@@ -1,18 +1,18 @@
-# TawasolApp
+# 🚀 TawasolApp
 This repository is the source code for the frontend of linkedin-clone
 
-## Technology Stack
-- React
-- Javascript
-- Vite
-- Tailwind CSS
-- Vitest
+## 🧰 Technology Stack
+- Framework and Libraries: React, Redux, Axios
+- Language: Javascript
+- Build Tool: Vite
+- Styling: Tailwind CSS
+- Testing: Vitest
 
-## Prerequisites
+## 📋 Prerequisites
 - Node.js (v16 or higher)
 - npm (v7 or higher)
 
-## Setup
+## ⚙️ Setup
 1. Clone the repository:
 ```bash
 git clone https://github.com/TawasolApp/Front-end.git
@@ -23,30 +23,27 @@ cd Front-end
 npm install
 ```
 
-## Running the Project
+## ▶️ Running the Project
 Start the development server:
 ```bash
 npm run dev
 ```
 Open your browser and navigate to http://localhost:5173.
 
-## Testing
+## 🧪 Testing
 Run tests with Vitest:
 ```bash
 npm run test
 ```
 
-## Commit Format
-
+## 📝 Commit Format
 Each commit message should follow this format:
 `<type>: <description>`
 - **`<type>`**: A keyword that describes the purpose of the commit (e.g., `feat`, `fix`, `docs`, etc.)
 - **`<description>`**: A concise description of the changes
 
-### Commit Types
-
+### 🔖 Commit Types
 Use the following types to categorize your commits:
-
 | Type       | Description                                                                 |
 |------------|-----------------------------------------------------------------------------|
 | feat       | A new feature or functionality.                                             |
@@ -56,10 +53,8 @@ Use the following types to categorize your commits:
 | docs       | Documentation changes (e.g., README, comments, or project documentation).   |
 | revert     | Reverting a previous commit.                                                |
 
-## Branch Naming Convention
-
-Use the following to name your created branch:
-
+## 🌳 Branch Naming Convention
+Use the following to name your created branch
 | Branch Name              | Description                                           |
 |--------------------------|-------------------------------------------------------|
 | main                     | Deployment branch.                                    |
@@ -67,9 +62,9 @@ Use the following to name your created branch:
 | feature/{feature-name}   | New feature implementation.                           |
 | bugfix/{bug-name}        | Fix bug before merging into develop.                  |
 
-- **Pull Requests** must be created in the `develop` branch for review and testing before merging into main
+➡️ **Pull Requests** must be created in the `develop` branch for review and testing before merging into main
 
-## Project Directories Structure
+## 📂 Project Directories Structure
 ```
 FRONT-END/
 ├── src/                   # Main source code directory
@@ -89,12 +84,31 @@ FRONT-END/
 └── vite.config.js         # Configuration for the Vite build tool
 ```
 
-### Additional Notes
-1. Create directories for any page and layout for clean structure
-2. Use Pascal-Case when creating a directory inside any of those directories
-3. Use **utils** directory when making a general function (ex: a date formatter)
+## 📐 Coding style
+| Rule                | How               |
+|---------------------|-------------------|
+| Directories         | PascalCase        |
+| Files               | PascalCase        |
+| HTML Functions      | PascalCase        |
+| General Functions   | camelCase         |
+| Global Constants    | UPPER_SNAKE_CASE  |
+| Constants           | camelCase         |
+| Variables           | camelCase         |
 
-## Code Formatting
+## 🌍 Rules
+### Pages design rules
+1. For every page, create directory inside of pages and/or layouts.
+2. For any general state that will only require context, make a storeSlice for it inside of the directory.
+
+### Generalization rules
+1. Any general function (eg. date formatting) must be in a specific file in utils directory.
+2. Any API calls are only done through the axios instance created inside of `apis` directory.
+3. Try to use context instead of redux if the rendering tree is small.
+
+### Routes and API routes rules
+1. TBD, for now make sure it is clean as much as possible to be changed later.
+
+## 🎯 Code Formatting
 We will be using prettier for this project
 1. Install prettier extension on vscode
 2. Upon finishing, right click and click format with, choose prettier
