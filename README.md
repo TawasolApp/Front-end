@@ -15,8 +15,8 @@ This repository is the source code for the frontend of linkedin-clone
 ## Setup
 1. Clone the repository:
 ```bash
-git clone <repository-url>
-cd <project-folder>
+git clone https://github.com/TawasolApp/Front-end.git
+cd Front-end
 ```
 2. Install dependencies:
 ```bash
@@ -49,12 +49,25 @@ Use the following types to categorize your commits:
 
 | Type       | Description                                                                 |
 |------------|-----------------------------------------------------------------------------|
-| `feat`     | A new feature or functionality.                                             |
-| `fix`      | A bug fix.                                                                  |
-| `refactor` | Code changes that neither fix a bug nor add a feature (e.g., code cleanup). |
-| `test`     | Adding or updating tests.                                                   |
-| `docs`     | Documentation changes (e.g., README, comments, or project documentation).   |
-| `revert`   | Reverting a previous commit.                                                |
+| feat       | A new feature or functionality.                                             |
+| fix        | A bug fix.                                                                  |
+| refactor   | Code changes that neither fix a bug nor add a feature (e.g., code cleanup). |
+| test       | Adding or updating tests.                                                   |
+| docs       | Documentation changes (e.g., README, comments, or project documentation).   |
+| revert     | Reverting a previous commit.                                                |
+
+## Branch Naming Convention
+
+Use the following to name your created branch:
+
+| Branch Name              | Description                                           |
+|--------------------------|-------------------------------------------------------|
+| main                     | Deployment branch.                                    |
+| develop                  | Latest development branch with all merged features.   |
+| feature/{feature-name}   | New feature implementation.                           |
+| bugfix/{bug-name}        | Fix bug before merging into develop.                  |
+
+- **Pull Requests** must be created in the `develop` branch for review and testing before merging into main
 
 ## Project Directories Structure
 ```
