@@ -1,4 +1,5 @@
 import './App.css'
+import { axiosInstance as axios } from './apis/axios'
 
 function App() {
 

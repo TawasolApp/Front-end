@@ -1,7 +1,7 @@
 # TawasolApp
 This repository is the source code for the frontend of linkedin-clone
 
-## Tech Stack
+## Technology Stack
 - React
 - Javascript
 - Vite
@@ -59,3 +59,33 @@ Use the following types to categorize your commits:
 | `build`    | Changes related to the build system or external dependencies.               |
 | `perf`     | Performance improvements.                                                   |
 | `revert`   | Reverting a previous commit.                                                |
+
+## Project Directories Structure
+```
+FRONT-END/
+├── src/                   # Main source code directory
+│   ├── apis/              # API service files for backend/mock communication
+│   ├── assets/            # Static assets like images, fonts, etc.
+│   ├── layouts/           # Layout components for consistent page structure
+│   ├── mocks/             # Mock data for development and testing
+│   ├── pages/             # Page components, corresponding to different routes
+│   ├── store/             # State management files (Redux)
+│   ├── tests/             # Test files for the application
+│   ├── utils/             # Utility functions and helpers
+│   └── setup-tests.js     # Configuration for test environment
+├── .gitignore             # Specifies files ignored by git
+├── eslint.config.js       # ESLint configuration for code linting
+├── package.json           # Defines project dependencies and scripts
+├── tailwind.config.js     # Configuration for Tailwind CSS
+└── vite.config.js         # Configuration for the Vite build tool
+```
+
+### Additional Notes
+1. Create directories for any page and layout for clean structure
+2. Use Pascal-Case when creating a directory inside any of those directories
+3. Use **utils** directory when making a general function (ex: a date formatter)
+
+## Code Formatting
+We will be using prettier for this project
+1. Install prettier extension on vscode
+2. Upon finishing, right click and click format with, choose prettier
