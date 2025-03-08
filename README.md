@@ -70,6 +70,7 @@ FRONT-END/
 ├── src/                   # Main source code directory
 │   ├── apis/              # API service files for backend/mock communication
 │   ├── assets/            # Static assets like images, fonts, etc.
+│   ├── hooks/             # Custom hooks created by our team
 │   ├── layouts/           # Layout components for consistent page structure
 │   ├── mocks/             # Mock data for development and testing
 │   ├── pages/             # Page components, corresponding to different routes
