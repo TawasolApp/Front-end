@@ -51,13 +51,9 @@ Use the following types to categorize your commits:
 |------------|-----------------------------------------------------------------------------|
 | `feat`     | A new feature or functionality.                                             |
 | `fix`      | A bug fix.                                                                  |
-| `docs`     | Documentation changes (e.g., README, comments, or project documentation).   |
-| `style`    | Code style changes (e.g., formatting, linting, or whitespace).              |
 | `refactor` | Code changes that neither fix a bug nor add a feature (e.g., code cleanup). |
 | `test`     | Adding or updating tests.                                                   |
-| `chore`    | Routine tasks or maintenance (e.g., updating dependencies, config files).   |
-| `build`    | Changes related to the build system or external dependencies.               |
-| `perf`     | Performance improvements.                                                   |
+| `docs`     | Documentation changes (e.g., README, comments, or project documentation).   |
 | `revert`   | Reverting a previous commit.                                                |
 
 ## Project Directories Structure
