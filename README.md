@@ -68,6 +68,7 @@ Use the following to name your created branch
 ```
 FRONT-END/
 ├── src/                   # Main source code directory
+│   ├── app/               # Main directory for the app component
 │   ├── apis/              # API service files for backend/mock communication
 │   ├── assets/            # Static assets like images, fonts, etc.
 │   ├── hooks/             # Custom hooks created by our team
