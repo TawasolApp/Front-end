@@ -83,6 +83,7 @@ FRONT-END/
 ├── eslint.config.js       # ESLint configuration for code linting
 ├── package.json           # Defines project dependencies and scripts
 ├── tailwind.config.js     # Configuration for Tailwind CSS
+├── postcss.config.js      # Configuration for Tailwind CSS
 └── vite.config.js         # Configuration for the Vite build tool
 ```
 
