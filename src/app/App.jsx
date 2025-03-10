@@ -1,6 +1,6 @@
 import './App.css';
-import { axiosInstance as axios } from './apis/axios';
-import { getIconComponent } from './utils';
+import { axiosInstance as axios } from '../apis/axios';
+import { getIconComponent } from '../utils';
 
 function App() {
 
