@@ -1,12 +1,15 @@
-import './App.css'
-import { axiosInstance as axios } from './apis/axios'
+import './App.css';
+import { axiosInstance as axios } from './apis/axios';
+import { getIconComponent } from './utils';
 
 function App() {
 
+  const InIcon = getIconComponent('in-black');
   return (
-    <h1 className="text-3xl font-bold underline">
-      Hello Frontend Team!
-    </h1>
+    <span>
+      <h1>hello Frontend Team!</h1>
+      <InIcon />
+    </span>
   )
 }
 
