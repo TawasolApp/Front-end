@@ -68,6 +68,7 @@ Use the following to name your created branch
 ```
 FRONT-END/
 ├── src/                   # Main source code directory
+│   ├── app/               # Main directory for the app component
 │   ├── apis/              # API service files for backend/mock communication
 │   ├── assets/            # Static assets like images, fonts, etc.
 │   ├── hooks/             # Custom hooks created by our team
@@ -82,6 +83,7 @@ FRONT-END/
 ├── eslint.config.js       # ESLint configuration for code linting
 ├── package.json           # Defines project dependencies and scripts
 ├── tailwind.config.js     # Configuration for Tailwind CSS
+├── postcss.config.js      # Configuration for Tailwind CSS
 └── vite.config.js         # Configuration for the Vite build tool
 ```
 
