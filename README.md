@@ -32,10 +32,6 @@ or to run with a mock server:
 ```bash
 npm run mock
 ```
-and then in another terminal:
-```bash
-npm run dev
-```
 Open your browser and navigate to http://localhost:5173.
 
 ## 🧪 Testing
