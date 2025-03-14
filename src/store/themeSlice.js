@@ -6,7 +6,7 @@ const initialState = {
               localStorage.getItem('theme') === null)
 };
 
-const themeSlice = createSlice({
+export const themeSlice = createSlice({
   name: 'theme',
   initialState,
   reducers: {

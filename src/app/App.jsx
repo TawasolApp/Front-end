@@ -1,6 +1,7 @@
 import './App.css';
 import { axiosInstance as axios } from '../apis/axios';
 import { getIconComponent } from '../utils';
+import Companypage from '../pages/companypage/CompanyPage';
 
 function App() {
   const InIcon = getIconComponent("in-black");
@@ -9,8 +10,6 @@ function App() {
       <div>
         <Companypage />
       </div>
-      {/* <h1>hello Frontend Team!</h1>
-      <InIcon /> */}
     </span>
   );
 }
