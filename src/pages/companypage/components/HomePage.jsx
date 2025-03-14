@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import company from "../testdata";
+import company from "../testdata.js";
 import Overviewbox from "./Overviewbox.jsx";
 import Aboutpage from "./AboutPage.jsx";
 import PostsSlider from "./PostsSlider.jsx";

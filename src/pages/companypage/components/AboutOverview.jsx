@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import company from "../testdata";
+import company from "../testdata.js";
 import Overviewbox from "./Overviewbox.jsx";
 // import { FiEdit } from "react-icons/fi";
 import Overviewcomponent from "./Overviewcomponent.jsx";

@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import company from "../testdata";
+import company from "../testdata.js";
 import Aboutpage from "./AboutPage.jsx";
 function Overviewbox({ setActiveButton }) {
   const [expanded, setExpanded] = useState(false);

@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import company from "../testdata";
+import company from "../testdata.js";
 import Homepage from "./Homepage.jsx";
 import Aboutpage from "./AboutPage.jsx";
 import { FiEdit } from "react-icons/fi";

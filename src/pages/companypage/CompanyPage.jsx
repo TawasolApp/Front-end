@@ -1,6 +1,6 @@
 import React, { useState } from "react";
-import CompanyHeader from "./components/CompanyHeader.jsx";
-import Homepage from "./components/Homepage.jsx";
+import CompanyHeader from "./Components/CompanyHeader.jsx";
+import Homepage from "./Components/Homepage.jsx";
 function Companypage() {
   return (
     <div className="bg-gray-200 pt-4 pb-4">
