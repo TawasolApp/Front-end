@@ -1,0 +1,26 @@
+const company = {
+  name: "elsewedy electric",
+  description:
+    "Manufacturer of Cables & Electrical Products and Integrated Infrastructure Provider",
+  address: "New Cairo, Cairo",
+  followers: 716000,
+  employees: 10100,
+  banner: "src/assets/images/elsewedyelectric_cover.jpeg",
+  logo: "src/assets/images/elsewedyicon.jpeg",
+  website: "https://elsewedyelectric.com/en/default",
+  overview:
+    "A global leader that has evolved from a local manufacturer of electrical products into an integrated infrastructure solutions provider; with over 19,000 employees and with recorded revenues of more than USD 5 billion in 2023  . We Operate in five key business sectors: Wire, Cable & Accessories, Electrical Products, Engineering & Construction, Digital Solutions, and Infrastructure Investments. With a strong presence in 19 different countries, 31 production facilities spread across African and Asian countries including Egypt, Algeria, KSA, Qatar, Indonesia, Pakistan, and Tanzania. We export a wide range of high-end products to over 110 countries worldwide. At the heart of our approach is an all-in-one integrated Engineering, Procurement & Construction (EPC) service, enabling us to deliver the most complex turnkey projects on time and with the highest efficiency.A vital part of our mission is ensuring that the communities where we operate develop and flourish. We work to facilitate the global transition toward a sustainable energy future, whereby we established green energy projects and smart cities across Africa, the Middle East, and Eastern Europe. In alignment with our 2030 sustainability strategy, we aim to extend and enhance our positive impact, provide energy services to a growing customer base, and drive decarbonization, digitalization, and sustainable transition in Egypt and beyond. Our growth has been driven by hiring talents and empowering businesses and communities where we operate. We enable customers to digitize and meet the challenges of an ever-changing world. Our extensive range of digital solutions allows them to become smarter, faster, and more agile. We are committed to doing our best to serve our customers while caring for the environment. We aim to use our knowledge of our environmental impact to better develop more sustainable business scenarios and evaluate our future policies.",
+  number: 19159,
+  verified: true,
+  verification_date: "March 01,2023",
+  Industry: "appliances,electrical and electronics manufacturing",
+  Type: "Privately Held",
+  Founded: 1938,
+  specialities:
+    "Cables & Accessories, Electrical Products, Energy Measurement & Management, Transformers, Communications, Wind Energy Generation, Solar Energy Solutions, Projects & Development, Cables, Power Generation solutions, Pivots, Telecommunication Solutions, Telecommunication Cables, Cable accessories, Wires, Copper Wires, Hydro power, Electrical solutions, Electrical projects, Energy Cables, Special Cables, OHTL & OPGW, Steel Products, Plastics, OIL & GAS SOLUTIONS, Metals, Telecom Cabling Solutions, Busway, Fiber Glass Poles, Motion Appliances, Engineering & Construction, Power Generation, Power Transmission, Power Distribution, Public & Civil Works, Water Solutions, Energy Management, Telecom Infrastructure, Telecommunication and Networking, Infrastructure Investments, Ports and logistics Development, and Utility Development",
+  mapsloc:
+    "https://www.bing.com/maps?where=New%20Cairo%2C%20Cairo%2011853%2C%20EG",
+  mapsimg:
+    "https://www.bing.com/maps?where=New%20Cairo%2C%20Cairo%2011853%2C%20EG",
+};
+export default company;
