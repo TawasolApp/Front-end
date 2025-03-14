@@ -28,6 +28,10 @@ Start the development server:
 ```bash
 npm run dev
 ```
+or to run with a mock server:
+```bash
+npm run mock
+```
 Open your browser and navigate to http://localhost:5173.
 
 ## 🧪 Testing
@@ -68,6 +72,7 @@ Use the following to name your created branch
 ```
 FRONT-END/
 ├── src/                   # Main source code directory
+│   ├── app/               # Main directory for the app component
 │   ├── apis/              # API service files for backend/mock communication
 │   ├── assets/            # Static assets like images, fonts, etc.
 │   ├── hooks/             # Custom hooks created by our team
@@ -82,6 +87,7 @@ FRONT-END/
 ├── eslint.config.js       # ESLint configuration for code linting
 ├── package.json           # Defines project dependencies and scripts
 ├── tailwind.config.js     # Configuration for Tailwind CSS
+├── postcss.config.js      # Configuration for Tailwind CSS
 └── vite.config.js         # Configuration for the Vite build tool
 ```
 
