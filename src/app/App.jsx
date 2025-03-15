@@ -2,15 +2,14 @@ import "./App.css";
 import { axiosInstance as axios } from "../apis/axios";
 import { getIconComponent } from "../utils";
 import Companypage from "../pages/CompanyPage/CompanyPage";
+import FeedContainer from "../pages/Feed/FeedContainer";
 
 function App() {
-  const InIcon = getIconComponent("in-black");
+
   return (
-    <span>
-      <div>
-        <Companypage />
-      </div>
-    </span>
+    <div>
+      <FeedContainer />
+    </div>
   );
 }
 

@@ -1,0 +1,42 @@
+import FeedPostCard from './FeedPostCard';
+
+const FeedPosts = () => {
+
+    // Mock posts data
+    const mockPost = [
+        {
+            id: 1,
+            isRepost: false,
+            repostAuthor: "", // only if isRepost is true
+            author: {
+                name: "John Doe",
+                title: "Software Engineer at Tech Corp",
+                avatar: "https://example.com/avatar.jpg"
+            },
+            content: "This is a sample post content...",
+            media: null, // or media URL
+            likes: 142,
+            comments: 45,
+            reposts: 12,
+            shares: 8,
+            timestamp: "2h ago",
+            showComments: false // manage this with state
+        }
+    ]
+
+    const mockPosts = Array(10).fill(null).map((_, index) => ({
+        ...mockPost[0],
+        id: index + 1 // Ensure each post has a unique ID
+    }));
+
+
+    return (
+        <div className="space-y-4 w-full">
+            {mockPosts.map((post) => (
+                <FeedPostCard key={post.id} post={post} />
+            ))}
+        </div>
+    );
+};
+
+export default FeedPosts;
