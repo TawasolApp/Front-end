@@ -6,9 +6,11 @@ import FeedPostCardHeader from './FeedPostCardHeader';
 import EngagementMetrics from './EngagementMetrics';
 import LikeButton from './LikeButton';
 import MediaDisplay from './MediaDisplay';
+import CommentsContainer from './CommentsContainer';
 
 const FeedPostCard = ({ post }) => {
     const [localPost, setLocalPost] = useState(post);
+    const [showComments, setShowComments] = useState(false);
 
     const handleReaction = (reactionTypeAdd, reactionTypeRemove) => {
         setLocalPost(prev => {
@@ -24,6 +26,23 @@ const FeedPostCard = ({ post }) => {
 
             return { ...prev, reactions: newReactions };
         });
+    };
+
+    const handleAddComment = (text) => {
+        const newComment = {
+            author: {
+                name: "Current User", // Replace with actual user data
+                title: "Your Title",
+                avatar: "https://example.com/avatar.jpg"
+            },
+            text: text,
+            timestamp: new Date().toISOString()
+        };
+
+        setLocalPost(prev => ({
+            ...prev,
+            comments: [...prev.comments, newComment]
+        }));
     };
 
     return (
@@ -52,7 +71,7 @@ const FeedPostCard = ({ post }) => {
                 reposts={localPost.reposts}
             />
 
-            <div className="grid grid-cols-4 gap-0 px-4 py-2 border-t border-gray-200">
+            <div className="grid grid-cols-4 gap-0 px-4 py-1 border-t border-gray-200">
                 <LikeButton onChange={handleReaction} />
 
                 <button className="flex items-center justify-center gap-1 hover:bg-gray-100 p-2 rounded">
@@ -70,6 +89,13 @@ const FeedPostCard = ({ post }) => {
                     <span className="text-sm text-gray-500">Send</span>
                 </button>
             </div>
+
+                <CommentsContainer
+                    comments={localPost.comments}
+                    onAddComment={handleAddComment}
+                />
+            
+
         </div>
     );
 };
