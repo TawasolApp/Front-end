@@ -5,6 +5,7 @@ import SendIcon from '@mui/icons-material/Send';
 import FeedPostCardHeader from './FeedPostCardHeader';
 import EngagementMetrics from './EngagementMetrics';
 import LikeButton from './LikeButton';
+import MediaDisplay from './MediaDisplay';
 
 const FeedPostCard = ({ post }) => {
     const [localPost, setLocalPost] = useState(post);
@@ -38,6 +39,11 @@ const FeedPostCard = ({ post }) => {
 
             {localPost.content && (
                 <p className="text-gray-800 px-4 pb-2">{localPost.content}</p>
+            )}
+
+
+            {post.media && post.media.length > 0 && (
+                <MediaDisplay media={post.media} />
             )}
 
             <EngagementMetrics
