@@ -19,7 +19,7 @@ const FeedPosts = () => {
             comments: 45,
             reposts: 12,
             shares: 8,
-            timestamp: "2h ago",
+            timestamp: "2023-07-20T12:00:00",
             showComments: false // manage this with state
         }
     ]
