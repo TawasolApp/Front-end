@@ -8,7 +8,7 @@ import EngagementMetrics from './EngagementMetrics';
 
 const FeedPostCard = ({ post }) => {
     return (
-        <div className="bg-white rounded-lg shadow border border-gray-200 p-4 mb-4">
+        <div className="bg-white rounded-lg shadow border border-gray-200 mb-4">
             {/* Repost Header */}
             {post.isRepost && (
                 <div className="flex items-center text-xs text-gray-500 mb-2">
@@ -21,38 +21,41 @@ const FeedPostCard = ({ post }) => {
 
             {/* Post Text */}
             {post.content && (
-                <p className="text-gray-800 mt-2">{post.content}</p>
+                <p className="text-gray-800 mx-4">{post.content}</p>
             )}
 
-            {/* Engagement Metrics */}
-            <EngagementMetrics
-                reactions={post.reactions}
-                comments={post.comments}
-                reposts={post.reposts}
-            />
+            <div>
+                {/* Engagement Metrics */}
+                <EngagementMetrics
+                    reactions={post.reactions}
+                    comments={post.comments}
+                    reposts={post.reposts}
+                />
 
-            {/* Action Buttons */}
-            <div className="grid grid-cols-4 gap-2 pt-3 mt-2">
-                <button className="flex items-center justify-center gap-1 hover:bg-gray-100 p-2 rounded">
-                    <FavoriteBorderIcon className="w-5 h-5" />
-                    <span className="text-sm">Like</span>
-                </button>
+                {/* Action Buttons */}
+                <div className="grid grid-cols-4 gap-2 px-4 py-1">
+                    <button className="flex items-center justify-center gap-1 hover:bg-gray-100 p-2 rounded">
+                        <FavoriteBorderIcon className="w-5 h-5" />
+                        <span className="text-sm">Like</span>
+                    </button>
 
-                <button className="flex items-center justify-center gap-1 hover:bg-gray-100 p-2 rounded">
-                    <ChatBubbleOutlineIcon className="w-5 h-5" />
-                    <span className="text-sm">Comment</span>
-                </button>
+                    <button className="flex items-center justify-center gap-1 hover:bg-gray-100 p-2 rounded">
+                        <ChatBubbleOutlineIcon className="w-5 h-5" />
+                        <span className="text-sm">Comment</span>
+                    </button>
 
-                <button className="flex items-center justify-center gap-1 hover:bg-gray-100 p-2 rounded">
-                    <RepeatIcon className="w-5 h-5" />
-                    <span className="text-sm">Repost</span>
-                </button>
+                    <button className="flex items-center justify-center gap-1 hover:bg-gray-100 p-2 rounded">
+                        <RepeatIcon className="w-5 h-5" />
+                        <span className="text-sm">Repost</span>
+                    </button>
 
-                <button className="flex items-center justify-center gap-1 hover:bg-gray-100 p-2 rounded">
-                    <SendIcon className="w-5 h-5" />
-                    <span className="text-sm">Send</span>
-                </button>
+                    <button className="flex items-center justify-center gap-1 hover:bg-gray-100 p-2 rounded">
+                        <SendIcon className="w-5 h-5" />
+                        <span className="text-sm">Send</span>
+                    </button>
+                </div>
             </div>
+
         </div>
     );
 };
