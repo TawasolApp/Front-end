@@ -23,10 +23,17 @@ const LikeButton = ({ onChange }) => {
     const containerRef = useRef(null);
 
     const handleReaction = (reactionType) => {
-        const isSame = currentReaction === reactionType;
-        const newReaction = isSame ? null : reactionType;
-        setCurrentReaction(newReaction);
-        onChange?.(newReaction, !isSame);
+
+        if (currentReaction === null) {
+            onChange(reactionType, null);
+            setCurrentReaction(reactionType);
+        } else if (currentReaction === reactionType) {
+            onChange(null, reactionType);
+            setCurrentReaction(null);
+        } else {
+            onChange(reactionType, currentReaction);
+            setCurrentReaction(reactionType);
+        }
         setShowPicker(false);
     };
 

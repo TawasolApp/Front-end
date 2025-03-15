@@ -9,12 +9,18 @@ import LikeButton from './LikeButton';
 const FeedPostCard = ({ post }) => {
     const [localPost, setLocalPost] = useState(post);
 
-    const handleReaction = (reactionType, isActive) => {
+    const handleReaction = (reactionTypeAdd, reactionTypeRemove) => {
         setLocalPost(prev => {
             const newReactions = { ...prev.reactions };
-            if (reactionType) {
-                newReactions[reactionType] += isActive ? 1 : -1;
+            console.log(newReactions);
+
+            if (reactionTypeAdd) {
+                newReactions[reactionTypeAdd] += 1;
             }
+            if (reactionTypeRemove) {
+                newReactions[reactionTypeRemove] -= 1;
+            }
+
             return { ...prev, reactions: newReactions };
         });
     };

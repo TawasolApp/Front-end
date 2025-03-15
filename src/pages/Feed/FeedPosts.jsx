@@ -16,9 +16,9 @@ const FeedPosts = () => {
             content: "This is a sample post content...",
             media: null, // or media URL
             reactions: {
-                like: 45,
-                celebrate: 23,
-                support: 100,
+                like: 44,
+                celebrate: 45,
+                support: 2,
                 love: 0,
                 insightful: 0,
                 funny: 0
