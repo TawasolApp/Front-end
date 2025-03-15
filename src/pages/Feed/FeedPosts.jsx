@@ -15,7 +15,14 @@ const FeedPosts = () => {
             },
             content: "This is a sample post content...",
             media: null, // or media URL
-            likes: 142,
+            reactions: {
+                like: 45,
+                celebrate: 23,
+                support: 100,
+                love: 0,
+                insightful: 0,
+                funny: 0
+              },
             comments: 45,
             reposts: 12,
             shares: 8,

@@ -3,6 +3,7 @@ import ChatBubbleOutlineIcon from '@mui/icons-material/ChatBubbleOutline';
 import RepeatIcon from '@mui/icons-material/Repeat';
 import SendIcon from '@mui/icons-material/Send';
 import FeedPostCardHeader from './FeedPostCardHeader';
+import EngagementMetrics from './EngagementMetrics';
 
 
 const FeedPostCard = ({ post }) => {
@@ -24,13 +25,11 @@ const FeedPostCard = ({ post }) => {
             )}
 
             {/* Engagement Metrics */}
-            <div className="flex items-center justify-between text-gray-500 pt-3 mt-2 border-t border-gray-200">
-                <div className="flex items-center space-x-4">
-                    <span className="text-xs">{post.likes} likes</span>
-                    <span className="text-xs">{post.comments} comments</span>
-                    <span className="text-xs">{post.reposts} reposts</span>
-                </div>
-            </div>
+            <EngagementMetrics
+                reactions={post.reactions}
+                comments={post.comments}
+                reposts={post.reposts}
+            />
 
             {/* Action Buttons */}
             <div className="grid grid-cols-4 gap-2 pt-3 mt-2">
