@@ -15,7 +15,7 @@ const reactionIcons = {
     funny: { Icon: MoodIcon, color: '#7dc20a' },
 };
 
-const EngagementMetrics = ({ reactions, comments, reposts }) => {
+const EngagementMetrics = ({ reactions, comments, reposts, setShowComments }) => {
     const topReactions = useMemo(() => {
         return Object.entries(reactions)
             .filter(([_, count]) => count > 0)
@@ -30,7 +30,9 @@ const EngagementMetrics = ({ reactions, comments, reposts }) => {
     return (
         <div className="flex items-center justify-between text-gray-500 mx-4 border-b border-black/10">
             {/* Left Section - Reactions */}
-            <div className="flex items-center space-x-2">
+            <button
+                className="flex items-center space-x-2 hover:underline"
+            >
                 <div className="flex items-center -space-x-1"> {/* Tighter spacing */}
                     {topReactions.map(([reactionType]) => {
                         const { Icon, color } = reactionIcons[reactionType];
@@ -52,17 +54,20 @@ const EngagementMetrics = ({ reactions, comments, reposts }) => {
                 {totalLikes > 0 && (
                     <span className="text-xs pr-0 ml-0.5">{totalLikes}</span>
                 )}
-            </div>
+            </button>
 
             {/* Right Section - Comments & Reposts */}
             <div className="flex items-center">
-                <span className="text-xs mx-1">
+                <button
+                    className="text-xs mx-1 hover:underline hover:text-blue-600"
+                    onClick={() => setShowComments(true)}
+                >
                     {comments} comments
-                </span>
+                </button>
                 <span>•</span>
-                <span className="text-xs mx-1">
+                <button className="text-xs mx-1 hover:underline hover:text-blue-600">
                     {reposts} reposts
-                </span>
+                </button>
             </div>
         </div>
     );

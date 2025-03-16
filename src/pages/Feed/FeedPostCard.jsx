@@ -9,6 +9,7 @@ import MediaDisplay from './MediaDisplay';
 import CommentsContainer from './CommentsContainer';
 
 const FeedPostCard = ({ post }) => {
+
     const [localPost, setLocalPost] = useState(post);
     const [showComments, setShowComments] = useState(false);
 
@@ -69,12 +70,16 @@ const FeedPostCard = ({ post }) => {
                 reactions={localPost.reactions}
                 comments={localPost.comments}
                 reposts={localPost.reposts}
+                setShowComments={setShowComments}
             />
 
             <div className="grid grid-cols-4 gap-0 px-4 py-1 border-t border-gray-200">
                 <LikeButton onChange={handleReaction} />
 
-                <button className="flex items-center justify-center gap-1 hover:bg-gray-100 p-2 rounded">
+                <button
+                    className="flex items-center justify-center gap-1 hover:bg-gray-100 p-2 rounded"
+                    onClick={() => setShowComments(true)}
+                >
                     <ChatBubbleOutlineIcon className="w-5 h-5 text-gray-500" />
                     <span className="text-sm text-gray-500">Comment</span>
                 </button>
@@ -90,10 +95,11 @@ const FeedPostCard = ({ post }) => {
                 </button>
             </div>
 
-                <CommentsContainer
-                    comments={localPost.comments}
-                    onAddComment={handleAddComment}
-                />
+
+            {showComments && <CommentsContainer
+                postId={post.id}
+                onAddComment={handleAddComment}
+            />}
             
 
         </div>
