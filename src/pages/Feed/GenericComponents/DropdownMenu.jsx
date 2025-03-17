@@ -3,6 +3,7 @@ import { useState, useEffect, useRef } from 'react';
 const DropdownMenu = ({ 
   menuItems = [], 
   position = 'right-0',
+  width = 'w-64',
   children 
 }) => {
   const [isOpen, setIsOpen] = useState(false);
@@ -31,7 +32,7 @@ const DropdownMenu = ({
       </div>
 
       {isOpen && (
-        <div className={`absolute ${position} mt-1 w-48 bg-white rounded-lg shadow-lg border border-gray-200 z-10`}>
+        <div className={`absolute ${position} mt-1 ${width} bg-white rounded-lg shadow-lg border border-gray-200 z-10`}>
           <div className="p-1">
             {menuItems.map((item, index) => (
               <button
