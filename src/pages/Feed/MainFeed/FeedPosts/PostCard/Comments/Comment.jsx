@@ -40,7 +40,7 @@ const Comment = ({ comment }) => {
       {/* Header Part */}
       <div className="flex px-4 pt-1 pb-2">
         <div>
-          <ActorHeader author={localComment.author} iconSize={32} />
+          <ActorHeader authorName={localComment.authorName} authorBio={localComment.authorBio} authorPicture={localComment.authorPicture} iconSize={32} />
         </div>
 
         <div className="ml-auto flex items-center gap-2">

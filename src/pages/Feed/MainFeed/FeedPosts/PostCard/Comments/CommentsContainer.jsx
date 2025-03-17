@@ -13,22 +13,16 @@ const CommentsContainer = ({ postId, rerender }) => {
         {
             id: "1",
             postId: postId,
-            author: {
-                id: "user1",
-                name: "John Doe",
-                title: "Software Engineer",
-                avatar: "https://example.com/avatar.jpg"
-            },
+            authorName: "John Doe",
+            authorBio: "Software Engineer",
+            authorPicture: "https://example.com/avatar.jpg",
             content: "Sample comment text",
             replies: [
                 {
                     authorId: "user1",
-                    author: {
-                        id: "user1",
-                        name: "John Doe",
-                        title: "Software Engineer",
-                        avatar: "https://example.com/avatar.jpg"
-                    },
+                    authorName: "John Doe",
+                    authorBio: "Software Engineer",
+                    authorPicture: "https://example.com/avatar.jpg",
                     text: "hello world",
                     reactions: {
                         like: 44,
@@ -42,12 +36,9 @@ const CommentsContainer = ({ postId, rerender }) => {
                 },
                 {
                     authorId: "user1",
-                    author: {
-                        id: "user1",
-                        name: "John Doe",
-                        title: "Software Engineer",
-                        avatar: "https://example.com/avatar.jpg"
-                    },
+                    authorName: "John Doe",
+                    authorBio: "Software Engineer",
+                    authorPicture: "https://example.com/avatar.jpg",
                     text: "hello world",
                     reactions: {
                         like: 44,
@@ -61,12 +52,9 @@ const CommentsContainer = ({ postId, rerender }) => {
                 },
                 {
                     authorId: "user1",
-                    author: {
-                        id: "user1",
-                        name: "John Doe",
-                        title: "Software Engineer",
-                        avatar: "https://example.com/avatar.jpg"
-                    },
+                    authorName: "John Doe",
+                    authorBio: "Software Engineer",
+                    authorPicture: "https://example.com/avatar.jpg",
                     text: "hello world",
                     reactions: {
                         like: 44,

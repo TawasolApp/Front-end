@@ -8,7 +8,12 @@ import FlagIcon from '@mui/icons-material/Flag';
 import ActorHeader from '../../../../GenericComponents/ActorHeader';
 import DropdownMenu from '../../../../GenericComponents/DropdownMenu';
 
-const PostCardHeader = ({ author, timestamp }) => {
+const PostCardHeader = ({
+    authorName,
+    authorBio,
+    authorPicture,
+    timestamp
+  }) => {
 
     const [isCloseVisible, setIsCloseVisible] = useState(false);
 
@@ -28,10 +33,9 @@ const PostCardHeader = ({ author, timestamp }) => {
     return (
         <div className="relative">
           <div className="pr-16 pl-3 pt-3 mb-2">
-            <ActorHeader author={author} timestamp={timestamp} />
+            <ActorHeader authorName={authorName} authorPicture={authorPicture} authorBio={authorBio} timestamp={timestamp} />
           </div>
-          
-    
+
           <div className="absolute right-3 top-1">
             <div className="flex items-center gap-1">
               <DropdownMenu menuItems={menuItems} position="right-0">

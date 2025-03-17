@@ -6,7 +6,7 @@ const PostContent = ({ content, media }) => {
     return (
         <>
             <TextContent content={content} />
-            {media && media.length > 0 && <MediaDisplay media={media} />}
+            {/* {media && media.length > 0 && <MediaDisplay media={media} />} */}
         </>
     );
 };

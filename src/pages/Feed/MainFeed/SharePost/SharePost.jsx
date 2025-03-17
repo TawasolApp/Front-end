@@ -1,10 +1,35 @@
 import { useState } from 'react';
 import PermMediaIcon from '@mui/icons-material/PermMedia';
+import PublicIcon from '@mui/icons-material/Public';
+import PeopleIcon from '@mui/icons-material/People';
 import Avatar from '@mui/material/Avatar';
+import DropdownMenu from '../../GenericComponents/DropdownMenu';
 
-const SharePost = () => {
+const SharePost = ({ sharePost }) => {
     
+    // TODO: change this to redux states
+    const currentAuthorId = 1;
+    const currentAuthorName = "John Doe";
+    const currentAuthorPicture = "https://example.com/avatar.jpg";
+    const currentAuthorBio = "Software Engineer at Tech Corp";
+    const currentAuthorType = "User";
+
     const [isModalOpen, setIsModalOpen] = useState(false);
+    const [text, setText] = useState('');
+    const [visibilityType, setVisibilityType] = useState('Public');
+
+    const menuItems = [
+        {
+          text: 'Public',
+          onClick: () => setVisibilityType('Public'),
+          icon: PublicIcon
+        },
+        {
+            text: 'Connections',
+            onClick: () => setVisibilityType('Connections'),
+            icon: PeopleIcon
+        }
+      ];
 
     return (
         <>
@@ -15,7 +40,7 @@ const SharePost = () => {
                     <Avatar 
                         sx={{ width: 48, height: 48 }}
                         className="rounded-full"
-                        src="https://media.licdn.com/dms/image/v2/D4D03AQH7Ais8BxRXzw/profile-displayphoto-shrink_100_100/profile-displayphoto-shrink_100_100/0/1721080103981?e=1747267200&v=beta&t=i7IQGWZtZGe0l3DFYSaSB97k_L6dt8vE2ueVR9loapM" // Add your src here
+                        src={currentAuthorPicture} // Add your src here
                     />
 
                     {/* Post Input Button */}
@@ -53,15 +78,23 @@ const SharePost = () => {
                     <div className="bg-white rounded-lg w-full max-w-2xl">
                         {/* Modal Header */}
                         <div className="flex items-center justify-between p-4 border-b">
-                            <div className="flex items-start gap-2 mb-4">
-                                <div className="w-11 h-11 rounded-full bg-gray-200"></div>
-                                <div>
-                                    <h3 className="font-medium">Your Name</h3>
-                                    <button className="text-sm text-blue-600 font-medium px-3 py-1 hover:bg-blue-50 rounded-full">
-                                        Anyone 🔽
-                                    </button>
+                            <DropdownMenu
+                                menuItems={menuItems}
+                                position="right-0"
+                                width="w-48"
+                            >
+                                <div className="flex items-start gap-2 mb-4">
+                                    <Avatar 
+                                        sx={{ width: 48, height: 48 }}
+                                        className="rounded-full"
+                                        src={currentAuthorPicture}
+                                    />
+                                    <div>
+                                        <h3 className="font-medium">{currentAuthorName}</h3>
+                                        <button className="text-sm text-blue-600 font-medium py-1 hover:bg-blue-50 rounded-full flex items-center gap-1">Choose Visiblity 🔽</button>
+                                    </div>
                                 </div>
-                            </div>
+                            </DropdownMenu>
 
                             <button
                                 onClick={() => setIsModalOpen(false)}
@@ -77,6 +110,8 @@ const SharePost = () => {
                             <textarea
                                 placeholder="What do you want to talk about?"
                                 className="w-full h-48 p-2 resize-none focus:outline-none text-lg"
+                                value={text}
+                                onChange={(e) => setText(e.target.value)}
                             />
 
                             <div className="flex justify-between items-center mt-4">
@@ -93,7 +128,14 @@ const SharePost = () => {
                                     >
                                         Cancel
                                     </button>
-                                    <button className="px-4 py-2 bg-blue-600 text-white rounded-full hover:bg-blue-700 disabled:opacity-50">
+                                    <button
+                                        className="px-4 py-2 bg-blue-600 text-white rounded-full hover:bg-blue-700 disabled:opacity-50"
+                                        onClick={() => {
+                                            sharePost(text, visibilityType);
+                                            setIsModalOpen(false);
+                                            setText('');
+                                        }}
+                                    >
                                         Post
                                     </button>
                                 </div>

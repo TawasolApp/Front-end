@@ -1,7 +1,6 @@
 import { useState } from 'react';
 import FlagIcon from '@mui/icons-material/Flag';
 import MoreHorizIcon from '@mui/icons-material/MoreHoriz';
-import ReactionPicker from '../../../../GenericComponents/ReactionPicker';
 import DropdownMenu from '../../../../GenericComponents/DropdownMenu';
 import ActorHeader from '../../../../GenericComponents/ActorHeader';
 import ActivitiesHolder from './ActivitiesHolder';
@@ -36,10 +35,10 @@ const Reply = ({ reply }) => {
 
 
   return (
-    <div className="items-start">
+    <div className="items-start px-4 pt-1">
       <div className="flex">
         <div>
-          <ActorHeader author={reply.author} iconSize={32} />
+          <ActorHeader authorName={reply.authorName} authorBio={reply.authorBio} authorPicture={reply.authorPicture} iconSize={32} />
         </div>
 
         <div className="ml-auto flex items-center gap-2">
@@ -61,7 +60,7 @@ const Reply = ({ reply }) => {
       <p className="text-sm text-gray-800 mt-1">{reply.text}</p>
 
       {/* Actions Row */}
-      <div className="flex items-center gap-2 mt-1">
+      <div className="flex items-center gap-2">
         <ActivitiesHolder
           reactions={localReply.reactions}
           onReactionChange={handleReaction}

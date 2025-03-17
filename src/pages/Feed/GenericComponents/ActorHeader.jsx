@@ -3,7 +3,9 @@ import PublicIcon from '@mui/icons-material/Public';
 import { formatDistanceToNow } from 'date-fns';
 
 const ActorHeader = ({
-    author,
+    authorName,
+    authorBio,
+    authorPicture,
     timestamp,
     iconSize=48,
 }) => {
@@ -13,7 +15,7 @@ const ActorHeader = ({
 
             <a className="hover:underline flex-shrink-0">
                 <Avatar
-                    src={author.avatar}
+                    src={authorPicture}
                     sx={{
                         width: iconSize,
                         height: iconSize,
@@ -26,10 +28,10 @@ const ActorHeader = ({
 
                 <a className="hover:underline block">
                     <h3 className="font-medium text-gray-900 text-sm leading-tight truncate">
-                        {author.name}
+                        {authorName}
                     </h3>
                     <p className="text-xs text-gray-500 mt-px truncate">
-                        {author.title}
+                        {authorBio}
                     </p>
                 </a>
 

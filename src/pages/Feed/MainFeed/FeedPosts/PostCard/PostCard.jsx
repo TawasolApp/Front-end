@@ -5,6 +5,7 @@ import PostContent from './Content/PostContent';
 import EngagementMetrics from './Metrics/EngagementMetrics';
 import ActivitiesHolder from './Activities/ActivitiesHolder';
 import CommentsContainer from './Comments/CommentsContainer';
+import ReactionsModal from '../ReactionModal/ReactionsModal';
 
 const PostCard = ({ post }) => {
 
@@ -41,7 +42,9 @@ const PostCard = ({ post }) => {
         <div className="bg-white rounded-lg shadow border border-gray-200 mb-4">
 
             <PostCardHeader
-                author={localPost.author}
+                authorName={localPost.authorName}
+                authorBio={localPost.authorBio}
+                authorPicture={localPost.authorPicture}
                 timestamp={localPost.timestamp}
             />
 
@@ -68,6 +71,13 @@ const PostCard = ({ post }) => {
                 postId={post.id}
                 rerender={rerenderCommentsNumber}
             />}
+
+            {showLikes && (
+                <ReactionsModal
+                    apiUrl="////"
+                    setShowLikes={() => setShowLikes(false)}
+                />
+            )}
 
         </div>
     );
