@@ -28,9 +28,8 @@ const FeedPosts = () => {
                 "https://media.licdn.com/dms/image/v2/D4D22AQFTFRxCX1N-ew/feedshare-shrink_2048_1536/B4DZU4IgbZHIAo-/0/1740403525710?e=1744848000&v=beta&t=GIclj6fm_PKEOgk9JgrDtOMwBf1JDRd5MFAeqoW-uh8",
                 "https://media.licdn.com/dms/image/v2/D4D22AQFTFRxCX1N-ew/feedshare-shrink_2048_1536/B4DZU4IgbZHIAo-/0/1740403525710?e=1744848000&v=beta&t=GIclj6fm_PKEOgk9JgrDtOMwBf1JDRd5MFAeqoW-uh8",
             ],
-            comments: 45,
-            reposts: 12,
-            shares: 8,
+            comments: 12,
+            reposts: 15,
             timestamp: "2025-03-17T12:00:00",
             showComments: false // manage this with state
         }

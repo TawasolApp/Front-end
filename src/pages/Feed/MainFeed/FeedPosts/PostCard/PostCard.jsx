@@ -6,15 +6,18 @@ import SendIcon from '@mui/icons-material/Send';
 
 import PostCardHeader from './Header/PostCardHeader';
 import PostContent from './Content/PostContent';
-import EngagementMetrics from './Metrices/EngagementMetrics';
+import EngagementMetrics from './Metrics/EngagementMetrics';
 import LikeButton from './Activities/LikeButton';
 import CommentsContainer from './Comments/CommentsContainer';
 
 const PostCard = ({ post }) => {
 
     const [localPost, setLocalPost] = useState(post);
-    const [showComments, setShowComments] = useState(false);
 
+    const [showLikes, setShowLikes] = useState(false);
+    const [showComments, setShowComments] = useState(false);
+    const [showReposts, setShowReposts] = useState(false);
+    
     const handleReaction = (reactionTypeAdd, reactionTypeRemove) => {
         setLocalPost(prev => {
             const newReactions = { ...prev.reactions };
@@ -51,15 +54,23 @@ const PostCard = ({ post }) => {
     return (
         <div className="bg-white rounded-lg shadow border border-gray-200 mb-4">
 
-            <PostCardHeader author={localPost.author} timestamp={localPost.timestamp} />
+            <PostCardHeader
+                author={localPost.author}
+                timestamp={localPost.timestamp}
+            />
 
-            <PostContent content={localPost.content} media={localPost.media} />
+            <PostContent
+                content={localPost.content}
+                media={localPost.media}
+            />
 
             <EngagementMetrics
                 reactions={localPost.reactions}
                 comments={localPost.comments}
                 reposts={localPost.reposts}
+                setShowLikes={setShowLikes}
                 setShowComments={setShowComments}
+                setShowrReposts={setShowReposts}
             />
 
             <div className="grid grid-cols-4 gap-0 px-4 py-1 border-t border-gray-200">
@@ -89,7 +100,7 @@ const PostCard = ({ post }) => {
                 postId={post.id}
                 onAddComment={handleAddComment}
             />}
-            
+
         </div>
     );
 };
