@@ -1,9 +1,10 @@
 import { useState, useEffect, useRef } from 'react';
-import { Avatar } from '@mui/material';
-import PublicIcon from '@mui/icons-material/Public';
+
 import MoreHorizIcon from '@mui/icons-material/MoreHoriz';
 import CloseIcon from '@mui/icons-material/Close';
-import { formatDistanceToNow } from 'date-fns';
+
+import ActorHeader from '../../../../GenericComponents/ActorHeader';
+
 const FeedPostCardHeader = ({ author, timestamp }) => {
 
     const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -29,49 +30,10 @@ const FeedPostCardHeader = ({ author, timestamp }) => {
     }, []);
 
     return (
-        <div className="relative"> {/* Added wrapper div */}
-            {/* Author Info Container - Takes full width */}
-            <div className="flex items-start gap-2 w-full pr-16 pl-3 pt-3 mb-2"> {/* Added padding for buttons */}
-                {/* Avatar */}
-                <a className="hover:underline flex-shrink-0">
-                    <Avatar
-                        src={author.avatar}
-                        sx={{
-                            width: 48,
-                            height: 48,
-                            borderRadius: '50%'
-                        }}
-                    />
-                </a>
+        <div className="relative">
+            
+            <ActorHeader author={author} timestamp={timestamp} />
 
-                {/* Author Content - Takes remaining space */}
-                <div className="flex-1 min-w-0"> {/* Added min-w-0 for proper truncation */}
-                    <a className="hover:underline block">
-                        <h3 className="font-medium text-gray-900 text-sm leading-tight truncate">
-                            {author.name}
-                        </h3>
-                        <p className="text-xs text-gray-500 mt-px truncate">
-                            {author.title}
-                        </p>
-                    </a>
-
-                    {/* Timestamp */}
-                    <div className="flex items-center gap-1 mt-0.5">
-                        <span className="text-xs text-gray-500">
-                            {formatDistanceToNow(new Date(timestamp))} •
-                        </span>
-                        <PublicIcon
-                            sx={{
-                                fontSize: '14px',
-                                verticalAlign: 'text-top'
-                            }}
-                            className="text-gray-500"
-                        />
-                    </div>
-                </div>
-            </div>
-
-            {/* Action Buttons - Absolutely positioned */}
             <div className="absolute right-3 top-1" ref={menuRef}>
                 <div className="flex items-center gap-1">
                     <button

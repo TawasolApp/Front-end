@@ -6,14 +6,12 @@ const FeedPosts = () => {
     const mockPost = [
         {
             id: 1,
-            isRepost: false,
-            repostAuthor: "", // only if isRepost is true
             author: {
                 name: "John Doe",
                 title: "Software Engineer at Tech Corp",
                 avatar: "https://example.com/avatar.jpg"
             },
-            content: "This is a sample post content...",
+            content: "This is a sample posndddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd",
             reactions: {
                 like: 44,
                 celebrate: 45,
@@ -33,7 +31,7 @@ const FeedPosts = () => {
             comments: 45,
             reposts: 12,
             shares: 8,
-            timestamp: "2023-07-20T12:00:00",
+            timestamp: "2025-03-17T12:00:00",
             showComments: false // manage this with state
         }
     ]

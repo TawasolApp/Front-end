@@ -4,10 +4,10 @@ import ChatBubbleOutlineIcon from '@mui/icons-material/ChatBubbleOutline';
 import RepeatIcon from '@mui/icons-material/Repeat';
 import SendIcon from '@mui/icons-material/Send';
 
-import FeedPostCardHeader from './Header/FeedPostCardHeader';
+import PostCardHeader from './Header/PostCardHeader';
+import PostContent from './Content/PostContent';
 import EngagementMetrics from './Metrices/EngagementMetrics';
 import LikeButton from './Activities/LikeButton';
-import MediaDisplay from './Content/MediaDisplay';
 import CommentsContainer from './Comments/CommentsContainer';
 
 const PostCard = ({ post }) => {
@@ -50,23 +50,10 @@ const PostCard = ({ post }) => {
 
     return (
         <div className="bg-white rounded-lg shadow border border-gray-200 mb-4">
-            {localPost.isRepost && (
-                <div className="flex items-center text-xs text-gray-500 mb-2 px-4 pt-2">
-                    <RepeatIcon className="w-4 h-4 mr-1" />
-                    <span>{localPost.repostAuthor} reposted</span>
-                </div>
-            )}
 
-            <FeedPostCardHeader author={localPost.author} timestamp={localPost.timestamp} />
+            <PostCardHeader author={localPost.author} timestamp={localPost.timestamp} />
 
-            {localPost.content && (
-                <p className="text-gray-800 px-4 pb-2">{localPost.content}</p>
-            )}
-
-
-            {post.media && post.media.length > 0 && (
-                <MediaDisplay media={post.media} />
-            )}
+            <PostContent content={localPost.content} />
 
             <EngagementMetrics
                 reactions={localPost.reactions}
@@ -103,7 +90,6 @@ const PostCard = ({ post }) => {
                 onAddComment={handleAddComment}
             />}
             
-
         </div>
     );
 };
