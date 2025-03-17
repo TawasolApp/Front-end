@@ -1,4 +1,4 @@
-import FeedPostCard from './FeedPostCard';
+import PostCard from './PostCard/PostCard';
 
 const FeedPosts = () => {
 
@@ -43,13 +43,15 @@ const FeedPosts = () => {
         id: index + 1 // Ensure each post has a unique ID
     }));
 
-
     return (
-        <div className="space-y-4 w-full">
-            {mockPosts.map((post) => (
-                <FeedPostCard key={post.id} post={post} />
-            ))}
-        </div>
+        <>
+            <div className="space-y-4 w-full">
+                {mockPosts.map((post) => (
+                    <PostCard key={post.id} post={post} />
+                ))}
+            </div>
+        </>
+        
     );
 };
 

@@ -3,6 +3,7 @@ import PermMediaIcon from '@mui/icons-material/PermMedia';
 import Avatar from '@mui/material/Avatar';
 
 const SharePost = () => {
+    
     const [isModalOpen, setIsModalOpen] = useState(false);
 
     return (

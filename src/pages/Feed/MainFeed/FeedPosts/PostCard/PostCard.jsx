@@ -1,14 +1,16 @@
 import { useState } from 'react';
+
 import ChatBubbleOutlineIcon from '@mui/icons-material/ChatBubbleOutline';
 import RepeatIcon from '@mui/icons-material/Repeat';
 import SendIcon from '@mui/icons-material/Send';
-import FeedPostCardHeader from './FeedPostCardHeader';
-import EngagementMetrics from './EngagementMetrics';
-import LikeButton from './LikeButton';
-import MediaDisplay from './MediaDisplay';
-import CommentsContainer from './CommentsContainer';
 
-const FeedPostCard = ({ post }) => {
+import FeedPostCardHeader from './Header/FeedPostCardHeader';
+import EngagementMetrics from './Metrices/EngagementMetrics';
+import LikeButton from './Activities/LikeButton';
+import MediaDisplay from './Content/MediaDisplay';
+import CommentsContainer from './Comments/CommentsContainer';
+
+const PostCard = ({ post }) => {
 
     const [localPost, setLocalPost] = useState(post);
     const [showComments, setShowComments] = useState(false);
@@ -106,4 +108,4 @@ const FeedPostCard = ({ post }) => {
     );
 };
 
-export default FeedPostCard;
+export default PostCard;
