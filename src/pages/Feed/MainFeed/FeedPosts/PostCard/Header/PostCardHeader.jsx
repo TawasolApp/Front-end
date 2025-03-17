@@ -27,7 +27,10 @@ const PostCardHeader = ({ author, timestamp }) => {
 
     return (
         <div className="relative">
-          <ActorHeader author={author} timestamp={timestamp} />
+          <div className="pr-16 pl-3 pt-3 mb-2">
+            <ActorHeader author={author} timestamp={timestamp} />
+          </div>
+          
     
           <div className="absolute right-3 top-1">
             <div className="flex items-center gap-1">

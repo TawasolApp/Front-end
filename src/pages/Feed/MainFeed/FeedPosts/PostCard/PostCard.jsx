@@ -30,20 +30,10 @@ const PostCard = ({ post }) => {
         });
     };
 
-    const handleAddComment = (text) => {
-        const newComment = {
-            author: {
-                name: "Current User", // Replace with actual user data
-                title: "Your Title",
-                avatar: "https://example.com/avatar.jpg"
-            },
-            text: text,
-            timestamp: new Date().toISOString()
-        };
-
+    const rerenderCommentsNumber = () => {
         setLocalPost(prev => ({
             ...prev,
-            comments: [...prev.comments, newComment]
+            comments: prev.comments + 1
         }));
     };
 
@@ -76,7 +66,7 @@ const PostCard = ({ post }) => {
 
             {showComments && <CommentsContainer
                 postId={post.id}
-                onAddComment={handleAddComment}
+                rerender={rerenderCommentsNumber}
             />}
 
         </div>

@@ -2,17 +2,21 @@ import { Avatar } from '@mui/material';
 import PublicIcon from '@mui/icons-material/Public';
 import { formatDistanceToNow } from 'date-fns';
 
-const ActorHeader = ({ author, timestamp }) => {
+const ActorHeader = ({
+    author,
+    timestamp,
+    iconSize=48,
+}) => {
 
     return (
-        <div className="flex items-start gap-2 w-full pr-16 pl-3 pt-3 mb-2">
+        <div className={`flex items-start gap-2 w-full`}>
 
             <a className="hover:underline flex-shrink-0">
                 <Avatar
                     src={author.avatar}
                     sx={{
-                        width: 48,
-                        height: 48,
+                        width: iconSize,
+                        height: iconSize,
                         borderRadius: '50%'
                     }}
                 />
