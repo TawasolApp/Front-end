@@ -1,55 +1,77 @@
-import { Avatar } from '@mui/material';
+import { useState } from 'react';
+import FlagIcon from '@mui/icons-material/Flag';
 import MoreHorizIcon from '@mui/icons-material/MoreHoriz';
 import ReactionPicker from '../../../../GenericComponents/ReactionPicker';
 import DropdownMenu from '../../../../GenericComponents/DropdownMenu';
+import ActorHeader from '../../../../GenericComponents/ActorHeader';
+import ActivitiesHolder from './ActivitiesHolder';
 
 const Reply = ({ reply }) => {
+
+
+  const [localReply, setLocalReply] = useState(reply);
+
+  const menuItems = [
+    {
+      text: 'Report post',
+      onClick: () => console.log('Reported post'),
+      icon: FlagIcon
+    },
+  ];
+
+  const handleReaction = (reactionTypeAdd, reactionTypeRemove) => {
+    setLocalReply(prev => {
+        const newReactions = { ...prev.reactions };
+
+        if (reactionTypeAdd) {
+            newReactions[reactionTypeAdd] += 1;
+        }
+        if (reactionTypeRemove) {
+            newReactions[reactionTypeRemove] -= 1;
+        }
+
+        return { ...prev, reactions: newReactions };
+    });
+  };
+
+
   return (
-    <div className="flex items-start gap-2 py-2">
-      <Avatar 
-        src={reply.author?.avatar}
-        sx={{ width: 24, height: 24 }}
-      />
-      <div className="flex-1">
-        <div className="flex items-baseline gap-2">
-          <span className="text-xs font-semibold">
-            {reply.author?.name}
-          </span>
+    <div className="items-start">
+      <div className="flex">
+        <div>
+          <ActorHeader author={reply.author} iconSize={32} />
+        </div>
+
+        <div className="ml-auto flex items-center gap-2">
           <span className="text-xs text-gray-500">
             {new Date(reply.timestamp).toLocaleDateString('en-US', {
               month: 'short',
               day: 'numeric'
             })}
           </span>
-          
-          <div className="ml-auto">
-            <DropdownMenu
-              trigger={
-                <button className="text-gray-500 hover:bg-gray-100 rounded-full p-1">
-                  <MoreHorizIcon fontSize="small" />
-                </button>
-              }
-              position="right-0"
-            >
-              <button className="px-4 py-2 text-sm hover:bg-gray-100 w-full text-left">
-                Report
-              </button>
-            </DropdownMenu>
-          </div>
-        </div>
-        
-        <p className="text-sm text-gray-800 mt-0.5">{reply.text}</p>
-        
-        <div className="mt-1">
-          <ReactionPicker onSelectReaction={(type) => console.log('Reply reaction:', type)}>
-            <button className="text-xs text-gray-500 hover:text-blue-600">
-              Like
+          <DropdownMenu menuItems={menuItems} position="right-0">
+            <button className="text-gray-500 hover:bg-gray-100 rounded-full p-1">
+              <MoreHorizIcon className="w-5 h-5" />
             </button>
-          </ReactionPicker>
+          </DropdownMenu>
         </div>
+      </div>
+
+      {/* Comment Text */}
+      <p className="text-sm text-gray-800 mt-1">{reply.text}</p>
+
+      {/* Actions Row */}
+      <div className="flex items-center gap-2 mt-1">
+        <ActivitiesHolder
+          reactions={localReply.reactions}
+          onReactionChange={handleReaction}
+        />
+        <span className="text-gray-300">·</span>
+        <button className="text-xs text-gray-500 hover:text-blue-600 px-2 py-1 -mx-2 rounded-sm">
+          Reply
+        </button>
       </div>
     </div>
   );
 };
-
 export default Reply;

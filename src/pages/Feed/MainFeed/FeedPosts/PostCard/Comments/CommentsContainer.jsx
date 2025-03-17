@@ -99,7 +99,6 @@ const CommentsContainer = ({ postId, rerender }) => {
                 try {
                     setLoading(true);
                     // Simulated API call
-                    await new Promise(resolve => setTimeout(resolve, 1000));
                     setComments(mockComments);
                 } catch (err) {
                     setError(err.message);

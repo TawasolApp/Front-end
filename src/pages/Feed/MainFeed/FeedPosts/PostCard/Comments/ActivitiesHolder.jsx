@@ -83,22 +83,25 @@ const ActivitiesHolder = ({
             </div>
 
             {/* Reply Button */}
-            <span className="text-gray-300 px-1">|</span>
-            <button
-                className="text-xs text-gray-500 hover:text-blue-600 py-1 rounded-md"
-                onClick={() => setShowReplies(true)}
-            >
-                Reply
-            </button>
-
-            {/* Replies Section */}
-            {replies > 0 && (
+            {replies && (
                 <>
-                    <span className="text-gray-300 px-1">•</span>
-                    <span className="text-xs text-gray-500 py-1 rounded-md">{replies} {replies === 1 ? 'reply' : 'replies'}</span>
+                    <span className="text-gray-300 px-1">|</span>
+                    <button
+                        className="text-xs text-gray-500 hover:text-blue-600 py-1 rounded-md"
+                        onClick={() => setShowReplies(true)}
+                    >
+                        Reply
+                    </button>
+                    {/* Replies Section */}
+                    {replies > 0 && (
+                        <>
+                            <span className="text-gray-300 px-1">•</span>
+                            <span className="text-xs text-gray-500 py-1 rounded-md">{replies} {replies === 1 ? 'reply' : 'replies'}</span>
+                        </>
+                    )}
                 </>
             )}
-
+            
         </div>
     );
 }

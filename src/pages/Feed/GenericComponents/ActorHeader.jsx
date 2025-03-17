@@ -22,7 +22,7 @@ const ActorHeader = ({
                 />
             </a>
 
-            <div className="flex-1 min-w-0">
+            <div className={`flex-1 min-w-0 max-w-${iconSize}`}>
 
                 <a className="hover:underline block">
                     <h3 className="font-medium text-gray-900 text-sm leading-tight truncate">

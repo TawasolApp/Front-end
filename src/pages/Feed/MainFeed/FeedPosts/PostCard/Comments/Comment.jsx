@@ -4,7 +4,7 @@ import FlagIcon from '@mui/icons-material/Flag';
 import ActorHeader from '../../../../GenericComponents/ActorHeader';
 import DropdownMenu from '../../../../GenericComponents/DropdownMenu';
 import ActivitiesHolder from './ActivitiesHolder';
-
+import Reply from './Reply';
 
 const Comment = ({ comment }) => {
 
@@ -82,7 +82,20 @@ const Comment = ({ comment }) => {
         />
       </div>
 
+      {/* Replies Part */}
+      {showReplies && localComment.replies?.length > 0 && (
+        <div className="ml-6 border-l-2 border-gray-100 pl-4">
+          {localComment.replies.map((reply, index) => (
+            <Reply 
+              key={reply.id || index}
+              reply={reply}
+              isLast={index === localComment.replies.length - 1}
+            />
+          ))}
+        </div>
+      )}
       
+
     </article>
   );
 };
