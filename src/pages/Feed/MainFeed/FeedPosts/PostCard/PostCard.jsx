@@ -1,13 +1,9 @@
 import { useState } from 'react';
 
-import ChatBubbleOutlineIcon from '@mui/icons-material/ChatBubbleOutline';
-import RepeatIcon from '@mui/icons-material/Repeat';
-import SendIcon from '@mui/icons-material/Send';
-
 import PostCardHeader from './Header/PostCardHeader';
 import PostContent from './Content/PostContent';
 import EngagementMetrics from './Metrics/EngagementMetrics';
-import LikeButton from './Activities/LikeButton';
+import ActivitiesHolder from './Activities/ActivitiesHolder';
 import CommentsContainer from './Comments/CommentsContainer';
 
 const PostCard = ({ post }) => {
@@ -73,28 +69,10 @@ const PostCard = ({ post }) => {
                 setShowrReposts={setShowReposts}
             />
 
-            <div className="grid grid-cols-4 gap-0 px-4 py-1 border-t border-gray-200">
-                <LikeButton onChange={handleReaction} />
-
-                <button
-                    className="flex items-center justify-center gap-1 hover:bg-gray-100 p-2 rounded"
-                    onClick={() => setShowComments(true)}
-                >
-                    <ChatBubbleOutlineIcon className="w-5 h-5 text-gray-500" />
-                    <span className="text-sm text-gray-500">Comment</span>
-                </button>
-
-                <button className="flex items-center justify-center gap-1 hover:bg-gray-100 p-2 rounded">
-                    <RepeatIcon className="w-5 h-5 text-gray-500" />
-                    <span className="text-sm text-gray-500">Repost</span>
-                </button>
-
-                <button className="flex items-center justify-center gap-1 hover:bg-gray-100 p-2 rounded">
-                    <SendIcon className="w-5 h-5 text-gray-500" />
-                    <span className="text-sm text-gray-500">Send</span>
-                </button>
-            </div>
-
+            <ActivitiesHolder
+                onChange={handleReaction}
+                setShowComments={setShowComments}
+            />
 
             {showComments && <CommentsContainer
                 postId={post.id}
