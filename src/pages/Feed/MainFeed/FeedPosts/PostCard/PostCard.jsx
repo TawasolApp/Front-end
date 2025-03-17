@@ -53,7 +53,7 @@ const PostCard = ({ post }) => {
 
             <PostCardHeader author={localPost.author} timestamp={localPost.timestamp} />
 
-            <PostContent content={localPost.content} />
+            <PostContent content={localPost.content} media={localPost.media} />
 
             <EngagementMetrics
                 reactions={localPost.reactions}
