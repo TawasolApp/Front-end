@@ -5,11 +5,13 @@ import ActorHeader from '../../../../GenericComponents/ActorHeader';
 import DropdownMenu from '../../../../GenericComponents/DropdownMenu';
 import ActivitiesHolder from './ActivitiesHolder';
 import Reply from './Reply';
+import AddComment from './AddComment';
 
 const Comment = ({ comment }) => {
 
   const [localComment, setLocalComment] = useState(comment);
   const [showReplies, setShowReplies] = useState(false);
+  const [showReply, setShowReply] = useState(false);
 
   const handleReaction = (reactionTypeAdd, reactionTypeRemove) => {
     setLocalComment(prev => {
@@ -33,6 +35,10 @@ const Comment = ({ comment }) => {
       icon: FlagIcon
     },
   ];
+
+  const onAddComment = (text) => {
+    console.log(text)  
+  }
 
   return (
     <article>
@@ -86,12 +92,17 @@ const Comment = ({ comment }) => {
       {showReplies && localComment.replies?.length > 0 && (
         <div className="ml-6 border-l-2 border-gray-100 pl-4">
           {localComment.replies.map((reply, index) => (
-            <Reply 
-              key={reply.id || index}
-              reply={reply}
-              isLast={index === localComment.replies.length - 1}
-            />
+            <div
+              onClick={() => setShowReply(true)}
+            >
+              <Reply
+                key={reply.id || index}
+                reply={reply}
+                isLast={index === localComment.replies.length - 1}
+              />
+            </div>
           ))}
+          {showReply && <AddComment onAddComment={onAddComment}/>}
         </div>
       )}
       
