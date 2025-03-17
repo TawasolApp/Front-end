@@ -37,7 +37,7 @@ const Comment = ({ comment }) => {
   ];
 
   const onAddComment = (text) => {
-    console.log(text)  
+    
   }
 
   return (

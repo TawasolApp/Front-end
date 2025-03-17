@@ -19,6 +19,17 @@ server.use(bodyParser);
 //   res.jsonp(serializedUsers);
 // });
 
+server.get("/posts", (req, res) => {
+  console.log('called');
+  let posts = _router.db.get("posts").value();
+  console.log(posts);
+  res.jsonp(posts);
+})
+
+server.post('/posts', (req, res) => {
+  console.log('called');
+})
+
 server.use(_router);
 
 server.listen(5000, () => {

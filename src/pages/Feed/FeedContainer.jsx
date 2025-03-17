@@ -3,6 +3,7 @@ import MainFeed from './MainFeed/MainFeed';
 import RightSideBar from './RightSideBar/RightSideBar';
 
 const FeedContainer = () => {
+
     return (
         <div className="flex justify-center min-h-screen bg-[#f4f2ee] gap-0 p-4">
             {/* Left Sidebar - Strict width */}

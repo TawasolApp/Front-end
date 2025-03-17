@@ -1,9 +1,9 @@
 import { useState, useEffect } from 'react';
 import SharePost from './SharePost/SharePost';
 import FeedPosts from './FeedPosts/FeedPosts';
+import { axiosInstance } from '../../../apis/axios';
 
 const MainFeed = () => {
-
 
     // TODO: change this to redux states
     const currentAuthorId = 1;
@@ -12,55 +12,59 @@ const MainFeed = () => {
     const currentAuthorBio = "Software Engineer at Tech Corp";
     const currentAuthorType = "User";
 
-    // Mock posts data
-    const mockPost = [
-        {
-            id: 1,
-            authorName: "John Doe",
-            authorPicture: "https://example.com/avatar.jpg",
-            authorBio: "Software Engineer at Tech Corp",
-            content: "This is a sample posndddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd",
-            reactions: {
-                like: 44,
-                celebrate: 45,
-                support: 2,
-                love: 0,
-                insightful: 0,
-                funny: 0
-            },
-            media: [
-                "https://media.licdn.com/dms/image/v2/D4D22AQH6CSh3GG5jkw/feedshare-shrink_800/B4DZU4IgaRHAAk-/0/1740403517920?e=1744848000&v=beta&t=UW7Kb9WEfPpx0Y4eJdt77JYn_3XWCLeRUgACRpSEaNA",
-                "https://media.licdn.com/dms/image/v2/D4D22AQGHs1zv53L1sg/feedshare-shrink_800/B4DZU4IgbPG8Ag-/0/1740403528207?e=1744848000&v=beta&t=gIUravC11fdyr1BXT-lk8YbZBz3XoqML7RmWWJUQ8xs",
-                "https://media.licdn.com/dms/image/v2/D4D22AQH3uBt2uncklg/feedshare-shrink_800/B4DZU4IgbRHAAg-/0/1740403522423?e=1744848000&v=beta&t=m2BDQOq_lTFtGWVmYHVlw8KP_16Ut_fDMRs1RTGa7mQ",
-                "https://media.licdn.com/dms/image/v2/D4D22AQFTFRxCX1N-ew/feedshare-shrink_2048_1536/B4DZU4IgbZHIAo-/0/1740403525710?e=1744848000&v=beta&t=GIclj6fm_PKEOgk9JgrDtOMwBf1JDRd5MFAeqoW-uh8",
-                "https://media.licdn.com/dms/image/v2/D4D22AQFTFRxCX1N-ew/feedshare-shrink_2048_1536/B4DZU4IgbZHIAo-/0/1740403525710?e=1744848000&v=beta&t=GIclj6fm_PKEOgk9JgrDtOMwBf1JDRd5MFAeqoW-uh8",
-                "https://media.licdn.com/dms/image/v2/D4D22AQFTFRxCX1N-ew/feedshare-shrink_2048_1536/B4DZU4IgbZHIAo-/0/1740403525710?e=1744848000&v=beta&t=GIclj6fm_PKEOgk9JgrDtOMwBf1JDRd5MFAeqoW-uh8",
-            ],
-            comments: 12,
-            reposts: 15,
-            timestamp: "2025-03-17T12:00:00",
-            showComments: false // manage this with state
-        }
-    ]
-
-    const mockPosts = Array(10).fill(null).map((_, index) => ({
-        ...mockPost[0],
-        id: index + 1 // Ensure each post has a unique ID
-    }));
-
-    const [posts, setPosts] = useState({});
+    const [posts, setPosts] = useState([]);
 
     useEffect(() => {
-        const fetchPosts = () => {
-            // TODO: implement fetch posts API here
-            setPosts(mockPosts);
+        const fetchPosts = async () => {
+            try {
+                const response = await axiosInstance.get('posts');
+                setPosts(response.data);
+            } catch (e) {
+                console.log(e.message)
+                setPosts([]);
+            }
         }
         fetchPosts();
     }, []);
 
-    const sharePost = (text, visiblity) => {
-        // TODO: implement API and update the posts here
-        console.log(text, visiblity)
+    const sharePost = (text, visibility, type) => {
+
+        const newPost = {
+            content: text,
+            media: [],
+            taggedUsers: [],
+            visibility: visibility,
+            authorType: type
+        }
+
+        const newPostUI = {
+            ...newPost,
+            id: "42131",
+            authorId: currentAuthorId,
+            authorName: currentAuthorName,
+            authorBio: currentAuthorBio,
+            authorPicture: currentAuthorPicture,
+            reactions: {
+                like: 0,
+                celebrate: 0,
+                support: 0,
+                love: 0,
+                insightful: 0,
+                funny: 0,
+            },
+            comments: 0,
+            replies: 0,
+            isLiked: false,
+            timestamp: new Date(),
+        }
+
+        try {
+            axiosInstance.post('posts', newPost);
+            const allPosts = [newPostUI, ...posts];
+            setPosts(allPosts);
+        } catch (e) {
+            console.log(`Error: ${err.message}`);
+        }
     }
 
     return (

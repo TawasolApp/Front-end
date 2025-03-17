@@ -10,7 +10,7 @@ const SharePost = ({ sharePost }) => {
     // TODO: change this to redux states
     const currentAuthorId = 1;
     const currentAuthorName = "John Doe";
-    const currentAuthorPicture = "https://example.com/avatar.jpg";
+    const currentAuthorPicture = "https://media.licdn.com/dms/image/v2/D4D03AQH7Ais8BxRXzw/profile-displayphoto-shrink_100_100/profile-displayphoto-shrink_100_100/0/1721080103981?e=1747872000&v=beta&t=nDnZdgCqkI8v5B2ymXZzluMZVlF6h_o-dN1pA95Fzv4";
     const currentAuthorBio = "Software Engineer at Tech Corp";
     const currentAuthorType = "User";
 
@@ -131,7 +131,7 @@ const SharePost = ({ sharePost }) => {
                                     <button
                                         className="px-4 py-2 bg-blue-600 text-white rounded-full hover:bg-blue-700 disabled:opacity-50"
                                         onClick={() => {
-                                            sharePost(text, visibilityType);
+                                            sharePost(text, visibilityType, currentAuthorType);
                                             setIsModalOpen(false);
                                             setText('');
                                         }}

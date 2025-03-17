@@ -14,12 +14,10 @@ const PostCard = ({ post }) => {
     const [showLikes, setShowLikes] = useState(false);
     const [showComments, setShowComments] = useState(false);
     const [showReposts, setShowReposts] = useState(false);
-    
+
     const handleReaction = (reactionTypeAdd, reactionTypeRemove) => {
         setLocalPost(prev => {
             const newReactions = { ...prev.reactions };
-            console.log(newReactions);
-
             if (reactionTypeAdd) {
                 newReactions[reactionTypeAdd] += 1;
             }

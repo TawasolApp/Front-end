@@ -1,6 +1,91 @@
 {
   "users": [
-    { "id": "1", "username": "Khalid", "password": "1234" },
-    { "id": "2", "username": "Ali", "password": "1234" }
+    {
+      "id": "1",
+      "username": "Khalid",
+      "password": "1234"
+    },
+    {
+      "id": "2",
+      "username": "Ali",
+      "password": "1234"
+    }
+  ],
+  "posts": [
+    {
+      "id": "1",
+      "authorId": "mohsobh",
+      "authorName": "Mohamed Sobh",
+      "authorPicture": "https://media.licdn.com/dms/image/v2/D4D03AQH7Ais8BxRXzw/profile-displayphoto-shrink_100_100/profile-displayphoto-shrink_100_100/0/1721080103981?e=1747872000&v=beta&t=nDnZdgCqkI8v5B2ymXZzluMZVlF6h_o-dN1pA95Fzv4",
+      "authorBio": "Computer Engineering Student at Cairo University",
+      "content": "During my recent spring break trip to Spain 🇪🇸, I encountered an unexpected reminder of why robust coding practices matter — all thanks to a game of Mahjong Solitaire on the in-flight entertainment system (IFE). The system, still running Android 4.X, (apparent due to the Android Skin of the UI) crashed with an SDL Assertion Error. ",
+      "media": [],
+      "reactions": {
+        "love": 50,
+        "celebrate": 40,
+        "insightful": 1,
+        "funny": 43,
+        "support": 0,
+        "like": 0
+      },
+      "comments": 3,
+      "shares": 1,
+      "taggedUsers": [],
+      "visibility": "Public",
+      "authorType": "User",
+      "isLiked": false,
+      "repostDetails": {},
+      "timestamp": "2025-03-17T23:15:11.484Z"
+    },
+    {
+      "id": "2",
+      "authorId": "mohsobh",
+      "authorName": "Mohamed Sobh",
+      "authorPicture": "https://media.licdn.com/dms/image/v2/D4D03AQH7Ais8BxRXzw/profile-displayphoto-shrink_100_100/profile-displayphoto-shrink_100_100/0/1721080103981?e=1747872000&v=beta&t=nDnZdgCqkI8v5B2ymXZzluMZVlF6h_o-dN1pA95Fzv4",
+      "authorBio": "Computer Engineering Student at Cairo University",
+      "content": "During my recent spring break trip to Spain 🇪🇸, I encountered an unexpected reminder of why robust coding practices matter — all thanks to a game of Mahjong Solitaire on the in-flight entertainment system (IFE). The system, still running Android 4.X, (apparent due to the Android Skin of the UI) crashed with an SDL Assertion Error. ",
+      "media": [],
+      "reactions": {
+        "love": 50,
+        "celebrate": 40,
+        "insightful": 1,
+        "funny": 43,
+        "support": 0,
+        "like": 0
+      },
+      "comments": 3,
+      "shares": 1,
+      "taggedUsers": [],
+      "visibility": "Public",
+      "authorType": "User",
+      "isLiked": false,
+      "repostDetails": {},
+      "timestamp": "2025-03-17T23:15:11.484Z"
+    },
+    {
+      "id": "3",
+      "authorId": "mohsobh",
+      "authorName": "Mohamed Sobh",
+      "authorPicture": "https://media.licdn.com/dms/image/v2/D4D03AQH7Ais8BxRXzw/profile-displayphoto-shrink_100_100/profile-displayphoto-shrink_100_100/0/1721080103981?e=1747872000&v=beta&t=nDnZdgCqkI8v5B2ymXZzluMZVlF6h_o-dN1pA95Fzv4",
+      "authorBio": "Computer Engineering Student at Cairo University",
+      "content": "During my recent spring break trip to Spain 🇪🇸, I encountered an unexpected reminder of why robust coding practices matter — all thanks to a game of Mahjong Solitaire on the in-flight entertainment system (IFE). The system, still running Android 4.X, (apparent due to the Android Skin of the UI) crashed with an SDL Assertion Error. ",
+      "media": [],
+      "reactions": {
+        "love": 50,
+        "celebrate": 40,
+        "insightful": 1,
+        "funny": 43,
+        "support": 0,
+        "like": 0
+      },
+      "comments": 3,
+      "shares": 1,
+      "taggedUsers": [],
+      "visibility": "Public",
+      "authorType": "User",
+      "isLiked": false,
+      "repostDetails": {},
+      "timestamp": "2025-03-17T23:15:11.484Z"
+    }
   ]
 }
