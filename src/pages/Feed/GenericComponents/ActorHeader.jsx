@@ -1,5 +1,6 @@
 import { Avatar } from '@mui/material';
 import PublicIcon from '@mui/icons-material/Public';
+import PeopleIcon from '@mui/icons-material/People';
 import { formatDistanceToNow } from 'date-fns';
 
 const ActorHeader = ({
@@ -7,6 +8,7 @@ const ActorHeader = ({
     authorBio,
     authorPicture,
     timestamp,
+    visibility,
     iconSize=48,
 }) => {
 
@@ -40,13 +42,24 @@ const ActorHeader = ({
                     <span className="text-xs text-gray-500">
                         {formatDistanceToNow(new Date(timestamp))} •
                     </span>
-                    <PublicIcon
-                        sx={{
-                            fontSize: '14px',
-                            verticalAlign: 'text-top'
-                        }}
-                        className="text-gray-500"
-                    />
+                    {visibility === "Public" ? (
+                        <PublicIcon
+                            sx={{
+                                fontSize: '14px',
+                                verticalAlign: 'text-top'
+                            }}
+                            className="text-gray-500"
+                        />
+                    ) : (
+                        <PeopleIcon
+                            sx={{
+                                fontSize: '14px',
+                                verticalAlign: 'text-top'
+                            }}
+                            className="text-gray-500"
+                        />
+                    )}
+                    
                 </div>
                 )}
                 

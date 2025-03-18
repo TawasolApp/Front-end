@@ -44,6 +44,7 @@ const PostCard = ({ post }) => {
                 authorBio={localPost.authorBio}
                 authorPicture={localPost.authorPicture}
                 timestamp={localPost.timestamp}
+                visibility={localPost.visibility}
             />
 
             <PostContent

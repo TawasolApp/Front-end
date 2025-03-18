@@ -12,7 +12,8 @@ const PostCardHeader = ({
     authorName,
     authorBio,
     authorPicture,
-    timestamp
+    timestamp,
+    visibility
   }) => {
 
     const [isCloseVisible, setIsCloseVisible] = useState(false);
@@ -33,7 +34,13 @@ const PostCardHeader = ({
     return (
         <div className="relative">
           <div className="pr-16 pl-3 pt-3 mb-2">
-            <ActorHeader authorName={authorName} authorPicture={authorPicture} authorBio={authorBio} timestamp={timestamp} />
+            <ActorHeader
+              authorName={authorName}
+              authorPicture={authorPicture}
+              authorBio={authorBio}
+              timestamp={timestamp}
+              visibility={visibility}
+            />
           </div>
 
           <div className="absolute right-3 top-1">
