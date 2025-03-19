@@ -1,14 +1,16 @@
 import "./App.css";
 import { axiosInstance as axios } from "../apis/axios";
 import { getIconComponent } from "../utils";
-import Companypage from "../pages/CompanyPage/CompanyPage";
+import SignUpPage from "../pages/AuthenticationPage/SignUpPage";
+import SignInPage from "../pages/AuthenticationPage/SignInPage";
+import NamePage from "../pages/AuthenticationPage/NamePage";
 
 function App() {
   const InIcon = getIconComponent("in-black");
   return (
     <span>
       <div>
-        <Companypage />
+        <NamePage />
       </div>
     </span>
   );
