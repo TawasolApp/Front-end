@@ -1,9 +1,9 @@
 import "./App.css";
 import { axiosInstance as axios } from "../apis/axios";
 import { getIconComponent } from "../utils";
-import SignUpPage from "../pages/AuthenticationPage/SignUpPage";
-import SignInPage from "../pages/AuthenticationPage/SignInPage";
-import NamePage from "../pages/AuthenticationPage/NamePage";
+import SignUpPage from "../pages/AuthenticationPages/SignUpPage";
+import SignInPage from "../pages/AuthenticationPages/SignInPage";
+import NamePage from "../pages/AuthenticationPages/NamePage";
 
 function App() {
   const InIcon = getIconComponent("in-black");
