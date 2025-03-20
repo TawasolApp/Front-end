@@ -11,4 +11,9 @@ export default defineConfig({
       },
     }),
   ],
+  server: {
+    allowedHosts: ['tawasolapp.me', 'www.tawasolapp.me'],
+    host: '0.0.0.0',
+    port: 5173
+  }
 });
