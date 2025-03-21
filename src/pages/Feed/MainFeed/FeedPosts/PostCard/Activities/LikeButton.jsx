@@ -8,14 +8,14 @@ const LikeButton = ({ onChange }) => {
 
     const handleReaction = (reactionType) => {
         if (currentReaction === null) {
+            setCurrentReaction(reactionType);
             onChange(reactionType, null);
-            setCurrentReaction(reactionType);
         } else if (currentReaction === reactionType) {
-            onChange(null, reactionType);
             setCurrentReaction(null);
+            onChange(null, reactionType);
         } else {
-            onChange(reactionType, currentReaction);
             setCurrentReaction(reactionType);
+            onChange(reactionType, currentReaction);
         }
     };
 

@@ -65,6 +65,7 @@ const ActivitiesHolder = ({
 
                 {totalLikes > 0 && (
                     <div className="flex items-center gap-1">
+                        <span>.</span>
                         <div className="flex items-center -space-x-1">
                             {topReactions.map(([reactionType]) => {
                                 const { Icon, color } = reactionIcons[reactionType];
@@ -82,23 +83,20 @@ const ActivitiesHolder = ({
                 )}
             </div>
 
+
+            <span className="text-gray-300 px-1">|</span>
+            <button
+                className="text-xs text-gray-500 hover:text-blue-600 py-1 rounded-md"
+                onClick={() => setShowReplies(true)}
+            >
+                Reply
+            </button>
+
             {/* Reply Button */}
-            {replies && (
+            {replies > 0 && (
                 <>
-                    <span className="text-gray-300 px-1">|</span>
-                    <button
-                        className="text-xs text-gray-500 hover:text-blue-600 py-1 rounded-md"
-                        onClick={() => setShowReplies(true)}
-                    >
-                        Reply
-                    </button>
-                    {/* Replies Section */}
-                    {replies > 0 && (
-                        <>
-                            <span className="text-gray-300 px-1">•</span>
-                            <span className="text-xs text-gray-500 py-1 rounded-md">{replies} {replies === 1 ? 'reply' : 'replies'}</span>
-                        </>
-                    )}
+                    <span className="text-gray-300 px-1">•</span>
+                    <span className="text-xs text-gray-500 py-1 rounded-md">{replies} {replies === 1 ? 'reply' : 'replies'}</span>
                 </>
             )}
             

@@ -89,7 +89,7 @@ const Comment = ({ comment }) => {
       </div>
 
       {/* Replies Part */}
-      {showReplies && localComment.replies?.length > 0 && (
+      {showReplies && localComment.replies.length > 0 && (
         <div className="ml-6 border-l-2 border-gray-100 pl-4">
           {localComment.replies.map((reply, index) => (
             <div

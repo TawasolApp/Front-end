@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import { CircularProgress } from '@mui/material';
 import AddComment from './AddComment';
 import Comment from './Comment';
+import { axiosInstance } from '../../../../../../apis/axios';
 
 const CommentsContainer = ({ postId, rerender }) => {
 
@@ -9,85 +10,14 @@ const CommentsContainer = ({ postId, rerender }) => {
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState(null);
     
-    const mockComments = [
-        {
-            id: "1",
-            postId: postId,
-            authorName: "John Doe",
-            authorBio: "Software Engineer",
-            authorPicture: "https://example.com/avatar.jpg",
-            content: "Sample comment text",
-            replies: [
-                {
-                    authorId: "user1",
-                    authorName: "John Doe",
-                    authorBio: "Software Engineer",
-                    authorPicture: "https://example.com/avatar.jpg",
-                    text: "hello world",
-                    reactions: {
-                        like: 44,
-                        celebrate: 45,
-                        support: 2,
-                        love: 0,
-                        insightful: 0,
-                        funny: 0
-                    },
-                    timestamp: new Date().toISOString(),
-                },
-                {
-                    authorId: "user1",
-                    authorName: "John Doe",
-                    authorBio: "Software Engineer",
-                    authorPicture: "https://example.com/avatar.jpg",
-                    text: "hello world",
-                    reactions: {
-                        like: 44,
-                        celebrate: 45,
-                        support: 2,
-                        love: 0,
-                        insightful: 0,
-                        funny: 0
-                    },
-                    timestamp: new Date().toISOString(),
-                },
-                {
-                    authorId: "user1",
-                    authorName: "John Doe",
-                    authorBio: "Software Engineer",
-                    authorPicture: "https://example.com/avatar.jpg",
-                    text: "hello world",
-                    reactions: {
-                        like: 44,
-                        celebrate: 45,
-                        support: 2,
-                        love: 0,
-                        insightful: 0,
-                        funny: 0
-                    },
-                    timestamp: new Date().toISOString(),
-                }
-
-            ],
-            reactions: {
-                like: 44,
-                celebrate: 45,
-                support: 2,
-                love: 0,
-                insightful: 0,
-                funny: 0
-              },
-            timestamp: new Date().toISOString(),
-            taggedUsers: []
-        }
-    ];
 
     useEffect(() => {
         if (postId) {
             const fetchComments = async () => {
                 try {
                     setLoading(true);
-                    // Simulated API call
-                    setComments(mockComments);
+                    const response = await axiosInstance.get('comments');
+                    setComments(response.data);
                 } catch (err) {
                     setError(err.message);
                 } finally {
@@ -115,7 +45,7 @@ const CommentsContainer = ({ postId, rerender }) => {
             <AddComment onAddComment={onAddComment} />
             {error && <div className="text-red-500 p-4">{error}</div>}
             {loading && <div className="p-4 flex justify-center"><CircularProgress size={20} /></div>}
-            {!error && !loading && comments.map(comment => (
+            {!error && !loading && comments && comments.length > 0 && comments.map(comment => (
                 <Comment key={comment.id} comment={comment} />
             ))}
         </>

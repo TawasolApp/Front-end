@@ -7,6 +7,8 @@ import ActivitiesHolder from './Activities/ActivitiesHolder';
 import CommentsContainer from './Comments/CommentsContainer';
 import ReactionsModal from '../ReactionModal/ReactionsModal';
 
+import { axiosInstance } from '../../../../../apis/axios';
+
 const PostCard = ({ post }) => {
 
     const [localPost, setLocalPost] = useState(post);
@@ -16,17 +18,18 @@ const PostCard = ({ post }) => {
     const [showReposts, setShowReposts] = useState(false);
 
     const handleReaction = (reactionTypeAdd, reactionTypeRemove) => {
-        setLocalPost(prev => {
-            const newReactions = { ...prev.reactions };
-            if (reactionTypeAdd) {
-                newReactions[reactionTypeAdd] += 1;
-            }
-            if (reactionTypeRemove) {
-                newReactions[reactionTypeRemove] -= 1;
-            }
-
-            return { ...prev, reactions: newReactions };
-        });
+        try {
+            // TODO: Check with Mohab about the request body
+            // axiosInstance.post(`posts/${localPost.id}/react`);
+            setLocalPost(prev => {
+                const newReactions = { ...prev.reactions };
+                if (reactionTypeAdd) newReactions[reactionTypeAdd] += 1;
+                if (reactionTypeRemove) newReactions[reactionTypeRemove] -= 1;
+                return { ...prev, reactions: newReactions };
+            });
+        } catch (e) {
+            console.log(`ERROR: ${e.message}`);
+        }
     };
 
     const rerenderCommentsNumber = () => {
@@ -58,7 +61,7 @@ const PostCard = ({ post }) => {
                 reposts={localPost.reposts}
                 setShowLikes={setShowLikes}
                 setShowComments={setShowComments}
-                setShowrReposts={setShowReposts}
+                setShowReposts={setShowReposts}
             />
 
             <ActivitiesHolder

@@ -1,7 +1,14 @@
 import { useMemo } from 'react';
 import reactionIcons from '../../../../GenericComponents/reactionIcons';
 
-const EngagementMetrics = ({ reactions, comments, reposts, setShowLikes, setShowComments, setShowReposts }) => {
+const EngagementMetrics = ({
+    reactions,
+    comments,
+    reposts,
+    setShowLikes,
+    setShowComments,
+    setShowReposts
+}) => {
 
     const topReactions = useMemo(() => {
         return Object.entries(reactions)

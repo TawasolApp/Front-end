@@ -21,13 +21,20 @@ server.use(bodyParser);
 
 server.get("/posts", (req, res) => {
   console.log('called');
-  let posts = _router.db.get("posts").value();
+  const posts = _router.db.get("posts").value();
   console.log(posts);
   res.jsonp(posts);
 })
 
 server.post('/posts', (req, res) => {
   console.log('called');
+})
+
+server.get("/comments", (req, res) => {
+  console.log("called comments");
+  const comments = _router.db.get("comments").value();
+  console.log(comments);
+  res.jsonp(comments);
 })
 
 server.use(_router);
