@@ -1,7 +1,9 @@
 import pkg from "json-server";
 const { create, router, defaults, bodyParser } = pkg;
 const server = create();
-const _router = router("src/mocks/db.json");
+const _router = router(
+  "C:/Users/ASUS/Desktop/sw project/Front-end/src/mocks/db.json"
+);
 const middlewares = defaults();
 
 server.use(middlewares);

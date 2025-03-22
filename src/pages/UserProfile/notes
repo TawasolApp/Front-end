@@ -1,0 +1,7 @@
+tc from owner and viewer beiw enty bthotehm as componen fa kol el hyttktb feh hyth fel header fa lw el problem deh gat odam dont forget just exptract styling in owener and viewer and put in header by chechking on the isowner
+image and the pen are not adjusted and not correctly responsive
+do mock data for unis and companies
+do for eg arraay for user an map on it ,, each user has list of educations EACH education has info about the user like date , and major, , department and so on
+problems
+
+1. about , corner case if 3 lines exactly will appear (see more) even no text to be seen
