@@ -20,7 +20,9 @@ server.use(bodyParser);
 // });
 
 server.get("/posts", (req, res) => {
-  console.log('called');
+
+  console.log("Request URL:", req.url);        // Should show `/posts?page=1`
+  console.log("Query Parameters:", req.query);
   const posts = _router.db.get("posts").value();
   console.log(posts);
   res.jsonp(posts);
