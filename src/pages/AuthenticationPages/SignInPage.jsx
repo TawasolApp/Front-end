@@ -14,7 +14,7 @@ const SignInPage = () => {
       </div>
       <p className="mt-6 text-center text-gray-600 text-xl">
         New to Tawasol?{" "}
-        <a href="/signup" className="text-blue-600 hover:underline">
+        <a href="/signup" className="text-blue-600 font-semibold hover:underline">
           Join now
         </a>
       </p>

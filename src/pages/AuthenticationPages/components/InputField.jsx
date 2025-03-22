@@ -14,10 +14,13 @@ const InputField = ({
   onTogglePasswordVisibility,
   showPassword,
   error,
+  labelClassName = '',
+  inputClassName = '',
+  containerClassName = '',
 }) => {
   return (
-    <div className="mb-6">
-      <label className="block text-gray-700 text-xl font-semibold mb-2" htmlFor={id}>
+    <div className={`mb-6 ${containerClassName}`}>
+      <label className={`block text-gray-700 text-xl font-semibold mb-2 ${labelClassName}`} htmlFor={id}>
         {labelText}
       </label>
       <div className="relative">
@@ -28,7 +31,7 @@ const InputField = ({
           value={value}
           onChange={onChange}
           onBlur={onBlur}
-          className={`w-full px-4 py-3 border-2 border-gray-300 rounded-lg hover:border-black hover:bg-stone-100 focus:outline-none focus:border-black text-xl cursor-pointer ${error && '!border-red-500'}`}
+          className={`w-full px-4 py-3 border-2 border-gray-300 rounded-lg hover:border-black hover:bg-stone-100 focus:outline-none focus:border-black text-xl cursor-pointer ${inputClassName} ${error && '!border-red-500'}`}
           placeholder={placeholder}
           required={required}
         />
@@ -42,7 +45,7 @@ const InputField = ({
           </button>
         )}
       </div>
-      {error && <p className="text-red-500 text-sm mt-2">{error}</p>}
+      {error && <p className="text-red-500 text-lg mt-2">{error}</p>}
     </div>
   );
 };
