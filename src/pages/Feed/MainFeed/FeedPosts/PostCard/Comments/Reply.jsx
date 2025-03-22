@@ -4,6 +4,7 @@ import MoreHorizIcon from '@mui/icons-material/MoreHoriz';
 import DropdownMenu from '../../../../GenericComponents/DropdownMenu';
 import ActorHeader from '../../../../GenericComponents/ActorHeader';
 import ActivitiesHolder from './ActivitiesHolder';
+import { formatDate } from '../../../../../../utils';
 
 const Reply = ({ reply }) => {
 
@@ -37,16 +38,18 @@ const Reply = ({ reply }) => {
   return (
     <div className="items-start px-4 pt-1">
       <div className="flex">
-        <div>
-          <ActorHeader authorName={reply.authorName} authorBio={reply.authorBio} authorPicture={reply.authorPicture} iconSize={32} />
-        </div>
+        
+        <ActorHeader
+          authorId={authorId}
+          authorName={reply.authorName}
+          authorBio={reply.authorBio}
+          authorPicture={reply.authorPicture}
+          iconSize={32}
+        />
 
         <div className="ml-auto flex items-center gap-2">
           <span className="text-xs text-gray-500">
-            {new Date(reply.timestamp).toLocaleDateString('en-US', {
-              month: 'short',
-              day: 'numeric'
-            })}
+            {formatDate(reply.timestamp)}
           </span>
           <DropdownMenu menuItems={menuItems} position="right-0">
             <button className="text-gray-500 hover:bg-gray-100 rounded-full p-1">

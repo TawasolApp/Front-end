@@ -4,11 +4,11 @@ const CommentButton = ({ setShowComments }) => {
 
     return (
         <button
-            className="flex items-center justify-center gap-1 hover:bg-gray-100 p-2 rounded"
+            className="p-2 flex items-center justify-center gap-1 hover:bg-gray-100 hover:transition-all duration-200 group"
             onClick={() => setShowComments(true)}
         >
-            <ChatBubbleOutlineIcon className="w-5 h-5 text-gray-500" />
-            <span className="text-sm text-gray-500">Comment</span>
+            <ChatBubbleOutlineIcon sx={{ fontSize: 16 }} className="text-gray-700 group-hover:text-black" />
+            <span className="text-sm font-semibold text-gray-700 group-hover:text-black">Comment</span>
         </button>
     );
 };

@@ -1,5 +1,5 @@
 // mockReactions.js
-const reactionTypes = ['like', 'celebrate', 'support', 'love', 'insightful', 'funny'];
+const reactionTypes = ['Like', 'Celebrate', 'Support', 'Love', 'Insightful', 'Funny'];
 const sampleAuthors = [
   {
     id: 'user_001',

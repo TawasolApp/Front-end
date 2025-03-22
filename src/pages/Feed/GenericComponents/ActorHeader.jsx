@@ -1,9 +1,11 @@
 import { Avatar } from '@mui/material';
 import PublicIcon from '@mui/icons-material/Public';
 import PeopleIcon from '@mui/icons-material/People';
-import { formatDistanceToNow } from 'date-fns';
+import { formatDate } from '../../../utils';
+import { Link } from 'react-router-dom';
 
 const ActorHeader = ({
+    authorId,
     authorName,
     authorBio,
     authorPicture,
@@ -15,7 +17,7 @@ const ActorHeader = ({
     return (
         <div className={`flex items-start gap-2 w-full`}>
 
-            <a className="hover:underline flex-shrink-0">
+            <Link to={`/in/${authorId}`}>
                 <Avatar
                     src={authorPicture}
                     sx={{
@@ -24,23 +26,22 @@ const ActorHeader = ({
                         borderRadius: '50%'
                     }}
                 />
-            </a>
+            </Link>
 
             <div className={`flex-1 min-w-0 max-w-${iconSize}`}>
-
-                <a className="hover:underline block">
-                    <h3 className="font-medium text-gray-900 text-sm leading-tight truncate">
+                <Link to={`/in/${authorId}`}>
+                    <h3 className="font-medium text-gray-900 text-sm leading-tight truncate hover:text-blue-700 hover:underline">
                         {authorName}
                     </h3>
                     <p className="text-xs text-gray-500 mt-px truncate">
                         {authorBio}
                     </p>
-                </a>
+                </Link>
 
                 {timestamp && (
                     <div className="flex items-center gap-1 mt-0.5">
                     <span className="text-xs text-gray-500">
-                        {formatDistanceToNow(new Date(timestamp))} •
+                        {formatDate(timestamp)} •
                     </span>
                     {visibility === "Public" ? (
                         <PublicIcon

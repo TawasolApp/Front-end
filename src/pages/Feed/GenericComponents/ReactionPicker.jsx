@@ -1,8 +1,12 @@
 import { useState, useEffect, useRef } from 'react';
 import reactionIcons from './reactionIcons';
 
-const ReactionPicker = ({ onSelectReaction, children }) => {
+const ReactionPicker = ({
+    onSelectReaction,
+    children
+}) => {
     const [showPicker, setShowPicker] = useState(false);
+    const [hoveredIcon, setHoveredIcon] = useState(null);
     const timeoutRef = useRef(null);
     const containerRef = useRef(null);
 
@@ -15,8 +19,9 @@ const ReactionPicker = ({ onSelectReaction, children }) => {
         timeoutRef.current = setTimeout(() => {
             if (!containerRef.current?.matches(':hover')) {
                 setShowPicker(false);
+                setHoveredIcon(null);
             }
-        }, 500);
+        }, 300);
     };
 
     const handleReactionSelect = (reactionType) => {
@@ -24,8 +29,20 @@ const ReactionPicker = ({ onSelectReaction, children }) => {
         setShowPicker(false);
     };
 
+    const handleIconHover = (reactionType) => {
+        setHoveredIcon(reactionType);
+    };
+
+    const handleIconLeave = () => {
+        setHoveredIcon(null);
+    };
+
     useEffect(() => {
-        return () => clearTimeout(timeoutRef.current);
+        return () => {
+            setShowPicker(false);
+            setHoveredIcon(null);
+            clearTimeout(timeoutRef.current);
+        }
     }, []);
 
     return (
@@ -38,30 +55,46 @@ const ReactionPicker = ({ onSelectReaction, children }) => {
             {children}
 
             {showPicker && (
-                <div className="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 flex gap-2 bg-white rounded-full shadow-lg p-2 border border-gray-200 z-10">
-                    {Object.entries(reactionIcons).map(([reactionType, { Icon, color, label }]) => (
-                        <div
-                            key={reactionType}
-                            className="relative group/icon"
-                        >
-                            <div className="absolute -top-9 left-1/2 -translate-x-1/2 opacity-0 group-hover/icon:opacity-100 transition-opacity duration-200 pointer-events-none">
-                                <div className="bg-gray-800 text-white text-xs px-2 py-1 rounded whitespace-nowrap">
-                                    {label}
-                                    <div className="absolute bottom-0 left-1/2 -translate-x-1/2 w-2 h-2 bg-gray-800 rotate-45 -mb-1"></div>
-                                </div>
-                            </div>
-
-                            <button
-                                className="transform transition-transform duration-200 origin-bottom hover:scale-150 hover:-translate-y-2"
-                                onClick={() => handleReactionSelect(reactionType)}
+                <div className={`absolute h-16 bottom-full left-1/2 -translate-x-1/2 mb-2 flex items-center bg-white rounded-full shadow-lg px-2 border border-gray-200 z-10 transition-all duration-300 ${hoveredIcon ? 'scale-90' : ''}`}>
+                    {Object.entries(reactionIcons).map(([reactionType, { Icon, color, label }], index, array) => {
+                        const isHovered = hoveredIcon === reactionType;
+                        
+                        let pushClass = '';
+                        if (hoveredIcon) {
+                            const hoveredIndex = array.findIndex(([type]) => type === hoveredIcon);
+                            if (index < hoveredIndex) {
+                                pushClass = '-translate-x-4';
+                            } else if (index > hoveredIndex) {
+                                pushClass = 'translate-x-4';
+                            }
+                        }
+                        
+                        return (
+                            <div
+                                key={reactionType}
+                                className={`relative transition-all duration-300 ${pushClass}`}
+                                onMouseEnter={() => handleIconHover(reactionType)}
+                                onMouseLeave={handleIconLeave}
                             >
-                                <Icon
-                                    style={{ color }}
-                                    className="w-6 h-6 transition-all duration-200"
-                                />
-                            </button>
-                        </div>
-                    ))}
+                                <div 
+                                    className={`absolute bottom-full mb-4 left-1/2 -translate-x-1/2 transition-all pointer-events-none 
+                                    ${isHovered ? 'opacity-100 scale-100' : 'opacity-0 scale-75'}`}
+                                >
+                                    <div className="bg-gray-800 text-white text-xs px-2 py-1 rounded whitespace-nowrap">
+                                        {label}
+                                        <div className="absolute bottom-0 left-1/2 -translate-x-1/2 w-2 h-2 bg-gray-800 rotate-45 -mb-1"></div>
+                                    </div>
+                                </div>
+
+                                <button
+                                    className={`my-2 py-2 transform transition-all duration-200 origin-bottom ${isHovered ? 'scale-150 -translate-y-2' : ''}`}
+                                    onClick={() => handleReactionSelect(reactionType)}
+                                >
+                                    <Icon className={`w-12 h-12 transition-all duration-200`} />
+                                </button>
+                            </div>
+                        );
+                    })}
                 </div>
             )}
         </div>

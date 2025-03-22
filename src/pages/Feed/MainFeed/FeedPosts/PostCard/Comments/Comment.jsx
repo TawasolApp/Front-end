@@ -1,19 +1,33 @@
 import { useState } from 'react';
 import MoreHorizIcon from '@mui/icons-material/MoreHoriz';
 import FlagIcon from '@mui/icons-material/Flag';
+import EditIcon from '@mui/icons-material/Edit';
+import DeleteIcon from '@mui/icons-material/Delete';
+
 import ActorHeader from '../../../../GenericComponents/ActorHeader';
 import DropdownMenu from '../../../../GenericComponents/DropdownMenu';
 import ActivitiesHolder from './ActivitiesHolder';
-import Reply from './Reply';
-import AddComment from './AddComment';
+import CommentThreadWrapper from './CommentThreadWrapper';
+import ReactionsModal from '../../ReactionModal/ReactionsModal';
+import { formatDate } from '../../../../../../utils';
 
-const Comment = ({ comment }) => {
+const Comment = ({
+  comment,
+  handleDeleteComment
+}) => {
+
+  // TODO: change this to redux states
+  const currentAuthorId = "mohsobh";
+  const currentAuthorName = "Mohamed Sobh";
+  const currentAuthorPicture = "https://media.licdn.com/dms/image/v2/D4D03AQH7Ais8BxRXzw/profile-displayphoto-shrink_100_100/profile-displayphoto-shrink_100_100/0/1721080103981?e=1747872000&v=beta&t=nDnZdgCqkI8v5B2ymXZzluMZVlF6h_o-dN1pA95Fzv4";
+  const currentAuthorBio = "Computer Engineering Student at Cairo University";
+  const currentAuthorType = "User";
 
   const [localComment, setLocalComment] = useState(comment);
-  const [showReplies, setShowReplies] = useState(false);
-  const [showReply, setShowReply] = useState(false);
+  const [showReactions, setShowReactions] = useState(false);
 
   const handleReaction = (reactionTypeAdd, reactionTypeRemove) => {
+    // TODO: API
     setLocalComment(prev => {
         const newReactions = { ...prev.reactions };
 
@@ -28,33 +42,40 @@ const Comment = ({ comment }) => {
     });
   };
 
-  const menuItems = [
+  let menuItems = [
     {
       text: 'Report post',
       onClick: () => console.log('Reported post'),
       icon: FlagIcon
     },
   ];
-
-  const onAddComment = (text) => {
-    
+  
+  if (localComment.authorId === currentAuthorId) {
+    menuItems.push({
+      text: 'Edit comment',
+      onClick: () => console.log('edit comment'),
+      icon: EditIcon
+    });
+    menuItems.push({
+      text: 'Delete comment',
+      onClick: () => handleDeleteComment(localComment.id),
+      icon: DeleteIcon
+    });
   }
 
   return (
     <article>
-
-      {/* Header Part */}
       <div className="flex px-4 pt-1 pb-2">
-        <div>
-          <ActorHeader authorName={localComment.authorName} authorBio={localComment.authorBio} authorPicture={localComment.authorPicture} iconSize={32} />
-        </div>
-
+        <ActorHeader
+          authorId={localComment.authorId}
+          authorName={localComment.authorName}
+          authorBio={localComment.authorBio}
+          authorPicture={localComment.authorPicture}
+          iconSize={32}
+        />
         <div className="ml-auto flex items-center gap-2">
           <span className="text-xs text-gray-500">
-            {new Date(localComment.timestamp).toLocaleDateString('en-US', {
-              month: 'short',
-              day: 'numeric'
-            })}
+            {formatDate(localComment.timestamp)}
           </span>
           <DropdownMenu menuItems={menuItems} position="right-0">
             <button className="text-gray-500 hover:bg-gray-100 rounded-full p-1">
@@ -63,49 +84,27 @@ const Comment = ({ comment }) => {
           </DropdownMenu>
         </div>
       </div>
-
-      {/* Content Part */}
-      <div className="px-4">
-        {/* First div - handles padding and thread line */}
-
-        {/* Second div - content with left padding */}
-        <div>
-          {/* Your content goes here */}
-          <p>{localComment.content}</p>
+      <CommentThreadWrapper>
+        <div className="pl-2">
+          <p className="text-sm font-normal">{localComment.content}</p>
         </div>
-      </div>
-
-      {/* Activities and Metrics Part */}
-      <div className="px-4">
-        {/* First div - handles padding and thread line */}
-        
-        {/* Second div - Actual holder */}
-        <ActivitiesHolder
-          reactions={localComment.reactions}
-          onReactionChange={handleReaction}
-          replies={localComment.replies.length}
-          setShowReplies={setShowReplies}
+      </CommentThreadWrapper>
+      <CommentThreadWrapper>
+        <div className="pl-1 pt-2">
+          <ActivitiesHolder
+            reactions={localComment.reactions}
+            onReactionChange={handleReaction}
+            setShowReactions={() => {console.log("Hello"); setShowReactions(true)}}
+            replies={localComment.replies.length}
+          />
+        </div>
+      </CommentThreadWrapper>
+      {showReactions && (
+        <ReactionsModal
+            APIURL={`/posts/reactions/${localComment.postId}/${localComment.id}`}
+            setShowLikes={() => setShowReactions(false)}
         />
-      </div>
-
-      {/* Replies Part */}
-      {showReplies && localComment.replies.length > 0 && (
-        <div className="ml-6 border-l-2 border-gray-100 pl-4">
-          {localComment.replies.map((reply, index) => (
-            <div
-              onClick={() => setShowReply(true)}
-            >
-              <Reply
-                key={reply.id || index}
-                reply={reply}
-                isLast={index === localComment.replies.length - 1}
-              />
-            </div>
-          ))}
-          {showReply && <AddComment onAddComment={onAddComment}/>}
-        </div>
       )}
-      
 
     </article>
   );

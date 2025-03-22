@@ -2,6 +2,7 @@
   "posts": [
     {
       "id": "1",
+      "isSaved": true,
       "authorId": "mohsobh",
       "authorName": "Mohamed Sobh",
       "authorPicture": "https://media.licdn.com/dms/image/v2/D4D03AQH7Ais8BxRXzw/profile-displayphoto-shrink_100_100/profile-displayphoto-shrink_100_100/0/1721080103981?e=1747872000&v=beta&t=nDnZdgCqkI8v5B2ymXZzluMZVlF6h_o-dN1pA95Fzv4",
@@ -9,168 +10,334 @@
       "content": "During my recent spring break trip to Spain 🇪🇸, I encountered an unexpected reminder of why robust coding practices matter — all thanks to a game of Mahjong Solitaire on the in-flight entertainment system (IFE). The system, still running Android 4.X, (apparent due to the Android Skin of the UI) crashed with an SDL Assertion Error.XSADSADNSAKJDASJKDHNASJDHNSJK ",
       "media": [],
       "reactions": {
-        "love": 50,
-        "celebrate": 40,
-        "insightful": 1,
-        "funny": 43,
-        "support": 0,
-        "like": 0
+        "Love": 50,
+        "Celebrate": 40,
+        "Insightful": 1,
+        "Funny": 43,
+        "Support": 0,
+        "Like": 0
       },
       "comments": 2,
       "shares": 1,
       "taggedUsers": [],
       "visibility": "Public",
       "authorType": "User",
-      "isLiked": false,
+      "reactType": "Love",
       "repostDetails": {},
       "timestamp": "2025-03-17T23:15:11.484Z"
     },
     {
       "id": "2",
-      "authorId": "mohsobh",
-      "authorName": "Mohamed Sobh",
-      "authorPicture": "https://media.licdn.com/dms/image/v2/D4D03AQH7Ais8BxRXzw/profile-displayphoto-shrink_100_100/profile-displayphoto-shrink_100_100/0/1721080103981?e=1747872000&v=beta&t=nDnZdgCqkI8v5B2ymXZzluMZVlF6h_o-dN1pA95Fzv4",
-      "authorBio": "Computer Engineering Student at Cairo University",
-      "content": "During my recent spring break trip to Spain 🇪🇸, I encountered an unexpected reminder of why robust coding practices matter — all thanks to a game of Mahjong Solitaire on the in-flight entertainment system (IFE). The system, still running Android 4.X, (apparent due to the Android Skin of the UI) crashed with an SDL Assertion Error.XSADSADNSAKJDASJKDHNASJDHNSJK ",
-      "media": [],
+      "isSaved": false,
+      "authorId": "fahmed",
+      "authorName": "Fatma Ahmed",
+      "authorPicture": "https://media.licdn.com/dms/image/D4D03AQFLMs/image.jpg",
+      "authorBio": "Software Engineer | AI Enthusiast",
+      "content": "Excited to share my latest project! Built a weather app using React and OpenWeather API. 🌤️",
+      "media": [
+        "https://example.com/weather-app-screenshot.png"
+      ],
       "reactions": {
-        "love": 50,
-        "celebrate": 40,
-        "insightful": 1,
-        "funny": 43,
-        "support": 0,
-        "like": 0
+        "Love": 20,
+        "Celebrate": 30,
+        "Insightful": 5,
+        "Funny": 0,
+        "Support": 15,
+        "Like": 10
       },
-      "comments": 2,
-      "shares": 1,
-      "taggedUsers": [],
+      "comments": 1,
+      "shares": 3,
+      "taggedUsers": [
+        "ahassan",
+        "ksalem"
+      ],
       "visibility": "Public",
       "authorType": "User",
-      "isLiked": false,
+      "reactType": null,
       "repostDetails": {},
-      "timestamp": "2025-03-17T23:15:11.484Z"
+      "timestamp": "2025-03-18T09:45:00.000Z"
     },
     {
       "id": "3",
-      "authorId": "mohsobh",
-      "authorName": "Mohamed Sobh",
-      "authorPicture": "https://media.licdn.com/dms/image/v2/D4D03AQH7Ais8BxRXzw/profile-displayphoto-shrink_100_100/profile-displayphoto-shrink_100_100/0/1721080103981?e=1747872000&v=beta&t=nDnZdgCqkI8v5B2ymXZzluMZVlF6h_o-dN1pA95Fzv4",
-      "authorBio": "Computer Engineering Student at Cairo University",
-      "content": "During my recent spring break trip to Spain 🇪🇸, I encountered an unexpected reminder of why robust coding practices matter — all thanks to a game of Mahjong Solitaire on the in-flight entertainment system (IFE). The system, still running Android 4.X, (apparent due to the Android Skin of the UI) crashed with an SDL Assertion Error.XSADSADNSAKJDASJKDHNASJDHNSJK ",
+      "isSaved": false,
+      "authorId": "osalem",
+      "authorName": "Omar Salem",
+      "authorPicture": "https://media.licdn.com/dms/image/D4D03AQFRJ2/image.jpg",
+      "authorBio": "Cybersecurity Analyst | Speaker",
+      "content": "Did you know? Password length is far more important than complexity! Try a 16-character passphrase for better security. 🔐",
       "media": [],
       "reactions": {
-        "love": 50,
-        "celebrate": 40,
-        "insightful": 1,
-        "funny": 43,
-        "support": 0,
-        "like": 0
+        "Love": 15,
+        "Celebrate": 25,
+        "Insightful": 40,
+        "Funny": 2,
+        "Support": 5,
+        "Like": 30
       },
-      "comments": 2,
-      "shares": 1,
+      "comments": 1,
+      "shares": 5,
       "taggedUsers": [],
       "visibility": "Public",
       "authorType": "User",
-      "isLiked": false,
+      "reactType": null,
       "repostDetails": {},
-      "timestamp": "2025-03-17T23:15:11.484Z"
+      "timestamp": "2025-03-19T14:32:21.000Z"
     },
     {
       "id": "4",
-      "authorId": "mohsobh",
-      "authorName": "Mohamed Sobh",
-      "authorPicture": "https://media.licdn.com/dms/image/v2/D4D03AQH7Ais8BxRXzw/profile-displayphoto-shrink_100_100/profile-displayphoto-shrink_100_100/0/1721080103981?e=1747872000&v=beta&t=nDnZdgCqkI8v5B2ymXZzluMZVlF6h_o-dN1pA95Fzv4",
-      "authorBio": "Computer Engineering Student at Cairo University",
-      "content": "During my recent spring break trip to Spain 🇪🇸, I encountered an unexpected reminder of why robust coding practices matter — all thanks to a game of Mahjong Solitaire on the in-flight entertainment system (IFE). The system, still running Android 4.X, (apparent due to the Android Skin of the UI) crashed with an SDL Assertion Error.XSADSADNSAKJDASJKDHNASJDHNSJK ",
-      "media": [],
+      "isSaved": true,
+      "authorId": "ahassan",
+      "authorName": "Ahmed Hassan",
+      "authorPicture": "https://media.licdn.com/dms/image/D4D03AQFLJS/image.jpg",
+      "authorBio": "Data Scientist | Python Guru",
+      "content": "I just released a new Python library for faster data visualization. 🚀 Check it out on GitHub!",
+      "media": [
+        "https://example.com/python-lib-github.png"
+      ],
       "reactions": {
-        "love": 50,
-        "celebrate": 40,
-        "insightful": 1,
-        "funny": 43,
-        "support": 0,
-        "like": 0
+        "Love": 60,
+        "Celebrate": 20,
+        "Insightful": 18,
+        "Funny": 0,
+        "Support": 10,
+        "Like": 25
       },
-      "comments": 2,
-      "shares": 1,
+      "comments": 1,
+      "shares": 12,
       "taggedUsers": [],
       "visibility": "Public",
       "authorType": "User",
-      "isLiked": false,
+      "reactType": null,
       "repostDetails": {},
-      "timestamp": "2025-03-17T23:15:11.484Z"
+      "timestamp": "2025-03-20T12:15:43.000Z"
     },
     {
       "id": "5",
-      "authorId": "mohsobh",
-      "authorName": "Mohamed Sobh",
-      "authorPicture": "https://media.licdn.com/dms/image/v2/D4D03AQH7Ais8BxRXzw/profile-displayphoto-shrink_100_100/profile-displayphoto-shrink_100_100/0/1721080103981?e=1747872000&v=beta&t=nDnZdgCqkI8v5B2ymXZzluMZVlF6h_o-dN1pA95Fzv4",
-      "authorBio": "Computer Engineering Student at Cairo University",
-      "content": "During my recent spring break trip to Spain 🇪🇸, I encountered an unexpected reminder of why robust coding practices matter — all thanks to a game of Mahjong Solitaire on the in-flight entertainment system (IFE). The system, still running Android 4.X, (apparent due to the Android Skin of the UI) crashed with an SDL Assertion Error.XSADSADNSAKJDASJKDHNASJDHNSJK ",
-      "media": [],
+      "isSaved": false,
+      "authorId": "ksalem",
+      "authorName": "Khalid Salem",
+      "authorPicture": "https://media.licdn.com/dms/image/D4D03AQFSSS/image.jpg",
+      "authorBio": "Cloud Engineer | AWS Certified",
+      "content": "Migrated an entire infrastructure to AWS in just two weeks! 🎯 Here's what I learned...",
+      "media": [
+        "https://example.com/aws-migration-tips.png"
+      ],
       "reactions": {
-        "love": 50,
-        "celebrate": 40,
-        "insightful": 1,
-        "funny": 43,
-        "support": 0,
-        "like": 0
+        "Love": 40,
+        "Celebrate": 30,
+        "Insightful": 20,
+        "Funny": 5,
+        "Support": 8,
+        "Like": 35
       },
-      "comments": 2,
-      "shares": 1,
-      "taggedUsers": [],
-      "visibility": "Public",
+      "comments": 1,
+      "shares": 8,
+      "taggedUsers": [
+        "fahmed"
+      ],
+      "visibility": "Connections",
       "authorType": "User",
-      "isLiked": false,
+      "reactType": null,
       "repostDetails": {},
-      "timestamp": "2025-03-17T23:15:11.484Z"
+      "timestamp": "2025-03-20T18:00:00.000Z"
     },
     {
       "id": "6",
-      "authorId": "mohsobh",
-      "authorName": "Mohamed Sobh",
-      "authorPicture": "https://media.licdn.com/dms/image/v2/D4D03AQH7Ais8BxRXzw/profile-displayphoto-shrink_100_100/profile-displayphoto-shrink_100_100/0/1721080103981?e=1747872000&v=beta&t=nDnZdgCqkI8v5B2ymXZzluMZVlF6h_o-dN1pA95Fzv4",
-      "authorBio": "Computer Engineering Student at Cairo University",
-      "content": "During my recent spring break trip to Spain 🇪🇸, I encountered an unexpected reminder of why robust coding practices matter — all thanks to a game of Mahjong Solitaire on the in-flight entertainment system (IFE). The system, still running Android 4.X, (apparent due to the Android Skin of the UI) crashed with an SDL Assertion Error.XSADSADNSAKJDASJKDHNASJDHNSJK ",
-      "media": [],
+      "isSaved": false,
+      "authorId": "nasr",
+      "authorName": "Nour Nasr",
+      "authorPicture": "https://media.licdn.com/dms/image/D4D03AQFAAA/image.jpg",
+      "authorBio": "UX/UI Designer | Freelancer",
+      "content": "Redesigned a fintech dashboard for improved usability. 💻 Here's the before and after:",
+      "media": [
+        "https://example.com/fintech-dashboard.png"
+      ],
       "reactions": {
-        "love": 50,
-        "celebrate": 40,
-        "insightful": 1,
-        "funny": 43,
-        "support": 0,
-        "like": 0
+        "Love": 50,
+        "Celebrate": 40,
+        "Insightful": 12,
+        "Funny": 1,
+        "Support": 7,
+        "Like": 60
       },
-      "comments": 2,
-      "shares": 1,
-      "taggedUsers": [],
+      "comments": 1,
+      "shares": 6,
+      "taggedUsers": [
+        "ahassan"
+      ],
       "visibility": "Public",
       "authorType": "User",
       "isLiked": false,
       "repostDetails": {},
-      "timestamp": "2025-03-17T23:15:11.484Z"
+      "timestamp": "2025-03-21T10:20:00.000Z"
+    },
+    {
+      "id": "7",
+      "isSaved": false,
+      "authorId": "yasser",
+      "authorName": "Yasser Tarek",
+      "authorPicture": "https://media.licdn.com/dms/image/D4D03AQFAAB/image.jpg",
+      "authorBio": "DevOps Engineer | Kubernetes Specialist",
+      "content": "Struggled with Kubernetes pods failing unexpectedly? 🐳 Here's a quick troubleshooting guide.",
+      "media": [],
+      "reactions": {
+        "Love": 25,
+        "Celebrate": 15,
+        "Insightful": 40,
+        "Funny": 0,
+        "Support": 12,
+        "Like": 30
+      },
+      "comments": 0,
+      "shares": 7,
+      "taggedUsers": [],
+      "visibility": "Connections",
+      "authorType": "User",
+      "reactType": null,
+      "repostDetails": {},
+      "timestamp": "2025-03-21T16:45:00.000Z"
     }
   ],
-
   "comments": [
     {
       "id": "1",
+      "postId": "2",
+      "authorId": "ahassan",
+      "authorName": "Ahmed Hassan",
+      "authorPicture": "https://media.licdn.com/dms/image/D4D03AQFLJS/image.jpg",
+      "authorBio": "Data Scientist | Python Guru",
+      "content": "Great work on the weather app! Have you considered adding hourly forecasts? 🌦️",
+      "replies": [
+        "hello hello",
+        "damn"
+      ],
+      "reactions": {
+        "Love": 15,
+        "Celebrate": 5,
+        "Insightful": 2,
+        "Funny": 0,
+        "Support": 1,
+        "Like": 10
+      },
+      "timestamp": "2025-03-18T10:00:00.000Z"
+    },
+    {
+      "id": "2",
+      "postId": "3",
+      "authorId": "nasr",
+      "authorName": "Nour Nasr",
+      "authorPicture": "https://media.licdn.com/dms/image/D4D03AQFAAA/image.jpg",
+      "authorBio": "UX/UI Designer | Freelancer",
+      "content": "Interesting point! I usually recommend passphrases made of random yet memorable words. Works wonders. 🔒",
+      "replies": [],
+      "reactions": {
+        "Love": 10,
+        "Celebrate": 3,
+        "Insightful": 8,
+        "Funny": 1,
+        "Support": 0,
+        "Like": 12
+      },
+      "timestamp": "2025-03-19T15:45:30.000Z"
+    },
+    {
+      "id": "3",
+      "postId": "4",
+      "authorId": "ksalem",
+      "authorName": "Khalid Salem",
+      "authorPicture": "https://media.licdn.com/dms/image/D4D03AQFSSS/image.jpg",
+      "authorBio": "Cloud Engineer | AWS Certified",
+      "content": "Looks amazing! Is your Python library compatible with Plotly as well?",
+      "replies": [],
+      "reactions": {
+        "Love": 5,
+        "Celebrate": 2,
+        "Insightful": 4,
+        "Funny": 0,
+        "Support": 3,
+        "Like": 7
+      },
+      "timestamp": "2025-03-20T13:20:45.000Z"
+    },
+    {
+      "id": "4",
+      "postId": "5",
+      "authorId": "yasser",
+      "authorName": "Yasser Tarek",
+      "authorPicture": "https://media.licdn.com/dms/image/D4D03AQFAAB/image.jpg",
+      "authorBio": "DevOps Engineer | Kubernetes Specialist",
+      "content": "That AWS migration sounds impressive! Did you face any major downtime during the process?",
+      "replies": [],
+      "reactions": {
+        "Love": 8,
+        "Celebrate": 6,
+        "Insightful": 10,
+        "Funny": 0,
+        "Support": 2,
+        "Like": 14
+      },
+      "timestamp": "2025-03-20T19:30:00.000Z"
+    },
+    {
+      "id": "5",
+      "postId": "6",
+      "authorId": "fahmed",
+      "authorName": "Fatma Ahmed",
+      "authorPicture": "https://media.licdn.com/dms/image/D4D03AQFLMs/image.jpg",
+      "authorBio": "Software Engineer | AI Enthusiast",
+      "content": "That dashboard redesign is stunning! 🎨 What tools did you use for prototyping?",
+      "replies": [],
+      "reactions": {
+        "Love": 12,
+        "Celebrate": 4,
+        "Insightful": 3,
+        "Funny": 0,
+        "Support": 1,
+        "Like": 11
+      },
+      "timestamp": "2025-03-21T11:15:00.000Z"
+    },
+    {
+      "id": "1742670408728",
       "postId": "1",
-      "authorId": "1",
+      "authorId": "mohsobh",
       "authorName": "Mohamed Sobh",
       "authorPicture": "https://media.licdn.com/dms/image/v2/D4D03AQH7Ais8BxRXzw/profile-displayphoto-shrink_100_100/profile-displayphoto-shrink_100_100/0/1721080103981?e=1747872000&v=beta&t=nDnZdgCqkI8v5B2ymXZzluMZVlF6h_o-dN1pA95Fzv4",
       "authorBio": "Computer Engineering Student at Cairo University",
-      "content": "Thanks!",
+      "content": "Insightful!",
+      "replies": [
+        "damn"
+      ],
+      "reactions": {
+        "Love": 10,
+        "Celebrate": 32,
+        "Insightful": 64,
+        "Funny": 13,
+        "Support": 0,
+        "Like": 0
+      },
+      "taggedUsers": [],
+      "timestamp": "2025-03-22T19:06:48.728Z"
+    },
+    {
+      "id": "1742677308010",
+      "postId": "1",
+      "authorId": "mohsobh",
+      "authorName": "Mohamed Sobh",
+      "authorPicture": "https://media.licdn.com/dms/image/v2/D4D03AQH7Ais8BxRXzw/profile-displayphoto-shrink_100_100/profile-displayphoto-shrink_100_100/0/1721080103981?e=1747872000&v=beta&t=nDnZdgCqkI8v5B2ymXZzluMZVlF6h_o-dN1pA95Fzv4",
+      "authorBio": "Computer Engineering Student at Cairo University",
+      "content": "hello wordl",
       "replies": [],
       "reactions": {
-        "love": 50,
-        "celebrate": 40,
-        "insightful": 1,
-        "funny": 43,
-        "support": 0,
-        "like": 0
+        "Love": 0,
+        "Celebrate": 0,
+        "Insightful": 0,
+        "Funny": 0,
+        "Support": 0,
+        "Like": 0
       },
-      "timestamp": "2025-03-18T00:27:16.644Z"
+      "taggedUsers": [],
+      "timestamp": "2025-03-22T21:01:48.010Z"
     }
   ]
 }

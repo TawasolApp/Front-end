@@ -5,10 +5,10 @@ import TextModal from './TextModal';
 const SharePost = ({ sharePost }) => {
     
     // TODO: change this to redux states
-    const currentAuthorId = 1;
-    const currentAuthorName = "John Doe";
+    const currentAuthorId = "mohsobh";
+    const currentAuthorName = "Mohamed Sobh";
     const currentAuthorPicture = "https://media.licdn.com/dms/image/v2/D4D03AQH7Ais8BxRXzw/profile-displayphoto-shrink_100_100/profile-displayphoto-shrink_100_100/0/1721080103981?e=1747872000&v=beta&t=nDnZdgCqkI8v5B2ymXZzluMZVlF6h_o-dN1pA95Fzv4";
-    const currentAuthorBio = "Software Engineer at Tech Corp";
+    const currentAuthorBio = "Computer Engineering Student at Cairo University";
     const currentAuthorType = "User";
 
     const [isModalOpen, setIsModalOpen] = useState(false);
@@ -20,7 +20,7 @@ const SharePost = ({ sharePost }) => {
                     <Avatar 
                         sx={{ width: 48, height: 48 }}
                         className="rounded-full"
-                        src={currentAuthorPicture} // Add your src here
+                        src={currentAuthorPicture}
                     />
                     <button
                         onClick={() => setIsModalOpen(true)}

@@ -2,39 +2,28 @@ import { useState, useEffect, useRef } from 'react';
 
 import MoreHorizIcon from '@mui/icons-material/MoreHoriz';
 import CloseIcon from '@mui/icons-material/Close';
-import BookmarkBorderIcon from '@mui/icons-material/BookmarkBorder';
-import FlagIcon from '@mui/icons-material/Flag';
+
 
 import ActorHeader from '../../../../GenericComponents/ActorHeader';
 import DropdownMenu from '../../../../GenericComponents/DropdownMenu';
 
 const PostCardHeader = ({
+    authorId,
     authorName,
     authorBio,
     authorPicture,
     timestamp,
-    visibility
+    visibility,
+    menuItems
   }) => {
 
     const [isCloseVisible, setIsCloseVisible] = useState(false);
-
-    const menuItems = [
-      { 
-        text: 'Save post', 
-        onClick: () => console.log('Saved post'),
-        icon: BookmarkBorderIcon // Import and use actual icon component
-      },
-      { 
-        text: 'Report post',
-        onClick: () => console.log('Reported post'),
-        icon: FlagIcon
-      },
-    ];
 
     return (
         <div className="relative">
           <div className="pr-16 pl-3 pt-3 mb-2">
             <ActorHeader
+              authorId={authorId}
               authorName={authorName}
               authorPicture={authorPicture}
               authorBio={authorBio}

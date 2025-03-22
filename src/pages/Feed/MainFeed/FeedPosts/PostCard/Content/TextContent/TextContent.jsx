@@ -3,24 +3,49 @@ import { useState } from 'react';
 const TextContent = ({ content }) => {
     const [isExpanded, setIsExpanded] = useState(false);
     const maxLines = 3;
+    const maxChars = 200;
     
     if (!content) return null;
-
+    
     // Split content into individual lines
     const lines = content.split('\n');
-    const needsTruncation = lines.length > maxLines || 
-                          (lines.length === 1 && lines[0].length >= 90);
+    
+    // Calculate total characters in first maxLines
+    let totalChars = 0;
+    for (let i = 0; i < Math.min(maxLines, lines.length); i++) {
+        totalChars += lines[i].length;
+    }
+    
+    const needsTruncation = lines.length > maxLines || totalChars > maxChars;
     const displayedLines = isExpanded ? lines : lines.slice(0, maxLines);
-
+    
+    // If not expanded and total chars > maxChars, we need to truncate the last displayed line
+    let truncatedLastLine = '';
+    if (!isExpanded && totalChars > maxChars) {
+        let charCount = 0;
+        for (let i = 0; i < displayedLines.length - 1; i++) {
+            charCount += displayedLines[i].length;
+        }
+        
+        // Calculate how many characters we can show in the last line
+        const remainingChars = maxChars - charCount;
+        if (remainingChars > 0) {
+            truncatedLastLine = displayedLines[displayedLines.length - 1].substring(0, remainingChars);
+        }
+    }
+    
     return (
-        <div className="px-4 pb-2">
+        <div className="pb-2 mx-4">
             {displayedLines.map((line, index) => (
-                <div 
-                    key={index} 
-                    className="text-gray-800 whitespace-pre-wrap break-words"
+                <div
+                    key={index}
+                    className="text-gray-800 whitespace-pre-wrap break-words text-sm font-normal"
                 >
-                    {line || <>&nbsp;</>}
-                    {/* Append "..." and button to last line */}
+                    {index === displayedLines.length - 1 && !isExpanded && totalChars > maxChars
+                        ? truncatedLastLine
+                        : (line || <>&nbsp;</>)}
+                    
+                    {/* Append "..." and button to last line if truncated */}
                     {!isExpanded && needsTruncation && index === displayedLines.length - 1 && (
                         <button
                             className="text-gray-400 hover:underline text-sm ml-1"

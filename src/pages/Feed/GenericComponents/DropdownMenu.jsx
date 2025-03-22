@@ -4,6 +4,7 @@ const DropdownMenu = ({
   menuItems = [], 
   position = 'right-0',
   width = 'w-64',
+  iconSize = 'w-4 h-4',
   children 
 }) => {
   const [isOpen, setIsOpen] = useState(false);
@@ -27,7 +28,10 @@ const DropdownMenu = ({
 
   return (
     <div className="relative" ref={menuRef}>
-      <div onClick={handleToggle}>
+      <div
+        className="h-full"
+        onClick={handleToggle}
+      >
         {children}
       </div>
 
@@ -43,11 +47,11 @@ const DropdownMenu = ({
                 }}
                 className="w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 flex items-center gap-2"
               >
-                {item.icon && <item.icon className="w-4 h-4" />}
+                {item.icon && <item.icon className={`${iconSize}`} />}
                 <div>
-                  <div>{item.text}</div>
+                  <div className="text-gray-500 font-semibold">{item.text}</div>
                   {item.subtext && (
-                    <div className="text-xs text-gray-500">{item.subtext}</div>
+                    <div className="text-xs text-gray-500 font-semibold">{item.subtext}</div>
                   )}
                 </div>
               </button>

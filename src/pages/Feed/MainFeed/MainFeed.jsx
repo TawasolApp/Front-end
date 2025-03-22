@@ -4,11 +4,12 @@ import FeedPosts from './FeedPosts/FeedPosts';
 import { axiosInstance } from '../../../apis/axios';
 
 const MainFeed = () => {
+    
     // TODO: change this to redux states
-    const currentAuthorId = 1;
-    const currentAuthorName = "John Doe";
-    const currentAuthorPicture = "https://example.com/avatar.jpg";
-    const currentAuthorBio = "Software Engineer at Tech Corp";
+    const currentAuthorId = "mohsobh";
+    const currentAuthorName = "Mohamed Sobh";
+    const currentAuthorPicture = "https://media.licdn.com/dms/image/v2/D4D03AQH7Ais8BxRXzw/profile-displayphoto-shrink_100_100/profile-displayphoto-shrink_100_100/0/1721080103981?e=1747872000&v=beta&t=nDnZdgCqkI8v5B2ymXZzluMZVlF6h_o-dN1pA95Fzv4";
+    const currentAuthorBio = "Computer Engineering Student at Cairo University";
     const currentAuthorType = "User";
 
     const [posts, setPosts] = useState([]);
@@ -16,12 +17,9 @@ const MainFeed = () => {
     const [loading, setLoading] = useState(false);
     const [hasMore, setHasMore] = useState(true);
     
-    // Reference to the observer element at the bottom of the list
     const observer = useRef();
-    // Reference to track if we're currently fetching
     const isFetching = useRef(false);
 
-    // Setup Intersection Observer callback
     const lastPostElementRef = useCallback(node => {
         if (loading) return;
         if (observer.current) observer.current.disconnect();
@@ -90,30 +88,37 @@ const MainFeed = () => {
 
     // Function to share a new post
     const sharePost = async (text, visibility) => {
-        const newPost = {
-            authorId: currentAuthorId,
-            content: text,
-            media: [],
-            taggedUsers: [],
-            visibility: visibility,
-        };
-
         try {
-            const response = await axiosInstance.post('posts', newPost);
-            // Add the new post to the beginning of the list
+            const response = await axiosInstance.post('posts', {
+                authorId: currentAuthorId,
+                content: text,
+                media: [],
+                taggedUsers: [],
+                visibility: visibility,
+            });
             setPosts(prevPosts => [response.data, ...prevPosts]);
         } catch (err) {
             console.log(`Error: ${err.message}`);
         }
     };
 
+    const deletePost = async (postId) => {
+        try {
+            await axiosInstance.delete(`/delete/${postId}`);
+            setPosts(prevPosts => prevPosts.filter(post => post.id !== postId));
+        } catch (e) {
+            console.log(e.message);
+        }
+    }
+
     return (
         <>
             <SharePost sharePost={sharePost} />
             <div className="rounded-lg border-gray-200">
                 <FeedPosts 
-                    posts={posts} 
+                    posts={posts}
                     lastPostRef={lastPostElementRef}
+                    deletePost={deletePost}
                 />
                 
                 {loading && (

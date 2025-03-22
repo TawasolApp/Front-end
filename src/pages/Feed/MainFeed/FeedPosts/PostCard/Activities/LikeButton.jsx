@@ -3,8 +3,11 @@ import ThumbUpOffAltIcon from '@mui/icons-material/ThumbUpOffAlt';
 import reactionIcons from '../../../../GenericComponents/reactionIcons';
 import ReactionPicker from '../../../../GenericComponents/ReactionPicker';
 
-const LikeButton = ({ onChange }) => {
-    const [currentReaction, setCurrentReaction] = useState(null);
+const LikeButton = ({
+    initReactValue,
+    onChange
+}) => {
+    const [currentReaction, setCurrentReaction] = useState(initReactValue);
 
     const handleReaction = (reactionType) => {
         if (currentReaction === null) {
@@ -24,15 +27,17 @@ const LikeButton = ({ onChange }) => {
             const { Icon, color, label } = reactionIcons[currentReaction];
             return (
                 <>
-                    <Icon style={{ color }} className="w-5 h-5" />
-                    <span style={{ color }} className="text-sm">{label}</span>
+                    <Icon style={{ color }} className="w-4 h-4 group-hover:text-black" />
+                    <span style={{ color }} className="text-sm font-semibold text-gray-600 group-hover:text-black">
+                        {label}
+                    </span>
                 </>
             );
         }
         return (
             <>
-                <ThumbUpOffAltIcon className="w-5 h-5 text-gray-500" />
-                <span className="text-sm text-gray-500">Like</span>
+                <ThumbUpOffAltIcon sx={{ fontSize: 16 }} className="text-gray-700 group-hover:text-black" />
+                <span className="text-sm font-semibold text-gray-700 group-hover:text-black">Like</span>
             </>
         );
     };
@@ -40,7 +45,7 @@ const LikeButton = ({ onChange }) => {
     return (
         <ReactionPicker onSelectReaction={handleReaction}>
             <button
-                className="flex items-center gap-1 hover:bg-gray-100 p-2 rounded w-full justify-center"
+                className="flex items-center gap-1 p-2 hover:bg-gray-100 hover:transition-all duration-200 w-full justify-center group"
                 onClick={() => handleReaction(currentReaction || 'like')}
             >
                 {renderButtonContent()}

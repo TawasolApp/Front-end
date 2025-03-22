@@ -22,30 +22,25 @@ const EngagementMetrics = ({
     }, [reactions]);
 
     return (
-        <div className="flex items-center justify-between text-gray-500 mx-4 border-b border-black/10">
+        <div className="flex items-center justify-between text-gray-500 pb-1 mx-4 border-b border-black/10">
 
             {/* Left Section - Reactions */}
             <button
-                className="flex items-center space-x-2 hover:underline"
+                className="flex items-center hover:transition-all group"
                 onClick={() => setShowLikes(true)}
             >
-                <div className="flex items-center -space-x-1">
+                <div className="flex -space-x-2">
                     {topReactions.map(([reactionType]) => {
                         const { Icon, color } = reactionIcons[reactionType];
                         return (
-                            <div key={reactionType} className="p-0.5">
-                                <Icon
-                                    sx={{
-                                        fontSize: 16,
-                                        color: color
-                                    }}
-                                />
+                            <div key={reactionType} className="relative">
+                                <Icon className="w-5 h-5" />
                             </div>
                         );
                     })}
                 </div>
                 {totalLikes > 0 && (
-                    <span className="text-xs pr-0 ml-0.5 hover:text-blue-600">{totalLikes}</span>
+                    <span className="text-sm ml-1 group-hover:text-blue-600 group-hover:underline">{totalLikes}</span>
                 )}
             </button>
 
@@ -60,7 +55,7 @@ const EngagementMetrics = ({
                     </button>
                 )}
                 {comments > 0 && reposts > 0 && (
-                    <span>•</span>
+                    <span className="mx-1">•</span>
                 )}
                 {reposts > 0 && (
                     <button
