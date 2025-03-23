@@ -1,6 +1,7 @@
-import React, { useState } from "react";
+import React, { useRef, useState } from "react";
 import InputField from "./InputField";
 import BlueSubmitButton from "./BlueSubmitButton";
+import ReCAPTCHA from "react-google-recaptcha";
 
 const NameForm = ({ onSubmit }) => {
   const [formData, setFormData] = useState({
@@ -10,6 +11,7 @@ const NameForm = ({ onSubmit }) => {
 
   const [firstNameError, setFirstNameError] = useState("");
   const [lastNameError, setLastNameError] = useState("");
+  const recaptchaRef = useRef(null);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -28,31 +30,39 @@ const NameForm = ({ onSubmit }) => {
 
   const handleFirstNameBlur = () => {
     if (!formData.firstName) {
-      setFirstNameError('Please enter your first name.');
+      setFirstNameError("Please enter your first name.");
     } else {
-      setFirstNameError('');
-    }
-  };
-  
-  const handleLastNameBlur = () => {
-    if (!formData.lastName) {
-      setLastNameError('Please enter your last name.');
-    } else {
-      setLastNameError('');
+      setFirstNameError("");
     }
   };
 
-  const handleSubmit = (e) => {
+  const handleLastNameBlur = () => {
+    if (!formData.lastName) {
+      setLastNameError("Please enter your last name.");
+    } else {
+      setLastNameError("");
+    }
+  };
+
+  const handleSubmit = async (e) => {
     e.preventDefault();
     if (!formData.firstName) {
-      setFirstNameError('Please enter your first name.');
+      setFirstNameError("Please enter your first name.");
       return;
     }
     if (!formData.lastName) {
-      setLastNameError('Please enter your last name.');
+      setLastNameError("Please enter your last name.");
       return;
     }
-    onSubmit(formData);
+
+    const captchaToken = await recaptchaRef.current.getValue();
+
+    if (!captchaToken) {
+      alert("Please complete the CAPTCHA.");
+      return;
+    }
+
+    onSubmit(formData, captchaToken);
   };
 
   return (
@@ -81,7 +91,13 @@ const NameForm = ({ onSubmit }) => {
         required
         error={lastNameError}
       />
-      <BlueSubmitButton text="Continue"/>
+      {/* reCAPTCHA Widget */}
+      <ReCAPTCHA
+        ref={recaptchaRef}
+        sitekey="6LdMDv0qAAAAAC935jMxhIW2ZSMaei6Hs1YU2PyR" // Site Key
+        className="grid place-items-center my-6"
+      />
+      <BlueSubmitButton text="Continue" />
     </form>
   );
 };

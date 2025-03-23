@@ -1,9 +1,10 @@
-import React from 'react';
-import LocationForm from './components/LocationForm';
+import React from "react";
+import LocationForm from "./components/LocationForm";
 
 const LocationPage = () => {
+
   const handleSubmit = (location) => {
-    console.log('Location:', location);
+    console.log("Location:", location);
   };
 
   return (

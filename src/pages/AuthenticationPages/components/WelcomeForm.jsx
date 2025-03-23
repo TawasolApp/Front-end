@@ -15,7 +15,7 @@ const WelcomeForm = () => {
       <button
         type="button"
         onClick={handleSignInWithEmail}
-        className="w-full flex items-center justify-center bg-white text-gray-700 py-3 px-4 border-2 border-gray-300 rounded-full hover:bg-gray-50 focus:outline-none focus:border-black text-xl font-medium transition duration-200 ease-in-out"
+        className="w-full flex items-center justify-center bg-white text-gray-700 py-4 px-4 border-2 border-gray-300 rounded-full hover:bg-gray-50 focus:outline-none focus:border-black text-xl font-medium transition duration-200 ease-in-out"
       >
         Sign in with Email
       </button>

@@ -20,7 +20,7 @@ const WelcomePage = () => {
       <img
         src={WelcomeImage}
         alt="Welcome to LinkedIn"
-        className="w-full max-w-2xl rounded-lg"
+        className="w-full max-w-2xl rounded-full"
       />
     </div>
   );

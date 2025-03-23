@@ -11,6 +11,7 @@ import ForgotPasswordPage from "../pages/AuthenticationPages/ForgotPasswordPage"
 import EmailVerificationPage from "../pages/AuthenticationPages/EmailVerificationPage";
 import NewPasswordPage from "../pages/AuthenticationPages/NewPasswordPage";
 import WelcomePage from "../pages/AuthenticationPages/WelcomePage";
+import ChangeEmailPage from "../pages/AuthenticationPages/ChangeEmailPage";
 
 function App() {
   const InIcon = getIconComponent("in-black");
