@@ -79,14 +79,7 @@ const MainFeed = () => {
         fetchPosts(nextPage);
     };
 
-    // Refresh the feed (for example, after creating a new post)
-    const refreshFeed = () => {
-        setPage(1);
-        setHasMore(true);
-        fetchPosts(1, true);
-    };
-
-    // Function to share a new post
+    
     const sharePost = async (text, visibility) => {
         try {
             const response = await axiosInstance.post('posts', {

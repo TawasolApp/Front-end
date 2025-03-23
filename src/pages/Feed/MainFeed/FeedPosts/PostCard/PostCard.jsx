@@ -64,7 +64,7 @@ const PostCard = ({
     const updatePost = async (text, visibility) => {
 
         try {
-            await axiosInstance.patch(`/posts/${localPost.postId}`, {
+            await axiosInstance.patch(`/posts/${localPost.id}`, {
                 authorId: currentAuthorId,
                 content: text,
                 media: [],
@@ -184,7 +184,7 @@ const PostCard = ({
 
             {showLikes && (
                 <ReactionsModal
-                    APIURL={`/posts/reactions/${localPost.postId}`}
+                    APIURL={`/posts/reactions/${localPost.id}`}
                     setShowLikes={() => setShowLikes(false)}
                 />
             )}
@@ -195,6 +195,7 @@ const PostCard = ({
                     currentAuthorPicture={currentAuthorPicture}
                     setIsModalOpen={() => setShowEditModal(false)}
                     sharePost={updatePost}
+                    initialText={localPost.content}
                 />
             )}
 

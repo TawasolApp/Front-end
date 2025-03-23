@@ -8,10 +8,11 @@ const TextModal = ({
     currentAuthorName,
     currentAuthorPicture,
     setIsModalOpen,
-    sharePost
+    sharePost,
+    initialText=''
 }) => {
 
-    const [text, setText] = useState('');
+    const [text, setText] = useState(initialText);
     const [visibilityType, setVisibilityType] = useState('Public');
 
     const menuItems = [
