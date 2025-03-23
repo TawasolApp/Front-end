@@ -8,7 +8,7 @@ const FeedContainer = () => {
         <div className="flex justify-center min-h-screen bg-[#f4f2ee] gap-0 p-4">
             {/* Left Sidebar - Strict width */}
             <div className="hidden lg:block w-56 max-w-[220px] sticky top-4 h-fit mr-2">
-                <div className="bg-white rounded-lg p-4 shadow border border-gray-200">
+                <div className="bg-white rounded-lg shadow border border-gray-200">
                     <LeftSideBar />
                 </div>
             </div>
