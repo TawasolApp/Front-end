@@ -46,7 +46,7 @@ const LikeButton = ({
         <ReactionPicker onSelectReaction={handleReaction}>
             <button
                 className="flex items-center gap-1 p-2 hover:bg-gray-100 hover:transition-all duration-200 w-full justify-center group"
-                onClick={() => handleReaction(currentReaction || 'like')}
+                onClick={() => handleReaction(currentReaction || 'Like')}
             >
                 {renderButtonContent()}
             </button>
