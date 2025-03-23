@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import ViewerView from "./ViewerView";
 import ProfilePicture from "./ProfilePicture";
 import CoverPhoto from "./CoverPhoto";
@@ -15,7 +15,7 @@ function ProfileHeader({ user, isOwner, onSave, experienceRef, educationRef }) {
   const [enlargedImage, setEnlargedImage] = useState(null);
   const [isUploadOpen, setIsUploadOpen] = useState(false);
   const [uploadType, setUploadType] = useState(null);
-  // for highlighted experience and education
+  const { profileSlug } = useParams();
   const experienceIndex = editedUser.selectedExperienceIndex ?? 0;
   const educationIndex = editedUser.selectedEducationIndex ?? 0;
   useEffect(() => {
@@ -30,6 +30,7 @@ function ProfileHeader({ user, isOwner, onSave, experienceRef, educationRef }) {
   }
   function openEditModal() {
     // console.log(" Opening edit modal");
+
     setIsEditing(true);
   }
 
@@ -122,9 +123,9 @@ function ProfileHeader({ user, isOwner, onSave, experienceRef, educationRef }) {
           {/*  Connections Count */}
           <p
             className="text-blue-600 cursor-pointer hover:underline mb-0"
-            onClick={() => navigate("/connections")}
+            onClick={() => navigate(`connections`)}
           >
-            {editedUser.connections} Connections
+            {editedUser.connectionCount} connections
           </p>
         </div>
 

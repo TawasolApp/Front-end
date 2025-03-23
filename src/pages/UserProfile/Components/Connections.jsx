@@ -1,5 +1,5 @@
 // will be redirected to this page when click on conntections
-import React from "react";
+import React, { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 
 function Connections() {

@@ -11,7 +11,7 @@ function GenericSection2({ title, type, items, isOwner }) {
   const [editData, setEditData] = useState(null); // Track data to edit
   const [editMode, setEditMode] = useState(false); // Track whether it's add or edit
 
-  // Add new item
+  /// add condition if words count >certain limit dont show 2 show only one and others in generic page   // Add new item
   const handleAdd = () => {
     setEditIndex(null);
     setEditData(null);
@@ -88,7 +88,7 @@ function GenericSection2({ title, type, items, isOwner }) {
       {/* Show "Show all" button if more than 2 items exist */}
       {data.length > 2 && (
         <button
-          onClick={() => navigate(`/${type.toLowerCase()}`)}
+          onClick={() => navigate(`${type.toLowerCase()}`)}
           className="w-full mt-4 text-black-500 hover:underline text-center block font-medium pb-4"
         >
           Show all {items.length} {type.toLowerCase()} records →

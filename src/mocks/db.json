@@ -17,7 +17,17 @@
       "email": "fatma@example.com",
       "isOwner": true,
       "visibility": "Public",
-      "workExperience": [
+      "experience": [
+        {
+          "title": "Software Engineer",
+          "company": "Google",
+          "location": "San Francisco, CA",
+          "startDate": "2020-06-01",
+          "endDate": "2023-08-31",
+          "description": "Worked on developing scalable web applications.",
+          "employmentType": "Full-time",
+          "locationType": "Onsite"
+        },
         {
           "title": "Software Engineer",
           "company": "Google",
@@ -44,6 +54,16 @@
           "institution": "Harvard University",
           "degree": "Bachelor's",
           "field": "Computer Science",
+          "startDate": "2018-09-01",
+          "endDate": "2022-06-30",
+          "description": "Studied software engineering and AI.",
+          "grade": "3.9 GPA",
+          "activities": "tt"
+        },
+        {
+          "institution": "Harvard ",
+          "degree": "Bach",
+          "field": "Computer",
           "startDate": "2018-09-01",
           "endDate": "2022-06-30",
           "description": "Studied software engineering and AI.",
@@ -109,7 +129,7 @@
         "messageCount": "",
         "applicationCount": ""
       },
-      "selectedExperienceIndex": 1,
+      "selectedExperienceIndex": 0,
       "selectedEducationIndex": 0
     },
     {
@@ -129,7 +149,7 @@
       "email": "mohamed@example.com",
       "isOwner": false,
       "visibility": "Public",
-      "workExperience": [
+      "experience": [
         {
           "title": "Software Engineer",
           "company": "Google",
@@ -239,7 +259,7 @@
       "resume": "https://linkedin.com/in/salma-ahmed",
       "isOwner": false,
       "visibility": "Public",
-      "workExperience": [
+      "experience": [
         {
           "title": "Software Engineer",
           "company": "Google",

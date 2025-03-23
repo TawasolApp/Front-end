@@ -1,43 +1,95 @@
-// import React, { useState, useEffect } from "react";
-// import GenericModal from "./GenericModal";
+import React, { useState, useEffect } from "react";
+import GenericModal from "./Useless/GenericModal";
 
-// const CertificationsModal = ({ isOpen, onClose, onSave, initialData = {} }) => {
-//   const [formData, setFormData] = useState(initialData);
-//   const [errors, setErrors] = useState({});
+const CertificationsModal = ({ isOpen, onClose, onSave, initialData = {} }) => {
+  const [formData, setFormData] = useState(initialData);
+  const [errors, setErrors] = useState({});
 
-//   useEffect(() => {
-//     if (isOpen) setFormData(initialData || {});
-//   }, [isOpen, initialData]);
+  useEffect(() => {
+    if (isOpen) setFormData(initialData || {});
+  }, [isOpen, initialData]);
 
-//   const handleChange = (e) => {
-//     setFormData({ ...formData, [e.target.name]: e.target.value });
-//   };
+  const handleChange = (e) => {
+    setFormData({ ...formData, [e.target.name]: e.target.value });
+  };
 
-//   return (
-//     <GenericModal
-//       isOpen={isOpen}
-//       onClose={onClose}
-//       onSave={onSave}
-//       initialData={initialData}
-//     >
-//       <h2 className="text-lg font-semibold mb-4">Certification Details</h2>
+  const validate = () => {
+    const newErrors = {};
+    if (!formData.name?.trim())
+      newErrors.name = "Certification name is required";
+    if (!formData.issuingOrganization?.trim())
+      newErrors.issuingOrganization = "Issuing organization is required";
+    setErrors(newErrors);
+    return Object.keys(newErrors).length === 0;
+  };
 
-//       <label className="block font-medium mb-1">Certification Name*</label>
-//       <input
-//         type="text"
-//         name="name"
-//         className="border p-2 w-full rounded-md mb-3"
-//         required
-//       />
+  const handleSave = (data) => {
+    if (validate()) onSave(data);
+  };
 
-//       <label className="block font-medium mb-1">Issuing Organization</label>
-//       <input
-//         type="text"
-//         name="issuingOrganization"
-//         className="border p-2 w-full rounded-md mb-3"
-//       />
-//     </GenericModal>
-//   );
-// };
+  return (
+    <GenericModal
+      isOpen={isOpen}
+      onClose={onClose}
+      onSave={handleSave}
+      initialData={formData}
+      type="certifications"
+    >
+      <h2 className="text-lg font-semibold mb-4">
+        Add license or certification
+      </h2>
 
-// export default CertificationsModal;
+      <p className="text-sm text-gray-600 mb-2">* Indicates required</p>
+
+      <label className="block font-medium mb-1">Name*</label>
+      <input
+        type="text"
+        name="name"
+        value={formData.name || ""}
+        onChange={handleChange}
+        className="border p-2 w-full rounded-md mb-2"
+        placeholder="Ex: Microsoft certified network associate security"
+      />
+      {errors.name && (
+        <p className="text-red-600 text-sm mb-2">{errors.name}</p>
+      )}
+
+      <label className="block font-medium mb-1">Issuing organization*</label>
+      <input
+        type="text"
+        name="issuingOrganization"
+        value={formData.issuingOrganization || ""}
+        onChange={handleChange}
+        className="border p-2 w-full rounded-md mb-2"
+        placeholder="Ex: Microsoft"
+      />
+      {errors.issuingOrganization && (
+        <p className="text-red-600 text-sm mb-2">
+          {errors.issuingOrganization}
+        </p>
+      )}
+
+      <label className="block font-medium mb-1">Credential ID</label>
+      <input
+        type="text"
+        name="credentialId"
+        value={formData.credentialId || ""}
+        onChange={handleChange}
+        className="border p-2 w-full rounded-md mb-2"
+        placeholder="Optional"
+      />
+
+      <label className="block font-medium mb-1">Credential URL</label>
+      <input
+        type="url"
+        name="credentialUrl"
+        value={formData.credentialUrl || ""}
+        onChange={handleChange}
+        className="border p-2 w-full rounded-md mb-2"
+        placeholder="Optional"
+      />
+    </GenericModal>
+  );
+};
+
+export default CertificationsModal;

@@ -1,34 +1,24 @@
 import React, { useRef, useEffect, useState } from "react";
-import ProfileHeader from "./ProfileHeader";
-// import mockProfiles from "./mockProfiles";
-import AboutSection from "./Sections/AboutSection";
-import ExperienceSection from "./Sections/ExperienceSection";
-import EducationSection from "./Sections/EducationSection";
-import SkillsSection from "./Sections/SkillsSection";
-import CertificationsSection from "./Sections/CertificationsSection";
-import { Outlet, useParams } from "react-router-dom";
-import { useNavigate } from "react-router-dom";
+import { Outlet, useParams, useLocation, useNavigate } from "react-router-dom";
 import axios from "axios";
 
-// function generateSlug(user) {
-//   return `${user.firstName.toLowerCase()}-${user.lastName.toLowerCase()}-${
-//     user.id
-//   }`;
-// }
-
-// const user = mockProfiles[1];
-
+import ProfileHeader from "./ProfileHeader";
+import EducationSection from "./Sections/EducationSection";
+import ExperienceSection from "./Sections/ExperienceSection";
+import SkillsSection from "./Sections/SkillsSection";
+import CertificationsSection from "./Sections/CertificationsSection";
 function ProfilePage({ isOwner }) {
-  const { profileSlug } = useParams(); //  fatma-gamal-12
+  const { profileSlug } = useParams();
   const navigate = useNavigate();
+  const location = useLocation();
+
   const [user, setUser] = useState(null);
-  // Create refs for scrolling
   const educationRef = useRef(null);
   const experienceRef = useRef(null);
-  const id = profileSlug?.split("-").pop(); // Gets "1" from "fatma-gamal-1"
-  // console.log(" Extracted ID from slug:", id);
 
-  ///get id from url
+  const id = profileSlug?.split("-").pop();
+  const isBaseProfile = location.pathname === `/users/${profileSlug}`;
+
   useEffect(() => {
     if (!id) return;
 
@@ -36,16 +26,16 @@ function ProfilePage({ isOwner }) {
       .get(`http://localhost:5000/profile/${id}`)
       .then((response) => {
         if (!response.data) {
-          navigate("/notfound"); // Optional: Redirect to 404 if needed
+          navigate("/notfound");
         } else {
           setUser(response.data);
         }
       })
       .catch((error) => console.error("Error fetching profile:", error));
   }, [id]);
-  // console.log(user);
 
   if (!user) return <p>Loading...</p>;
+
   return (
     <div className="bg-gray-200 pt-4 pb-4">
       <ProfileHeader
@@ -54,40 +44,26 @@ function ProfilePage({ isOwner }) {
         educationRef={educationRef}
         experienceRef={experienceRef}
       />
-      {/* <AboutSection user={user} isOwner={isOwner} />
-      <EducationSection isOwner={isOwner} sectionRef={educationRef} />
-      <ExperienceSection isOwner={isOwner} sectionRef={experienceRef} />
-      <SkillsSection isOwner={isOwner} />
-      <CertificationsSection isOwner={isOwner} /> */}
-      <Outlet />
+      <EducationSection
+        isOwner={isOwner}
+        sectionRef={educationRef}
+        user={user}
+      />
+      <ExperienceSection
+        isOwner={isOwner}
+        sectionRef={educationRef}
+        user={user}
+      />
+      <SkillsSection isOwner={isOwner} sectionRef={educationRef} user={user} />
+      <CertificationsSection
+        isOwner={isOwner}
+        sectionRef={educationRef}
+        user={user}
+      />
+      {/* other sections here */}
+      <Outlet context={{ user }} />
     </div>
   );
 }
+
 export default ProfilePage;
-{
-  /* <GenericSection
-        title="Education"
-        type="education"
-        items={mockEducation}
-        isOwner={isOwner}
-      />
-      <GenericSection
-        title="Experience"
-        type="experience"
-        items={mockExperience}
-        isOwner={isOwner}
-      />
-      <GenericSection
-        title="Skills"
-        type="skills"
-        items={mockskills}
-        isOwner={isOwner}
-      />
-      <GenericSection
-        title="Licenses & certifications"
-        type="certifications"
-        items={mockCertifications}
-        isOwner={isOwner}
-      /> 
-       */
-}

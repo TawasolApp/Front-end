@@ -1,109 +1,106 @@
-// import React, { useState } from "react";
-// import GenericCard from "./Useless/GenericCard";
-// import { useNavigate } from "react-router-dom";
-// import EducationModal from "./EducationModal";
-// import ExperienceModal from "./ExperienceModal";
-// import CertificationsModal from "./CertificationsModal";
+// ✅ GenericSection.jsx
+import React, { useState } from "react";
+import GenericCard from "./GenericCard";
+import EducationModal from "../EducationModal";
+import ExperienceModal from "../ExperienceModal";
+import CertificationsModal from "../CertificationsModal";
+import SkillsModal from "../SkillsModal";
+import { useNavigate, useParams } from "react-router-dom";
 
-// function GenericSection({ title, type, items, isOwner, onUpdate }) {
-//   const navigate = useNavigate();
-//   const [data, setData] = useState(items);
-//   const [isModalOpen, setIsModalOpen] = useState(false);
-//   const [editIndex, setEditIndex] = useState(null);
-//   const [editData, setEditData] = useState(null);
+function GenericSection({ title, type, items, isOwner }) {
+  const navigate = useNavigate();
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [selectedItem, setSelectedItem] = useState(null);
+  const [dataList, setDataList] = useState(items);
+  const [editIndex, setEditIndex] = useState(null);
+  const { profileSlug } = useParams();
+  console.log("generiicccc", profileSlug);
+  //handler for add and edit modals
+  const openModal = (item = {}, index = null) => {
+    setSelectedItem(item);
+    setEditIndex(index);
+    setIsModalOpen(true);
+  };
 
-//   const handleAdd = () => {
-//     setEditIndex(null);
-//     setEditData(null);
-//     setIsModalOpen(true);
-//   };
+  const handleClose = () => {
+    setIsModalOpen(false);
+    setSelectedItem(null);
+    setEditIndex(null);
+  };
 
-//   const handleEdit = (item, index) => {
-//     setEditIndex(index);
-//     setEditData(item);
-//     setIsModalOpen(true);
-//   };
-//   // ✅ Function to save or update education data
-//   const handleSave = (updatedItem) => {
-//     let updatedItems;
-//     if (editIndex !== null) {
-//       // ✅ Edit existing item
-//       updatedItems = items.map((item, i) =>
-//         i === editIndex ? updatedItem : item
-//       );
-//     } else {
-//       // ✅ Add new item
-//       updatedItems = [...items, updatedItem];
-//     }
+  const handleSave = (updatedItem) => {
+    let updatedItems;
+    if (editIndex !== null) {
+      updatedItems = dataList.map((item, i) =>
+        i === editIndex ? updatedItem : item
+      );
+    } else {
+      updatedItems = [...dataList, updatedItem];
+    }
+    setDataList(updatedItems);
+    handleClose();
+  };
 
-//     onUpdate(updatedItems); // ✅ Pass updated data to parent (EducationSection)
-//     setIsModalOpen(false);
-//   };
+  const renderModal = () => {
+    const modalProps = {
+      isOpen: isModalOpen,
+      onClose: handleClose,
+      onSave: handleSave,
+      initialData: selectedItem || {},
+    };
 
-//   return (
-//     <div className="bg-white p-6 shadow-md rounded-md w-full max-w-3xl mx-auto pb-0 mb-4">
-//       <div className="flex justify-between items-center mb-4">
-//         <h2 className="text-2xl font-semibold">{title}</h2>
+    switch (type) {
+      case "education":
+        return <EducationModal {...modalProps} />;
+      case "experience":
+        return <ExperienceModal {...modalProps} />;
+      case "certifications":
+        return <CertificationsModal {...modalProps} />;
+      case "skills":
+        return <SkillsModal {...modalProps} />;
+      default:
+        return null;
+    }
+  };
 
-//         {isOwner && (
-//           <button
-//             className="w-8 h-8 bg-gray-100 rounded-full flex items-center justify-center hover:bg-gray-200 transition"
-//             onClick={handleAdd}
-//           >
-//             &#43;
-//           </button>
-//         )}
-//       </div>
+  return (
+    <div className="mb-6">
+      <div className="flex justify-between items-center mb-3">
+        <h2 className="text-xl font-semibold">{title}</h2>
+        {isOwner && (
+          <button onClick={() => openModal()} className="text-blue-600">
+            + Add
+          </button>
+        )}
+      </div>
+      <div className="space-y-4">
+        {dataList.slice(0, 2).map((item, index) => (
+          <GenericCard
+            key={index}
+            data={item}
+            type={type}
+            isOwner={isOwner}
+            onEdit={() => openModal(item, index)}
+          />
+        ))}
+        {dataList.length > 2 && (
+          <button
+            onClick={() => {
+              console.log("edit clicked");
 
-//       {/* Display Items */}
-//       <div className="space-y-4">
-//         {data.slice(0, 2).map((item, index) => (
-//           <GenericCard
-//             key={index}
-//             item={item}
-//             isOwner={isOwner}
-//             type={type}
-//             onEdit={() => handleEdit(item, index)}
-//           />
-//         ))}
-//       </div>
+              navigate(`${type.toLowerCase()}`, {
+                state: { items: dataList },
+              });
+            }}
+            className="text-blue-500 hover:underline text-sm"
+          >
+            See more
+          </button>
+        )}
+      </div>
+      {renderModal()}
+    </div>
+  );
+}
 
-//       {/* Show the correct modal based on type */}
-//       {isModalOpen && type === "education" && (
-//         <EducationModal
-//           isOpen={isModalOpen}
-//           onClose={() => setIsModalOpen(false)}
-//           onSave={handleSave}
-//           initialData={editData || {}}
-//         />
-//       )}
-//       {isModalOpen && type === "experience" && (
-//         <ExperienceModal
-//           isOpen={isModalOpen}
-//           onClose={() => setIsModalOpen(false)}
-//           onSave={handleSave}
-//           initialData={editData}
-//         />
-//       )}
-//       {isModalOpen && type === "certifications" && (
-//         <CertificationsModal
-//           isOpen={isModalOpen}
-//           onClose={() => setIsModalOpen(false)}
-//           onSave={handleSave}
-//           initialData={editData}
-//         />
-//       )}
-
-//       {data.length > 2 && (
-//         <button
-//           onClick={() => navigate(`/${type.toLowerCase()}`)}
-//           className="w-full mt-4 text-black-500 hover:underline text-center block font-medium pb-4"
-//         >
-//           Show all {items.length} {type.toLowerCase()} records →
-//         </button>
-//       )}
-//     </div>
-//   );
-// }
-
-// export default GenericSection;
+export default GenericSection;
