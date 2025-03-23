@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import ViewerView from "./ViewerView";
 import ProfilePicture from "./ProfilePicture";
@@ -6,27 +6,33 @@ import CoverPhoto from "./CoverPhoto";
 import EditProfileModal from "./GenericComponent/EditProfileModal";
 import ImageEnlarge from "./ImageEnlarge";
 import ImageUploadModal from "./ImageUploadModal";
-
+import defaultProfilePicture from "../../../assets/images/defaultProfilePicture.png";
+import defaultCoverPhoto from "../../../assets/images/defaultCoverPhoto.png";
 function ProfileHeader({ user, isOwner, onSave, experienceRef, educationRef }) {
   const navigate = useNavigate();
   const [isEditing, setIsEditing] = useState(false);
   const [editedUser, setEditedUser] = useState(user);
-  // Enlarged image state
-
   const [enlargedImage, setEnlargedImage] = useState(null);
-
-  // Upload modal state
   const [isUploadOpen, setIsUploadOpen] = useState(false);
   const [uploadType, setUploadType] = useState(null);
+  // for highlighted experience and education
+  const experienceIndex = editedUser.selectedExperienceIndex ?? 0;
+  const educationIndex = editedUser.selectedEducationIndex ?? 0;
+  useEffect(() => {
+    setEditedUser(user);
+  }, [user]);
   function openEditModal() {
-    setEditedUser(user); // Reset editedUser with latest user data
     setIsEditing(true);
   }
-
   function openUploadModal(type) {
     setUploadType(type);
     setIsUploadOpen(true);
   }
+  function openEditModal() {
+    // console.log(" Opening edit modal");
+    setIsEditing(true);
+  }
+
   function handleUpload(imageUrl) {
     setEditedUser((prevUser) => ({
       ...prevUser,
@@ -49,7 +55,7 @@ function ProfileHeader({ user, isOwner, onSave, experienceRef, educationRef }) {
   function saveProfileChanges(updatedUser) {
     setIsEditing(false);
     setEditedUser(updatedUser);
-    onSave(updatedUser);
+    onSave?.(updatedUser); // only if onSave is passed
   }
   // Scroll to section function
   function scrollToSection(ref) {
@@ -57,13 +63,15 @@ function ProfileHeader({ user, isOwner, onSave, experienceRef, educationRef }) {
       ref.current.scrollIntoView({ behavior: "smooth" });
     }
   }
+  if (!editedUser) return null;
+
   return (
     <div className="bg-white py-6 shadow-md rounded-md w-full max-w-3xl mx-auto pb-0 mb-4 pt-0">
       {/* Cover Photo Component */}
       <div className="relative w-full h-64 rounded-md overflow-hidden pb-0">
         {/* Cover Photo */}
         <CoverPhoto
-          backgroundImage={editedUser.backgroundImage}
+          backgroundImage={editedUser.coverPhoto || defaultCoverPhoto}
           isOwner={isOwner}
           className="w-full h-full object-cover rounded-md"
           onImageClick={handleImageClick}
@@ -73,7 +81,9 @@ function ProfileHeader({ user, isOwner, onSave, experienceRef, educationRef }) {
         {/* Profile Picture (Centered & Fully Visible) */}
         <div className="absolute left-20 ml-4 transform -translate-x-1/2 -top-2 sm:top-24 border-4 border-white rounded-full shadow-lg bg-white mb-0">
           <ProfilePicture
-            profilePictureSrc={editedUser.profilePicture}
+            profilePictureSrc={
+              editedUser.profilePicture || defaultProfilePicture
+            }
             isOwner={isOwner}
             onImageClick={handleImageClick}
             onUpload={() => openUploadModal("profile")}
@@ -132,13 +142,13 @@ function ProfileHeader({ user, isOwner, onSave, experienceRef, educationRef }) {
             className="text-sm text-gray-600 cursor-pointer hover:text-blue-500 hover:underline pt-9"
             onClick={() => scrollToSection(experienceRef)}
           >
-            {editedUser.workExperience}
+            {editedUser.workExperience?.[experienceIndex]?.title}
           </p>
           <p
             className="text-sm text-gray-600  cursor-pointer  hover:text-blue-500 hover:underline"
             onClick={() => scrollToSection(educationRef)}
           >
-            {editedUser.education}
+            {editedUser.education?.[educationIndex]?.institution}{" "}
           </p>
         </div>
       </div>
@@ -148,13 +158,13 @@ function ProfileHeader({ user, isOwner, onSave, experienceRef, educationRef }) {
         {!isOwner ? <ViewerView user={editedUser} /> : null}
       </div>
 
-      {/* ✅ Fix: Edit Profile Modal (Now Opens Correctly) */}
+      {/*  Edit Profile Modal  */}
       <EditProfileModal
         user={editedUser}
         isOpen={isEditing}
         onClose={() => setIsEditing(false)}
         onSave={saveProfileChanges}
-        onChange={handleInputChange}
+        // onChange={handleInputChange}
       />
     </div>
   );

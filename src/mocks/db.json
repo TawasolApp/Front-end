@@ -5,17 +5,18 @@
       "firstName": "Fatma",
       "lastName": "Gamal",
       "profilePicture": "https://th.bing.com/th/id/OIP.AxXeQv751lyx0ltppBIg6QHaHa?rs=1&pid=ImgDetMain",
-      "backgroundImage": "coverphoto",
-      "bio": "Student at Cairo University",
+      "coverPhoto": "",
+      "resume": "https://linkedin.com/in/fatma-gamal",
+      "headline": "Student at Cairo University faculty of Engineering",
+      "bio": "I am a motivated Software Engineer with a passion for frontend development",
       "country": "Egypt",
-      "city": "Cairo",
+      "city": "giza",
       "industry": "Computer Engineering",
-      "connections": 50,
+      "connectionCount": 50,
       "achievements": "Dean's List Award",
-      "about": "I am a highly motivated and detail-oriented Software Engineer with a passion for frontend development...",
       "email": "fatma@example.com",
-      "profileUrl": "https://linkedin.com/in/fatma-gamal",
       "isOwner": true,
+      "visibility": "Public",
       "workExperience": [
         {
           "title": "Software Engineer",
@@ -63,48 +64,71 @@
       "certifications": [
         {
           "name": "AWS Certified Solutions Architect",
-          "issuingOrganization": "Amazon Web Services (AWS)",
+          "company": "Amazon Web Services (AWS)",
           "issueDate": "2023-05-20",
           "expirationDate": "2026-05-20"
         },
         {
           "name": "Google Cloud Professional Data Engineer",
-          "issuingOrganization": "Google Cloud",
+          "company": "Google Cloud",
           "issueDate": "2022-11-15",
           "expirationDate": "2025-11-15"
         }
       ],
       "skills": [
         {
-          "name": "Android Studio",
+          "skillName": "Android Studio",
           "position": "Android Developer Intern at Banque Misr",
           "endorsements": 3,
           "recentEndorsement": null
         },
         {
-          "name": "XML",
+          "skillName": "XML",
           "position": "Android Developer Intern at Banque Misr",
           "endorsements": 4,
           "recentEndorsement": "Endorsed by 1 person in the last 6 months"
         }
-      ]
+      ],
+      "planDetails": [
+        {
+          "planType": "",
+          "startDate": "",
+          "expiryDate": "",
+          "autoRenewal": "",
+          "cancelDate": ""
+        },
+        {
+          "planType": "",
+          "startDate": "",
+          "expiryDate": "",
+          "autoRenewal": "",
+          "cancelDate": ""
+        }
+      ],
+      "planStatistics": {
+        "messageCount": "",
+        "applicationCount": ""
+      },
+      "selectedExperienceIndex": 1,
+      "selectedEducationIndex": 0
     },
     {
       "id": 2,
       "firstName": "Mohamed",
       "lastName": "Sobh",
       "profilePicture": "https://th.bing.com/th/id/OIP.srNFFzORAaERcWvhwgPzVAHaHa?rs=1&pid=ImgDetMain",
-      "backgroundImage": "coverphoto",
-      "bio": "Computer Engineering Student at Cairo University",
+      "coverPhoto": "",
+      "resume": "https://linkedin.com/in/mohamed-sobh",
+      "headline": "Computer Engineering Student at Cairo University",
+      "bio": "",
       "country": "Egypt",
       "city": "Qesm El Maadi, Cairo",
       "industry": "Software Engineering",
-      "connections": 80,
+      "connectionCount": 80,
       "achievements": "Google Coding Competition Finalist",
-      "about": "",
       "email": "mohamed@example.com",
-      "profileUrl": "https://linkedin.com/in/mohamed-sobh",
       "isOwner": false,
+      "visibility": "Public",
       "workExperience": [
         {
           "title": "Software Engineer",
@@ -152,48 +176,69 @@
       "certifications": [
         {
           "name": "AWS Certified Solutions Architect",
-          "issuingOrganization": "Amazon Web Services (AWS)",
+          "company": "Amazon Web Services (AWS)",
           "issueDate": "2023-05-20",
           "expirationDate": "2026-05-20"
         },
         {
           "name": "Google Cloud Professional Data Engineer",
-          "issuingOrganization": "Google Cloud",
+          "company": "Google Cloud",
           "issueDate": "2022-11-15",
           "expirationDate": "2025-11-15"
         }
       ],
       "skills": [
         {
-          "name": "Kotlin",
+          "skillName": "Kotlin",
           "position": "Android Developer Intern at Banque Misr",
           "endorsements": 2,
           "recentEndorsement": "Endorsed by 2 people in the last 3 months"
         },
         {
-          "name": "Java",
+          "skillName": "Java",
           "position": "Android Developer Intern at Banque Misr",
           "endorsements": 0,
           "recentEndorsement": "Endorsed by 3 people in the last 1 year"
         }
-      ]
+      ],
+      "planDetails": [
+        {
+          "planType": "",
+          "startDate": "",
+          "expiryDate": "",
+          "autoRenewal": "",
+          "cancelDate": ""
+        },
+        {
+          "planType": "",
+          "startDate": "",
+          "expiryDate": "",
+          "autoRenewal": "",
+          "cancelDate": ""
+        }
+      ],
+      "planStatistics": {
+        "messageCount": "",
+        "applicationCount": ""
+      }
     },
     {
       "id": 3,
       "firstName": "Salma",
       "lastName": "Ahmed",
       "profilePicture": "https://th.bing.com/th/id/OIP.AxXeQv751lyx0ltppBIg6QHaHa?rs=1&pid=ImgDetMain",
-      "backgroundImage": "coverphoto",
-      "bio": "Marketing Specialist | Content Creator",
+      "coverPhoto": "",
+      "headline": "Marketing Specialist | Content Creator",
       "country": "Egypt",
       "city": "Giza",
       "industry": "Marketing & Media",
-      "connections": 80,
+      "connectionCount": 80,
       "achievements": "Top 10 Content Creators Award",
-      "about": "I thrive in collaborative environments, where I can contribute my problem-solving skills and creativity...",
+      "bio": "I thrive in collaborative environments, where I can contribute my problem-solving skills and creativity...",
       "email": "salma@example.com",
-      "profileUrl": "https://linkedin.com/in/salma-ahmed",
+      "resume": "https://linkedin.com/in/salma-ahmed",
       "isOwner": false,
+      "visibility": "Public",
       "workExperience": [
         {
           "title": "Software Engineer",
@@ -241,19 +286,39 @@
       "certifications": [
         {
           "name": "Certified Kubernetes Administrator (CKA)",
-          "issuingOrganization": "Linux Foundation",
+          "company": "Linux Foundation",
           "issueDate": "2024-02-10",
           "expirationDate": "2027-02-10"
         }
       ],
       "skills": [
         {
-          "name": "React",
+          "skillName": "React",
           "position": "Content Creator and Frontend Dev",
           "endorsements": 5,
           "recentEndorsement": "Endorsed by 3 people in the last 6 months"
         }
-      ]
+      ],
+      "planDetails": [
+        {
+          "planType": "",
+          "startDate": "",
+          "expiryDate": "",
+          "autoRenewal": "",
+          "cancelDate": ""
+        },
+        {
+          "planType": "",
+          "startDate": "",
+          "expiryDate": "",
+          "autoRenewal": "",
+          "cancelDate": ""
+        }
+      ],
+      "planStatistics": {
+        "messageCount": "",
+        "applicationCount": ""
+      }
     }
   ]
 }

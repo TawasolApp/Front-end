@@ -6,7 +6,7 @@ function CoverPhoto({ backgroundImage, isOwner, onImageClick, onUpload }) {
   return (
     <div className="relative w-full h-36 sm:h-44 bg-cover bg-center rounded-t-lg z-0">
       <img
-        src={backgroundImage || "https://via.placeholder.com/800x200"}
+        src={backgroundImage}
         alt="Cover Photo"
         className="w-full h-full object-cover cursor-pointer"
         onClick={() => onImageClick(backgroundImage)}

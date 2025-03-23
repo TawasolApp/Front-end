@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import OwnerActions from "../OwnerActions";
 
 function AboutSection({ user, isOwner }) {
+  if (!user) return null;
   const [expanded, setExpanded] = useState(false);
   const isClamped = user.about.length > 100;
   const hasAbout = user.about && user.about.trim().length > 0; // Check if About exists

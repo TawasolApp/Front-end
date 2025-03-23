@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import axios from "axios";
 
 function EditProfileModal({ user, isOpen, onClose, onSave }) {
   if (!isOpen) return null;
@@ -7,7 +8,9 @@ function EditProfileModal({ user, isOpen, onClose, onSave }) {
   const [editedUser, setEditedUser] = useState({ ...user });
   const [errors, setErrors] = useState({}); // State for validation errors
   const [showDiscardModal, setShowDiscardModal] = useState(false); // Discard confirmation state
-
+  // for changing  education and experience pinned at header,,and send BE to surive loading
+  const [selectedExperienceIndex, setSelectedExperienceIndex] = useState(0);
+  const [selectedEducationIndex, setSelectedEducationIndex] = useState(0);
   useEffect(() => {
     if (isOpen) {
       setEditedUser({ ...user });
@@ -31,8 +34,8 @@ function EditProfileModal({ user, isOpen, onClose, onSave }) {
       validationErrors.firstName = "First Name is required.";
     if (!editedUser.lastName?.trim())
       validationErrors.lastName = "Last Name is required.";
-    if (!editedUser.location?.trim())
-      validationErrors.location = "Country/Region is required.";
+    if (!editedUser.country?.trim())
+      validationErrors.country = "Country/Region is required.";
     if (!editedUser.industry?.trim())
       validationErrors.industry = "Industry is required.";
 
@@ -40,10 +43,37 @@ function EditProfileModal({ user, isOpen, onClose, onSave }) {
       setErrors(validationErrors);
       return; // Stop saving if errors exist
     }
+    //  Only send changed fields
+    const updates = {};
+    for (let key in editedUser) {
+      if (editedUser[key] !== user[key]) {
+        updates[key] = editedUser[key];
+      }
+    }
 
-    onSave(editedUser); // Save updated data
-    onClose(); // Close modal after saving
+    axios
+      .patch("http://localhost:5000/profile", {
+        id: user.id,
+        ...updates,
+        selectedExperienceIndex,
+        selectedEducationIndex,
+      })
+      .then((res) => {
+        onSave({
+          ...res.data,
+          selectedExperienceIndex,
+          selectedEducationIndex,
+        });
+        onClose();
+      })
+      .catch((err) => {
+        console.error(
+          " Failed to update profile:",
+          err.response?.data || err.message
+        );
+      });
   }
+
   function handleCancel() {
     // Check if any field is changed
     const isChanged = JSON.stringify(editedUser) !== JSON.stringify(user);
@@ -107,21 +137,21 @@ function EditProfileModal({ user, isOpen, onClose, onSave }) {
           className="border p-2 w-full mb-2 h-20"
         />
 
-        {/* Location */}
+        {/* country */}
         <label className="block text-sm font-medium text-gray-700">
           Country/Region *
         </label>
         <input
           type="text"
-          name="location"
-          value={editedUser.location || ""}
+          name="country"
+          value={editedUser.country || ""}
           onChange={handleChange}
           className={`border p-2 w-full mb-2 ${
-            errors.location ? "border-red-500" : ""
+            errors.country ? "border-red-500" : ""
           }`}
         />
-        {errors.location && (
-          <p className="text-red-500 text-sm">{errors.location}</p>
+        {errors.country && (
+          <p className="text-red-500 text-sm">{errors.country}</p>
         )}
 
         <label className="block text-sm font-medium text-gray-700">
@@ -156,30 +186,34 @@ function EditProfileModal({ user, isOpen, onClose, onSave }) {
         <label className="block text-sm font-medium text-gray-700">
           Work Experience
         </label>
-        <select name="workExperience" className="border p-2 w-full mb-2">
-          {Array.isArray(editedUser.workExperience) &&
-          editedUser.workExperience.length > 0 ? (
-            editedUser.workExperience.map((exp, index) => (
-              <option key={index}>{exp}</option>
-            ))
-          ) : (
-            <option>No Experience added</option>
-          )}
+        <select
+          name="workExperience"
+          className="border p-2 w-full mb-2"
+          value={selectedExperienceIndex}
+          onChange={(e) => setSelectedExperienceIndex(Number(e.target.value))}
+        >
+          {editedUser.workExperience?.map((exp, index) => (
+            <option key={index} value={index}>
+              {exp.title} at {exp.company}
+            </option>
+          ))}
         </select>
 
         {/* Education (Dropdown) */}
         <label className="block text-sm font-medium text-gray-700">
           Education
         </label>
-        <select name="education" className="border p-2 w-full mb-2">
-          {Array.isArray(editedUser.education) &&
-          editedUser.education.length > 0 ? (
-            editedUser.education.map((edu, index) => (
-              <option key={index}>{edu}</option>
-            ))
-          ) : (
-            <option>No education added</option>
-          )}
+        <select
+          name="education"
+          className="border p-2 w-full mb-2"
+          value={selectedEducationIndex}
+          onChange={(e) => setSelectedEducationIndex(Number(e.target.value))}
+        >
+          {editedUser.education?.map((edu, index) => (
+            <option key={index} value={index}>
+              {edu.institution} - {edu.degree}
+            </option>
+          ))}
         </select>
 
         {/* Skills (Dropdown) */}
@@ -189,7 +223,7 @@ function EditProfileModal({ user, isOpen, onClose, onSave }) {
         <select name="skills" className="border p-2 w-full mb-2">
           {Array.isArray(editedUser.skills) && editedUser.skills.length > 0 ? (
             editedUser.skills.map((skill, index) => (
-              <option key={index}>{skill}</option>
+              <option key={index}>{skill.skillName}</option>
             ))
           ) : (
             <option>No Skill added</option>

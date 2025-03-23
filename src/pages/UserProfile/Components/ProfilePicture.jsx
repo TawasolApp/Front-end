@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import ImageEnlarge from "./ImageEnlarge";
 import PlusIcon from "../../../assets/icons/plus-icon.svg";
+
 function ProfilePicture({
   profilePictureSrc,
   isOwner,
@@ -8,7 +9,7 @@ function ProfilePicture({
   onUpload,
 }) {
   return (
-    <div className="relative flex items-center justify-center">
+    <div className="relative flex items-center ">
       {/* Profile Picture & Plus Icon as One Unit */}
       <div className="relative">
         <div className="w-28 h-28 sm:w-36 sm:h-36 rounded-full overflow-hidden border-4 border-white shadow-md cursor-pointer flex items-center justify-center bg-white">
