@@ -1,0 +1,304 @@
+import React, { useState } from "react";
+import { FiUpload } from "react-icons/fi";
+import axios from "axios";
+import { useNavigate } from "react-router-dom";
+
+function CreateCompanyPage() {
+  const [companyName, setName] = useState("");
+  const [tagline, setTagline] = useState("");
+  const [industry, setIndustry] = useState("");
+  const [orgSize, setOrgSize] = useState("");
+  const [orgType, setOrgType] = useState("");
+  const [agreeTerms, setAgreeTerms] = useState(false);
+  const [errors, setErrors] = useState({});
+  const [loading, setLoading] = useState(false);
+  const [successMessage, setSuccessMessage] = useState("");
+  const navigate = useNavigate();
+
+  function validateForm() {
+    let newErrors = {};
+    if (!companyName.trim()) newErrors.companyName = "Please enter a name.";
+    if (!industry.trim()) newErrors.industry = "Please select an industry.";
+    if (!orgSize.trim())
+      newErrors.orgSize = "Please select an organization size.";
+    if (!orgType.trim())
+      newErrors.orgType = "Please select an organization type.";
+    if (!agreeTerms) newErrors.agreeTerms = "You must agree to the terms.";
+
+    setErrors(newErrors);
+    return Object.keys(newErrors).length === 0;
+  }
+
+  async function handleSubmit() {
+    if (!validateForm()) {
+      return; // Stop submission if there are validation errors
+    }
+
+    setLoading(true);
+
+    // Prepare company data for API request
+    const newCompany = {
+      companyId: companyName.toLowerCase(),
+      name: companyName,
+      industry: industry,
+      companySize: orgSize,
+      companyType: orgType,
+      description: `${companyName} is a leading company in the ${industry} sector.`,
+    };
+
+    try {
+      // Send POST request to create company
+      const response = await axios.post(
+        "http://localhost:5000/companies",
+        newCompany
+      );
+
+      if (response.status === 201) {
+        setSuccessMessage("Company page created successfully!");
+        setTimeout(() => {
+          navigate(`/company/${newCompany.companyId}/home`);
+        }, 2000);
+      }
+    } catch (error) {
+      if (error.response) {
+        setErrors((prev) => ({
+          ...prev,
+          apiError: error.response.data.error || "Something went wrong.",
+        }));
+      } else {
+        setErrors((prev) => ({
+          ...prev,
+          apiError: "Server error. Please try again later.",
+        }));
+      }
+    } finally {
+      setLoading(false);
+    }
+  }
+
+  return (
+    <div className="bg-gray-200">
+      <div className="max-w-7xl mx-auto p-6 bg-gray-200">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+          {/* Left Form Section */}
+          <div className="space-y-4 bg-white p-6 rounded-xl border border-gray-300 shadow-md">
+            {/* Name */}
+            <div>
+              <label className="block text-sm text-gray-600 mb-1">Name*</label>
+              <input
+                type="text"
+                value={companyName}
+                onChange={(e) => setName(e.target.value)}
+                className={`w-full p-1 border text-sm border-gray-400 rounded-md ${
+                  errors.companyName ? "border-red-500" : "border-gray-400"
+                }`}
+                placeholder="Add your organization’s name"
+              />
+              {errors.companyName && (
+                <p className="text-red-500 text-xs mt-1">
+                  {errors.companyName}
+                </p>
+              )}
+            </div>
+
+            {/* Website */}
+            <div>
+              <label className="block text-sm text-gray-600 mb-1">
+                Website
+              </label>
+              <input
+                type="url"
+                className="w-full p-1 border text-sm border-gray-400 rounded-md"
+                placeholder="Begin with http://, https:// or www."
+              />
+            </div>
+
+            {/* Industry */}
+            <div>
+              <label className="block text-sm text-gray-600 mb-1">
+                Industry*
+              </label>
+              <input
+                type="text"
+                value={industry}
+                onChange={(e) => setIndustry(e.target.value)}
+                className={`w-full p-1 border text-sm border-gray-400 rounded-md ${
+                  errors.industry ? "border-red-500" : "border-gray-400"
+                }`}
+                placeholder="ex: Information Services"
+              />
+              {errors.industry && (
+                <p className="text-red-500 text-xs mt-1">{errors.industry}</p>
+              )}
+            </div>
+
+            {/* Organization Size */}
+            <div>
+              <label className="block text-sm text-gray-600 mb-1">
+                Organization size*
+              </label>
+              <select
+                value={orgSize}
+                onChange={(e) => setOrgSize(e.target.value)}
+                className={`w-full p-1 border text-sm
+                border-gray-400 rounded-md ${
+                  errors.orgSize ? "border-red-500" : "border-gray-400"
+                }`}
+              >
+                <option value="">Select size</option>
+                <option>0-1 employees</option>
+                <option>2-10 employees</option>
+                <option>11-50 employees</option>
+                <option>51-200 employees</option>
+                <option>201-500 employees</option>
+                <option>501-1,000 employees</option>
+                <option>1,001-5,000 employees</option>
+                <option>5,001-10,000 employees</option>
+                <option>10,000+ employees</option>
+              </select>
+              {errors.orgSize && (
+                <p className="text-red-500 text-xs mt-1">{errors.orgSize}</p>
+              )}
+            </div>
+
+            {/* Organization Type */}
+            <div>
+              <label className="block text-sm text-gray-600 mb-1">
+                Organization type*
+              </label>
+              <select
+                value={orgType}
+                onChange={(e) => setOrgType(e.target.value)}
+                className={`w-full p-1 border text-sm border-gray-400
+                rounded-md ${
+                  errors.orgType ? "border-red-500" : "border-gray-400"
+                }`}
+              >
+                <option value="">Select type</option>
+                <option>Public company</option>
+                <option>Self-employed</option>
+                <option>Government agency</option>
+                <option>Nonprofit</option>
+                <option>Sole proprietorship</option>
+                <option>Privately held</option>
+                <option>Partnership</option>
+              </select>
+              {errors.orgType && (
+                <p className="text-red-500 text-xs mt-1">{errors.orgType}</p>
+              )}
+            </div>
+            {/* Logo Upload */}
+            <div>
+              <label className="block text-sm text-gray-600 mb-1">Logo</label>
+              <div className="w-full h-12 sm:h-16 md:h-20 lg:h-24 border border-gray-400 rounded-md p-4 text-center bg-gray-100 relative">
+                <div className="flex items-center justify-center gap-2 text-gray-600">
+                  <FiUpload className="text-xl font-semibold" />
+                  <p className="font-semibold">Choose file</p>
+                </div>
+                <p className="text-gray-600 text-sm">Upload to see preview</p>
+                <input
+                  type="file"
+                  className="w-full h-full mt-2 opacity-0 absolute top-0 left-0 right-0 bottom-0 cursor-pointer"
+                />
+              </div>
+
+              <p className="text-xs text-gray-500 mt-1">
+                300 x 300px recommended. JPGs, JPEGs, and PNGs supported.
+              </p>
+            </div>
+            {/* Tagline */}
+            <div>
+              <label className="block text-sm text-gray-500 mb-1">
+                Tagline
+              </label>
+              <textarea
+                value={tagline}
+                onChange={(e) => setTagline(e.target.value)}
+                className="w-full p-2 border rounded-md"
+                placeholder="ex: An information services firm helping small businesses succeed."
+                maxLength={120}
+              />
+              <p className="text-xs text-gray-500">
+                Use your tagline to briefly describe what your organization
+                does. This can be changed later.
+              </p>
+            </div>
+
+            {/* Verification Checkbox */}
+            <div className="flex items-start gap-2">
+              <input
+                type="checkbox"
+                checked={agreeTerms}
+                onChange={() => setAgreeTerms(!agreeTerms)}
+              />
+              <p className="text-sm">
+                I verify that I am an authorized representative of this
+                organization and have the right to act on its behalf in the
+                creation and management of this page. The organization and I
+                agree to the additional terms for Pages.
+              </p>
+            </div>
+            {errors.agreeTerms && (
+              <p className="text-red-500 text-xs mt-1">{errors.agreeTerms}</p>
+            )}
+
+            {/* Terms Link */}
+            <p className="text-blue-600 cursor-pointer hover:underline font-medium text-sm">
+              Read the LinkedIn Pages Terms
+            </p>
+          </div>
+
+          {/* Right Page Preview */}
+          <div className="bg-gray-200">
+            <div className="bg-white p-6 rounded-xl border border-gray-300 shadow-md h-auto pt-2 px-0 pb-0">
+              <h3 className="text-lg font-semibold text-gray-700 mb-2 pl-2">
+                Page preview
+              </h3>
+              <div className="bg-gray-400 w-full p-6 rounded-b-xl">
+                <div className="mt-4 bg-white pt-4 pb-4 rounded-xl px-6">
+                  <div className="h-32 w-32 bg-gray-200 mx-auto rounded-full mb-4"></div>
+                  <h4 className="text-lg font-bold text-gray-700">
+                    {companyName || "Company Name"}
+                  </h4>
+                  <p className="text-sm text-gray-600 font-medium">
+                    {tagline || "Tagline"}
+                  </p>
+                  <p className="text-sm text-gray-500">
+                    {industry || "Industry"}
+                  </p>
+                  <button className="mt-4 px-6 py-2 rounded-full bg-blue-600 text-white font-semibold">
+                    + Follow
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {/* Submit Button */}
+        <div className="flex mt-6">
+          <button
+            onClick={handleSubmit}
+            disabled={!agreeTerms}
+            className={`px-6 py-2 rounded-full font-semibold transition ${
+              !agreeTerms
+                ? "bg-gray-400 text-gray-700 cursor-not-allowed"
+                : "bg-blue-600 text-white hover:bg-blue-800"
+            }`}
+          >
+            Create Page
+          </button>
+          {/* Success or Error Message */}
+          {successMessage && (
+            <p className="text-green-600 mt-2">{successMessage}</p>
+          )}
+          {errors.apiError && (
+            <p className="text-red-600 mt-2">{errors.apiError}</p>
+          )}
+        </div>
+      </div>
+    </div>
+  );
+}
+
+export default CreateCompanyPage;

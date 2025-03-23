@@ -1,10 +1,9 @@
 import React, { useState } from "react";
-import company from "../testdata.js";
 import Overviewbox from "./Overviewbox.jsx";
-// import { FiEdit } from "react-icons/fi";
 import Overviewcomponent from "./Overviewcomponent.jsx";
-function Aboutoverview() {
+function Aboutoverview(props) {
   // const isAdmin = true;
+  const company = props.company;
   return (
     <div className="bg-white p-6 shadow-md rounded-md w-full max-w-3xl mx-auto pb-4 mb-8 relative">
       <div className="flex justify-between items-center mb-2">
@@ -19,33 +18,49 @@ function Aboutoverview() {
         )} */}
       </div>
       <p className="text-gray-900">{company.overview}</p>
-      <div className="mt-4">
-        <p className="font-bold">Website</p>
-        <a
-          href={company.website}
-          target="_blank"
-          rel="noopener noreferrer"
-          className="text-blue-600 font-semibold hover:underline"
-        >
-          {company.website}
-        </a>
-      </div>
-      <Overviewcomponent title="Phone" content={company.number} />
-      {company.verified && (
+      {company?.website && (
+        <div className="mt-4">
+          <p className="font-bold">Website</p>
+          <a
+            href={company.website}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="text-blue-600 font-semibold hover:underline"
+          >
+            {company.website}
+          </a>
+        </div>
+      )}
+      {company?.phoneNumber && (
+        <Overviewcomponent title="Phone" content={company.phoneNumber} />
+      )}
+      {company?.verified && company?.verification_date && (
         <Overviewcomponent
           title="Verified Page"
           content={company.verification_date}
         />
       )}
-      <Overviewcomponent title="Industry" content={company.Industry} />
-      <Overviewcomponent
-        title="Company Size"
-        content={`${company.employees}+ employees`}
-      />
+      {company?.industry && (
+        <Overviewcomponent title="Industry" content={company.industry} />
+      )}
 
-      <Overviewcomponent title="Headquarters" content={company.address} />
-      <Overviewcomponent title="Type" content={company.Type} />
-      <Overviewcomponent title="Founded" content={company.Founded} />
+      {company?.companySize && (
+        <Overviewcomponent
+          title="Company Size"
+          content={`${company.companySize}+ employees`}
+        />
+      )}
+
+      {company?.address && (
+        <Overviewcomponent title="Headquarters" content={company.address} />
+      )}
+
+      {company?.companyType && (
+        <Overviewcomponent title="Type" content={company.companyType} />
+      )}
+      {company?.founded && (
+        <Overviewcomponent title="Founded" content={company.founded} />
+      )}
     </div>
   );
 }

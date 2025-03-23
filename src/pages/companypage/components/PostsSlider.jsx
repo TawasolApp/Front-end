@@ -2,9 +2,13 @@ import React, { useRef } from "react";
 import PostSlide from "./PostSlide";
 import posts from "../poststest";
 import { AiOutlineLeft, AiOutlineRight } from "react-icons/ai";
+import { useNavigate, useParams } from "react-router-dom"; // Import useParams
+import { HiOutlineDocumentText } from "react-icons/hi"; // Import document icon
 
 function PostsSlider({ setActiveButton }) {
   const sliderRef = useRef(null);
+  const navigate = useNavigate();
+  const { companyId } = useParams(); // Dynamically get companyId from URL
 
   const scrollLeft = () => {
     if (sliderRef.current) {
@@ -38,22 +42,33 @@ function PostsSlider({ setActiveButton }) {
           </button>
         </div>
       </div>
-
-      {/* Slider Wrapper - No Scrollbar But Scrollable */}
+      {/* Slider Wrapper */}
       <div className="relative overflow-hidden">
         <div
           ref={sliderRef}
           className="flex space-x-4 overflow-x-scroll no-scrollbar scroll-smooth"
           style={{ scrollbarWidth: "none", msOverflowStyle: "none" }}
         >
-          {posts.map((post, index) => (
+          {/* Show only the first 4 posts */}
+          {posts.slice(0, 4).map((post, index) => (
             <div key={index} className="flex-shrink-0 w-[350px]">
               <PostSlide post={post} />
             </div>
           ))}
+
+          {/* Last Slide */}
+          <div className="bg-white rounded-2xl border border-gray-400 p-4 w-[350px] flex-shrink-0 flex flex-col justify-between min-h-[400px] h-[400px]">
+            <HiOutlineDocumentText className="text-gray-500 w-12 h-12 mb-3 " />
+            <p className="text-gray-700 text-center mb-4 ">Show all posts</p>
+            <button
+              className="border border-blue-600 text-blue-600 py-2 px-6 rounded-full font-semibold flex items-center justify-center gap-2 hover:bg-blue-50 transition "
+              onClick={() => navigate(`/company/${companyId}/posts`)} // Use dynamic companyId
+            >
+              Show all →
+            </button>
+          </div>
         </div>
       </div>
-
       {/* Dots Navigation */}
       <div className="flex justify-center mt-3 space-x-2">
         {posts.map((_, index) => (
@@ -64,8 +79,8 @@ function PostsSlider({ setActiveButton }) {
         ))}
       </div>
       <button
-        className="w-full py-2 text-gray-700 border-t border-gray-300 mt-4"
-        onClick={() => setActiveButton("Posts")}
+        className="w-full py-2 text-gray-700 border-t border-gray-300 mt-4  hover:bg-gray-200"
+        onClick={() => navigate(`/company/${companyId}/posts`)} // Use dynamic companyId
       >
         Show all posts →
       </button>

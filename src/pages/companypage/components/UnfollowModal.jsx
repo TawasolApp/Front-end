@@ -1,16 +1,27 @@
 import React from "react";
-
+import { useEffect } from "react";
 const Unfollowmodal = ({ show, cancel, confirm }) => {
+  useEffect(() => {
+    if (show) {
+      document.body.classList.add("overflow-hidden");
+    } else {
+      document.body.classList.remove("overflow-hidden");
+    }
+
+    return () => {
+      document.body.classList.remove("overflow-hidden");
+    };
+  }, [show]);
   if (!show) return null;
 
   return (
-    <div className="fixed inset-0 flex items-center justify-center bg-gray-200/60">
+    <div className="fixed inset-0 flex items-center justify-center bg-gray-200/60 z-[999]">
       <div className="bg-white p-5 rounded-lg shadow-xl w-80 relative">
         <button
+          className="absolute top-2 right-2 text-gray-600 text-xl font-bold hover:text-gray-900 transition"
           onClick={cancel}
-          className="absolute top-4 right-6 text-gray-500 hover:text-gray-700 font-semibold text-lg"
         >
-          X
+          ✖
         </button>
 
         <h2 className="text-lg font-semibold">Unfollow Page</h2>
