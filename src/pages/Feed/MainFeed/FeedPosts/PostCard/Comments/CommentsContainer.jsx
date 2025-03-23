@@ -54,7 +54,7 @@ const CommentsContainer = ({
 
     const handleDeleteComment = (commentId) => {
         try {
-            axiosInstance.delete(`/posts/comments/${postId}/${commentId}`);
+            axiosInstance.delete(`/posts/comments/${commentId}`);
             incrementCommentsNumber("dec");
             setComments(prevComments => prevComments.filter(comment => comment.id !== commentId));
         } catch (e) {

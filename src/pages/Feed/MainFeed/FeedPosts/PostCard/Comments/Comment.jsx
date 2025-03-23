@@ -9,7 +9,9 @@ import DropdownMenu from '../../../../GenericComponents/DropdownMenu';
 import ActivitiesHolder from './ActivitiesHolder';
 import CommentThreadWrapper from './CommentThreadWrapper';
 import ReactionsModal from '../../ReactionModal/ReactionsModal';
+import AddForm from './AddForm';
 import { formatDate } from '../../../../../../utils';
+import { axiosInstance } from '../../../../../../apis/axios';
 
 const Comment = ({
   comment,
@@ -25,9 +27,12 @@ const Comment = ({
 
   const [localComment, setLocalComment] = useState(comment);
   const [showReactions, setShowReactions] = useState(false);
+  const [editorMode, setEditorMode] = useState(false);
 
   const handleReaction = (reactionTypeAdd, reactionTypeRemove) => {
+
     // TODO: API
+    
     setLocalComment(prev => {
         const newReactions = { ...prev.reactions };
 
@@ -53,7 +58,7 @@ const Comment = ({
   if (localComment.authorId === currentAuthorId) {
     menuItems.push({
       text: 'Edit comment',
-      onClick: () => console.log('edit comment'),
+      onClick: () => setEditorMode(true),
       icon: EditIcon
     });
     menuItems.push({
@@ -63,50 +68,77 @@ const Comment = ({
     });
   }
 
-  return (
-    <article>
-      <div className="flex px-4 pt-1 pb-2">
-        <ActorHeader
-          authorId={localComment.authorId}
-          authorName={localComment.authorName}
-          authorBio={localComment.authorBio}
-          authorPicture={localComment.authorPicture}
-          iconSize={32}
-        />
-        <div className="ml-auto flex items-center gap-2">
-          <span className="text-xs text-gray-500">
-            {formatDate(localComment.timestamp)}
-          </span>
-          <DropdownMenu menuItems={menuItems} position="right-0">
-            <button className="text-gray-500 hover:bg-gray-100 rounded-full p-1">
-              <MoreHorizIcon className="w-5 h-5" />
-            </button>
-          </DropdownMenu>
-        </div>
-      </div>
-      <CommentThreadWrapper>
-        <div className="pl-2">
-          <p className="text-sm font-normal">{localComment.content}</p>
-        </div>
-      </CommentThreadWrapper>
-      <CommentThreadWrapper>
-        <div className="pl-1 pt-2">
-          <ActivitiesHolder
-            reactions={localComment.reactions}
-            onReactionChange={handleReaction}
-            setShowReactions={() => {console.log("Hello"); setShowReactions(true)}}
-            replies={localComment.replies.length}
-          />
-        </div>
-      </CommentThreadWrapper>
-      {showReactions && (
-        <ReactionsModal
-            APIURL={`/posts/reactions/${localComment.postId}/${localComment.id}`}
-            setShowLikes={() => setShowReactions(false)}
-        />
-      )}
+  const handleEditComment = async (text) => {
+    try {
+      console.log("hello")
+      setEditorMode(false);
+      await axiosInstance.patch(`/posts/comments/${localComment.id}`, {
+        content: text,
+        tagged: []
+      });
+      setLocalComment(prev => ({
+        ...prev,
+        content: text
+      }))
+    } catch (e) {
+      console.log(e.message);
+    }
+  }
 
-    </article>
+  return (
+    <>
+      {editorMode ? (
+        <AddForm
+          handleAddFunction={handleEditComment}
+          initialText={localComment.content}
+          close={() => setEditorMode(false)}
+          type="Reply"
+        />
+      ) : (
+        <article>
+          <div className="flex px-4 pt-1 pb-2">
+            <ActorHeader
+              authorId={localComment.authorId}
+              authorName={localComment.authorName}
+              authorBio={localComment.authorBio}
+              authorPicture={localComment.authorPicture}
+              iconSize={32}
+            />
+            <div className="ml-auto flex items-center gap-2">
+              <span className="text-xs text-gray-500">
+                {formatDate(localComment.timestamp)}
+              </span>
+              <DropdownMenu menuItems={menuItems} position="right-0">
+                <button className="text-gray-500 hover:bg-gray-100 rounded-full p-1">
+                  <MoreHorizIcon className="w-5 h-5" />
+                </button>
+              </DropdownMenu>
+            </div>
+          </div>
+          <CommentThreadWrapper>
+            <div className="pl-2">
+              <p className="text-sm font-normal">{localComment.content}</p>
+            </div>
+          </CommentThreadWrapper>
+          <CommentThreadWrapper>
+            <div className="pl-1 pt-2">
+              <ActivitiesHolder
+                reactions={localComment.reactions}
+                onReactionChange={handleReaction}
+                setShowReactions={() => {console.log("Hello"); setShowReactions(true)}}
+                replies={localComment.replies.length}
+              />
+            </div>
+          </CommentThreadWrapper>
+          {showReactions && (
+            <ReactionsModal
+                APIURL={`/posts/reactions/${localComment.postId}/${localComment.id}`}
+                setShowLikes={() => setShowReactions(false)}
+            />
+          )}
+        </article>
+      )}
+    </>
   );
 };
 

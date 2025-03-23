@@ -3,6 +3,8 @@ import { Avatar } from '@mui/material';
 
 const AddForm = ({
     handleAddFunction,
+    initialText = "",
+    close=null,
     type
 }) => {
 
@@ -13,7 +15,7 @@ const AddForm = ({
     const currentAuthorBio = "Computer Engineering Student at Cairo University";
     const currentAuthorType = "User";
 
-    const [commentText, setCommentText] = useState('');
+    const [commentText, setCommentText] = useState(initialText);
     const hasText = commentText.trim().length > 0;
 
     const handleSubmit = (e) => {
@@ -37,13 +39,22 @@ const AddForm = ({
             <form onSubmit={handleSubmit} className="flex-1 relative">
                 <textarea
                     placeholder={type === "Comment" ? "Add a comment..." : "Edit Comment..." }
-                    className={`w-full px-3 py-1.5 bg-gray-50 ${hasText ? "rounded-xl" : "rounded-full"} border border-gray-200 focus:outline-none focus:border-gray-400 pr-20 resize-none transition-all duration-200 ${hasText ? 'h-16' : 'h-8'} overflow-hidden`}
+                    className={`w-full px-3 py-1.5 bg-gray-50 ${(hasText || (type === "Reply")) ? "rounded-xl" : "rounded-full"} border border-gray-200 focus:outline-none focus:border-gray-400 pr-20 resize-none transition-all duration-200 ${(hasText || (type === "Reply")) ? 'h-16' : 'h-8'} overflow-hidden`}
                     value={commentText}
                     onChange={(e) => setCommentText(e.target.value)}
                     rows={1}
                 />
               
-                {hasText && (
+                {type === "Reply" && (
+                    <button
+                        onClick={close}
+                        className="absolute right-20 bottom-3 px-3 py-1 text-sm font-medium text-white bg-blue-600 rounded-full hover:bg-blue-700"
+                    >
+                        Cancel
+                    </button>
+                )}
+
+                {(hasText || (type === "Reply")) && (
                     <button
                         type="submit"
                         className="absolute right-2 bottom-3 px-3 py-1 text-sm font-medium text-white bg-blue-600 rounded-full hover:bg-blue-700"
