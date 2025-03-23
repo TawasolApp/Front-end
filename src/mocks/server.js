@@ -4,6 +4,7 @@ const server = create();
 const _router = router("src/mocks/db.json");
 const middlewares = defaults();
 
+
 server.use(middlewares);
 server.use(bodyParser);
 
@@ -21,7 +22,7 @@ const currentUser = {
 server.get("/posts", (req, res) => {
   const posts = _router.db.get("posts").value();
   res.jsonp(posts);
-})
+});
 
 server.post('/posts', (req, res) => {
   const { authorId, content, media, taggedUsers, visibility } = req.body;
@@ -32,14 +33,14 @@ server.post('/posts', (req, res) => {
   }
 
   const newPost = {
-      id: uuidv4(),
+      id: Date.now().toString(),
       isSaved: false,
       authorId: currentUser.id,
       authorName: currentUser.name,
       authorPicture: currentUser.picture,
       authorBio: currentUser.bio,
-      content,
-      media: media || [],
+      content: content,
+      media: media,
       reactions: {
           Love: 0,
           Celebrate: 0,
@@ -50,17 +51,15 @@ server.post('/posts', (req, res) => {
       },
       comments: 0,
       shares: 0,
-      taggedUsers: taggedUsers || [],
-      visibility,
-      authorType: "User",
-      reactType: "",
-      repostDetails: {},
+      taggedUsers: taggedUsers,
+      visibility: visibility,
+      authorType: currentUser.type,
+      reactType: null,
       timestamp: new Date().toISOString()
   };
 
   // Access the existing posts
-  const db = router.db; // Get reference to db.json
-  const posts = db.get('posts');
+  const posts = _router.db.get('posts');
 
   // Add the new post and persist the change
   posts.push(newPost).write();
@@ -70,100 +69,74 @@ server.post('/posts', (req, res) => {
 
 server.delete('/delete/:postId', (req, res) => {
   const { postId } = req.params;
-
-  // Access the database
-  const db = router.db; // Reference to db.json
-  const posts = db.get('posts');
-
+  const posts = _router.db.get('posts');
   // Find the post
   const postToDelete = posts.find({ id: postId }).value();
-
   if (!postToDelete) {
-      return res.status(404).json({ error: 'Post not found' });
+    return res.status(404).json({ error: 'Post not found' });
   }
-
   // Remove the post and persist the change
   posts.remove({ id: postId }).write();
-
   res.status(200).json({ message: 'Post deleted successfully' });
 });
 
 server.patch('/posts/:postId', (req, res) => {
   const { postId } = req.params;
   const { authorId, content, media, taggedUsers, visibility } = req.body;
-
-  // Access the database
-  const db = router.db;
-  const posts = db.get('posts');
-
-  // Find the post
+  const posts = _router.db.get('posts');
   const post = posts.find({ id: postId }).value();
-
   if (!post) {
-      return res.status(404).json({ error: 'Post not found' });
+    return res.status(404).json({ error: 'Post not found' });
   }
-
   // Update post details
   posts
       .find({ id: postId })
       .assign({
-          authorId: authorId || post.authorId, // Maintain existing data if no update provided
           content: content || post.content,
           media: media || post.media,
           taggedUsers: taggedUsers || post.taggedUsers,
-          visibility: visibility || post.visibility,
-          timestamp: new Date().toISOString() // Update timestamp for modification tracking
+          visibility: visibility || post.visibility
       })
       .write();
-
-  const updatedPost = posts.find({ id: postId }).value();
-
-  res.status(200).json({ message: 'Post updated successfully', updatedPost });
+  res.status(200).json({ message: 'Post updated successfully' });
 });
 
 // REACT TO POST (ADD AND DELETE)
 server.post('/posts/react/:postId', (req, res) => {
   const { postId } = req.params;
   const { reactions, postType } = req.body;
-
-  const db = router.db;
-  const posts = db.get('posts');
-  const reactionsTable = db.get('reactions');
-
+  const posts = _router.db.get('posts');
+  const reactionsTable = _router.db.get('reactions');
   const post = posts.find({ id: postId }).value();
   if (!post) {
       return res.status(404).json({ error: 'Post not found' });
   }
-
   // Remove existing reaction by this author
   const existingReaction = reactionsTable
-      .find({ postId, authorId: currentUser.id })
+      .find({ postId: postId, authorId: currentUser.id })
       .value();
-
   if (existingReaction) {
       reactionsTable.remove({ likeId: existingReaction.likeId }).write();
-
       // Subtract 1 from the old reaction type in the posts table
       if (existingReaction.type && post.reactions[existingReaction.type] > 0) {
           posts
               .find({ id: postId })
               .assign({
                   reactions: {
-                      ...post.reactions,
+                      ...post.reactions, 
                       [existingReaction.type]: post.reactions[existingReaction.type] - 1
-                  }
+                  },
+                  reactType: null,
               })
               .write();
       }
   }
-
   // Add the new reaction if requested
   const reactionTypeAdd = Object.keys(reactions).find(type => reactions[type] === 1);
-
   if (reactionTypeAdd) {
       const newReaction = {
           likeId: `${postId}-${currentUser.id}-${reactionTypeAdd}`,
-          postId,
+          postId: postId,
           authorId: currentUser.id,
           authorType: currentUser.type,
           type: reactionTypeAdd,
@@ -171,9 +144,7 @@ server.post('/posts/react/:postId', (req, res) => {
           authorPicture: currentUser.picture,
           authorBio: currentUser.bio
       };
-
       reactionsTable.push(newReaction).write();
-
       // Add 1 to the new reaction type in the posts table
       posts
           .find({ id: postId })
@@ -181,72 +152,56 @@ server.post('/posts/react/:postId', (req, res) => {
               reactions: {
                   ...post.reactions,
                   [reactionTypeAdd]: (post.reactions[reactionTypeAdd] || 0) + 1
-              }
+              },
+              reactType: reactionTypeAdd
           })
           .write();
   }
-
   res.status(200).json({ message: 'Reaction updated successfully' });
 });
 
 server.get('/posts/reactions/:postId', (req, res) => {
   const { postId } = req.params;
-
-  const db = router.db;
-  const reactionsTable = db.get('reactions');
-
+  const reactionsTable = _router.db.get('reactions');
   // Filter reactions for the specified post
   const postReactions = reactionsTable
       .filter({ postId })
       .value();
-
   if (!postReactions || postReactions.length === 0) {
       return res.status(404).json({ error: 'No reactions found for this post' });
   }
-
   res.status(200).json(postReactions);
 });
 
-// SAVE UNSAVE POSTS
+// SAVED
+server.get('/posts/saved', (req, res) => {
+  const posts = _router.db.get("posts").filter({ isSaved: true }).value();
+  res.jsonp(posts);
+})
+
 server.post('/posts/save/:postId', (req, res) => {
   const { postId } = req.params;
-
-  // Access the database
-  const db = router.db;
-  const posts = db.get('posts');
-
-  // Find the post
+  const posts = _router.db.get('posts');
   const post = posts.find({ id: postId }).value();
-
   if (!post) {
-      return res.status(404).json({ error: 'Post not found' });
+    return res.status(404).json({ error: 'Post not found' });
   }
-
-  // Update `isSaved` to true
   posts.find({ id: postId }).assign({ isSaved: true }).write();
-
   res.status(200).json({ message: 'Post saved successfully' });
 });
 
 server.delete('/posts/save/:postId', (req, res) => {
   const { postId } = req.params;
-
-  const db = router.db;
-  const posts = db.get('posts');
-
+  const posts = _router.db.get('posts');
   const post = posts.find({ id: postId }).value();
-
   if (!post) {
-      return res.status(404).json({ error: 'Post not found' });
+    return res.status(404).json({ error: 'Post not found' });
   }
-
-  // Update `isSaved` to false
   posts.find({ id: postId }).assign({ isSaved: false }).write();
-
   res.status(200).json({ message: 'Post unsaved successfully' });
 });
 
-
+// COMMENTS
 server.get("/posts/comments/:postId", (req, res) => {
   const { postId } = req.params;
   console.log(`Fetching comments for postId: ${postId}`);
@@ -260,7 +215,6 @@ server.get("/posts/comments/:postId", (req, res) => {
   res.jsonp(comments);
 });
 
-// POST endpoint to add a new comment to a post
 server.post("/posts/comment/:postId", (req, res) => {
   const { postId } = req.params;
   const { content, taggedUsers } = req.body;
@@ -314,6 +268,39 @@ server.post("/posts/comment/:postId", (req, res) => {
   
   // Return the newly created comment
   res.status(201).jsonp(newComment);
+});
+
+server.patch("/posts/comments/:commentId", (req, res) => {
+  const { commentId } = req.params;
+  const { content, taggedUsers } = req.body;
+  
+  const data = _router.db.get("comments").find({ id: commentId });
+  if (data) {
+    data.assign({ content: content }).write();
+    return res.status(200).json({ message: 'Comment edited successfully' });
+  }
+  return res.status(404).json({ message: 'Comment not found' });
+});
+
+server.delete("/posts/comments/:commentId", (req, res) => {
+  const { commentId } = req.params;
+  const comments = _router.db.get("comments");
+  const wantedComment = comments.find({ id: commentId }).value();
+
+  if (wantedComment) {
+    const posts = _router.db.get("posts");
+    const wantedPost = posts.find({ id: wantedComment.postId }).value();
+
+    if (wantedPost) {
+      const setCount = Math.max(wantedPost.comments - 1, 0); // Prevents negative values
+      posts.find({ id: wantedComment.postId }).assign({ comments: setCount }).write();
+
+      comments.remove({ id: commentId }).write();
+      return res.status(200).json({ message: 'Comment deleted successfully' });
+    }
+  }
+
+  res.status(404).json({ error: 'Comment not found' });
 });
 
 server.use(_router);

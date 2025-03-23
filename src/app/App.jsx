@@ -2,6 +2,7 @@ import "./App.css";
 import { BrowserRouter as Router, Route, Routes, Link } from 'react-router-dom';
 
 import FeedContainer from "../pages/Feed/FeedContainer";
+import SavedPostsContainer from "../pages/SavedPosts/SavedPostsContainer";
 
 const App = () => {
 
@@ -10,6 +11,7 @@ const App = () => {
       <Routes>
         <Route path="/" element={<FeedContainer />} />
         <Route path="/feed/" element={<FeedContainer />} />
+        <Route path="/my-items/saved-posts" element={<SavedPostsContainer />} />
         <Route path="/in/:usedId/" element={<h1>HelloWorld</h1>} />
       </Routes>
     </Router>
