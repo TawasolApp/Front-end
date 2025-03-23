@@ -117,7 +117,7 @@ function GenericSection({ title, type, items, isOwner }) {
           onClick={() => navigate(`${type.toLowerCase()}`)}
           className="w-full mt-4 text-black-500 hover:underline text-center block font-medium pb-4"
         >
-          Show all {data.length} {type.toLowerCase()} records →
+          Show all {items.length} {type.toLowerCase()} records →
         </button>
       )}
 

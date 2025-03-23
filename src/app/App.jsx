@@ -7,14 +7,12 @@ import {
   Navigate,
 } from "react-router-dom";
 import ProfilePage from "../pages/UserProfile/Components/ProfilePage";
-import GenericPage2 from "../pages/UserProfile/Components/GenericComponent/OLDWAYS/GenericPage2";
 import Connections from "../pages/UserProfile/Components/Connections";
 import { useEffect, useState } from "react";
 import axios from "axios";
 import GenericPage from "../pages/UserProfile/Components/GenericComponent/Useless/GenericPage";
 import ProfileLayout from "../pages/UserProfile/Components/profileLayout";
-import GenericPage2Wrapper from "../pages/UserProfile/Components/GenericComponent/OLDWAYS/GenericPage2Wrapper";
-import GenericSection from "../pages/UserProfile/Components/GenericComponent/Useless/GenericSection";
+// import GenericSection from "../pages/UserProfile/Components/GenericComponent/Useless/GenericSection";
 function App() {
   const isOwner = true;
   return (
@@ -23,7 +21,7 @@ function App() {
         {/*  Top-level layout with slug param */}
         <Route path="/users/:profileSlug" element={<ProfileLayout />}>
           {/* 👇 This is your main profile page (inside layout) */}
-          <Route index element={<ProfilePage isOwner={isOwner} />} />
+          <Route index element={<ProfilePage />} />
           {/*  Sub-pages */}
 
           <Route
@@ -32,7 +30,7 @@ function App() {
               <GenericPage
                 title="education"
                 type="education"
-                isOwner={isOwner}
+                // isOwner={isOwner}
               />
             }
           />
@@ -42,15 +40,13 @@ function App() {
               <GenericPage
                 title="experience"
                 type="experience"
-                isOwner={isOwner}
+                // isOwner={isOwner}
               />
             }
           />
           <Route
             path="skills"
-            element={
-              <GenericPage title="skills" type="skills" isOwner={isOwner} />
-            }
+            element={<GenericPage title="skills" type="skills" />}
           />
           <Route
             path="certifications"
@@ -58,7 +54,7 @@ function App() {
               <GenericPage
                 title="Certifications"
                 type="certifications"
-                isOwner={isOwner}
+                // isOwner={isOwner}
               />
             }
           />
@@ -93,42 +89,3 @@ function App() {
 }
 
 export default App;
-{
-  /* <Route
-            path="experience"
-            element={
-              <GenericPage2
-                title="Experience"
-                type="experience"
-                items={mockExperience}
-                isOwner={isOwner}
-              />
-            }
-          />  */
-}
-{
-  /* <Route
-            path="skills"
-            element={
-              <GenericPage2
-                title="Skills"
-                type="skills"
-                items={mockskills}
-                isOwner={isOwner}
-              />
-            }
-          />  */
-}
-{
-  /* <Route
-            path="certifications"
-            element={
-              <GenericPage2
-                title="Certifications"
-                type="certifications"
-                items={mockCertifications}
-                isOwner={isOwner}
-              />
-            }
-          /> */
-}

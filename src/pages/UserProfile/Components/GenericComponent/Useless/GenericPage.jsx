@@ -102,17 +102,21 @@ function GenericPage({ title, type }) {
       {/* Card List */}
       <div className="space-y-4">
         {data.map((item, index) => (
-          <div
-            key={index}
-            onClick={() => isOwner && handleEdit(item, index)}
-            className={`cursor-${isOwner ? "pointer" : "default"}`}
-          >
+          <div key={index} className="relative group">
             <GenericCard
               item={item}
               type={type}
               isOwner={isOwner}
               showEditIcons={false}
             />
+            {isOwner && (
+              <button
+                onClick={() => handleEdit(item, index)}
+                className="absolute top-2 right-2 text-gray-500 hover:text-blue-700 p-1  group-hover:visible"
+              >
+                ✎
+              </button>
+            )}
           </div>
         ))}
       </div>
