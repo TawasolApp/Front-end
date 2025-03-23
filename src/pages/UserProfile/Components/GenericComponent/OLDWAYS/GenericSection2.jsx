@@ -63,7 +63,7 @@ function GenericSection2({ title, type, items, isOwner }) {
             {/* Edit Button (Redirects to GenericPage2 for Editing) */}
             <button
               className="w-8 h-8 bg-white-100 rounded-full flex items-center justify-center hover:bg-gray-200 transition"
-              onClick={() => navigate(`/${type.toLowerCase()}`)}
+              onClick={() => navigate(`${type.toLowerCase()}`)}
             >
               ✎
             </button>

@@ -1,10 +1,10 @@
 import React from "react";
-import GenericSection2 from "../GenericComponent/OLDWAYS/GenericSection2";
+import GenericSection from "../GenericComponent/Useless/GenericSection";
 import mockskills from "../MockData/mockskills";
 
 function SkillsSection({ isOwner }) {
   return (
-    <GenericSection2
+    <GenericSection
       title="Skills"
       type="skills"
       items={mockskills}

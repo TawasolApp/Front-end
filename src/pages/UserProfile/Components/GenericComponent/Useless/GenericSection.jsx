@@ -1,103 +1,127 @@
-// ✅ GenericSection.jsx
 import React, { useState } from "react";
 import GenericCard from "./GenericCard";
-import EducationModal from "../EducationModal";
-import ExperienceModal from "../ExperienceModal";
-import CertificationsModal from "../CertificationsModal";
-import SkillsModal from "../SkillsModal";
-import { useNavigate, useParams } from "react-router-dom";
+import GenericModal from "../Useless/GenericModal";
+import { useNavigate } from "react-router-dom";
 
 function GenericSection({ title, type, items, isOwner }) {
   const navigate = useNavigate();
+  const [data, setData] = useState(items);
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [selectedItem, setSelectedItem] = useState(null);
-  const [dataList, setDataList] = useState(items);
   const [editIndex, setEditIndex] = useState(null);
-  const { profileSlug } = useParams();
-  console.log("generiicccc", profileSlug);
-  //handler for add and edit modals
-  const openModal = (item = {}, index = null) => {
-    setSelectedItem(item);
-    setEditIndex(index);
+  const [editData, setEditData] = useState(null);
+  const [editMode, setEditMode] = useState(false);
+
+  // ➕ Add new
+  const handleAdd = () => {
+    setEditIndex(null);
+    setEditData(null);
+    setEditMode(false);
     setIsModalOpen(true);
   };
 
-  const handleClose = () => {
-    setIsModalOpen(false);
-    setSelectedItem(null);
-    setEditIndex(null);
+  // ✏ Edit existing
+  const handleEdit = (item, index) => {
+    setEditIndex(index);
+    setEditData(item);
+    setEditMode(true);
+    setIsModalOpen(true);
   };
 
+  // 💾 Save
   const handleSave = (updatedItem) => {
-    let updatedItems;
     if (editIndex !== null) {
-      updatedItems = dataList.map((item, i) =>
+      const updated = data.map((item, i) =>
         i === editIndex ? updatedItem : item
       );
+      setData(updated);
     } else {
-      updatedItems = [...dataList, updatedItem];
+      setData([...data, updatedItem]);
     }
-    setDataList(updatedItems);
-    handleClose();
+    closeModal();
+  };
+
+  // ❌ Delete
+  const handleDelete = () => {
+    if (editIndex !== null) {
+      const updated = data.filter((_, i) => i !== editIndex);
+      setData(updated);
+    }
+    closeModal();
+  };
+
+  const closeModal = () => {
+    setIsModalOpen(false);
+    setEditData(null);
+    setEditIndex(null);
+    setEditMode(false);
   };
 
   const renderModal = () => {
-    const modalProps = {
-      isOpen: isModalOpen,
-      onClose: handleClose,
-      onSave: handleSave,
-      initialData: selectedItem || {},
-    };
-
-    switch (type) {
-      case "education":
-        return <EducationModal {...modalProps} />;
-      case "experience":
-        return <ExperienceModal {...modalProps} />;
-      case "certifications":
-        return <CertificationsModal {...modalProps} />;
-      case "skills":
-        return <SkillsModal {...modalProps} />;
-      default:
-        return null;
-    }
+    return (
+      <GenericModal
+        isOpen={isModalOpen}
+        onClose={closeModal}
+        onSave={handleSave}
+        onDelete={handleDelete}
+        initialData={editData || {}}
+        type={type}
+        editMode={editIndex !== null} //  Add or edit
+      />
+    );
   };
 
   return (
-    <div className="mb-6">
-      <div className="flex justify-between items-center mb-3">
-        <h2 className="text-xl font-semibold">{title}</h2>
+    <div className="bg-white p-6 shadow-md rounded-md w-full max-w-3xl mx-auto pb-0 mb-8">
+      {/* Header row */}
+      <div className="flex justify-between items-center mb-4">
+        <h2 className="text-2xl font-semibold">{title}</h2>
         {isOwner && (
-          <button onClick={() => openModal()} className="text-blue-600">
-            + Add
-          </button>
+          <div className="flex gap-0">
+            <button
+              className="w-8 h-8 rounded-full flex items-center justify-center hover:bg-gray-200 transition"
+              onClick={handleAdd}
+            >
+              +
+            </button>
+            <button
+              className="w-8 h-8 rounded-full flex items-center justify-center hover:bg-gray-200 transition"
+              onClick={() => navigate(`${type.toLowerCase()}`)}
+            >
+              ✎
+            </button>
+          </div>
         )}
       </div>
-      <div className="space-y-4">
-        {dataList.slice(0, 2).map((item, index) => (
-          <GenericCard
-            key={index}
-            data={item}
-            type={type}
-            isOwner={isOwner}
-            onEdit={() => openModal(item, index)}
-          />
-        ))}
-        {dataList.length > 2 && (
-          <button
-            onClick={() => {
-              console.log("edit clicked");
 
-              navigate(`${type.toLowerCase()}`, {
-                state: { items: dataList },
-              });
-            }}
-            className="text-blue-500 hover:underline text-sm"
+      {/* Cards */}
+      <div className="flex flex-col gap-4">
+        {data.slice(0, 2).map((item, index) => (
+          <div
+            key={index}
+            onClick={() => isOwner && handleEdit(item, index)}
+            className={`cursor-${isOwner ? "pointer" : "default"}`}
           >
-            See more
-          </button>
-        )}
+            <GenericCard
+              item={item}
+              type={type}
+              isOwner={isOwner}
+              showEditIcons={false}
+            />
+          </div>
+        ))}
       </div>
+
+      {/* Show more */}
+      {data.length > 2 && (
+        <button
+          onClick={() => navigate(`${type.toLowerCase()}`)}
+          className="w-full mt-4 text-black-500 hover:underline text-center block font-medium pb-4"
+        >
+          Show all {data.length} {type.toLowerCase()} records →
+        </button>
+      )}
+
+      {/* Modal */}
       {renderModal()}
     </div>
   );

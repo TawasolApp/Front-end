@@ -1,42 +1,8 @@
 import React from "react";
-import GenericModal from "./Useless/GenericModal";
 
-function EducationModal({ isOpen, onClose, onSave, initialData = {} }) {
-  const [formData, setFormData] = React.useState(initialData);
-  const [errors, setErrors] = React.useState({});
-
-  React.useEffect(() => {
-    setFormData(initialData || {});
-  }, [initialData]);
-
-  const handleChange = (e) => {
-    setFormData({ ...formData, [e.target.name]: e.target.value });
-  };
-
-  // Minimal inline validation for required fields (optional)
-  const validate = () => {
-    const newErrors = {};
-    if (!formData.institution?.trim()) {
-      newErrors.institution = "School is required";
-    }
-    setErrors(newErrors);
-    return Object.keys(newErrors).length === 0;
-  };
-
-  const handleSave = (data) => {
-    if (validate()) {
-      onSave(data);
-    }
-  };
-
+function EducationFields({ formData, handleChange, errors }) {
   return (
-    <GenericModal
-      isOpen={isOpen}
-      onClose={onClose}
-      onSave={handleSave}
-      initialData={formData}
-      type="education"
-    >
+    <>
       <h2 className="text-lg font-semibold mb-4">Education Details</h2>
 
       <label className="block font-medium mb-1">School *</label>
@@ -107,8 +73,8 @@ function EducationModal({ isOpen, onClose, onSave, initialData = {} }) {
       <p className="text-right text-gray-500 text-sm">
         {formData.description?.length || 0}/1000
       </p>
-    </GenericModal>
+    </>
   );
 }
 
-export default EducationModal;
+export default EducationFields;

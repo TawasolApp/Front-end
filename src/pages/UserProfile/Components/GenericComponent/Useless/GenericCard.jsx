@@ -1,108 +1,83 @@
 import React, { useState } from "react";
-import GenericModal from "../Useless/GenericModal";
+import GenericModal from "./GenericModal";
 
-function GenericCard({ item, isOwner, type, onUpdate }) {
+function GenericCard({ item, isOwner, type, onEdit, showEditIcons = false }) {
   const [isEndorsed, setIsEndorsed] = useState(false);
   const [endorsementCount, setEndorsementCount] = useState(
     item.endorsements || 0
   );
   const [isModalOpen, setIsModalOpen] = useState(false);
 
-  const handleSave = (updatedData) => {
-    if (onUpdate) onUpdate(updatedData);
-    setIsModalOpen(false);
-  };
-
-  const handleDelete = () => {
-    alert(
-      `Delete ${type}: ${
-        item.title || item.institution || item.skill || item.name
-      }`
-    );
-  };
-
   const handleEndorse = () => {
     setEndorsementCount((prev) => (isEndorsed ? prev - 1 : prev + 1));
     setIsEndorsed(!isEndorsed);
   };
 
-  const renderHeader = () => (
-    <h3 className="text-lg font-semibold">
-      {item.title || item.institution || item.name || item.skill}
-    </h3>
-  );
-
-  const renderSub = () => (
-    <p className="text-gray-600">
-      {item.company ||
-        item.degree ||
-        item.position ||
-        item.issuingOrganization ||
-        ""}
-    </p>
-  );
-
-  const renderLocation = () => (
-    <p className="text-gray-500">
-      {item.location || item.field || item.fieldOfStudy || ""}
-    </p>
-  );
-
-  const renderDateRange = () => {
-    if (item.startMonth && item.startYear) {
-      return (
-        <p className="text-gray-500">
-          {item.startMonth} {item.startYear} -{" "}
-          {item.endMonth && item.endYear
-            ? `${item.endMonth} ${item.endYear}`
-            : "Present"}
-        </p>
-      );
-    }
-    return null;
+  const handleSave = (updatedData) => {
+    // Placeholder — if you need to update item here you can pass onUpdate
+    setIsModalOpen(false);
   };
 
   return (
-    <div className="bg-white p-4 rounded-lg shadow-sm w-full flex flex-col relative">
-      {/* Edit/Delete Buttons */}
-      {isOwner && (
-        <div className="absolute top-2 right-2 flex gap-2 items-center">
-          <button
-            onClick={() => {
-              console.log("edit clicked");
-              setIsModalOpen(true);
-            }} // ✅ Open modal
-            className="text-gray-500 hover:text-blue-700 p-1"
-          >
-            ✎
-          </button>
-          <button
-            onClick={handleDelete}
-            className="text-gray-500 hover:text-blue-700 p-1"
-          >
-            🗑
-          </button>
-        </div>
+    <div className="bg-white p-4 rounded-lg shadow-sm w-full flex flex-col space-y-0 relative">
+      {/* ✎ Only in section (showEditIcons = true) */}
+      {isOwner && showEditIcons && (
+        <button
+          className="absolute top-2 right-2 text-gray-500 hover:text-blue-700"
+          onClick={(e) => {
+            e.stopPropagation();
+            if (onEdit) onEdit(); // Trigger the modal in parent
+          }}
+        >
+          ✎
+        </button>
       )}
 
-      {/* Card Content */}
-      {renderHeader()}
-      {renderSub()}
-      {renderLocation()}
-      {renderDateRange()}
+      {/* Content Layout */}
+      {item.institution && (
+        <h3 className="text-lg font-semibold">{item.institution}</h3>
+      )}
+      {item.title && <h3 className="text-lg font-semibold">{item.title}</h3>}
+      {item.name && <h3 className="text-lg font-semibold">{item.name}</h3>}
+
+      <p className="text-gray-600">
+        {item.degree ||
+          item.position ||
+          item.company ||
+          item.issuingOrganization}
+      </p>
+
+      <p className="text-gray-500">
+        {item.location || item.field || item.fieldOfStudy}
+      </p>
+
+      <p className="text-gray-500">
+        {item.startMonth && item.startYear
+          ? `${item.startMonth} ${item.startYear}`
+          : ""}
+        {item.endMonth && item.endYear
+          ? ` - ${item.endMonth} ${item.endYear}`
+          : ""}
+      </p>
+
       {item.description && (
-        <p className="text-gray-700 text-sm mt-1">{item.description}</p>
+        <p className="text-gray-700 text-sm">{item.description}</p>
       )}
       {item.grade && (
         <p className="text-gray-500 text-sm">Grade: {item.grade}</p>
       )}
 
-      {/* Skills-specific endorsement UI */}
+      {/* Skills endorsement */}
       {type === "skills" && (
         <>
+          {item.recentEndorsement && (
+            <p className="text-gray-500 text-sm flex items-center mt-1">
+              {item.recentEndorsement}
+            </p>
+          )}
           <p className="text-gray-600 flex items-center mt-1">
-            <span className="mr-2">👥</span>
-            {endorsementCount} endorsement{endorsementCount !== 1 ? "s" : ""}
+            <span className="mr-2">👥</span> {endorsementCount} endorsement
+            {endorsementCount !== 1 ? "s" : ""}
           </p>
 
           {!isOwner && (
@@ -120,7 +95,7 @@ function GenericCard({ item, isOwner, type, onUpdate }) {
         </>
       )}
 
-      {/* ✅ Generic Modal */}
+      {/* Hidden modal in page, shown only in section */}
       {isModalOpen && (
         <GenericModal
           isOpen={isModalOpen}

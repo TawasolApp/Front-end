@@ -1,7 +1,7 @@
 const mockEducation = [
   {
     id: 1,
-    institution: "Harvard University",
+    institution: "Harvard whatt",
     degree: "Bachelor's",
     field: "Computer Science",
     startDate: "2018-09-01",

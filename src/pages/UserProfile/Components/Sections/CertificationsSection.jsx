@@ -1,11 +1,11 @@
 import React from "react";
-import GenericSection2 from "../GenericComponent/OLDWAYS/GenericSection2";
+import GenericSection from "../GenericComponent/Useless/GenericSection";
 import mockCertifications from "../MockData/mockCertifications";
 
 function CertificationsSection({ isOwner }) {
   return (
     <div>
-      <GenericSection2
+      <GenericSection
         title="Licenses & Certifications"
         type="certifications"
         items={mockCertifications}

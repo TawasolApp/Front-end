@@ -1,14 +1,35 @@
 import React, { useState, useEffect } from "react";
-import EducationFields from "../EducationModal";
-import ExperienceFields from "../ExperienceModal";
-import SkillsFields from "../SkillsModal";
-import CertificationsFields from "../CertificationsModal";
-// Utility functions
-const getAllMonthsDynamically = () => {
-  return [...Array(12)].map((_, i) =>
+import EducationFields from "../EducationFields";
+import ExperienceFields from "../ExperienceFields";
+import SkillsFields from "../SkillsFields";
+import CertificationsFields from "../CertificationsFields";
+
+// Local confirmation modals
+const ConfirmModal = ({ title, message, onConfirm, onCancel }) => (
+  <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+    <div className="bg-white rounded-lg p-6 w-[90%] sm:w-[400px] shadow-lg">
+      <h2 className="text-lg font-semibold mb-2">{title}</h2>
+      <p className="text-gray-700 mb-4">{message}</p>
+      <div className="flex justify-end gap-3">
+        <button className="px-4 py-2 bg-gray-300 rounded" onClick={onCancel}>
+          Cancel
+        </button>
+        <button
+          className="px-4 py-2 bg-red-500 text-white rounded"
+          onClick={onConfirm}
+        >
+          Confirm
+        </button>
+      </div>
+    </div>
+  </div>
+);
+
+// Shared date utilities
+const getAllMonths = () =>
+  [...Array(12)].map((_, i) =>
     new Date(2000, i).toLocaleString("default", { month: "long" })
   );
-};
 
 const getStartYears = () =>
   Array.from({ length: 50 }, (_, i) => new Date().getFullYear() - i);
@@ -21,48 +42,73 @@ const getEndYears = () => {
   );
 };
 
-const months = getAllMonthsDynamically();
+const months = getAllMonths();
 const currentYear = new Date().getFullYear();
 const currentMonthIndex = new Date().getMonth();
 const startYears = getStartYears();
 const endYears = getEndYears();
 
-function GenericModal({ isOpen, onClose, onSave, type, initialData = {} }) {
-  if (!isOpen) return null;
-
+function GenericModal({
+  isOpen,
+  onClose,
+  onSave,
+  onDelete,
+  type,
+  initialData = {},
+  editMode = false,
+}) {
   const [formData, setFormData] = useState(initialData);
   const [errors, setErrors] = useState({});
+  const [showDiscardModal, setShowDiscardModal] = useState(false);
+  const [showDeleteModal, setShowDeleteModal] = useState(false);
 
   useEffect(() => {
-    setFormData(initialData || {});
-  }, [initialData]);
+    if (isOpen) {
+      setFormData(initialData || {});
+    }
+  }, [isOpen, initialData]);
 
   const handleChange = (e) => {
-    setFormData({ ...formData, [e.target.name]: e.target.value });
+    const { name, value, type: inputType, checked } = e.target;
+    const fieldValue = inputType === "checkbox" ? checked : value;
+    setFormData((prev) => ({ ...prev, [name]: fieldValue }));
+  };
+
+  const hasUnsavedChanges =
+    JSON.stringify(formData) !== JSON.stringify(initialData);
+
+  const handleClose = () => {
+    if (hasUnsavedChanges) {
+      setShowDiscardModal(true);
+    } else {
+      onClose();
+    }
+  };
+
+  const handleDiscardConfirm = () => {
+    setShowDiscardModal(false);
+    onClose();
+  };
+
+  const handleDeleteConfirm = () => {
+    setShowDeleteModal(false);
+    onDelete?.();
   };
 
   const validateForm = () => {
     const newErrors = {};
-
-    if (!formData.startYear) {
+    if (!formData.startYear)
       newErrors.startYear = "Please select a valid start year";
-    }
-
-    if (!formData.startMonth) {
+    if (!formData.startMonth)
       newErrors.startMonth = "Please select a valid start month";
-    }
-
-    if (formData.startYear > currentYear) {
+    if (formData.startYear > currentYear)
       newErrors.startYear = "Start date can't be in the future";
-    }
-
     if (
       formData.startYear == currentYear &&
       months.indexOf(formData.startMonth) > currentMonthIndex
     ) {
       newErrors.startMonth = "Start month can't be in the future";
     }
-
     if (
       formData.endYear &&
       formData.startYear &&
@@ -70,7 +116,6 @@ function GenericModal({ isOpen, onClose, onSave, type, initialData = {} }) {
     ) {
       newErrors.endYear = "End year can't be before the start year";
     }
-
     if (
       formData.endYear &&
       formData.startYear &&
@@ -87,13 +132,23 @@ function GenericModal({ isOpen, onClose, onSave, type, initialData = {} }) {
   const handleSubmit = () => {
     if (validateForm()) {
       onSave({ ...formData });
-      onClose();
     }
   };
+
+  if (!isOpen) return null;
+
   return (
     <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-40">
-      <div className="bg-white w-[90%] sm:w-[500px] p-6 rounded-lg shadow-lg max-h-[80vh] overflow-y-auto">
-        {/* Modular Section */}
+      <div className="bg-white w-[90%] sm:w-[500px] p-6 rounded-lg shadow-lg max-h-[90vh] overflow-y-auto relative">
+        {/* ✖ Close */}
+        <button
+          onClick={handleClose}
+          className="absolute top-3 right-4 text-xl text-gray-600 hover:text-gray-900"
+        >
+          ✖
+        </button>
+
+        {/* Modal Fields */}
         {type === "education" && (
           <EducationFields
             formData={formData}
@@ -123,12 +178,12 @@ function GenericModal({ isOpen, onClose, onSave, type, initialData = {} }) {
           />
         )}
 
-        {/* Start Date Selection */}
+        {/* Date Pickers */}
         <label className="block font-medium mb-1">Start date</label>
         <div className="flex gap-2 mb-3">
           <select
             name="startMonth"
-            value={formData.startMonth}
+            value={formData.startMonth || ""}
             onChange={handleChange}
             className="border p-2 w-1/2 rounded-md"
           >
@@ -145,7 +200,7 @@ function GenericModal({ isOpen, onClose, onSave, type, initialData = {} }) {
 
           <select
             name="startYear"
-            value={formData.startYear}
+            value={formData.startYear || ""}
             onChange={handleChange}
             className="border p-2 w-1/2 rounded-md"
           >
@@ -157,18 +212,19 @@ function GenericModal({ isOpen, onClose, onSave, type, initialData = {} }) {
             ))}
           </select>
         </div>
+
         {errors.startMonth && (
-          <p className="text-red-600 text-sm mb-3">{errors.startMonth}</p>
+          <p className="text-red-600 text-sm mb-2">{errors.startMonth}</p>
         )}
         {errors.startYear && (
-          <p className="text-red-600 text-sm mb-3">{errors.startYear}</p>
+          <p className="text-red-600 text-sm mb-2">{errors.startYear}</p>
         )}
-        {/* End Date Selection */}
+
         <label className="block font-medium mb-1">End date (or expected)</label>
         <div className="flex gap-2 mb-3">
           <select
             name="endMonth"
-            value={formData.endMonth}
+            value={formData.endMonth || ""}
             onChange={handleChange}
             className="border p-2 w-1/2 rounded-md"
           >
@@ -182,7 +238,7 @@ function GenericModal({ isOpen, onClose, onSave, type, initialData = {} }) {
 
           <select
             name="endYear"
-            value={formData.endYear}
+            value={formData.endYear || ""}
             onChange={handleChange}
             className="border p-2 w-1/2 rounded-md"
           >
@@ -194,17 +250,24 @@ function GenericModal({ isOpen, onClose, onSave, type, initialData = {} }) {
             ))}
           </select>
         </div>
+
         {errors.endMonth && (
-          <p className="text-red-600 text-sm mb-3">{errors.endMonth}</p>
+          <p className="text-red-600 text-sm mb-2">{errors.endMonth}</p>
         )}
         {errors.endYear && (
-          <p className="text-red-600 text-sm mb-3">{errors.endYear}</p>
+          <p className="text-red-600 text-sm mb-2">{errors.endYear}</p>
         )}
-        {/* Buttons */}
-        <div className="flex justify-end gap-2 mt-4">
-          <button className="px-4 py-2 bg-gray-300 rounded" onClick={onClose}>
-            Cancel
-          </button>
+
+        {/* Footer Buttons */}
+        <div className="flex justify-end items-center mt-6 gap-2">
+          {onDelete && editMode && (
+            <button
+              className="px-4 py-2 bg-red-500 text-white rounded"
+              onClick={() => setShowDeleteModal(true)}
+            >
+              Delete
+            </button>
+          )}
           <button
             className="px-4 py-2 bg-blue-500 text-white rounded"
             onClick={handleSubmit}
@@ -213,7 +276,26 @@ function GenericModal({ isOpen, onClose, onSave, type, initialData = {} }) {
           </button>
         </div>
       </div>
+
+      {/* Confirmation Modals */}
+      {showDiscardModal && (
+        <ConfirmModal
+          title="Discard changes?"
+          message="You have unsaved changes. Are you sure you want to close?"
+          onConfirm={handleDiscardConfirm}
+          onCancel={() => setShowDiscardModal(false)}
+        />
+      )}
+      {showDeleteModal && (
+        <ConfirmModal
+          title="Confirm delete"
+          message="Are you sure you want to delete this entry? This action cannot be undone."
+          onConfirm={handleDeleteConfirm}
+          onCancel={() => setShowDeleteModal(false)}
+        />
+      )}
     </div>
   );
 }
+
 export default GenericModal;

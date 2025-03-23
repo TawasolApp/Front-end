@@ -1,46 +1,8 @@
-import React, { useState, useEffect } from "react";
-import GenericModal from "./Useless/GenericModal";
+import React from "react";
 
-const ExperienceModal = ({ isOpen, onClose, onSave, initialData = {} }) => {
-  const [formData, setFormData] = useState(initialData);
-  const [errors, setErrors] = useState({});
-
-  useEffect(() => {
-    if (isOpen) {
-      setFormData(initialData || {});
-    }
-  }, [isOpen, initialData]);
-
-  const handleChange = (e) => {
-    const { name, value, type, checked } = e.target;
-    setFormData((prev) => ({
-      ...prev,
-      [name]: type === "checkbox" ? checked : value,
-    }));
-  };
-
-  const validate = () => {
-    const newErrors = {};
-    if (!formData.title?.trim()) newErrors.title = "Title is required";
-    if (!formData.company?.trim()) newErrors.company = "Company is required";
-    setErrors(newErrors);
-    return Object.keys(newErrors).length === 0;
-  };
-
-  const handleSave = (data) => {
-    if (validate()) {
-      onSave({ ...formData, ...data }); // combine modal data + date pickers
-    }
-  };
-
+function ExperienceFields({ formData, handleChange, errors }) {
   return (
-    <GenericModal
-      isOpen={isOpen}
-      onClose={onClose}
-      onSave={handleSave}
-      initialData={formData}
-      type="experience"
-    >
+    <>
       <h2 className="text-lg font-semibold mb-4">Add experience</h2>
 
       <label className="block font-medium mb-1">Title*</label>
@@ -96,8 +58,6 @@ const ExperienceModal = ({ isOpen, onClose, onSave, initialData = {} }) => {
         <span>I am currently working in this role</span>
       </label>
 
-      {/* Start and End dates handled by GenericModal */}
-      {/* End date will be disabled if currently working */}
       <label className="block font-medium mb-1">Location</label>
       <input
         type="text"
@@ -136,8 +96,8 @@ const ExperienceModal = ({ isOpen, onClose, onSave, initialData = {} }) => {
       <p className="text-right text-gray-500 text-sm mb-2">
         {formData.description?.length || 0}/1000
       </p>
-    </GenericModal>
+    </>
   );
-};
+}
 
-export default ExperienceModal;
+export default ExperienceFields;

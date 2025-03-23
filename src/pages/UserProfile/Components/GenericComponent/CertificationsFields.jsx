@@ -1,40 +1,8 @@
-import React, { useState, useEffect } from "react";
-import GenericModal from "./Useless/GenericModal";
+import React from "react";
 
-const CertificationsModal = ({ isOpen, onClose, onSave, initialData = {} }) => {
-  const [formData, setFormData] = useState(initialData);
-  const [errors, setErrors] = useState({});
-
-  useEffect(() => {
-    if (isOpen) setFormData(initialData || {});
-  }, [isOpen, initialData]);
-
-  const handleChange = (e) => {
-    setFormData({ ...formData, [e.target.name]: e.target.value });
-  };
-
-  const validate = () => {
-    const newErrors = {};
-    if (!formData.name?.trim())
-      newErrors.name = "Certification name is required";
-    if (!formData.issuingOrganization?.trim())
-      newErrors.issuingOrganization = "Issuing organization is required";
-    setErrors(newErrors);
-    return Object.keys(newErrors).length === 0;
-  };
-
-  const handleSave = (data) => {
-    if (validate()) onSave(data);
-  };
-
+function CertificationsFields({ formData, handleChange, errors }) {
   return (
-    <GenericModal
-      isOpen={isOpen}
-      onClose={onClose}
-      onSave={handleSave}
-      initialData={formData}
-      type="certifications"
-    >
+    <>
       <h2 className="text-lg font-semibold mb-4">
         Add license or certification
       </h2>
@@ -88,8 +56,8 @@ const CertificationsModal = ({ isOpen, onClose, onSave, initialData = {} }) => {
         className="border p-2 w-full rounded-md mb-2"
         placeholder="Optional"
       />
-    </GenericModal>
+    </>
   );
-};
+}
 
-export default CertificationsModal;
+export default CertificationsFields;
