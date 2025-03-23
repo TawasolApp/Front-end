@@ -180,6 +180,7 @@ const PostCard = ({
             {showComments && <CommentsContainer
                 postId={post.id}
                 incrementCommentsNumber={incrementCommentsNumber}
+                commentsCount={post.comments}
             />}
 
             {showLikes && (

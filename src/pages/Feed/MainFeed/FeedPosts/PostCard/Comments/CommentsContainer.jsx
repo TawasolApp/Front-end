@@ -1,12 +1,14 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useRef } from 'react';
 import { CircularProgress } from '@mui/material';
+import OpenInFullIcon from '@mui/icons-material/OpenInFull';
 import AddForm from './AddForm';
 import Comment from './Comment';
 import { axiosInstance } from '../../../../../../apis/axios';
 
 const CommentsContainer = ({
     postId,
-    incrementCommentsNumber
+    incrementCommentsNumber,
+    commentsCount
 }) => {
 
     // TODO: change this to redux states
@@ -20,24 +22,58 @@ const CommentsContainer = ({
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState(null);
     
+    const [pageNum, setPageNum] = useState(1);
+    const [hasMore, setHasMore] = useState(true);
+    const abortControllerRef = useRef(null);
+    
+    const fetchComments = async () => {
+        try {
+            // Cancel previous request
+            if (abortControllerRef.current) {
+                abortControllerRef.current.abort();
+            }
+            
+            // Create new controller for this request
+            const controller = new AbortController();
+            abortControllerRef.current = controller;
+
+            setLoading(true);
+            const response = await axiosInstance.get(`/posts/comments/${postId}`, {
+                params: { 
+                    page: pageNum, 
+                    limit: 2,
+                    _: Date.now() // Cache buster
+                },
+                signal: controller.signal
+            });
+
+            const newComments = response.data;
+            setComments(prev => [...prev, ...newComments]);
+            setPageNum(prev => prev + 1);
+            setHasMore(commentsCount > comments.length + 2);
+
+        } catch (err) {
+            if (err.name === 'CanceledError') return;
+            if (err.response?.status === 404) {
+                setHasMore(false);
+            } else {
+                setError(err.message || "Failed to load comments");
+            }
+        } finally {
+            setLoading(false);
+        }
+    };
 
     useEffect(() => {
         if (postId) {
-            const fetchComments = async () => {
-                try {
-                    setLoading(true);
-                    const response = await axiosInstance.get(`/posts/comments/${postId}`);
-                    setComments(response.data);
-                } catch (err) {
-                    setError(err.message);
-                } finally {
-                    setLoading(false);
+            fetchComments();
+            return () => {
+                if (abortControllerRef.current) {
+                    abortControllerRef.current.abort();
                 }
             };
-
-            fetchComments();
         }
-    }, []);
+    }, [postId]);
 
     const onAddComment = async (text) => {
         try {
@@ -74,7 +110,7 @@ const CommentsContainer = ({
             {!error && !loading && comments && comments.length > 0 && comments.map((comment, index) => (
                 <div
                     key={comment.id}
-                    className={`border-gray-300 py-2 ${index === comments.length - 1 ? 'pb-4' : ''}`}
+                    className={`border-gray-300 py-2`}
                 >
                     <Comment
                         comment={comment}
@@ -82,6 +118,21 @@ const CommentsContainer = ({
                     />
                 </div>
             ))}
+
+            {hasMore && (
+                <div className="ml-4 my-3 flex items-center">
+                    <button
+                    onClick={fetchComments}
+                    className="flex items-center px-3 py-1 space-x-1 rounded-full hover:bg-gray-100 transition-colors"
+                    disabled={loading}
+                    >
+                    <OpenInFullIcon className="text-gray-600" fontSize="small" />
+                    <span className="text-xs font-medium text-gray-600">
+                        {loading ? 'Loading...' : 'Load more comments'}
+                    </span>
+                    </button>
+                </div>
+            )}
         </>
     );
 };

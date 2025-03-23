@@ -96,6 +96,7 @@ const Comment = ({
         />
       ) : (
         <article>
+          
           <div className="flex px-4 pt-1 pb-2">
             <ActorHeader
               authorId={localComment.authorId}
@@ -115,11 +116,13 @@ const Comment = ({
               </DropdownMenu>
             </div>
           </div>
+
           <CommentThreadWrapper>
             <div className="pl-2">
               <p className="text-sm font-normal">{localComment.content}</p>
             </div>
           </CommentThreadWrapper>
+
           <CommentThreadWrapper>
             <div className="pl-1 pt-2">
               <ActivitiesHolder
@@ -130,6 +133,7 @@ const Comment = ({
               />
             </div>
           </CommentThreadWrapper>
+
           {showReactions && (
             <ReactionsModal
                 APIURL={`/posts/reactions/${localComment.postId}/${localComment.id}`}

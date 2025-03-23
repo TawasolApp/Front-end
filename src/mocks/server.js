@@ -201,18 +201,24 @@ server.delete('/posts/save/:postId', (req, res) => {
   res.status(200).json({ message: 'Post unsaved successfully' });
 });
 
-// COMMENTS
 server.get("/posts/comments/:postId", (req, res) => {
   const { postId } = req.params;
-  console.log(`Fetching comments for postId: ${postId}`);
+  const page = parseInt(req.query.page) || 1;
+  const limit = parseInt(req.query.limit) || 2;
+  const startIndex = (page - 1) * limit;
 
   const comments = _router.db
     .get("comments")
     .filter({ postId })
     .value();
 
-  console.log(comments);
-  res.jsonp(comments);
+  const paginatedComments = comments.slice(startIndex, startIndex + limit);
+
+  if (paginatedComments.length > 0) {
+    res.status(200).jsonp(paginatedComments);
+  } else {
+    res.status(404).jsonp({ message: "No more comments found" });
+  }
 });
 
 server.post("/posts/comment/:postId", (req, res) => {
