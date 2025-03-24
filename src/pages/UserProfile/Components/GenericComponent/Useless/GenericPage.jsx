@@ -2,11 +2,12 @@ import React, { useState, useEffect } from "react";
 import { useNavigate, useOutletContext } from "react-router-dom";
 import GenericCard from "./GenericCard";
 import GenericModal from "../Useless/GenericModal";
+import axios from "axios";
+import { v4 as uuidv4 } from "uuid";
 
 function GenericPage({ title, type }) {
   const navigate = useNavigate();
   const { user, isOwner } = useOutletContext();
-
   const [data, setData] = useState([]);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [editIndex, setEditIndex] = useState(null);
@@ -34,23 +35,73 @@ function GenericPage({ title, type }) {
     setIsModalOpen(true);
   };
 
-  const handleSave = (updatedItem) => {
-    if (editIndex !== null) {
-      const updated = data.map((item, i) =>
-        i === editIndex ? updatedItem : item
-      );
-      setData(updated);
-    } else {
-      setData([...data, updatedItem]);
+  // const handleSave = (updatedItem) => {
+  //   if (editIndex !== null) {
+  //     const updated = data.map((item, i) =>
+  //       i === editIndex ? updatedItem : item
+  //     );
+  //     setData(updated);
+  //   } else {
+  //     setData([...data, updatedItem]);
+  //   }
+  //   closeModal();
+  // };
+  // const handleDelete = () => {
+  //   if (editIndex !== null) {
+  //     const updated = data.filter((_, i) => i !== editIndex);
+  //     setData(updated);
+  //   }
+  //   closeModal();
+  // };
+  const handleSave = async (updatedItem) => {
+    if (!user?.id) return;
+
+    try {
+      let response;
+
+      if (editMode && editIndex !== null && data[editIndex]?.id) {
+        // PATCH existing item
+        const itemId = data[editIndex].id;
+        response = await axios.patch(
+          `http://localhost:5000/profile/${user.id}/${type}/${itemId}`,
+          updatedItem
+        );
+        const updatedData = data.map((item, i) =>
+          i === editIndex ? response.data : item
+        );
+        setData(updatedData);
+      } else {
+        // POST new item with generated ID
+        const itemWithId = { ...updatedItem, id: uuidv4() };
+        await axios.post(
+          `http://localhost:5000/profile/${user.id}/${type}`,
+          itemWithId
+        );
+        setData([...data, itemWithId]);
+      }
+    } catch (err) {
+      console.error("Failed to save item:", err);
     }
+
     closeModal();
   };
 
-  const handleDelete = () => {
-    if (editIndex !== null) {
-      const updated = data.filter((_, i) => i !== editIndex);
-      setData(updated);
+  const handleDelete = async () => {
+    if (!user?.id || editIndex === null || !data[editIndex]?.id) return;
+
+    const itemId = data[editIndex].id;
+    const updatedData = data.filter((item) => item.id !== itemId);
+
+    try {
+      await axios.delete(
+        `http://localhost:5000/profile/${user.id}/${type}/${itemId}`
+      );
+      const updatedData = data.filter((_, i) => i !== editIndex);
+      setData(updatedData);
+    } catch (err) {
+      console.error("Failed to delete item:", err);
     }
+
     closeModal();
   };
 

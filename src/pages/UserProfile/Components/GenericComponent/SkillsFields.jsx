@@ -9,14 +9,14 @@ function SkillsFields({ formData, handleChange, errors }) {
       <label className="block font-medium mb-1">Skill *</label>
       <input
         type="text"
-        name="skill"
+        name="skillName"
         placeholder="Skill (ex: Project Management)"
-        value={formData.skill || ""}
+        value={formData.skillName || ""}
         onChange={handleChange}
         className="border p-2 w-full rounded-md mb-2"
         required
       />
-      {errors.skill && (
+      {errors.skillName && (
         <p className="text-red-600 text-sm mb-3">{errors.skill}</p>
       )}
 

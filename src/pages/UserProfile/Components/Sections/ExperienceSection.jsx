@@ -10,6 +10,7 @@ function ExperienceSection({ isOwner, sectionRef, user }) {
         type="experience"
         items={user.experience || {}}
         isOwner={isOwner}
+        user={user} // needed for PATCH
       />
     </div>
   );

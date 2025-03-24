@@ -9,23 +9,13 @@ const middlewares = defaults();
 server.use(middlewares);
 server.use(bodyParser);
 
-// Example: Return users without their passwords
-// server.get("/users", (req, res) => {
-//   let users = _router.db.get("users").value();
+const supportedTypes = ["education", "experience", "skills", "certifications"];
 
-//   const serializedUsers = users.map((user) => ({
-//     id: user.id,
-//     username: user.username,
-//   }));
-
-//   res.jsonp(serializedUsers);
-// });
-
-// GET /profile/:id → Get user profile by ID
+// GET user profile by ID
 server.get("/profile/:id", (req, res) => {
-  const userId = parseInt(req.params.id); // convert id to number
-  const users = _router.db.get("users").value(); // get all users
-  const user = users.find((u) => u.id === userId); // find user by ID
+  const userId = req.params.id; // keep as string
+  const users = _router.db.get("users").value();
+  const user = users.find((u) => String(u.id) === String(userId));
 
   if (user) {
     res.jsonp(user);
@@ -34,22 +24,83 @@ server.get("/profile/:id", (req, res) => {
   }
 });
 
-// PATCH /profile → Update user data in header
-// ✅ CORRECT PATCH HANDLER
+// PATCH main profile data
 server.patch("/profile", (req, res) => {
   const users = _router.db.get("users").value();
   const { id, ...updates } = req.body;
 
-  const userIndex = users.findIndex((u) => u.id === id);
+  const userIndex = users.findIndex((u) => String(u.id) === String(id));
   if (userIndex === -1) {
     return res.status(404).json({ error: "User not found" });
   }
 
   const updatedUser = { ...users[userIndex], ...updates };
-
-  _router.db.get("users").find({ id }).assign(updatedUser).write();
+  _router.db
+    .get("users")
+    .find({ id: String(id) })
+    .assign(updatedUser)
+    .write();
 
   res.status(200).json(updatedUser);
+});
+
+// POST new item (education, etc.)
+server.post("/profile/:id/:type", (req, res) => {
+  const userId = req.params.id;
+  const type = req.params.type;
+  const newItem = { id: Date.now().toString(), ...req.body };
+
+  const user = _router.db.get("users").find({ id: String(userId) });
+  if (!user.value()) return res.status(404).json({ error: "User not found" });
+
+  const items = user.get(type).value() || [];
+  user.assign({ [type]: [...items, newItem] }).write();
+
+  res.status(201).json(newItem);
+});
+
+// PATCH specific item in a section
+server.patch("/profile/:userId/:type/:itemId", (req, res) => {
+  const { userId, type, itemId } = req.params;
+
+  if (!supportedTypes.includes(type)) {
+    return res.status(400).json({ error: "Unsupported type" });
+  }
+
+  const user = _router.db.get("users").find({ id: String(userId) });
+  if (!user.value()) return res.status(404).json({ error: "User not found" });
+
+  const updatedItems = user
+    .get(type)
+    .map((item) =>
+      String(item.id) === itemId ? { ...item, ...req.body } : item
+    )
+    .value();
+
+  user.assign({ [type]: updatedItems }).write();
+
+  const updatedItem = updatedItems.find((item) => String(item.id) === itemId);
+  res.status(200).json(updatedItem);
+});
+
+// DELETE specific item in a section
+server.delete("/profile/:userId/:type/:itemId", (req, res) => {
+  const { userId, type, itemId } = req.params;
+
+  if (!supportedTypes.includes(type)) {
+    return res.status(400).json({ error: "Unsupported type" });
+  }
+
+  const user = _router.db.get("users").find({ id: String(userId) });
+  if (!user.value()) return res.status(404).json({ error: "User not found" });
+
+  const filteredItems = user
+    .get(type)
+    .filter((item) => String(item.id) !== itemId)
+    .value();
+
+  user.assign({ [type]: filteredItems }).write();
+  res.status(204).end();
 });
 
 server.use(_router);

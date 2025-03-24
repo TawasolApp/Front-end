@@ -10,6 +10,7 @@ function EducationSection({ isOwner, sectionRef, user }) {
         type="education"
         items={user.education || []}
         isOwner={isOwner}
+        user={user} // needed for PATCH
       />
     </div>
   );

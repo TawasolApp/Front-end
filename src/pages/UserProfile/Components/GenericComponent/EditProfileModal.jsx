@@ -187,12 +187,12 @@ function EditProfileModal({ user, isOpen, onClose, onSave }) {
           Work Experience
         </label>
         <select
-          name="workExperience"
+          name="experience"
           className="border p-2 w-full mb-2"
           value={selectedExperienceIndex}
           onChange={(e) => setSelectedExperienceIndex(Number(e.target.value))}
         >
-          {editedUser.workExperience?.map((exp, index) => (
+          {editedUser.experience?.map((exp, index) => (
             <option key={index} value={index}>
               {exp.title} at {exp.company}
             </option>

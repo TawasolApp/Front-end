@@ -2,16 +2,19 @@ import React, { useState } from "react";
 import GenericCard from "./GenericCard";
 import GenericModal from "../Useless/GenericModal";
 import { useNavigate } from "react-router-dom";
+import { v4 as uuidv4 } from "uuid";
+import axios from "axios";
 
-function GenericSection({ title, type, items, isOwner }) {
+//to generate unique id
+function GenericSection({ title, type, items, isOwner, user }) {
   const navigate = useNavigate();
-  const [data, setData] = useState(items);
+  const [data, setData] = useState(items || []);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [editIndex, setEditIndex] = useState(null);
   const [editData, setEditData] = useState(null);
   const [editMode, setEditMode] = useState(false);
 
-  // ➕ Add new
+  //  Add new
   const handleAdd = () => {
     setEditIndex(null);
     setEditData(null);
@@ -19,7 +22,7 @@ function GenericSection({ title, type, items, isOwner }) {
     setIsModalOpen(true);
   };
 
-  // ✏ Edit existing
+  //  Edit existing
   const handleEdit = (item, index) => {
     setEditIndex(index);
     setEditData(item);
@@ -27,24 +30,38 @@ function GenericSection({ title, type, items, isOwner }) {
     setIsModalOpen(true);
   };
 
-  // 💾 Save
-  const handleSave = (updatedItem) => {
-    if (editIndex !== null) {
-      const updated = data.map((item, i) =>
-        i === editIndex ? updatedItem : item
-      );
-      setData(updated);
-    } else {
-      setData([...data, updatedItem]);
-    }
-    closeModal();
-  };
+  //  Save
+  // const handleSave = (updatedItem) => {
+  //   if (editIndex !== null) {
+  //     const updated = data.map((item, i) =>
+  //       i === editIndex ? updatedItem : item
+  //     );
+  //     setData(updated);
+  //   } else {
+  //     setData([...data, updatedItem]);
+  //   }
+  //   closeModal();
+  // };
 
-  // ❌ Delete
-  const handleDelete = () => {
-    if (editIndex !== null) {
-      const updated = data.filter((_, i) => i !== editIndex);
-      setData(updated);
+  // //  Delete
+  // const handleDelete = () => {
+  //   if (editIndex !== null) {
+  //     const updated = data.filter((_, i) => i !== editIndex);
+  //     setData(updated);
+  //   }
+  //   closeModal();
+  // };
+  const handleSave = async (newItem) => {
+    if (!user?.id) return;
+    try {
+      const itemWithId = { ...newItem, id: uuidv4() };
+      await axios.post(
+        `http://localhost:5000/profile/${user.id}/${type}`,
+        itemWithId
+      );
+      setData([...data, itemWithId]);
+    } catch (err) {
+      console.error("Failed to add item:", err);
     }
     closeModal();
   };
@@ -55,14 +72,13 @@ function GenericSection({ title, type, items, isOwner }) {
     setEditIndex(null);
     setEditMode(false);
   };
-
   const renderModal = () => {
     return (
       <GenericModal
         isOpen={isModalOpen}
         onClose={closeModal}
         onSave={handleSave}
-        onDelete={handleDelete}
+        onDelete={undefined}
         initialData={editData || {}}
         type={type}
         editMode={editIndex !== null} //  Add or edit
@@ -117,7 +133,7 @@ function GenericSection({ title, type, items, isOwner }) {
           onClick={() => navigate(`${type.toLowerCase()}`)}
           className="w-full mt-4 text-black-500 hover:underline text-center block font-medium pb-4"
         >
-          Show all {items.length} {type.toLowerCase()} records →
+          Show all {data.length} {type.toLowerCase()} records →
         </button>
       )}
 
