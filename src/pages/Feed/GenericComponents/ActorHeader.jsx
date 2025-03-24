@@ -30,17 +30,17 @@ const ActorHeader = ({
 
             <div className={`flex-1 min-w-0 max-w-${iconSize}`}>
                 <Link to={`/in/${authorId}`}>
-                    <h3 className="font-medium text-gray-900 text-sm leading-tight truncate hover:text-blue-700 hover:underline">
+                    <h3 className="font-medium text-sm text-authorName hover:text-authorNameHover hover:underline leading-tight truncate">
                         {authorName}
                     </h3>
-                    <p className="text-xs text-gray-500 mt-px truncate">
+                    <p className="text-xs font-semibold text-authorBio mt-px truncate">
                         {authorBio}
                     </p>
                 </Link>
 
                 {timestamp && (
                     <div className="flex items-center gap-1 mt-0.5">
-                    <span className="text-xs text-gray-500">
+                    <span className="text-xs font-semibold text-textDate">
                         {formatDate(timestamp)} •
                     </span>
                     {visibility === "Public" ? (
@@ -49,7 +49,7 @@ const ActorHeader = ({
                                 fontSize: '14px',
                                 verticalAlign: 'text-top'
                             }}
-                            className="text-gray-500"
+                            className="text-textDate"
                         />
                     ) : (
                         <PeopleIcon
@@ -57,7 +57,7 @@ const ActorHeader = ({
                                 fontSize: '14px',
                                 verticalAlign: 'text-top'
                             }}
-                            className="text-gray-500"
+                            className="text-textDate"
                         />
                     )}
                     

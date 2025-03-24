@@ -36,8 +36,8 @@ const LikeButton = ({
         }
         return (
             <>
-                <ThumbUpOffAltIcon sx={{ fontSize: 16 }} className="text-gray-700 group-hover:text-black" />
-                <span className="text-sm font-semibold text-gray-700 group-hover:text-black">Like</span>
+                <ThumbUpOffAltIcon sx={{ fontSize: 16 }} className="text-textActivity group-hover:text-textActivityHover" />
+                <span className="text-sm font-semibold text-textActivity group-hover:text-textActivityHover">Like</span>
             </>
         );
     };
@@ -45,7 +45,7 @@ const LikeButton = ({
     return (
         <ReactionPicker onSelectReaction={handleReaction}>
             <button
-                className="flex items-center gap-1 p-2 hover:bg-gray-100 hover:transition-all duration-200 w-full justify-center group"
+                className="flex items-center gap-1 p-2 hover:bg-buttonIconHover hover:transition-all duration-200 w-full justify-center group"
                 onClick={() => handleReaction(currentReaction || 'Like')}
             >
                 {renderButtonContent()}

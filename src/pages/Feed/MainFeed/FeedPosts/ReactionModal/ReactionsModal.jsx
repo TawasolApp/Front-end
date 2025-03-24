@@ -61,12 +61,12 @@ const ReactionsModal = ({
 
   return (
     <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
-      <div className="bg-white rounded-lg w-full max-w-lg h-[500px] flex flex-col shadow-xl relative">
+      <div className="bg-cardBackground rounded-lg w-full max-w-lg h-[500px] flex flex-col shadow-xl relative">
 
         <div className="absolute top-4 right-4">
           <CloseIcon
             onClick={setShowLikes}
-            className="p-2 hover:bg-gray-100 rounded-full hover:cursor-pointer"
+            className="p-2 text-icon hover:bg-buttonIconHover rounded-full hover:cursor-pointer"
             sx={{
               fontSize: 40
             }}
@@ -74,7 +74,7 @@ const ReactionsModal = ({
         </div>
 
         <div className="pt-4 pl-6 pr-12 pb-0">
-          <h3 className="text-lg font-semibold text-gray-900">Reactions</h3>
+          <h3 className="text-lg font-semibold text-header">Reactions</h3>
           <div className="flex border-b h-[56px] flex-shrink-0">
             <TabButton
               label="All"
@@ -107,11 +107,11 @@ const ReactionsModal = ({
                 <button 
                   className={`p-4 h-full flex items-center gap-1 relative ${
                     selectedTab !== 'all' && dropdownTabs.includes(selectedTab) 
-                      ? 'border-b-4 border-green-700 text-green-700 font-semibold text-[14px]' 
-                      : 'text-gray-500 hover:text-gray-700 font-semibold text-[14px]'
+                      ? 'border-b-4 border-listSelected text-listSelected font-semibold text-sm' 
+                      : 'text-textActivity font-semibold text-sm'
                   }`}
                 >
-                  <span>More</span>
+                  <span className="text-textActivity font-semibold text-sm">More</span>
                   <ArrowDropDownIcon
                   />
                 </button>
@@ -127,7 +127,7 @@ const ReactionsModal = ({
               return (
                 <Link to={`/in/${reaction.authorId}`}
                   key={reaction.likeId}
-                  className="flex items-center gap-3 hover:bg-gray-50 rounded-lg relative p-2 hover:cursor-pointer"
+                  className="flex items-center gap-3 hover:bg-buttonIconHover rounded-lg relative p-2 hover:cursor-pointer"
                 >
                   <div className="relative h-14">
                     <img
@@ -143,8 +143,8 @@ const ReactionsModal = ({
                     )}
                   </div>
                   <div className="flex-1 min-w-0">
-                    <p className="text-sm font-semibold truncate">{reaction.authorName}</p>
-                    <p className="text-xs text-gray-500 truncate">{reaction.authorBio}</p>
+                    <p className="text-sm font-semibold truncate text-authorName">{reaction.authorName}</p>
+                    <p className="text-xs truncate text-authorBio">{reaction.authorBio}</p>
                   </div>
                 </Link>
               );
@@ -163,12 +163,12 @@ const ReactionsModal = ({
 const TabButton = memo(({ label, count, isActive, onClick }) => (
   <button
     onClick={onClick}
-    className={`px-4 py-3 flex items-center gap-2 relative hover:bg-gray-100 hover:transition-all duration-200 ${
-      isActive ? 'border-b-4 border-green-700 text-green-700' : 'text-gray-600'
+    className={`px-4 py-3 flex items-center gap-2 relative hover:bg-buttonIconHover hover:transition-all duration-200 ${
+      isActive ? 'border-b-4 border-listSelected text-listSelected' : 'text-textActivity'
     }`}
   >
     <span className="font-medium text-sm">{label}</span>
-    <span className={`font-medium text-sm ${isActive ? 'text-green-700' : 'text-gray-500'}`}>{count}</span>
+    <span className={`font-medium text-sm ${isActive ? 'text-listSelected' : 'text-textActivity'}`}>{count}</span>
   </button>
 ));
 
@@ -177,12 +177,12 @@ const ReactionTab = memo(({ type, count, isActive, onClick }) => {
   return (
     <button
       onClick={onClick}
-      className={`px-4 py-3 flex items-center gap-2 relative font-medium hover:bg-gray-100 hover:transition-all duration-200 ${
-        isActive ? 'border-b-4 border-green-700 text-green-700' : 'text-gray-600'
+      className={`px-4 py-3 flex items-center gap-2 relative font-medium hover:bg-buttonIconHover hover:transition-all duration-200 ${
+        isActive ? 'border-b-4 border-listSelected text-listSelected' : 'text-textActivity'
       }`}
     >
       {Icon && <Icon className="w-6 h-6" />}
-      <span className={`text-sm ${isActive ? 'text-green-700' : 'text-gray-500'}`}>{count}</span>
+      <span className={`text-sm ${isActive ? 'text-listSelected' : 'text-textActivity'}`}>{count}</span>
     </button>
   );
 });

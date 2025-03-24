@@ -102,7 +102,7 @@ const MainFeed = () => {
     return (
         <>
             <SharePost sharePost={sharePost} />
-            <div className="rounded-lg border-gray-200">
+            <div className="sm:rounded-lg rounded-none">
                 <FeedPosts 
                     posts={posts}
                     lastPostRef={lastPostElementRef}
@@ -116,7 +116,7 @@ const MainFeed = () => {
                 )}
                 
                 {!hasMore && posts.length > 0 && (
-                    <div className="text-center p-4 text-gray-500">
+                    <div className="text-center p-4 text-textDescriptor">
                         Enough Scrolling for you today 😵
                     </div>
                 )}

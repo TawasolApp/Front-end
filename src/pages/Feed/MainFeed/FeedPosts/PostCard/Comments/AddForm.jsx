@@ -61,7 +61,7 @@ const AddForm = ({
                 <textarea
                     ref={textareaRef}
                     placeholder={type === "Comment" ? "Add a comment..." : "Edit Comment..." }
-                    className={`w-full px-3 py-1.5 bg-gray-50 ${isExpanded ? "rounded-xl" : "rounded-full"} border border-gray-200 focus:outline-none focus:border-gray-400 ${isExpanded ? "pb-8" : "pb-1.5"} resize-none transition-all duration-200 overflow-hidden min-w-0 break-words`}
+                    className={`w-full px-3 py-1.5 bg-form ${isExpanded ? "rounded-xl" : "rounded-2xl"} border border-itemBorder focus:outline-none focus:border-itemBorderFocus ${isExpanded ? "pb-8" : "pb-1.5"} resize-none transition-all duration-200 overflow-hidden min-w-0 break-words text-textContent`}
                     value={commentText}
                     onChange={(e) => setCommentText(e.target.value)}
                     rows={1}
@@ -73,7 +73,7 @@ const AddForm = ({
                         <button
                             type="button"
                             onClick={close}
-                            className="px-3 py-1 text-sm font-medium text-white bg-gray-500 rounded-full hover:bg-gray-600"
+                            className="px-3 py-1 text-sm font-medium text-white bg-gray-500 rounded-lg hover:bg-gray-600"
                         >
                             Cancel
                         </button>
@@ -82,7 +82,7 @@ const AddForm = ({
                     {(hasText || (type === "Reply")) && (
                         <button
                             type="submit"
-                            className="px-3 py-1 text-sm font-medium text-white bg-blue-600 rounded-full hover:bg-blue-700"
+                            className="px-3 py-1 text-sm font-medium text-buttonSubmitText bg-buttonSubmitEnable rounded-lg hover:bg-buttonSubmitEnableHover"
                         >
                             {type}
                         </button>

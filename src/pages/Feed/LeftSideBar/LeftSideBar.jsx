@@ -57,24 +57,24 @@ const LeftSideBar = () => {
 
       <Link to={`/in/${currentAuthorId}`}>
         <div className="pt-10 pb-4 text-center px-2">
-          <h2 className="font-semibold text-base text-gray-900">{currentAuthorName}</h2>
-          <p className="text-xs font-normal text-gray-600 mt-1">{currentAuthorBio}</p>
+          <h2 className="font-semibold text-base text-authorName">{currentAuthorName}</h2>
+          <p className="text-xs font-normal text-authorBio mt-1">{currentAuthorBio}</p>
         </div>
       </Link>
 
-      <div className="border-t border-gray-200 mx-2"></div>
+      <div className="border-t border-cardBorder mx-2"></div>
 
       {/* Show these items always in sidebar mode, or when "show more" is toggled in top mode */}
       <div className={`py-2 ${isTopPosition && !showMore ? 'hidden' : 'block'}`}>
-        <div className="flex items-center px-3 py-2 text-sm hover:bg-gray-100 cursor-pointer group transition-all">
+        <div className="flex items-center px-3 py-2 text-sm hover:bg-buttonIconHover cursor-pointer group transition-all">
           <WorkIcon className="text-yellow-600 mr-2 text-base" />
-          <span className="text-xs font-semibold text-gray-900 group-hover:text-blue-500">Try Premium for EGP0</span>
+          <span className="text-xs font-semibold text-textHeavyTitle group-hover:text-textHeavyTitleHover">Try Premium for EGP0</span>
         </div>
 
         <Link to="/my-items/saved-posts">
-          <div className="flex items-center px-3 py-2 text-sm hover:bg-gray-100 cursor-pointer group transition-all">
-            <BookmarkIcon className="text-gray-500 mr-2 text-base" />
-            <span className="text-xs font-semibold text-gray-900 group-hover:text-blue-500">Saved items</span>
+          <div className="flex items-center px-3 py-2 text-sm hover:bg-buttonIconHover cursor-pointer group transition-all">
+            <BookmarkIcon className="text-gray-400 mr-2 text-base" />
+            <span className="text-xs font-semibold text-textHeavyTitle group-hover:text-textHeavyTitleHover">Saved items</span>
           </div>
         </Link>
       </div>
@@ -83,15 +83,15 @@ const LeftSideBar = () => {
       {isTopPosition && (
         <button 
           onClick={toggleShowMore}
-          className="w-full flex items-center justify-center py-2 text-sm font-medium bg-[#f4f2ee] text-gray-500"
+          className="w-full flex items-center justify-center py-2 text-sm font-medium bg-mainBackground text-textPlaceholder"
         >
           {showMore ? (
             <>
-              Show less <KeyboardArrowUpIcon className="ml-1" fontSize="small" />
+              Show less <KeyboardArrowUpIcon className="ml-1 text-icon" fontSize="small" />
             </>
           ) : (
             <>
-              Show more <KeyboardArrowDownIcon className="ml-1" fontSize="small" />
+              Show more <KeyboardArrowDownIcon className="ml-1 text-icon" fontSize="small" />
             </>
           )}
         </button>

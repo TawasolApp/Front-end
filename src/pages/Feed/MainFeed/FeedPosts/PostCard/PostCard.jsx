@@ -145,7 +145,7 @@ const PostCard = ({
 
 
     return (
-        <div className="bg-white rounded-lg shadow border border-gray-200 mb-4">
+        <div className="bg-cardBackground rounded-none sm:rounded-lg border border-cardBorder mb-4">
 
             <PostCardHeader
                 authorId={localPost.authorId}

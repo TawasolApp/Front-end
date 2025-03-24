@@ -4,7 +4,7 @@ import RightSideBar from './RightSideBar/RightSideBar';
 
 const FeedContainer = () => {
     return (
-        <div className="min-h-screen bg-[#f4f2ee]">
+        <div className="min-h-screen bg-mainBackground">
             {/* Container with max width and centered content */}
             <div className="max-w-7xl mx-auto">
                 {/* Extra Large Screens (1280px+): Three column layout */}
@@ -12,7 +12,7 @@ const FeedContainer = () => {
                     {/* Left Sidebar */}
                     <div className="w-56 flex-shrink-0">
                         <div className="sticky top-4 h-fit">
-                            <div className="bg-white rounded-lg shadow border border-gray-200">
+                            <div className="bg-cardBackground rounded-lg border border-cardBorder">
                                 <LeftSideBar />
                             </div>
                         </div>
@@ -26,7 +26,7 @@ const FeedContainer = () => {
                     {/* Right Sidebar */}
                     <aside className="w-80 flex-shrink-0">
                         <div className="sticky top-4 h-fit">
-                            <div className="bg-white rounded-lg p-4 shadow border border-gray-200">
+                            <div className="bg-cardBackground rounded-lg p-4 border border-cardBorder">
                                 <RightSideBar />
                             </div>
                         </div>
@@ -38,7 +38,7 @@ const FeedContainer = () => {
                     {/* Left Sidebar */}
                     <div className="w-52 flex-shrink-0">
                         <div className="sticky top-4 h-fit">
-                            <div className="bg-white rounded-lg shadow border border-gray-200">
+                            <div className="bg-cardBackground rounded-lg border border-cardBorder">
                                 <LeftSideBar />
                             </div>
                         </div>
@@ -52,7 +52,7 @@ const FeedContainer = () => {
                     {/* Right Sidebar */}
                     <aside className="w-72 flex-shrink-0">
                         <div className="sticky top-4 h-fit">
-                            <div className="bg-white rounded-lg p-4 shadow border border-gray-200">
+                            <div className="bg-cardBackground rounded-lg p-4 border border-cardBorder">
                                 <RightSideBar />
                             </div>
                         </div>
@@ -64,21 +64,21 @@ const FeedContainer = () => {
                     {/* Left Sidebar */}
                     <div className="w-48 flex-shrink-0">
                         <div className="sticky top-4 h-fit">
-                            <div className="bg-white rounded-lg shadow border border-gray-200">
+                            <div className="bg-cardBackground rounded-lg border border-cardBorder">
                                 <LeftSideBar />
                             </div>
                         </div>
                     </div>
 
                     {/* Main Feed */}
-                    <main className="flex-1 pt-4">
+                    <main className="flex-1 pt-4 max-w-xl">
                         <MainFeed />
                     </main>
                 </div>
 
                 {/* Small Screens (640px-768px): Single column with spacing */}
                 <div className="hidden sm:block md:hidden px-4 space-y-4">
-                    <div className="bg-white rounded-lg shadow border border-gray-200">
+                    <div className="bg-cardBackground rounded-lg border border-cardBorder">
                         <LeftSideBar />
                     </div>
                     
@@ -89,7 +89,7 @@ const FeedContainer = () => {
 
                 {/* Mobile (<640px): Single column full width */}
                 <div className="sm:hidden">
-                    <div className="bg-white">
+                    <div className="bg-cardBackground">
                         <LeftSideBar />
                     </div>
                     

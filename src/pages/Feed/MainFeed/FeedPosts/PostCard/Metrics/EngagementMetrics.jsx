@@ -22,7 +22,7 @@ const EngagementMetrics = ({
     }, [reactions]);
 
     return (
-        <div className="flex items-center justify-between text-gray-500 pb-1 mx-4 border-b border-black/10">
+        <div className="flex items-center justify-between text-textPlaceholder pb-1 mx-4 border-b border-cardBorder">
 
             {/* Left Section - Reactions */}
             <button
@@ -40,7 +40,7 @@ const EngagementMetrics = ({
                     })}
                 </div>
                 {totalLikes > 0 && (
-                    <span className="text-sm ml-1 group-hover:text-blue-600 group-hover:underline">{totalLikes}</span>
+                    <span className="text-sm ml-1 group-hover:text-textPlaceholderHover group-hover:underline">{totalLikes}</span>
                 )}
             </button>
 
@@ -48,7 +48,7 @@ const EngagementMetrics = ({
             <div className="flex items-center">
                 {comments > 0 && (
                     <button
-                        className="text-xs mx-1 hover:underline hover:text-blue-600"
+                        className="text-xs mx-1 hover:underline hover:text-textPlaceholderHover"
                         onClick={() => setShowComments(true)}
                     >
                         {comments} {comments === 1 ? "comment" : "comments"}
@@ -59,7 +59,7 @@ const EngagementMetrics = ({
                 )}
                 {reposts > 0 && (
                     <button
-                        className="text-xs mx-1 hover:underline hover:text-blue-600"
+                        className="text-xs mx-1 hover:underline hover:text-textPlaceholderHover"
                         onClick={() => setShowReposts(true)}
                     >
                         {reposts} {reposts === 1 ? "repost" : "reposts"}

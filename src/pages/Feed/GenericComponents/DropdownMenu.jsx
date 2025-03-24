@@ -36,7 +36,7 @@ const DropdownMenu = ({
       </div>
 
       {isOpen && (
-        <div className={`absolute ${position} mt-1 ${width} bg-white rounded-lg shadow-lg border border-gray-200 z-10`}>
+        <div className={`absolute ${position} mt-1 ${width} bg-cardBackground rounded-lg border border-cardBorder z-10`}>
           <div className="p-1">
             {menuItems.map((item, index) => (
               <button
@@ -45,13 +45,13 @@ const DropdownMenu = ({
                   handleClose();
                   item.onClick?.();
                 }}
-                className="w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 flex items-center gap-2"
+                className="w-full text-left px-4 py-2 text-sm text-textActivity hover:bg-cardBackgroundHover flex items-center gap-2 group transition-all duration-200"
               >
-                {item.icon && <item.icon className={`${iconSize}`} />}
+                {item.icon && <item.icon className={`${iconSize} text-textActivity group-hover:text-textActivityHover`} />}
                 <div>
-                  <div className="text-gray-500 font-semibold">{item.text}</div>
+                  <div className="text-textActivity group-hover:text-textActivityHover font-semibold">{item.text}</div>
                   {item.subtext && (
-                    <div className="text-xs text-gray-500 font-semibold">{item.subtext}</div>
+                    <div className="text-xs font-semibold text-textActivity group-hover:text-textActivityHover">{item.subtext}</div>
                   )}
                 </div>
               </button>

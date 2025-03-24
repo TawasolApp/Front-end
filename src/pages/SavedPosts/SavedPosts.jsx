@@ -38,7 +38,6 @@ const SavedPosts = () => {
                     </div>
                 )
             })}
-            {localPosts.length === 0 && (<h1>Hello world</h1>)}
         </>
     );
 }

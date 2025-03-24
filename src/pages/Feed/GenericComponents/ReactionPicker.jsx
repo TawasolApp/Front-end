@@ -55,7 +55,7 @@ const ReactionPicker = ({
             {children}
 
             {showPicker && (
-                <div className={`absolute h-16 bottom-full left-1/2 -translate-x-1/2 mb-2 flex items-center bg-white rounded-full shadow-lg px-2 border border-gray-200 z-10 transition-all duration-300 ${hoveredIcon ? 'scale-90' : ''}`}>
+                <div className={`absolute h-16 bottom-full left-1/2 -translate-x-1/2 mb-2 flex items-center bg-cardBackground rounded-full shadow-lg px-2 border border-itemBorder z-10 transition-all duration-300 ${hoveredIcon ? 'scale-90' : ''}`}>
                     {Object.entries(reactionIcons).map(([reactionType, { Icon, color, label }], index, array) => {
                         const isHovered = hoveredIcon === reactionType;
                         
@@ -88,9 +88,9 @@ const ReactionPicker = ({
 
                                 <button
                                     className={`my-2 py-2 transform transition-all duration-200 origin-bottom ${isHovered ? 'scale-150 -translate-y-2' : ''}`}
-                                    onClick={() => handleReactionSelect(reactionType)}
+                                    onClick={() => {setHoveredIcon(null); handleReactionSelect(reactionType)}}
                                 >
-                                    <Icon className={`w-12 h-12 transition-all duration-200`} />
+                                    <Icon className={`w-14 h-14 p-0.5 transition-all duration-200`} />
                                 </button>
                             </div>
                         );

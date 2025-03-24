@@ -104,13 +104,13 @@ const CommentsContainer = ({
                 handleAddFunction={onAddComment}
                 type="Comment"
             />
-            {error && <div className="text-red-500 p-4">{error}</div>}
+            {error && <div className="text-red-500 font-black p-4">{error}</div>}
             {loading && <div className="p-4 flex justify-center"><CircularProgress size={20} /></div>}
 
             {!error && !loading && comments && comments.length > 0 && comments.map((comment, index) => (
                 <div
                     key={comment.id}
-                    className={`border-gray-300 py-2`}
+                    className="py-2"
                 >
                     <Comment
                         comment={comment}
@@ -122,14 +122,12 @@ const CommentsContainer = ({
             {hasMore && (
                 <div className="ml-4 my-3 flex items-center">
                     <button
-                    onClick={fetchComments}
-                    className="flex items-center px-3 py-1 space-x-1 rounded-full hover:bg-gray-100 transition-colors"
-                    disabled={loading}
+                        onClick={fetchComments}
+                        className="flex items-center px-1 py-1 space-x-1 rounded-xl hover:bg-buttonIconHover transition-colors"
+                        disabled={loading}
                     >
-                    <OpenInFullIcon className="text-gray-600" fontSize="small" />
-                    <span className="text-xs font-medium text-gray-600">
-                        {loading ? 'Loading...' : 'Load more comments'}
-                    </span>
+                        <OpenInFullIcon className="text-icon" fontSize="small" />
+                        <span className="text-xs font-medium text-icon pl-1">{loading ? 'Loading...' : 'Load more comments'}</span>
                     </button>
                 </div>
             )}

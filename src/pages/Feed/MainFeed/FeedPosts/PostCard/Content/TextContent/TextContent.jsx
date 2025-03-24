@@ -39,7 +39,7 @@ const TextContent = ({ content }) => {
             {displayedLines.map((line, index) => (
                 <div
                     key={index}
-                    className="text-gray-800 whitespace-pre-wrap break-words text-sm font-normal"
+                    className="text-textContent whitespace-pre-wrap break-words text-sm font-normal"
                 >
                     {index === displayedLines.length - 1 && !isExpanded && totalChars > maxChars
                         ? truncatedLastLine
@@ -48,7 +48,7 @@ const TextContent = ({ content }) => {
                     {/* Append "..." and button to last line if truncated */}
                     {!isExpanded && needsTruncation && index === displayedLines.length - 1 && (
                         <button
-                            className="text-gray-400 hover:underline text-sm ml-1"
+                            className="text-textPlaceholder hover:underline text-sm ml-1"
                             onClick={() => setIsExpanded(true)}
                         >
                             ...more

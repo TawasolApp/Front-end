@@ -15,7 +15,7 @@ const SharePost = ({ sharePost }) => {
 
     return (
         <>
-            <div className="bg-white rounded-lg shadow-sm p-4 mb-4">
+            <div className="bg-cardBackground border border-cardBorder rounded-none sm:rounded-lg p-4 pb-2 mb-4">
                 <div className="flex items-start gap-2 pb-3">
                     <Avatar 
                         sx={{ width: 48, height: 48 }}
@@ -24,9 +24,9 @@ const SharePost = ({ sharePost }) => {
                     />
                     <button
                         onClick={() => setIsModalOpen(true)}
-                        className="flex-1 pl-4 pr-2 py-[10px] my-1 bg-white hover:bg-gray-100 rounded-full border-2 border-gray-300 hover:border-gray-400 cursor-pointer focus:outline-none text-left text-gray-500 font-medium transition-colors"
+                        className="flex-1 pl-4 pr-2 py-2 my-1 bg-cardBackground hover:bg-cardBackgroundHover rounded-full border-2 border-itemBorder text-left"
                     >
-                        <span>Start a post</span>
+                        <span className="font-semibold text-sm text-textPlaceholder">Start a post</span>
                     </button>
                 </div>
             </div>

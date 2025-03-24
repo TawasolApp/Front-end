@@ -39,10 +39,7 @@ const ActivitiesHolder = ({
 
     // Reaction display component
     const ReactionDisplay = () => {
-        if (!currentReaction) return (
-            <span className="text-sm font-semibold text-gray-500">Like</span>
-        );
-
+        if (!currentReaction) return <span className="text-sm font-semibold text-textLightActivity">Like</span>;
         const { Icon, color, label } = reactionIcons[currentReaction];
         return (
             <div className="flex items-center">
@@ -52,13 +49,13 @@ const ActivitiesHolder = ({
     };
 
     return (
-        <div className="flex items-center text-gray-500">
+        <div className="flex items-center text-textLightActivity">
 
             {/* Reactions Section */}
             <div className="flex items-center">
                 <ReactionPicker onSelectReaction={handleReaction}>
                     <button
-                        className="flex px-1 items-center rounded-md hover:bg-gray-100 transition-all duration-200"
+                        className="flex px-1 items-center rounded-md hover:bg-buttonIconHover transition-all duration-200"
                         onClick={() => handleReaction(currentReaction || 'like')}
                     >
                         <ReactionDisplay />
@@ -67,7 +64,6 @@ const ActivitiesHolder = ({
 
                 {totalLikes > 0 && (
                     <div className="flex items-center">
-                        <span className="pr-1 text-xs font-light">•</span>
                         <div
                             className="flex -space-x-2 cursor-pointer hover:transition-all group"
                             onClick={setShowReactions}
@@ -80,7 +76,7 @@ const ActivitiesHolder = ({
                                     </div>
                                 );
                             })}
-                            <span className="text-xs pl-2 group-hover:text-blue-600 group-hover:underline">
+                            <span className="text-xs pl-2.5 group-hover:text-textPlaceholderHover group-hover:underline">
                                 {totalLikes}
                             </span>
                         </div>
@@ -89,9 +85,9 @@ const ActivitiesHolder = ({
             </div>
 
 
-            <span className="text-gray-400 pl-1 text-xs font-semibold">|</span>
+            <span className="text-textLightActivity pl-1 text-xs font-semibold">|</span>
             <button
-                className="text-sm font-semibold text-gray-500 px-1 rounded-md hover:bg-gray-100 transition-all duration-200"
+                className="text-sm font-semibold text-textLightActivity px-1 rounded-md hover:bg-buttonIconHover transition-all duration-200"
                 onClick={() => setShowReplies(true)}
             >
                 Reply
@@ -100,8 +96,8 @@ const ActivitiesHolder = ({
             {/* Reply Button */}
             {replies > 0 && (
                 <>
-                    <span className="text-gray-300 pr-1 text-xs font-light">•</span>
-                    <span className="text-xs font-normal text-gray-500 py-1 rounded-md">{replies} {replies === 1 ? 'reply' : 'replies'}</span>
+                    <span className="text-textLightActivity pr-1 text-xs font-light">•</span>
+                    <span className="text-xs font-normal text-textLightActivity py-1 rounded-md">{replies} {replies === 1 ? 'reply' : 'replies'}</span>
                 </>
             )}
             

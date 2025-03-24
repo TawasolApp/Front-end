@@ -112,11 +112,11 @@ const Comment = ({
               iconSize={32}
             />
             <div className="ml-auto flex items-center gap-2">
-              <span className="text-xs text-gray-500">
+              <span className="text-xs text-textDate">
                 {formatDate(localComment.timestamp)}
               </span>
               <DropdownMenu menuItems={menuItems} position="right-0">
-                <button className="text-gray-500 hover:bg-gray-100 rounded-full p-1">
+                <button className="text-icon hover:bg-buttonIconHover rounded-full p-1">
                   <MoreHorizIcon className="w-5 h-5" />
                 </button>
               </DropdownMenu>
@@ -125,7 +125,7 @@ const Comment = ({
 
           <CommentThreadWrapper>
             <div className="pl-2">
-              <p className="text-sm font-normal">{localComment.content}</p>
+              <p className="text-sm font-normal text-textContent">{localComment.content}</p>
             </div>
           </CommentThreadWrapper>
 

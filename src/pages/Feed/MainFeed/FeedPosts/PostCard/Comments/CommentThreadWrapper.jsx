@@ -9,7 +9,7 @@ const CommentThreadWrapper = ({
         <div className="relative px-4 flex">
             {/* Thread line that connects comments */}
             {hasReplies ? (
-                <div className="px-[15px] min-w-1 bg-gray-300" />
+                <div className="px-[15px] min-w-1" />
             ) : (
                 <div className="pl-8" />
             )}
