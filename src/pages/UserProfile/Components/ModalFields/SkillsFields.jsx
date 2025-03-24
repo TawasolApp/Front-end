@@ -17,7 +17,7 @@ function SkillsFields({ formData, handleChange, errors }) {
         required
       />
       {errors.skillName && (
-        <p className="text-red-600 text-sm mb-3">{errors.skill}</p>
+        <p className="text-red-600 text-sm mb-3">{errors.skillName}</p>
       )}
 
       <label className="block font-medium mb-1">Position (Optional)</label>

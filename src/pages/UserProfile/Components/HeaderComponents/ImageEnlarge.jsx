@@ -1,5 +1,5 @@
 import React, { useEffect } from "react";
-import CloseIcon from "../../../assets/icons/exit-icon.svg";
+import CloseIcon from "../../../../assets/icons/exit-icon.svg";
 
 function ImageEnlarge({ profilePicture, isOpen, onClose }) {
   useEffect(() => {

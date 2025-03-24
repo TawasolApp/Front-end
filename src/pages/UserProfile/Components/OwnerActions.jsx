@@ -1,5 +1,5 @@
 import React from "react";
-
+/// will be used for about/profile pic and cover photo
 function OwnerActions({ onAdd, onEdit, onDelete }) {
   return (
     <div className="flex items-center gap-2">

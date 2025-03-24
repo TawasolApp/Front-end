@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate, useOutletContext } from "react-router-dom";
 import GenericCard from "./GenericCard";
-import GenericModal from "../Useless/GenericModal";
+import GenericModal from "./GenericModal";
 import axios from "axios";
 import { v4 as uuidv4 } from "uuid";
 
@@ -13,6 +13,7 @@ function GenericPage({ title, type }) {
   const [editIndex, setEditIndex] = useState(null);
   const [editData, setEditData] = useState(null);
   const [editMode, setEditMode] = useState(false);
+  const [isSaving, setIsSaving] = useState(false); // Track saving status
 
   // Load data on mount
   useEffect(() => {
@@ -34,7 +35,7 @@ function GenericPage({ title, type }) {
     setEditMode(true);
     setIsModalOpen(true);
   };
-
+  ////saving and deleting on Ui only
   // const handleSave = (updatedItem) => {
   //   if (editIndex !== null) {
   //     const updated = data.map((item, i) =>
@@ -54,35 +55,42 @@ function GenericPage({ title, type }) {
   //   closeModal();
   // };
   const handleSave = async (updatedItem) => {
-    if (!user?.id) return;
+    if (isSaving || !user?.id) return;
+    setIsSaving(true);
 
     try {
       let response;
 
       if (editMode && editIndex !== null && data[editIndex]?.id) {
-        // PATCH existing item
         const itemId = data[editIndex].id;
+
+        // Send PATCH to server
         response = await axios.patch(
           `http://localhost:5000/profile/${user.id}/${type}/${itemId}`,
           updatedItem
         );
-        const updatedData = data.map((item, i) =>
-          i === editIndex ? response.data : item
-        );
-        setData(updatedData);
+
+        // Update local UI state
+        const updated = [...data];
+        updated[editIndex] = response.data;
+        setData(updated);
       } else {
-        // POST new item with generated ID
         const itemWithId = { ...updatedItem, id: uuidv4() };
+
+        // Send POST to server
         await axios.post(
           `http://localhost:5000/profile/${user.id}/${type}`,
           itemWithId
         );
+
+        // Update UI
         setData([...data, itemWithId]);
       }
     } catch (err) {
       console.error("Failed to save item:", err);
     }
 
+    setIsSaving(false);
     closeModal();
   };
 
@@ -90,7 +98,6 @@ function GenericPage({ title, type }) {
     if (!user?.id || editIndex === null || !data[editIndex]?.id) return;
 
     const itemId = data[editIndex].id;
-    const updatedData = data.filter((item) => item.id !== itemId);
 
     try {
       await axios.delete(

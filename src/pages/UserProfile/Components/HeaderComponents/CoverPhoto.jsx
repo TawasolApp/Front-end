@@ -1,6 +1,5 @@
 import React, { useState } from "react";
-import ImageEnlarge from "./ImageEnlarge";
-import CameraIcon from "../../../assets/icons/camera.svg";
+import CameraIcon from "../../../../assets/icons/camera.svg";
 
 function CoverPhoto({ backgroundImage, isOwner, onImageClick, onUpload }) {
   return (

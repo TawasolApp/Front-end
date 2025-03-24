@@ -1,13 +1,13 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate, useParams } from "react-router-dom";
-import ViewerView from "./ViewerView";
+import ViewerView from "../ViewerView";
 import ProfilePicture from "./ProfilePicture";
 import CoverPhoto from "./CoverPhoto";
-import EditProfileModal from "./GenericComponent/EditProfileModal";
+import EditProfileModal from "./EditProfileModal";
 import ImageEnlarge from "./ImageEnlarge";
-import ImageUploadModal from "./ImageUploadModal";
-import defaultProfilePicture from "../../../assets/images/defaultProfilePicture.png";
-import defaultCoverPhoto from "../../../assets/images/defaultCoverPhoto.png";
+import ImageUploadModal from "../ImageUploadModal";
+import defaultProfilePicture from "../../../../assets/images/defaultProfilePicture.png";
+import defaultCoverPhoto from "../../../../assets/images/defaultCoverPhoto.png";
 function ProfileHeader({ user, isOwner, onSave, experienceRef, educationRef }) {
   const navigate = useNavigate();
   const [isEditing, setIsEditing] = useState(false);

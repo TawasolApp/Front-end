@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import GenericCard from "./GenericCard";
-import GenericModal from "../Useless/GenericModal";
+import GenericModal from "./GenericModal";
 import { useNavigate } from "react-router-dom";
 import { v4 as uuidv4 } from "uuid";
 import axios from "axios";
@@ -13,6 +13,7 @@ function GenericSection({ title, type, items, isOwner, user }) {
   const [editIndex, setEditIndex] = useState(null);
   const [editData, setEditData] = useState(null);
   const [editMode, setEditMode] = useState(false);
+  const [isSaving, setIsSaving] = useState(false); // Track saving status
 
   //  Add new
   const handleAdd = () => {
@@ -23,14 +24,11 @@ function GenericSection({ title, type, items, isOwner, user }) {
   };
 
   //  Edit existing
-  const handleEdit = (item, index) => {
-    setEditIndex(index);
-    setEditData(item);
-    setEditMode(true);
-    setIsModalOpen(true);
+  const handleEdit = () => {
+    navigate(`${type.toLowerCase()}`);
   };
 
-  //  Save
+  ////saving and deleting on Ui only
   // const handleSave = (updatedItem) => {
   //   if (editIndex !== null) {
   //     const updated = data.map((item, i) =>
@@ -43,26 +41,22 @@ function GenericSection({ title, type, items, isOwner, user }) {
   //   closeModal();
   // };
 
-  // //  Delete
-  // const handleDelete = () => {
-  //   if (editIndex !== null) {
-  //     const updated = data.filter((_, i) => i !== editIndex);
-  //     setData(updated);
-  //   }
-  //   closeModal();
-  // };
   const handleSave = async (newItem) => {
-    if (!user?.id) return;
+    if (isSaving || !user?.id) return; // Prevent multiple saves
+    setIsSaving(true);
+
     try {
       const itemWithId = { ...newItem, id: uuidv4() };
       await axios.post(
         `http://localhost:5000/profile/${user.id}/${type}`,
         itemWithId
       );
+      //update UI
       setData([...data, itemWithId]);
     } catch (err) {
       console.error("Failed to add item:", err);
     }
+    setIsSaving(false);
     closeModal();
   };
 
@@ -101,7 +95,7 @@ function GenericSection({ title, type, items, isOwner, user }) {
             </button>
             <button
               className="w-8 h-8 rounded-full flex items-center justify-center hover:bg-gray-200 transition"
-              onClick={() => navigate(`${type.toLowerCase()}`)}
+              onClick={handleEdit}
             >
               ✎
             </button>
@@ -112,11 +106,7 @@ function GenericSection({ title, type, items, isOwner, user }) {
       {/* Cards */}
       <div className="flex flex-col gap-4">
         {data.slice(0, 2).map((item, index) => (
-          <div
-            key={index}
-            onClick={() => isOwner && handleEdit(item, index)}
-            className={`cursor-${isOwner ? "pointer" : "default"}`}
-          >
+          <div key={index}>
             <GenericCard
               item={item}
               type={type}

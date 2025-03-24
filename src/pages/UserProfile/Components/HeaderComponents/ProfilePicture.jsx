@@ -1,7 +1,4 @@
 import React, { useState } from "react";
-import ImageEnlarge from "./ImageEnlarge";
-import PlusIcon from "../../../assets/icons/plus-icon.svg";
-
 function ProfilePicture({
   profilePictureSrc,
   isOwner,

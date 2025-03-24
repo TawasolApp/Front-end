@@ -57,7 +57,7 @@ function ExperienceFields({ formData, handleChange, errors }) {
         />
         <span>I am currently working in this role</span>
       </label>
-
+      {/* remember for this checkbox, to take itsvalue from db also hide end year and month if it is checked  */}
       <label className="block font-medium mb-1">Location</label>
       <input
         type="text"

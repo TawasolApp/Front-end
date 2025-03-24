@@ -1,5 +1,5 @@
 import React from "react";
-import GenericSection from "../GenericComponent/Useless/GenericSection";
+import GenericSection from "../GenericDisplay/GenericSection";
 import mockCertifications from "../MockData/mockCertifications";
 
 function CertificationsSection({ isOwner, user }) {

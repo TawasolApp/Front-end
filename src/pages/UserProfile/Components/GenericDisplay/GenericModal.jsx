@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from "react";
-import EducationFields from "../EducationFields";
-import ExperienceFields from "../ExperienceFields";
-import SkillsFields from "../SkillsFields";
-import CertificationsFields from "../CertificationsFields";
+import EducationFields from "../ModalFields/EducationFields";
+import ExperienceFields from "../ModalFields/ExperienceFields";
+import SkillsFields from "../ModalFields/SkillsFields";
+import CertificationsFields from "../ModalFields/CertificationsFields";
 
 // Local confirmation modals
 const ConfirmModal = ({ title, message, onConfirm, onCancel }) => (
@@ -121,6 +121,25 @@ function GenericModal({
       ) {
         newErrors.endMonth = "End month can't be before the start month";
       }
+      if (type === "education") {
+        if (!formData.institution)
+          newErrors.institution = "Please provide an institution";
+      }
+      if (type === "experience") {
+        if (!formData.company)
+          newErrors.company = "Please provide a company name";
+        if (!formData.title) newErrors.title = "Please provide a title";
+      }
+      if (type === "certifications") {
+        if (!formData.name)
+          newErrors.name = "Please provide a certificate name";
+        if (!formData.issuingOrganization)
+          newErrors.issuingOrganization =
+            "Please provide an issuing organization";
+      }
+    }
+    if (type === "skills") {
+      if (!formData.skillName) newErrors.skillName = "Please provide a skill";
     }
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
@@ -128,10 +147,10 @@ function GenericModal({
 
   const handleSubmit = () => {
     if (validateForm()) {
-      if (type === "skills" && formData.skill) {
-        formData.skillName = formData.skill;
-        delete formData.skill;
-      }
+      // if (type === "skills" && formData.skill) {
+      //   formData.skillName = formData.skill;
+      //   delete formData.skill;
+      // }
       onSave({ ...formData });
     }
   };

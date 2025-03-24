@@ -1,7 +1,7 @@
 import React, { useRef } from "react";
 import { useOutletContext } from "react-router-dom";
 
-import ProfileHeader from "./ProfileHeader";
+import ProfileHeader from "./HeaderComponents/ProfileHeader";
 import EducationSection from "./Sections/EducationSection";
 import ExperienceSection from "./Sections/ExperienceSection";
 import SkillsSection from "./Sections/SkillsSection";
@@ -28,15 +28,11 @@ function ProfilePage() {
       />
       <ExperienceSection
         isOwner={isOwner}
-        sectionRef={educationRef}
+        sectionRef={experienceRef}
         user={user}
       />
-      <SkillsSection isOwner={isOwner} sectionRef={educationRef} user={user} />
-      <CertificationsSection
-        isOwner={isOwner}
-        sectionRef={educationRef}
-        user={user}
-      />
+      <SkillsSection isOwner={isOwner} user={user} />
+      <CertificationsSection isOwner={isOwner} user={user} />
     </div>
   );
 }
