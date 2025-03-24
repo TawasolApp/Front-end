@@ -1,13 +1,12 @@
-import { useState } from 'react';
+import { useState, useRef, useEffect } from 'react';
 import { Avatar } from '@mui/material';
 
 const AddForm = ({
     handleAddFunction,
     initialText = "",
-    close=null,
+    close = null,
     type
 }) => {
-
     // TODO: change this to redux states
     const currentAuthorId = "mohsobh";
     const currentAuthorName = "Mohamed Sobh";
@@ -17,6 +16,25 @@ const AddForm = ({
 
     const [commentText, setCommentText] = useState(initialText);
     const hasText = commentText.trim().length > 0;
+    const textareaRef = useRef(null);
+
+    // Adjust textarea height based on content
+    useEffect(() => {
+        if (textareaRef.current) {
+            // Reset height to auto to get the correct scrollHeight
+            textareaRef.current.style.height = 'auto';
+            
+            // Set the new height based on whether there's text or it's a Reply type
+            if (hasText || type === "Reply") {
+                // Set the new height based on scrollHeight (with a min expanded height)
+                const newHeight = Math.max(64, textareaRef.current.scrollHeight);
+                textareaRef.current.style.height = `${newHeight}px`;
+            } else {
+                // When no text and not a Reply, collapse to default height
+                textareaRef.current.style.height = '32px';
+            }
+        }
+    }, [commentText, hasText, type]);
 
     const handleSubmit = (e) => {
         e.preventDefault();
@@ -25,6 +43,9 @@ const AddForm = ({
             setCommentText('');
         }
     };
+
+    // Determine whether to show expanded or collapsed view
+    const isExpanded = hasText || type === "Reply";
 
     return (
         <div className="flex items-start pt-1 pb-2 px-4">
@@ -38,30 +59,35 @@ const AddForm = ({
 
             <form onSubmit={handleSubmit} className="flex-1 relative">
                 <textarea
+                    ref={textareaRef}
                     placeholder={type === "Comment" ? "Add a comment..." : "Edit Comment..." }
-                    className={`w-full px-3 py-1.5 bg-gray-50 ${(hasText || (type === "Reply")) ? "rounded-xl" : "rounded-full"} border border-gray-200 focus:outline-none focus:border-gray-400 pr-20 resize-none transition-all duration-200 ${(hasText || (type === "Reply")) ? 'h-16' : 'h-8'} overflow-hidden`}
+                    className={`w-full px-3 py-1.5 bg-gray-50 ${isExpanded ? "rounded-xl" : "rounded-full"} border border-gray-200 focus:outline-none focus:border-gray-400 ${isExpanded ? "pb-8" : "pb-1.5"} resize-none transition-all duration-200 overflow-hidden min-w-0 break-words`}
                     value={commentText}
                     onChange={(e) => setCommentText(e.target.value)}
                     rows={1}
+                    style={{ wordWrap: 'break-word', overflowWrap: 'break-word' }}
                 />
               
-                {type === "Reply" && (
-                    <button
-                        onClick={close}
-                        className="absolute right-20 bottom-3 px-3 py-1 text-sm font-medium text-white bg-blue-600 rounded-full hover:bg-blue-700"
-                    >
-                        Cancel
-                    </button>
-                )}
+                <div className={`absolute right-2 ${isExpanded ? "bottom-3.5" : "hidden"} flex space-x-2`}>
+                    {type === "Reply" && (
+                        <button
+                            type="button"
+                            onClick={close}
+                            className="px-3 py-1 text-sm font-medium text-white bg-gray-500 rounded-full hover:bg-gray-600"
+                        >
+                            Cancel
+                        </button>
+                    )}
 
-                {(hasText || (type === "Reply")) && (
-                    <button
-                        type="submit"
-                        className="absolute right-2 bottom-3 px-3 py-1 text-sm font-medium text-white bg-blue-600 rounded-full hover:bg-blue-700"
-                    >
-                        {type}
-                    </button>
-                )}
+                    {(hasText || (type === "Reply")) && (
+                        <button
+                            type="submit"
+                            className="px-3 py-1 text-sm font-medium text-white bg-blue-600 rounded-full hover:bg-blue-700"
+                        >
+                            {type}
+                        </button>
+                    )}
+                </div>
             </form>
         </div>
     );
