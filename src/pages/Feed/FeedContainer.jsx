@@ -19,7 +19,7 @@ const FeedContainer = () => {
                     </div>
 
                     {/* Main Feed - Fixed width to match LinkedIn */}
-                    <main className="w-full max-w-xl flex-shrink-0">
+                    <main className="w-full max-w-xl flex-shrink-0 pt-4">
                         <MainFeed />
                     </main>
 
@@ -45,7 +45,7 @@ const FeedContainer = () => {
                     </div>
 
                     {/* Main Feed */}
-                    <main className="w-full max-w-md flex-shrink-0">
+                    <main className="w-full max-w-md flex-shrink-0 pt-4">
                         <MainFeed />
                     </main>
 
@@ -71,7 +71,7 @@ const FeedContainer = () => {
                     </div>
 
                     {/* Main Feed */}
-                    <main className="flex-1">
+                    <main className="flex-1 pt-4">
                         <MainFeed />
                     </main>
                 </div>

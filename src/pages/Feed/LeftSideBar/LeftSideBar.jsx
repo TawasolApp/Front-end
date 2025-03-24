@@ -83,7 +83,7 @@ const LeftSideBar = () => {
       {isTopPosition && (
         <button 
           onClick={toggleShowMore}
-          className="w-full flex items-center justify-center py-2 text-sm font-medium text-gray-500 hover:bg-gray-100 transition-all border-t border-gray-200"
+          className="w-full flex items-center justify-center py-2 text-sm font-medium bg-[#f4f2ee] text-gray-500 transition-all border-t border-gray-200"
         >
           {showMore ? (
             <>
