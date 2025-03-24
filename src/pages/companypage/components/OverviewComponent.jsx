@@ -2,8 +2,8 @@ import React, { useState } from "react";
 function Overviewcomponent(props) {
   return (
     <div className="mt-4">
-      <p className="font-bold">{props.title}</p>
-      <p className="text-gray-500">{props.content}</p>
+      <p className="font-bold text-text">{props.title}</p>
+      <p className="text-overviewcomponenttext">{props.content}</p>
     </div>
   );
 }

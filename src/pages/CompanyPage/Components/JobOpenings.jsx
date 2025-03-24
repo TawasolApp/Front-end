@@ -12,11 +12,13 @@ function JobOpenings({ company }) {
 
   return (
     <div
-      className="bg-white p-6 shadow-md rounded-md w-full max-w-3xl mx-auto pb-0 mb-4 mt-8"
+      className="bg-boxbackground p-6 shadow-md rounded-md w-full max-w-3xl mx-auto pb-0 mb-4 mt-8"
       data-testid="job-openings"
     >
       {/* Header */}
-      <h1 className="text-xl font-semibold mb-4">Recent Job Openings</h1>
+      <h1 className="text-xl font-semibold mb-4 text-boxheading">
+        Recent Job Openings
+      </h1>
 
       {jobs.length > 0 ? (
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -24,8 +26,8 @@ function JobOpenings({ company }) {
             <div key={job.id} className="flex items-center space-x-3">
               <img src={job.logo} alt="Company Logo" className="w-10 h-10" />
               <div>
-                <h2 className="font-semibold">{job.title}</h2>
-                <p className="text-gray-600">{job.location}</p>
+                <h2 className=" text-text">{job.title}</h2>
+                <p className="text-text2 text-xs">{job.location}</p>
               </div>
             </div>
           ))}
@@ -53,8 +55,7 @@ function JobOpenings({ company }) {
       {/* Show All Jobs Button - Full Width & Darker Hover Effect */}
       {jobs.length > 0 && (
         <button
-          className="w-full py-2 text-gray-700 border-t border-gray-300 mt-4 
-                     hover:bg-gray-200 transition duration-300 rounded-b-md"
+          className="w-full py-2 text-navbuttons border-t border-gray-300 mt-4 transition duration-300 rounded-b-md"
           onClick={() => navigate(`/company/${companyId}/jobs`)} // Use dynamic companyId
         >
           Show all {jobs.length} jobs →

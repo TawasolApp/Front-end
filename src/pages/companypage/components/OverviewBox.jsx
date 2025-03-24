@@ -13,12 +13,12 @@ function Overviewbox(props) {
 
   return (
     <div
-      className="bg-white p-6 shadow-md rounded-md w-full max-w-3xl mx-auto pb-0 mb-8"
+      className="bg-boxbackground p-6 shadow-md rounded-md w-full max-w-3xl mx-auto pb-0 mb-8"
       data-testid="overview-box"
     >
-      <h1 className="text-2xl font-semibold mb-2">Overview</h1>
+      <h1 className="text-2xl font-semibold mb-2 text-boxheading">Overview</h1>
       <p
-        className={`text-gray-900 transition-all ${
+        className={`text-companyheader1 transition-all ${
           expanded ? "line-clamp-none" : "line-clamp-3"
         }`}
       >
@@ -26,12 +26,12 @@ function Overviewbox(props) {
       </p>
       <button
         onClick={() => setExpanded(!expanded)}
-        className="text-gray-500 hover:underline hover:decoration-blue-500"
+        className="text-companyheader2 hover:underline hover:decoration-blue-500"
       >
         {expanded || (company?.overview?.length ?? 0) < 100 ? "" : "See More"}
       </button>
       <button
-        className="w-full py-2 text-gray-700 border-t border-gray-300 mt-4 hover:bg-gray-200"
+        className="w-full py-2 text-navbuttons border-t border-gray-300 mt-4"
         onClick={() => navigate(`/company/${companyId}/about`)} // Use dynamic companyId
       >
         Show all details →

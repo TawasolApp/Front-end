@@ -16,7 +16,7 @@ function PostsPage() {
   }, [activeFilter, setSearchParams]);
 
   return (
-    <div className="bg-white p-6 shadow-md rounded-md w-full max-w-3xl mx-auto">
+    <div className="bg-boxbackground p-6 shadow-md rounded-md w-full max-w-3xl mx-auto">
       {/* Navigation Filters */}
       <div className="overflow-x-auto">
         <div className="flex flex-wrap gap-2 border-b pb-2">
@@ -24,10 +24,10 @@ function PostsPage() {
             <button
               key={filter}
               onClick={() => setActiveFilter(filter)}
-              className={`px-3 py-1 sm:px-4 sm:py-2 rounded-full font-semibold transition ${
+              className={`px-3 py-1 sm:px-4 sm:py-2 rounded-full font-semibold transition border border-white text-navbuttons shadow-md ${
                 activeFilter === filter
                   ? "bg-green-700 text-white"
-                  : "bg-gray-100 text-gray-700 hover:bg-gray-200"
+                  : "bg-postsbuttoncolor text-gray-700 hover:border-2"
               }`}
             >
               {filter}

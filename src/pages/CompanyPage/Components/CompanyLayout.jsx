@@ -37,7 +37,7 @@ function CompanyLayout() {
   }
 
   return (
-    <div className="bg-gray-200 pt-4 pb-4">
+    <div className="bg-background pt-4 pb-4">
       <CompanyHeader companyId={companyId || defaultCompanyId} />
       <div className="max-w-6xl mx-auto mt-4">
         <Outlet context={{ jobs }} /> {/* Pass jobs via context if needed */}

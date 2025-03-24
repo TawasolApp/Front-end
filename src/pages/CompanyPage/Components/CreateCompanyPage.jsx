@@ -77,21 +77,21 @@ function CreateCompanyPage() {
   }
 
   return (
-    <div className="bg-gray-200">
-      <div className="max-w-7xl mx-auto p-6 bg-gray-200">
+    <div className="bg-background">
+      <div className="max-w-7xl mx-auto p-6 bg-background">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
           {/* Left Form Section */}
-          <div className="space-y-4 bg-white p-6 rounded-xl border border-gray-300 shadow-md">
+          <div className="space-y-4 bg-boxbackground p-6 rounded-xl border border-gray-300 shadow-md">
             {/* Name */}
             <div>
-              <label className="block text-sm text-gray-600 mb-1">Name*</label>
+              <label className="block text-sm text-text2 mb-1">Name*</label>
               <input
                 type="text"
                 value={companyName}
                 id="company-name"
                 data-testid="company-name"
                 onChange={(e) => setName(e.target.value)}
-                className={`w-full p-1 border text-sm border-gray-400 rounded-md ${
+                className={`w-full p-1 border text-sm bg-boxbackground border-gray-400 rounded-md ${
                   errors.companyName ? "border-red-500" : "border-gray-400"
                 }`}
                 placeholder="Add your organization’s name"
@@ -105,30 +105,26 @@ function CreateCompanyPage() {
 
             {/* Website */}
             <div>
-              <label className="block text-sm text-gray-600 mb-1">
-                Website
-              </label>
+              <label className="block text-sm text-text2 mb-1">Website</label>
               <input
                 type="url"
                 id="company-website"
                 data-testid="company-website"
-                className="w-full p-1 border text-sm border-gray-400 rounded-md"
+                className="w-full p-1 border text-sm border-gray-400 rounded-md bg-boxbackground"
                 placeholder="Begin with http://, https:// or www."
               />
             </div>
 
             {/* Industry */}
             <div>
-              <label className="block text-sm text-gray-600 mb-1">
-                Industry*
-              </label>
+              <label className="block text-sm text-text2 mb-1">Industry*</label>
               <input
                 type="text"
                 id="company-industry"
                 data-testid="company-industry"
                 value={industry}
                 onChange={(e) => setIndustry(e.target.value)}
-                className={`w-full p-1 border text-sm border-gray-400 rounded-md ${
+                className={`w-full p-1 border text-sm border-gray-400 rounded-md bg-boxbackground ${
                   errors.industry ? "border-red-500" : "border-gray-400"
                 }`}
                 placeholder="ex: Information Services"
@@ -140,7 +136,7 @@ function CreateCompanyPage() {
 
             {/* Organization Size */}
             <div>
-              <label className="block text-sm text-gray-600 mb-1">
+              <label className="block text-sm text-text2 mb-1">
                 Organization size*
               </label>
               <select
@@ -148,7 +144,7 @@ function CreateCompanyPage() {
                 id="organization-size"
                 data-testid="organization-size"
                 onChange={(e) => setOrgSize(e.target.value)}
-                className={`w-full p-1 border text-sm
+                className={`w-full bg-boxbackground text-text p-1 border text-sm
                 border-gray-400 rounded-md ${
                   errors.orgSize ? "border-red-500" : "border-gray-400"
                 }`}
@@ -171,7 +167,7 @@ function CreateCompanyPage() {
 
             {/* Organization Type */}
             <div>
-              <label className="block text-sm text-gray-600 mb-1">
+              <label className="block text-sm text-text2 mb-1">
                 Organization type*
               </label>
               <select
@@ -179,7 +175,7 @@ function CreateCompanyPage() {
                 id="organization-type"
                 data-testid="organization-type"
                 onChange={(e) => setOrgType(e.target.value)}
-                className={`w-full p-1 border text-sm border-gray-400
+                className={`w-full bg-boxbackground p-1 border text-text text-sm border-gray-400
                 rounded-md ${
                   errors.orgType ? "border-red-500" : "border-gray-400"
                 }`}
@@ -199,12 +195,14 @@ function CreateCompanyPage() {
             </div>
             {/* Logo Upload */}
             <div>
-              <label className="block text-sm text-gray-600 mb-1">Logo</label>
-              <div className="w-full min-h-[100px] border border-gray-400 rounded-md bg-gray-100 relative flex flex-col items-center justify-center px-4 py-6 text-center">
+              <label className="block text-sm text-text2 mb-1">Logo</label>
+              <div className="w-full min-h-[100px] border border-gray-400 rounded-md bg-uploadimage relative flex flex-col items-center justify-center px-4 py-6 text-center">
                 <div className="flex flex-col items-center justify-center gap-1 text-gray-600">
-                  <FiUpload className="text-2xl font-semibold" />
-                  <p className="font-semibold text-sm">Choose file</p>
-                  <p className="text-gray-600 text-xs">Upload to see preview</p>
+                  <FiUpload className="text-2xl font-semibold text-text2" />
+                  <p className="font-semibold text-sm text-text2">
+                    Choose file
+                  </p>
+                  <p className="text-text2 text-xs">Upload to see preview</p>
                 </div>
                 <input
                   type="file"
@@ -220,15 +218,13 @@ function CreateCompanyPage() {
 
             {/* Tagline */}
             <div>
-              <label className="block text-sm text-gray-500 mb-1">
-                Tagline
-              </label>
+              <label className="block text-sm text-text2 mb-1">Tagline</label>
               <textarea
                 value={tagline}
                 id="company-tagline"
                 data-testid="company-tagline"
                 onChange={(e) => setTagline(e.target.value)}
-                className="w-full p-2 border rounded-md"
+                className="w-full p-2 border rounded-md bg-boxbackground"
                 placeholder="ex: An information services firm helping small businesses succeed."
                 maxLength={120}
               />
@@ -246,7 +242,7 @@ function CreateCompanyPage() {
                 checked={agreeTerms}
                 onChange={() => setAgreeTerms(!agreeTerms)}
               />
-              <p className="text-sm">
+              <p className="text-sm text-text">
                 I verify that I am an authorized representative of this
                 organization and have the right to act on its behalf in the
                 creation and management of this page. The organization and I
@@ -264,21 +260,21 @@ function CreateCompanyPage() {
           </div>
 
           {/* Right Page Preview */}
-          <div className="bg-gray-200">
-            <div className="bg-white p-6 rounded-xl border border-gray-300 shadow-md h-auto pt-2 px-0 pb-0">
-              <h3 className="text-lg font-semibold text-gray-700 mb-2 pl-2">
+          <div className="bg-background">
+            <div className="bg-boxbackground p-6 rounded-xl border border-gray-300 shadow-md h-auto pt-2 px-0 pb-0">
+              <h3 className="text-lg font-semibold text-text mb-2 pl-2">
                 Page preview
               </h3>
-              <div className="bg-gray-400 w-full p-6 rounded-b-xl">
-                <div className="mt-4 bg-white pt-4 pb-4 rounded-xl px-6">
+              <div className="bg-background w-full p-6 rounded-b-xl">
+                <div className="mt-4 bg-boxbackground pt-4 pb-4 rounded-xl px-6">
                   <div className="h-32 w-32 bg-gray-200 mx-auto rounded-full mb-4"></div>
-                  <h4 className="text-lg font-bold text-gray-700">
+                  <h4 className="text-lg font-bold text-text">
                     {companyName || "Company Name"}
                   </h4>
-                  <p className="text-sm text-gray-600 font-medium">
+                  <p className="text-sm text-text font-medium">
                     {tagline || "Tagline"}
                   </p>
-                  <p className="text-sm text-gray-500">
+                  <p className="text-sm text-gray-500 text-overviewcomponenttext">
                     {industry || "Industry"}
                   </p>
                   <button className="mt-4 px-6 py-2 rounded-full bg-blue-600 text-white font-semibold">

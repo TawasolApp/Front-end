@@ -66,7 +66,7 @@ function CompanyHeader({ companyId }) {
 
   return (
     <div>
-      <div className="bg-white p-6 shadow-md rounded-md w-full max-w-3xl mx-auto pb-0 mb-8">
+      <div className="bg-boxbackground p-6 shadow-md rounded-md w-full max-w-3xl mx-auto pb-0 mb-8">
         {/* Banner Section */}
         <div className="relative w-full h-48" onClick={() => setIsOpen(true)}>
           <img
@@ -94,12 +94,12 @@ function CompanyHeader({ companyId }) {
         {/* Company Details */}
         <div className="mt-8">
           <div className="flex items-center relative">
-            <h1 className="text-2xl font-semibold uppercase ">
+            <h1 className="text-2xl font-semibold uppercase text-text">
               {company.name}
             </h1>
             {isAdmin && (
               <button
-                className="absolute right-0 bg-white p-2 rounded-full shadow-md border border-gray-300 hover:bg-gray-100 transition"
+                className="absolute right-0 bg-boxbackground p-2 rounded-full shadow-md border border-gray-300 transition"
                 aria-label="Edit Company"
                 onClick={() => setShowEditModal(true)}
               >
@@ -108,15 +108,15 @@ function CompanyHeader({ companyId }) {
             )}
           </div>
 
-          <p className="text-gray-900">{company.description}</p>
-          <p className="text-gray-500 mt-1">
+          <p className="text-companyheader1">{company.description}</p>
+          <p className="text-companyheader2 mt-1">
             {company.address} · {formatNumbers(company.followers)} followers ·{" "}
             {company.companySize}
           </p>
           <div className="mt-4 flex flex-nowrap gap-2 sm:gap-3 pb-4 items-center justify-start">
             {/* Follow Button */}
             <button
-              className="px-4 h-9 min-w-max rounded-full transition duration-300 border-2 border-blue-700 bg-white text-blue-700 font-medium text-sm flex items-center justify-center"
+              className="px-4 h-9 min-w-max rounded-full transition duration-300 border-2 border-blue-700 bg-boxbackground text-blue-700 font-medium text-sm flex items-center justify-center"
               onClick={toggleFollow}
             >
               {isFollowing ? "✓ Following" : "+ Follow"}
@@ -156,21 +156,19 @@ function CompanyHeader({ companyId }) {
           <div>
             {/* Navigation Bar */}
             <div className="flex flex-nowrap gap-3 sm:gap-4 items-center justify-start pb-0">
-              {["Home", "About", "Posts", "Jobs", "Life", "People"].map(
-                (buttonName) => (
-                  <button
-                    key={buttonName}
-                    className={`text-gray-700 pb-2 ${
-                      activeButton === buttonName.toLowerCase()
-                        ? "font-bold text-green-600 border-b-2 border-green-600"
-                        : ""
-                    }`}
-                    onClick={() => handleNavigation(buttonName)}
-                  >
-                    {buttonName}
-                  </button>
-                )
-              )}
+              {["Home", "About", "Posts", "Jobs"].map((buttonName) => (
+                <button
+                  key={buttonName}
+                  className={` pb-2 ${
+                    activeButton === buttonName.toLowerCase()
+                      ? "font-bold text-green-600 border-b-2 border-green-600"
+                      : "text-navbuttons"
+                  }`}
+                  onClick={() => handleNavigation(buttonName)}
+                >
+                  {buttonName}
+                </button>
+              ))}
             </div>
           </div>
         </div>

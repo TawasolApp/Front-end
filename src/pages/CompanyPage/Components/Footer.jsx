@@ -95,7 +95,7 @@ function Footer() {
         {/* Column 5 - Language Selector (Properly aligned) */}
         <div className="flex flex-col items-start space-y-2">
           <p className="font-semibold text-gray-800">Select Language</p>
-          <select className="border border-gray-300 rounded-md px-3 py-2 w-full min-w-[180px]">
+          <select className="border border-gray-300 rounded-md px-3 py-2 w-full min-w-[180px] bg-sliderbutton">
             <option>English (English)</option>
             <option>العربية (Arabic)</option>
             <option>Français (French)</option>
