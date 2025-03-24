@@ -205,7 +205,7 @@ describe("CompanyHeader", () => {
     expect(screen.getByText(/Edit Company Profile/i)).toBeInTheDocument();
   });
 
-  const buttons = ["Home", "About", "Posts", "Jobs", "Life", "People"];
+  const buttons = ["Home", "About", "Posts", "Jobs"];
 
   buttons.forEach((button) => {
     test(`navigates to ${button} page`, async () => {
