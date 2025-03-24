@@ -1,16 +1,20 @@
 import "./App.css";
-import { axiosInstance as axios } from "../apis/axios";
-import { getIconComponent } from "../utils";
-import Companypage from "../pages/CompanyPage/CompanyPage";
+import { BrowserRouter as Router, Route, Routes, Link } from 'react-router-dom';
 
-function App() {
-  const InIcon = getIconComponent("in-black");
+import FeedContainer from "../pages/Feed/FeedContainer";
+import SavedPostsContainer from "../pages/SavedPosts/SavedPostsContainer";
+
+const App = () => {
+
   return (
-    <span>
-      <div>
-        <Companypage />
-      </div>
-    </span>
+    <Router>
+      <Routes>
+        <Route path="/" element={<FeedContainer />} />
+        <Route path="/feed/" element={<FeedContainer />} />
+        <Route path="/my-items/saved-posts" element={<SavedPostsContainer />} />
+        <Route path="/in/:usedId/" element={<h1>HelloWorld</h1>} />
+      </Routes>
+    </Router>
   );
 }
 
