@@ -18,7 +18,7 @@ const currentUser = {
 
 
 
-// GET ADD DELETE EDIT POSTS
+/*********************************************************** POSTS ***********************************************************/
 server.get("/posts", (req, res) => {
   const posts = _router.db.get("posts").value();
   res.jsonp(posts);
@@ -101,66 +101,75 @@ server.patch('/posts/:postId', (req, res) => {
   res.status(200).json({ message: 'Post updated successfully' });
 });
 
-// REACT TO POST (ADD AND DELETE)
+
+
+/*********************************************************** REACTIONS ***********************************************************/
 server.post('/posts/react/:postId', (req, res) => {
   const { postId } = req.params;
   const { reactions, postType } = req.body;
-  const posts = _router.db.get('posts');
+  
+  // Determine which database table to use
+  const entityType = postType === 'Comment' ? 'comments' : 'posts';
+  const entityTable = _router.db.get(entityType);
   const reactionsTable = _router.db.get('reactions');
-  const post = posts.find({ id: postId }).value();
-  if (!post) {
-      return res.status(404).json({ error: 'Post not found' });
+
+  // Find the target entity (post or comment)
+  const entity = entityTable.find({ id: postId }).value();
+  if (!entity) {
+    return res.status(404).json({ error: `${postType} not found` });
   }
-  // Remove existing reaction by this author
-  const existingReaction = reactionsTable
-      .find({ postId: postId, authorId: currentUser.id })
-      .value();
+
+  // Check for existing reaction
+  const existingReaction = reactionsTable.find({
+    ['postId']: postId,
+    authorId: currentUser.id
+  }).value();
+
+  // Remove existing reaction
   if (existingReaction) {
-      reactionsTable.remove({ likeId: existingReaction.likeId }).write();
-      // Subtract 1 from the old reaction type in the posts table
-      if (existingReaction.type && post.reactions[existingReaction.type] > 0) {
-          posts
-              .find({ id: postId })
-              .assign({
-                  reactions: {
-                      ...post.reactions, 
-                      [existingReaction.type]: post.reactions[existingReaction.type] - 1
-                  },
-                  reactType: null,
-              })
-              .write();
-      }
+    reactionsTable.remove({ likeId: existingReaction.likeId }).write();
+    
+    // Decrement old reaction count
+    entityTable.find({ id: postId }).assign({
+      reactions: {
+        ...entity.reactions,
+        [existingReaction.type]: Math.max((entity.reactions[existingReaction.type] || 0) - 1, 0)
+      },
+      reactType: null
+    }).write();
   }
-  // Add the new reaction if requested
+
+  // Add new reaction
   const reactionTypeAdd = Object.keys(reactions).find(type => reactions[type] === 1);
   if (reactionTypeAdd) {
-      const newReaction = {
-          likeId: `${postId}-${currentUser.id}-${reactionTypeAdd}`,
-          postId: postId,
-          authorId: currentUser.id,
-          authorType: currentUser.type,
-          type: reactionTypeAdd,
-          authorName: currentUser.name,
-          authorPicture: currentUser.picture,
-          authorBio: currentUser.bio
-      };
-      reactionsTable.push(newReaction).write();
-      // Add 1 to the new reaction type in the posts table
-      posts
-          .find({ id: postId })
-          .assign({
-              reactions: {
-                  ...post.reactions,
-                  [reactionTypeAdd]: (post.reactions[reactionTypeAdd] || 0) + 1
-              },
-              reactType: reactionTypeAdd
-          })
-          .write();
+    const newReaction = {
+      likeId: `${postId}-${currentUser.id}-${reactionTypeAdd}`,
+      [postType === 'Comment' ? 'commentId' : 'postId']: postId,
+      authorId: currentUser.id,
+      authorType: currentUser.type,
+      type: reactionTypeAdd,
+      authorName: currentUser.name,
+      authorPicture: currentUser.picture,
+      authorBio: currentUser.bio
+    };
+    
+    reactionsTable.push(newReaction).write();
+    
+    // Increment new reaction count
+    entityTable.find({ id: postId }).assign({
+      reactions: {
+        ...entity.reactions,
+        [reactionTypeAdd]: (entity.reactions[reactionTypeAdd] || 0) + 1
+      },
+      reactType: reactionTypeAdd
+    }).write();
   }
+
   res.status(200).json({ message: 'Reaction updated successfully' });
 });
 
 server.get('/posts/reactions/:postId', (req, res) => {
+
   const { postId } = req.params;
   const reactionsTable = _router.db.get('reactions');
   // Filter reactions for the specified post
@@ -173,7 +182,9 @@ server.get('/posts/reactions/:postId', (req, res) => {
   res.status(200).json(postReactions);
 });
 
-// SAVED
+
+
+/*********************************************************** SAVE ***********************************************************/
 server.get('/posts/saved', (req, res) => {
   const posts = _router.db.get("posts").filter({ isSaved: true }).value();
   res.jsonp(posts);
@@ -201,6 +212,9 @@ server.delete('/posts/save/:postId', (req, res) => {
   res.status(200).json({ message: 'Post unsaved successfully' });
 });
 
+
+
+/*********************************************************** COMMENTING ***********************************************************/
 server.get("/posts/comments/:postId", (req, res) => {
   const { postId } = req.params;
   const page = parseInt(req.query.page) || 1;
@@ -241,11 +255,11 @@ server.post("/posts/comment/:postId", (req, res) => {
     content: content,
     replies: [],
     reactions: {
-      "love": 0,
-      "celebrate": 0,
-      "insightful": 0,
-      "funny": 0,
-      "support": 0,
+      "Love": 0,
+      "Celebrate": 0,
+      "Insightful": 0,
+      "Funny": 0,
+      "Support": 0,
       "like": 0
     },
     taggedUsers: taggedUsers || [],
@@ -308,6 +322,8 @@ server.delete("/posts/comments/:commentId", (req, res) => {
 
   res.status(404).json({ error: 'Comment not found' });
 });
+
+
 
 server.use(_router);
 

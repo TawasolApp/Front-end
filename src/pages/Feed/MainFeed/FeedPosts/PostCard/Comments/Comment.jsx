@@ -31,20 +31,28 @@ const Comment = ({
 
   const handleReaction = (reactionTypeAdd, reactionTypeRemove) => {
 
-    // TODO: API
-    
-    setLocalComment(prev => {
-        const newReactions = { ...prev.reactions };
+    let reacts = {};
+    if (reactionTypeAdd) reacts[reactionTypeAdd] = 1;
+    if (reactionTypeRemove) reacts[reactionTypeRemove] = 0;
 
+    try {
+      axiosInstance.post(`posts/react/${comment.id}`, {
+        reactions: reacts,
+        postType: "Comment"
+      });
+      setLocalComment(prev => {
+        const newReactions = { ...prev.reactions };
         if (reactionTypeAdd) {
-            newReactions[reactionTypeAdd] += 1;
+          newReactions[reactionTypeAdd] += 1;
         }
         if (reactionTypeRemove) {
-            newReactions[reactionTypeRemove] -= 1;
+          newReactions[reactionTypeRemove] -= 1;
         }
-
         return { ...prev, reactions: newReactions };
-    });
+      });
+    } catch (e) {
+      console.log(e.message);
+    }
   };
 
   let menuItems = [
@@ -70,7 +78,6 @@ const Comment = ({
 
   const handleEditComment = async (text) => {
     try {
-      console.log("hello")
       setEditorMode(false);
       await axiosInstance.patch(`/posts/comments/${localComment.id}`, {
         content: text,
@@ -96,7 +103,6 @@ const Comment = ({
         />
       ) : (
         <article>
-          
           <div className="flex px-4 pt-1 pb-2">
             <ActorHeader
               authorId={localComment.authorId}
@@ -126,9 +132,10 @@ const Comment = ({
           <CommentThreadWrapper>
             <div className="pl-1 pt-2">
               <ActivitiesHolder
+                initReactValue={localComment.reactType}
                 reactions={localComment.reactions}
                 onReactionChange={handleReaction}
-                setShowReactions={() => {console.log("Hello"); setShowReactions(true)}}
+                setShowReactions={() => {setShowReactions(true)}}
                 replies={localComment.replies.length}
               />
             </div>
@@ -136,7 +143,7 @@ const Comment = ({
 
           {showReactions && (
             <ReactionsModal
-                APIURL={`/posts/reactions/${localComment.postId}/${localComment.id}`}
+                APIURL={`/posts/reactions/${localComment.id}`}
                 setShowLikes={() => setShowReactions(false)}
             />
           )}

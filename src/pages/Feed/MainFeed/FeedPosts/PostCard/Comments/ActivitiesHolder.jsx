@@ -3,13 +3,14 @@ import reactionIcons from '../../../../GenericComponents/reactionIcons';
 import ReactionPicker from '../../../../GenericComponents/ReactionPicker';
 
 const ActivitiesHolder = ({
+    initReactValue=null,
     reactions,
     onReactionChange,
     setShowReactions,
     replies,
     setShowReplies
 }) => {
-    const [currentReaction, setCurrentReaction] = useState(null);
+    const [currentReaction, setCurrentReaction] = useState(initReactValue);
     
     // Memoized calculations
     const { topReactions, totalLikes } = useMemo(() => {
