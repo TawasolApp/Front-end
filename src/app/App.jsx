@@ -6,6 +6,7 @@ import { getIconComponent } from "../utils";
 import NetworkBox from "../pages/mynetworkpage/mynetworkpage";
 import Connections from "../pages/connectionpage/ConnectionPage";
 import BlockedPage from "../pages/mynetworkpage/components/BlockedPage"; 
+import FollowPage from '../pages/mynetworkpage/components/FollowPage'; 
 
 function App() {
   const InIcon = getIconComponent("in-black");
@@ -17,6 +18,7 @@ function App() {
             <Route path="/" element={<NetworkBox />} />
             <Route path="/connections" element={<Connections />} />
             <Route path="/blocked" element={<BlockedPage />} />
+            <Route path="/follow" element={<FollowPage />} />
           </Routes>
         </Router>
       </div>

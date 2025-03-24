@@ -1,6 +1,66 @@
 {
-  "users": [
-    { "id": "1", "username": "Khalid", "password": "1234" },
-    { "id": "2", "username": "Ali", "password": "1234" }
+  "connections": [
+    {
+      "userId": "1",
+      "username": "Khalid Aly",
+      "profilePicture": "https://example.com/khalid.jpg",
+      "headline": "Software Engineer",
+      "createdAt": "2025-03-24T12:00:00Z"
+    },
+    {
+      "userId": "3",
+      "username": "Omar Salah",
+      "profilePicture": "https://example.com/omar.jpg",
+      "headline": "Data Scientist",
+      "createdAt": "2025-03-22T12:30:00Z"
+    }
+  ],
+  "pendingConnections": [
+    {
+      "userId": "4",
+      "username": "OmarSalah",
+      "profilePicture": "/images/omar.jpg",
+      "headline": "Software Engineer at Google",
+      "createdAt": "2023-05-15T10:30:00Z"
+    }
+  ],
+  "following": [
+    {
+      "userId": "5",
+      "username": "Noor Al-Hadidi",
+      "profilePicture": "https://example.com/noor.jpg",
+      "headline": "Backend Developer",
+      "createdAt": "2025-03-10T09:00:00Z"
+    },
+    {
+      "userId": "6",
+      "username": "Mariam El-Soufy",
+      "profilePicture": "https://example.com/mariam.jpg",
+      "headline": "Mobile Developer",
+      "createdAt": "2025-03-15T14:45:00Z"
+    }
+  ],
+  "followers": [
+    {
+      "userId": "6",
+      "username": "Mariam El-Soufy",
+      "profilePicture": "https://example.com/mariam.jpg",
+      "headline": "Mobile Developer",
+      "createdAt": "2025-03-15T14:45:00Z"
+    },
+    {
+      "userId": "7",
+      "username": "Ahmed Yassin",
+      "profilePicture": "https://example.com/ahmed.jpg",
+      "headline": "Cloud Engineer",
+      "createdAt": "2025-03-20T11:00:00Z"
+    },
+    {
+      "userId": "8",
+      "username": "Sara Ibrahim",
+      "profilePicture": "https://example.com/sara.jpg",
+      "headline": "Cybersecurity Analyst",
+      "createdAt": "2025-03-18T08:30:00Z"
+    }
   ]
 }
