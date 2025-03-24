@@ -8,7 +8,7 @@ function Aboutpage() {
   const navigate = useNavigate();
   const location = useLocation();
   const { companyId } = useParams();
-  const [company, setCompany] = useState(location.state?.company || null);
+  const [company, setCompany] = useState(location.state?.company || null); //to get state passed in navigation
   const [loading, setLoading] = useState(!company);
   useEffect(() => {
     if (!company) {

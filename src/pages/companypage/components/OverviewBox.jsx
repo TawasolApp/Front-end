@@ -1,5 +1,4 @@
 import React, { useState } from "react";
-import Aboutpage from "./AboutPage.jsx";
 import { useNavigate, useParams } from "react-router-dom";
 
 function Overviewbox(props) {
@@ -8,8 +7,15 @@ function Overviewbox(props) {
   const { companyId } = useParams();
   const [expanded, setExpanded] = useState(false);
 
+  if (!company) {
+    return null; // Return early if company is null or undefined
+  }
+
   return (
-    <div className="bg-white p-6 shadow-md rounded-md w-full max-w-3xl mx-auto pb-0 mb-8">
+    <div
+      className="bg-white p-6 shadow-md rounded-md w-full max-w-3xl mx-auto pb-0 mb-8"
+      data-testid="overview-box"
+    >
       <h1 className="text-2xl font-semibold mb-2">Overview</h1>
       <p
         className={`text-gray-900 transition-all ${

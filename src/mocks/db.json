@@ -25,13 +25,13 @@
       "contactNumber": 19159,
       "verified": false,
       "verification_date": "March 01,2023",
-      "industry": "appliances,electrical and electronics manufacturing",
+      "industry": "appliances,electrical and electronics",
       "companyType": "Privately Held",
-      "founded": 1938,
+      "founded": "1944",
       "specialities": "Cables & Accessories, Electrical Products, Energy Measurement & Management, Transformers, Communications, Wind Energy Generation, Solar Energy Solutions, Projects & Development, Cables, Power Generation solutions, Pivots, Telecommunication Solutions, Telecommunication Cables, Cable accessories, Wires, Copper Wires, Hydro power, Electrical solutions, Electrical projects, Energy Cables, Special Cables, OHTL & OPGW, Steel Products, Plastics, OIL & GAS SOLUTIONS, Metals, Telecom Cabling Solutions, Busway, Fiber Glass Poles, Motion Appliances, Engineering & Construction, Power Generation, Power Transmission, Power Distribution, Public & Civil Works, Water Solutions, Energy Management, Telecom Infrastructure, Telecommunication and Networking, Infrastructure Investments, Ports and logistics Development, and Utility Development",
       "companySize": "201-500 employees",
       "email": "elsewedyelectric@gmail.com",
-      "phoneNumber": "012237368792"
+      "phoneNumber": "01114"
     },
     {
       "companyId": "google",
@@ -48,6 +48,22 @@
       "companySize": "201-500 employees",
       "companyType": "Government agency",
       "description": "zeft is a leading company in the zefttttttt sector."
+    },
+    {
+      "companyId": "pepsi",
+      "name": "pepsi",
+      "industry": "soft drinks",
+      "companySize": "11-50 employees",
+      "companyType": "Nonprofit",
+      "description": "pepsi is a leading company in the soft drinks sector."
+    },
+    {
+      "companyId": "cocacola",
+      "name": "cocacola",
+      "industry": "soft drinks",
+      "companySize": "11-50 employees",
+      "companyType": "Public company",
+      "description": "cocacola is a leading company in the soft drinks sector."
     }
   ]
 }

@@ -12,6 +12,17 @@ export default defineConfig({
     }),
   ],
   test: {
+    coverage: {
+      all: true,
+      include: ["src/pages/CompanyPage/Components/**/*.{js,jsx}"],
+      exclude: [
+        "**/tests/**",
+        "**/*.test.{js,jsx}",
+        "**/__mocks__/**",
+        "node_modules/**",
+        "src/pages/CompanyPage/Components/PostSlide.jsx",
+      ],
+    },
     globals: true,
     environment: "jsdom",
     setupFiles: "./src/setupTests.js",

@@ -5,7 +5,10 @@ function Aboutoverview(props) {
   // const isAdmin = true;
   const company = props.company;
   return (
-    <div className="bg-white p-6 shadow-md rounded-md w-full max-w-3xl mx-auto pb-4 mb-8 relative">
+    <div
+      className="bg-white p-6 shadow-md rounded-md w-full max-w-3xl mx-auto pb-4 mb-8 relative"
+      data-testid="about-overview"
+    >
       <div className="flex justify-between items-center mb-2">
         <h1 className="text-2xl font-semibold mb-2">Overview</h1>
         {/* {isAdmin && (

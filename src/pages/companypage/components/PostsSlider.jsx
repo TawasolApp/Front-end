@@ -23,19 +23,24 @@ function PostsSlider({ setActiveButton }) {
   };
 
   return (
-    <div className="bg-white p-6 shadow-md rounded-md w-full max-w-3xl mx-auto pb-0 relative">
+    <div
+      className="bg-white p-6 shadow-md rounded-md w-full max-w-3xl mx-auto pb-0 relative"
+      data-testid="posts-slider"
+    >
       {/* Header with Navigation Arrows */}
       <div className="flex justify-between items-center mb-4">
         <h1 className="text-2xl font-semibold">Page Posts</h1>
         <div className="flex space-x-2">
           <button
             className="bg-gray-200 p-2 rounded-full hover:bg-gray-300 transition"
+            aria-label="scroll-left"
             onClick={scrollLeft}
           >
             <AiOutlineLeft size={20} />
           </button>
           <button
             className="bg-gray-200 p-2 rounded-full hover:bg-gray-300 transition"
+            aria-label="scroll-right"
             onClick={scrollRight}
           >
             <AiOutlineRight size={20} />

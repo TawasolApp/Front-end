@@ -24,7 +24,9 @@ const Unfollowmodal = ({ show, cancel, confirm }) => {
           ✖
         </button>
 
-        <h2 className="text-lg font-semibold">Unfollow Page</h2>
+        <h2 className="text-lg font-semibold">
+          Are you sure you want to unfollow?
+        </h2>
         <p className="text-sm text-gray-600 mt-2 pt-2 border-t-1 border-gray-200 border-b-1 pb-2">
           You’ll no longer receive notifications from this Page, and you won’t
           see its updates in your feed.
@@ -33,12 +35,14 @@ const Unfollowmodal = ({ show, cancel, confirm }) => {
         <div className="mt-4 flex justify-end space-x-2">
           <button
             className="px-4 border border-gray-400 text-gray-700 rounded-full hover:bg-gray-100"
+            aria-label="Close Unfollow"
             onClick={cancel} //call function to close modal
           >
             Cancel
           </button>
           <button
             className="px-4 bg-blue-600 text-white rounded-full hover:bg-blue-700"
+            aria-label="Confirm Unfollow"
             onClick={confirm} //call function to unfollow and close modal
           >
             Unfollow

@@ -12,11 +12,7 @@ import { FiExternalLink } from "react-icons/fi";
 import ImageEnlarge from "./ImageEnlarge.jsx";
 import PostsPage from "./PostsPage.jsx";
 import MoreOptionsModal from "./MoreOptionsModal.jsx";
-function formatNumbers(count) {
-  if (count >= 1_000_000) return `${(count / 1_000_000).toFixed(1)}M`;
-  if (count >= 1_000) return `${Math.floor(count / 1_000)}K`;
-  return `${count}`;
-}
+import { formatNumbers } from "../../../utils/formatNumbers.js";
 function CompanyHeader({ companyId }) {
   const navigate = useNavigate();
   const location = useLocation(); // Get current URL
@@ -104,6 +100,7 @@ function CompanyHeader({ companyId }) {
             {isAdmin && (
               <button
                 className="absolute right-0 bg-white p-2 rounded-full shadow-md border border-gray-300 hover:bg-gray-100 transition"
+                aria-label="Edit Company"
                 onClick={() => setShowEditModal(true)}
               >
                 <FiEdit className="text-gray-600 w-7 h-7" />
@@ -140,6 +137,7 @@ function CompanyHeader({ companyId }) {
             <div className="relative">
               <button
                 className="w-9 h-9 border-2 border-gray-600 rounded-full flex items-center justify-center"
+                aria-label="More options"
                 onClick={() => setShowMoreModal((prev) => !prev)}
               >
                 <FiMoreHorizontal className="text-gray-600 w-5 h-5" />

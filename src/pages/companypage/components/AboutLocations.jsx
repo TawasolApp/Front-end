@@ -9,7 +9,10 @@ function AboutLocations(props) {
   )}&output=embed`;
 
   return (
-    <div className="bg-white p-6 shadow-md rounded-md w-full max-w-3xl mx-auto pb-4 mb-8">
+    <div
+      className="bg-white p-6 shadow-md rounded-md w-full max-w-3xl mx-auto pb-4 mb-8"
+      data-testid="about-locations"
+    >
       <h1 className="text-2xl font-semibold mb-2">Location</h1>
 
       {/* Get Directions Link */}

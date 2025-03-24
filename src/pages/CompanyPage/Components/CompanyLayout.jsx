@@ -1,15 +1,16 @@
 import { Outlet, useParams, useNavigate } from "react-router-dom";
 import { useState, useEffect } from "react";
-import axios from "axios"; // Re-added axios import
+import axios from "axios";
 import CompanyHeader from "./CompanyHeader.jsx";
 import Footer from "./Footer.jsx";
 import LoadingPage from "../../LoadingPage/LoadingPage.jsx";
+import jobs from "../jobs.js";
 
 function CompanyLayout() {
   const { companyId } = useParams();
   const navigate = useNavigate();
   const [defaultCompanyId, setDefaultCompanyId] = useState(null);
-  const [loading, setLoading] = useState(true); // Added loading state
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     if (!companyId) {
@@ -25,23 +26,22 @@ function CompanyLayout() {
           }
         })
         .catch((error) => console.error("❌ Error fetching companies:", error))
-        .finally(() => setLoading(false)); // Ensure loading is set to false
+        .finally(() => setLoading(false));
     } else {
-      setLoading(false); // If companyId exists, stop loading
+      setLoading(false);
     }
   }, [companyId, navigate]);
 
   if (loading) {
-    return <LoadingPage />; // Display loading message
+    return <LoadingPage />;
   }
 
   return (
     <div className="bg-gray-200 pt-4 pb-4">
       <CompanyHeader companyId={companyId || defaultCompanyId} />
       <div className="max-w-6xl mx-auto mt-4">
-        <Outlet />
+        <Outlet context={{ jobs }} /> {/* Pass jobs via context if needed */}
       </div>
-
       <Footer />
     </div>
   );

@@ -88,6 +88,8 @@ function CreateCompanyPage() {
               <input
                 type="text"
                 value={companyName}
+                id="company-name"
+                data-testid="company-name"
                 onChange={(e) => setName(e.target.value)}
                 className={`w-full p-1 border text-sm border-gray-400 rounded-md ${
                   errors.companyName ? "border-red-500" : "border-gray-400"
@@ -108,6 +110,8 @@ function CreateCompanyPage() {
               </label>
               <input
                 type="url"
+                id="company-website"
+                data-testid="company-website"
                 className="w-full p-1 border text-sm border-gray-400 rounded-md"
                 placeholder="Begin with http://, https:// or www."
               />
@@ -120,6 +124,8 @@ function CreateCompanyPage() {
               </label>
               <input
                 type="text"
+                id="company-industry"
+                data-testid="company-industry"
                 value={industry}
                 onChange={(e) => setIndustry(e.target.value)}
                 className={`w-full p-1 border text-sm border-gray-400 rounded-md ${
@@ -139,6 +145,8 @@ function CreateCompanyPage() {
               </label>
               <select
                 value={orgSize}
+                id="organization-size"
+                data-testid="organization-size"
                 onChange={(e) => setOrgSize(e.target.value)}
                 className={`w-full p-1 border text-sm
                 border-gray-400 rounded-md ${
@@ -168,6 +176,8 @@ function CreateCompanyPage() {
               </label>
               <select
                 value={orgType}
+                id="organization-type"
+                data-testid="organization-type"
                 onChange={(e) => setOrgType(e.target.value)}
                 className={`w-full p-1 border text-sm border-gray-400
                 rounded-md ${
@@ -190,15 +200,16 @@ function CreateCompanyPage() {
             {/* Logo Upload */}
             <div>
               <label className="block text-sm text-gray-600 mb-1">Logo</label>
-              <div className="w-full h-12 sm:h-16 md:h-20 lg:h-24 border border-gray-400 rounded-md p-4 text-center bg-gray-100 relative">
-                <div className="flex items-center justify-center gap-2 text-gray-600">
-                  <FiUpload className="text-xl font-semibold" />
-                  <p className="font-semibold">Choose file</p>
+              <div className="w-full min-h-[100px] border border-gray-400 rounded-md bg-gray-100 relative flex flex-col items-center justify-center px-4 py-6 text-center">
+                <div className="flex flex-col items-center justify-center gap-1 text-gray-600">
+                  <FiUpload className="text-2xl font-semibold" />
+                  <p className="font-semibold text-sm">Choose file</p>
+                  <p className="text-gray-600 text-xs">Upload to see preview</p>
                 </div>
-                <p className="text-gray-600 text-sm">Upload to see preview</p>
                 <input
                   type="file"
-                  className="w-full h-full mt-2 opacity-0 absolute top-0 left-0 right-0 bottom-0 cursor-pointer"
+                  id="company-logo"
+                  className="absolute inset-0 opacity-0 cursor-pointer"
                 />
               </div>
 
@@ -206,6 +217,7 @@ function CreateCompanyPage() {
                 300 x 300px recommended. JPGs, JPEGs, and PNGs supported.
               </p>
             </div>
+
             {/* Tagline */}
             <div>
               <label className="block text-sm text-gray-500 mb-1">
@@ -213,6 +225,8 @@ function CreateCompanyPage() {
               </label>
               <textarea
                 value={tagline}
+                id="company-tagline"
+                data-testid="company-tagline"
                 onChange={(e) => setTagline(e.target.value)}
                 className="w-full p-2 border rounded-md"
                 placeholder="ex: An information services firm helping small businesses succeed."
@@ -228,6 +242,7 @@ function CreateCompanyPage() {
             <div className="flex items-start gap-2">
               <input
                 type="checkbox"
+                data-testid="agree-terms"
                 checked={agreeTerms}
                 onChange={() => setAgreeTerms(!agreeTerms)}
               />

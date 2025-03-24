@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import axios from "axios";
 
 function EditAboutModal({ show, companyData, onClose }) {
+  const [errorMessage, setErrorMessage] = useState("");
   const [formData, setFormData] = useState({
     logo: "",
     banner: "",
@@ -57,6 +58,7 @@ function EditAboutModal({ show, companyData, onClose }) {
       window.location.reload();
     } catch (error) {
       console.error("Error updating company:", error);
+      setErrorMessage("Failed to update company profile.");
     }
   };
 
@@ -259,6 +261,15 @@ function EditAboutModal({ show, companyData, onClose }) {
             />
           </div>
         </div>
+        {errorMessage && (
+          <p
+            className="text-red-500 text-sm text-center mb-2"
+            data-testid="error-message"
+          >
+            {errorMessage}
+          </p>
+        )}
+
         {/* Save Button */}
         <div className="p-4 border-t flex justify-end bg-white sticky bottom-0 rounded-lg">
           <button

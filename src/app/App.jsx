@@ -3,8 +3,8 @@ import { axiosInstance as axios } from "../apis/axios";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import { getIconComponent } from "../utils";
 import CompanyLayout from "../pages/CompanyPage/Components/CompanyLayout";
-import PostsPage from "../pages/companypage/components/PostsPage";
-import Aboutpage from "../pages/CompanyPage/Components/AboutPage";
+import PostsPage from "../pages/CompanyPage/Components/PostsPage";
+import Aboutpage from "../pages/companypage/components/AboutPage";
 import Homepage from "../pages/CompanyPage/Components/HomePage";
 import CreateCompanyPage from "../pages/CompanyPage/Components/CreateCompanyPage";
 

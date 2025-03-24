@@ -1,45 +1,20 @@
-import React from "react";
-import { useState } from "react";
+import React, { useState } from "react";
 import { FiPlusCircle } from "react-icons/fi"; // Import plus icon
-import company from "../testdata"; // Ensure company data is imported
-import AddJobOpeningModal from "./AddJobOpeningModal";
+// import AddJobOpeningModal from "./AddJobOpeningModal";
 import { useNavigate, useParams } from "react-router-dom"; // Import useParams
+import jobs from "../jobs"; // Import jobs from the jobs file
 
-const jobs = [
-  {
-    id: 1,
-    title: "Software Engineer",
-    location: "Cairo, Egypt",
-    logo: company.logo,
-  },
-  {
-    id: 2,
-    title: "Frontend Developer",
-    location: "Cairo, Egypt",
-    logo: company.logo,
-  },
-  {
-    id: 3,
-    title: "Backend Developer",
-    location: "Alexandria, Egypt",
-    logo: company.logo,
-  },
-  {
-    id: 4,
-    title: "Product Manager",
-    location: "Giza, Egypt",
-    logo: company.logo,
-  },
-]; // Assume more jobs exist
-
-function JobOpenings(props) {
-  const company = props.company;
+function JobOpenings({ company }) {
   const isAdmin = true; // Change to 'true' to see "Add Job Opening" button
   const navigate = useNavigate();
   const { companyId } = useParams(); // Dynamically get companyId from URL
   const [showJobModal, setShowJobModal] = useState(false);
+
   return (
-    <div className="bg-white p-6 shadow-md rounded-md w-full max-w-3xl mx-auto pb-0 mb-4 mt-8">
+    <div
+      className="bg-white p-6 shadow-md rounded-md w-full max-w-3xl mx-auto pb-0 mb-4 mt-8"
+      data-testid="job-openings"
+    >
       {/* Header */}
       <h1 className="text-xl font-semibold mb-4">Recent Job Openings</h1>
 
@@ -62,17 +37,18 @@ function JobOpenings(props) {
       )}
 
       {/* Add Job Button (Only for Admins) */}
-      {isAdmin && (
+      {/* {isAdmin && (
         <div className="flex justify-center mt-4">
           <button
             className="flex items-center space-x-2 text-blue-600 font-semibold hover:underline"
+            data-testid="add-job-modal"
             onClick={() => setShowJobModal(true)}
           >
             <FiPlusCircle className="w-5 h-5" />
             <span>Add Job Opening</span>
           </button>
         </div>
-      )}
+      )} */}
 
       {/* Show All Jobs Button - Full Width & Darker Hover Effect */}
       {jobs.length > 0 && (
@@ -84,10 +60,10 @@ function JobOpenings(props) {
           Show all {jobs.length} jobs →
         </button>
       )}
-      <AddJobOpeningModal
+      {/* <AddJobOpeningModal
         show={showJobModal}
         onClose={() => setShowJobModal(false)}
-      />
+      /> */}
     </div>
   );
 }

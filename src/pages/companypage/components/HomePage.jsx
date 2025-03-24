@@ -29,7 +29,7 @@ function Homepage() {
   }
   return (
     <div>
-      <Overviewbox company={company} />
+      {company?.overview && <Overviewbox company={company} />}
       <PostsSlider />
       <JobOpenings company={company} />
     </div>
