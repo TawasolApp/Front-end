@@ -12,13 +12,13 @@ const LikeButton = ({
     const handleReaction = (reactionType) => {
         if (currentReaction === null) {
             setCurrentReaction(reactionType);
-            onChange(reactionType, null);
+            onChange && onChange(reactionType, null);
         } else if (currentReaction === reactionType) {
             setCurrentReaction(null);
-            onChange(null, reactionType);
+            onChange && onChange(null, reactionType);
         } else {
             setCurrentReaction(reactionType);
-            onChange(reactionType, currentReaction);
+            onChange && onChange(reactionType, currentReaction);
         }
     };
 

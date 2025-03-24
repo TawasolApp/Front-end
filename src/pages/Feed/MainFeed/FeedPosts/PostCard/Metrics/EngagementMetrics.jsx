@@ -23,8 +23,6 @@ const EngagementMetrics = ({
 
     return (
         <div className="flex items-center justify-between text-textPlaceholder pb-1 mx-4 border-b border-cardBorder">
-
-            {/* Left Section - Reactions */}
             <button
                 className="flex items-center hover:transition-all group"
                 onClick={() => setShowLikes(true)}
@@ -43,8 +41,6 @@ const EngagementMetrics = ({
                     <span className="text-sm ml-1 group-hover:text-textPlaceholderHover group-hover:underline">{totalLikes}</span>
                 )}
             </button>
-
-            {/* Right Section - Comments & Reposts */}
             <div className="flex items-center">
                 {comments > 0 && (
                     <button

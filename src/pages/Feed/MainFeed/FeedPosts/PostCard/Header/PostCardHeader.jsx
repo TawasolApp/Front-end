@@ -1,9 +1,4 @@
-import { useState, useEffect, useRef } from 'react';
-
 import MoreHorizIcon from '@mui/icons-material/MoreHoriz';
-import CloseIcon from '@mui/icons-material/Close';
-
-
 import ActorHeader from '../../../../GenericComponents/ActorHeader';
 import DropdownMenu from '../../../../GenericComponents/DropdownMenu';
 

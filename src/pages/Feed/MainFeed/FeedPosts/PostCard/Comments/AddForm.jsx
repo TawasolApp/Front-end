@@ -57,7 +57,7 @@ const AddForm = ({
                 />
             </div>
 
-            <form onSubmit={handleSubmit} className="flex-1 relative">
+            <form onSubmit={handleSubmit} className="flex-1 relative" role="form">
                 <textarea
                     ref={textareaRef}
                     placeholder={type === "Comment" ? "Add a comment..." : "Edit Comment..." }

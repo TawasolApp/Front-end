@@ -22,22 +22,4 @@ const CommentThreadWrapper = ({
     );
 };
 
-/**
- * Usage example:
- * 
- * <CommentThreadWrapper hasReplies={commentHasReplies}>
- *   <CommentContent /> 
- * </CommentThreadWrapper>
- * 
- * <CommentThreadWrapper hasReplies={true}>
- *   <ReplyContent />
- *   
- *   {/* More replies can be nested here *}
- * </CommentThreadWrapper>
- * 
- * <CommentThreadWrapper hasReplies={true} isLastReply={true}>
- *   <LastReplyContent />
- * </CommentThreadWrapper>
- */
-
 export default CommentThreadWrapper;

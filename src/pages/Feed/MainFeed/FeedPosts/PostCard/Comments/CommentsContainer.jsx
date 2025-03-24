@@ -93,9 +93,7 @@ const CommentsContainer = ({
             axiosInstance.delete(`/posts/comments/${commentId}`);
             incrementCommentsNumber("dec");
             setComments(prevComments => prevComments.filter(comment => comment.id !== commentId));
-        } catch (e) {
-            console.log(e.message);
-        }
+        } catch (e) {}
     }
 
     return (
