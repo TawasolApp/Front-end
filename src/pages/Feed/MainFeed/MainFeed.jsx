@@ -116,7 +116,7 @@ const MainFeed = () => {
                 )}
                 
                 {!hasMore && posts.length > 0 && (
-                    <div className="text-center p-4 text-textDescriptor">
+                    <div className="text-center p-4 text-header">
                         Enough Scrolling for you today 😵
                     </div>
                 )}

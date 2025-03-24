@@ -9,13 +9,15 @@ const ReactionPicker = ({
     const [hoveredIcon, setHoveredIcon] = useState(null);
     const timeoutRef = useRef(null);
     const containerRef = useRef(null);
+    const pickerRef = useRef(null);
 
-    const handleMouseEnter = () => {
+    // Handle both mouse and touch events
+    const handleInteractionStart = () => {
         clearTimeout(timeoutRef.current);
         setShowPicker(true);
     };
 
-    const handleMouseLeave = () => {
+    const handleInteractionEnd = () => {
         timeoutRef.current = setTimeout(() => {
             if (!containerRef.current?.matches(':hover')) {
                 setShowPicker(false);
@@ -37,25 +39,74 @@ const ReactionPicker = ({
         setHoveredIcon(null);
     };
 
+    // Close picker when clicking outside of it
     useEffect(() => {
+        const handleClickOutside = (event) => {
+            if (
+                showPicker && 
+                containerRef.current && 
+                !containerRef.current.contains(event.target) &&
+                pickerRef.current &&
+                !pickerRef.current.contains(event.target)
+            ) {
+                setShowPicker(false);
+                setHoveredIcon(null);
+            }
+        };
+
+        document.addEventListener('mousedown', handleClickOutside);
+        document.addEventListener('touchstart', handleClickOutside);
+        
         return () => {
-            setShowPicker(false);
-            setHoveredIcon(null);
+            document.removeEventListener('mousedown', handleClickOutside);
+            document.removeEventListener('touchstart', handleClickOutside);
             clearTimeout(timeoutRef.current);
+        };
+    }, [showPicker]);
+
+    // Calculate position for the picker
+    useEffect(() => {
+        if (showPicker && pickerRef.current && containerRef.current) {
+            const pickerElement = pickerRef.current;
+            const containerRect = containerRef.current.getBoundingClientRect();
+            const pickerRect = pickerElement.getBoundingClientRect();
+            
+            // Check if picker would go off-screen to the left
+            if (containerRect.left + containerRect.width/2 - pickerRect.width/2 < 0) {
+                pickerElement.style.left = '0';
+                pickerElement.style.transform = 'translateX(0)';
+            } 
+            // Check if picker would go off-screen to the right
+            else if (containerRect.left + containerRect.width/2 + pickerRect.width/2 > window.innerWidth) {
+                pickerElement.style.left = 'auto';
+                pickerElement.style.right = '0';
+                pickerElement.style.transform = 'translateX(0)';
+            }
+            // Default centered position
+            else {
+                pickerElement.style.left = '50%';
+                pickerElement.style.right = 'auto';
+                pickerElement.style.transform = 'translateX(-50%)';
+            }
         }
-    }, []);
+    }, [showPicker]);
 
     return (
         <div
             className="relative group"
             ref={containerRef}
-            onMouseEnter={handleMouseEnter}
-            onMouseLeave={handleMouseLeave}
+            onMouseEnter={handleInteractionStart}
+            onMouseLeave={handleInteractionEnd}
+            onClick={() => setShowPicker(!showPicker)} // Toggle on click for mobile
+            onTouchStart={handleInteractionStart}
         >
             {children}
 
             {showPicker && (
-                <div className={`absolute h-16 bottom-full left-1/2 -translate-x-1/2 mb-2 flex items-center bg-cardBackground rounded-full shadow-lg px-2 border border-itemBorder z-10 transition-all duration-300 ${hoveredIcon ? 'scale-90' : ''}`}>
+                <div 
+                    ref={pickerRef}
+                    className={`absolute h-16 bottom-full mb-2 flex items-center bg-cardBackground rounded-full shadow-lg px-2 border border-itemBorder z-10 transition-all duration-300 ${hoveredIcon ? 'scale-90' : ''}`}
+                >
                     {Object.entries(reactionIcons).map(([reactionType, { Icon, color, label }], index, array) => {
                         const isHovered = hoveredIcon === reactionType;
                         
@@ -88,9 +139,13 @@ const ReactionPicker = ({
 
                                 <button
                                     className={`my-2 py-2 transform transition-all duration-200 origin-bottom ${isHovered ? 'scale-150 -translate-y-2' : ''}`}
-                                    onClick={() => {setHoveredIcon(null); handleReactionSelect(reactionType)}}
+                                    onClick={(e) => {
+                                        e.stopPropagation(); // Prevent toggle
+                                        setHoveredIcon(null); 
+                                        handleReactionSelect(reactionType);
+                                    }}
                                 >
-                                    <Icon className={`w-14 h-14 p-0.5 transition-all duration-200`} />
+                                    <Icon className="w-14 h-14 p-0.5 transition-all duration-200" />
                                 </button>
                             </div>
                         );
