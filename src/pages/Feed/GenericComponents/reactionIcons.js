@@ -1,6 +1,6 @@
 import { getIconComponent } from '../../../utils/iconMapper';
 
-const isDarkMode = document.getElementById("root").className === "dark";
+const isDarkMode = document.getElementById("root")?.className === "dark";
 const reactionIcons = {
     Like: { Icon: getIconComponent('react-like'), color: isDarkMode ? '#3399ff' : '#0a66c2', label: "Like" },
     Celebrate: { Icon: getIconComponent('react-celebrate'), color: isDarkMode ? '#5fa740' : '#44712e', label: "Celebrate" },
