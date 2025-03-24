@@ -11,4 +11,8 @@ export default defineConfig({
       },
     }),
   ],
+  test: {
+    environment: 'jsdom', // Ensures DOM methods are available
+    globals: true         // Enables `describe`, `test`, etc. globally
+  }
 });
