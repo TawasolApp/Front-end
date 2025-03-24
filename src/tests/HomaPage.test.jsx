@@ -1,11 +1,18 @@
 import { render, screen, waitFor } from "@testing-library/react";
 import { MemoryRouter, Route, Routes } from "react-router-dom";
 import Homepage from "../pages/CompanyPage/Components/HomePage";
-import axios from "axios";
 import { vi } from "vitest";
+import { axiosInstance } from "../apis/axios";
 
-vi.mock("axios");
-const mockedAxios = axios;
+vi.mock("../apis/axios", () => ({
+  axiosInstance: {
+    get: vi.fn(),
+    post: vi.fn(),
+    patch: vi.fn(),
+    delete: vi.fn(),
+  },
+}));
+const mockedAxios = axiosInstance;
 
 test("renders Overviewbox, PostsSlider, and JobOpenings on Homepage", async () => {
   const mockCompany = {
@@ -65,15 +72,15 @@ test("does not render Overviewbox when overview is empty", async () => {
 
   // Wait for API call to complete
   await waitFor(() => {
-    expect(mockedAxios.get).toHaveBeenCalledWith(
-      "http://localhost:5000/companies/test-company"
-    );
+    expect(mockedAxios.get).toHaveBeenCalledWith("/companies/test-company");
   });
 
   // Ensure Overviewbox is NOT rendered
   expect(screen.queryByTestId("overview-box")).not.toBeInTheDocument();
 
   // Ensure other components are still rendered
-  expect(screen.getByTestId("posts-slider")).toBeInTheDocument();
+  await waitFor(() => {
+    expect(screen.getByTestId("posts-slider")).toBeInTheDocument();
+  });
   expect(screen.getByTestId("job-openings")).toBeInTheDocument();
 });

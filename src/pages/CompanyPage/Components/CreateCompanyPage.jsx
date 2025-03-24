@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { FiUpload } from "react-icons/fi";
-import axios from "axios";
+import { axiosInstance as axios } from "../../../apis/axios";
 import { useNavigate } from "react-router-dom";
 
 function CreateCompanyPage() {
@@ -48,10 +48,7 @@ function CreateCompanyPage() {
 
     try {
       // Send POST request to create company
-      const response = await axios.post(
-        "http://localhost:5000/companies",
-        newCompany
-      );
+      const response = await axios.post("/companies", newCompany);
 
       if (response.status === 201) {
         setSuccessMessage("Company page created successfully!");

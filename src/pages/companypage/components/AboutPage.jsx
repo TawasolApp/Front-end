@@ -3,7 +3,7 @@ import { useNavigate, useLocation, useParams } from "react-router-dom";
 import Aboutoverview from "./AboutOverview";
 import AboutLocations from "./AboutLocations";
 import LoadingPage from "../../LoadingPage/LoadingPage";
-import axios from "axios";
+import { axiosInstance } from "../../../apis/axios";
 function Aboutpage() {
   const navigate = useNavigate();
   const location = useLocation();
@@ -13,8 +13,8 @@ function Aboutpage() {
   useEffect(() => {
     if (!company) {
       setLoading(true);
-      axios
-        .get(`http://localhost:5000/companies/${companyId}`)
+      axiosInstance
+        .get(`/companies/${companyId}`)
         .then((response) => {
           setCompany(response.data);
         })

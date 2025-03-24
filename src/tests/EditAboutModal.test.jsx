@@ -1,9 +1,13 @@
 import { render, screen, fireEvent, waitFor } from "@testing-library/react";
 import { describe, test, vi, beforeEach, afterEach, expect } from "vitest";
 import EditAboutModal from "../pages/CompanyPage/Components/EditAboutModal";
-import axios from "axios";
+import { axiosInstance as axios } from "../apis/axios";
 
-vi.mock("axios");
+vi.mock("../apis/axios", () => ({
+  axiosInstance: {
+    patch: vi.fn(),
+  },
+}));
 const mockedAxios = axios;
 
 describe("EditAboutModal", () => {
@@ -97,7 +101,7 @@ describe("EditAboutModal", () => {
 
     await waitFor(() => {
       expect(mockedAxios.patch).toHaveBeenCalledWith(
-        "http://localhost:5000/companies/1",
+        "/companies/1",
         expect.objectContaining({ description: "Updated Description" })
       );
       expect(onClose).toHaveBeenCalled();

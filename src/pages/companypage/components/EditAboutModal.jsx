@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import axios from "axios";
+import { axiosInstance as axios } from "../../../apis/axios";
 
 function EditAboutModal({ show, companyData, onClose }) {
   const [errorMessage, setErrorMessage] = useState("");
@@ -49,7 +49,7 @@ function EditAboutModal({ show, companyData, onClose }) {
   const handleSave = async () => {
     try {
       const response = await axios.patch(
-        `http://localhost:5000/companies/${companyData.companyId}`,
+        `/companies/${companyData.companyId}`,
         formData
       );
       console.log(" Company updated:", response.data);

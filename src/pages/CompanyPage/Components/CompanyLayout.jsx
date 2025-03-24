@@ -1,10 +1,10 @@
 import { Outlet, useParams, useNavigate } from "react-router-dom";
 import { useState, useEffect } from "react";
-import axios from "axios";
 import CompanyHeader from "./CompanyHeader.jsx";
 import Footer from "./Footer.jsx";
 import LoadingPage from "../../LoadingPage/LoadingPage.jsx";
 import jobs from "../jobs.js";
+import { axiosInstance } from "../../../apis/axios.js";
 
 function CompanyLayout() {
   const { companyId } = useParams();
@@ -14,8 +14,8 @@ function CompanyLayout() {
 
   useEffect(() => {
     if (!companyId) {
-      axios
-        .get("http://localhost:5000/companies")
+      axiosInstance
+        .get("/companies")
         .then((response) => {
           if (response.data.length > 0) {
             const firstCompany = response.data[0];

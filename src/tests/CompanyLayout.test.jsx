@@ -2,11 +2,18 @@ import { describe, test, expect, vi, beforeEach } from "vitest";
 import { render, screen, waitFor } from "@testing-library/react";
 import { MemoryRouter, Route, Routes } from "react-router-dom";
 import CompanyLayout from "../pages/CompanyPage/Components/CompanyLayout";
-import axios from "axios";
+import { axiosInstance } from "../apis/axios";
 
 // Mock axios
-vi.mock("axios");
-const mockedAxios = axios;
+vi.mock("../apis/axios", () => ({
+  axiosInstance: {
+    get: vi.fn(),
+    post: vi.fn(),
+    patch: vi.fn(),
+    delete: vi.fn(),
+  },
+}));
+const mockedAxios = axiosInstance;
 
 // Mock child components (CompanyHeader, Footer, and Outlet)
 vi.mock("../pages/companypage/components/CompanyHeader", () => ({
@@ -69,9 +76,7 @@ describe("CompanyLayout", () => {
     );
 
     await waitFor(() => {
-      expect(mockedAxios.get).toHaveBeenCalledWith(
-        "http://localhost:5000/companies"
-      );
+      expect(mockedAxios.get).toHaveBeenCalledWith("/companies");
     });
   });
 });

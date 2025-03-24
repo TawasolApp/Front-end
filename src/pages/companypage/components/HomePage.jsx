@@ -4,8 +4,8 @@ import Overviewbox from "./Overviewbox.jsx";
 import Aboutpage from "./AboutPage.jsx";
 import PostsSlider from "./PostsSlider.jsx";
 import LoadingPage from "../../LoadingPage/LoadingPage.jsx";
-import axios from "axios";
 import JobOpenings from "./JobOpenings.jsx";
+import { axiosInstance } from "../../../apis/axios.js";
 function Homepage() {
   const location = useLocation();
   const { companyId } = useParams();
@@ -14,8 +14,8 @@ function Homepage() {
   useEffect(() => {
     if (!company) {
       setLoading(true);
-      axios
-        .get(`http://localhost:5000/companies/${companyId}`)
+      axiosInstance
+        .get(`/companies/${companyId}`)
         .then((response) => {
           setCompany(response.data);
         })

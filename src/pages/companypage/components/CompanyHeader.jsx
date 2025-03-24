@@ -4,7 +4,6 @@ import Homepage from "./HomePage.jsx";
 import Aboutpage from "./AboutPage.jsx";
 import { FiEdit } from "react-icons/fi";
 import Unfollowmodal from "./Unfollowmodal.jsx";
-import axios from "axios";
 import EditAboutModal from "./EditAboutModal.jsx";
 import { FiMoreHorizontal } from "react-icons/fi";
 import { useNavigate, useLocation } from "react-router-dom";
@@ -13,6 +12,7 @@ import ImageEnlarge from "./ImageEnlarge.jsx";
 import PostsPage from "./PostsPage.jsx";
 import MoreOptionsModal from "./MoreOptionsModal.jsx";
 import { formatNumbers } from "../../../utils/formatNumbers.js";
+import { axiosInstance } from "../../../apis/axios.js";
 function CompanyHeader({ companyId }) {
   const navigate = useNavigate();
   const location = useLocation(); // Get current URL
@@ -27,8 +27,8 @@ function CompanyHeader({ companyId }) {
   useEffect(() => {
     if (companyId) {
       setLoading(true);
-      axios
-        .get(`http://localhost:5000/companies/${companyId}`)
+      axiosInstance
+        .get(`/companies/${companyId}`)
         .then((response) => {
           setCompany(response.data);
         })

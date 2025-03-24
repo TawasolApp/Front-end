@@ -2,12 +2,19 @@ import { describe, expect, test, vi, beforeEach } from "vitest";
 import { render, screen, waitFor, fireEvent } from "@testing-library/react";
 import { formatNumbers } from "../utils/formatNumbers";
 import CompanyHeader from "../pages/companypage/components/CompanyHeader";
-import axios from "axios";
+import { axiosInstance } from "../apis/axios";
 import { MemoryRouter } from "react-router-dom";
 
 // Mock axios
-vi.mock("axios");
-const mockedAxios = axios;
+vi.mock("../apis/axios", () => ({
+  axiosInstance: {
+    get: vi.fn(),
+    post: vi.fn(),
+    patch: vi.fn(),
+    delete: vi.fn(),
+  },
+}));
+const mockedAxios = axiosInstance;
 const mockNavigate = vi.fn();
 
 vi.mock("react-router-dom", async () => {

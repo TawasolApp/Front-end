@@ -8,9 +8,13 @@ import {
 import { describe, test, vi, beforeEach, expect } from "vitest";
 import { MemoryRouter } from "react-router-dom";
 import CreateCompanyPage from "../pages/CompanyPage/Components/CreateCompanyPage";
-import axios from "axios";
+import { axiosInstance as axios } from "../apis/axios";
 
-vi.mock("axios");
+vi.mock("../apis/axios", () => ({
+  axiosInstance: {
+    post: vi.fn(),
+  },
+}));
 const mockedAxios = axios;
 
 const mockNavigate = vi.fn();

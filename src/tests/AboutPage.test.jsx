@@ -1,11 +1,15 @@
 import { render, screen, waitFor } from "@testing-library/react";
 import { MemoryRouter, Routes, Route } from "react-router-dom";
 import { vi } from "vitest";
-import axios from "axios";
+import { axiosInstance as axios } from "../apis/axios";
 import Aboutpage from "../pages/companypage/components/AboutPage";
 
 // Mock axios
-vi.mock("axios");
+vi.mock("../apis/axios", () => ({
+  axiosInstance: {
+    get: vi.fn(),
+  },
+}));
 const mockedAxios = axios;
 
 test("renders Aboutoverview and AboutLocations on Aboutpage", async () => {
