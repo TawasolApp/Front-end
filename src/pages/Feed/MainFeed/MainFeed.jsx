@@ -41,17 +41,13 @@ const MainFeed = () => {
     // Function to fetch posts with pagination
     const fetchPosts = async (pageNum, reset = false) => {
         if (isFetching.current) return;
-        
         try {
             setLoading(true);
             isFetching.current = true;
-            
             const response = await axiosInstance.get('posts', {
                 params: { page: pageNum }
             });
-            
             const newPosts = response.data;
-            
             if (newPosts.length === 0) {
                 setHasMore(false);
             } else {
@@ -78,7 +74,6 @@ const MainFeed = () => {
         setPage(nextPage);
         fetchPosts(nextPage);
     };
-
     
     const sharePost = async (text, visibility) => {
         try {
@@ -122,7 +117,7 @@ const MainFeed = () => {
                 
                 {!hasMore && posts.length > 0 && (
                     <div className="text-center p-4 text-gray-500">
-                        No more posts to load
+                        Enough Scrolling for you today 😵
                     </div>
                 )}
             </div>

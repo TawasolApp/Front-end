@@ -20,8 +20,15 @@ const currentUser = {
 
 /*********************************************************** POSTS ***********************************************************/
 server.get("/posts", (req, res) => {
-  const posts = _router.db.get("posts").value();
-  res.jsonp(posts);
+  const page = parseInt(req.query.page) || 1;
+  const limit = parseInt(req.query.limit) || 10;
+  const startIndex = (page - 1) * limit;
+  const allPosts = _router.db
+    .get("posts")
+    .orderBy('timestamp', 'desc')
+    .value();
+  const paginatedPosts = allPosts.slice(startIndex, startIndex + limit);
+  res.jsonp(paginatedPosts);
 });
 
 server.post('/posts', (req, res) => {
@@ -144,7 +151,7 @@ server.post('/posts/react/:postId', (req, res) => {
   if (reactionTypeAdd) {
     const newReaction = {
       likeId: `${postId}-${currentUser.id}-${reactionTypeAdd}`,
-      [postType === 'Comment' ? 'commentId' : 'postId']: postId,
+      ['postId']: postId,
       authorId: currentUser.id,
       authorType: currentUser.type,
       type: reactionTypeAdd,
