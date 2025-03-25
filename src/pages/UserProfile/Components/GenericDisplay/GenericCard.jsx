@@ -19,11 +19,11 @@ function GenericCard({ item, isOwner, type, onEdit, showEditIcons = false }) {
   };
 
   return (
-    <div className="bg-white p-4 rounded-lg shadow-sm w-full flex flex-col space-y-0 relative">
+    <div className="bg-boxbackground p-4 rounded-lg shadow-sm w-full flex flex-col space-y-0 relative">
       {/* ✎ Only in section (showEditIcons = true) */}
       {isOwner && showEditIcons && (
         <button
-          className="absolute top-2 right-2 text-gray-500 hover:text-blue-700"
+          className="absolute top-2 right-2 text-companyheader2 hover:text-blue-700"
           onClick={(e) => {
             e.stopPropagation();
             if (onEdit) onEdit(); // Trigger the modal in parent
@@ -35,25 +35,34 @@ function GenericCard({ item, isOwner, type, onEdit, showEditIcons = false }) {
 
       {/* Content Layout */}
       {item.institution && (
-        <h3 className="text-lg font-semibold" data-testid="institution">
+        <h3
+          className="text-lg font-semibold text-text"
+          data-testid="institution"
+        >
           {item.institution}
         </h3>
       )}
-      {item.title && <h3 className="text-lg font-semibold">{item.title}</h3>}
-      {item.name && <h3 className="text-lg font-semibold">{item.name}</h3>}
-      {item.skill && <h3 className="text-lg font-semibold">{item.skill}</h3>}
-      <p className="text-gray-600">
+      {item.title && (
+        <h3 className="text-lg font-semibold text-text">{item.title}</h3>
+      )}
+      {item.name && (
+        <h3 className="text-lg font-semibold text-text">{item.name}</h3>
+      )}
+      {item.skill && (
+        <h3 className="text-lg font-semibold text-text">{item.skill}</h3>
+      )}
+      <p className="text-text2">
         {item.degree ||
           item.position ||
           item.company ||
           item.issuingOrganization}
       </p>
 
-      <p className="text-gray-500">
+      <p className="text-text2">
         {item.location || item.field || item.fieldOfStudy}
       </p>
 
-      <p className="text-gray-500">
+      <p className="text-text2">
         {item.startMonth && item.startYear
           ? `${item.startMonth} ${item.startYear}`
           : ""}
@@ -63,10 +72,10 @@ function GenericCard({ item, isOwner, type, onEdit, showEditIcons = false }) {
       </p>
 
       {item.description && (
-        <p className="text-gray-700 text-sm">{item.description}</p>
+        <p className="text-text2 text-sm">{item.description}</p>
       )}
       {item.grade && (
-        <p className="text-gray-500 text-sm" data-testid="grade">
+        <p className="text-companyheader2 text-sm" data-testid="grade">
           Grade: {item.grade}
         </p>
       )}
@@ -79,7 +88,10 @@ function GenericCard({ item, isOwner, type, onEdit, showEditIcons = false }) {
               {item.recentEndorsement}
             </p>
           )} */}
-          <p className="text-gray-600 flex items-center mt-1">
+          <p
+            className="text-companyheader2 flex items-center mt-1"
+            data-testid="endorsement-count"
+          >
             <span className="mr-2">👥</span> {endorsementCount} endorsement
             {endorsementCount !== 1 ? "s" : ""}
           </p>
@@ -89,8 +101,8 @@ function GenericCard({ item, isOwner, type, onEdit, showEditIcons = false }) {
               onClick={handleEndorse}
               className={`mt-2 px-4 py-2 border rounded-full flex items-center justify-center gap-2 w-fit ${
                 isEndorsed
-                  ? "bg-gray-200 text-gray-800 border-gray-400"
-                  : "bg-white text-gray-700 border-gray-500"
+                  ? "bg-gray-200 text-text2 border-companyheader2"
+                  : "bg-white text-text-text2 border-companyheader2"
               } hover:bg-gray-300 transition`}
             >
               {isEndorsed ? "✔ Endorsed" : "Endorse"}

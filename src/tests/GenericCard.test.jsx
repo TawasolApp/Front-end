@@ -20,9 +20,8 @@ describe("GenericCard Component", () => {
     description: "Worked on frontend and backend.",
   };
 
-  it("renders title, company, location, dates, and description", () => {
+  it("renders experience card with full data", () => {
     render(<GenericCard item={baseItem} isOwner={true} type="experience" />);
-
     expect(screen.getByText("Software Engineer")).toBeInTheDocument();
     expect(screen.getByText("Tech Corp")).toBeInTheDocument();
     expect(screen.getByText("Remote")).toBeInTheDocument();
@@ -32,21 +31,19 @@ describe("GenericCard Component", () => {
     ).toBeInTheDocument();
   });
 
-  it("renders institution and grade if provided", () => {
+  it("renders education card with institution and grade", () => {
     const eduItem = {
       institution: "Cairo University",
       grade: "3.9 GPA",
     };
-
     render(<GenericCard item={eduItem} isOwner={true} type="education" />);
-
     expect(screen.getByTestId("institution")).toHaveTextContent(
       "Cairo University"
     );
     expect(screen.getByTestId("grade")).toHaveTextContent("Grade: 3.9 GPA");
   });
 
-  it("shows edit icon if isOwner and showEditIcons is true, and calls onEdit", () => {
+  it("shows edit icon if isOwner and showEditIcons is true and calls onEdit", () => {
     const onEdit = vi.fn();
     render(
       <GenericCard
@@ -57,17 +54,12 @@ describe("GenericCard Component", () => {
         type="experience"
       />
     );
-
-    const editBtn = screen.getByRole("button", { name: /✎/i });
-    fireEvent.click(editBtn);
+    fireEvent.click(screen.getByRole("button", { name: /✎/i }));
     expect(onEdit).toHaveBeenCalled();
   });
 
-  it("opens and closes GenericModal via internal state", () => {
-    const modalItem = {
-      title: "Test Role",
-    };
-
+  it("opens and closes GenericModal via external trigger", () => {
+    const modalItem = { title: "Test Role" };
     const TestWrapper = () => {
       const [open, setOpen] = useState(false);
       return (
@@ -86,35 +78,75 @@ describe("GenericCard Component", () => {
         </>
       );
     };
-
     render(<TestWrapper />);
     fireEvent.click(screen.getByText("Trigger"));
     expect(screen.getByTestId("generic-modal")).toBeInTheDocument();
   });
 
-  it("renders skill endorsements and toggles on click", () => {
+  it("renders skill and handles endorsements toggle", () => {
     const skillItem = {
-      skillName: "React",
+      skill: "React",
       endorsements: 2,
     };
-
     render(
       <GenericCard
         item={skillItem}
-        type="skills"
         isOwner={false}
         showEditIcons={false}
+        type="skills"
       />
     );
 
-    expect(screen.getByText("2 endorsements")).toBeInTheDocument();
+    expect(screen.getByTestId("endorsement-count")).toHaveTextContent(
+      "2 endorsements"
+    );
 
-    const endorseButton = screen.getByRole("button", { name: /endorse/i });
-    fireEvent.click(endorseButton);
+    const endorseBtn = screen.getByRole("button", { name: /endorse/i });
+    fireEvent.click(endorseBtn);
     expect(screen.getByText("✔ Endorsed")).toBeInTheDocument();
 
-    // Unendorse
     fireEvent.click(screen.getByText("✔ Endorsed"));
-    expect(screen.getByText("2 endorsements")).toBeInTheDocument();
+    expect(screen.getByTestId("endorsement-count")).toHaveTextContent(
+      "2 endorsements"
+    );
+  });
+
+  it("does not show edit icon if isOwner is false", () => {
+    render(
+      <GenericCard
+        item={baseItem}
+        isOwner={false}
+        showEditIcons={true}
+        type="experience"
+      />
+    );
+    expect(
+      screen.queryByRole("button", { name: /✎/i })
+    ).not.toBeInTheDocument();
+  });
+
+  it("does not show endorse button if isOwner is true", () => {
+    const skillItem = { skill: "JS", endorsements: 5 };
+    render(<GenericCard item={skillItem} isOwner={true} type="skills" />);
+    expect(
+      screen.queryByRole("button", { name: /endorse/i })
+    ).not.toBeInTheDocument();
+  });
+
+  it("displays partial date correctly if end date missing", () => {
+    const partialItem = {
+      title: "Intern",
+      startMonth: "June",
+      startYear: "2023",
+    };
+    render(<GenericCard item={partialItem} isOwner={true} type="experience" />);
+    expect(screen.getByText("June 2023")).toBeInTheDocument();
+  });
+
+  it("displays company name and title when both are present", () => {
+    const comboItem = { title: "Dev", company: "Test Inc." };
+    render(<GenericCard item={comboItem} isOwner={true} type="experience" />);
+    expect(screen.getByText("Dev")).toBeInTheDocument();
+    expect(screen.getByText("Test Inc.")).toBeInTheDocument();
   });
 });

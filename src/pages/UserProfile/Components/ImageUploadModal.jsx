@@ -27,8 +27,8 @@ function ImageUploadModal({ isOpen, onClose, onUpload }) {
 
   return (
     <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
-      <div className="bg-white p-6 rounded-lg shadow-lg w-96">
-        <h2 className="text-xl font-semibold mb-3">Upload Image</h2>
+      <div className="bg-boxbackground p-6 rounded-lg shadow-lg w-96">
+        <h2 className="text-xl font-semibold mb-3 text-text">Upload Image</h2>
 
         {/* Upload Section */}
         <div className="border-dashed border-2 border-gray-300 p-4 text-center">

@@ -64,7 +64,7 @@ function GenericPage({ title, type }) {
         );
       }
 
-      // POST — Add new item (no id sent)
+      // POST — Add new item without sending id
       else {
         response = await axios.post(`/profile/${user.id}/${type}`, updatedItem);
 
@@ -122,22 +122,22 @@ function GenericPage({ title, type }) {
   };
 
   return (
-    <div className="bg-white p-6 shadow-md rounded-md w-full max-w-3xl mx-auto">
+    <div className="bg-boxbackground p-6 shadow-md rounded-md w-full max-w-3xl mx-auto">
       {/* Header */}
       <div className="flex items-center justify-between mb-4">
         <div className="flex items-center gap-2">
           <button
             onClick={() => navigate(-1)}
-            className="w-10 h-10 flex items-center justify-center text-xl rounded-full hover:bg-gray-200 transition"
+            className="w-10 h-10 flex items-center justify-center text-xl rounded-full hover:bg-gray-200 transition text-text"
           >
             ←
           </button>
-          <h2 className="text-2xl font-semibold">All {title}</h2>
+          <h2 className="text-2xl font-semibold text-text">All {title}</h2>
         </div>
 
         {isOwner && (
           <button
-            className="w-8 h-8 flex items-center justify-center rounded-full hover:bg-gray-200 transition"
+            className="w-8 h-8 flex items-center justify-center rounded-full hover:bg-gray-200 transition text-text"
             onClick={handleAdd}
           >
             +

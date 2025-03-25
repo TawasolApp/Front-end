@@ -35,9 +35,9 @@ function GenericSection({ title, type, items, isOwner, user }) {
 
       if (response?.data) {
         setData((prev) => [...prev, response.data]);
-      } else {
       }
     } catch (err) {
+      console.error("Failed to save item:", err); // ✅ Add this line
     } finally {
       setIsSaving(false);
 
@@ -66,20 +66,20 @@ function GenericSection({ title, type, items, isOwner, user }) {
   };
 
   return (
-    <div className="bg-white p-6 shadow-md rounded-md w-full max-w-3xl mx-auto pb-0 mb-8">
+    <div className="bg-boxbackground p-6 shadow-md rounded-md w-full max-w-3xl mx-auto pb-0 mb-8">
       {/* Header row */}
       <div className="flex justify-between items-center mb-4">
-        <h2 className="text-2xl font-semibold">{title}</h2>
+        <h2 className="text-2xl font-semibold text-text">{title}</h2>
         {isOwner && (
           <div className="flex gap-0">
             <button
-              className="w-8 h-8 rounded-full flex items-center justify-center hover:bg-gray-200 transition"
+              className="w-8 h-8 rounded-full flex items-center justify-center hover:bg-gray-200 transition text-text"
               onClick={handleAdd}
             >
               +
             </button>
             <button
-              className="w-8 h-8 rounded-full flex items-center justify-center hover:bg-gray-200 transition"
+              className="w-8 h-8 rounded-full flex items-center justify-center hover:bg-gray-200 transition text-text"
               onClick={handleEdit}
             >
               ✎
@@ -106,7 +106,7 @@ function GenericSection({ title, type, items, isOwner, user }) {
       {data.length > 2 && (
         <button
           onClick={() => navigate(`${type.toLowerCase()}`)}
-          className="w-full mt-4 text-black-500 hover:underline text-center block font-medium pb-4"
+          className="w-full mt-4 text-text hover:underline text-center block font-medium pb-4"
         >
           Show all {data.length} {type.toLowerCase()} records →
         </button>

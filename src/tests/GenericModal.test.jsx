@@ -1,230 +1,159 @@
-import { describe, it, expect, vi, afterEach } from "vitest";
-import {
-  render,
-  fireEvent,
-  screen,
-  waitFor,
-  cleanup,
-} from "@testing-library/react";
+import { render, screen, fireEvent } from "@testing-library/react";
 import GenericModal from "../pages/UserProfile/Components/GenericDisplay/GenericModal";
+import { vi } from "vitest";
 
-afterEach(cleanup);
+const defaultProps = {
+  isOpen: true,
+  onClose: vi.fn(),
+  onSave: vi.fn(),
+  onDelete: vi.fn(),
+  type: "skills",
+  initialData: {},
+  editMode: true,
+};
 
 describe("GenericModal", () => {
-  const mockOnSave = vi.fn();
-  const mockOnClose = vi.fn();
-  const mockOnDelete = vi.fn();
-
-  const mockInitialData = {
-    institution: "CU",
-    degree: "Bachelor's Degree",
-    startYear: "2018",
-    startMonth: "Sep",
-    endYear: "2022",
-    endMonth: "Jun",
-    description: "A degree in Computer Science",
-  };
-
-  it("renders correctly when open", () => {
-    render(
-      <GenericModal
-        isOpen
-        onClose={mockOnClose}
-        onSave={mockOnSave}
-        onDelete={mockOnDelete}
-        type="education"
-        initialData={mockInitialData}
-      />
-    );
-
-    expect(screen.getByLabelText("School *")).toBeInTheDocument();
+  beforeEach(() => {
+    vi.clearAllMocks();
   });
 
-  it("closes when close button is clicked without changes", () => {
-    render(
-      <GenericModal
-        isOpen
-        onClose={mockOnClose}
-        onSave={mockOnSave}
-        onDelete={mockOnDelete}
-        type="education"
-        initialData={mockInitialData}
-      />
-    );
-
-    fireEvent.click(screen.getByRole("button", { name: /✖/ }));
-    expect(mockOnClose).toHaveBeenCalled();
+  it("renders modal when isOpen is true", () => {
+    render(<GenericModal {...defaultProps} />);
+    expect(screen.getByTestId("generic-modal")).toBeInTheDocument();
   });
 
-  it("shows discard modal when unsaved changes exist and close is clicked", async () => {
-    render(
-      <GenericModal
-        isOpen
-        onClose={mockOnClose}
-        onSave={mockOnSave}
-        onDelete={mockOnDelete}
-        type="education"
-        initialData={mockInitialData}
-      />
-    );
+  it("renders skill input for type=skills", () => {
+    render(<GenericModal {...defaultProps} />);
+    expect(screen.getByLabelText(/skill/i)).toBeInTheDocument();
+  });
 
-    fireEvent.change(screen.getByLabelText("School *"), {
-      target: { value: "New University" },
+  it("validates skill field and shows error", () => {
+    render(<GenericModal {...defaultProps} />);
+    fireEvent.click(screen.getByTestId("save-button"));
+    expect(screen.getByText(/please provide a skill/i)).toBeInTheDocument();
+  });
+
+  it("calls onSave when valid form is submitted", () => {
+    render(<GenericModal {...defaultProps} />);
+    fireEvent.change(screen.getByLabelText(/skill/i), {
+      target: { value: "React", name: "skill" },
     });
-
-    fireEvent.click(screen.getByRole("button", { name: /✖/ }));
-
-    await waitFor(() =>
-      expect(screen.getByText("Discard changes?")).toBeInTheDocument()
+    fireEvent.click(screen.getByTestId("save-button"));
+    expect(defaultProps.onSave).toHaveBeenCalledWith(
+      expect.objectContaining({ skill: "React" })
     );
   });
 
-  it("calls onSave with updated institution", async () => {
-    render(
-      <GenericModal
-        isOpen
-        onClose={mockOnClose}
-        onSave={mockOnSave}
-        onDelete={mockOnDelete}
-        type="education"
-        initialData={mockInitialData}
-      />
-    );
+  it("calls onClose when ✖ button clicked with no unsaved changes", () => {
+    render(<GenericModal {...defaultProps} />);
+    fireEvent.click(screen.getByText("✖"));
+    expect(defaultProps.onClose).toHaveBeenCalled();
+  });
 
-    fireEvent.change(screen.getByLabelText("School *"), {
-      target: { value: "New University" },
+  it("shows discard confirmation modal if changes are made", () => {
+    render(<GenericModal {...defaultProps} initialData={{ skill: "React" }} />);
+    fireEvent.change(screen.getByLabelText(/skill/i), {
+      target: { value: "Angular", name: "skill" },
     });
-
-    const [saveButton] = screen.getAllByTestId("save-button");
-    fireEvent.click(saveButton);
-
-    await waitFor(() =>
-      expect(mockOnSave).toHaveBeenCalledWith({
-        ...mockInitialData,
-        institution: "New University",
-      })
-    );
+    fireEvent.click(screen.getByText("✖"));
+    expect(screen.getByText(/discard changes/i)).toBeInTheDocument();
   });
 
-  it("shows delete modal when delete button is clicked", () => {
-    render(
-      <GenericModal
-        isOpen
-        onClose={mockOnClose}
-        onSave={mockOnSave}
-        onDelete={mockOnDelete}
-        editMode
-        type="education"
-        initialData={mockInitialData}
-      />
-    );
-
-    const [deleteButton] = screen.getAllByTestId("delete-button");
-    fireEvent.click(deleteButton);
-
-    expect(screen.getByText("Confirm delete")).toBeInTheDocument();
+  it("calls onDelete when delete is confirmed", () => {
+    render(<GenericModal {...defaultProps} />);
+    fireEvent.click(screen.getByTestId("delete-button"));
+    fireEvent.click(screen.getByTestId("confirm-delete"));
+    expect(defaultProps.onDelete).toHaveBeenCalled();
   });
 
-  it("calls onDelete when delete is confirmed", async () => {
+  // ✅ Additional tests for branches with low coverage
+
+  it("validates that end year cannot be before start year", () => {
     render(
       <GenericModal
-        isOpen
-        onClose={mockOnClose}
-        onSave={mockOnSave}
-        onDelete={mockOnDelete}
-        editMode
+        {...defaultProps}
         type="education"
-        initialData={mockInitialData}
+        initialData={{ startYear: "2022", endYear: "2020" }}
       />
     );
-
-    const [deleteButton] = screen.getAllByTestId("delete-button");
-    fireEvent.click(deleteButton);
-
-    const confirmDelete = await screen.findByTestId("confirm-delete");
-    fireEvent.click(confirmDelete);
-
-    await waitFor(() => expect(mockOnDelete).toHaveBeenCalled());
+    fireEvent.click(screen.getByTestId("save-button"));
+    expect(
+      screen.getByText(/end year can't be before the start year/i)
+    ).toBeInTheDocument();
   });
 
-  it("validates required fields", async () => {
+  it("validates that end month cannot be before start month if same year", () => {
     render(
       <GenericModal
-        isOpen
-        onClose={mockOnClose}
-        onSave={mockOnSave}
-        onDelete={mockOnDelete}
-        type="education"
-        initialData={{ ...mockInitialData, institution: "" }}
+        {...defaultProps}
+        type="experience"
+        initialData={{
+          startYear: "2024",
+          startMonth: "October",
+          endYear: "2024",
+          endMonth: "January",
+        }}
       />
     );
-
-    const [saveButton] = screen.getAllByTestId("save-button");
-    fireEvent.click(saveButton);
-
-    await waitFor(() =>
-      expect(
-        screen.getByText("Please provide an institution")
-      ).toBeInTheDocument()
-    );
+    fireEvent.click(screen.getByTestId("save-button"));
+    expect(
+      screen.getByText(/end month can't be before the start month/i)
+    ).toBeInTheDocument();
   });
 
-  it("handles month/year updates", async () => {
+  it("validates required fields for experience", () => {
     render(
-      <GenericModal
-        isOpen
-        onClose={mockOnClose}
-        onSave={mockOnSave}
-        onDelete={mockOnDelete}
-        type="education"
-        initialData={mockInitialData}
-      />
+      <GenericModal {...defaultProps} type="experience" initialData={{}} />
     );
+    fireEvent.click(screen.getByTestId("save-button"));
+    expect(
+      screen.getByText(/please provide a company name/i)
+    ).toBeInTheDocument();
+    expect(screen.getByText(/please provide a title/i)).toBeInTheDocument();
+  });
 
-    fireEvent.change(screen.getByLabelText("School *"), {
-      target: { value: "New University" },
+  it("validates required fields for education", () => {
+    render(
+      <GenericModal {...defaultProps} type="education" initialData={{}} />
+    );
+    fireEvent.click(screen.getByTestId("save-button"));
+    expect(
+      screen.getByText(/please provide an institution/i)
+    ).toBeInTheDocument();
+  });
+
+  it("validates required fields for certifications", () => {
+    render(
+      <GenericModal {...defaultProps} type="certifications" initialData={{}} />
+    );
+    fireEvent.click(screen.getByTestId("save-button"));
+    expect(
+      screen.getByText(/please provide a certificate name/i)
+    ).toBeInTheDocument();
+    expect(
+      screen.getByText(/please provide an issuing organization/i)
+    ).toBeInTheDocument();
+  });
+
+  it("closes discard modal without confirming", () => {
+    render(<GenericModal {...defaultProps} initialData={{ skill: "JS" }} />);
+    fireEvent.change(screen.getByLabelText(/skill/i), {
+      target: { value: "TS", name: "skill" },
     });
-
-    fireEvent.change(screen.getByLabelText("Degree"), {
-      target: { value: "Bachelor's Degree" },
-    });
-
-    fireEvent.change(screen.getByLabelText("Start Month"), {
-      target: { value: "September" },
-    });
-
-    fireEvent.change(screen.getByLabelText("Start Year"), {
-      target: { value: "2018" },
-    });
-
-    const [saveButton] = screen.getAllByTestId("save-button");
-    fireEvent.click(saveButton);
-
-    await waitFor(() =>
-      expect(mockOnSave).toHaveBeenCalledWith({
-        ...mockInitialData,
-        institution: "New University",
-        degree: "Bachelor's Degree",
-        startMonth: "September",
-        startYear: "2018",
-      })
-    );
+    fireEvent.click(screen.getByText("✖"));
+    const cancelBtn = screen.getByText("Cancel");
+    fireEvent.click(cancelBtn);
+    expect(screen.queryByText(/discard changes/i)).not.toBeInTheDocument();
   });
 
-  it("renders month dropdown correctly", () => {
-    render(
-      <GenericModal
-        isOpen
-        onClose={mockOnClose}
-        onSave={mockOnSave}
-        onDelete={mockOnDelete}
-        type="education"
-        initialData={mockInitialData}
-      />
-    );
-
-    const dropdown = screen.getByLabelText("Start Month");
-    expect(dropdown).toBeInTheDocument();
-    expect(dropdown.children.length).toBeGreaterThan(1);
+  it("closes discard modal after confirming", () => {
+    render(<GenericModal {...defaultProps} initialData={{ skill: "JS" }} />);
+    fireEvent.change(screen.getByLabelText(/skill/i), {
+      target: { value: "TS", name: "skill" },
+    });
+    fireEvent.click(screen.getByText("✖"));
+    const confirmBtn = screen.getByTestId("confirm-delete");
+    fireEvent.click(confirmBtn);
+    expect(defaultProps.onClose).toHaveBeenCalled();
   });
 });

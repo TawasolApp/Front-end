@@ -54,7 +54,7 @@ function ProfileLayout() {
   if (loading) return <p data-testid="loading">Loading...</p>; // Simple fallback
 
   return (
-    <div className="bg-gray-200 pt-4 pb-4">
+    <div className="bg-background pt-4 pb-4">
       <div className="max-w-6xl mx-auto mt-4" data-testid="layout-wrapper">
         <Outlet context={{ user, isOwner }} />
       </div>

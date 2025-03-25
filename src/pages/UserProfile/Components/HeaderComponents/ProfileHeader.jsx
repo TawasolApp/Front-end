@@ -63,7 +63,7 @@ function ProfileHeader({ user, isOwner, onSave, experienceRef, educationRef }) {
   if (!editedUser) return null;
 
   return (
-    <div className="bg-white py-6 shadow-md rounded-md w-full max-w-3xl mx-auto pb-0 mb-4 pt-0">
+    <div className="bg-boxbackground py-6 shadow-md rounded-md w-full max-w-3xl mx-auto pb-0 mb-8 pt-0">
       {/* Cover Photo Component */}
       <div className="relative w-full h-64 rounded-md overflow-hidden pb-0">
         {/* Cover Photo */}
@@ -76,7 +76,7 @@ function ProfileHeader({ user, isOwner, onSave, experienceRef, educationRef }) {
         />
 
         {/* Profile Picture (Centered & Fully Visible) */}
-        <div className="absolute left-20 ml-4 transform -translate-x-1/2 -top-2 sm:top-24 border-4 border-white rounded-full shadow-lg bg-white mb-0">
+        <div className="absolute left-20 ml-4 transform -translate-x-1/2 -top-30 sm:-top-15 border-4 border-white rounded-full shadow-lg bg-white mb-0">
           <ProfilePicture
             profilePictureSrc={
               editedUser.profilePicture || defaultProfilePicture
@@ -104,21 +104,21 @@ function ProfileHeader({ user, isOwner, onSave, experienceRef, educationRef }) {
       {/* User Info & Experience  */}
       <div className="flex flex-col sm:flex-row justify-between items-start px-6 mt-0 gap-4">
         <div className="sm:w-3/5 text-left">
-          <h1 className="text-2xl font-bold flex items-center gap-2">
+          <h1 className="text-2xl font-bold flex items-center gap-2 text-text">
             {editedUser.firstName} {editedUser.lastName}
           </h1>
-          <p className="text-black-600 text-lg">{editedUser.bio}</p>
+          <p className="text-text text-lg">{editedUser.bio}</p>
           <div className="flex items-center text-sm text-gray-500">
-            <p className="text-sm text-gray-700">
+            <p className="text-sm text-text">
               {editedUser.country}, {editedUser.city || "N/A"}
             </p>
             <span className="mx-1">·</span>
-            <p>Contact Info</p>
+            <p className="text-companyheader2">Contact Info</p>
           </div>
 
           {/*  Connections Count */}
           <p
-            className="text-blue-600 cursor-pointer hover:underline mb-0"
+            className="text-blue-500 cursor-pointer hover:underline mb-0"
             onClick={() => navigate(`connections`)}
           >
             {editedUser.connectionCount} connections
@@ -129,20 +129,20 @@ function ProfileHeader({ user, isOwner, onSave, experienceRef, educationRef }) {
         <div className="relative sm:w-2/5 text-right pr-6">
           {isOwner && (
             <button
-              className="absolute right-0 top-0 bg-white w-8 h-8 flex items-center justify-center rounded-full shadow-md border cursor-pointer hover:bg-gray-100 -top-14"
+              className="w-8 h-8 rounded-full flex items-center justify-center hover:bg-gray-200 transition text-text"
               onClick={openEditModal}
             >
               ✎
             </button>
           )}
           <p
-            className="text-sm text-gray-600 cursor-pointer hover:text-blue-500 hover:underline pt-9"
+            className="text-sm text-companyheader2 cursor-pointer hover:text-blue-500 hover:underline pt-9"
             onClick={() => scrollToSection(experienceRef)}
           >
             {editedUser.experience?.[experienceIndex]?.title}
           </p>
           <p
-            className="text-sm text-gray-600  cursor-pointer  hover:text-blue-500 hover:underline"
+            className="text-sm text-companyheader2  cursor-pointer  hover:text-blue-500 hover:underline"
             onClick={() => scrollToSection(educationRef)}
           >
             {editedUser.education?.[educationIndex]?.institution}{" "}

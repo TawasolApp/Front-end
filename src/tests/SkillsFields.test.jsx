@@ -23,10 +23,7 @@ describe("SkillsFields Component", () => {
 
   it("renders errors if provided", () => {
     render(
-      <SkillsFields
-        {...defaultProps}
-        errors={{ skillName: "Skill is required" }}
-      />
+      <SkillsFields {...defaultProps} errors={{ skill: "Skill is required" }} />
     );
 
     expect(screen.getByText("Skill is required")).toBeInTheDocument();
@@ -46,7 +43,7 @@ describe("SkillsFields Component", () => {
     render(
       <SkillsFields
         {...defaultProps}
-        formData={{ skillName: "React", position: "Frontend Developer" }}
+        formData={{ skill: "React", position: "Frontend Developer" }}
       />
     );
 

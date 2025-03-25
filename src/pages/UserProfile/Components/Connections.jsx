@@ -6,7 +6,7 @@ function Connections() {
   const navigate = useNavigate();
 
   return (
-    <div className="bg-white p-6 shadow-md rounded-md w-full max-w-3xl mx-auto">
+    <div className="bg-boxbackground p-6 shadow-md rounded-md w-full max-w-3xl mx-auto">
       <button
         onClick={() => navigate(-1)}
         className="mb-4 text-black-500 hover:underline font-medium"

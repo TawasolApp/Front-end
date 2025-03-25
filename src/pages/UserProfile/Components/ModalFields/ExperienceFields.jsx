@@ -3,9 +3,9 @@ import React from "react";
 function ExperienceFields({ formData, handleChange, errors }) {
   return (
     <>
-      <h2 className="text-lg font-semibold mb-4">Add experience</h2>
+      <h2 className="text-lg font-semibold mb-4 text-text">Add experience</h2>
 
-      <label htmlFor="title" className="block font-medium mb-1">
+      <label htmlFor="title" className="block font-medium mb-1 text-text">
         Title*
       </label>
       <input
@@ -15,14 +15,17 @@ function ExperienceFields({ formData, handleChange, errors }) {
         placeholder="Ex: Retail Sales Manager"
         value={formData.title || ""}
         onChange={handleChange}
-        className="border p-2 w-full rounded-md mb-2"
+        className="border p-2 w-full rounded-md mb-2 bg-boxbackground text-companyheader2"
         required
       />
       {errors.title && (
         <p className="text-red-600 text-sm mb-2">{errors.title}</p>
       )}
 
-      <label htmlFor="employmentType" className="block font-medium mb-1">
+      <label
+        htmlFor="employmentType"
+        className="block font-medium mb-1 text-text"
+      >
         Employment type
       </label>
       <select
@@ -30,7 +33,7 @@ function ExperienceFields({ formData, handleChange, errors }) {
         name="employmentType"
         value={formData.employmentType || ""}
         onChange={handleChange}
-        className="border p-2 w-full rounded-md mb-2"
+        className="border p-2 w-full rounded-md mb-2 bg-boxbackground text-companyheader2"
       >
         <option value="">Please select</option>
         <option value="Full-time">Full-time</option>
@@ -40,7 +43,7 @@ function ExperienceFields({ formData, handleChange, errors }) {
         <option value="Temporary">Temporary</option>
       </select>
 
-      <label htmlFor="company" className="block font-medium mb-1">
+      <label htmlFor="company" className="block font-medium mb-1 text-text">
         Company or organization*
       </label>
       <input
@@ -50,7 +53,7 @@ function ExperienceFields({ formData, handleChange, errors }) {
         placeholder="Ex: Microsoft"
         value={formData.company || ""}
         onChange={handleChange}
-        className="border p-2 w-full rounded-md mb-2"
+        className="border p-2 w-full rounded-md mb-2 bg-boxbackground text-companyheader2"
         required
       />
       {errors.company && (
@@ -65,12 +68,12 @@ function ExperienceFields({ formData, handleChange, errors }) {
           checked={formData.currentlyWorking || false}
           onChange={handleChange}
         />
-        <label htmlFor="currentlyWorking">
+        <label htmlFor="currentlyWorking " className="text-text">
           I am currently working in this role
         </label>
       </div>
 
-      <label htmlFor="location" className="block font-medium mb-1">
+      <label htmlFor="location" className="block font-medium mb-1 text-text">
         Location
       </label>
       <input
@@ -80,10 +83,13 @@ function ExperienceFields({ formData, handleChange, errors }) {
         placeholder="Ex: London, United Kingdom"
         value={formData.location || ""}
         onChange={handleChange}
-        className="border p-2 w-full rounded-md mb-2"
+        className="border p-2 w-full rounded-md mb-2 bg-boxbackground text-companyheader2"
       />
 
-      <label htmlFor="locationType" className="block font-medium mb-1">
+      <label
+        htmlFor="locationType"
+        className="block font-medium mb-1 text-text"
+      >
         Location type
       </label>
       <select
@@ -91,7 +97,7 @@ function ExperienceFields({ formData, handleChange, errors }) {
         name="locationType"
         value={formData.locationType || ""}
         onChange={handleChange}
-        className="border p-2 w-full rounded-md mb-2"
+        className="border p-2 w-full rounded-md mb-2 bg-boxbackground text-companyheader2"
       >
         <option value="">Please select</option>
         <option value="On-site">On-site</option>
@@ -102,7 +108,7 @@ function ExperienceFields({ formData, handleChange, errors }) {
         Pick a location type (ex: remote)
       </p>
 
-      <label htmlFor="description" className="block font-medium mb-1">
+      <label htmlFor="description" className="block font-medium mb-1 text-text">
         Description
       </label>
       <textarea
@@ -111,7 +117,7 @@ function ExperienceFields({ formData, handleChange, errors }) {
         placeholder="List your major duties and successes, highlighting specific projects"
         value={formData.description || ""}
         onChange={handleChange}
-        className="border p-2 w-full rounded-md resize-none"
+        className="border p-2 w-full rounded-md resize-none bg-boxbackground text-companyheader2"
         maxLength={1000}
       />
       <p className="text-right text-gray-500 text-sm mb-2">

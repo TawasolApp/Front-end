@@ -7,9 +7,9 @@ import CertificationsFields from "../ModalFields/CertificationsFields";
 // Local confirmation modals
 const ConfirmModal = ({ title, message, onConfirm, onCancel }) => (
   <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-    <div className="bg-white rounded-lg p-6 w-[90%] sm:w-[400px] shadow-lg">
-      <h2 className="text-lg font-semibold mb-2">{title}</h2>
-      <p className="text-gray-700 mb-4">{message}</p>
+    <div className="bg-boxbackground rounded-lg p-6 w-[90%] sm:w-[400px] shadow-lg">
+      <h2 className="text-lg font-semibold mb-2 text-text">{title}</h2>
+      <p className="text-gray-700 mb-4 text-companyheader2">{message}</p>
       <div className="flex justify-end gap-3">
         <button className="px-4 py-2 bg-gray-300 rounded" onClick={onCancel}>
           Cancel
@@ -177,13 +177,13 @@ function GenericModal({
         data-testid="generic-modal"
       >
         <div
-          className="bg-white w-[95%] sm:w-[500px] p-6 rounded-lg shadow-lg max-h-[90vh] overflow-y-auto relative 
+          className="bg-boxbackground w-[95%] sm:w-[500px] p-6 rounded-lg shadow-lg max-h-[90vh] overflow-y-auto relative 
              sm:max-h-[90vh] max-h-screen sm:rounded-lg rounded-none"
         >
           {/* ✖ Close */}
           <button
             onClick={handleClose}
-            className="absolute top-3 right-4 text-xl text-gray-600 hover:text-gray-900"
+            className="absolute top-4 right-4 text-l text-gray-600 hover:text-gray-900"
           >
             ✖
           </button>
@@ -227,7 +227,7 @@ function GenericModal({
                 <div className="w-1/2">
                   <label
                     htmlFor="startMonth"
-                    className="block font-medium mb-1"
+                    className="block font-medium mb-1  text-text"
                   >
                     Start Month
                   </label>
@@ -236,7 +236,7 @@ function GenericModal({
                     name="startMonth"
                     value={formData.startMonth || ""}
                     onChange={handleChange}
-                    className="border p-2 w-full rounded-md"
+                    className="border p-2 w-full rounded-md  bg-boxbackground text-text"
                   >
                     <option value="">Month</option>
                     {months.map((month) => (
@@ -254,7 +254,10 @@ function GenericModal({
 
                 {/* Start Year */}
                 <div className="w-1/2">
-                  <label htmlFor="startYear" className="block font-medium mb-1">
+                  <label
+                    htmlFor="startYear"
+                    className="block font-medium text-text "
+                  >
                     Start Year
                   </label>
                   <select
@@ -262,7 +265,7 @@ function GenericModal({
                     name="startYear"
                     value={formData.startYear || ""}
                     onChange={handleChange}
-                    className="border p-2 w-full rounded-md"
+                    className="border p-2 w-full rounded-md  bg-boxbackground text-text"
                   >
                     <option value="">Year</option>
                     {startYears.map((year) => (
@@ -283,7 +286,10 @@ function GenericModal({
               <div className="flex gap-4 mb-3">
                 {/* End Month */}
                 <div className="w-1/2">
-                  <label htmlFor="endMonth" className="block font-medium mb-1">
+                  <label
+                    htmlFor="endMonth"
+                    className="block font-medium mb-1 text-text "
+                  >
                     End Month
                   </label>
                   <select
@@ -291,7 +297,7 @@ function GenericModal({
                     name="endMonth"
                     value={formData.endMonth || ""}
                     onChange={handleChange}
-                    className="border p-2 w-full rounded-md"
+                    className="border p-2 w-full rounded-md  bg-boxbackground text-text"
                   >
                     <option value="">Month</option>
                     {months.map((month) => (
@@ -309,7 +315,10 @@ function GenericModal({
 
                 {/* End Year */}
                 <div className="w-1/2">
-                  <label htmlFor="endYear" className="block font-medium mb-1">
+                  <label
+                    htmlFor="endYear"
+                    className="block font-medium mb-1  text-text"
+                  >
                     End Year
                   </label>
                   <select
@@ -317,7 +326,7 @@ function GenericModal({
                     name="endYear"
                     value={formData.endYear || ""}
                     onChange={handleChange}
-                    className="border p-2 w-full rounded-md"
+                    className="border p-2 w-full rounded-md  bg-boxbackground text-text"
                   >
                     <option value="">Year</option>
                     {endYears.map((year) => (

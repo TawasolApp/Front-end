@@ -128,13 +128,20 @@ function EditProfileModal({ user, isOpen, onClose, onSave }) {
     >
       {/*  the previous div to prevent bg scrolling */}
       <div
-        className="bg-white w-[95%] sm:w-[600px] p-6 rounded-lg shadow-lg 
+        className="bg-boxbackground w-[95%] sm:w-[600px] p-6 rounded-lg shadow-lg 
                 max-h-screen sm:max-h-[90vh] overflow-y-auto relative"
       >
-        <h2 className="text-xl font-bold mb-4">Edit Profile</h2>
+        <button
+          onClick={handleCancel}
+          className="absolute top-4 right-4 text-l text-gray-600 hover:text-gray-900"
+          aria-label="Close modal"
+        >
+          ✖
+        </button>
+        <h2 className="text-xl font-bold mb-4 text-text">Edit Profile</h2>
         <label
           htmlFor="firstName"
-          className="block text-sm font-medium text-gray-700"
+          className="block text-sm font-medium text-text2"
         >
           First name *
         </label>
@@ -144,7 +151,7 @@ function EditProfileModal({ user, isOpen, onClose, onSave }) {
           name="firstName"
           value={editedUser.firstName || ""}
           onChange={handleChange}
-          className={`border p-2 w-full mb-2 ${
+          className={`border p-2 w-full mb-2 bg-boxbackground text-companyheader2 ${
             errors.firstName ? "border-red-500" : ""
           }`}
         />
@@ -153,7 +160,7 @@ function EditProfileModal({ user, isOpen, onClose, onSave }) {
         )}
         <label
           htmlFor="lastName"
-          className="block text-sm font-medium text-gray-700"
+          className="block text-sm font-medium text-text2"
         >
           Last name *
         </label>
@@ -163,7 +170,7 @@ function EditProfileModal({ user, isOpen, onClose, onSave }) {
           name="lastName"
           value={editedUser.lastName || ""}
           onChange={handleChange}
-          className={`border p-2 w-full mb-2 ${
+          className={`border p-2 w-full mb-2 bg-boxbackground text-companyheader2 ${
             errors.lastName ? "border-red-500" : ""
           }`}
         />
@@ -172,10 +179,7 @@ function EditProfileModal({ user, isOpen, onClose, onSave }) {
             {errors.lastName}
           </p>
         )}
-        <label
-          htmlFor="bio"
-          className="block text-sm font-medium text-gray-700"
-        >
+        <label htmlFor="bio" className="block text-sm font-medium text-text2">
           Bio
         </label>
         <textarea
@@ -183,11 +187,11 @@ function EditProfileModal({ user, isOpen, onClose, onSave }) {
           name="bio"
           value={editedUser.bio || ""}
           onChange={handleChange}
-          className="border p-2 w-full mb-2 h-20"
+          className="border p-2 w-full mb-2 h-20 bg-boxbackground text-companyheader2"
         />
         <label
           htmlFor="country"
-          className="block text-sm font-medium text-gray-700"
+          className="block text-sm font-medium text-text2"
         >
           Country/Region *
         </label>
@@ -197,7 +201,7 @@ function EditProfileModal({ user, isOpen, onClose, onSave }) {
           name="country"
           value={editedUser.country || ""}
           onChange={handleChange}
-          className={`border p-2 w-full mb-2 ${
+          className={`border p-2 w-full mb-2 bg-boxbackground text-companyheader2  ${
             errors.country ? "border-red-500" : ""
           }`}
         />
@@ -206,10 +210,7 @@ function EditProfileModal({ user, isOpen, onClose, onSave }) {
             {errors.country}
           </p>
         )}
-        <label
-          htmlFor="city"
-          className="block text-sm font-medium text-gray-700"
-        >
+        <label htmlFor="city" className="block text-sm font-medium text-text2">
           City (Optional)
         </label>
         <input
@@ -218,11 +219,11 @@ function EditProfileModal({ user, isOpen, onClose, onSave }) {
           name="city"
           value={editedUser.city || ""}
           onChange={handleChange}
-          className="border p-2 w-full mb-2"
+          className="border p-2 w-full mb-2 bg-boxbackground text-companyheader2"
         />
         <label
           htmlFor="industry"
-          className="block text-sm font-medium text-gray-700"
+          className="block text-sm font-medium text-text2"
         >
           Industry *
         </label>
@@ -232,7 +233,7 @@ function EditProfileModal({ user, isOpen, onClose, onSave }) {
           name="industry"
           value={editedUser.industry || ""}
           onChange={handleChange}
-          className={`border p-2 w-full mb-2 ${
+          className={`border p-2 w-full mb-2  bg-boxbackground text-companyheader2 ${
             errors.industry ? "border-red-500" : ""
           }`}
         />
@@ -243,14 +244,14 @@ function EditProfileModal({ user, isOpen, onClose, onSave }) {
         )}
         <label
           htmlFor="experience"
-          className="block text-sm font-medium text-gray-700"
+          className="block text-sm font-medium text-text2"
         >
           Work Experience
         </label>
         <select
           id="experience"
           name="experience"
-          className="border p-2 w-full mb-2"
+          className="border p-2 w-full mb-2 bg-boxbackground text-companyheader2"
           value={selectedExperienceIndex}
           onChange={(e) => setSelectedExperienceIndex(Number(e.target.value))}
         >
@@ -262,14 +263,14 @@ function EditProfileModal({ user, isOpen, onClose, onSave }) {
         </select>
         <label
           htmlFor="education"
-          className="block text-sm font-medium text-gray-700"
+          className="block text-sm font-medium text-text2"
         >
           Education
         </label>
         <select
           id="education"
           name="education"
-          className="border p-2 w-full mb-2"
+          className="border p-2 w-full mb-2 bg-boxbackground text-companyheader2"
           value={selectedEducationIndex}
           onChange={(e) => setSelectedEducationIndex(Number(e.target.value))}
         >
@@ -281,11 +282,15 @@ function EditProfileModal({ user, isOpen, onClose, onSave }) {
         </select>
         <label
           htmlFor="skills"
-          className="block text-sm font-medium text-gray-700"
+          className="block text-sm font-medium text-text2 "
         >
           Skills
         </label>
-        <select id="skills" name="skills" className="border p-2 w-full mb-2">
+        <select
+          id="skills"
+          name="skills"
+          className="border p-2 w-full mb-2 bg-boxbackground text-companyheader2"
+        >
           {Array.isArray(editedUser.skills) && editedUser.skills.length > 0 ? (
             editedUser.skills.map((skill, index) => (
               <option key={index}>{skill.skillName}</option>
@@ -296,12 +301,6 @@ function EditProfileModal({ user, isOpen, onClose, onSave }) {
         </select>
         <div className="flex justify-end mt-4">
           <button
-            onClick={handleCancel}
-            className="px-4 py-2 mr-2 border rounded-md"
-          >
-            Cancel
-          </button>
-          <button
             onClick={handleSave}
             className="px-4 py-2 bg-blue-500 text-white rounded-md"
           >
@@ -311,15 +310,15 @@ function EditProfileModal({ user, isOpen, onClose, onSave }) {
       </div>
       {showDiscardModal && (
         <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
-          <div className="bg-white p-6 rounded-lg shadow-lg w-[350px] relative">
+          <div className="bg-boxbackground p-6 rounded-lg shadow-lg w-[350px] relative">
             <button
               onClick={() => setShowDiscardModal(false)}
               className="absolute top-2 right-2 text-gray-500 hover:text-gray-700 p-2 text-2xl p-3"
             >
               &times;
             </button>
-            <h3 className="text-lg font-semibold">Discard changes</h3>
-            <p className="text-gray-700 mt-2">
+            <h3 className="text-lg font-semibold text-text">Discard changes</h3>
+            <p className="text-companyheader2 mt-2 ">
               Are you sure you want to discard the changes you made?
             </p>
 
