@@ -51,6 +51,16 @@
           "description": "Designed UI components and improved user flows.",
           "currentlyWorking": true,
           "employmentType": "Internship"
+        },
+        {
+          "id": "1742918855839",
+          "currentlyWorking": true,
+          "startMonth": "December",
+          "startYear": "2007",
+          "company": "Microsoft",
+          "title": "UI/UX Intern",
+          "location": "Remote",
+          "description": "Designed UI components and improved user flows."
         }
       ],
       "education": [
@@ -58,6 +68,16 @@
           "id": "959a50e8-2c55-4d85-84a0-ab1c414aa7e3",
           "institution": "Stanford University",
           "degree": "Master's",
+          "grade": "4.0 GPA",
+          "startMonth": "November",
+          "startYear": "2008",
+          "endMonth": "December",
+          "endYear": "2015"
+        },
+        {
+          "id": "1742918830957",
+          "institution": "Harvard University",
+          "degree": "Bachelor's",
           "grade": "4.0 GPA",
           "startMonth": "November",
           "startYear": "2008"
@@ -71,7 +91,8 @@
           "expirationDate": "2025-11-15",
           "id": "14a15be0-c040-4421-b7ec-ce6303888c8d",
           "startMonth": "November",
-          "startYear": "2008"
+          "startYear": "2008",
+          "issuingOrganization": "Amazon"
         },
         {
           "id": "cert-2",
@@ -115,6 +136,11 @@
           "position": "Android Developer Intern at Banque Misr",
           "endorsements": 0,
           "id": "2029666a-5975-41c7-9e22-b332d07fab1b"
+        },
+        {
+          "id": "1742918882726",
+          "skill": "xml",
+          "position": "front end developer "
         }
       ]
     },
