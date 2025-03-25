@@ -88,7 +88,7 @@ function CreateCompanyPage() {
                 id="company-name"
                 data-testid="company-name"
                 onChange={(e) => setName(e.target.value)}
-                className={`w-full p-1 border text-sm bg-boxbackground border-gray-400 rounded-md ${
+                className={`w-full p-1 border text-sm bg-boxbackground border-gray-400 rounded-md text-text2 ${
                   errors.companyName ? "border-red-500" : "border-gray-400"
                 }`}
                 placeholder="Add your organization’s name"
@@ -107,7 +107,7 @@ function CreateCompanyPage() {
                 type="url"
                 id="company-website"
                 data-testid="company-website"
-                className="w-full p-1 border text-sm border-gray-400 rounded-md bg-boxbackground"
+                className="w-full p-1 border text-sm border-gray-400 rounded-md bg-boxbackground text-text2"
                 placeholder="Begin with http://, https:// or www."
               />
             </div>
@@ -121,7 +121,7 @@ function CreateCompanyPage() {
                 data-testid="company-industry"
                 value={industry}
                 onChange={(e) => setIndustry(e.target.value)}
-                className={`w-full p-1 border text-sm border-gray-400 rounded-md bg-boxbackground ${
+                className={`w-full p-1 border text-sm border-gray-400 rounded-md bg-boxbackground text-text2 ${
                   errors.industry ? "border-red-500" : "border-gray-400"
                 }`}
                 placeholder="ex: Information Services"
@@ -221,7 +221,7 @@ function CreateCompanyPage() {
                 id="company-tagline"
                 data-testid="company-tagline"
                 onChange={(e) => setTagline(e.target.value)}
-                className="w-full p-2 border rounded-md bg-boxbackground"
+                className="w-full p-2 border rounded-md bg-boxbackground text-text2"
                 placeholder="ex: An information services firm helping small businesses succeed."
                 maxLength={120}
               />
