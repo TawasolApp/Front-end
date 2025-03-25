@@ -17,8 +17,8 @@ export default defineConfig({
     globals: true, // Enables `describe`, `test`, etc. globally
     coverage: {
       all: true,
-      include: ["src/pages/CompanyPage/Components/**/*.{js,jsx}"],
       exclude: [
+        "./src/pages/CompanyPage/testdata.js",
         "**/tests/**",
         "**/*.test.{js,jsx}",
         "**/__mocks__/**",
@@ -46,8 +46,6 @@ export default defineConfig({
         "src/app/**",
       ],
     },
-    globals: true,
-    environment: "jsdom",
     setupFiles: "./src/setupTests.js",
   },
   server: {
