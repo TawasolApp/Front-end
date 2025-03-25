@@ -41,9 +41,7 @@ function GenericCard({ item, isOwner, type, onEdit, showEditIcons = false }) {
       )}
       {item.title && <h3 className="text-lg font-semibold">{item.title}</h3>}
       {item.name && <h3 className="text-lg font-semibold">{item.name}</h3>}
-      {item.skillName && (
-        <h3 className="text-lg font-semibold">{item.skillName}</h3>
-      )}
+      {item.skill && <h3 className="text-lg font-semibold">{item.skill}</h3>}
       <p className="text-gray-600">
         {item.degree ||
           item.position ||
@@ -74,7 +72,7 @@ function GenericCard({ item, isOwner, type, onEdit, showEditIcons = false }) {
       )}
 
       {/* Skills endorsement */}
-      {type === "skills" && item.skillName && (
+      {type === "skills" && item.skill && (
         <>
           {/* {item.recentEndorsement && (
             <p className="text-gray-500 text-sm flex items-center mt-1">

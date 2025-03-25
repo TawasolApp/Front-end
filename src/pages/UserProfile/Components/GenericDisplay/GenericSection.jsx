@@ -91,7 +91,7 @@ function GenericSection({ title, type, items, isOwner, user }) {
       {/* Cards */}
       <div className="flex flex-col gap-4">
         {data.slice(0, 2).map((item, index) => (
-          <div key={index}>
+          <div key={item.id ?? index}>
             <GenericCard
               item={item}
               type={type}

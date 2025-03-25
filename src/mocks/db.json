@@ -51,16 +51,6 @@
           "description": "Designed UI components and improved user flows.",
           "currentlyWorking": true,
           "employmentType": "Internship"
-        },
-        {
-          "id": "1742887716083",
-          "title": "UI/UX Intern",
-          "company": "Microsoft",
-          "location": "Remote",
-          "description": "Designed UI components and improved user flows.",
-          "startMonth": "September",
-          "startYear": "2012",
-          "employmentType": "Freelance"
         }
       ],
       "education": [
@@ -70,25 +60,13 @@
           "degree": "Master's",
           "grade": "4.0 GPA",
           "startMonth": "November",
-          "startYear": "2009"
+          "startYear": "2008"
         },
         {
-          "id": "1742882183222",
-          "institution": "Harvard",
-          "startMonth": "June",
-          "startYear": "2021"
-        },
-        {
-          "id": "1742885500300",
-          "institution": "hola",
-          "startMonth": "September",
-          "startYear": "2012"
-        },
-        {
-          "id": "1742887701999",
-          "institution": "date",
-          "startMonth": "September",
-          "startYear": "2012"
+          "id": "1742890736189",
+          "institution": "cvz ",
+          "startMonth": "November",
+          "startYear": "2007"
         }
       ],
       "certifications": [
@@ -133,9 +111,12 @@
       "selectedEducationIndex": 0,
       "skills": [
         {
-          "id": "25eaa23b-c365-4409-a75b-74bae12a4a16",
-          "skillName": "XML",
-          "position": "Android Developer Intern at Banque Misr"
+          "id": "1742891346940",
+          "skill": "gbfd"
+        },
+        {
+          "id": "1742891349808",
+          "skill": "dvdfs"
         }
       ]
     },

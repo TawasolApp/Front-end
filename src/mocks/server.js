@@ -16,6 +16,7 @@ server.get("/profile", (req, res) => {
   res.status(200).json(users);
 });
 
+//////////Main User Apis\\\\\\\\\\
 // GET user profile by ID
 server.get("/profile/:id", (req, res) => {
   const userId = req.params.id; // keep as string
@@ -49,6 +50,8 @@ server.patch("/profile", (req, res) => {
   res.status(200).json(updatedUser);
 });
 
+//////////education , skills, experinces ,, certifications Apis\\\\\\\\\\
+
 server.post("/profile/:id/education", (req, res) => {
   const userId = req.params.id;
   const newItem = { id: Date.now().toString(), ...req.body };
@@ -76,6 +79,18 @@ server.post("/profile/:id/certifications", (req, res) => {
   if (!user.value()) return res.status(404).json({ error: "User not found" });
   const items = user.get("certifications").value() || [];
   user.assign({ certifications: [...items, newItem] }).write();
+  return res.status(201).json(newItem);
+});
+server.post("/profile/:id/skills", (req, res) => {
+  const userId = req.params.id;
+  const newItem = { id: Date.now().toString(), ...req.body };
+
+  const user = _router.db.get("users").find({ id: String(userId) });
+  if (!user.value()) return res.status(404).json({ error: "User not found" });
+
+  const items = user.get("skills").value() || [];
+  user.assign({ skills: [...items, newItem] }).write();
+
   return res.status(201).json(newItem);
 });
 
@@ -124,6 +139,25 @@ server.patch("/profile/:userId/certifications/:itemId", (req, res) => {
   res.status(200).json(updatedItem);
 });
 
+server.patch("/profile/:userId/skills/:itemId", (req, res) => {
+  const { userId, itemId } = req.params;
+
+  const user = _router.db.get("users").find({ id: String(userId) });
+  if (!user.value()) return res.status(404).json({ error: "User not found" });
+
+  const updatedItems = user
+    .get("skills")
+    .map((item) =>
+      String(item.id) === itemId ? { ...item, ...req.body } : item
+    )
+    .value();
+
+  user.assign({ skills: updatedItems }).write();
+
+  const updatedItem = updatedItems.find((item) => String(item.id) === itemId);
+  res.status(200).json(updatedItem);
+});
+
 server.delete("/profile/:userId/education/:itemId", (req, res) => {
   const { userId, itemId } = req.params;
   const user = _router.db.get("users").find({ id: String(userId) });
@@ -159,59 +193,26 @@ server.delete("/profile/:userId/certifications/:itemId", (req, res) => {
   user.assign({ certifications: filteredItems }).write();
   res.status(204).end();
 });
+server.delete("/profile/:userId/skills/:itemId", (req, res) => {
+  const { userId, itemId } = req.params;
+
+  const user = _router.db.get("users").find({ id: String(userId) });
+  if (!user.value()) return res.status(404).json({ error: "User not found" });
+
+  const filteredItems = user
+    .get("skills")
+    .filter((item) => String(item.id) !== itemId)
+    .value();
+
+  user.assign({ skills: filteredItems }).write();
+  res.status(204).end();
+});
 
 server.use(_router);
 
 server.listen(5000, () => {
   console.log("Mock server running at http://localhost:5000");
 });
-
-////for skills
-// server.post("/profile/:id/skills", (req, res) => {
-//   const userId = req.params.id;
-//   const newItem = { id: Date.now().toString(), ...req.body };
-
-//   const user = _router.db.get("users").find({ id: String(userId) });
-//   if (!user.value()) return res.status(404).json({ error: "User not found" });
-
-//   const items = user.get("skills").value() || [];
-//   user.assign({ skills: [...items, newItem] }).write();
-
-//   return res.status(201).json(newItem);
-// });
-
-// server.patch("/profile/:userId/skills/:itemId", (req, res) => {
-//   const { userId, itemId } = req.params;
-
-//   const user = _router.db.get("users").find({ id: String(userId) });
-//   if (!user.value()) return res.status(404).json({ error: "User not found" });
-
-//   const updatedItems = user.get("skills")
-//     .map((item) =>
-//       String(item.id) === itemId ? { ...item, ...req.body } : item
-//     )
-//     .value();
-
-//   user.assign({ skills: updatedItems }).write();
-
-//   const updatedItem = updatedItems.find((item) => String(item.id) === itemId);
-//   res.status(200).json(updatedItem);
-// });
-
-// server.delete("/profile/:userId/skills/:itemId", (req, res) => {
-//   const { userId, itemId } = req.params;
-
-//   const user = _router.db.get("users").find({ id: String(userId) });
-//   if (!user.value()) return res.status(404).json({ error: "User not found" });
-
-//   const filteredItems = user
-//     .get("skills")
-//     .filter((item) => String(item.id) !== itemId)
-//     .value();
-
-//   user.assign({ skills: filteredItems }).write();
-//   res.status(204).end();
-// });
 
 // editedGeneric
 

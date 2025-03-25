@@ -61,6 +61,17 @@ function GenericModal({
 
   useEffect(() => {
     if (isOpen) {
+      document.body.style.overflow = "hidden";
+    } else {
+      document.body.style.overflow = "";
+    }
+    return () => {
+      document.body.style.overflow = "";
+    };
+  }, [isOpen]);
+
+  useEffect(() => {
+    if (isOpen) {
       setFormData(initialData || {});
     }
   }, [isOpen, initialData]);
@@ -140,7 +151,7 @@ function GenericModal({
       }
     }
     if (type === "skills") {
-      if (!formData.skillName) newErrors.skillName = "Please provide a skill";
+      if (!formData.skill) newErrors.skill = "Please provide a skill";
     }
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
@@ -165,7 +176,10 @@ function GenericModal({
         className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-40"
         data-testid="generic-modal"
       >
-        <div className="bg-white w-[90%] sm:w-[500px] p-6 rounded-lg shadow-lg max-h-[90vh] overflow-y-auto relative">
+        <div
+          className="bg-white w-[95%] sm:w-[500px] p-6 rounded-lg shadow-lg max-h-[90vh] overflow-y-auto relative 
+             sm:max-h-[90vh] max-h-screen sm:rounded-lg rounded-none"
+        >
           {/* ✖ Close */}
           <button
             onClick={handleClose}

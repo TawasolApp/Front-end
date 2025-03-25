@@ -2,8 +2,6 @@ import React, { useState, useEffect } from "react";
 import { axiosInstance as axios } from "../../../../apis/axios.js";
 
 function EditProfileModal({ user, isOpen, onClose, onSave }) {
-  if (!isOpen) return null;
-
   const [editedUser, setEditedUser] = useState({ ...user });
   const [errors, setErrors] = useState({});
   const [showDiscardModal, setShowDiscardModal] = useState(false);
@@ -17,6 +15,19 @@ function EditProfileModal({ user, isOpen, onClose, onSave }) {
       setErrors({});
     }
   }, [isOpen, user]);
+
+  //  Prevent background scroll when modal is open
+  useEffect(() => {
+    if (isOpen) {
+      document.body.style.overflow = "hidden";
+    } else {
+      document.body.style.overflow = "";
+    }
+
+    return () => {
+      document.body.style.overflow = "";
+    };
+  }, [isOpen]);
 
   useEffect(() => {
     const saveProfile = async () => {
@@ -109,12 +120,18 @@ function EditProfileModal({ user, isOpen, onClose, onSave }) {
     setShowDiscardModal(false);
     onClose();
   }
-
   return (
-    <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
-      <div className="bg-white p-6 rounded-lg shadow-lg w-full max-h-[90vh] overflow-y-auto">
+    <div
+      className={`fixed inset-0 z-50 ${
+        isOpen ? "flex" : "hidden"
+      } items-center justify-center bg-black bg-opacity-50`}
+    >
+      {/*  the previous div to prevent bg scrolling */}
+      <div
+        className="bg-white w-[95%] sm:w-[600px] p-6 rounded-lg shadow-lg 
+                max-h-screen sm:max-h-[90vh] overflow-y-auto relative"
+      >
         <h2 className="text-xl font-bold mb-4">Edit Profile</h2>
-
         <label
           htmlFor="firstName"
           className="block text-sm font-medium text-gray-700"
@@ -134,7 +151,6 @@ function EditProfileModal({ user, isOpen, onClose, onSave }) {
         {errors.firstName && (
           <p className="text-red-500 text-sm">{errors.firstName}</p>
         )}
-
         <label
           htmlFor="lastName"
           className="block text-sm font-medium text-gray-700"
@@ -156,7 +172,6 @@ function EditProfileModal({ user, isOpen, onClose, onSave }) {
             {errors.lastName}
           </p>
         )}
-
         <label
           htmlFor="bio"
           className="block text-sm font-medium text-gray-700"
@@ -170,7 +185,6 @@ function EditProfileModal({ user, isOpen, onClose, onSave }) {
           onChange={handleChange}
           className="border p-2 w-full mb-2 h-20"
         />
-
         <label
           htmlFor="country"
           className="block text-sm font-medium text-gray-700"
@@ -192,7 +206,6 @@ function EditProfileModal({ user, isOpen, onClose, onSave }) {
             {errors.country}
           </p>
         )}
-
         <label
           htmlFor="city"
           className="block text-sm font-medium text-gray-700"
@@ -207,7 +220,6 @@ function EditProfileModal({ user, isOpen, onClose, onSave }) {
           onChange={handleChange}
           className="border p-2 w-full mb-2"
         />
-
         <label
           htmlFor="industry"
           className="block text-sm font-medium text-gray-700"
@@ -229,7 +241,6 @@ function EditProfileModal({ user, isOpen, onClose, onSave }) {
             {errors.industry}
           </p>
         )}
-
         <label
           htmlFor="experience"
           className="block text-sm font-medium text-gray-700"
@@ -249,7 +260,6 @@ function EditProfileModal({ user, isOpen, onClose, onSave }) {
             </option>
           ))}
         </select>
-
         <label
           htmlFor="education"
           className="block text-sm font-medium text-gray-700"
@@ -269,7 +279,6 @@ function EditProfileModal({ user, isOpen, onClose, onSave }) {
             </option>
           ))}
         </select>
-
         <label
           htmlFor="skills"
           className="block text-sm font-medium text-gray-700"
@@ -285,7 +294,6 @@ function EditProfileModal({ user, isOpen, onClose, onSave }) {
             <option>No Skill added</option>
           )}
         </select>
-
         <div className="flex justify-end mt-4">
           <button
             onClick={handleCancel}
@@ -301,7 +309,6 @@ function EditProfileModal({ user, isOpen, onClose, onSave }) {
           </button>
         </div>
       </div>
-
       {showDiscardModal && (
         <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
           <div className="bg-white p-6 rounded-lg shadow-lg w-[350px] relative">

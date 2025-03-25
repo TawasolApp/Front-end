@@ -51,10 +51,17 @@ function GenericPage({ title, type }) {
           `/profile/${user.id}/${type}/${itemId}`,
           updatedItem
         );
+        //  faster
+        // const updated = [...data];
+        // updated[editIndex] = response.data;
+        // setData(updated);
 
-        const updated = [...data];
-        updated[editIndex] = response.data;
-        setData(updated);
+        // safer as replace only the updated item
+        setData((prev) =>
+          prev.map((item) =>
+            item.id === response.data.id ? response.data : item
+          )
+        );
       }
 
       // POST — Add new item (no id sent)
@@ -141,7 +148,7 @@ function GenericPage({ title, type }) {
       {/* Card List */}
       <div className="space-y-4">
         {data.map((item, index) => (
-          <div key={index} className="relative group">
+          <div key={item.id ?? index} className="relative group">
             <GenericCard
               item={item}
               type={type}
