@@ -181,7 +181,7 @@ const ExperienceForm = ({ onSubmit }) => {
           )}
         </>
       )}
-
+  
       {/* Student Fields */}
       {isStudent && (
         <>
@@ -198,12 +198,10 @@ const ExperienceForm = ({ onSubmit }) => {
             containerClassName="!mb-4"
             required
           />
-          <div className="flex gap-8 mb-4">
-            <div className="w-1/2">
-              <label
-                htmlFor="startYear"
-                className="block text-gray-700 text-lg font-normal mb-1"
-              >
+  
+          <div className="flex flex-col sm:flex-row gap-4 sm:gap-6 mb-4">
+            <div className="w-full sm:w-1/2">
+              <label htmlFor="startYear" className="block text-gray-700 text-lg font-normal mb-1">
                 Start year *
               </label>
               <select
@@ -212,13 +210,7 @@ const ExperienceForm = ({ onSubmit }) => {
                 value={startYear}
                 onChange={handleStartYearChange}
                 onBlur={handleStartYearBlur}
-                className={`w-full px-3 py-1 border border-black rounded-md text-lg focus:outline-none focus:border-blue-500 ${
-                  startYearError ||
-                  endYearError ===
-                    "Your end date can't be earlier than your start date."
-                    ? "border-red-500"
-                    : ""
-                }`}
+                className="w-full px-3 py-2 border border-black rounded-md text-lg focus:outline-none focus:border-blue-500"
                 required
               >
                 <option value="">-</option>
@@ -232,11 +224,8 @@ const ExperienceForm = ({ onSubmit }) => {
                 ))}
               </select>
             </div>
-            <div className="w-1/2">
-              <label
-                htmlFor="endYear"
-                className="block text-gray-700 text-lg font-normal mb-1"
-              >
+            <div className="w-full sm:w-1/2">
+              <label htmlFor="endYear" className="block text-gray-700 text-lg font-normal mb-1">
                 End year (or expected) *
               </label>
               <select
@@ -245,9 +234,7 @@ const ExperienceForm = ({ onSubmit }) => {
                 value={endYear}
                 onChange={handleEndYearChange}
                 onBlur={handleEndYearBlur}
-                className={`w-full px-3 py-1 border border-black rounded-md text-lg focus:outline-none focus:border-blue-500 ${
-                  endYearError ? "border-red-500" : ""
-                }`}
+                className="w-full px-3 py-2 border border-black rounded-md text-lg focus:outline-none focus:border-blue-500"
                 required
               >
                 <option value="">-</option>
@@ -262,21 +249,28 @@ const ExperienceForm = ({ onSubmit }) => {
               </select>
             </div>
           </div>
-          {/* Error messages container */}
+  
+          {/* Error messages */}
           <div className="w-full mb-4">
             {startYearError && (
-              <p className="text-red-500 text-xl mt-2 w-full">
+              <p className="text-red-500 text-base sm:text-lg mt-1">
                 {startYearError}
               </p>
             )}
             {endYearError && (
-              <p className="text-red-500 text-xl mt-2 w-full">{endYearError}</p>
+              <p className="text-red-500 text-base sm:text-lg mt-1">
+                {endYearError}
+              </p>
             )}
           </div>
-          <div className="mb-6 w-full flex items-center justify-between px-6 py-6 border border-gray-400 rounded-lg">
-            <span className="text-gray-700 text-xl">I’m over 16</span>
-            <div className="flex items-center gap-2">
-              <span className="text-gray-700 text-xl">
+  
+          {/* Age Verification */}
+          <div className="mb-6 w-full flex flex-col sm:flex-row items-center justify-between p-4 sm:p-6 border border-gray-300 rounded-lg">
+            <span className="text-gray-700 text-lg sm:text-xl mb-2 sm:mb-0">
+              I'm over 16
+            </span>
+            <div className="flex items-center gap-3">
+              <span className="text-gray-700 text-lg sm:text-xl">
                 {isOver16 ? "Yes" : "No"}
               </span>
               <label className="flex items-center cursor-pointer">
@@ -303,48 +297,42 @@ const ExperienceForm = ({ onSubmit }) => {
               </label>
             </div>
           </div>
+  
+          {/* Date of Birth Fields */}
           {!isOver16 && (
             <div className="mb-6">
               <label className="block text-gray-700 text-lg font-semibold mb-2">
                 Date of birth *
               </label>
-              <div className="flex gap-4">
-                <div className="w-1/3">
-                  <label
-                    htmlFor="month"
-                    className="block text-gray-700 text-lg font-normal mb-1"
-                  >
+              <div className="flex flex-col sm:flex-row gap-3 sm:gap-4">
+                <div className="w-full sm:w-1/3">
+                  <label htmlFor="month" className="block text-gray-700 text-lg font-normal mb-1">
                     Month *
                   </label>
                   <select
                     name="month"
                     value={birthDate.month}
                     onChange={handleBirthDateChange}
-                    className="w-full px-3 py-1 border border-black rounded-md text-lg focus:outline-none focus:border-blue-500"
+                    className="w-full px-3 py-2 border border-black rounded-md text-lg focus:outline-none focus:border-blue-500"
                     required
                   >
                     <option value="">-</option>
                     {Array.from({ length: 12 }, (_, i) => (
                       <option key={i + 1} value={i + 1}>
-                        {new Date(0, i).toLocaleString("default", {
-                          month: "long",
-                        })}
+                        {new Date(0, i).toLocaleString("default", { month: "long" })}
                       </option>
                     ))}
                   </select>
                 </div>
-                <div className="w-1/3">
-                  <label
-                    htmlFor="day"
-                    className="block text-gray-700 text-lg font-normal mb-1"
-                  >
+                <div className="w-full sm:w-1/3">
+                  <label htmlFor="day" className="block text-gray-700 text-lg font-normal mb-1">
                     Day *
                   </label>
                   <select
                     name="day"
                     value={birthDate.day}
                     onChange={handleBirthDateChange}
-                    className="w-full px-3 py-1 border border-black rounded-md text-lg focus:outline-none focus:border-blue-500"
+                    className="w-full px-3 py-2 border border-black rounded-md text-lg focus:outline-none focus:border-blue-500"
                     required
                   >
                     <option value="">-</option>
@@ -355,26 +343,20 @@ const ExperienceForm = ({ onSubmit }) => {
                     ))}
                   </select>
                 </div>
-                <div className="w-1/3">
-                  <label
-                    htmlFor="year"
-                    className="block text-gray-700 text-lg font-normal mb-1"
-                  >
+                <div className="w-full sm:w-1/3">
+                  <label htmlFor="year" className="block text-gray-700 text-lg font-normal mb-1">
                     Year *
                   </label>
                   <select
                     name="year"
                     value={birthDate.year}
                     onChange={handleBirthDateChange}
-                    className="w-full px-3 py-1 border border-black rounded-md text-lg focus:outline-none focus:border-blue-500"
+                    className="w-full px-3 py-2 border border-black rounded-md text-lg focus:outline-none focus:border-blue-500"
                     required
                   >
                     <option value="">-</option>
                     {Array.from({ length: 100 }, (_, i) => (
-                      <option
-                        key={new Date().getFullYear() - i}
-                        value={new Date().getFullYear() - i}
-                      >
+                      <option key={new Date().getFullYear() - i} value={new Date().getFullYear() - i}>
                         {new Date().getFullYear() - i}
                       </option>
                     ))}
@@ -385,18 +367,18 @@ const ExperienceForm = ({ onSubmit }) => {
           )}
         </>
       )}
-
+  
       {/* I'm a Student Button */}
       <div className="mb-6 flex items-center">
         <button
           type="button"
           onClick={handleIsStudentChange}
-          className="bg-white w-full text-gray-700 px-6 py-3 rounded-lg hover:bg-gray-100 text-2xl font-medium transition duration-200 ease-in-out"
+          className="bg-white w-full text-gray-700 px-6 py-3 rounded-lg hover:bg-gray-100 text-xl sm:text-2xl font-medium transition duration-200 ease-in-out"
         >
           {isStudent ? "I'm not a student" : "I'm a student"}
         </button>
       </div>
-
+  
       <BlueSubmitButton text="Continue" disabled={!isFormValid()} />
     </form>
   );

@@ -1,6 +1,5 @@
 import "./App.css";
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
-import { getIconComponent } from "../utils";
 import SignUpPage from "../pages/AuthenticationPages/SignUpPage";
 import SignInPage from "../pages/AuthenticationPages/SignInPage";
 import NamePage from "../pages/AuthenticationPages/NamePage";
@@ -14,7 +13,6 @@ import WelcomePage from "../pages/AuthenticationPages/WelcomePage";
 import ChangeEmailPage from "../pages/AuthenticationPages/ChangeEmailPage";
 
 function App() {
-  const InIcon = getIconComponent("in-black");
   return (
     <Router>
       <Routes>

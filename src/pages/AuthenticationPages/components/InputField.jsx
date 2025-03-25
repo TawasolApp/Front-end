@@ -1,7 +1,7 @@
-import React from 'react';
+import React from "react";
 
 const InputField = ({
-  type = 'text',
+  type = "text",
   id,
   name,
   labelText,
@@ -14,13 +14,16 @@ const InputField = ({
   onTogglePasswordVisibility,
   showPassword,
   error,
-  labelClassName = '',
-  inputClassName = '',
-  containerClassName = '',
+  labelClassName = "",
+  inputClassName = "",
+  containerClassName = "",
 }) => {
   return (
-    <div className={`mb-6 ${containerClassName}`}>
-      <label className={`block text-gray-700 text-xl font-semibold mb-2 ${labelClassName}`} htmlFor={id}>
+    <div className={`mb-4 sm:mb-5 md:mb-6 ${containerClassName}`}>
+      <label
+        className={`block text-gray-700 text-lg sm:text-xl md:text-2xl font-medium sm:font-semibold mb-1 sm:mb-2 ${labelClassName}`}
+        htmlFor={id}
+      >
         {labelText}
       </label>
       <div className="relative">
@@ -31,7 +34,9 @@ const InputField = ({
           value={value}
           onChange={onChange}
           onBlur={onBlur}
-          className={`w-full px-4 py-3 border-2 border-gray-300 rounded-lg hover:border-black hover:bg-stone-100 focus:outline-none focus:border-black text-xl cursor-pointer ${inputClassName} ${error && '!border-red-500'}`}
+          className={`w-full px-3 sm:px-4 py-2 sm:py-3 border-2 border-gray-300 rounded-lg hover:border-black hover:bg-stone-100 focus:outline-none focus:border-black text-base sm:text-lg md:text-xl cursor-pointer ${inputClassName} ${
+            error && "!border-red-500"
+          }`}
           placeholder={placeholder}
           required={required}
         />
@@ -39,13 +44,17 @@ const InputField = ({
           <button
             type="button"
             onClick={onTogglePasswordVisibility}
-            className="absolute inset-y-0 right-0 px-4 py-3 text-blue-500 font-semibold focus:outline-none"
+            className="absolute inset-y-0 right-0 px-3 sm:px-4 flex items-center text-blue-500 text-base sm:text-lg font-medium focus:outline-none"
           >
-            {showPassword ? 'Hide' : 'Show'}
+            {showPassword ? "Hide" : "Show"}
           </button>
         )}
       </div>
-      {error && <p className="text-red-500 text-lg mt-2">{error}</p>}
+      {error && (
+        <p className="text-red-500 text-sm sm:text-base md:text-lg mt-1 sm:mt-2">
+          {error}
+        </p>
+      )}
     </div>
   );
 };

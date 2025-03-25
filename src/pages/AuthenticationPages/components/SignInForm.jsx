@@ -15,7 +15,6 @@ const SignInForm = ({ onSubmit }) => {
   const [emailError, setEmailError] = useState("");
   const [passwordError, setPasswordError] = useState("");
   const [credentialsError, setCredentialsError] = useState("");
-  
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -35,28 +34,28 @@ const SignInForm = ({ onSubmit }) => {
 
   const handleEmailBlur = () => {
     if (!formData.email) {
-      setEmailError('Please enter your email.');
+      setEmailError("Please enter your email.");
     } else {
-      setEmailError('');
+      setEmailError("");
     }
   };
-  
+
   const handlePasswordBlur = () => {
     if (!formData.password) {
-      setPasswordError('Please enter your password.');
+      setPasswordError("Please enter your password.");
     } else {
-      setPasswordError('');
+      setPasswordError("");
     }
   };
 
   const handleSubmit = (e) => {
     e.preventDefault();
     if (!formData.email) {
-      setEmailError('Please enter your email.');
+      setEmailError("Please enter your email.");
       return;
     }
     if (!formData.password) {
-      setPasswordError('Please enter your password.');
+      setPasswordError("Please enter your password.");
       return;
     }
     onSubmit(formData, setCredentialsError);
@@ -67,12 +66,15 @@ const SignInForm = ({ onSubmit }) => {
   };
 
   return (
-    <form onSubmit={handleSubmit}>
-      <h1 className="text-5xl font-semibold mb-8 text-gray-800 text-left">
+    <form onSubmit={handleSubmit} className="space-y-4 sm:space-y-6">
+      <h1 className="text-3xl sm:text-4xl md:text-5xl font-semibold mb-6 sm:mb-8 text-gray-800">
         Sign in
       </h1>
+
       <SignWithGoogle />
+
       <Divider />
+
       <InputField
         type="text"
         id="email"
@@ -85,6 +87,7 @@ const SignInForm = ({ onSubmit }) => {
         required
         error={emailError}
       />
+
       <InputField
         type={showPassword ? "text" : "password"}
         id="password"
@@ -100,27 +103,38 @@ const SignInForm = ({ onSubmit }) => {
         showPassword={showPassword}
         error={passwordError}
       />
-      {credentialsError && <p className="text-red-500 text-lg mt-2">{credentialsError}</p>}
-      <div className="mb-6">
+
+      {credentialsError && (
+        <p className="text-red-500 text-base sm:text-lg mt-2">
+          {credentialsError}
+        </p>
+      )}
+
+      <div className="mb-4 sm:mb-6">
         <Link
           to="/auth/forgot-password"
-          className="text-blue-600 hover:underline text-xl"
-        > {/* TODO: Navigate to ForgotPasswordPage */}
+          className="text-blue-600 hover:underline text-base sm:text-lg"
+        >
           Forgot password?
         </Link>
       </div>
+
       <div className="mb-6 flex items-center">
         <input
           type="checkbox"
           id="keepLoggedIn"
-          className="w-5 h-5 mr-2 accent-green-600"
+          className="w-4 h-4 sm:w-5 sm:h-5 mr-2 accent-green-600"
           defaultChecked
         />
-        <label htmlFor="keepLoggedIn" className="text-gray-700 text-xl">
+        <label
+          htmlFor="keepLoggedIn"
+          className="text-gray-700 text-base sm:text-lg"
+        >
           Keep me logged in
         </label>
       </div>
-      <BlueSubmitButton text="Sign in"/>
+
+      <BlueSubmitButton text="Sign in" />
     </form>
   );
 };

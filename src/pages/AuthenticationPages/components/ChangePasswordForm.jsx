@@ -20,8 +20,6 @@ const ChangePasswordForm = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-
-    // Basic validation
     if (!currentPassword) {
       setErrorMessage("Please enter your current password.");
       return;
@@ -38,12 +36,10 @@ const ChangePasswordForm = () => {
     try {
       setLoading(true);
       setErrorMessage("");
-
       const response = await axiosInstance.patch("/user/update-password", {
         currentPassword,
         newPassword,
       });
-
       if (response.status === 200) {
         setCurrentPassword("");
         setNewPassword("");
@@ -73,12 +69,10 @@ const ChangePasswordForm = () => {
   };
 
   const handleForgotPassword = () => {
-    // TODO: Navigate to ForgotPasswordPage
     navigate("/auth/forgot-password");
   };
 
   const handleBack = () => {
-    // TODO: Navigate back
     navigate(-1);
   };
 
@@ -94,121 +88,126 @@ const ChangePasswordForm = () => {
   };
 
   return (
-    <form onSubmit={handleSubmit} className="w-1/2 min-w-96">
+    <form onSubmit={handleSubmit} className="w-full md:w-3/4 lg:w-1/2 min-w-0">
+      {/* Back Button */}
       <button
         type="button"
         onClick={handleBack}
-        className="relative top-0 left-0 mb-4 flex items-center text-gray-500 text-lg font-medium transition duration-200 ease-in-out"
+        className="mb-3 sm:mb-4 flex items-center text-gray-500 text-base sm:text-lg font-medium"
       >
-        <ArrowBack className="mr-2 max-w-6" />
+        <ArrowBack className="mr-2 w-5 h-5" />
         Back
       </button>
-      <h2 className="text-xl font-semibold text-gray-900 mb-1">
-        Change Password
-      </h2>
-      <p className="text-lg mb-9">
-        Create a new password that is at least 8 characters long.
-      </p>
-      {/* Current Password Field */}
-      <InputField
-        type={showCurrentPassword ? "text" : "password"}
-        id="currentPassword"
-        name="currentPassword"
-        labelText="Type your current password *"
-        value={currentPassword}
-        onChange={(e) => {
-          setCurrentPassword(e.target.value);
-          setCurrentPasswordError("");
-          setErrorMessage("");
-        }}
-        onBlur={() => {
-          if (!currentPassword) {
-            setCurrentPasswordError("Please enter your current password.");
-          }
-        }}
-        placeholder=""
-        labelClassName="!text-lg !font-normal"
-        inputClassName="!py-1 !text-lg rounded-md !border-black !border !bg-white !cursor-text"
-        required
-        showPasswordToggle
-        onTogglePasswordVisibility={toggleCurrentPasswordVisibility}
-        showPassword={showCurrentPassword}
-        error={currentPasswordError}
-      />
 
-      {/* New Password Field */}
-      <InputField
-        type="password"
-        id="newPassword"
-        name="newPassword"
-        labelText="Type your new password *"
-        value={newPassword}
-        onChange={(e) => {
-          setNewPassword(e.target.value);
-          setNewPasswordError("");
-          setErrorMessage("");
-        }}
-        onBlur={() => {
-          if (!newPassword) {
-            setNewPasswordError("Please enter your new password.");
-          } else if (newPassword.length < 8) {
-            setNewPasswordError(
-              "Your password is too short. It should be at least 8 characters long"
-            );
-          }
-        }}
-        placeholder=""
-        labelClassName="!text-lg !font-normal"
-        inputClassName="!py-1 !text-lg rounded-md !border-black !border !bg-white !cursor-text"
-        required
-        error={newPasswordError}
-      />
+      {/* Header */}
+      <div className="mb-6 sm:mb-8">
+        <h2 className="text-xl sm:text-2xl font-semibold text-gray-900 mb-1 sm:mb-2">
+          Change Password
+        </h2>
+        <p className="text-base sm:text-lg">
+          Create a new password that is at least 8 characters long.
+        </p>
+      </div>
 
-      {/* Confirm New Password Field */}
-      <InputField
-        type={showNewPassword ? "text" : "password"}
-        id="confirmNewPassword"
-        name="confirmNewPassword"
-        labelText="Retype your new password *"
-        value={confirmNewPassword}
-        onChange={(e) => {
-          setConfirmNewPassword(e.target.value);
-          setConfirmNewPasswordError("");
-          setErrorMessage("");
-        }}
-        onBlur={() => {
-          if (!confirmNewPassword) {
-            setConfirmNewPasswordError("Please confirm your new password.");
-          } else if (newPassword !== confirmNewPassword) {
-            setConfirmNewPasswordError("Passwords do not match.");
-          }
-        }}
-        placeholder=""
-        labelClassName="!text-lg !font-normal"
-        inputClassName="!py-1 !text-lg rounded-md !border-black !border !bg-white !cursor-text"
-        required
-        showPasswordToggle
-        onTogglePasswordVisibility={toggleNewPasswordVisibility}
-        showPassword={showNewPassword}
-        error={confirmNewPasswordError}
-      />
+      {/* Password Fields */}
+      <div className="space-y-4 sm:space-y-6">
+        <InputField
+          type={showCurrentPassword ? "text" : "password"}
+          id="currentPassword"
+          name="currentPassword"
+          labelText="Type your current password *"
+          value={currentPassword}
+          onChange={(e) => {
+            setCurrentPassword(e.target.value);
+            setCurrentPasswordError("");
+            setErrorMessage("");
+          }}
+          onBlur={() => {
+            if (!currentPassword) {
+              setCurrentPasswordError("Please enter your current password.");
+            }
+          }}
+          labelClassName="!text-lg !font-normal"
+          inputClassName="!py-1 !text-lg rounded-md !border-black !border !bg-white !cursor-text"
+          required
+          showPasswordToggle
+          onTogglePasswordVisibility={toggleCurrentPasswordVisibility}
+          showPassword={showCurrentPassword}
+          error={currentPasswordError}
+        />
 
+        <InputField
+          type="password"
+          id="newPassword"
+          name="newPassword"
+          labelText="Type your new password *"
+          value={newPassword}
+          onChange={(e) => {
+            setNewPassword(e.target.value);
+            setNewPasswordError("");
+            setErrorMessage("");
+          }}
+          onBlur={() => {
+            if (!newPassword) {
+              setNewPasswordError("Please enter your new password.");
+            } else if (newPassword.length < 8) {
+              setNewPasswordError(
+                "Your password is too short. It should be at least 8 characters long"
+              );
+            }
+          }}
+          labelClassName="!text-lg !font-normal"
+          inputClassName="!py-1 !text-lg rounded-md !border-black !border !bg-white !cursor-text"
+          required
+          error={newPasswordError}
+        />
+
+        <InputField
+          type={showNewPassword ? "text" : "password"}
+          id="confirmNewPassword"
+          name="confirmNewPassword"
+          labelText="Retype your new password *"
+          value={confirmNewPassword}
+          onChange={(e) => {
+            setConfirmNewPassword(e.target.value);
+            setConfirmNewPasswordError("");
+            setErrorMessage("");
+          }}
+          onBlur={() => {
+            if (!confirmNewPassword) {
+              setConfirmNewPasswordError("Please confirm your new password.");
+            } else if (newPassword !== confirmNewPassword) {
+              setConfirmNewPasswordError("Passwords do not match.");
+            }
+          }}
+          labelClassName="!text-lg !font-normal"
+          inputClassName="!py-1 !text-lg rounded-md !border-black !border !bg-white !cursor-text"
+          required
+          showPasswordToggle
+          onTogglePasswordVisibility={toggleNewPasswordVisibility}
+          showPassword={showNewPassword}
+          error={confirmNewPasswordError}
+        />
+      </div>
+
+      {/* Error Message */}
       {errorMessage && (
-        <p className="text-red-500 text-xl mb-4">{errorMessage}</p>
+        <p className="text-red-500 text-base sm:text-lg mb-4">{errorMessage}</p>
       )}
 
-      {/* Submit Button and Forgot Password Link */}
-      <div className="flex items-center justify-between">
-        <div className="mb-6 flex flex-col items-center">
-          <BlueSubmitButton text="Save Password" disabled={!isFormValid()} />
-          <button
-            type="button"
-            onClick={handleForgotPassword}
-            className="mt-4 bg-white w-full text-gray-700 px-6 py-3 rounded-lg hover:bg-gray-100 text-xl font-medium transition duration-200 ease-in-out"
-          >
-            Forgot Password
-          </button>
-        </div>
+      {/* Buttons */}
+      <div className="flex flex-col space-y-4 mt-6">
+        <BlueSubmitButton 
+          text={loading ? "Saving..." : "Save Password"} 
+          disabled={!isFormValid() || loading} 
+        />
+        <button
+          type="button"
+          onClick={handleForgotPassword}
+          className="bg-white text-gray-700 px-4 py-3 rounded-lg hover:bg-gray-100 text-base sm:text-lg font-medium transition-colors"
+        >
+          Forgot Password
+        </button>
       </div>
     </form>
   );

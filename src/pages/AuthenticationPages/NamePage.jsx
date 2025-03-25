@@ -15,7 +15,7 @@ const NamePage = () => {
     dispatch(setLastName(formData.lastName));
 
     try {
-      console.log(email, password)
+      console.log(email, password);
       const response = await axiosInstance.post("/auth/register", {
         email,
         password,
@@ -24,7 +24,6 @@ const NamePage = () => {
         captchaToken,
       });
 
-      // TODO: Navigate to LocationPage
       navigate("/auth/signup/location");
     } catch (error) {
       alert(
@@ -35,12 +34,12 @@ const NamePage = () => {
   };
 
   return (
-    <div className="min-h-screen flex flex-col items-center justify-center bg-stone-100">
-      <h1 className="text-4xl font-normal mb-8 text-gray-800 text-center">
+    <div className="min-h-screen flex flex-col items-center justify-center bg-stone-100 px-4 sm:px-8 md:px-12 lg:px-24">
+      <h1 className="text-4xl md:text-5xl font-normal mb-8 text-gray-800 text-center max-w-screen-lg">
         Make the most of your professional life
       </h1>
-      <div className="bg-white p-10 rounded-lg shadow-lg w-full max-w-lg">
-        <NameForm onSubmit={handleName} />{" "}
+      <div className="bg-white p-10 rounded-lg shadow-lg w-full max-w-lg min-w-[350px]">
+        <NameForm onSubmit={handleName} />
       </div>
     </div>
   );
