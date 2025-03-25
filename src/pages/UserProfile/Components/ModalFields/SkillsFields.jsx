@@ -16,7 +16,7 @@ function SkillsFields({ formData, handleChange, errors }) {
         placeholder="Skill (ex: Project Management)"
         value={formData.skill || ""}
         onChange={handleChange}
-        className="border p-2 w-full rounded-md mb-2 bg-boxbackground"
+        className="border p-2 w-full rounded-md mb-2 bg-boxbackground text-companyheader2"
         required
       />
       {errors.skill && (
@@ -33,7 +33,7 @@ function SkillsFields({ formData, handleChange, errors }) {
         placeholder="e.g. Frontend Developer"
         value={formData.position || ""}
         onChange={handleChange}
-        className="border p-2 w-full rounded-md mb-2 bg-boxbackground"
+        className="border p-2 w-full rounded-md mb-2 bg-boxbackground text-companyheader2"
       />
     </>
   );

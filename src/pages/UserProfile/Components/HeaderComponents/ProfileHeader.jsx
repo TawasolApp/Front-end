@@ -1,23 +1,26 @@
 import React, { useState, useEffect } from "react";
-import { useNavigate, useParams } from "react-router-dom";
-import ViewerView from "../ViewerView";
-import ProfilePicture from "./ProfilePicture";
+import { useParams, useNavigate } from "react-router-dom";
 import CoverPhoto from "./CoverPhoto";
-import EditProfileModal from "./EditProfileModal";
-import ImageEnlarge from "./ImageEnlarge";
-import ImageUploadModal from "../ImageUploadModal";
+import ProfilePicture from "./ProfilePicture";
 import defaultProfilePicture from "../../../../assets/images/defaultProfilePicture.png";
 import defaultCoverPhoto from "../../../../assets/images/defaultCoverPhoto.png";
+import EditProfileModal from "./EditProfileModal";
+import ImageUploadModal from "../ImageUploadModal";
+import ImageEnlarge from "./ImageEnlarge";
+import ViewerView from "../ViewerView";
+
 function ProfileHeader({ user, isOwner, onSave, experienceRef, educationRef }) {
-  const navigate = useNavigate();
-  const [isEditing, setIsEditing] = useState(false);
   const [editedUser, setEditedUser] = useState(user);
+  const [isEditing, setIsEditing] = useState(false);
   const [enlargedImage, setEnlargedImage] = useState(null);
   const [isUploadOpen, setIsUploadOpen] = useState(false);
   const [uploadType, setUploadType] = useState(null);
+  const navigate = useNavigate();
   const { profileSlug } = useParams();
+
   const experienceIndex = editedUser.selectedExperienceIndex ?? 0;
   const educationIndex = editedUser.selectedEducationIndex ?? 0;
+
   useEffect(() => {
     setEditedUser(user);
   }, [user]);
@@ -26,68 +29,107 @@ function ProfileHeader({ user, isOwner, onSave, experienceRef, educationRef }) {
     setUploadType(type);
     setIsUploadOpen(true);
   }
-  function openEditModal() {
-    setIsEditing(true);
-  }
 
   function handleUpload(imageUrl) {
-    setEditedUser((prevUser) => ({
-      ...prevUser,
-      [uploadType === "profile" ? "profilePicture" : "backgroundImage"]:
-        imageUrl,
+    setEditedUser((prev) => ({
+      ...prev,
+      [uploadType === "profile" ? "profilePicture" : "coverPhoto"]: imageUrl,
     }));
     setIsUploadOpen(false);
   }
 
-  // function handleInputChange(event) {
-  //   const { name, value } = event.target;
-  //   setEditedUser((prevUser) => ({
-  //     ...prevUser,
-  //     [name]: value,
-  //   }));
-  // }
   function handleImageClick(imageUrl) {
-    setEnlargedImage(imageUrl); // Set image to enlarge
+    setEnlargedImage(imageUrl);
   }
-  function saveProfileChanges(updatedUser) {
-    setIsEditing(false);
+
+  function handleSave(updatedUser) {
     setEditedUser(updatedUser);
-    onSave?.(updatedUser); // only if onSave is passed
+    setIsEditing(false);
+    onSave?.(updatedUser);
   }
-  // Scroll to section function
+
   function scrollToSection(ref) {
     if (ref && ref.current) {
       ref.current.scrollIntoView({ behavior: "smooth" });
     }
   }
+
   if (!editedUser) return null;
 
   return (
-    <div className=" relative bg-boxbackground py-6 shadow-md rounded-md w-full max-w-3xl mx-auto pb-0 mb-8 pt-0">
-      {/* Cover Photo Component */}
-      <div className="relative w-full h-64 rounded-md overflow-hidden pb-0">
-        {/* Cover Photo */}
+    <div className="w-full bg-boxbackground rounded-md shadow max-w-3xl mx-auto mb-8 relative">
+      {/* Cover Photo */}
+      <div className="relative">
         <CoverPhoto
           backgroundImage={editedUser.coverPhoto || defaultCoverPhoto}
           isOwner={isOwner}
-          className="w-full h-full object-cover rounded-md"
           onImageClick={handleImageClick}
           onUpload={() => openUploadModal("cover")}
         />
 
-        {/* Profile Picture (Centered & Fully Visible) */}
-        <div className="absolute left-16 ml-4 transform -translate-x-1/2 top-20 sm:-top-15 border-4 border-white rounded-full shadow-lg bg-white mb-0">
-          <ProfilePicture
-            profilePictureSrc={
-              editedUser.profilePicture || defaultProfilePicture
-            }
-            isOwner={isOwner}
-            onImageClick={handleImageClick}
-            onUpload={() => openUploadModal("profile")}
-          />
-        </div>
+        {/* Edit Button over cover */}
+        {isOwner && (
+          <button
+            className="absolute w-8 h-8 top-35 right-6 bg-white p-1 rounded-full  hover:bg-gray-200"
+            onClick={() => setIsEditing(true)}
+          >
+            ✎
+          </button>
+        )}
       </div>
-      {/* Enlarged Image Modal (Global) */}
+
+      {/* Profile Picture - overlapping */}
+      <div className="flex justify-start px-6 -mt-14 sm:-mt-16">
+        <ProfilePicture
+          profilePictureSrc={editedUser.profilePicture || defaultProfilePicture}
+          isOwner={isOwner}
+          onImageClick={handleImageClick}
+          onUpload={() => openUploadModal("profile")}
+        />
+      </div>
+
+      {/* Name and Details */}
+      <div className="px-6 pt-4">
+        <h1 className="text-xl font-bold text-text flex items-center gap-2">
+          {editedUser.firstName} {editedUser.lastName}
+        </h1>
+        <p className="text-sm text-gray-600">Student at Cairo University</p>
+        <p className="text-sm text-gray-600">
+          {editedUser.city}, {editedUser.country} ·{" "}
+          <span className="text-gray-600 cursor-pointer">Contact info</span>
+        </p>
+        <p
+          className="text-blue-600 text-sm cursor-pointer hover:underline mt-1"
+          onClick={() => navigate("connections")}
+        >
+          {editedUser.connectionCount} connections
+        </p>
+      </div>
+
+      {/* Experience & Education Tags */}
+      <div className="px-6 pt-2 pb-4 text-left space-y-1 text-sm">
+        <p
+          className="text-companyheader2 cursor-pointer hover:text-blue-500 hover:underline"
+          onClick={() => scrollToSection(experienceRef)}
+        >
+          {editedUser.experience?.[experienceIndex]?.title}
+        </p>
+        <p
+          className="text-companyheader2 cursor-pointer hover:text-blue-500 hover:underline"
+          onClick={() => scrollToSection(educationRef)}
+        >
+          {editedUser.education?.[educationIndex]?.institution}
+        </p>
+      </div>
+
+      {/* Viewer View */}
+      {!isOwner && (
+        <div className="px-6 pb-4 pt-2">
+          <ViewerView user={editedUser} />
+        </div>
+      )}
+
+      {/* Modals */}
       {enlargedImage && (
         <ImageEnlarge
           profilePicture={enlargedImage}
@@ -95,73 +137,16 @@ function ProfileHeader({ user, isOwner, onSave, experienceRef, educationRef }) {
           onClose={() => setEnlargedImage(null)}
         />
       )}
-      {/* Upload Modal (Global) */}
       <ImageUploadModal
         isOpen={isUploadOpen}
         onClose={() => setIsUploadOpen(false)}
         onUpload={handleUpload}
       />
-      {/* User Info & Experience  */}
-      <div className="flex flex-col sm:flex-row justify-between items-start px-6 mt-0 gap-4">
-        <div className="sm:w-3/5 text-lef -mt-10">
-          <h1 className="text-2xl font-bold flex items-center gap-2 text-text">
-            {editedUser.firstName} {editedUser.lastName}
-          </h1>
-          <p className="text-text text-lg">{editedUser.bio}</p>
-          <div className="flex items-center text-sm text-gray-500">
-            <p className="text-sm text-text">
-              {editedUser.country}, {editedUser.city || "N/A"}
-            </p>
-            <span className="mx-1">·</span>
-            <p className="text-companyheader2">Contact Info</p>
-          </div>
-
-          {/*  Connections Count */}
-          <p
-            className="text-blue-500 cursor-pointer hover:underline mb-0"
-            onClick={() => navigate(`connections`)}
-          >
-            {editedUser.connectionCount} connections
-          </p>
-        </div>
-
-        {/*  Experience & Education Section */}
-        <div className="flex-items relative sm:w-2/5 text-right  ">
-          {isOwner && (
-            <button
-              className="absolute right-1 w-8 h-8 top-10 rounded-full flex items-center justify-center hover:bg-gray-200 transition text-text"
-              onClick={openEditModal}
-            >
-              ✎
-            </button>
-          )}
-          <p
-            className=" absolute text-sm text-companyheader2 right-1 cursor-pointer hover:text-blue-500 hover:underline pt-9 pb-0"
-            onClick={() => scrollToSection(experienceRef)}
-          >
-            {editedUser.experience?.[experienceIndex]?.title}
-          </p>
-          <p
-            className="absolute text-sm text-companyheader2 right-1 cursor-pointer  hover:text-blue-500 hover:underline mb-0"
-            onClick={() => scrollToSection(educationRef)}
-          >
-            {editedUser.education?.[educationIndex]?.institution}{" "}
-          </p>
-        </div>
-      </div>
-
-      {/* Viewer View */}
-      <div className="mt-4 flex gap-3 pb-4">
-        {!isOwner ? <ViewerView user={editedUser} /> : null}
-      </div>
-
-      {/*  Edit Profile Modal  */}
       <EditProfileModal
         user={editedUser}
         isOpen={isEditing}
         onClose={() => setIsEditing(false)}
-        onSave={saveProfileChanges}
-        // onChange={handleInputChange}
+        onSave={handleSave}
       />
     </div>
   );

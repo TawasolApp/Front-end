@@ -36,7 +36,7 @@ function CertificationsFields({ formData, handleChange, errors }) {
         name="issuingOrganization"
         value={formData.issuingOrganization || ""}
         onChange={handleChange}
-        className="border p-2 w-full rounded-md mb-2 bg-boxbackground"
+        className="border p-2 w-full rounded-md mb-2 bg-boxbackground text-companyheader2"
         placeholder="Ex: Microsoft"
       />
       {errors.issuingOrganization && (
@@ -57,7 +57,7 @@ function CertificationsFields({ formData, handleChange, errors }) {
         name="credentialId"
         value={formData.credentialId || ""}
         onChange={handleChange}
-        className="border p-2 w-full rounded-md mb-2 bg-boxbackground"
+        className="border p-2 w-full rounded-md mb-2 bg-boxbackground text-companyheader2"
         placeholder="Optional"
       />
 
@@ -73,7 +73,7 @@ function CertificationsFields({ formData, handleChange, errors }) {
         name="credentialUrl"
         value={formData.credentialUrl || ""}
         onChange={handleChange}
-        className="border p-2 w-full rounded-md mb-2 bg-boxbackground"
+        className="border p-2 w-full rounded-md mb-2 bg-boxbackground text-companyheader2"
         placeholder="Optional"
       />
     </>
