@@ -26,7 +26,12 @@ function GenericCard({ item, isOwner, type, onEdit, showEditIcons = false }) {
           className="absolute top-2 right-2 text-companyheader2 hover:text-blue-700"
           onClick={(e) => {
             e.stopPropagation();
-            if (onEdit) onEdit(); // Trigger the modal in parent
+            if (onEdit) {
+              onEdit();
+            } // Trigger the modal in parent
+            else {
+              setIsModalOpen(true); // ✅ fallback to open modal internally/////////////////
+            }
           }}
         >
           ✎

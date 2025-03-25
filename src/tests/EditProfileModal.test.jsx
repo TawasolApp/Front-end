@@ -120,7 +120,7 @@ describe("EditProfileModal", () => {
     });
   });
 
-  it("sets selectedExperienceIndex and EducationIndex correctly", () => {
+  it("sets selectedExperienceIndex and selectedEducationIndex correctly", () => {
     render(
       <EditProfileModal
         user={user}
@@ -134,6 +134,50 @@ describe("EditProfileModal", () => {
     });
     fireEvent.change(screen.getByLabelText(/Education/i), {
       target: { value: "0" },
+    });
+  });
+
+  it("saves with selected experience and education indices", async () => {
+    const updatedUser = {
+      ...user,
+      firstName: "Fatma",
+      selectedExperienceIndex: 0,
+      selectedEducationIndex: 0,
+    };
+
+    axios.patch.mockResolvedValueOnce({ data: updatedUser });
+
+    render(
+      <EditProfileModal
+        user={user}
+        isOpen={true}
+        onSave={onSave}
+        onClose={onClose}
+      />
+    );
+
+    fireEvent.change(screen.getByLabelText(/Work Experience/i), {
+      target: { value: "0" },
+    });
+
+    fireEvent.change(screen.getByLabelText(/Education/i), {
+      target: { value: "0" },
+    });
+
+    fireEvent.change(screen.getByLabelText(/first name \*/i), {
+      target: { value: "Fatma" },
+    });
+
+    fireEvent.click(screen.getByText(/save/i));
+
+    await waitFor(() => {
+      expect(onSave).toHaveBeenCalledWith(
+        expect.objectContaining({
+          firstName: "Fatma",
+          selectedExperienceIndex: 0,
+          selectedEducationIndex: 0,
+        })
+      );
     });
   });
 

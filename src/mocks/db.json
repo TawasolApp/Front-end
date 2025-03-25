@@ -3,7 +3,7 @@
     {
       "id": "1",
       "firstName": "Fatimah",
-      "lastName": "Gamal  Zein",
+      "lastName": "Gama Zein",
       "profilePicture": "https://th.bing.com/th/id/OIP.AxXeQv751lyx0ltppBIg6QHaHa?rs=1&pid=ImgDetMain",
       "coverPhoto": "",
       "resume": "https://linkedin.com/in/fatma-gamal",
@@ -105,12 +105,16 @@
       "selectedEducationIndex": 0,
       "skills": [
         {
-          "id": "1742891346940",
-          "skill": "gbfd"
+          "skill": "Kotlin",
+          "position": "Android Developer Intern at Banque Misr",
+          "endorsements": 2,
+          "id": "2a0b8e72-3385-436a-8e63-9417e9ed1045"
         },
         {
-          "id": "1742891349808",
-          "skill": "dvdfs"
+          "skill": "Java",
+          "position": "Android Developer Intern at Banque Misr",
+          "endorsements": 0,
+          "id": "2029666a-5975-41c7-9e22-b332d07fab1b"
         }
       ]
     },

@@ -3,9 +3,11 @@ import { render, screen, fireEvent, cleanup } from "@testing-library/react";
 import { MemoryRouter, Route, Routes } from "react-router-dom";
 import ProfileHeader from "../pages/UserProfile/Components/HeaderComponents/ProfileHeader";
 
+// Mock children components to isolate ProfileHeader
 vi.mock("../pages/UserProfile/Components/ViewerView", () => ({
   default: () => <div data-testid="viewer-view">ViewerView Component</div>,
 }));
+
 vi.mock(
   "../pages/UserProfile/Components/HeaderComponents/ImageEnlarge",
   () => ({
@@ -16,6 +18,7 @@ vi.mock(
     ),
   })
 );
+
 vi.mock("../pages/UserProfile/Components/ImageUploadModal", () => ({
   default: ({ isOpen, onClose, onUpload }) =>
     isOpen ? (
@@ -27,9 +30,13 @@ vi.mock("../pages/UserProfile/Components/ImageUploadModal", () => ({
         >
           Confirm Upload
         </button>
+        <button data-testid="upload-cancel" onClick={onClose}>
+          Cancel
+        </button>
       </div>
     ) : null,
 }));
+
 vi.mock(
   "../pages/UserProfile/Components/HeaderComponents/EditProfileModal",
   () => ({
@@ -43,11 +50,14 @@ vi.mock(
           >
             Save
           </button>
-          <button onClick={onClose}>Cancel</button>
+          <button data-testid="cancel-edit" onClick={onClose}>
+            Cancel
+          </button>
         </div>
       ) : null,
   })
 );
+
 vi.mock(
   "../pages/UserProfile/Components/HeaderComponents/ProfilePicture",
   () => ({
@@ -58,13 +68,14 @@ vi.mock(
           alt="Profile"
           onClick={() => onImageClick("profile.jpg")}
         />
-        <button data-testid="upload-profile" onClick={() => onUpload()}>
+        <button data-testid="upload-profile" onClick={onUpload}>
           Upload Profile
         </button>
       </>
     ),
   })
 );
+
 vi.mock("../pages/UserProfile/Components/HeaderComponents/CoverPhoto", () => ({
   default: ({ onImageClick, onUpload }) => (
     <>
@@ -73,7 +84,7 @@ vi.mock("../pages/UserProfile/Components/HeaderComponents/CoverPhoto", () => ({
         alt="Cover"
         onClick={() => onImageClick("cover.jpg")}
       />
-      <button data-testid="upload-cover" onClick={() => onUpload()}>
+      <button data-testid="upload-cover" onClick={onUpload}>
         Upload Cover
       </button>
     </>
@@ -81,12 +92,13 @@ vi.mock("../pages/UserProfile/Components/HeaderComponents/CoverPhoto", () => ({
 }));
 
 describe("ProfileHeader Component", () => {
+  const scrollToMock = vi.fn();
   const mockUser = {
     firstName: "Fatma",
     lastName: "Gamal",
     bio: "Frontend Developer",
-    country: "Egypt",
     city: "Cairo",
+    country: "Egypt",
     connectionCount: 42,
     experience: [{ title: "Software Intern" }],
     education: [{ institution: "Cairo University" }],
@@ -94,7 +106,8 @@ describe("ProfileHeader Component", () => {
     coverPhoto: "",
   };
 
-  const scrollToMock = vi.fn();
+  const experienceRef = { current: document.createElement("div") };
+  const educationRef = { current: document.createElement("div") };
 
   beforeEach(() => {
     window.HTMLElement.prototype.scrollIntoView = scrollToMock;
@@ -105,48 +118,55 @@ describe("ProfileHeader Component", () => {
     vi.clearAllMocks();
   });
 
-  function renderWithRouter(children) {
-    return render(
+  const renderWithRouter = (ui) =>
+    render(
       <MemoryRouter initialEntries={["/users/fatma-gamal-1"]}>
         <Routes>
-          <Route path="/users/:profileSlug" element={<>{children}</>} />
+          <Route path="/users/:profileSlug" element={ui} />
         </Routes>
       </MemoryRouter>
     );
-  }
 
-  it("renders user basic information", () => {
+  it("returns null if editedUser is null", () => {
+    const { container } = renderWithRouter(<ProfileHeader user={null} />);
+    expect(container.firstChild).toBeNull();
+  });
+
+  it("renders user info and dynamic sections for owner", () => {
     renderWithRouter(
       <ProfileHeader
         user={mockUser}
         isOwner={true}
         onSave={vi.fn()}
-        experienceRef={{ current: document.createElement("div") }}
-        educationRef={{ current: document.createElement("div") }}
+        experienceRef={experienceRef}
+        educationRef={educationRef}
       />
     );
 
     expect(screen.getByText("Fatma Gamal")).toBeInTheDocument();
-    expect(screen.getByText("Frontend Developer")).toBeInTheDocument();
-    expect(screen.getByText("Egypt, Cairo")).toBeInTheDocument();
+    expect(screen.getByText("Student at Cairo University")).toBeInTheDocument();
+    expect(
+      screen.getByText(
+        (content) => content.includes("Cairo") && content.includes("Egypt")
+      )
+    ).toBeInTheDocument();
     expect(screen.getByText("42 connections")).toBeInTheDocument();
     expect(screen.getByText("Software Intern")).toBeInTheDocument();
     expect(screen.getByText("Cairo University")).toBeInTheDocument();
   });
 
-  it("renders ViewerView if not owner", async () => {
+  it("renders viewer view if not owner", () => {
     renderWithRouter(
       <ProfileHeader
         user={mockUser}
         isOwner={false}
         onSave={vi.fn()}
-        experienceRef={{ current: document.createElement("div") }}
-        educationRef={{ current: document.createElement("div") }}
+        experienceRef={experienceRef}
+        educationRef={educationRef}
       />
     );
 
-    const viewer = await screen.findByTestId("viewer-view");
-    expect(viewer).toBeInTheDocument();
+    expect(screen.getByTestId("viewer-view")).toBeInTheDocument();
   });
 
   it("opens edit modal on edit button click", () => {
@@ -155,25 +175,24 @@ describe("ProfileHeader Component", () => {
         user={mockUser}
         isOwner={true}
         onSave={vi.fn()}
-        experienceRef={{ current: document.createElement("div") }}
-        educationRef={{ current: document.createElement("div") }}
+        experienceRef={experienceRef}
+        educationRef={educationRef}
       />
     );
 
-    const editBtn = screen.getByRole("button", { name: /✎/i });
-    fireEvent.click(editBtn);
+    fireEvent.click(screen.getByRole("button", { name: /✎/i }));
     expect(screen.getByTestId("edit-modal")).toBeInTheDocument();
   });
 
-  it("calls saveProfileChanges when save button clicked", () => {
+  it("saves profile changes and closes edit modal", () => {
     const onSave = vi.fn();
     renderWithRouter(
       <ProfileHeader
         user={mockUser}
         isOwner={true}
         onSave={onSave}
-        experienceRef={{ current: document.createElement("div") }}
-        educationRef={{ current: document.createElement("div") }}
+        experienceRef={experienceRef}
+        educationRef={educationRef}
       />
     );
 
@@ -190,13 +209,12 @@ describe("ProfileHeader Component", () => {
         user={mockUser}
         isOwner={true}
         onSave={vi.fn()}
-        experienceRef={{ current: document.createElement("div") }}
-        educationRef={{ current: document.createElement("div") }}
+        experienceRef={experienceRef}
+        educationRef={educationRef}
       />
     );
 
-    const profilePic = screen.getByTestId("profile-picture");
-    fireEvent.click(profilePic);
+    fireEvent.click(screen.getByTestId("profile-picture"));
     expect(screen.getByTestId("image-enlarge")).toHaveTextContent(
       "profile.jpg"
     );
@@ -208,24 +226,23 @@ describe("ProfileHeader Component", () => {
         user={mockUser}
         isOwner={true}
         onSave={vi.fn()}
-        experienceRef={{ current: document.createElement("div") }}
-        educationRef={{ current: document.createElement("div") }}
+        experienceRef={experienceRef}
+        educationRef={educationRef}
       />
     );
 
-    const coverPhoto = screen.getByTestId("cover-photo");
-    fireEvent.click(coverPhoto);
+    fireEvent.click(screen.getByTestId("cover-photo"));
     expect(screen.getByTestId("image-enlarge")).toHaveTextContent("cover.jpg");
   });
 
-  it("opens upload modal when profile or cover upload is clicked", () => {
+  it("opens upload modal and handles profile upload", () => {
     renderWithRouter(
       <ProfileHeader
         user={mockUser}
         isOwner={true}
         onSave={vi.fn()}
-        experienceRef={{ current: document.createElement("div") }}
-        educationRef={{ current: document.createElement("div") }}
+        experienceRef={experienceRef}
+        educationRef={educationRef}
       />
     );
 
@@ -233,33 +250,34 @@ describe("ProfileHeader Component", () => {
     expect(screen.getByTestId("upload-modal")).toBeInTheDocument();
 
     fireEvent.click(screen.getByTestId("upload-confirm"));
+    // nothing to assert here — state updates inside component only
   });
 
-  it("updates backgroundImage when uploading cover photo", () => {
+  it("handles cover photo upload through modal", () => {
     renderWithRouter(
       <ProfileHeader
         user={mockUser}
         isOwner={true}
         onSave={vi.fn()}
-        experienceRef={{ current: document.createElement("div") }}
-        educationRef={{ current: document.createElement("div") }}
+        experienceRef={experienceRef}
+        educationRef={educationRef}
       />
     );
 
     fireEvent.click(screen.getByTestId("upload-cover"));
+    expect(screen.getByTestId("upload-modal")).toBeInTheDocument();
+
     fireEvent.click(screen.getByTestId("upload-confirm"));
   });
 
-  it("calls scrollToSection for experience and education", () => {
-    const expRef = { current: document.createElement("div") };
-    const eduRef = { current: document.createElement("div") };
+  it("scrolls to experience and education sections on click", () => {
     renderWithRouter(
       <ProfileHeader
         user={mockUser}
         isOwner={true}
         onSave={vi.fn()}
-        experienceRef={expRef}
-        educationRef={eduRef}
+        experienceRef={experienceRef}
+        educationRef={educationRef}
       />
     );
 

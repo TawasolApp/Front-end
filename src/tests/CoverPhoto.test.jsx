@@ -15,12 +15,12 @@ describe("CoverPhoto Component", () => {
       />
     );
 
-    const img = screen.getByAltText("Cover Photo");
+    const img = screen.getByAltText("Cover");
     expect(img).toBeInTheDocument();
     expect(img).toHaveAttribute("src", mockImage);
   });
 
-  it("calls onImageClick when image is clicked", () => {
+  it("calls onImageClick when cover image is clicked", () => {
     const handleClick = vi.fn();
 
     render(
@@ -32,12 +32,12 @@ describe("CoverPhoto Component", () => {
       />
     );
 
-    const img = screen.getByAltText("Cover Photo");
+    const img = screen.getByAltText("Cover");
     fireEvent.click(img);
     expect(handleClick).toHaveBeenCalledWith(mockImage);
   });
 
-  it("renders upload button for owners and triggers onUpload", () => {
+  it("renders upload button with camera icon and calls onUpload when clicked", () => {
     const handleUpload = vi.fn();
 
     render(
@@ -50,11 +50,13 @@ describe("CoverPhoto Component", () => {
     );
 
     const uploadBtn = screen.getByRole("button");
+    const icon = screen.getByAltText("Change Cover");
+    expect(icon).toBeInTheDocument();
     fireEvent.click(uploadBtn);
     expect(handleUpload).toHaveBeenCalled();
   });
 
-  it("does not show upload button for non-owners", () => {
+  it("does not render upload button if not owner", () => {
     render(
       <CoverPhoto
         backgroundImage={mockImage}
@@ -66,5 +68,8 @@ describe("CoverPhoto Component", () => {
 
     const button = screen.queryByRole("button");
     expect(button).toBeNull();
+
+    const icon = screen.queryByAltText("Change Cover");
+    expect(icon).toBeNull();
   });
 });

@@ -72,11 +72,12 @@ describe("ProfileLayout", () => {
     });
   });
 
-  it("redirects to /notfound if user is null", async () => {
+  it("redirects to /notfound if user is null and profileSlug exists", async () => {
+    mockParams = { profileSlug: "john-doe-123" };
     axiosInstance.get.mockResolvedValueOnce({ data: null });
 
     render(
-      <MemoryRouter initialEntries={["/users/fatma-gamal-999"]}>
+      <MemoryRouter initialEntries={["/users/john-doe-123"]}>
         <Routes>
           <Route path="/users/:profileSlug" element={<ProfileLayout />}>
             <Route index element={<DummyOutlet />} />
@@ -86,6 +87,7 @@ describe("ProfileLayout", () => {
     );
 
     await waitFor(() => {
+      expect(axiosInstance.get).toHaveBeenCalledWith("/profile/123");
       expect(mockNavigate).toHaveBeenCalledWith("/notfound");
     });
   });
@@ -112,6 +114,48 @@ describe("ProfileLayout", () => {
       expect(mockNavigate).toHaveBeenCalledWith("/users/fatma-gamal-1", {
         replace: true,
       });
+    });
+  });
+
+  it("redirects to /notfound if fetching first user returns empty array", async () => {
+    mockParams = {};
+
+    axiosInstance.get.mockResolvedValueOnce({
+      data: [],
+    });
+
+    render(
+      <MemoryRouter initialEntries={["/users"]}>
+        <Routes>
+          <Route path="/users" element={<ProfileLayout />}>
+            <Route index element={<DummyOutlet />} />
+          </Route>
+        </Routes>
+      </MemoryRouter>
+    );
+
+    await waitFor(() => {
+      expect(mockNavigate).toHaveBeenCalledWith("/notfound");
+    });
+  });
+
+  it("handles error during fetching and redirects to /notfound", async () => {
+    mockParams = { profileSlug: "any-user-1" };
+
+    axiosInstance.get.mockRejectedValueOnce(new Error("Network error"));
+
+    render(
+      <MemoryRouter initialEntries={["/users/any-user-1"]}>
+        <Routes>
+          <Route path="/users/:profileSlug" element={<ProfileLayout />}>
+            <Route index element={<DummyOutlet />} />
+          </Route>
+        </Routes>
+      </MemoryRouter>
+    );
+
+    await waitFor(() => {
+      expect(mockNavigate).toHaveBeenCalledWith("/notfound");
     });
   });
 });

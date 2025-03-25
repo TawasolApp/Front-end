@@ -17,6 +17,7 @@ function ProfileHeader({ user, isOwner, onSave, experienceRef, educationRef }) {
   const [uploadType, setUploadType] = useState(null);
   const navigate = useNavigate();
   const { profileSlug } = useParams();
+  if (!editedUser) return null;
 
   const experienceIndex = editedUser.selectedExperienceIndex ?? 0;
   const educationIndex = editedUser.selectedEducationIndex ?? 0;
@@ -53,8 +54,6 @@ function ProfileHeader({ user, isOwner, onSave, experienceRef, educationRef }) {
       ref.current.scrollIntoView({ behavior: "smooth" });
     }
   }
-
-  if (!editedUser) return null;
 
   return (
     <div className="w-full bg-boxbackground rounded-md shadow max-w-3xl mx-auto mb-8 relative">
