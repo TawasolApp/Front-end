@@ -1,6 +1,5 @@
 import React from "react";
 import GenericSection from "../GenericDisplay/GenericSection";
-import mockCertifications from "../MockData/mockCertifications";
 
 function CertificationsSection({ isOwner, user }) {
   return (

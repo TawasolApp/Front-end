@@ -2,8 +2,8 @@ import React, { useState, useEffect } from "react";
 import { useNavigate, useOutletContext } from "react-router-dom";
 import GenericCard from "./GenericCard";
 import GenericModal from "./GenericModal";
-import axios from "axios";
 import { v4 as uuidv4 } from "uuid";
+import { axiosInstance as axios } from "../../../../apis/axios.js";
 
 function GenericPage({ title, type }) {
   const navigate = useNavigate();
@@ -66,7 +66,7 @@ function GenericPage({ title, type }) {
 
         // Send PATCH to server
         response = await axios.patch(
-          `http://localhost:5000/profile/${user.id}/${type}/${itemId}`,
+          `/profile/${user.id}/${type}/${itemId}`,
           updatedItem
         );
 
@@ -78,10 +78,7 @@ function GenericPage({ title, type }) {
         const itemWithId = { ...updatedItem, id: uuidv4() };
 
         // Send POST to server
-        await axios.post(
-          `http://localhost:5000/profile/${user.id}/${type}`,
-          itemWithId
-        );
+        await axios.post(`/profile/${user.id}/${type}`, itemWithId);
 
         // Update UI
         setData([...data, itemWithId]);
@@ -100,9 +97,8 @@ function GenericPage({ title, type }) {
     const itemId = data[editIndex].id;
 
     try {
-      await axios.delete(
-        `http://localhost:5000/profile/${user.id}/${type}/${itemId}`
-      );
+      await axios.delete(`/profile/${user.id}/${type}/${itemId}`);
+
       const updatedData = data.filter((_, i) => i !== editIndex);
       setData(updatedData);
     } catch (err) {

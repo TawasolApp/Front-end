@@ -5,6 +5,7 @@ function OwnerActions({ onAdd, onEdit, onDelete }) {
     <div className="flex items-center gap-2">
       {onAdd && (
         <button
+          aria-label="add"
           className="w-8 h-8 bg-gray-100 rounded-full hover:text-blue-700 p-1"
           onClick={onAdd}
         >
@@ -13,6 +14,7 @@ function OwnerActions({ onAdd, onEdit, onDelete }) {
       )}
       {onEdit && (
         <button
+          aria-label="edit"
           className="w-8 h-8 text-gray-500 bg-transparent hover:text-blue-700 p-1"
           onClick={onEdit}
         >
@@ -21,6 +23,7 @@ function OwnerActions({ onAdd, onEdit, onDelete }) {
       )}
       {onDelete && (
         <button
+          aria-label="delete"
           className="w-8 h-8 bg-transparent hover:text-blue-700 p-1"
           onClick={onDelete}
         >

@@ -10,6 +10,11 @@ server.use(middlewares);
 server.use(bodyParser);
 
 const supportedTypes = ["education", "experience", "skills", "certifications"];
+// GET all users
+server.get("/profile", (req, res) => {
+  const users = _router.db.get("users").value();
+  res.status(200).json(users);
+});
 
 // GET user profile by ID
 server.get("/profile/:id", (req, res) => {

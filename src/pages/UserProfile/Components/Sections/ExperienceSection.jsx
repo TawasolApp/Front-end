@@ -1,6 +1,5 @@
 import React from "react";
 import GenericSection from "../GenericDisplay/GenericSection";
-import mockExperience from "../MockData/mockExperience";
 
 function ExperienceSection({ isOwner, sectionRef, user }) {
   return (

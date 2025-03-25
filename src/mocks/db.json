@@ -2,16 +2,16 @@
   "users": [
     {
       "id": "1",
-      "firstName": "Fatma",
-      "lastName": "Gamal",
+      "firstName": "Fatimah",
+      "lastName": "Gamal  Zein",
       "profilePicture": "https://th.bing.com/th/id/OIP.AxXeQv751lyx0ltppBIg6QHaHa?rs=1&pid=ImgDetMain",
       "coverPhoto": "",
       "resume": "https://linkedin.com/in/fatma-gamal",
       "headline": "Student at Cairo University faculty of Engineering",
-      "bio": "I am not a motivated Software Engineer",
+      "bio": "I am a motivated Software Engineer ",
       "country": "Egypt",
-      "city": "cairo",
-      "industry": "Computer Engineering",
+      "city": "Cairo",
+      "industry": "Computer ",
       "connectionCount": 50,
       "achievements": "Dean's List Award",
       "email": "fatma@example.com",
@@ -49,23 +49,11 @@
           "endMonth": "September",
           "endYear": "2021",
           "description": "Designed UI components and improved user flows.",
-          "currentlyWorking": true
+          "currentlyWorking": true,
+          "employmentType": "Internship"
         }
       ],
       "education": [
-        {
-          "institution": "Stanford University",
-          "degree": "Master's",
-          "field": "Artificial Intelligence",
-          "description": "Focused on deep learning and data science.",
-          "grade": "4.0 GPA",
-          "activities": "tt",
-          "id": "04c958ef-2167-44de-909e-d139eb9bf4e7",
-          "startMonth": "May",
-          "startYear": "2000",
-          "endYear": "2031",
-          "endMonth": "July"
-        },
         {
           "id": "0514a36f-05bc-4140-a923-abaeeb5cc0e3",
           "institution": "Harvard University",
@@ -76,10 +64,22 @@
           "activities": "tt",
           "startMonth": "June",
           "startYear": "2016",
-          "startDate": "2018-09-01",
-          "endDate": "2022-06-30",
           "endYear": "2028",
           "endMonth": "June"
+        },
+        {
+          "id": "959a50e8-2c55-4d85-84a0-ab1c414aa7e3",
+          "institution": "Stanford University",
+          "degree": "Master's",
+          "grade": "4.0 GPA",
+          "startMonth": "November",
+          "startYear": "2009"
+        },
+        {
+          "id": "5a6ea4a9-4080-4845-bb3d-7300a102e0f3",
+          "startYear": "2011",
+          "startMonth": "October",
+          "institution": "Harvard University"
         }
       ],
       "certifications": [

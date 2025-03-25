@@ -6,8 +6,11 @@ function SkillsFields({ formData, handleChange, errors }) {
       <h2 className="text-lg font-semibold mb-4">Add skill</h2>
       <p className="text-sm text-gray-600 mb-2">* Indicates required</p>
 
-      <label className="block font-medium mb-1">Skill *</label>
+      <label htmlFor="skillName" className="block font-medium mb-1">
+        Skill *
+      </label>
       <input
+        id="skillName"
         type="text"
         name="skillName"
         placeholder="Skill (ex: Project Management)"
@@ -20,8 +23,11 @@ function SkillsFields({ formData, handleChange, errors }) {
         <p className="text-red-600 text-sm mb-3">{errors.skillName}</p>
       )}
 
-      <label className="block font-medium mb-1">Position (Optional)</label>
+      <label htmlFor="position" className="block font-medium mb-1">
+        Position (Optional)
+      </label>
       <input
+        id="position"
         type="text"
         name="position"
         placeholder="e.g. Frontend Developer"

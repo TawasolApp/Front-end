@@ -17,6 +17,7 @@ const ConfirmModal = ({ title, message, onConfirm, onCancel }) => (
         <button
           className="px-4 py-2 bg-red-500 text-white rounded"
           onClick={onConfirm}
+          data-testid="confirm-delete"
         >
           Confirm
         </button>
@@ -158,167 +159,210 @@ function GenericModal({
   if (!isOpen) return null;
 
   return (
-    <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-40">
-      <div className="bg-white w-[90%] sm:w-[500px] p-6 rounded-lg shadow-lg max-h-[90vh] overflow-y-auto relative">
-        {/* ✖ Close */}
-        <button
-          onClick={handleClose}
-          className="absolute top-3 right-4 text-xl text-gray-600 hover:text-gray-900"
-        >
-          ✖
-        </button>
-
-        {/* Modal Fields */}
-        {type === "education" && (
-          <EducationFields
-            formData={formData}
-            handleChange={handleChange}
-            errors={errors}
-          />
-        )}
-        {type === "experience" && (
-          <ExperienceFields
-            formData={formData}
-            handleChange={handleChange}
-            errors={errors}
-          />
-        )}
-        {type === "skills" && (
-          <SkillsFields
-            formData={formData}
-            handleChange={handleChange}
-            errors={errors}
-          />
-        )}
-        {type === "certifications" && (
-          <CertificationsFields
-            formData={formData}
-            handleChange={handleChange}
-            errors={errors}
-          />
-        )}
-
-        {/* Date Pickers */}
-        {type !== "skills" && (
-          <>
-            <label className="block font-medium mb-1">Start date</label>
-            <div className="flex gap-2 mb-3">
-              <select
-                name="startMonth"
-                value={formData.startMonth || ""}
-                onChange={handleChange}
-                className="border p-2 w-1/2 rounded-md"
-              >
-                <option value="">Month</option>
-                {months.map((month, index) => (
-                  <option key={month} value={month}>
-                    {month}
-                  </option>
-                ))}
-              </select>
-
-              <select
-                name="startYear"
-                value={formData.startYear || ""}
-                onChange={handleChange}
-                className="border p-2 w-1/2 rounded-md"
-              >
-                <option value="">Year</option>
-                {startYears.map((year) => (
-                  <option key={year} value={year}>
-                    {year}
-                  </option>
-                ))}
-              </select>
-            </div>
-
-            {errors.startMonth && (
-              <p className="text-red-600 text-sm mb-2">{errors.startMonth}</p>
-            )}
-            {errors.startYear && (
-              <p className="text-red-600 text-sm mb-2">{errors.startYear}</p>
-            )}
-
-            <label className="block font-medium mb-1">
-              End date (or expected)
-            </label>
-            <div className="flex gap-2 mb-3">
-              <select
-                name="endMonth"
-                value={formData.endMonth || ""}
-                onChange={handleChange}
-                className="border p-2 w-1/2 rounded-md"
-              >
-                <option value="">Month</option>
-                {months.map((month) => (
-                  <option key={month} value={month}>
-                    {month}
-                  </option>
-                ))}
-              </select>
-
-              <select
-                name="endYear"
-                value={formData.endYear || ""}
-                onChange={handleChange}
-                className="border p-2 w-1/2 rounded-md"
-              >
-                <option value="">Year</option>
-                {endYears.map((year) => (
-                  <option key={year} value={year}>
-                    {year}
-                  </option>
-                ))}
-              </select>
-            </div>
-
-            {errors.endMonth && (
-              <p className="text-red-600 text-sm mb-2">{errors.endMonth}</p>
-            )}
-            {errors.endYear && (
-              <p className="text-red-600 text-sm mb-2">{errors.endYear}</p>
-            )}
-          </>
-        )}
-
-        {/* Footer Buttons */}
-        <div className="flex justify-end items-center mt-6 gap-2">
-          {onDelete && editMode && (
-            <button
-              className="px-4 py-2 bg-red-500 text-white rounded"
-              onClick={() => setShowDeleteModal(true)}
-            >
-              Delete
-            </button>
-          )}
+    isOpen && (
+      <div
+        className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-40"
+        data-testid="generic-modal"
+      >
+        <div className="bg-white w-[90%] sm:w-[500px] p-6 rounded-lg shadow-lg max-h-[90vh] overflow-y-auto relative">
+          {/* ✖ Close */}
           <button
-            className="px-4 py-2 bg-blue-500 text-white rounded"
-            onClick={handleSubmit}
+            onClick={handleClose}
+            className="absolute top-3 right-4 text-xl text-gray-600 hover:text-gray-900"
           >
-            Save
+            ✖
           </button>
-        </div>
-      </div>
 
-      {/* Confirmation Modals */}
-      {showDiscardModal && (
-        <ConfirmModal
-          title="Discard changes?"
-          message="You have unsaved changes. Are you sure you want to close?"
-          onConfirm={handleDiscardConfirm}
-          onCancel={() => setShowDiscardModal(false)}
-        />
-      )}
-      {showDeleteModal && (
-        <ConfirmModal
-          title="Confirm delete"
-          message="Are you sure you want to delete this entry? This action cannot be undone."
-          onConfirm={handleDeleteConfirm}
-          onCancel={() => setShowDeleteModal(false)}
-        />
-      )}
-    </div>
+          {/* Modal Fields */}
+          {type === "education" && (
+            <EducationFields
+              formData={formData}
+              handleChange={handleChange}
+              errors={errors}
+            />
+          )}
+          {type === "experience" && (
+            <ExperienceFields
+              formData={formData}
+              handleChange={handleChange}
+              errors={errors}
+            />
+          )}
+          {type === "skills" && (
+            <SkillsFields
+              formData={formData}
+              handleChange={handleChange}
+              errors={errors}
+            />
+          )}
+          {type === "certifications" && (
+            <CertificationsFields
+              formData={formData}
+              handleChange={handleChange}
+              errors={errors}
+            />
+          )}
+
+          {/* Date Pickers */}
+          {type !== "skills" && (
+            <>
+              {/* Start Date */}
+              <div className="flex gap-4 mb-3">
+                {/* Start Month */}
+                <div className="w-1/2">
+                  <label
+                    htmlFor="startMonth"
+                    className="block font-medium mb-1"
+                  >
+                    Start Month
+                  </label>
+                  <select
+                    id="startMonth"
+                    name="startMonth"
+                    value={formData.startMonth || ""}
+                    onChange={handleChange}
+                    className="border p-2 w-full rounded-md"
+                  >
+                    <option value="">Month</option>
+                    {months.map((month) => (
+                      <option key={month} value={month}>
+                        {month}
+                      </option>
+                    ))}
+                  </select>
+                  {errors.startMonth && (
+                    <p className="text-red-600 text-sm mt-1">
+                      {errors.startMonth}
+                    </p>
+                  )}
+                </div>
+
+                {/* Start Year */}
+                <div className="w-1/2">
+                  <label htmlFor="startYear" className="block font-medium mb-1">
+                    Start Year
+                  </label>
+                  <select
+                    id="startYear"
+                    name="startYear"
+                    value={formData.startYear || ""}
+                    onChange={handleChange}
+                    className="border p-2 w-full rounded-md"
+                  >
+                    <option value="">Year</option>
+                    {startYears.map((year) => (
+                      <option key={year} value={year}>
+                        {year}
+                      </option>
+                    ))}
+                  </select>
+                  {errors.startYear && (
+                    <p className="text-red-600 text-sm mt-1">
+                      {errors.startYear}
+                    </p>
+                  )}
+                </div>
+              </div>
+
+              {/* End Date */}
+              <div className="flex gap-4 mb-3">
+                {/* End Month */}
+                <div className="w-1/2">
+                  <label htmlFor="endMonth" className="block font-medium mb-1">
+                    End Month
+                  </label>
+                  <select
+                    id="endMonth"
+                    name="endMonth"
+                    value={formData.endMonth || ""}
+                    onChange={handleChange}
+                    className="border p-2 w-full rounded-md"
+                  >
+                    <option value="">Month</option>
+                    {months.map((month) => (
+                      <option key={month} value={month}>
+                        {month}
+                      </option>
+                    ))}
+                  </select>
+                  {errors.endMonth && (
+                    <p className="text-red-600 text-sm mt-1">
+                      {errors.endMonth}
+                    </p>
+                  )}
+                </div>
+
+                {/* End Year */}
+                <div className="w-1/2">
+                  <label htmlFor="endYear" className="block font-medium mb-1">
+                    End Year
+                  </label>
+                  <select
+                    id="endYear"
+                    name="endYear"
+                    value={formData.endYear || ""}
+                    onChange={handleChange}
+                    className="border p-2 w-full rounded-md"
+                  >
+                    <option value="">Year</option>
+                    {endYears.map((year) => (
+                      <option key={year} value={year}>
+                        {year}
+                      </option>
+                    ))}
+                  </select>
+                  {errors.endYear && (
+                    <p className="text-red-600 text-sm mt-1">
+                      {errors.endYear}
+                    </p>
+                  )}
+                </div>
+              </div>
+            </>
+          )}
+
+          {/* Footer Buttons */}
+          <div className="flex justify-end items-center mt-6 gap-2">
+            {onDelete && editMode && (
+              <button
+                className="px-4 py-2 bg-red-500 text-white rounded"
+                aria-label="Delete entry"
+                onClick={() => setShowDeleteModal(true)}
+                data-testid="delete-button"
+              >
+                Delete
+              </button>
+            )}
+            <button
+              className="px-4 py-2 bg-blue-500 text-white rounded"
+              aria-label="Save changes"
+              onClick={handleSubmit}
+              data-testid="save-button"
+            >
+              Save
+            </button>
+          </div>
+        </div>
+
+        {/* Confirmation Modals */}
+        {showDiscardModal && (
+          <ConfirmModal
+            title="Discard changes?"
+            message="You have unsaved changes. Are you sure you want to close?"
+            onConfirm={handleDiscardConfirm}
+            onCancel={() => setShowDiscardModal(false)}
+          />
+        )}
+        {showDeleteModal && (
+          <ConfirmModal
+            title="Confirm delete"
+            message="Are you sure you want to delete this entry? This action cannot be undone."
+            onConfirm={handleDeleteConfirm}
+            onCancel={() => setShowDeleteModal(false)}
+          />
+        )}
+      </div>
+    )
   );
 }
-
 export default GenericModal;

@@ -3,8 +3,7 @@ import GenericCard from "./GenericCard";
 import GenericModal from "./GenericModal";
 import { useNavigate } from "react-router-dom";
 import { v4 as uuidv4 } from "uuid";
-import axios from "axios";
-
+import { axiosInstance as axios } from "../../../../apis/axios.js";
 //to generate unique id
 function GenericSection({ title, type, items, isOwner, user }) {
   const navigate = useNavigate();
@@ -16,6 +15,7 @@ function GenericSection({ title, type, items, isOwner, user }) {
   const [isSaving, setIsSaving] = useState(false); // Track saving status
 
   //  Add new
+
   const handleAdd = () => {
     setEditIndex(null);
     setEditData(null);
@@ -47,10 +47,8 @@ function GenericSection({ title, type, items, isOwner, user }) {
 
     try {
       const itemWithId = { ...newItem, id: uuidv4() };
-      await axios.post(
-        `http://localhost:5000/profile/${user.id}/${type}`,
-        itemWithId
-      );
+      await axios.post(`/profile/${user.id}/${type}`, itemWithId); // axios instance
+
       //update UI
       setData([...data, itemWithId]);
     } catch (err) {

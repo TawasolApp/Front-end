@@ -1,6 +1,6 @@
-import { defineConfig } from 'vite';
-import react from '@vitejs/plugin-react';
-import svgr from 'vite-plugin-svgr';
+import { defineConfig } from "vite";
+import react from "@vitejs/plugin-react";
+import svgr from "vite-plugin-svgr";
 
 export default defineConfig({
   plugins: [
@@ -11,4 +11,19 @@ export default defineConfig({
       },
     }),
   ],
+  test: {
+    coverage: {
+      all: true,
+      include: ["src/pages/UserProfile/**/*.{js,jsx}"],
+      exclude: [
+        "**/tests/**",
+        "**/*.test.{js,jsx}",
+        "**/__mocks__/**",
+        "node_modules/**",
+      ],
+    },
+    globals: true,
+    environment: "jsdom",
+    setupFiles: "./src/setupTests.js",
+  },
 });

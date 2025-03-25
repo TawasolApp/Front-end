@@ -1,7 +1,5 @@
 import React from "react";
 import GenericSection from "../GenericDisplay/GenericSection";
-import mockskills from "../MockData/mockskills";
-
 function SkillsSection({ isOwner, user }) {
   return (
     <GenericSection

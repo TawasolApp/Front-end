@@ -1,16 +1,16 @@
 import React, { useState, useEffect } from "react";
-import axios from "axios";
+import { axiosInstance as axios } from "../../../../apis/axios.js";
 
 function EditProfileModal({ user, isOpen, onClose, onSave }) {
   if (!isOpen) return null;
 
-  // Store edited user in state
   const [editedUser, setEditedUser] = useState({ ...user });
-  const [errors, setErrors] = useState({}); // State for validation errors
-  const [showDiscardModal, setShowDiscardModal] = useState(false); // Discard confirmation state
-  // for changing  education and experience pinned at header,,and send BE to surive loading
+  const [errors, setErrors] = useState({});
+  const [showDiscardModal, setShowDiscardModal] = useState(false);
   const [selectedExperienceIndex, setSelectedExperienceIndex] = useState(0);
   const [selectedEducationIndex, setSelectedEducationIndex] = useState(0);
+  const [isSaving, setIsSaving] = useState(false);
+
   useEffect(() => {
     if (isOpen) {
       setEditedUser({ ...user });
@@ -18,7 +18,76 @@ function EditProfileModal({ user, isOpen, onClose, onSave }) {
     }
   }, [isOpen, user]);
 
-  // Handle Input Changes
+  useEffect(() => {
+    const saveProfile = async () => {
+      if (isSaving) {
+        console.log("Saving profile data...");
+
+        let validationErrors = {};
+        if (!editedUser.firstName?.trim())
+          validationErrors.firstName = "First Name is required.";
+        if (!editedUser.lastName?.trim())
+          validationErrors.lastName = "Last Name is required.";
+        if (!editedUser.country?.trim())
+          validationErrors.country = "Country/Region is required.";
+        if (!editedUser.industry?.trim())
+          validationErrors.industry = "Industry is required.";
+
+        if (Object.keys(validationErrors).length > 0) {
+          setErrors(validationErrors);
+          setIsSaving(false);
+          return;
+        }
+
+        const updates = {};
+        for (let key in editedUser) {
+          if (editedUser[key] !== user[key]) {
+            updates[key] = editedUser[key];
+          }
+        }
+
+        try {
+          // PATCH request to update the profile
+          const response = await axios.patch("/profile", {
+            id: user.id, // Send the user ID in the body
+            ...updates,
+            selectedExperienceIndex,
+            selectedEducationIndex,
+          });
+
+          // Call onSave with updated data after successful save
+          onSave({
+            ...response.data,
+            selectedExperienceIndex,
+            selectedEducationIndex,
+          });
+          onClose(); // Close the modal after successful save
+        } catch (err) {
+          console.error(
+            "Failed to update profile:",
+            err.response?.data || err.message
+          );
+        }
+
+        setIsSaving(false); // Reset saving state
+      }
+    };
+
+    saveProfile();
+  }, [
+    isSaving,
+    editedUser,
+    selectedExperienceIndex,
+    selectedEducationIndex,
+    user,
+    onClose,
+    onSave,
+  ]);
+
+  function handleSave() {
+    setIsSaving(true); // Set isSaving to true, triggering the useEffect above
+  }
+
   function handleChange(event) {
     const { name, value } = event.target;
     setEditedUser((prevUser) => ({
@@ -27,60 +96,12 @@ function EditProfileModal({ user, isOpen, onClose, onSave }) {
     }));
   }
 
-  // Handle Save with Validation
-  function handleSave() {
-    let validationErrors = {};
-    if (!editedUser.firstName?.trim())
-      validationErrors.firstName = "First Name is required.";
-    if (!editedUser.lastName?.trim())
-      validationErrors.lastName = "Last Name is required.";
-    if (!editedUser.country?.trim())
-      validationErrors.country = "Country/Region is required.";
-    if (!editedUser.industry?.trim())
-      validationErrors.industry = "Industry is required.";
-
-    if (Object.keys(validationErrors).length > 0) {
-      setErrors(validationErrors);
-      return; // Stop saving if errors exist
-    }
-    //  Only send changed fields
-    const updates = {};
-    for (let key in editedUser) {
-      if (editedUser[key] !== user[key]) {
-        updates[key] = editedUser[key];
-      }
-    }
-
-    axios
-      .patch("http://localhost:5000/profile", {
-        id: user.id,
-        ...updates,
-        selectedExperienceIndex,
-        selectedEducationIndex,
-      })
-      .then((res) => {
-        onSave({
-          ...res.data,
-          selectedExperienceIndex,
-          selectedEducationIndex,
-        });
-        onClose();
-      })
-      .catch((err) => {
-        console.error(
-          " Failed to update profile:",
-          err.response?.data || err.message
-        );
-      });
-  }
-
   function handleCancel() {
-    // Check if any field is changed
     const isChanged = JSON.stringify(editedUser) !== JSON.stringify(user);
     if (isChanged) {
-      setShowDiscardModal(true); // Show discard modal
+      setShowDiscardModal(true);
     } else {
-      onClose(); // Close immediately if no changes
+      onClose();
     }
   }
 
@@ -94,11 +115,14 @@ function EditProfileModal({ user, isOpen, onClose, onSave }) {
       <div className="bg-white p-6 rounded-lg shadow-lg w-full max-h-[90vh] overflow-y-auto">
         <h2 className="text-xl font-bold mb-4">Edit Profile</h2>
 
-        {/* First Name */}
-        <label className="block text-sm font-medium text-gray-700">
+        <label
+          htmlFor="firstName"
+          className="block text-sm font-medium text-gray-700"
+        >
           First name *
         </label>
         <input
+          id="firstName"
           type="text"
           name="firstName"
           value={editedUser.firstName || ""}
@@ -111,11 +135,14 @@ function EditProfileModal({ user, isOpen, onClose, onSave }) {
           <p className="text-red-500 text-sm">{errors.firstName}</p>
         )}
 
-        {/* Last Name */}
-        <label className="block text-sm font-medium text-gray-700">
+        <label
+          htmlFor="lastName"
+          className="block text-sm font-medium text-gray-700"
+        >
           Last name *
         </label>
         <input
+          id="lastName"
           type="text"
           name="lastName"
           value={editedUser.lastName || ""}
@@ -125,23 +152,33 @@ function EditProfileModal({ user, isOpen, onClose, onSave }) {
           }`}
         />
         {errors.lastName && (
-          <p className="text-red-500 text-sm">{errors.lastName}</p>
+          <p className="text-red-500 text-sm" data-testid="lastName-error">
+            {errors.lastName}
+          </p>
         )}
 
-        {/* Bio */}
-        <label className="block text-sm font-medium text-gray-700">Bio</label>
+        <label
+          htmlFor="bio"
+          className="block text-sm font-medium text-gray-700"
+        >
+          Bio
+        </label>
         <textarea
+          id="bio"
           name="bio"
           value={editedUser.bio || ""}
           onChange={handleChange}
           className="border p-2 w-full mb-2 h-20"
         />
 
-        {/* country */}
-        <label className="block text-sm font-medium text-gray-700">
+        <label
+          htmlFor="country"
+          className="block text-sm font-medium text-gray-700"
+        >
           Country/Region *
         </label>
         <input
+          id="country"
           type="text"
           name="country"
           value={editedUser.country || ""}
@@ -151,13 +188,19 @@ function EditProfileModal({ user, isOpen, onClose, onSave }) {
           }`}
         />
         {errors.country && (
-          <p className="text-red-500 text-sm">{errors.country}</p>
+          <p className="text-red-500 text-sm" data-testid="country-error">
+            {errors.country}
+          </p>
         )}
 
-        <label className="block text-sm font-medium text-gray-700">
+        <label
+          htmlFor="city"
+          className="block text-sm font-medium text-gray-700"
+        >
           City (Optional)
         </label>
         <input
+          id="city"
           type="text"
           name="city"
           value={editedUser.city || ""}
@@ -165,11 +208,14 @@ function EditProfileModal({ user, isOpen, onClose, onSave }) {
           className="border p-2 w-full mb-2"
         />
 
-        {/* Industry */}
-        <label className="block text-sm font-medium text-gray-700">
+        <label
+          htmlFor="industry"
+          className="block text-sm font-medium text-gray-700"
+        >
           Industry *
         </label>
         <input
+          id="industry"
           type="text"
           name="industry"
           value={editedUser.industry || ""}
@@ -179,14 +225,19 @@ function EditProfileModal({ user, isOpen, onClose, onSave }) {
           }`}
         />
         {errors.industry && (
-          <p className="text-red-500 text-sm">{errors.industry}</p>
+          <p className="text-red-500 text-sm" data-testid="industry-error">
+            {errors.industry}
+          </p>
         )}
 
-        {/* Work Experience (Dropdown) */}
-        <label className="block text-sm font-medium text-gray-700">
+        <label
+          htmlFor="experience"
+          className="block text-sm font-medium text-gray-700"
+        >
           Work Experience
         </label>
         <select
+          id="experience"
           name="experience"
           className="border p-2 w-full mb-2"
           value={selectedExperienceIndex}
@@ -199,11 +250,14 @@ function EditProfileModal({ user, isOpen, onClose, onSave }) {
           ))}
         </select>
 
-        {/* Education (Dropdown) */}
-        <label className="block text-sm font-medium text-gray-700">
+        <label
+          htmlFor="education"
+          className="block text-sm font-medium text-gray-700"
+        >
           Education
         </label>
         <select
+          id="education"
           name="education"
           className="border p-2 w-full mb-2"
           value={selectedEducationIndex}
@@ -216,11 +270,13 @@ function EditProfileModal({ user, isOpen, onClose, onSave }) {
           ))}
         </select>
 
-        {/* Skills (Dropdown) */}
-        <label className="block text-sm font-medium text-gray-700">
+        <label
+          htmlFor="skills"
+          className="block text-sm font-medium text-gray-700"
+        >
           Skills
         </label>
-        <select name="skills" className="border p-2 w-full mb-2">
+        <select id="skills" name="skills" className="border p-2 w-full mb-2">
           {Array.isArray(editedUser.skills) && editedUser.skills.length > 0 ? (
             editedUser.skills.map((skill, index) => (
               <option key={index}>{skill.skillName}</option>
@@ -230,7 +286,6 @@ function EditProfileModal({ user, isOpen, onClose, onSave }) {
           )}
         </select>
 
-        {/* Buttons */}
         <div className="flex justify-end mt-4">
           <button
             onClick={handleCancel}
@@ -246,11 +301,10 @@ function EditProfileModal({ user, isOpen, onClose, onSave }) {
           </button>
         </div>
       </div>
-      {/* Discard Changes Modal */}
+
       {showDiscardModal && (
         <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
           <div className="bg-white p-6 rounded-lg shadow-lg w-[350px] relative">
-            {/* Close Button (X) */}
             <button
               onClick={() => setShowDiscardModal(false)}
               className="absolute top-2 right-2 text-gray-500 hover:text-gray-700 p-2 text-2xl p-3"

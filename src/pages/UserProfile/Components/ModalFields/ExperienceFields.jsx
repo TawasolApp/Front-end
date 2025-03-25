@@ -5,8 +5,11 @@ function ExperienceFields({ formData, handleChange, errors }) {
     <>
       <h2 className="text-lg font-semibold mb-4">Add experience</h2>
 
-      <label className="block font-medium mb-1">Title*</label>
+      <label htmlFor="title" className="block font-medium mb-1">
+        Title*
+      </label>
       <input
+        id="title"
         type="text"
         name="title"
         placeholder="Ex: Retail Sales Manager"
@@ -19,8 +22,11 @@ function ExperienceFields({ formData, handleChange, errors }) {
         <p className="text-red-600 text-sm mb-2">{errors.title}</p>
       )}
 
-      <label className="block font-medium mb-1">Employment type</label>
+      <label htmlFor="employmentType" className="block font-medium mb-1">
+        Employment type
+      </label>
       <select
+        id="employmentType"
         name="employmentType"
         value={formData.employmentType || ""}
         onChange={handleChange}
@@ -34,8 +40,11 @@ function ExperienceFields({ formData, handleChange, errors }) {
         <option value="Temporary">Temporary</option>
       </select>
 
-      <label className="block font-medium mb-1">Company or organization*</label>
+      <label htmlFor="company" className="block font-medium mb-1">
+        Company or organization*
+      </label>
       <input
+        id="company"
         type="text"
         name="company"
         placeholder="Ex: Microsoft"
@@ -48,18 +57,24 @@ function ExperienceFields({ formData, handleChange, errors }) {
         <p className="text-red-600 text-sm mb-2">{errors.company}</p>
       )}
 
-      <label className="flex items-center mb-3 gap-2">
+      <div className="flex items-center mb-3 gap-2">
         <input
+          id="currentlyWorking"
           type="checkbox"
           name="currentlyWorking"
           checked={formData.currentlyWorking || false}
           onChange={handleChange}
         />
-        <span>I am currently working in this role</span>
+        <label htmlFor="currentlyWorking">
+          I am currently working in this role
+        </label>
+      </div>
+
+      <label htmlFor="location" className="block font-medium mb-1">
+        Location
       </label>
-      {/* remember for this checkbox, to take itsvalue from db also hide end year and month if it is checked  */}
-      <label className="block font-medium mb-1">Location</label>
       <input
+        id="location"
         type="text"
         name="location"
         placeholder="Ex: London, United Kingdom"
@@ -68,8 +83,11 @@ function ExperienceFields({ formData, handleChange, errors }) {
         className="border p-2 w-full rounded-md mb-2"
       />
 
-      <label className="block font-medium mb-1">Location type</label>
+      <label htmlFor="locationType" className="block font-medium mb-1">
+        Location type
+      </label>
       <select
+        id="locationType"
         name="locationType"
         value={formData.locationType || ""}
         onChange={handleChange}
@@ -84,8 +102,11 @@ function ExperienceFields({ formData, handleChange, errors }) {
         Pick a location type (ex: remote)
       </p>
 
-      <label className="block font-medium mb-1">Description</label>
+      <label htmlFor="description" className="block font-medium mb-1">
+        Description
+      </label>
       <textarea
+        id="description"
         name="description"
         placeholder="List your major duties and successes, highlighting specific projects"
         value={formData.description || ""}

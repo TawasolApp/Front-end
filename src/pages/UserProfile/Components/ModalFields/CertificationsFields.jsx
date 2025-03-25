@@ -1,5 +1,4 @@
 import React from "react";
-
 function CertificationsFields({ formData, handleChange, errors }) {
   return (
     <>
@@ -9,8 +8,11 @@ function CertificationsFields({ formData, handleChange, errors }) {
 
       <p className="text-sm text-gray-600 mb-2">* Indicates required</p>
 
-      <label className="block font-medium mb-1">Name*</label>
+      <label htmlFor="name" className="block font-medium mb-1">
+        Name*
+      </label>
       <input
+        id="name"
         type="text"
         name="name"
         value={formData.name || ""}
@@ -22,8 +24,11 @@ function CertificationsFields({ formData, handleChange, errors }) {
         <p className="text-red-600 text-sm mb-2">{errors.name}</p>
       )}
 
-      <label className="block font-medium mb-1">Issuing organization*</label>
+      <label htmlFor="issuingOrganization" className="block font-medium mb-1">
+        Issuing organization*
+      </label>
       <input
+        id="issuingOrganization"
         type="text"
         name="issuingOrganization"
         value={formData.issuingOrganization || ""}
@@ -37,8 +42,11 @@ function CertificationsFields({ formData, handleChange, errors }) {
         </p>
       )}
 
-      <label className="block font-medium mb-1">Credential ID</label>
+      <label htmlFor="credentialId" className="block font-medium mb-1">
+        Credential ID
+      </label>
       <input
+        id="credentialId"
         type="text"
         name="credentialId"
         value={formData.credentialId || ""}
@@ -47,8 +55,11 @@ function CertificationsFields({ formData, handleChange, errors }) {
         placeholder="Optional"
       />
 
-      <label className="block font-medium mb-1">Credential URL</label>
+      <label htmlFor="credentialUrl" className="block font-medium mb-1">
+        Credential URL
+      </label>
       <input
+        id="credentialUrl"
         type="url"
         name="credentialUrl"
         value={formData.credentialUrl || ""}

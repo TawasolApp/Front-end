@@ -1,6 +1,5 @@
 import React from "react";
 import GenericSection from "../GenericDisplay/GenericSection";
-import mockEducation from "../MockData/mockEducation";
 
 function EducationSection({ isOwner, sectionRef, user }) {
   return (

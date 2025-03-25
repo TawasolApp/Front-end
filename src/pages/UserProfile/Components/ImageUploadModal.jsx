@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { FiUpload } from "react-icons/fi";
 
-function UploadModal({ isOpen, onClose, onUpload }) {
+function ImageUploadModal({ isOpen, onClose, onUpload }) {
   const [selectedImage, setSelectedImage] = useState(null);
 
   useEffect(() => {
@@ -55,6 +55,7 @@ function UploadModal({ isOpen, onClose, onUpload }) {
             accept="image/*"
             className="hidden"
             onChange={handleFileChange}
+            data-testid="file-input"
           />
         </div>
 
@@ -83,4 +84,4 @@ function UploadModal({ isOpen, onClose, onUpload }) {
   );
 }
 
-export default UploadModal;
+export default ImageUploadModal;

@@ -5,8 +5,11 @@ function EducationFields({ formData, handleChange, errors }) {
     <>
       <h2 className="text-lg font-semibold mb-4">Education Details</h2>
 
-      <label className="block font-medium mb-1">School *</label>
+      <label htmlFor="institution" className="block font-medium mb-1">
+        School *
+      </label>
       <input
+        id="institution"
         type="text"
         name="institution"
         value={formData.institution || ""}
@@ -18,8 +21,11 @@ function EducationFields({ formData, handleChange, errors }) {
         <p className="text-red-600 text-sm mb-3">{errors.institution}</p>
       )}
 
-      <label className="block font-medium mb-1">Degree</label>
+      <label htmlFor="degree" className="block font-medium mb-1">
+        Degree
+      </label>
       <input
+        id="degree"
         type="text"
         name="degree"
         value={formData.degree || ""}
@@ -28,8 +34,11 @@ function EducationFields({ formData, handleChange, errors }) {
         placeholder="Ex: Bachelor's"
       />
 
-      <label className="block font-medium mb-1">Field of Study</label>
+      <label htmlFor="fieldOfStudy" className="block font-medium mb-1">
+        Field of Study
+      </label>
       <input
+        id="fieldOfStudy"
         type="text"
         name="fieldOfStudy"
         value={formData.fieldOfStudy || ""}
@@ -38,8 +47,11 @@ function EducationFields({ formData, handleChange, errors }) {
         placeholder="Ex: Computer Science"
       />
 
-      <label className="block font-medium mb-1">Grade</label>
+      <label htmlFor="grade" className="block font-medium mb-1">
+        Grade
+      </label>
       <input
+        id="grade"
         type="text"
         name="grade"
         value={formData.grade || ""}
@@ -48,8 +60,11 @@ function EducationFields({ formData, handleChange, errors }) {
         placeholder="Ex: 3.9 GPA"
       />
 
-      <label className="block font-medium mb-1">Activities and Societies</label>
+      <label htmlFor="activities" className="block font-medium mb-1">
+        Activities and Societies
+      </label>
       <textarea
+        id="activities"
         name="activities"
         value={formData.activities || ""}
         onChange={handleChange}
@@ -61,8 +76,11 @@ function EducationFields({ formData, handleChange, errors }) {
         {formData.activities?.length || 0}/500
       </p>
 
-      <label className="block font-medium mb-1">Description</label>
+      <label htmlFor="description" className="block font-medium mb-1">
+        Description
+      </label>
       <textarea
+        id="description"
         name="description"
         value={formData.description || ""}
         onChange={handleChange}

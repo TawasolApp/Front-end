@@ -13,12 +13,15 @@ import EducationPage from "../pages/UserProfile/Components/Pages/EducationPage";
 import ExperiencePage from "../pages/UserProfile/Components/Pages/ExperiencePage";
 import CertificationsPage from "../pages/UserProfile/Components/Pages/CertificationsPage";
 import SkillsPage from "../pages/UserProfile/Components/Pages/SkillsPage";
+
 function App() {
   const isOwner = true;
   return (
     <Router>
       <Routes>
         {/*  Top-level layout with slug param */}
+        <Route path="/users" element={<ProfileLayout />} />
+
         <Route path="/users/:profileSlug" element={<ProfileLayout />}>
           {/*  The main profile page (inside layout) */}
           <Route index element={<ProfilePage />} />
@@ -32,7 +35,7 @@ function App() {
         </Route>
 
         {/*  Fallback */}
-        <Route path="*" element={<Navigate to="/users/fatma-gamal-1" />} />
+        <Route path="*" element={<Navigate to="/users" />} />
       </Routes>
     </Router>
   );

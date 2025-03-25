@@ -18,8 +18,6 @@ function ViewerView({ user }) {
   //     </p>
   //   </div>
 
-  {
-    /* Viewer Actions */
-  }
+  /* Viewer Actions */
 }
 export default ViewerView;

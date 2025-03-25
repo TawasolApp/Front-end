@@ -21,16 +21,12 @@ function ProfileHeader({ user, isOwner, onSave, experienceRef, educationRef }) {
   useEffect(() => {
     setEditedUser(user);
   }, [user]);
-  function openEditModal() {
-    setIsEditing(true);
-  }
+
   function openUploadModal(type) {
     setUploadType(type);
     setIsUploadOpen(true);
   }
   function openEditModal() {
-    // console.log(" Opening edit modal");
-
     setIsEditing(true);
   }
 
@@ -43,13 +39,13 @@ function ProfileHeader({ user, isOwner, onSave, experienceRef, educationRef }) {
     setIsUploadOpen(false);
   }
 
-  function handleInputChange(event) {
-    const { name, value } = event.target;
-    setEditedUser((prevUser) => ({
-      ...prevUser,
-      [name]: value,
-    }));
-  }
+  // function handleInputChange(event) {
+  //   const { name, value } = event.target;
+  //   setEditedUser((prevUser) => ({
+  //     ...prevUser,
+  //     [name]: value,
+  //   }));
+  // }
   function handleImageClick(imageUrl) {
     setEnlargedImage(imageUrl); // Set image to enlarge
   }

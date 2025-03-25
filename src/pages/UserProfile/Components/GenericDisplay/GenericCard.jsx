@@ -35,7 +35,9 @@ function GenericCard({ item, isOwner, type, onEdit, showEditIcons = false }) {
 
       {/* Content Layout */}
       {item.institution && (
-        <h3 className="text-lg font-semibold">{item.institution}</h3>
+        <h3 className="text-lg font-semibold" data-testid="institution">
+          {item.institution}
+        </h3>
       )}
       {item.title && <h3 className="text-lg font-semibold">{item.title}</h3>}
       {item.name && <h3 className="text-lg font-semibold">{item.name}</h3>}
@@ -66,7 +68,9 @@ function GenericCard({ item, isOwner, type, onEdit, showEditIcons = false }) {
         <p className="text-gray-700 text-sm">{item.description}</p>
       )}
       {item.grade && (
-        <p className="text-gray-500 text-sm">Grade: {item.grade}</p>
+        <p className="text-gray-500 text-sm" data-testid="grade">
+          Grade: {item.grade}
+        </p>
       )}
 
       {/* Skills endorsement */}

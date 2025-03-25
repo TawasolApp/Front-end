@@ -1,18 +1,21 @@
 import React, { useState } from "react";
 import OwnerActions from "../OwnerActions";
 
-function AboutSection({ user, isOwner }) {
+function AboutSection({ user, isOwner, onAddAbout, onEditAbout }) {
   if (!user) return null;
   const [expanded, setExpanded] = useState(false);
   const isClamped = user.about.length > 100;
   const hasAbout = user.about && user.about.trim().length > 0; // Check if About exists
 
   const handleAddAbout = () => {
-    alert("Add About button clicked!");
+    // alert("add About button clicked!");
+
+    if (onAddAbout) onAddAbout();
   };
 
   const handleEditAbout = () => {
-    alert("Edit About button clicked!");
+    // alert("Edit About button clicked!");
+    if (onEditAbout) onEditAbout();
   };
 
   return (
