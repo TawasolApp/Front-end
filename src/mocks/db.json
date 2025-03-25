@@ -51,22 +51,19 @@
           "description": "Designed UI components and improved user flows.",
           "currentlyWorking": true,
           "employmentType": "Internship"
+        },
+        {
+          "id": "1742887716083",
+          "title": "UI/UX Intern",
+          "company": "Microsoft",
+          "location": "Remote",
+          "description": "Designed UI components and improved user flows.",
+          "startMonth": "September",
+          "startYear": "2012",
+          "employmentType": "Freelance"
         }
       ],
       "education": [
-        {
-          "id": "0514a36f-05bc-4140-a923-abaeeb5cc0e3",
-          "institution": "Harvard University",
-          "degree": "Bachelor's",
-          "field": "Computer Science",
-          "description": "Studied software engineering and AI.",
-          "grade": "3.9 GPA",
-          "activities": "tt",
-          "startMonth": "June",
-          "startYear": "2016",
-          "endYear": "2028",
-          "endMonth": "June"
-        },
         {
           "id": "959a50e8-2c55-4d85-84a0-ab1c414aa7e3",
           "institution": "Stanford University",
@@ -76,10 +73,22 @@
           "startYear": "2009"
         },
         {
-          "id": "5a6ea4a9-4080-4845-bb3d-7300a102e0f3",
-          "startYear": "2011",
-          "startMonth": "October",
-          "institution": "Harvard University"
+          "id": "1742882183222",
+          "institution": "Harvard",
+          "startMonth": "June",
+          "startYear": "2021"
+        },
+        {
+          "id": "1742885500300",
+          "institution": "hola",
+          "startMonth": "September",
+          "startYear": "2012"
+        },
+        {
+          "id": "1742887701999",
+          "institution": "date",
+          "startMonth": "September",
+          "startYear": "2012"
         }
       ],
       "certifications": [

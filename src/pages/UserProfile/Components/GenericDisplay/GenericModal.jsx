@@ -151,6 +151,7 @@ function GenericModal({
       // if (type === "skills" && formData.skill) {
       //   formData.skillName = formData.skill;
       //   delete formData.skill;
+
       // }
       onSave({ ...formData });
     }

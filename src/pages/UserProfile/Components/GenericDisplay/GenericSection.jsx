@@ -2,7 +2,6 @@ import React, { useState } from "react";
 import GenericCard from "./GenericCard";
 import GenericModal from "./GenericModal";
 import { useNavigate } from "react-router-dom";
-import { v4 as uuidv4 } from "uuid";
 import { axiosInstance as axios } from "../../../../apis/axios.js";
 //to generate unique id
 function GenericSection({ title, type, items, isOwner, user }) {
@@ -15,7 +14,6 @@ function GenericSection({ title, type, items, isOwner, user }) {
   const [isSaving, setIsSaving] = useState(false); // Track saving status
 
   //  Add new
-
   const handleAdd = () => {
     setEditIndex(null);
     setEditData(null);
@@ -23,39 +21,28 @@ function GenericSection({ title, type, items, isOwner, user }) {
     setIsModalOpen(true);
   };
 
-  //  Edit existing
+  //  Edit : maps to page where we can edit
   const handleEdit = () => {
     navigate(`${type.toLowerCase()}`);
   };
-
-  ////saving and deleting on Ui only
-  // const handleSave = (updatedItem) => {
-  //   if (editIndex !== null) {
-  //     const updated = data.map((item, i) =>
-  //       i === editIndex ? updatedItem : item
-  //     );
-  //     setData(updated);
-  //   } else {
-  //     setData([...data, updatedItem]);
-  //   }
-  //   closeModal();
-  // };
 
   const handleSave = async (newItem) => {
     if (isSaving || !user?.id) return; // Prevent multiple saves
     setIsSaving(true);
 
     try {
-      const itemWithId = { ...newItem, id: uuidv4() };
-      await axios.post(`/profile/${user.id}/${type}`, itemWithId); // axios instance
+      const response = await axios.post(`/profile/${user.id}/${type}`, newItem);
 
-      //update UI
-      setData([...data, itemWithId]);
+      if (response?.data) {
+        setData((prev) => [...prev, response.data]);
+      } else {
+      }
     } catch (err) {
-      console.error("Failed to add item:", err);
+    } finally {
+      setIsSaving(false);
+
+      closeModal();
     }
-    setIsSaving(false);
-    closeModal();
   };
 
   const closeModal = () => {

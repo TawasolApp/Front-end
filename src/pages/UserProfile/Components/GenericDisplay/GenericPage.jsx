@@ -2,7 +2,6 @@ import React, { useState, useEffect } from "react";
 import { useNavigate, useOutletContext } from "react-router-dom";
 import GenericCard from "./GenericCard";
 import GenericModal from "./GenericModal";
-import { v4 as uuidv4 } from "uuid";
 import { axiosInstance as axios } from "../../../../apis/axios.js";
 
 function GenericPage({ title, type }) {
@@ -14,6 +13,7 @@ function GenericPage({ title, type }) {
   const [editData, setEditData] = useState(null);
   const [editMode, setEditMode] = useState(false);
   const [isSaving, setIsSaving] = useState(false); // Track saving status
+  // const [saveError, setSaveError] = useState(null); // if error in saving to show user a msg
 
   // Load data on mount
   useEffect(() => {
@@ -35,25 +35,7 @@ function GenericPage({ title, type }) {
     setEditMode(true);
     setIsModalOpen(true);
   };
-  ////saving and deleting on Ui only
-  // const handleSave = (updatedItem) => {
-  //   if (editIndex !== null) {
-  //     const updated = data.map((item, i) =>
-  //       i === editIndex ? updatedItem : item
-  //     );
-  //     setData(updated);
-  //   } else {
-  //     setData([...data, updatedItem]);
-  //   }
-  //   closeModal();
-  // };
-  // const handleDelete = () => {
-  //   if (editIndex !== null) {
-  //     const updated = data.filter((_, i) => i !== editIndex);
-  //     setData(updated);
-  //   }
-  //   closeModal();
-  // };
+
   const handleSave = async (updatedItem) => {
     if (isSaving || !user?.id) return;
     setIsSaving(true);
@@ -61,34 +43,37 @@ function GenericPage({ title, type }) {
     try {
       let response;
 
-      if (editMode && editIndex !== null && data[editIndex]?.id) {
+      //  PATCH — Edit existing item (uses id)
+      if (editMode && editIndex !== null && data[editIndex]) {
         const itemId = data[editIndex].id;
 
-        // Send PATCH to server
         response = await axios.patch(
           `/profile/${user.id}/${type}/${itemId}`,
           updatedItem
         );
 
-        // Update local UI state
         const updated = [...data];
         updated[editIndex] = response.data;
         setData(updated);
-      } else {
-        const itemWithId = { ...updatedItem, id: uuidv4() };
+      }
 
-        // Send POST to server
-        await axios.post(`/profile/${user.id}/${type}`, itemWithId);
+      // POST — Add new item (no id sent)
+      else {
+        response = await axios.post(`/profile/${user.id}/${type}`, updatedItem);
 
-        // Update UI
-        setData([...data, itemWithId]);
+        if (!response?.data) {
+          throw new Error("❌ No data returned from backend");
+        }
+
+        setData((prev) => [...prev, response.data]);
       }
     } catch (err) {
       console.error("Failed to save item:", err);
+    } finally {
+      //finally happen no matter what: even if: The API fails PATCH/POST throws an error or return early
+      setIsSaving(false);
+      closeModal();
     }
-
-    setIsSaving(false);
-    closeModal();
   };
 
   const handleDelete = async () => {
