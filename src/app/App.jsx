@@ -11,12 +11,13 @@ import EmailVerificationPage from "../pages/AuthenticationPages/EmailVerificatio
 import NewPasswordPage from "../pages/AuthenticationPages/NewPasswordPage";
 import WelcomePage from "../pages/AuthenticationPages/WelcomePage";
 import ChangeEmailPage from "../pages/AuthenticationPages/ChangeEmailPage";
+import EmailTokenVerificationPage from "../pages/AuthenticationPages/EmailTokenVerifocationPage";
 
 function App() {
   return (
     <Router>
       <Routes>
-        <Route path="/" element={<EmailVerificationPage />} />
+        <Route path="/" element={<WelcomePage />} />
         <Route path="/auth/signin" element={<SignInPage />} />
         <Route path="/auth/signup" element={<SignUpPage />} />
         <Route path="/auth/signup/name" element={<NamePage />} />
@@ -25,6 +26,7 @@ function App() {
         <Route path="/auth/update-password" element={<ChangePasswordPage />} />
         <Route path="/auth/forgot-password" element={<ForgotPasswordPage />} />
         <Route path="/auth/email-verification" element={<EmailVerificationPage />} />
+        <Route path="/auth/email-token-verification" element={<EmailTokenVerificationPage />} />
         <Route path="/auth/new-password" element={<NewPasswordPage />} />
         <Route path="/auth/update-email" element={<ChangeEmailPage />} />
       </Routes>

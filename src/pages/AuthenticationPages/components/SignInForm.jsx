@@ -105,7 +105,7 @@ const SignInForm = ({ onSubmit }) => {
       />
 
       {credentialsError && (
-        <p className="text-errorText text-base sm:text-lg mt-2">
+        <p className="text-red-500 text-base sm:text-lg mt-2">
           {credentialsError}
         </p>
       )}

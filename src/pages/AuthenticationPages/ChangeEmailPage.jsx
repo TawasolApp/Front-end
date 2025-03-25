@@ -3,9 +3,11 @@ import ChangeEmailForm from "./components/ChangeEmailForm";
 import { useDispatch } from "react-redux";
 import { setEmail } from "../../store/authenticationSlice";
 import { axiosInstance } from "../../apis/axios";
+import { useNavigate } from "react-router-dom";
 
 const ChangeEmailPage = () => {
   const dispatch = useDispatch();
+  const navigate = useNavigate();
 
   const handleSubmit = async (
     newEmail,
@@ -14,15 +16,17 @@ const ChangeEmailPage = () => {
     setCurrentPasswordError
   ) => {
     try {
-      await axiosInstance.patch("/users/request-email-update", {
-        newEmail,
-        password: currentPassword,
-      });
+      const response = await axiosInstance.patch(
+        "/users/request-email-update",
+        {
+          newEmail,
+          password: currentPassword,
+        }
+      );
 
       dispatch(setEmail(newEmail));
 
-      alert("Confirmation email sent! Please check your new email address.");
-      // TODO: Navigate to EmailVerificationPage
+      navigate("/auth/email-verification");
     } catch (error) {
       if (error.response && error.response.status === 400) {
         setCurrentPasswordError("Incorrect password.");
@@ -32,6 +36,7 @@ const ChangeEmailPage = () => {
         setEmailError("Email already exists.");
       } else {
         console.error("Email update request failed:", error);
+        setEmailError("An unexpected error occurred. Please try again.");
       }
     }
   };

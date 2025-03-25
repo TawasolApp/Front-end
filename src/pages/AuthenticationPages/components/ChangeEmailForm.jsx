@@ -55,8 +55,12 @@ const ChangeEmailForm = ({ onSubmit }) => {
       <h1 className="text-4xl font-semibold mb-4 text-textHomeTitle text-left">
         Update Email
       </h1>
-      <p className="text-xl text-textHomeTitle text-left mb-10">
+      <p className="text-xl text-textHomeTitle text-left mb-2">
         Enter the new email you would like to be used by Tawasol.
+      </p>
+      <p className="text-lg text-textHomeTitle text-left mb-10">
+        After submitting, you'll receive a verification email. You must click
+        the link in that email to complete the email change process
       </p>
 
       <InputField

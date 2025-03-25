@@ -94,47 +94,83 @@ server.patch("/user/update-password", (req, res) => {
   return res.status(200).json({ message: "Password changed successfully" });
 });
 
-server.patch("/users/request-email-update", (req, res) => {
-  const { newEmail, password } = req.body;
+server.post("/auth/forgot-password", (req, res) => {
+  return res.status(200).json({ 
+    message: "If this email exists, a password reset link has been sent" 
+  });
+});
 
-  if (!newEmail || !password) {
-    return res
-      .status(400)
-      .json({ message: "New email and password are required" });
+// Add these endpoints to your existing server.js
+server.get("/users/confirm-email-change", (req, res) => {
+  const { token } = req.query;
+
+  if (!token) {
+    return res.status(400).json({ message: "Token is required" });
   }
 
+  // Mock token verification - in real app this would check your database
   const users = _router.db.get("users").value();
-  const userId = "1"; // For simplicity
-  const user = users.find((u) => u.id === userId);
+  const pendingChanges = _router.db.get("pendingEmailChanges").value() || [];
+  
+  const changeRequest = pendingChanges.find(req => req.token === token);
+  
+  if (!changeRequest) {
+    return res.status(400).json({ message: "Invalid or expired token" });
+  }
 
+  // Update user's email
+  const user = users.find(u => u.id === changeRequest.userId);
   if (!user) {
     return res.status(404).json({ message: "User not found" });
   }
 
-  if (user.password !== password) {
-    return res.status(400).json({ message: "Incorrect password." });
-  }
+  user.email = changeRequest.newEmail;
+  _router.db.get("users").find({ id: changeRequest.userId }).assign(user).write();
+  
+  // Remove the pending change
+  _router.db.set("pendingEmailChanges", pendingChanges.filter(req => req.token !== token)).write();
 
-  const emailExists = users.some(
-    (u) => u.email === newEmail && u.id !== userId
-  );
-  if (emailExists) {
-    return res.status(409).json({ message: "Email already exists." });
-  }
-
-  return res.status(200).json({
-    message: "Confirmation email sent! Please check your new email address.",
-    mockData: {
-      currentEmail: user.email,
-      newEmail,
-      confirmationToken: "mock_confirmation_token",
-    },
-  });
+  return res.status(200).json({ message: "Email updated successfully" });
 });
 
-server.post("/auth/forgot-password", (req, res) => {
+server.patch("/users/request-email-update", (req, res) => {
+  const { newEmail, password } = req.body;
+  const users = _router.db.get("users").value();
+  
+  const userId = "1"; // For simplicity
+  const user = users.find(u => u.id === userId);
+  
+  if (!user) {
+    return res.status(404).json({ message: "User not found" });
+  }
+  
+  if (user.password !== password) {
+    return res.status(400).json({ message: "Incorrect password" });
+  }
+  
+  if (users.some(u => u.email === newEmail)) {
+    return res.status(409).json({ message: "Email already exists" });
+  }
+
+  const token = `mock_token_${Math.random().toString(36).substring(2, 9)}`;
+  const pendingChanges = _router.db.get("pendingEmailChanges").value() || [];
+  
+  _router.db.set("pendingEmailChanges", [
+    ...pendingChanges,
+    {
+      userId,
+      newEmail,
+      token,
+      createdAt: new Date().toISOString()
+    }
+  ]).write();
+
+  const verificationLink = `http://localhost:5173/auth/email-token-verification?token=${token}`;
+  console.log(`Mock verification email sent with link: ${verificationLink}`);
+
   return res.status(200).json({ 
-    message: "If this email exists, a password reset link has been sent" 
+    message: "Verification email sent",
+    mockVerificationLink: verificationLink // For testing
   });
 });
 
