@@ -7,11 +7,18 @@ import PostsPage from "../pages/CompanyPage/Components/PostsPage";
 import Aboutpage from "../pages/companypage/components/AboutPage";
 import Homepage from "../pages/CompanyPage/Components/HomePage";
 import CreateCompanyPage from "../pages/CompanyPage/Components/CreateCompanyPage";
+import FeedContainer from "../pages/Feed/FeedContainer";
+import SavedPostsContainer from "../pages/SavedPosts/SavedPostsContainer";
 
-function App() {
+const App = () => {
+
   return (
     <Router>
       <Routes>
+        <Route path="/" element={<FeedContainer />} />
+        <Route path="/feed/" element={<FeedContainer />} />
+        <Route path="/my-items/saved-posts" element={<SavedPostsContainer />} />
+        <Route path="/in/:usedId/" element={<h1>HelloWorld</h1>} />
         {/* Ensure companyId is part of the URL */}
         <Route path="/company/:companyId/*" element={<CompanyLayout />}>
           <Route index element={<Homepage />} />
