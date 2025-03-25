@@ -123,7 +123,7 @@ const NetworkBox = () => {
                         </button>
                         <button
                           onClick={() => handleAccept(request.userId)}
-                          className="px-4 py-2 text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 rounded-3xl transition-colors"
+                          className="px-4 py-2 text-sm font-medium text-blue-600 bg-white border-2 border-blue-600 hover:bg-blue-50 rounded-3xl transition-colors"
                         >
                           Accept
                         </button>

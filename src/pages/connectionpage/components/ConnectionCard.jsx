@@ -61,6 +61,7 @@ const ConnectionCard = ({ imageUrl, username, experience, connectionDate, onRemo
           <div className="relative" ref={menuRef}>
             <button
               onClick={toggleMenu}
+              data-testid="menu-button" 
               className="p-1.5 text-black dark:text-[#c1c9d4] hover:text-black dark:hover:text-[#f0f2f5] focus:outline-none"
             >
               <svg

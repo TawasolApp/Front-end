@@ -118,6 +118,8 @@ const FollowPage = () => {
               <button
                 onClick={() => handleUnfollow(userToUnfollow.userId)}
                 className="px-3 py-1 bg-blue-700 hover:bg-blue-800 text-white rounded-3xl text-sm"
+                data-testid="unfollow2"
+                
               >
                 Unfollow
               </button>
@@ -128,13 +130,14 @@ const FollowPage = () => {
 
       <div className="bg-white dark:bg-[#1e2229] p-4 sm:p-6 rounded-lg shadow-md w-full mx-auto max-w-full sm:max-w-[900px] border border-gray-200 dark:border-[#2a3038]">
         <div className="border-b border-gray-200 dark:border-[#2a3038] pb-4 mb-4">
-          <h1 className="text-xl font-semibold dark:text-[#f0f2f5]">Omar's Network</h1>
+          <h1 className="text-xl font-semibold dark:text-[#f0f2f5]">My Network</h1>
         </div>
 
         <div className="flex border-b border-gray-200 dark:border-[#2a3038] mb-4">
           <button
             className={`px-3 py-1 sm:px-4 sm:py-2 font-semibold text-sm sm:text-base ${activeTab === "following" ? "text-green-800 dark:text-green-500 border-b-2 border-green-800 dark:border-green-500" : "text-gray-500 dark:text-[#959ea9]"}`}
             onClick={() => setActiveTab("following")}
+            data-testid="followingButton"
           >
             Following
           </button>
@@ -165,6 +168,7 @@ const FollowPage = () => {
                       </div>
                       <button
                         onClick={() => promptUnfollow(user)}
+                        data-testid="followingButton2"
                         className="px-4 py-1 sm:px-5 sm:py-2 text-sm font-semibold text-gray-700 dark:text-[#c1c9d4] border-2 border-gray-300 dark:border-[#2a3038] hover:border-gray-400 dark:hover:border-[#3a4048] rounded-full hover:bg-gray-100 dark:hover:bg-[#2a3038] hover:font-bold shrink-0 transition-all w-full sm:w-auto text-center"
                       >
                         Following

@@ -8,7 +8,7 @@
     "build": "vite build",
     "lint": "eslint .",
     "preview": "vite preview",
-    "test": "vitest",
+    "test": "vitest --coverage",
     "mock": "set VITE_APP_BASE_URL=http://localhost:5000 && start cmd /c node src/mocks/server.js && vite"
   },
   "dependencies": {
@@ -17,6 +17,7 @@
     "@mui/icons-material": "^6.4.7",
     "@mui/material": "^6.4.7",
     "@reduxjs/toolkit": "^2.6.1",
+    "@vitest/coverage-v8": "^3.0.9",
     "axios": "^1.8.2",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
