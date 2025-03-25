@@ -1,40 +1,29 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import BlockIcon from "@mui/icons-material/Block"; // Import the Block icon
+import BlockIcon from "@mui/icons-material/Block";
 
 const BlockedPage = () => {
-  const navigate = useNavigate(); // Hook for navigation
-
-  // State to manage blocked users
+  const navigate = useNavigate();
   const [blockedUsers, setBlockedUsers] = useState([
-    // Example blocked users (empty for testing)
-    {
-      id: 1,
-      username: "Ahmed Ali",
-    },
-    {
-      id: 2,
-      username: "Mona Hassan",
-    },
+    { id: 1, username: "Ahmed Ali" },
+    { id: 2, username: "Mona Hassan" },
   ]);
 
-  // Function to handle "Unblock" button
   const handleUnblock = (id) => {
     setBlockedUsers(blockedUsers.filter((user) => user.id !== id));
   };
 
-  // Function to navigate back to the previous page
   const handleBack = () => {
-    navigate(-1); // Navigate to the previous page
+    navigate(-1);
   };
 
   return (
-    <div className="min-h-screen bg-stone-100 p-8">
-      <div className="bg-white p-6 rounded-lg shadow-md w-[700px] mx-auto">
-        {/* Back Arrow */}
+    <div className="min-h-screen bg-stone-100 dark:bg-black p-4 sm:p-8">
+      <div className="bg-white dark:bg-[#1e2229] p-4 sm:p-6 rounded-lg shadow-md w-full max-w-[700px] mx-auto border border-gray-200 dark:border-[#2a3038]">
+        {/* Back Button */}
         <button
           onClick={handleBack}
-          className="text-gray-500 hover:text-gray-700 mb-2 flex items-center text-sm"
+          className="text-gray-500 dark:text-[#959ea9] hover:text-gray-700 dark:hover:text-white mb-2 flex items-center text-sm"
         >
           <svg
             xmlns="http://www.w3.org/2000/svg"
@@ -43,40 +32,28 @@ const BlockedPage = () => {
             viewBox="0 0 24 24"
             stroke="currentColor"
           >
-            <path
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              strokeWidth={2}
-              d="M10 19l-7-7m0 0l7-7m-7 7h18"
-            />
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 19l-7-7m0 0l7-7m-7 7h18" />
           </svg>
           Back
         </button>
 
         {/* Title */}
-        <h2 className="text-lg font-bold mb-1">Blocking</h2> {/* Reduced margin-bottom */}
-
-        {/* Dynamic Line */}
-        <p className="text-sm text-gray-500 mb-4">
-          You’re currently blocking {blockedUsers.length} person
-          {blockedUsers.length !== 1 ? "s" : ""}.
+        <h2 className="text-lg font-bold dark:text-[#f0f2f5]">Blocking</h2>
+        <p className="text-sm text-gray-500 dark:text-[#959ea9] mb-4">
+          You're currently blocking {blockedUsers.length} person{blockedUsers.length !== 1 ? "s" : ""}.
         </p>
 
-        {/* Display Blocked Users */}
+        {/* Blocked Users List */}
         {blockedUsers.length > 0 ? (
           blockedUsers.map((user) => (
-            <div
-              key={user.id}
-              className="flex items-center justify-between p-3"
-            >
+            <div key={user.id} className="flex items-center justify-between p-3 border-b border-gray-200 dark:border-[#2a3038]">
               <div className="flex items-center">
-                {/* Block Sign */}
-                <BlockIcon className="text-black text-xs mr-1" /> {/* Smaller and black */}
-                <p className="font-semibold">{user.username}</p>
+                <BlockIcon className="text-black dark:text-red-500 text-xs mr-1" />
+                <p className="font-semibold dark:text-[#f0f2f5]">{user.username}</p>
               </div>
               <button
                 onClick={() => handleUnblock(user.id)}
-                className="px-3 py-1 text-sm font-semibold text-blue-700 hover:bg-blue-50 rounded-lg"
+                className="px-3 py-1 text-sm font-semibold text-blue-700 dark:text-[#3d7bc8] hover:bg-blue-50 dark:hover:bg-[#2a3038] rounded-lg"
               >
                 Unblock
               </button>
@@ -84,12 +61,12 @@ const BlockedPage = () => {
           ))
         ) : (
           <div>
-            <p className="text-gray-500 mb-4">You’re currently not blocking anyone.</p>
-            <p className="text-sm text-gray-500">
-              Need to block or report someone? Go to the profile of the person you want to block and select “Block/Report” from the drop-down menu at the top of the profile summary.
+            <p className="text-gray-500 dark:text-[#959ea9] mb-4">You're currently not blocking anyone.</p>
+            <p className="text-sm text-gray-500 dark:text-[#c1c9d4]">
+              Need to block or report someone? Go to their profile and select "Block/Report" from the menu.
             </p>
-            <p className="text-sm text-gray-500 mt-2">
-              After you’ve blocked the person, any previous profile views of yours and of the other person will disappear from each of your "Who‘s Viewed My Profile" sections.
+            <p className="text-sm text-gray-500 dark:text-[#c1c9d4] mt-2">
+              Once blocked, any profile views will disappear from each other's "Who's Viewed My Profile" sections.
             </p>
           </div>
         )}

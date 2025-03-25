@@ -2,55 +2,41 @@ import React, { useState, useEffect, useRef } from 'react';
 
 const ConnectionCard = ({ imageUrl, username, experience, connectionDate, onRemove }) => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
-  const [isConfirmationOpen, setIsConfirmationOpen] = useState(false); // State for confirmation modal
-  const menuRef = useRef(null); // Ref for the dropdown menu
+  const [isConfirmationOpen, setIsConfirmationOpen] = useState(false);
+  const menuRef = useRef(null);
 
-  // Function to toggle the menu
-  const toggleMenu = () => {
-    setIsMenuOpen(!isMenuOpen);
-  };
-
-  // Function to open the confirmation modal
+  const toggleMenu = () => setIsMenuOpen(!isMenuOpen);
   const openConfirmation = () => {
     setIsConfirmationOpen(true);
-    setIsMenuOpen(false); // Close the dropdown menu
+    setIsMenuOpen(false);
   };
-
-  // Function to close the confirmation modal
-  const closeConfirmation = () => {
+  const closeConfirmation = () => setIsConfirmationOpen(false);
+  const handleRemove = () => {
+    onRemove();
     setIsConfirmationOpen(false);
   };
 
-  // Function to handle the "Remove Connection" action
-  const handleRemove = () => {
-    onRemove(); // Call the onRemove function passed from the parent component
-    setIsConfirmationOpen(false); // Close the confirmation modal
-  };
-
-  // Effect to handle clicks outside the dropdown menu
   useEffect(() => {
     const handleClickOutside = (event) => {
       if (menuRef.current && !menuRef.current.contains(event.target)) {
-        setIsMenuOpen(false); // Close the menu if the click is outside
+        setIsMenuOpen(false);
       }
     };
 
-    // Add event listener when the menu is open
     if (isMenuOpen) {
       document.addEventListener('mousedown', handleClickOutside);
     }
 
-    // Cleanup the event listener when the component unmounts or the menu closes
     return () => {
       document.removeEventListener('mousedown', handleClickOutside);
     };
-  }, [isMenuOpen]); // Re-run the effect when isMenuOpen changes
+  }, [isMenuOpen]);
 
   return (
     <>
       {/* Connection Card */}
-      <div className="flex items-center justify-between p-3 bg-white border border-gray-200 rounded-lg shadow-sm transition-shadow w-full">
-        {/* Left Section: Profile Image and Details */}
+      <div className="flex items-center justify-between p-3 bg-white dark:bg-[#1e2229] border border-gray-200 dark:border-[#2a3038] rounded-lg shadow-sm transition-shadow w-full">
+        {/* Left Section */}
         <div className="flex items-center flex-1">
           <img
             src={imageUrl}
@@ -58,31 +44,25 @@ const ConnectionCard = ({ imageUrl, username, experience, connectionDate, onRemo
             className="w-12 h-12 rounded-full object-cover"
           />
           <div className="ml-3 flex-1">
-            {/* Username with underline on hover */}
-            <h3 className="text-lg font-semibold hover:underline cursor-pointer">
+            <h3 className="text-lg font-semibold hover:underline cursor-pointer dark:text-[#f0f2f5]">
               {username}
             </h3>
-            {/* Experience */}
-            <p className="text-sm text-gray-700">{experience}</p>
-            {/* Connection Date */}
-            <p className="text-xs text-gray-500 mt-1">{connectionDate}</p>
+            <p className="text-sm text-gray-700 dark:text-[#c1c9d4]">{experience}</p>
+            <p className="text-xs text-gray-500 dark:text-[#959ea9] mt-1">{connectionDate}</p>
           </div>
         </div>
 
-        {/* Right Section: Message Button and Three Dots Menu */}
+        {/* Right Section */}
         <div className="flex items-center space-x-3">
-          {/* Message Button */}
-          <button className="px-3 py-1.5 bg-transparent font-semibold border border-blue-700 text-blue-700 rounded-full hover:bg-blue-50 transition-colors text-sm">
+          <button className="px-3 py-1.5 bg-transparent font-semibold border border-blue-700 dark:border-[#3d7bc8] text-blue-700 dark:text-[#3d7bc8] rounded-full hover:bg-blue-50 dark:hover:bg-[#2a3038] transition-colors text-sm">
             Message
           </button>
 
-          {/* Three Dots Menu */}
           <div className="relative" ref={menuRef}>
             <button
               onClick={toggleMenu}
-              className="p-1.5 text-black bold hover:text-black bold focus:outline-none"
+              className="p-1.5 text-black dark:text-[#c1c9d4] hover:text-black dark:hover:text-[#f0f2f5] focus:outline-none"
             >
-              {/* Three Dots Icon */}
               <svg
                 xmlns="http://www.w3.org/2000/svg"
                 className="h-5 w-5"
@@ -99,14 +79,12 @@ const ConnectionCard = ({ imageUrl, username, experience, connectionDate, onRemo
               </svg>
             </button>
 
-            {/* Dropdown Menu */}
             {isMenuOpen && (
-              <div className="absolute right-0 mt-2 w-48 bg-white border border-gray-200 rounded-lg shadow-lg z-10">
+              <div className="absolute right-0 mt-2 w-48 bg-white dark:bg-[#1e2229] border border-gray-200 dark:border-[#2a3038] rounded-lg shadow-lg z-10">
                 <button
-                  onClick={openConfirmation} // Open the confirmation modal
-                  className="w-full px-4 py-2 text-sm text-black bold hover:bg-gray-100 flex items-center"
+                  onClick={openConfirmation}
+                  className="w-full px-4 py-2 text-sm text-black dark:text-[#c1c9d4] hover:bg-gray-100 dark:hover:bg-[#2a3038] flex items-center"
                 >
-                  {/* Trash Can Icon */}
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
                     className="h-5 w-5 mr-2"
@@ -130,11 +108,10 @@ const ConnectionCard = ({ imageUrl, username, experience, connectionDate, onRemo
       {/* Confirmation Modal */}
       {isConfirmationOpen && (
         <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
-          <div className="bg-white p-6 rounded-lg shadow-lg w-[500px] relative"> {/* Added relative for positioning the X button */}
-            {/* X Button with Hover Effect */}
+          <div className="bg-white dark:bg-[#1e2229] p-6 rounded-lg shadow-lg w-[500px] relative border border-gray-200 dark:border-[#2a3038]">
             <button
               onClick={closeConfirmation}
-              className="absolute top-4 right-4 p-2 text-gray-600 hover:bg-gray-100 rounded-full focus:outline-none transition-colors"
+              className="absolute top-4 right-4 p-2 text-gray-600 dark:text-[#959ea9] hover:bg-gray-100 dark:hover:bg-[#2a3038] rounded-full focus:outline-none transition-colors"
             >
               <svg
                 xmlns="http://www.w3.org/2000/svg"
@@ -152,25 +129,20 @@ const ConnectionCard = ({ imageUrl, username, experience, connectionDate, onRemo
               </svg>
             </button>
 
-            {/* Title and Divider */}
-            <h2 className="text-xl font-semibold mb-4">Remove Connection</h2>
-            <div className="border-t border-gray-200 mb-4"></div> {/* Added divider line */}
+            <h2 className="text-xl font-semibold mb-4 dark:text-[#f0f2f5]">Remove Connection</h2>
+            <div className="border-t border-gray-200 dark:border-[#2a3038] mb-4"></div>
 
-            {/* Message */}
-            <p className="text-gray-700 mb-4"> {/* Reduced margin-bottom */}
-              Are you sure you want to remove {username} as a connection? Don’t worry, {username} won’t be notified by LinkedIn.
+            <p className="text-gray-700 dark:text-[#c1c9d4] mb-4">
+              Are you sure you want to remove {username} as a connection? Don't worry, {username} won't be notified by LinkedIn.
             </p>
 
-            {/* Buttons */}
             <div className="flex justify-end space-x-4">
-              {/* Cancel Button */}
               <button
                 onClick={closeConfirmation}
-                className="px-4 py-2 text-sm text-blue-600 bg-white border border-blue-600 rounded-3xl hover:bg-blue-50 transition-colors"
+                className="px-4 py-2 text-sm text-blue-600 dark:text-[#3d7bc8] bg-white dark:bg-[#1e2229] border border-blue-600 dark:border-[#3d7bc8] rounded-3xl hover:bg-blue-50 dark:hover:bg-[#2a3038] transition-colors"
               >
                 Cancel
               </button>
-              {/* Remove Button */}
               <button
                 onClick={handleRemove}
                 className="px-4 py-2 text-sm text-white bg-blue-600 hover:bg-blue-700 rounded-3xl transition-colors"
