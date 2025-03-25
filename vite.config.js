@@ -1,6 +1,6 @@
-import { defineConfig } from 'vite';
-import react from '@vitejs/plugin-react';
-import svgr from 'vite-plugin-svgr';
+import { defineConfig } from "vite";
+import react from "@vitejs/plugin-react";
+import svgr from "vite-plugin-svgr";
 
 export default defineConfig({
   plugins: [
@@ -12,12 +12,19 @@ export default defineConfig({
     }),
   ],
   test: {
-    environment: 'jsdom', // Ensures DOM methods are available
+    provider: 'v8',
+        environment: 'jsdom', // Ensures DOM methods are available
     globals: true,         // Enables `describe`, `test`, etc. globally
     coverage: {
-      provider: 'v8',
+      all: true,
+      include: ["src/pages/CompanyPage/Components/**/*.{js,jsx}"],
       exclude: [
-        'node_modules',
+        "**/tests/**",
+        "**/*.test.{js,jsx}",
+        "**/__mocks__/**",
+        "node_modules/**",
+        "src/pages/CompanyPage/Components/PostSlide.jsx",
+                'node_modules',
         'tests',
         'vite.config.js',
         'tailwind.config.js',
@@ -37,9 +44,13 @@ export default defineConfig({
         'src/apis/**',
         'src/assets/**',
         'src/app/**',
-        'src/pages/CompanyPage/**',
-        'src/pages/LoadingPage/**',
-      ]
-    }
-  }
+      ],
+    },
+    globals: true,
+    environment: "jsdom",
+    setupFiles: "./src/setupTests.js",
+  },
+  server: {
+    historyApiFallback: true,
+  },
 });
