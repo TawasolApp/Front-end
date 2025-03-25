@@ -63,7 +63,7 @@ function ProfileHeader({ user, isOwner, onSave, experienceRef, educationRef }) {
   if (!editedUser) return null;
 
   return (
-    <div className="bg-boxbackground py-6 shadow-md rounded-md w-full max-w-3xl mx-auto pb-0 mb-8 pt-0">
+    <div className=" relative bg-boxbackground py-6 shadow-md rounded-md w-full max-w-3xl mx-auto pb-0 mb-8 pt-0">
       {/* Cover Photo Component */}
       <div className="relative w-full h-64 rounded-md overflow-hidden pb-0">
         {/* Cover Photo */}
@@ -76,7 +76,7 @@ function ProfileHeader({ user, isOwner, onSave, experienceRef, educationRef }) {
         />
 
         {/* Profile Picture (Centered & Fully Visible) */}
-        <div className="absolute left-20 ml-4 transform -translate-x-1/2 -top-30 sm:-top-15 border-4 border-white rounded-full shadow-lg bg-white mb-0">
+        <div className="absolute left-16 ml-4 transform -translate-x-1/2 top-20 sm:-top-15 border-4 border-white rounded-full shadow-lg bg-white mb-0">
           <ProfilePicture
             profilePictureSrc={
               editedUser.profilePicture || defaultProfilePicture
@@ -103,7 +103,7 @@ function ProfileHeader({ user, isOwner, onSave, experienceRef, educationRef }) {
       />
       {/* User Info & Experience  */}
       <div className="flex flex-col sm:flex-row justify-between items-start px-6 mt-0 gap-4">
-        <div className="sm:w-3/5 text-left">
+        <div className="sm:w-3/5 text-lef -mt-10">
           <h1 className="text-2xl font-bold flex items-center gap-2 text-text">
             {editedUser.firstName} {editedUser.lastName}
           </h1>
@@ -126,23 +126,23 @@ function ProfileHeader({ user, isOwner, onSave, experienceRef, educationRef }) {
         </div>
 
         {/*  Experience & Education Section */}
-        <div className="relative sm:w-2/5 text-right pr-6">
+        <div className="flex-items relative sm:w-2/5 text-right  ">
           {isOwner && (
             <button
-              className="w-8 h-8 rounded-full flex items-center justify-center hover:bg-gray-200 transition text-text"
+              className="absolute right-1 w-8 h-8 top-10 rounded-full flex items-center justify-center hover:bg-gray-200 transition text-text"
               onClick={openEditModal}
             >
               ✎
             </button>
           )}
           <p
-            className="text-sm text-companyheader2 cursor-pointer hover:text-blue-500 hover:underline pt-9"
+            className=" absolute text-sm text-companyheader2 right-1 cursor-pointer hover:text-blue-500 hover:underline pt-9 pb-0"
             onClick={() => scrollToSection(experienceRef)}
           >
             {editedUser.experience?.[experienceIndex]?.title}
           </p>
           <p
-            className="text-sm text-companyheader2  cursor-pointer  hover:text-blue-500 hover:underline"
+            className="absolute text-sm text-companyheader2 right-1 cursor-pointer  hover:text-blue-500 hover:underline mb-0"
             onClick={() => scrollToSection(educationRef)}
           >
             {editedUser.education?.[educationIndex]?.institution}{" "}

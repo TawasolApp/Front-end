@@ -18,7 +18,7 @@ function ImageEnlarge({ profilePicture, isOpen, onClose }) {
     <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-80 z-50">
       {/* Prevent Closing When Clicking Inside the Modal */}
       <div
-        className="relative w-full flex items-center justify-center bg-black p-4 "
+        className="relative bg-black p-4 rounded-lg max-w-[90%] max-h-[90vh] flex items-center justify-center"
         onClick={(e) => e.stopPropagation()}
       >
         {/* Close Button */}

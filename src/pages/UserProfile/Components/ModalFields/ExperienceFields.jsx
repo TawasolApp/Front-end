@@ -68,7 +68,7 @@ function ExperienceFields({ formData, handleChange, errors }) {
           checked={formData.currentlyWorking || false}
           onChange={handleChange}
         />
-        <label htmlFor="currentlyWorking " className="text-text">
+        <label htmlFor="currentlyWorking" className="text-text">
           I am currently working in this role
         </label>
       </div>

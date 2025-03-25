@@ -149,4 +149,28 @@ describe("GenericCard Component", () => {
     expect(screen.getByText("Dev")).toBeInTheDocument();
     expect(screen.getByText("Test Inc.")).toBeInTheDocument();
   });
+  it("opens modal via ✎ and closes it on save", () => {
+    const item = { name: "React" }; // item.name to test that line too
+    render(
+      <GenericCard
+        item={item}
+        isOwner={true}
+        showEditIcons={true}
+        type="skills"
+      />
+    );
+
+    fireEvent.click(screen.getByRole("button", { name: /✎/i }));
+    expect(screen.getByTestId("generic-modal")).toBeInTheDocument();
+
+    // simulate save (make sure GenericModal has a save button with this text)
+    fireEvent.click(screen.getByRole("button", { name: /save/i }));
+    expect(screen.queryByTestId("generic-modal")).not.toBeInTheDocument();
+  });
+  it("renders item name if provided", () => {
+    render(
+      <GenericCard item={{ name: "HTML5" }} isOwner={false} type="skills" />
+    );
+    expect(screen.getByText("HTML5")).toBeInTheDocument();
+  });
 });

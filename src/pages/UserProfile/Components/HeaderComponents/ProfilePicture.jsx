@@ -8,15 +8,15 @@ function ProfilePicture({
   return (
     <div className="relative flex items-center ">
       {/* Profile Picture & Plus Icon as One Unit */}
-      <div className="relative">
-        <div className="w-28 h-28 sm:w-36 sm:h-36 rounded-full overflow-hidden border-4 border-white shadow-md cursor-pointer flex items-center justify-center bg-white">
-          <img
-            src={profilePictureSrc}
-            alt="User Profile"
-            className="w-full h-full object-cover "
-            onClick={() => onImageClick(profilePictureSrc)}
-          />
-        </div>
+      {/* <div className="relative"> */}
+      <div className="w-28 h-28 sm:w-36 sm:h-36 rounded-full overflow-hidden border-4 border-white shadow-md cursor-pointer flex items-center justify-center bg-white">
+        <img
+          src={profilePictureSrc}
+          alt="User Profile"
+          className="w-full h-full object-cover "
+          onClick={() => onImageClick(profilePictureSrc)}
+        />
+        {/* </div> */}
 
         {/* Move Plus Icon WITH the Profile Picture */}
         {isOwner ? (
