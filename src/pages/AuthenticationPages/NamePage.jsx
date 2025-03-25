@@ -2,25 +2,36 @@ import React from "react";
 import NameForm from "./components/NameForm";
 import { useDispatch, useSelector } from "react-redux";
 import { setFirstName, setLastName } from "../../store/authenticationSlice";
+import { axiosInstance } from "../../apis/axios";
+import { useNavigate } from "react-router-dom";
 
 const NamePage = () => {
   const dispatch = useDispatch();
   const { email, password } = useSelector((state) => state.authentication);
+  const navigate = useNavigate();
 
-  const handleName = (formData, captchaToken) => {
-    // Handle form submission (e.g., send data to an API)
-    console.log("Form Data Submitted:", formData);
-
+  const handleName = async (formData, captchaToken) => {
     dispatch(setFirstName(formData.firstName));
     dispatch(setLastName(formData.lastName));
 
-    console.log(
-      "Here: ",
-      email,
-      password,
-      formData.firstName,
-      formData.lastName
-    );
+    try {
+      console.log(email, password)
+      const response = await axiosInstance.post("/auth/register", {
+        email,
+        password,
+        firstName: formData.firstName,
+        lastName: formData.lastName,
+        captchaToken,
+      });
+
+      // TODO: Navigate to LocationPage
+      navigate("/auth/signup/location");
+    } catch (error) {
+      alert(
+        "Registration Failed:",
+        error.response?.data?.message || error.message
+      );
+    }
   };
 
   return (

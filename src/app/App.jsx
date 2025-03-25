@@ -1,5 +1,5 @@
 import "./App.css";
-import { axiosInstance as axios } from "../apis/axios";
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import { getIconComponent } from "../utils";
 import SignUpPage from "../pages/AuthenticationPages/SignUpPage";
 import SignInPage from "../pages/AuthenticationPages/SignInPage";
@@ -16,11 +16,21 @@ import ChangeEmailPage from "../pages/AuthenticationPages/ChangeEmailPage";
 function App() {
   const InIcon = getIconComponent("in-black");
   return (
-    <span>
-      <div>
-        <WelcomePage />
-      </div>
-    </span>
+    <Router>
+      <Routes>
+        <Route path="/" element={<WelcomePage />} />
+        <Route path="/auth/signin" element={<SignInPage />} />
+        <Route path="/auth/signup" element={<SignUpPage />} />
+        <Route path="/auth/signup/name" element={<NamePage />} />
+        <Route path="/auth/signup/location" element={<LocationPage />} />
+        <Route path="/auth/signup/experience" element={<ExperiencePage />} />
+        <Route path="/auth/update-password" element={<ChangePasswordPage />} />
+        <Route path="/auth/forgot-password" element={<ForgotPasswordPage />} />
+        <Route path="/auth/email-verification" element={<EmailVerificationPage />} />
+        <Route path="/auth/new-password" element={<NewPasswordPage />} />
+        <Route path="/auth/update-email" element={<ChangeEmailPage />} />
+      </Routes>
+    </Router>
   );
 }
 

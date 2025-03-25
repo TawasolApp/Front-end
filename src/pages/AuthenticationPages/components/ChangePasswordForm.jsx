@@ -2,41 +2,66 @@ import React, { useState } from "react";
 import InputField from "./InputField";
 import BlueSubmitButton from "./BlueSubmitButton";
 import ArrowBack from "@mui/icons-material/ArrowBack";
+import { axiosInstance } from "../../../apis/axios";
+import { useNavigate } from "react-router-dom";
 
 const ChangePasswordForm = () => {
   const [currentPassword, setCurrentPassword] = useState("");
   const [newPassword, setNewPassword] = useState("");
   const [confirmNewPassword, setConfirmNewPassword] = useState("");
-  const [requireNewSignIn, setRequireNewSignIn] = useState(false);
   const [showCurrentPassword, setShowCurrentPassword] = useState(false);
   const [showNewPassword, setShowNewPassword] = useState(false);
   const [currentPasswordError, setCurrentPasswordError] = useState("");
   const [newPasswordError, setNewPasswordError] = useState("");
   const [confirmNewPasswordError, setConfirmNewPasswordError] = useState("");
+  const [errorMessage, setErrorMessage] = useState("");
+  const [loading, setLoading] = useState(false);
+  const navigate = useNavigate();
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
 
     // Basic validation
     if (!currentPassword) {
-      setCurrentPasswordError("Please enter your current password.");
+      setErrorMessage("Please enter your current password.");
       return;
     }
-    if (!newPassword) {
-      setNewPasswordError("Please enter your new password.");
-      return;
-    }
-    if (!confirmNewPassword) {
-      setConfirmNewPasswordError("Please confirm your new password.");
+    if (newPassword.length < 8) {
+      setErrorMessage("New password must be at least 8 characters.");
       return;
     }
     if (newPassword !== confirmNewPassword) {
-      setConfirmNewPasswordError("Passwords do not match.");
+      setErrorMessage("Passwords do not match.");
       return;
     }
 
-    // Submit logic
-    console.log("Password change submitted");
+    try {
+      setLoading(true);
+      setErrorMessage("");
+
+      const response = await axiosInstance.patch("/user/update-password", {
+        currentPassword,
+        newPassword,
+      });
+
+      if (response.status === 200) {
+        setCurrentPassword("");
+        setNewPassword("");
+        setConfirmNewPassword("");
+      }
+    } catch (error) {
+      if (error.response?.status === 400) {
+        setErrorMessage("Incorrect current password.");
+      } else if (error.response?.status === 401) {
+        setErrorMessage("Unauthorized.");
+      } else if (error.response?.status === 404) {
+        setErrorMessage("User not found.");
+      } else {
+        setErrorMessage("Something went wrong. Please try again.");
+      }
+    } finally {
+      setLoading(false);
+    }
   };
 
   const toggleCurrentPasswordVisibility = () => {
@@ -48,13 +73,13 @@ const ChangePasswordForm = () => {
   };
 
   const handleForgotPassword = () => {
-    // go to forgot password page
-    console.log("Forgot password");
+    // TODO: Navigate to ForgotPasswordPage
+    navigate("/auth/forgot-password");
   };
 
   const handleBack = () => {
-    // Navigate back
-    console.log("Back");
+    // TODO: Navigate back
+    navigate(-1);
   };
 
   const isFormValid = () => {
@@ -63,7 +88,8 @@ const ChangePasswordForm = () => {
       newPassword &&
       confirmNewPassword &&
       newPassword.length >= 8 &&
-      newPassword === confirmNewPassword
+      newPassword === confirmNewPassword &&
+      !loading
     );
   };
 
@@ -93,6 +119,7 @@ const ChangePasswordForm = () => {
         onChange={(e) => {
           setCurrentPassword(e.target.value);
           setCurrentPasswordError("");
+          setErrorMessage("");
         }}
         onBlur={() => {
           if (!currentPassword) {
@@ -119,6 +146,7 @@ const ChangePasswordForm = () => {
         onChange={(e) => {
           setNewPassword(e.target.value);
           setNewPasswordError("");
+          setErrorMessage("");
         }}
         onBlur={() => {
           if (!newPassword) {
@@ -146,14 +174,11 @@ const ChangePasswordForm = () => {
         onChange={(e) => {
           setConfirmNewPassword(e.target.value);
           setConfirmNewPasswordError("");
+          setErrorMessage("");
         }}
         onBlur={() => {
           if (!confirmNewPassword) {
             setConfirmNewPasswordError("Please confirm your new password.");
-          } else if (confirmNewPassword.length < 8) {
-            setConfirmNewPasswordError(
-              "Your password is too short. It should be at least 8 characters long"
-            );
           } else if (newPassword !== confirmNewPassword) {
             setConfirmNewPasswordError("Passwords do not match.");
           }
@@ -167,6 +192,10 @@ const ChangePasswordForm = () => {
         showPassword={showNewPassword}
         error={confirmNewPasswordError}
       />
+
+      {errorMessage && (
+        <p className="text-red-500 text-xl mb-4">{errorMessage}</p>
+      )}
 
       {/* Submit Button and Forgot Password Link */}
       <div className="flex items-center justify-between">

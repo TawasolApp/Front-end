@@ -1,12 +1,15 @@
 import React, { useState } from "react";
 import InputField from "./InputField";
 import BlueSubmitButton from "./BlueSubmitButton";
+import { useNavigate } from "react-router-dom";
+import { axiosInstance } from "../../../apis/axios";
 
 const ForgotPasswordForm = () => {
   const [email, setEmail] = useState("");
   const [error, setError] = useState("");
+  const navigate = useNavigate();
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
 
     // Basic validation
@@ -18,12 +21,31 @@ const ForgotPasswordForm = () => {
       return;
     }
 
-    // Submit logic (e.g., send verification code)
-    console.log("Verification code sent to:", email);
+    try {
+      const response = await axiosInstance.post("/auth/forgot-password", {
+        email: email,
+      });
+
+      navigate("/auth/email-verification");
+    } catch (error) {
+      if (error.response) {
+        console.error("Forgot password error:", error.response.data);
+        setError(
+          error.response.data.message ||
+            "Failed to send reset email. Please try again."
+        );
+      } else if (error.request) {
+        console.error("No response received:", error.request);
+        setError("Network error. Please check your connection.");
+      } else {
+        console.error("Error:", error.message);
+        setError("An unexpected error occurred.");
+      }
+    }
   };
 
   const handleBack = () => {
-    return; // Go back to the previous page
+    navigate(-1);
   };
 
   const validateEmail = (email) => {

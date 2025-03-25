@@ -76,7 +76,6 @@ const NameForm = ({ onSubmit }) => {
         onChange={handleChange}
         onBlur={handleFirstNameBlur}
         placeholder=""
-        required
         error={firstNameError}
       />
       <InputField
@@ -88,7 +87,6 @@ const NameForm = ({ onSubmit }) => {
         onChange={handleChange}
         onBlur={handleLastNameBlur}
         placeholder=""
-        required
         error={lastNameError}
       />
       {/* reCAPTCHA Widget */}

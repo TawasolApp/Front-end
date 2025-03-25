@@ -1,12 +1,13 @@
 import React, { useState } from "react";
 import InputField from "./InputField";
 import BlueSubmitButton from "./BlueSubmitButton";
+import { useSelector } from "react-redux";
 
 const EmailVerificationForm = () => {
   const [code, setCode] = useState("");
   const [error, setError] = useState("");
 
-  const email = "khalid4abdelwahab@gmail.com"; // needs to be changed, get email from state
+  const { email } = useSelector((state) => state.authentication);
 
   const handleSubmit = (e) => {
     e.preventDefault();

@@ -3,6 +3,7 @@ import { getIconComponent } from "../../../utils";
 const SignWithGoogle = () => {
   const GoogleGIcon = getIconComponent("google-g");
 
+  // TODO: implement social login
   return (
     <button
       type="button"

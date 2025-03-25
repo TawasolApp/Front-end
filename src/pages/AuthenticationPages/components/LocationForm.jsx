@@ -1,11 +1,12 @@
 import React, { useState } from "react";
 import BlueSubmitButton from "./BlueSubmitButton";
 import InputField from "./InputField";
+import { useSelector } from "react-redux";
 
 const LocationForm = ({ onSubmit }) => {
   const [location, setLocation] = useState("");
-
   const [locationError, setLocationError] = useState("");
+  const { firstName } = useSelector((state) => state.authentication);
 
   const handleChange = (e) => {
     setLocation(e.target.value);
@@ -34,7 +35,7 @@ const LocationForm = ({ onSubmit }) => {
   return (
     <form onSubmit={handleSubmit}>
       <h1 className="text-3xl font-semibold mb-4 text-gray-800 text-center">
-        Welcome, Jo! What's your location?
+        Welcome, {firstName}! What's your location?
       </h1>
       <p className="text-xl text-gray-700 text-center mb-10">
         See people, jobs, and news in your area.

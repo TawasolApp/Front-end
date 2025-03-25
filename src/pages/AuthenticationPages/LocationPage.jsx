@@ -1,10 +1,12 @@
 import React from "react";
 import LocationForm from "./components/LocationForm";
+import { useNavigate } from "react-router-dom";
 
 const LocationPage = () => {
+  const navigate = useNavigate();
 
   const handleSubmit = (location) => {
-    console.log("Location:", location);
+    navigate("/auth/signup/experience");
   };
 
   return (

@@ -1,6 +1,39 @@
 {
   "users": [
-    { "id": "1", "username": "Khalid", "password": "1234" },
-    { "id": "2", "username": "Ali", "password": "1234" }
+    {
+      "id": "1",
+      "email": "Khalid",
+      "password": "123456789",
+      "firstName": "Khalid",
+      "lastNAme": "Ali"
+    },
+    {
+      "id": 2,
+      "email": "Khalid@gmail.c",
+      "password": "123456",
+      "firstName": "",
+      "lastName": ""
+    },
+    {
+      "id": 3,
+      "email": "ali@gmail.com",
+      "password": "123456",
+      "firstName": "Khalid",
+      "lastName": "Ali"
+    },
+    {
+      "id": 4,
+      "email": "email@g.com",
+      "password": "123456",
+      "firstName": "email",
+      "lastName": "email"
+    },
+    {
+      "id": 5,
+      "email": "Test@gmail.com",
+      "password": "123456",
+      "firstName": "Test",
+      "lastName": "Test"
+    }
   ]
 }

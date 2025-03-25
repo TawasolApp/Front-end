@@ -3,6 +3,7 @@ import InputField from "./InputField";
 import SignWithGoogle from "./SignWithGoogle";
 import Divider from "./Divider";
 import BlueSubmitButton from "./BlueSubmitButton";
+import { Link } from "react-router-dom";
 
 const SignInForm = ({ onSubmit }) => {
   const [formData, setFormData] = useState({
@@ -13,6 +14,8 @@ const SignInForm = ({ onSubmit }) => {
   const [showPassword, setShowPassword] = useState(false);
   const [emailError, setEmailError] = useState("");
   const [passwordError, setPasswordError] = useState("");
+  const [credentialsError, setCredentialsError] = useState("");
+  
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -27,6 +30,7 @@ const SignInForm = ({ onSubmit }) => {
     if (name === "password" && passwordError) {
       setPasswordError("");
     }
+    setCredentialsError("");
   };
 
   const handleEmailBlur = () => {
@@ -55,7 +59,7 @@ const SignInForm = ({ onSubmit }) => {
       setPasswordError('Please enter your password.');
       return;
     }
-    onSubmit(formData);
+    onSubmit(formData, setCredentialsError);
   };
 
   const togglePasswordVisibility = () => {
@@ -96,13 +100,14 @@ const SignInForm = ({ onSubmit }) => {
         showPassword={showPassword}
         error={passwordError}
       />
+      {credentialsError && <p className="text-red-500 text-lg mt-2">{credentialsError}</p>}
       <div className="mb-6">
-        <a
-          href="/forgot-password"
+        <Link
+          to="/auth/forgot-password"
           className="text-blue-600 hover:underline text-xl"
-        >
+        > {/* TODO: Navigate to ForgotPasswordPage */}
           Forgot password?
-        </a>
+        </Link>
       </div>
       <div className="mb-6 flex items-center">
         <input

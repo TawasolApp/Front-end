@@ -6,6 +6,9 @@ import { useSelector } from "react-redux";
 const ChangeEmailForm = ({ onSubmit }) => {
   const { email } = useSelector((state) => state.authentication);
   const [newEmail, setNewEmail] = useState(email);
+  const [currentPassword, setCurrentPassword] = useState("");
+  const [showCurrentPassword, setShowCurrentPassword] = useState(false);
+  const [currentPasswordError, setCurrentPasswordError] = useState("");
 
   const [emailError, setEmailError] = useState("");
 
@@ -36,12 +39,16 @@ const ChangeEmailForm = ({ onSubmit }) => {
       setEmailError("Please enter a valid email.");
       return;
     }
-    onSubmit(newEmail);
+    onSubmit(newEmail, currentPassword, setEmailError, setCurrentPasswordError);
   };
 
   const validateEmail = (email) => {
     const regex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     return regex.test(email);
+  };
+
+  const toggleCurrentPasswordVisibility = () => {
+    setShowCurrentPassword(!showCurrentPassword);
   };
 
   return (
@@ -63,6 +70,28 @@ const ChangeEmailForm = ({ onSubmit }) => {
         placeholder=""
         required
         error={emailError}
+      />
+      <InputField
+        type={showCurrentPassword ? "text" : "password"}
+        id="currentPassword"
+        name="currentPassword"
+        labelText="Password"
+        value={currentPassword}
+        onChange={(e) => {
+          setCurrentPassword(e.target.value);
+          setCurrentPasswordError("");
+        }}
+        onBlur={() => {
+          if (!currentPassword) {
+            setCurrentPasswordError("Please enter your current password.");
+          }
+        }}
+        placeholder=""
+        required
+        showPasswordToggle
+        onTogglePasswordVisibility={toggleCurrentPasswordVisibility}
+        showPassword={showCurrentPassword}
+        error={currentPasswordError}
       />
       <BlueSubmitButton text="Submit" />
     </form>

@@ -1,9 +1,13 @@
 import React from "react";
 import SignWithGoogle from "./SignWithGoogle";
+import { Link, useNavigate } from "react-router-dom";
 
 const WelcomeForm = () => {
+  const navigate = useNavigate();
+
   const handleSignInWithEmail = () => {
-    console.log("Sign in with email");
+    // TODO: Navigate to SignInPage
+    navigate("/auth/signin");
   };
 
   return (
@@ -22,9 +26,13 @@ const WelcomeForm = () => {
 
       <p className="mt-6 text-center text-gray-600 text-xl">
         New to Tawasol?{" "}
-        <a href="/signup" className="text-blue-600 font-semibold hover:underline">
+        <Link
+          to="/auth/signup"
+          className="text-blue-600 font-semibold hover:underline"
+        >
+          {/* TODO: Navigate to SignUpPage*/}
           Join now
-        </a>
+        </Link>
       </p>
     </div>
   );
