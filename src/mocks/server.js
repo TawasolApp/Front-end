@@ -82,6 +82,43 @@ server.post("/companies", (req, res) => {
     company: newCompany,
   });
 });
+// POST - Follow a company
+server.post("/companies/:companyId/follow", (req, res) => {
+  console.log("Following company...");
+
+  const companyId = req.params.companyId;
+  const company = _router.db.get("companies").find({ companyId: companyId });
+
+  if (!company.value()) {
+    return res.status(404).json({ error: "Company not found" });
+  }
+
+  company.assign({ isFollowing: true }).write();
+
+  res.status(200).json({
+    message: "Company followed successfully",
+    company: company.value(),
+  });
+});
+
+// DELETE - Unfollow a company
+server.delete("/companies/:companyId/unfollow", (req, res) => {
+  console.log("Unfollowing company...");
+
+  const companyId = req.params.companyId;
+  const company = _router.db.get("companies").find({ companyId: companyId });
+
+  if (!company.value()) {
+    return res.status(404).json({ error: "Company not found" });
+  }
+
+  company.assign({ isFollowing: false }).write();
+
+  res.status(200).json({
+    message: "Company unfollowed successfully",
+    company: company.value(),
+  });
+});
 server.use(_router);
 
 server.listen(5000, () => {

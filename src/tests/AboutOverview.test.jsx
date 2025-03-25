@@ -5,8 +5,8 @@ describe("Aboutoverview", () => {
   const mockCompany = {
     overview: "A great company with innovative products.",
     website: "https://example.com",
-    phoneNumber: "123-456-7890",
-    verified: true,
+    contactNumber: "123-456-7890",
+    isVerified: true,
     verification_date: "2022-01-01",
     industry: "Software",
     companySize: "100-200",

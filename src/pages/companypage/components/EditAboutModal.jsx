@@ -11,12 +11,15 @@ function EditAboutModal({ show, companyData, onClose }) {
     industry: "",
     address: "",
     website: "",
-    phoneNumber: "",
-    verified: false,
+    contactNumber: "",
+    isVerified: false,
     verification_date: "",
     founded: "",
     specialities: "",
+    email: "",
     location: "",
+    companyType: "",
+    companySize: "",
   });
   useEffect(() => {
     if (show && companyData) {
@@ -28,12 +31,15 @@ function EditAboutModal({ show, companyData, onClose }) {
         industry: companyData.industry || "",
         address: companyData.address || "",
         website: companyData.website || "",
-        phoneNumber: companyData.phoneNumber || "",
-        verified: companyData.verified || false,
+        contactNumber: companyData.contactNumber || "",
+        isVerified: companyData.isVerified || false,
         verification_date: companyData.verification_date || "",
         founded: companyData.founded || "",
         specialities: companyData.specialities || "",
         location: companyData.location || "",
+        email: companyData.email || "",
+        companyType: companyData.companyType || "",
+        companySize: companyData.companySize || "",
       });
     }
   }, [show, companyData]);
@@ -181,15 +187,14 @@ function EditAboutModal({ show, companyData, onClose }) {
               onChange={handleChange}
             />
           </div>
-
           {/* Phone Number */}
           <div className="mb-4">
             <label className="block font-medium text-text2">Phone</label>
             <input
               type="text"
-              name="phoneNumber"
+              name="contactNumber"
               className="w-full p-2 border rounded-md bg-boxbackground text-text2"
-              value={formData.phoneNumber}
+              value={formData.contactNumber}
               onChange={handleChange}
             />
           </div>
@@ -198,8 +203,9 @@ function EditAboutModal({ show, companyData, onClose }) {
           <div className="mb-4 flex items-center">
             <input
               type="checkbox"
-              name="verified"
-              checked={formData.verified}
+              name="isVerified"
+              aria-label="Verified Page"
+              checked={formData.isVerified}
               onChange={handleChange}
               className="mr-2 "
             />
@@ -207,7 +213,7 @@ function EditAboutModal({ show, companyData, onClose }) {
           </div>
 
           {/* Verification Date */}
-          {formData.verified && (
+          {formData.isVerified && (
             <div className="mb-4">
               <label className="block font-medium text-text2 bg-boxbackground">
                 Verification Date
@@ -221,7 +227,17 @@ function EditAboutModal({ show, companyData, onClose }) {
               />
             </div>
           )}
-
+          {/* Email */}
+          <div className="mb-4">
+            <label className="block font-medium text-text2">Email</label>
+            <input
+              type="text"
+              name="email"
+              className="w-full p-2 border rounded-md bg-boxbackground text-text2"
+              value={formData.email}
+              onChange={handleChange}
+            />
+          </div>
           {/* Founded Year */}
           <div className="mb-4">
             <label className="block font-medium text-text2">Founded</label>
@@ -233,7 +249,28 @@ function EditAboutModal({ show, companyData, onClose }) {
               onChange={handleChange}
             />
           </div>
-
+          {/* companySize */}
+          <div className="mb-4">
+            <label className="block font-medium text-text2">Company Size</label>
+            <input
+              type="text"
+              name="companySize"
+              className="w-full p-2 border rounded-md bg-boxbackground text-text2"
+              value={formData.companySize}
+              onChange={handleChange}
+            />
+          </div>
+          {/* companyType */}
+          <div className="mb-4">
+            <label className="block font-medium text-text2">Company Type</label>
+            <input
+              type="text"
+              name="companyType"
+              className="w-full p-2 border rounded-md bg-boxbackground text-text2"
+              value={formData.companyType}
+              onChange={handleChange}
+            />
+          </div>
           {/* Specialities */}
           <div className="mb-4">
             <label className="block font-medium text-text2">Specialities</label>

@@ -36,10 +36,10 @@ function Aboutoverview(props) {
           </a>
         </div>
       )}
-      {company?.phoneNumber && (
-        <Overviewcomponent title="Phone" content={company.phoneNumber} />
+      {company?.contactNumber && (
+        <Overviewcomponent title="Phone" content={company.contactNumber} />
       )}
-      {company?.verified && company?.verification_date && (
+      {company?.isVerified && company?.verification_date && (
         <Overviewcomponent
           title="Verified Page"
           content={company.verification_date}

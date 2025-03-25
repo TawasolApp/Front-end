@@ -20,8 +20,8 @@ describe("EditAboutModal", () => {
     industry: "Tech",
     address: "123 Street",
     website: "https://company.com",
-    phoneNumber: "1234567890",
-    verified: true,
+    contactNumber: "1234567890",
+    isVerified: true,
     verification_date: "2023-01-01",
     founded: "2000",
     specialities: "IT Services",
@@ -144,5 +144,78 @@ describe("EditAboutModal", () => {
     expect(await screen.findByTestId("error-message")).toHaveTextContent(
       "Failed to update company profile."
     );
+  });
+  test("renders default values for missing company data", () => {
+    render(<EditAboutModal show={true} companyData={{}} onClose={onClose} />);
+
+    expect(screen.getByPlaceholderText("Enter new banner URL")).toHaveValue("");
+    expect(screen.getByPlaceholderText("Enter new logo URL")).toHaveValue("");
+  });
+
+  test("checks and unchecks verified checkbox", () => {
+    render(
+      <EditAboutModal
+        show={true}
+        companyData={{ isVerified: false }}
+        onClose={onClose}
+      />
+    );
+
+    const checkbox = screen.getByRole("checkbox", { name: "Verified Page" });
+
+    fireEvent.click(checkbox);
+    expect(checkbox.checked).toBe(true);
+
+    fireEvent.click(checkbox);
+    expect(checkbox.checked).toBe(false);
+  });
+
+  test("closes modal when close button is clicked", () => {
+    render(
+      <EditAboutModal
+        show={true}
+        companyData={mockCompanyData}
+        onClose={onClose}
+      />
+    );
+
+    fireEvent.click(screen.getByText("✖"));
+    expect(onClose).toHaveBeenCalled();
+  });
+
+  test("renders company logo and banner", () => {
+    render(
+      <EditAboutModal
+        show={true}
+        companyData={mockCompanyData}
+        onClose={onClose}
+      />
+    );
+
+    const logo = screen.getByAltText("Company Logo");
+    const banner = screen.getByAltText("Company Banner");
+
+    expect(logo).toHaveAttribute("src", "logo-url");
+    expect(banner).toHaveAttribute("src", "banner-url");
+  });
+
+  test("renders all input fields", () => {
+    render(
+      <EditAboutModal
+        show={true}
+        companyData={mockCompanyData}
+        onClose={onClose}
+      />
+    );
+
+    expect(
+      screen.getByPlaceholderText("Enter new banner URL")
+    ).toBeInTheDocument();
+    expect(
+      screen.getByPlaceholderText("Enter new logo URL")
+    ).toBeInTheDocument();
+    expect(screen.getByDisplayValue("1234567890")).toBeInTheDocument();
+    expect(screen.getByDisplayValue("Tech")).toBeInTheDocument();
+    expect(screen.getByDisplayValue("https://company.com")).toBeInTheDocument();
   });
 });

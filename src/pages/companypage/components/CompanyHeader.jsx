@@ -31,6 +31,7 @@ function CompanyHeader({ companyId }) {
         .get(`/companies/${companyId}`)
         .then((response) => {
           setCompany(response.data);
+          setIsFollowing(response.data.isFollowing);
         })
         .catch((error) => console.error("Error fetching company:", error))
         .finally(() => setLoading(false));
@@ -53,15 +54,25 @@ function CompanyHeader({ companyId }) {
   //on click call togglefollow
   const toggleFollow = () => {
     if (isFollowing) {
-      setShowModal(true); // Show unfollow modal when already following
+      setShowModal(true); // Show unfollow modal
     } else {
-      setIsFollowing(true);
+      axiosInstance
+        .post(`/companies/${companyId}/follow`)
+        .then(() => {
+          setIsFollowing(true);
+        })
+        .catch((error) => console.error("Error following company:", error));
     }
   };
 
   const confirmUnfollow = () => {
-    setIsFollowing(false);
-    setShowModal(false);
+    axiosInstance
+      .delete(`/companies/${companyId}/unfollow`)
+      .then(() => {
+        setIsFollowing(false);
+        setShowModal(false);
+      })
+      .catch((error) => console.error("Error unfollowing company:", error));
   };
 
   return (

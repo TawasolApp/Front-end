@@ -1,8 +1,7 @@
 import { describe, test, expect, vi, beforeEach } from "vitest";
 import { render, screen, fireEvent } from "@testing-library/react";
 import { MemoryRouter } from "react-router-dom";
-// Corrected the import path for JobOpenings
-import JobOpenings from "../pages/CompanyPage/components/JobOpenings";
+import JobOpenings from "../pages/CompanyPage/Components/JobOpenings";
 
 describe("JobOpenings Component", () => {
   beforeEach(() => {

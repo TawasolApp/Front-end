@@ -1,7 +1,7 @@
 import { describe, expect, test, vi, beforeEach } from "vitest";
 import { render, screen, waitFor, fireEvent } from "@testing-library/react";
 import { formatNumbers } from "../utils/formatNumbers";
-import CompanyHeader from "../pages/companypage/components/CompanyHeader";
+import CompanyHeader from "../pages/CompanyPage/Components/CompanyHeader";
 import { axiosInstance } from "../apis/axios";
 import { MemoryRouter } from "react-router-dom";
 
@@ -53,12 +53,43 @@ describe("CompanyHeader", () => {
     followers: 1234,
     companySize: "201-500 employees",
     website: "https://testcompany.com",
+    isFollowing: false,
   };
 
   beforeEach(() => {
-    mockedAxios.get.mockResolvedValueOnce({ data: mockCompany });
+    mockedAxios.get.mockResolvedValue({ data: mockCompany });
+    mockedAxios.post.mockResolvedValue({});
+    mockedAxios.delete.mockResolvedValue({});
   });
 
+  test("handles follow button toggle", async () => {
+    render(
+      <MemoryRouter>
+        <CompanyHeader companyId="test-company" />
+      </MemoryRouter>
+    );
+
+    await waitFor(() =>
+      expect(screen.getByText("+ Follow")).toBeInTheDocument()
+    );
+
+    fireEvent.click(screen.getByText("+ Follow"));
+    await waitFor(() =>
+      expect(screen.getByText("✓ Following")).toBeInTheDocument()
+    );
+
+    fireEvent.click(screen.getByText("✓ Following")); // Open unfollow modal
+    await waitFor(() =>
+      expect(
+        screen.getByText(/Are you sure you want to unfollow/i)
+      ).toBeInTheDocument()
+    );
+
+    fireEvent.click(screen.getByLabelText("Confirm Unfollow"));
+    await waitFor(() =>
+      expect(screen.getByText("+ Follow")).toBeInTheDocument()
+    );
+  });
   test("renders company info correctly", async () => {
     render(
       <MemoryRouter>
@@ -126,40 +157,54 @@ describe("CompanyHeader", () => {
         <CompanyHeader companyId="test-company" />
       </MemoryRouter>
     );
-    // Step 1: Wait for data and follow button
+
+    // Step 1: Wait for "+ Follow" button
     await waitFor(() =>
       expect(screen.getByText("+ Follow")).toBeInTheDocument()
     );
 
-    // Step 2: Click "+ Follow" → becomes "✓ Following"
+    // Step 2: Click "+ Follow" → Should change to "✓ Following"
     fireEvent.click(screen.getByText("+ Follow"));
-    expect(screen.getByText("✓ Following")).toBeInTheDocument();
 
-    // Step 3: Click "✓ Following" → opens modal
+    await waitFor(() =>
+      expect(screen.getByText("✓ Following")).toBeInTheDocument()
+    );
+
+    // Step 3: Click "✓ Following" → Opens Unfollow Modal
     fireEvent.click(screen.getByText("✓ Following"));
 
-    // Step 4: Assert modal content is shown
-    expect(
-      screen.getByText(/Are you sure you want to unfollow/i)
-    ).toBeInTheDocument();
+    await waitFor(() =>
+      expect(
+        screen.getByText(/Are you sure you want to unfollow/i)
+      ).toBeInTheDocument()
+    );
 
-    // Step 5: Click cancel
+    // Step 4: Click "Close Unfollow" → Modal should disappear
     const closeunfollow = screen.getByLabelText("Close Unfollow");
     fireEvent.click(closeunfollow);
-    expect(
-      screen.queryByText(/Are you sure you want to unfollow/i)
-    ).not.toBeInTheDocument();
 
-    // Step 6: Re-open and click "Unfollow"
+    await waitFor(() =>
+      expect(
+        screen.queryByText(/Are you sure you want to unfollow/i)
+      ).not.toBeInTheDocument()
+    );
 
+    // Step 5: Click "✓ Following" again → Reopen modal
     fireEvent.click(screen.getByText("✓ Following"));
-    expect(
-      screen.getByText(/Are you sure you want to unfollow/i)
-    ).toBeInTheDocument();
+
+    await waitFor(() =>
+      expect(
+        screen.getByText(/Are you sure you want to unfollow/i)
+      ).toBeInTheDocument()
+    );
+
+    // Step 6: Click "Unfollow" → Should change back to "+ Follow"
     const confirmunfollow = screen.getByLabelText("Confirm Unfollow");
     fireEvent.click(confirmunfollow);
-    // Should return to "+ Follow" after confirming
-    expect(screen.getByText("+ Follow")).toBeInTheDocument();
+
+    await waitFor(() =>
+      expect(screen.getByText("+ Follow")).toBeInTheDocument()
+    );
   });
 
   test("opens the More Options modal when clicking the More Options button", async () => {
