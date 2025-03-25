@@ -1,17 +1,16 @@
-import MoreHorizIcon from '@mui/icons-material/MoreHoriz';
-import ActorHeader from '../../../../GenericComponents/ActorHeader';
-import DropdownMenu from '../../../../GenericComponents/DropdownMenu';
+import MoreHorizIcon from "@mui/icons-material/MoreHoriz";
+import ActorHeader from "../../../../GenericComponents/ActorHeader";
+import DropdownMenu from "../../../../GenericComponents/DropdownMenu";
 
 const PostCardHeader = ({
-    authorId,
-    authorName,
-    authorBio,
-    authorPicture,
-    timestamp,
-    visibility,
-    menuItems
-  }) => {
-
+  authorId,
+  authorName,
+  authorBio,
+  authorPicture,
+  timestamp,
+  visibility,
+  menuItems,
+}) => {
   return (
     <div className="relative">
       <div className="pr-16 pl-3 pt-3 mb-2">

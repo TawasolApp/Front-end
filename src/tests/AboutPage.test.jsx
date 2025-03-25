@@ -33,12 +33,12 @@ test("renders Aboutoverview and AboutLocations on Aboutpage", async () => {
       <Routes>
         <Route path="/company/:companyId/about" element={<Aboutpage />} />
       </Routes>
-    </MemoryRouter>
+    </MemoryRouter>,
   );
 
   // Wait for async loading
   await waitFor(() =>
-    expect(screen.getByTestId("about-overview")).toBeInTheDocument()
+    expect(screen.getByTestId("about-overview")).toBeInTheDocument(),
   );
 
   // Assertions

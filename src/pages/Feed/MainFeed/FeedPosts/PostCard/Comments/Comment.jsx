@@ -1,27 +1,24 @@
-import { useState } from 'react';
-import MoreHorizIcon from '@mui/icons-material/MoreHoriz';
-import FlagIcon from '@mui/icons-material/Flag';
-import EditIcon from '@mui/icons-material/Edit';
-import DeleteIcon from '@mui/icons-material/Delete';
+import { useState } from "react";
+import MoreHorizIcon from "@mui/icons-material/MoreHoriz";
+import FlagIcon from "@mui/icons-material/Flag";
+import EditIcon from "@mui/icons-material/Edit";
+import DeleteIcon from "@mui/icons-material/Delete";
 
-import ActorHeader from '../../../../GenericComponents/ActorHeader';
-import DropdownMenu from '../../../../GenericComponents/DropdownMenu';
-import ActivitiesHolder from './ActivitiesHolder';
-import CommentThreadWrapper from './CommentThreadWrapper';
-import ReactionsModal from '../../ReactionModal/ReactionsModal';
-import AddForm from './AddForm';
-import { formatDate } from '../../../../../../utils';
-import { axiosInstance } from '../../../../../../apis/axios';
+import ActorHeader from "../../../../GenericComponents/ActorHeader";
+import DropdownMenu from "../../../../GenericComponents/DropdownMenu";
+import ActivitiesHolder from "./ActivitiesHolder";
+import CommentThreadWrapper from "./CommentThreadWrapper";
+import ReactionsModal from "../../ReactionModal/ReactionsModal";
+import AddForm from "./AddForm";
+import { formatDate } from "../../../../../../utils";
+import { axiosInstance } from "../../../../../../apis/axios";
 
-const Comment = ({
-  comment,
-  handleDeleteComment
-}) => {
-
+const Comment = ({ comment, handleDeleteComment }) => {
   // TODO: change this to redux states
   const currentAuthorId = "mohsobh";
   const currentAuthorName = "Mohamed Sobh";
-  const currentAuthorPicture = "https://media.licdn.com/dms/image/v2/D4D03AQH7Ais8BxRXzw/profile-displayphoto-shrink_100_100/profile-displayphoto-shrink_100_100/0/1721080103981?e=1747872000&v=beta&t=nDnZdgCqkI8v5B2ymXZzluMZVlF6h_o-dN1pA95Fzv4";
+  const currentAuthorPicture =
+    "https://media.licdn.com/dms/image/v2/D4D03AQH7Ais8BxRXzw/profile-displayphoto-shrink_100_100/profile-displayphoto-shrink_100_100/0/1721080103981?e=1747872000&v=beta&t=nDnZdgCqkI8v5B2ymXZzluMZVlF6h_o-dN1pA95Fzv4";
   const currentAuthorBio = "Computer Engineering Student at Cairo University";
   const currentAuthorType = "User";
 
@@ -30,7 +27,6 @@ const Comment = ({
   const [editorMode, setEditorMode] = useState(false);
 
   const handleReaction = (reactionTypeAdd, reactionTypeRemove) => {
-
     let reacts = {};
     if (reactionTypeAdd) reacts[reactionTypeAdd] = 1;
     if (reactionTypeRemove) reacts[reactionTypeRemove] = 0;
@@ -38,9 +34,9 @@ const Comment = ({
     try {
       axiosInstance.post(`posts/react/${comment.id}`, {
         reactions: reacts,
-        postType: "Comment"
+        postType: "Comment",
       });
-      setLocalComment(prev => {
+      setLocalComment((prev) => {
         const newReactions = { ...prev.reactions };
         if (reactionTypeAdd) {
           newReactions[reactionTypeAdd] += 1;
@@ -57,22 +53,22 @@ const Comment = ({
 
   let menuItems = [
     {
-      text: 'Report post',
-      onClick: () => console.log('Reported post'),
-      icon: FlagIcon
+      text: "Report post",
+      onClick: () => console.log("Reported post"),
+      icon: FlagIcon,
     },
   ];
-  
+
   if (localComment.authorId === currentAuthorId) {
     menuItems.push({
-      text: 'Edit comment',
+      text: "Edit comment",
       onClick: () => setEditorMode(true),
-      icon: EditIcon
+      icon: EditIcon,
     });
     menuItems.push({
-      text: 'Delete comment',
+      text: "Delete comment",
       onClick: () => handleDeleteComment(localComment.id),
-      icon: DeleteIcon
+      icon: DeleteIcon,
     });
   }
 
@@ -81,16 +77,16 @@ const Comment = ({
       setEditorMode(false);
       await axiosInstance.patch(`/posts/comments/${localComment.id}`, {
         content: text,
-        tagged: []
+        tagged: [],
       });
-      setLocalComment(prev => ({
+      setLocalComment((prev) => ({
         ...prev,
-        content: text
-      }))
+        content: text,
+      }));
     } catch (e) {
       console.log(e.message);
     }
-  }
+  };
 
   return (
     <>
@@ -125,7 +121,9 @@ const Comment = ({
 
           <CommentThreadWrapper>
             <div className="pl-2">
-              <p className="text-sm font-normal text-textContent">{localComment.content}</p>
+              <p className="text-sm font-normal text-textContent">
+                {localComment.content}
+              </p>
             </div>
           </CommentThreadWrapper>
 
@@ -135,7 +133,9 @@ const Comment = ({
                 initReactValue={localComment.reactType}
                 reactions={localComment.reactions}
                 onReactionChange={handleReaction}
-                setShowReactions={() => {setShowReactions(true)}}
+                setShowReactions={() => {
+                  setShowReactions(true);
+                }}
                 replies={localComment.replies.length}
               />
             </div>
@@ -143,8 +143,8 @@ const Comment = ({
 
           {showReactions && (
             <ReactionsModal
-                APIURL={`/posts/reactions/${localComment.id}`}
-                setShowLikes={() => setShowReactions(false)}
+              APIURL={`/posts/reactions/${localComment.id}`}
+              setShowLikes={() => setShowReactions(false)}
             />
           )}
         </article>

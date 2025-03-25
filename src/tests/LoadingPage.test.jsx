@@ -9,6 +9,6 @@ const mockedAxios = axiosInstance;
 test("should render LoadingPage correctly", () => {
   const { container } = render(<LoadingPage />);
   expect(container.firstChild).toHaveClass(
-    "flex justify-center items-center h-screen"
+    "flex justify-center items-center h-screen",
   );
 });

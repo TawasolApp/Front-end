@@ -24,7 +24,7 @@ describe("Aboutoverview", () => {
   test("renders overview text", () => {
     render(<Aboutoverview company={mockCompany} />);
     expect(
-      screen.getByText("A great company with innovative products.")
+      screen.getByText("A great company with innovative products."),
     ).toBeInTheDocument();
   });
 

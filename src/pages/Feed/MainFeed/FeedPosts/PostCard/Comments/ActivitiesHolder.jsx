@@ -1,108 +1,118 @@
-import { useState, useMemo } from 'react';
-import reactionIcons from '../../../../GenericComponents/reactionIcons';
-import ReactionPicker from '../../../../GenericComponents/ReactionPicker';
+import { useState, useMemo } from "react";
+import reactionIcons from "../../../../GenericComponents/reactionIcons";
+import ReactionPicker from "../../../../GenericComponents/ReactionPicker";
 
 const ActivitiesHolder = ({
-    initReactValue=null,
-    reactions,
-    onReactionChange,
-    setShowReactions,
-    replies,
-    setShowReplies
+  initReactValue = null,
+  reactions,
+  onReactionChange,
+  setShowReactions,
+  replies,
+  setShowReplies,
 }) => {
-    const [currentReaction, setCurrentReaction] = useState(initReactValue);
-    
-    // Memoized calculations
-    const { topReactions, totalLikes } = useMemo(() => {
-        const filtered = Object.entries(reactions)
-            .filter(([_, count]) => count > 0)
-            .sort((a, b) => b[1] - a[1]);
-        
-        return {
-            topReactions: filtered.slice(0, 3),
-            totalLikes: filtered.reduce((acc, [_, count]) => acc + count, 0)
-        };
-    }, [reactions]);
+  const [currentReaction, setCurrentReaction] = useState(initReactValue);
 
-    const handleReaction = (reactionType) => {
-        if (currentReaction === null) {
-            onReactionChange(reactionType, null);
-            setCurrentReaction(reactionType);
-        } else if (currentReaction === reactionType) {
-            onReactionChange(null, reactionType);
-            setCurrentReaction(null);
-        } else {
-            onReactionChange(reactionType, currentReaction);
-            setCurrentReaction(reactionType);
-        }
+  // Memoized calculations
+  const { topReactions, totalLikes } = useMemo(() => {
+    const filtered = Object.entries(reactions)
+      .filter(([_, count]) => count > 0)
+      .sort((a, b) => b[1] - a[1]);
+
+    return {
+      topReactions: filtered.slice(0, 3),
+      totalLikes: filtered.reduce((acc, [_, count]) => acc + count, 0),
     };
+  }, [reactions]);
 
-    // Reaction display component
-    const ReactionDisplay = () => {
-        if (!currentReaction) return <span className="text-sm font-semibold text-textLightActivity">Like</span>;
-        const { Icon, color, label } = reactionIcons[currentReaction];
-        return (
-            <div className="flex items-center">
-                <span style={{ color }} className="text-sm font-semibold">{label}</span>
-            </div>
-        );
-    };
+  const handleReaction = (reactionType) => {
+    if (currentReaction === null) {
+      onReactionChange(reactionType, null);
+      setCurrentReaction(reactionType);
+    } else if (currentReaction === reactionType) {
+      onReactionChange(null, reactionType);
+      setCurrentReaction(null);
+    } else {
+      onReactionChange(reactionType, currentReaction);
+      setCurrentReaction(reactionType);
+    }
+  };
 
+  // Reaction display component
+  const ReactionDisplay = () => {
+    if (!currentReaction)
+      return (
+        <span className="text-sm font-semibold text-textLightActivity">
+          Like
+        </span>
+      );
+    const { Icon, color, label } = reactionIcons[currentReaction];
     return (
-        <div className="flex items-center text-textLightActivity">
-
-            {/* Reactions Section */}
-            <div className="flex items-center">
-                <ReactionPicker onSelectReaction={handleReaction}>
-                    <button
-                        className="flex px-1 items-center rounded-md hover:bg-buttonIconHover transition-all duration-200"
-                        onClick={() => handleReaction(currentReaction || 'like')}
-                    >
-                        <ReactionDisplay />
-                    </button>
-                </ReactionPicker>
-
-                {totalLikes > 0 && (
-                    <div className="flex items-center">
-                        <div
-                            className="flex -space-x-2 cursor-pointer hover:transition-all group"
-                            onClick={setShowReactions}
-                        >
-                            {topReactions.map(([reactionType]) => {
-                                const { Icon, color } = reactionIcons[reactionType];
-                                return (
-                                    <div key={reactionType} className="relative">
-                                        <Icon className="w-4 h-4" />
-                                    </div>
-                                );
-                            })}
-                            <span className="text-xs pl-2.5 group-hover:text-textPlaceholderHover group-hover:underline">
-                                {totalLikes}
-                            </span>
-                        </div>
-                    </div>
-                )}
-            </div>
-
-
-            <span className="text-textLightActivity pl-1 text-xs font-semibold">|</span>
-            <button
-                className="text-sm font-semibold text-textLightActivity px-1 rounded-md hover:bg-buttonIconHover transition-all duration-200"
-                onClick={() => setShowReplies(true)}
-            >
-                Reply
-            </button>
-
-            {/* Reply Button */}
-            {replies > 0 && (
-                <>
-                    <span className="text-textLightActivity pr-1 text-xs font-light">•</span>
-                    <span className="text-xs font-normal text-textLightActivity py-1 rounded-md">{replies} {replies === 1 ? 'reply' : 'replies'}</span>
-                </>
-            )}
-            
-        </div>
+      <div className="flex items-center">
+        <span style={{ color }} className="text-sm font-semibold">
+          {label}
+        </span>
+      </div>
     );
-}
+  };
+
+  return (
+    <div className="flex items-center text-textLightActivity">
+      {/* Reactions Section */}
+      <div className="flex items-center">
+        <ReactionPicker onSelectReaction={handleReaction}>
+          <button
+            className="flex px-1 items-center rounded-md hover:bg-buttonIconHover transition-all duration-200"
+            onClick={() => handleReaction(currentReaction || "like")}
+          >
+            <ReactionDisplay />
+          </button>
+        </ReactionPicker>
+
+        {totalLikes > 0 && (
+          <div className="flex items-center">
+            <div
+              className="flex -space-x-2 cursor-pointer hover:transition-all group"
+              onClick={setShowReactions}
+            >
+              {topReactions.map(([reactionType]) => {
+                const { Icon, color } = reactionIcons[reactionType];
+                return (
+                  <div key={reactionType} className="relative">
+                    <Icon className="w-4 h-4" />
+                  </div>
+                );
+              })}
+              <span className="text-xs pl-2.5 group-hover:text-textPlaceholderHover group-hover:underline">
+                {totalLikes}
+              </span>
+            </div>
+          </div>
+        )}
+      </div>
+
+      <span className="text-textLightActivity pl-1 text-xs font-semibold">
+        |
+      </span>
+      <button
+        className="text-sm font-semibold text-textLightActivity px-1 rounded-md hover:bg-buttonIconHover transition-all duration-200"
+        onClick={() => setShowReplies(true)}
+      >
+        Reply
+      </button>
+
+      {/* Reply Button */}
+      {replies > 0 && (
+        <>
+          <span className="text-textLightActivity pr-1 text-xs font-light">
+            •
+          </span>
+          <span className="text-xs font-normal text-textLightActivity py-1 rounded-md">
+            {replies} {replies === 1 ? "reply" : "replies"}
+          </span>
+        </>
+      )}
+    </div>
+  );
+};
 
 export default ActivitiesHolder;

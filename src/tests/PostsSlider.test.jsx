@@ -33,7 +33,7 @@ describe("PostsSlider", () => {
     render(
       <MemoryRouter>
         <PostsSlider />
-      </MemoryRouter>
+      </MemoryRouter>,
     );
 
     // Main wrapper
@@ -50,7 +50,7 @@ describe("PostsSlider", () => {
     render(
       <MemoryRouter>
         <PostsSlider />
-      </MemoryRouter>
+      </MemoryRouter>,
     );
 
     const button = screen.getByText("Show all posts →");
@@ -63,7 +63,7 @@ describe("PostsSlider", () => {
     render(
       <MemoryRouter>
         <PostsSlider />
-      </MemoryRouter>
+      </MemoryRouter>,
     );
 
     const lastButton = screen.getByText("Show all →");
@@ -90,7 +90,7 @@ describe("PostsSlider scroll functionality", () => {
         <Routes>
           <Route path="/company/:companyId/home" element={<PostsSlider />} />
         </Routes>
-      </MemoryRouter>
+      </MemoryRouter>,
     );
 
     const leftBtn = screen.getByLabelText("scroll-left");
@@ -108,7 +108,7 @@ describe("PostsSlider scroll functionality", () => {
         <Routes>
           <Route path="/company/:companyId/home" element={<PostsSlider />} />
         </Routes>
-      </MemoryRouter>
+      </MemoryRouter>,
     );
 
     const rightBtn = screen.getByLabelText("scroll-right");

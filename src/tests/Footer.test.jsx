@@ -17,13 +17,13 @@ describe("Footer", () => {
     expect(screen.getByText("Visit our Help Center.")).toBeInTheDocument();
 
     expect(
-      screen.getByText("Manage your account & privacy")
+      screen.getByText("Manage your account & privacy"),
     ).toBeInTheDocument();
     expect(screen.getByText("Go to Settings.")).toBeInTheDocument();
 
     expect(screen.getByText("Recommendation Transparency")).toBeInTheDocument();
     expect(
-      screen.getByText("Learn more about Recommended Content.")
+      screen.getByText("Learn more about Recommended Content."),
     ).toBeInTheDocument();
   });
 
@@ -38,6 +38,8 @@ describe("Footer", () => {
 
   test("shows copyright", () => {
     render(<Footer />);
-    expect(screen.getByText(/LinkedIn Corporation © 2025/)).toBeInTheDocument();
+    expect(
+      screen.getByText(/LinkedIn Corporation © 2025/),
+    ).toBeInTheDocument();
   });
 });

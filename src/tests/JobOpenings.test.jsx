@@ -27,7 +27,7 @@ describe("JobOpenings Component", () => {
     render(
       <MemoryRouter initialEntries={["/company/123"]}>
         <JobOpenings company={{ logo: "logo.png" }} jobs={mockJobs} />
-      </MemoryRouter>
+      </MemoryRouter>,
     );
 
     expect(screen.getByText("Recent Job Openings")).toBeInTheDocument();
@@ -35,8 +35,8 @@ describe("JobOpenings Component", () => {
     expect(screen.getByText("Frontend Developer")).toBeInTheDocument();
     expect(
       screen.getByText(
-        (content) => content.includes("Show all") && content.includes("jobs")
-      )
+        (content) => content.includes("Show all") && content.includes("jobs"),
+      ),
     ).toBeInTheDocument();
   });
 
@@ -67,11 +67,11 @@ describe("JobOpenings Component", () => {
     render(
       <MemoryRouter>
         <JobOpenings company={{ logo: "logo.png" }} jobs={mockJobs} />
-      </MemoryRouter>
+      </MemoryRouter>,
     );
 
     const showAllJobsButton = screen.getByText(
-      (content) => content.includes("Show all") && content.includes("jobs")
+      (content) => content.includes("Show all") && content.includes("jobs"),
     );
     expect(showAllJobsButton).toBeInTheDocument();
 

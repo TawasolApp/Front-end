@@ -13,7 +13,7 @@ describe("MoreOptionsModal", () => {
         show={false}
         onClose={onCloseMock}
         navigate={navigateMock}
-      />
+      />,
     );
     expect(container.firstChild).toBeNull();
   });
@@ -24,7 +24,7 @@ describe("MoreOptionsModal", () => {
         show={true}
         onClose={onCloseMock}
         navigate={navigateMock}
-      />
+      />,
     );
     expect(screen.getByText("Send in a message")).toBeInTheDocument();
     expect(screen.getByText("Report abuse")).toBeInTheDocument();
@@ -37,7 +37,7 @@ describe("MoreOptionsModal", () => {
         show={true}
         onClose={onCloseMock}
         navigate={navigateMock}
-      />
+      />,
     );
 
     fireEvent.click(screen.getByText("Create a Tawasol Page"));

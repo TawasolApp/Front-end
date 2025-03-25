@@ -9,7 +9,8 @@
     "lint": "eslint .",
     "preview": "vite preview",
     "test": "vitest --coverage",
-    "mock": "set VITE_APP_BASE_URL=http://localhost:5000 && start cmd /c node src/mocks/server.js && vite"
+    "mock": "set VITE_APP_BASE_URL=http://localhost:5000 && start cmd /c node src/mocks/server.js && vite",
+    "pretty": "npx prettier --write ."
   },
   "dependencies": {
     "@emotion/react": "^11.14.0",
@@ -20,6 +21,7 @@
     "axios": "^1.8.3",
     "date-fns": "^4.1.0",
     "dayjs": "^1.11.13",
+    "prettier": "^3.5.3",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
     "react-icons": "^5.5.0",

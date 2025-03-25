@@ -41,7 +41,7 @@ describe("CompanyLayout", () => {
         <Routes>
           <Route path="/company/:companyId/*" element={<CompanyLayout />} />
         </Routes>
-      </MemoryRouter>
+      </MemoryRouter>,
     );
 
     // Wait for the layout to finish loading
@@ -72,7 +72,7 @@ describe("CompanyLayout", () => {
             element={<div data-testid="redirected-home" />}
           />
         </Routes>
-      </MemoryRouter>
+      </MemoryRouter>,
     );
 
     await waitFor(() => {

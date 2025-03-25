@@ -44,7 +44,7 @@ describe("EditAboutModal", () => {
         show={false}
         companyData={mockCompanyData}
         onClose={onClose}
-      />
+      />,
     );
     expect(container.firstChild).toBeNull();
   });
@@ -55,7 +55,7 @@ describe("EditAboutModal", () => {
         show={true}
         companyData={mockCompanyData}
         onClose={onClose}
-      />
+      />,
     );
 
     expect(screen.getByDisplayValue("Old Description")).toBeInTheDocument();
@@ -69,7 +69,7 @@ describe("EditAboutModal", () => {
         show={true}
         companyData={mockCompanyData}
         onClose={onClose}
-      />
+      />,
     );
 
     const descriptionInput = screen.getByDisplayValue("Old Description");
@@ -90,7 +90,7 @@ describe("EditAboutModal", () => {
         show={true}
         companyData={mockCompanyData}
         onClose={onClose}
-      />
+      />,
     );
 
     fireEvent.change(screen.getByDisplayValue("Old Description"), {
@@ -102,7 +102,7 @@ describe("EditAboutModal", () => {
     await waitFor(() => {
       expect(mockedAxios.patch).toHaveBeenCalledWith(
         "/companies/1",
-        expect.objectContaining({ description: "Updated Description" })
+        expect.objectContaining({ description: "Updated Description" }),
       );
       expect(onClose).toHaveBeenCalled();
       expect(window.location.reload).toHaveBeenCalled();
@@ -115,7 +115,7 @@ describe("EditAboutModal", () => {
         show={true}
         companyData={mockCompanyData}
         onClose={onClose}
-      />
+      />,
     );
     expect(document.body.classList.contains("overflow-hidden")).toBe(true);
 
@@ -124,7 +124,7 @@ describe("EditAboutModal", () => {
         show={false}
         companyData={mockCompanyData}
         onClose={onClose}
-      />
+      />,
     );
     expect(document.body.classList.contains("overflow-hidden")).toBe(false);
   });
@@ -136,13 +136,13 @@ describe("EditAboutModal", () => {
         show={true}
         companyData={{ companyId: 1 }}
         onClose={vi.fn()}
-      />
+      />,
     );
 
     fireEvent.click(screen.getByText("Save Changes"));
 
     expect(await screen.findByTestId("error-message")).toHaveTextContent(
-      "Failed to update company profile."
+      "Failed to update company profile.",
     );
   });
   test("renders default values for missing company data", () => {
@@ -158,7 +158,7 @@ describe("EditAboutModal", () => {
         show={true}
         companyData={{ isVerified: false }}
         onClose={onClose}
-      />
+      />,
     );
 
     const checkbox = screen.getByRole("checkbox", { name: "Verified Page" });
@@ -176,7 +176,7 @@ describe("EditAboutModal", () => {
         show={true}
         companyData={mockCompanyData}
         onClose={onClose}
-      />
+      />,
     );
 
     fireEvent.click(screen.getByText("✖"));
@@ -189,7 +189,7 @@ describe("EditAboutModal", () => {
         show={true}
         companyData={mockCompanyData}
         onClose={onClose}
-      />
+      />,
     );
 
     const logo = screen.getByAltText("Company Logo");
@@ -205,14 +205,14 @@ describe("EditAboutModal", () => {
         show={true}
         companyData={mockCompanyData}
         onClose={onClose}
-      />
+      />,
     );
 
     expect(
-      screen.getByPlaceholderText("Enter new banner URL")
+      screen.getByPlaceholderText("Enter new banner URL"),
     ).toBeInTheDocument();
     expect(
-      screen.getByPlaceholderText("Enter new logo URL")
+      screen.getByPlaceholderText("Enter new logo URL"),
     ).toBeInTheDocument();
     expect(screen.getByDisplayValue("1234567890")).toBeInTheDocument();
     expect(screen.getByDisplayValue("Tech")).toBeInTheDocument();

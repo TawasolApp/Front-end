@@ -1,9 +1,8 @@
 import pkg from "json-server";
 const { create, router, defaults, bodyParser } = pkg;
 const server = create();
-const _router = router("./db.json");
+const _router = router("src/mocks/db.json");
 const middlewares = defaults();
-
 
 server.use(middlewares);
 server.use(bodyParser);
@@ -11,62 +10,59 @@ server.use(bodyParser);
 const currentUser = {
   id: "mohsobh",
   name: "Mohamed Sobh",
-  picture: "https://media.licdn.com/dms/image/v2/D4D03AQH7Ais8BxRXzw/profile-displayphoto-shrink_100_100/profile-displayphoto-shrink_100_100/0/1721080103981?e=1747872000&v=beta&t=nDnZdgCqkI8v5B2ymXZzluMZVlF6h_o-dN1pA95Fzv4",
+  picture:
+    "https://media.licdn.com/dms/image/v2/D4D03AQH7Ais8BxRXzw/profile-displayphoto-shrink_100_100/profile-displayphoto-shrink_100_100/0/1721080103981?e=1747872000&v=beta&t=nDnZdgCqkI8v5B2ymXZzluMZVlF6h_o-dN1pA95Fzv4",
   bio: "Computer Engineering Student at Cairo University",
-  type: "User"
+  type: "User",
 };
-
-
 
 /*********************************************************** POSTS ***********************************************************/
 server.get("/posts", (req, res) => {
   const page = parseInt(req.query.page) || 1;
   const limit = parseInt(req.query.limit) || 10;
   const startIndex = (page - 1) * limit;
-  const allPosts = _router.db
-    .get("posts")
-    .orderBy('timestamp', 'desc')
-    .value();
+  const allPosts = _router.db.get("posts").orderBy("timestamp", "desc").value();
   const paginatedPosts = allPosts.slice(startIndex, startIndex + limit);
+  console.log(paginatedPosts);
   res.jsonp(paginatedPosts);
 });
 
-server.post('/posts', (req, res) => {
+server.post("/posts", (req, res) => {
   const { authorId, content, media, taggedUsers, visibility } = req.body;
 
   // Basic validation
   if (!authorId || !content) {
-      return res.status(400).json({ error: 'authorId and content are required' });
+    return res.status(400).json({ error: "authorId and content are required" });
   }
 
   const newPost = {
-      id: Date.now().toString(),
-      isSaved: false,
-      authorId: currentUser.id,
-      authorName: currentUser.name,
-      authorPicture: currentUser.picture,
-      authorBio: currentUser.bio,
-      content: content,
-      media: media,
-      reactions: {
-          Love: 0,
-          Celebrate: 0,
-          Insightful: 0,
-          Funny: 0,
-          Support: 0,
-          Like: 0
-      },
-      comments: 0,
-      shares: 0,
-      taggedUsers: taggedUsers,
-      visibility: visibility,
-      authorType: currentUser.type,
-      reactType: null,
-      timestamp: new Date().toISOString()
+    id: Date.now().toString(),
+    isSaved: false,
+    authorId: currentUser.id,
+    authorName: currentUser.name,
+    authorPicture: currentUser.picture,
+    authorBio: currentUser.bio,
+    content: content,
+    media: media,
+    reactions: {
+      Love: 0,
+      Celebrate: 0,
+      Insightful: 0,
+      Funny: 0,
+      Support: 0,
+      Like: 0,
+    },
+    comments: 0,
+    shares: 0,
+    taggedUsers: taggedUsers,
+    visibility: visibility,
+    authorType: currentUser.type,
+    reactType: null,
+    timestamp: new Date().toISOString(),
   };
 
   // Access the existing posts
-  const posts = _router.db.get('posts');
+  const posts = _router.db.get("posts");
 
   // Add the new post and persist the change
   posts.push(newPost).write();
@@ -74,51 +70,49 @@ server.post('/posts', (req, res) => {
   res.status(201).json(newPost);
 });
 
-server.delete('/delete/:postId', (req, res) => {
+server.delete("/delete/:postId", (req, res) => {
   const { postId } = req.params;
-  const posts = _router.db.get('posts');
+  const posts = _router.db.get("posts");
   // Find the post
   const postToDelete = posts.find({ id: postId }).value();
   if (!postToDelete) {
-    return res.status(404).json({ error: 'Post not found' });
+    return res.status(404).json({ error: "Post not found" });
   }
   // Remove the post and persist the change
   posts.remove({ id: postId }).write();
-  res.status(200).json({ message: 'Post deleted successfully' });
+  res.status(200).json({ message: "Post deleted successfully" });
 });
 
-server.patch('/posts/:postId', (req, res) => {
+server.patch("/posts/:postId", (req, res) => {
   const { postId } = req.params;
   const { authorId, content, media, taggedUsers, visibility } = req.body;
-  const posts = _router.db.get('posts');
+  const posts = _router.db.get("posts");
   const post = posts.find({ id: postId }).value();
   if (!post) {
-    return res.status(404).json({ error: 'Post not found' });
+    return res.status(404).json({ error: "Post not found" });
   }
   // Update post details
   posts
-      .find({ id: postId })
-      .assign({
-          content: content || post.content,
-          media: media || post.media,
-          taggedUsers: taggedUsers || post.taggedUsers,
-          visibility: visibility || post.visibility
-      })
-      .write();
-  res.status(200).json({ message: 'Post updated successfully' });
+    .find({ id: postId })
+    .assign({
+      content: content || post.content,
+      media: media || post.media,
+      taggedUsers: taggedUsers || post.taggedUsers,
+      visibility: visibility || post.visibility,
+    })
+    .write();
+  res.status(200).json({ message: "Post updated successfully" });
 });
 
-
-
 /*********************************************************** REACTIONS ***********************************************************/
-server.post('/posts/react/:postId', (req, res) => {
+server.post("/posts/react/:postId", (req, res) => {
   const { postId } = req.params;
   const { reactions, postType } = req.body;
-  
+
   // Determine which database table to use
-  const entityType = postType === 'Comment' ? 'comments' : 'posts';
+  const entityType = postType === "Comment" ? "comments" : "posts";
   const entityTable = _router.db.get(entityType);
-  const reactionsTable = _router.db.get('reactions');
+  const reactionsTable = _router.db.get("reactions");
 
   // Find the target entity (post or comment)
   const entity = entityTable.find({ id: postId }).value();
@@ -127,99 +121,105 @@ server.post('/posts/react/:postId', (req, res) => {
   }
 
   // Check for existing reaction
-  const existingReaction = reactionsTable.find({
-    ['postId']: postId,
-    authorId: currentUser.id
-  }).value();
+  const existingReaction = reactionsTable
+    .find({
+      ["postId"]: postId,
+      authorId: currentUser.id,
+    })
+    .value();
 
   // Remove existing reaction
   if (existingReaction) {
     reactionsTable.remove({ likeId: existingReaction.likeId }).write();
-    
+
     // Decrement old reaction count
-    entityTable.find({ id: postId }).assign({
-      reactions: {
-        ...entity.reactions,
-        [existingReaction.type]: Math.max((entity.reactions[existingReaction.type] || 0) - 1, 0)
-      },
-      reactType: null
-    }).write();
+    entityTable
+      .find({ id: postId })
+      .assign({
+        reactions: {
+          ...entity.reactions,
+          [existingReaction.type]: Math.max(
+            (entity.reactions[existingReaction.type] || 0) - 1,
+            0,
+          ),
+        },
+        reactType: null,
+      })
+      .write();
   }
 
   // Add new reaction
-  const reactionTypeAdd = Object.keys(reactions).find(type => reactions[type] === 1);
+  const reactionTypeAdd = Object.keys(reactions).find(
+    (type) => reactions[type] === 1,
+  );
   if (reactionTypeAdd) {
     const newReaction = {
       likeId: `${postId}-${currentUser.id}-${reactionTypeAdd}`,
-      ['postId']: postId,
+      ["postId"]: postId,
       authorId: currentUser.id,
       authorType: currentUser.type,
       type: reactionTypeAdd,
       authorName: currentUser.name,
       authorPicture: currentUser.picture,
-      authorBio: currentUser.bio
+      authorBio: currentUser.bio,
     };
-    
+
     reactionsTable.push(newReaction).write();
-    
+
     // Increment new reaction count
-    entityTable.find({ id: postId }).assign({
-      reactions: {
-        ...entity.reactions,
-        [reactionTypeAdd]: (entity.reactions[reactionTypeAdd] || 0) + 1
-      },
-      reactType: reactionTypeAdd
-    }).write();
+    entityTable
+      .find({ id: postId })
+      .assign({
+        reactions: {
+          ...entity.reactions,
+          [reactionTypeAdd]: (entity.reactions[reactionTypeAdd] || 0) + 1,
+        },
+        reactType: reactionTypeAdd,
+      })
+      .write();
   }
 
-  res.status(200).json({ message: 'Reaction updated successfully' });
+  res.status(200).json({ message: "Reaction updated successfully" });
 });
 
-server.get('/posts/reactions/:postId', (req, res) => {
-
+server.get("/posts/reactions/:postId", (req, res) => {
   const { postId } = req.params;
-  const reactionsTable = _router.db.get('reactions');
+  const reactionsTable = _router.db.get("reactions");
   // Filter reactions for the specified post
-  const postReactions = reactionsTable
-      .filter({ postId })
-      .value();
+  const postReactions = reactionsTable.filter({ postId }).value();
   if (!postReactions || postReactions.length === 0) {
-      return res.status(404).json({ error: 'No reactions found for this post' });
+    return res.status(404).json({ error: "No reactions found for this post" });
   }
   res.status(200).json(postReactions);
 });
 
-
-
 /*********************************************************** SAVE ***********************************************************/
-server.get('/posts/saved', (req, res) => {
+server.get("/posts/saved", (req, res) => {
   const posts = _router.db.get("posts").filter({ isSaved: true }).value();
   res.jsonp(posts);
-})
+});
 
-server.post('/posts/save/:postId', (req, res) => {
+server.post("/posts/save/:postId", (req, res) => {
   const { postId } = req.params;
-  const posts = _router.db.get('posts');
+  const posts = _router.db.get("posts");
   const post = posts.find({ id: postId }).value();
   if (!post) {
-    return res.status(404).json({ error: 'Post not found' });
+    return res.status(404).json({ error: "Post not found" });
   }
   posts.find({ id: postId }).assign({ isSaved: true }).write();
-  res.status(200).json({ message: 'Post saved successfully' });
+  res.status(200).json({ message: "Post saved successfully" });
 });
 
-server.delete('/posts/save/:postId', (req, res) => {
+server.delete("/posts/save/:postId", (req, res) => {
   const { postId } = req.params;
-  const posts = _router.db.get('posts');
+  const posts = _router.db.get("posts");
   const post = posts.find({ id: postId }).value();
   if (!post) {
-    return res.status(404).json({ error: 'Post not found' });
+    return res.status(404).json({ error: "Post not found" });
   }
   posts.find({ id: postId }).assign({ isSaved: false }).write();
-  res.status(200).json({ message: 'Post unsaved successfully' });
+  res.status(200).json({ message: "Post unsaved successfully" });
 });
-
-
 
 /*********************************************************** COMMENTING ***********************************************************/
 server.get("/posts/comments/:postId", (req, res) => {
@@ -228,10 +228,7 @@ server.get("/posts/comments/:postId", (req, res) => {
   const limit = parseInt(req.query.limit) || 2;
   const startIndex = (page - 1) * limit;
 
-  const comments = _router.db
-    .get("comments")
-    .filter({ postId })
-    .value();
+  const comments = _router.db.get("comments").filter({ postId }).value();
 
   const paginatedComments = comments.slice(startIndex, startIndex + limit);
 
@@ -245,10 +242,10 @@ server.get("/posts/comments/:postId", (req, res) => {
 server.post("/posts/comment/:postId", (req, res) => {
   const { postId } = req.params;
   const { content, taggedUsers } = req.body;
-  
+
   console.log(`Adding comment to postId: ${postId}`);
   console.log(`Comment content: ${content}`);
-  
+
   const commentId = Date.now().toString();
   const createdAt = new Date().toISOString();
 
@@ -262,29 +259,23 @@ server.post("/posts/comment/:postId", (req, res) => {
     content: content,
     replies: [],
     reactions: {
-      "Love": 0,
-      "Celebrate": 0,
-      "Insightful": 0,
-      "Funny": 0,
-      "Support": 0,
-      "like": 0
+      Love: 0,
+      Celebrate: 0,
+      Insightful: 0,
+      Funny: 0,
+      Support: 0,
+      like: 0,
     },
     taggedUsers: taggedUsers || [],
-    timestamp: createdAt
+    timestamp: createdAt,
   };
-  
+
   // Add the comment to the database
-  _router.db
-    .get("comments")
-    .push(newComment)
-    .write();
-  
+  _router.db.get("comments").push(newComment).write();
+
   // Update the comment count for the post
-  const post = _router.db
-    .get("posts")
-    .find({ id: postId })
-    .value();
-    
+  const post = _router.db.get("posts").find({ id: postId }).value();
+
   if (post) {
     _router.db
       .get("posts")
@@ -292,7 +283,7 @@ server.post("/posts/comment/:postId", (req, res) => {
       .assign({ comments: (post.comments || 0) + 1 })
       .write();
   }
-  
+
   // Return the newly created comment
   res.status(201).jsonp(newComment);
 });
@@ -300,13 +291,13 @@ server.post("/posts/comment/:postId", (req, res) => {
 server.patch("/posts/comments/:commentId", (req, res) => {
   const { commentId } = req.params;
   const { content, taggedUsers } = req.body;
-  
+
   const data = _router.db.get("comments").find({ id: commentId });
   if (data) {
     data.assign({ content: content }).write();
-    return res.status(200).json({ message: 'Comment edited successfully' });
+    return res.status(200).json({ message: "Comment edited successfully" });
   }
-  return res.status(404).json({ message: 'Comment not found' });
+  return res.status(404).json({ message: "Comment not found" });
 });
 
 server.delete("/posts/comments/:commentId", (req, res) => {
@@ -320,16 +311,18 @@ server.delete("/posts/comments/:commentId", (req, res) => {
 
     if (wantedPost) {
       const setCount = Math.max(wantedPost.comments - 1, 0); // Prevents negative values
-      posts.find({ id: wantedComment.postId }).assign({ comments: setCount }).write();
+      posts
+        .find({ id: wantedComment.postId })
+        .assign({ comments: setCount })
+        .write();
 
       comments.remove({ id: commentId }).write();
-      return res.status(200).json({ message: 'Comment deleted successfully' });
+      return res.status(200).json({ message: "Comment deleted successfully" });
     }
   }
 
-  res.status(404).json({ error: 'Comment not found' });
+  res.status(404).json({ error: "Comment not found" });
 });
-
 
 server.get("/companies/:companyId", (req, res) => {
   console.log("Fetching company details...");

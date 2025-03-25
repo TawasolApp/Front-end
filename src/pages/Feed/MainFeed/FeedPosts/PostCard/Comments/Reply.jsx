@@ -1,44 +1,40 @@
-import { useState } from 'react';
-import FlagIcon from '@mui/icons-material/Flag';
-import MoreHorizIcon from '@mui/icons-material/MoreHoriz';
-import DropdownMenu from '../../../../GenericComponents/DropdownMenu';
-import ActorHeader from '../../../../GenericComponents/ActorHeader';
-import ActivitiesHolder from './ActivitiesHolder';
-import { formatDate } from '../../../../../../utils';
+import { useState } from "react";
+import FlagIcon from "@mui/icons-material/Flag";
+import MoreHorizIcon from "@mui/icons-material/MoreHoriz";
+import DropdownMenu from "../../../../GenericComponents/DropdownMenu";
+import ActorHeader from "../../../../GenericComponents/ActorHeader";
+import ActivitiesHolder from "./ActivitiesHolder";
+import { formatDate } from "../../../../../../utils";
 
 const Reply = ({ reply }) => {
-
-
   const [localReply, setLocalReply] = useState(reply);
 
   const menuItems = [
     {
-      text: 'Report post',
-      onClick: () => console.log('Reported post'),
-      icon: FlagIcon
+      text: "Report post",
+      onClick: () => console.log("Reported post"),
+      icon: FlagIcon,
     },
   ];
 
   const handleReaction = (reactionTypeAdd, reactionTypeRemove) => {
-    setLocalReply(prev => {
-        const newReactions = { ...prev.reactions };
+    setLocalReply((prev) => {
+      const newReactions = { ...prev.reactions };
 
-        if (reactionTypeAdd) {
-            newReactions[reactionTypeAdd] += 1;
-        }
-        if (reactionTypeRemove) {
-            newReactions[reactionTypeRemove] -= 1;
-        }
+      if (reactionTypeAdd) {
+        newReactions[reactionTypeAdd] += 1;
+      }
+      if (reactionTypeRemove) {
+        newReactions[reactionTypeRemove] -= 1;
+      }
 
-        return { ...prev, reactions: newReactions };
+      return { ...prev, reactions: newReactions };
     });
   };
-
 
   return (
     <div className="items-start px-4 pt-1">
       <div className="flex">
-        
         <ActorHeader
           authorId={authorId}
           authorName={reply.authorName}

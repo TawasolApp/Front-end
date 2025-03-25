@@ -34,12 +34,12 @@ test("renders Overviewbox, PostsSlider, and JobOpenings on Homepage", async () =
       <Routes>
         <Route path="/company/:companyId/home" element={<Homepage />} />
       </Routes>
-    </MemoryRouter>
+    </MemoryRouter>,
   );
 
   // Wait for company data to load
   await waitFor(() =>
-    expect(screen.getByTestId("overview-box")).toBeInTheDocument()
+    expect(screen.getByTestId("overview-box")).toBeInTheDocument(),
   );
 
   // Check all 3 components are rendered
@@ -67,7 +67,7 @@ test("does not render Overviewbox when overview is empty", async () => {
       <Routes>
         <Route path="/company/:companyId/home" element={<Homepage />} />
       </Routes>
-    </MemoryRouter>
+    </MemoryRouter>,
   );
 
   // Wait for API call to complete

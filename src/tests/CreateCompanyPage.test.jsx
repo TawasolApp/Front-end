@@ -35,7 +35,7 @@ describe("CreateCompanyPage", () => {
     render(
       <MemoryRouter>
         <CreateCompanyPage />
-      </MemoryRouter>
+      </MemoryRouter>,
     );
 
     expect(screen.getByTestId("company-name")).toBeInTheDocument();
@@ -49,7 +49,7 @@ describe("CreateCompanyPage", () => {
     render(
       <MemoryRouter>
         <CreateCompanyPage />
-      </MemoryRouter>
+      </MemoryRouter>,
     );
 
     fireEvent.click(screen.getByTestId("agree-terms"));
@@ -58,13 +58,13 @@ describe("CreateCompanyPage", () => {
     await waitFor(() => {
       expect(screen.getByText("Please enter a name.")).toBeInTheDocument();
       expect(
-        screen.getByText("Please select an industry.")
+        screen.getByText("Please select an industry."),
       ).toBeInTheDocument();
       expect(
-        screen.getByText("Please select an organization size.")
+        screen.getByText("Please select an organization size."),
       ).toBeInTheDocument();
       expect(
-        screen.getByText("Please select an organization type.")
+        screen.getByText("Please select an organization type."),
       ).toBeInTheDocument();
     });
   });
@@ -75,7 +75,7 @@ describe("CreateCompanyPage", () => {
     render(
       <MemoryRouter>
         <CreateCompanyPage />
-      </MemoryRouter>
+      </MemoryRouter>,
     );
 
     fireEvent.change(screen.getByTestId("company-name"), {
@@ -95,7 +95,7 @@ describe("CreateCompanyPage", () => {
 
     await waitFor(() => {
       expect(
-        screen.getByText("Company page created successfully!")
+        screen.getByText("Company page created successfully!"),
       ).toBeInTheDocument();
     });
   });
@@ -108,7 +108,7 @@ describe("CreateCompanyPage", () => {
     render(
       <MemoryRouter>
         <CreateCompanyPage />
-      </MemoryRouter>
+      </MemoryRouter>,
     );
 
     fireEvent.change(screen.getByTestId("company-name"), {
@@ -128,7 +128,7 @@ describe("CreateCompanyPage", () => {
 
     await waitFor(() => {
       expect(
-        screen.getByText((text) => text.includes("Failed to create"))
+        screen.getByText((text) => text.includes("Failed to create")),
       ).toBeInTheDocument();
     });
   });
@@ -137,7 +137,7 @@ describe("CreateCompanyPage", () => {
     render(
       <MemoryRouter>
         <CreateCompanyPage />
-      </MemoryRouter>
+      </MemoryRouter>,
     );
 
     const submitButton = screen.getByText("Create Page");

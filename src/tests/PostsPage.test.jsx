@@ -22,7 +22,7 @@ describe("PostsPage", () => {
         <Routes>
           <Route path="/company/test-company/posts" element={<TestWrapper />} />
         </Routes>
-      </MemoryRouter>
+      </MemoryRouter>,
     );
 
     const filters = ["All", "Images", "Videos", "Articles", "Documents"];

@@ -19,7 +19,7 @@ describe("PostSlide Component", () => {
     expect(screen.getByText("Tech Corp")).toBeInTheDocument();
     expect(screen.getByText("1200 followers")).toBeInTheDocument();
     expect(
-      screen.getByText((content) => content.includes("Edited"))
+      screen.getByText((content) => content.includes("Edited")),
     ).toBeInTheDocument();
   });
 
