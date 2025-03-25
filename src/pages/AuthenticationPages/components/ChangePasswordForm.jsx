@@ -93,7 +93,7 @@ const ChangePasswordForm = () => {
       <button
         type="button"
         onClick={handleBack}
-        className="mb-3 sm:mb-4 flex items-center text-gray-500 text-base sm:text-lg font-medium"
+        className="mb-3 sm:mb-4 flex items-center text-textHomeTitle text-base sm:text-lg font-medium"
       >
         <ArrowBack className="mr-2 w-5 h-5" />
         Back
@@ -101,10 +101,10 @@ const ChangePasswordForm = () => {
 
       {/* Header */}
       <div className="mb-6 sm:mb-8">
-        <h2 className="text-xl sm:text-2xl font-semibold text-gray-900 mb-1 sm:mb-2">
+        <h2 className="text-xl sm:text-2xl font-semibold text-textHomeTitle mb-1 sm:mb-2">
           Change Password
         </h2>
-        <p className="text-base sm:text-lg">
+        <p className="text-base text-textHomeTitle sm:text-lg">
           Create a new password that is at least 8 characters long.
         </p>
       </div>
@@ -204,7 +204,7 @@ const ChangePasswordForm = () => {
         <button
           type="button"
           onClick={handleForgotPassword}
-          className="bg-white text-gray-700 px-4 py-3 rounded-lg hover:bg-gray-100 text-base sm:text-lg font-medium transition-colors"
+          className="bg-cardBackground text-textHomeTitle px-4 py-3 rounded-lg hover:bg-buttonSubmitDisable text-base sm:text-lg font-medium transition-colors"
         >
           Forgot Password
         </button>

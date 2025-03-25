@@ -36,11 +36,11 @@ const NewPasswordForm = () => {
 
   return (
     <form onSubmit={handleSubmit}>
-      <h2 className="text-4xl font-semibold text-gray-900 mb-2">
+      <h2 className="text-4xl font-semibold text-textHomeTitle mb-2">
         Choose a new password
       </h2>
 
-      <p className="text-lg mb-6">
+      <p className="text-lg text-textHomeTitle mb-6">
         To secure your account, choose a strong password you haven’t used before
         and is at least 8 characters long.
       </p>

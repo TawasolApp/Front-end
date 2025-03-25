@@ -21,7 +21,7 @@ const InputField = ({
   return (
     <div className={`mb-4 sm:mb-5 md:mb-6 ${containerClassName}`}>
       <label
-        className={`block text-gray-700 text-lg sm:text-xl md:text-2xl font-medium sm:font-semibold mb-1 sm:mb-2 ${labelClassName}`}
+        className={`block text-textContent text-lg sm:text-xl md:text-2xl font-medium sm:font-semibold mb-1 sm:mb-2 ${labelClassName}`}
         htmlFor={id}
       >
         {labelText}
@@ -34,8 +34,8 @@ const InputField = ({
           value={value}
           onChange={onChange}
           onBlur={onBlur}
-          className={`w-full px-3 sm:px-4 py-2 sm:py-3 border-2 border-gray-300 rounded-lg hover:border-black hover:bg-stone-100 focus:outline-none focus:border-black text-base sm:text-lg md:text-xl cursor-pointer ${inputClassName} ${
-            error && "!border-red-500"
+          className={`w-full px-3 sm:px-4 py-2 sm:py-3 border-2 border-inputBorder rounded-lg hover:border-inputBorderHover hover:bg-inputBackground focus:outline-none focus:border-inputBorderFocus text-base sm:text-lg md:text-xl cursor-pointer ${inputClassName} ${
+            error && "border-red-500"
           }`}
           placeholder={placeholder}
           required={required}
@@ -44,7 +44,7 @@ const InputField = ({
           <button
             type="button"
             onClick={onTogglePasswordVisibility}
-            className="absolute inset-y-0 right-0 px-3 sm:px-4 flex items-center text-blue-500 text-base sm:text-lg font-medium focus:outline-none"
+            className="absolute inset-y-0 right-0 px-3 sm:px-4 flex items-center text-buttonSubmitEnable text-base sm:text-lg font-medium focus:outline-none"
           >
             {showPassword ? "Hide" : "Show"}
           </button>

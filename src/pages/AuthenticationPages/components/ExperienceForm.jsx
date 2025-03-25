@@ -201,7 +201,7 @@ const ExperienceForm = ({ onSubmit }) => {
   
           <div className="flex flex-col sm:flex-row gap-4 sm:gap-6 mb-4">
             <div className="w-full sm:w-1/2">
-              <label htmlFor="startYear" className="block text-gray-700 text-lg font-normal mb-1">
+              <label htmlFor="startYear" className="block text-textHomeTitle text-lg font-normal mb-1">
                 Start year *
               </label>
               <select
@@ -225,7 +225,7 @@ const ExperienceForm = ({ onSubmit }) => {
               </select>
             </div>
             <div className="w-full sm:w-1/2">
-              <label htmlFor="endYear" className="block text-gray-700 text-lg font-normal mb-1">
+              <label htmlFor="endYear" className="block text-textHomeTitle text-lg font-normal mb-1">
                 End year (or expected) *
               </label>
               <select
@@ -266,11 +266,11 @@ const ExperienceForm = ({ onSubmit }) => {
   
           {/* Age Verification */}
           <div className="mb-6 w-full flex flex-col sm:flex-row items-center justify-between p-4 sm:p-6 border border-gray-300 rounded-lg">
-            <span className="text-gray-700 text-lg sm:text-xl mb-2 sm:mb-0">
+            <span className="text-textHomeTitle text-lg sm:text-xl mb-2 sm:mb-0">
               I'm over 16
             </span>
             <div className="flex items-center gap-3">
-              <span className="text-gray-700 text-lg sm:text-xl">
+              <span className="text-textHomeTitle text-lg sm:text-xl">
                 {isOver16 ? "Yes" : "No"}
               </span>
               <label className="flex items-center cursor-pointer">
@@ -301,12 +301,12 @@ const ExperienceForm = ({ onSubmit }) => {
           {/* Date of Birth Fields */}
           {!isOver16 && (
             <div className="mb-6">
-              <label className="block text-gray-700 text-lg font-semibold mb-2">
+              <label className="block text-textHomeTitle text-lg font-semibold mb-2">
                 Date of birth *
               </label>
               <div className="flex flex-col sm:flex-row gap-3 sm:gap-4">
                 <div className="w-full sm:w-1/3">
-                  <label htmlFor="month" className="block text-gray-700 text-lg font-normal mb-1">
+                  <label htmlFor="month" className="block text-textHomeTitle text-lg font-normal mb-1">
                     Month *
                   </label>
                   <select
@@ -325,7 +325,7 @@ const ExperienceForm = ({ onSubmit }) => {
                   </select>
                 </div>
                 <div className="w-full sm:w-1/3">
-                  <label htmlFor="day" className="block text-gray-700 text-lg font-normal mb-1">
+                  <label htmlFor="day" className="block text-textHomeTitle text-lg font-normal mb-1">
                     Day *
                   </label>
                   <select
@@ -344,7 +344,7 @@ const ExperienceForm = ({ onSubmit }) => {
                   </select>
                 </div>
                 <div className="w-full sm:w-1/3">
-                  <label htmlFor="year" className="block text-gray-700 text-lg font-normal mb-1">
+                  <label htmlFor="year" className="block text-textHomeTitle text-lg font-normal mb-1">
                     Year *
                   </label>
                   <select
@@ -373,7 +373,7 @@ const ExperienceForm = ({ onSubmit }) => {
         <button
           type="button"
           onClick={handleIsStudentChange}
-          className="bg-white w-full text-gray-700 px-6 py-3 rounded-lg hover:bg-gray-100 text-xl sm:text-2xl font-medium transition duration-200 ease-in-out"
+          className="bg-cardBackground w-full text-textHomeTitle px-6 py-3 rounded-lg hover:bg-buttonSubmitDisable text-xl sm:text-2xl font-medium transition duration-200 ease-in-out"
         >
           {isStudent ? "I'm not a student" : "I'm a student"}
         </button>

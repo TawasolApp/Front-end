@@ -11,6 +11,11 @@ const NamePage = () => {
   const navigate = useNavigate();
 
   const handleName = async (formData, captchaToken) => {
+    if (!email || !password) {
+      alert("Error: Missing email or password. Please sign up again.");
+      return;
+    }
+
     dispatch(setFirstName(formData.firstName));
     dispatch(setLastName(formData.lastName));
 
@@ -27,18 +32,17 @@ const NamePage = () => {
       navigate("/auth/signup/location");
     } catch (error) {
       alert(
-        "Registration Failed:",
-        error.response?.data?.message || error.message
+        `Registration Failed: ${error.response?.data?.message || error.message}`
       );
     }
   };
 
   return (
-    <div className="min-h-screen flex flex-col items-center justify-center bg-stone-100 px-4 sm:px-8 md:px-12 lg:px-24">
-      <h1 className="text-4xl md:text-5xl font-normal mb-8 text-gray-800 text-center max-w-screen-lg">
+    <div className="min-h-screen flex flex-col items-center justify-center bg-[rgb(var(--main-background))] px-4 sm:px-8 md:px-12 lg:px-24">
+      <h1 className="text-4xl md:text-5xl font-normal mb-8 text-textHomeTitle text-center max-w-screen-lg">
         Make the most of your professional life
       </h1>
-      <div className="bg-white p-10 rounded-lg shadow-lg w-full max-w-lg min-w-[350px]">
+      <div className="bg-[rgb(var(--card-background))] p-10 rounded-lg shadow-lg w-full max-w-lg min-w-[350px]">
         <NameForm onSubmit={handleName} />
       </div>
     </div>

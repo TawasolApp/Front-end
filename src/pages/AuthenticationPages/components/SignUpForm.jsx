@@ -97,12 +97,12 @@ const SignUpForm = ({ onSubmit }) => {
         <input
           type="checkbox"
           id="rememberMe"
-          className="w-4 h-4 sm:w-5 sm:h-5 mr-2 accent-green-600"
+          className="w-4 h-4 sm:w-5 sm:h-5 mr-2 accent-buttonSubmitEnable"
           defaultChecked
         />
         <label
           htmlFor="rememberMe"
-          className="text-gray-700 text-base sm:text-lg md:text-xl"
+          className="text-textContent text-base sm:text-lg md:text-xl"
         >
           Remember me
         </label>
@@ -110,9 +110,12 @@ const SignUpForm = ({ onSubmit }) => {
       <BlueSubmitButton text="Join" />
       <Divider />
       <SignWithGoogle />
-      <p className="mt-4 md:mt-6 text-center text-gray-600 text-base sm:text-lg md:text-xl">
+      <p className="mt-4 md:mt-6 text-center text-textContent text-base sm:text-lg md:text-xl">
         Already on Tawasol?{" "}
-        <Link to="/auth/signin" className="text-blue-600 hover:underline">
+        <Link
+          to="/auth/signin"
+          className="text-buttonSubmitEnable hover:underline"
+        >
           Sign in
         </Link>
       </p>

@@ -66,7 +66,7 @@ const NameForm = ({ onSubmit }) => {
   };
 
   return (
-    <form onSubmit={handleSubmit}>
+    <form onSubmit={handleSubmit} className="space-y-5">
       <InputField
         type="text"
         id="firstName"
@@ -89,12 +89,16 @@ const NameForm = ({ onSubmit }) => {
         placeholder=""
         error={lastNameError}
       />
+
       {/* reCAPTCHA Widget */}
-      <ReCAPTCHA
-        ref={recaptchaRef}
-        sitekey="6LdMDv0qAAAAAC935jMxhIW2ZSMaei6Hs1YU2PyR" // Site Key
-        className="grid place-items-center my-6"
-      />
+      <div className="grid place-items-center my-6">
+        <ReCAPTCHA
+          ref={recaptchaRef}
+          sitekey="6LdMDv0qAAAAAC935jMxhIW2ZSMaei6Hs1YU2PyR" // Replace with actual site key
+          className="bg-[rgb(var(--card-background))] p-2 rounded-lg shadow-md"
+        />
+      </div>
+
       <BlueSubmitButton text="Continue" />
     </form>
   );

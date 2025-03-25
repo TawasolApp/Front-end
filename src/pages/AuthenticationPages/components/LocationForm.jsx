@@ -17,16 +17,16 @@ const LocationForm = ({ onSubmit }) => {
 
   const handleLocationBlur = () => {
     if (!location) {
-      setLocationError('Please enter your location.');
+      setLocationError("Please enter your location.");
     } else {
-      setLocationError('');
+      setLocationError("");
     }
   };
 
   const handleSubmit = (e) => {
     e.preventDefault();
     if (!location) {
-      alert("Please enter your location");
+      alert("Please enter your location.");
       return;
     }
     onSubmit(location);
@@ -34,10 +34,10 @@ const LocationForm = ({ onSubmit }) => {
 
   return (
     <form onSubmit={handleSubmit}>
-      <h1 className="text-3xl font-semibold mb-4 text-gray-800 text-center">
+      <h1 className="text-3xl font-semibold mb-4 text-textHomeTitle text-center">
         Welcome, {firstName}! What's your location?
       </h1>
-      <p className="text-xl text-gray-700 text-center mb-10">
+      <p className="text-xl text-textHomeTitle text-center mb-10">
         See people, jobs, and news in your area.
       </p>
       <InputField

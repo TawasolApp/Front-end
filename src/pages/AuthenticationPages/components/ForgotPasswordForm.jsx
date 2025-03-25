@@ -22,10 +22,7 @@ const ForgotPasswordForm = () => {
     }
 
     try {
-      const response = await axiosInstance.post("/auth/forgot-password", {
-        email: email,
-      });
-
+      await axiosInstance.post("/auth/forgot-password", { email });
       navigate("/auth/email-verification");
     } catch (error) {
       if (error.response) {
@@ -55,10 +52,11 @@ const ForgotPasswordForm = () => {
 
   return (
     <form onSubmit={handleSubmit}>
-      <h2 className="text-4xl font-semibold text-gray-900 mb-8">
+      <h2 className="text-4xl font-semibold text-textHomeTitle mb-8">
         Forgot password
       </h2>
-      {/* Email or Phone Input */}
+
+      {/* Email Input */}
       <InputField
         type="text"
         id="email"
@@ -74,7 +72,7 @@ const ForgotPasswordForm = () => {
       />
 
       {/* Info Text */}
-      <p className="text-black text-lg my-8">
+      <p className="text-textHomeTitle text-lg my-8">
         We’ll send a verification code to this email if it matches an existing
         Tawasol account.
       </p>
@@ -82,13 +80,13 @@ const ForgotPasswordForm = () => {
       {/* Buttons */}
       <div className="flex flex-col items-center justify-between space-y-4">
         <BlueSubmitButton text="Next" />
-        <a
-          href=""
+        <button
+          type="button"
           onClick={handleBack}
-          className="text-gray-500 text-xl font-medium p-2 rounded-full transition duration-200 ease-in-out hover:bg-stone-200 hover:underline"
+          className="text-textHomeTitle text-xl font-medium p-2 rounded-full transition duration-200 ease-in-out hover:bg-[rgb(var(--hover-bg))] hover:underline"
         >
           Back
-        </a>
+        </button>
       </div>
     </form>
   );

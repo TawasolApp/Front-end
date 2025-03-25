@@ -9,7 +9,6 @@ const ChangeEmailForm = ({ onSubmit }) => {
   const [currentPassword, setCurrentPassword] = useState("");
   const [showCurrentPassword, setShowCurrentPassword] = useState(false);
   const [currentPasswordError, setCurrentPasswordError] = useState("");
-
   const [emailError, setEmailError] = useState("");
 
   const handleChange = (e) => {
@@ -53,12 +52,13 @@ const ChangeEmailForm = ({ onSubmit }) => {
 
   return (
     <form onSubmit={handleSubmit}>
-      <h1 className="text-4xl font-semibold mb-4 text-gray-800 text-left">
+      <h1 className="text-4xl font-semibold mb-4 text-textHomeTitle text-left">
         Update Email
       </h1>
-      <p className="text-xl text-gray-700 text-left mb-10">
+      <p className="text-xl text-textHomeTitle text-left mb-10">
         Enter the new email you would like to be used by Tawasol.
       </p>
+
       <InputField
         type="text"
         id="newEmail"
@@ -71,6 +71,7 @@ const ChangeEmailForm = ({ onSubmit }) => {
         required
         error={emailError}
       />
+
       <InputField
         type={showCurrentPassword ? "text" : "password"}
         id="currentPassword"
@@ -93,6 +94,7 @@ const ChangeEmailForm = ({ onSubmit }) => {
         showPassword={showCurrentPassword}
         error={currentPasswordError}
       />
+
       <BlueSubmitButton text="Submit" />
     </form>
   );

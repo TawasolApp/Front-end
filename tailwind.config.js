@@ -17,6 +17,7 @@ export default {
         textTitle: "rgb(var(--text-title))",
         textHeavyTitle: "rgb(var(--text-heavy-title))",
         textHeavyTitleHover: "rgb(var(--text-heavy-title-hover))",
+        textHomeTitle: "rgb(var(--text-home-title))",
         textDate: "rgb(var(--text-date))",
         textBreakpoint: "rgb(var(--text-breakpoint))",
         textContent: "rgb(var(--text-content))",

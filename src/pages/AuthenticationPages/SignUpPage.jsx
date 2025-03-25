@@ -37,11 +37,11 @@ const SignUpPage = () => {
   };
 
   return (
-    <div className="min-h-screen flex flex-col items-center justify-center bg-stone-100 px-4 sm:px-6 lg:px-8">
-      <h1 className="text-2xl sm:text-3xl md:text-4xl font-normal mb-4 sm:mb-6 md:mb-8 text-gray-800 text-center">
+    <div className="min-h-screen flex flex-col items-center justify-center bg-mainBackground px-4 sm:px-6 lg:px-8">
+      <h1 className="text-2xl sm:text-3xl md:text-4xl font-normal mb-4 sm:mb-6 md:mb-8 text-textHomeTitle text-center">
         Make the most of your professional life
       </h1>
-      <div className="bg-white p-6 sm:p-8 md:p-10 rounded-lg shadow-lg w-full max-w-md sm:max-w-lg">
+      <div className="bg-cardBackground p-6 sm:p-8 md:p-10 rounded-lg shadow-lg w-full max-w-md sm:max-w-lg">
         <SignUpForm onSubmit={handleSignUp} />
       </div>
     </div>

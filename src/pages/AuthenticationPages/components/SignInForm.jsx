@@ -67,7 +67,7 @@ const SignInForm = ({ onSubmit }) => {
 
   return (
     <form onSubmit={handleSubmit} className="space-y-4 sm:space-y-6">
-      <h1 className="text-3xl sm:text-4xl md:text-5xl font-semibold mb-6 sm:mb-8 text-gray-800">
+      <h1 className="text-3xl sm:text-4xl md:text-5xl font-semibold mb-6 sm:mb-8 text-textHomeTitle">
         Sign in
       </h1>
 
@@ -105,7 +105,7 @@ const SignInForm = ({ onSubmit }) => {
       />
 
       {credentialsError && (
-        <p className="text-red-500 text-base sm:text-lg mt-2">
+        <p className="text-errorText text-base sm:text-lg mt-2">
           {credentialsError}
         </p>
       )}
@@ -113,7 +113,7 @@ const SignInForm = ({ onSubmit }) => {
       <div className="mb-4 sm:mb-6">
         <Link
           to="/auth/forgot-password"
-          className="text-blue-600 hover:underline text-base sm:text-lg"
+          className="text-buttonSubmitEnable hover:underline text-base sm:text-lg"
         >
           Forgot password?
         </Link>
@@ -128,7 +128,7 @@ const SignInForm = ({ onSubmit }) => {
         />
         <label
           htmlFor="keepLoggedIn"
-          className="text-gray-700 text-base sm:text-lg"
+          className="text-textContent text-base sm:text-lg"
         >
           Keep me logged in
         </label>

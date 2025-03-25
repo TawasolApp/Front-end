@@ -27,7 +27,7 @@ const ChangeEmailPage = () => {
       if (error.response && error.response.status === 400) {
         setCurrentPasswordError("Incorrect password.");
       } else if (error.response && error.response.status === 401) {
-        setCurrentPasswordError("Unautharized.");
+        setCurrentPasswordError("Unauthorized.");
       } else if (error.response && error.response.status === 409) {
         setEmailError("Email already exists.");
       } else {
@@ -37,8 +37,8 @@ const ChangeEmailPage = () => {
   };
 
   return (
-    <div className="min-h-screen flex items-start pt-20 justify-center bg-white">
-      <div className="bg-white p-10 rounded-lg w-full max-w-xl">
+    <div className="min-h-screen flex items-start pt-20 justify-center bg-mainBackground">
+      <div className="bg-cardBackground p-10 rounded-lg w-full max-w-xl shadow-md">
         <ChangeEmailForm onSubmit={handleSubmit} />
       </div>
     </div>
