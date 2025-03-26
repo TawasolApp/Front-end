@@ -1,8 +1,7 @@
 import React from "react";
 import OverviewComponent from "./OverviewComponent.jsx";
-function AboutOverview(props) {
+function AboutOverview({ company }) {
   // const isAdmin = true;
-  const company = props.company;
   return (
     <div
       className="bg-boxbackground p-6 shadow-md rounded-md w-full max-w-3xl mx-auto pb-4 mb-8 relative"

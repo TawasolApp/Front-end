@@ -1,8 +1,7 @@
 import React, { useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 
-function OverviewBox(props) {
-  const company = props.company;
+function OverviewBox({ company }) {
   const navigate = useNavigate();
   const { companyId } = useParams();
   const [expanded, setExpanded] = useState(false);

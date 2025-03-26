@@ -1,9 +1,9 @@
 import React from "react";
-function OverviewComponent(props) {
+function OverviewComponent({ title, content }) {
   return (
     <div className="mt-4">
-      <p className="font-bold text-text">{props.title}</p>
-      <p className="text-overviewcomponenttext">{props.content}</p>
+      <p className="font-bold text-text">{title}</p>
+      <p className="text-overviewcomponenttext">{content}</p>
     </div>
   );
 }
