@@ -116,6 +116,7 @@ const CommentsContainer = ({
             <Comment
               comment={comment}
               handleDeleteComment={handleDeleteComment}
+              setComments={setComments}
             />
           </div>
         ))}
