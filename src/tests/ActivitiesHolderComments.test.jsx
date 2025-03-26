@@ -6,7 +6,8 @@ import ActivitiesHolder from "../pages/Feed/MainFeed/FeedPosts/PostCard/Comments
 // Mock dependencies with the right casing for reaction types
 vi.mock("../pages/Feed/GenericComponents/reactionIcons", () => ({
   default: {
-    Like: {  // Capitalized to match component code
+    Like: {
+      // Capitalized to match component code
       Icon: ({ className }) => (
         <div data-testid="like-icon" className={className}>
           Like Icon
@@ -15,7 +16,8 @@ vi.mock("../pages/Feed/GenericComponents/reactionIcons", () => ({
       color: "blue",
       label: "Like",
     },
-    Celebrate: {  // Capitalized
+    Celebrate: {
+      // Capitalized
       Icon: ({ className }) => (
         <div data-testid="celebrate-icon" className={className}>
           Celebrate Icon
@@ -24,7 +26,8 @@ vi.mock("../pages/Feed/GenericComponents/reactionIcons", () => ({
       color: "yellow",
       label: "Celebrate",
     },
-    Support: {  // Capitalized
+    Support: {
+      // Capitalized
       Icon: ({ className }) => (
         <div data-testid="support-icon" className={className}>
           Support Icon
@@ -33,7 +36,8 @@ vi.mock("../pages/Feed/GenericComponents/reactionIcons", () => ({
       color: "purple",
       label: "Support",
     },
-    Insightful: {  // Capitalized
+    Insightful: {
+      // Capitalized
       Icon: ({ className }) => (
         <div data-testid="insightful-icon" className={className}>
           Insightful Icon
@@ -51,7 +55,7 @@ vi.mock("../pages/Feed/GenericComponents/ReactionPicker", () => ({
       {children}
       <button
         data-testid="select-celebrate"
-        onClick={() => onSelectReaction("Celebrate")}  // Capitalized
+        onClick={() => onSelectReaction("Celebrate")} // Capitalized
       >
         Select Celebrate
       </button>

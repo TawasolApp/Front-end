@@ -29,7 +29,7 @@ const ConfirmModal = ({ title, message, onConfirm, onCancel }) => (
 // Shared date utilities
 const getAllMonths = () =>
   [...Array(12)].map((_, i) =>
-    new Date(2000, i).toLocaleString("default", { month: "long" })
+    new Date(2000, i).toLocaleString("default", { month: "long" }),
   );
 
 const currentYear = new Date().getFullYear();

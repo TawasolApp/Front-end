@@ -209,7 +209,9 @@ describe("Comment Component", () => {
     );
 
     // Check for menu items
-    expect(screen.getByTestId("menu-item-0")).toHaveTextContent("Report comment");
+    expect(screen.getByTestId("menu-item-0")).toHaveTextContent(
+      "Report comment",
+    );
     expect(screen.getByTestId("menu-item-1")).toHaveTextContent("Edit comment");
     expect(screen.getByTestId("menu-item-2")).toHaveTextContent(
       "Delete comment",
@@ -228,7 +230,9 @@ describe("Comment Component", () => {
     );
 
     // Check for menu items
-    expect(screen.getByTestId("menu-item-0")).toHaveTextContent("Report comment");
+    expect(screen.getByTestId("menu-item-0")).toHaveTextContent(
+      "Report comment",
+    );
 
     // Only 1 menu item
     expect(screen.getAllByTestId(/menu-item-\d+/).length).toBe(1);

@@ -54,6 +54,12 @@ Run tests with Vitest:
 npm run test
 ```
 
+You can also get coverage after running the tests:
+
+```bash
+npm run coverage
+```
+
 ## 📝 Commit Format
 
 Each commit message should follow this format:

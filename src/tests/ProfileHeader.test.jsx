@@ -16,7 +16,7 @@ vi.mock(
         Enlarged: {profilePicture}
       </div>
     ),
-  })
+  }),
 );
 
 vi.mock("../pages/UserProfile/Components/ImageUploadModal", () => ({
@@ -55,7 +55,7 @@ vi.mock(
           </button>
         </div>
       ) : null,
-  })
+  }),
 );
 
 vi.mock(
@@ -73,7 +73,7 @@ vi.mock(
         </button>
       </>
     ),
-  })
+  }),
 );
 
 vi.mock("../pages/UserProfile/Components/HeaderComponents/CoverPhoto", () => ({
@@ -124,7 +124,7 @@ describe("ProfileHeader Component", () => {
         <Routes>
           <Route path="/users/:profileSlug" element={ui} />
         </Routes>
-      </MemoryRouter>
+      </MemoryRouter>,
     );
 
   it("returns null if editedUser is null", () => {
@@ -140,15 +140,15 @@ describe("ProfileHeader Component", () => {
         onSave={vi.fn()}
         experienceRef={experienceRef}
         educationRef={educationRef}
-      />
+      />,
     );
 
     expect(screen.getByText("Fatma Gamal")).toBeInTheDocument();
     expect(screen.getByText("Student at Cairo University")).toBeInTheDocument();
     expect(
       screen.getByText(
-        (content) => content.includes("Cairo") && content.includes("Egypt")
-      )
+        (content) => content.includes("Cairo") && content.includes("Egypt"),
+      ),
     ).toBeInTheDocument();
     expect(screen.getByText("42 connections")).toBeInTheDocument();
     expect(screen.getByText("Software Intern")).toBeInTheDocument();
@@ -163,7 +163,7 @@ describe("ProfileHeader Component", () => {
         onSave={vi.fn()}
         experienceRef={experienceRef}
         educationRef={educationRef}
-      />
+      />,
     );
 
     expect(screen.getByTestId("viewer-view")).toBeInTheDocument();
@@ -177,7 +177,7 @@ describe("ProfileHeader Component", () => {
         onSave={vi.fn()}
         experienceRef={experienceRef}
         educationRef={educationRef}
-      />
+      />,
     );
 
     fireEvent.click(screen.getByRole("button", { name: /✎/i }));
@@ -193,13 +193,13 @@ describe("ProfileHeader Component", () => {
         onSave={onSave}
         experienceRef={experienceRef}
         educationRef={educationRef}
-      />
+      />,
     );
 
     fireEvent.click(screen.getByRole("button", { name: /✎/i }));
     fireEvent.click(screen.getByTestId("save-edit"));
     expect(onSave).toHaveBeenCalledWith(
-      expect.objectContaining({ firstName: "Updated" })
+      expect.objectContaining({ firstName: "Updated" }),
     );
   });
 
@@ -211,12 +211,12 @@ describe("ProfileHeader Component", () => {
         onSave={vi.fn()}
         experienceRef={experienceRef}
         educationRef={educationRef}
-      />
+      />,
     );
 
     fireEvent.click(screen.getByTestId("profile-picture"));
     expect(screen.getByTestId("image-enlarge")).toHaveTextContent(
-      "profile.jpg"
+      "profile.jpg",
     );
   });
 
@@ -228,7 +228,7 @@ describe("ProfileHeader Component", () => {
         onSave={vi.fn()}
         experienceRef={experienceRef}
         educationRef={educationRef}
-      />
+      />,
     );
 
     fireEvent.click(screen.getByTestId("cover-photo"));
@@ -243,7 +243,7 @@ describe("ProfileHeader Component", () => {
         onSave={vi.fn()}
         experienceRef={experienceRef}
         educationRef={educationRef}
-      />
+      />,
     );
 
     fireEvent.click(screen.getByTestId("upload-profile"));
@@ -261,7 +261,7 @@ describe("ProfileHeader Component", () => {
         onSave={vi.fn()}
         experienceRef={experienceRef}
         educationRef={educationRef}
-      />
+      />,
     );
 
     fireEvent.click(screen.getByTestId("upload-cover"));
@@ -278,7 +278,7 @@ describe("ProfileHeader Component", () => {
         onSave={vi.fn()}
         experienceRef={experienceRef}
         educationRef={educationRef}
-      />
+      />,
     );
 
     fireEvent.click(screen.getByText("Software Intern"));

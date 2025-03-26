@@ -51,10 +51,9 @@ const App = () => {
           <Route path="posts" element={<PostsPage />} />
         </Route>
         <Route path="/company/setup/new" element={<CreateCompanyPage />} />
-
       </Routes>
     </Router>
   );
-}
+};
 
 export default App;

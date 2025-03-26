@@ -22,7 +22,7 @@ describe("CertificationsFields Component", () => {
 
     expect(screen.getByLabelText(/name\*/i)).toBeInTheDocument();
     expect(
-      screen.getByLabelText(/issuing organization\*/i)
+      screen.getByLabelText(/issuing organization\*/i),
     ).toBeInTheDocument();
     expect(screen.getByLabelText(/credential id/i)).toBeInTheDocument();
     expect(screen.getByLabelText(/credential url/i)).toBeInTheDocument();

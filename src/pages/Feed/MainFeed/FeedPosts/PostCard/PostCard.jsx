@@ -50,7 +50,7 @@ const PostCard = ({ post, handleDeletePost }) => {
     },
     {
       text: `Unfollow ${localPost.authorName}`,
-      onClick: () => console.log("User unfollowed"),  // TODO: Phase 3 to integrate with noor
+      onClick: () => console.log("User unfollowed"), // TODO: Phase 3 to integrate with noor
       icon: HighlightOffIcon,
     },
     {

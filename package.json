@@ -8,7 +8,8 @@
     "build": "vite build",
     "lint": "eslint .",
     "preview": "vite preview",
-    "test": "vitest --coverage",
+    "test": "vitest",
+    "coverage": "vitest --coverage",
     "mock": "set VITE_APP_BASE_URL=http://localhost:5000 && start cmd /c node src/mocks/server.js && vite",
     "pretty": "npx prettier --write ."
   },

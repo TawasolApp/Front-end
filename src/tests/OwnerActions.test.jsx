@@ -41,7 +41,7 @@ describe("OwnerActions Component", () => {
     const mockDelete = vi.fn();
 
     render(
-      <OwnerActions onAdd={mockAdd} onEdit={mockEdit} onDelete={mockDelete} />
+      <OwnerActions onAdd={mockAdd} onEdit={mockEdit} onDelete={mockDelete} />,
     );
 
     fireEvent.click(screen.getByLabelText("add"));

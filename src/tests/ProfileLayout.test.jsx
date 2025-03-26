@@ -46,7 +46,7 @@ describe("ProfileLayout", () => {
             <Route index element={<DummyOutlet />} />
           </Route>
         </Routes>
-      </MemoryRouter>
+      </MemoryRouter>,
     );
 
     expect(screen.getByText("Loading...")).toBeInTheDocument();
@@ -64,7 +64,7 @@ describe("ProfileLayout", () => {
             <Route index element={<DummyOutlet />} />
           </Route>
         </Routes>
-      </MemoryRouter>
+      </MemoryRouter>,
     );
 
     await waitFor(() => {
@@ -83,7 +83,7 @@ describe("ProfileLayout", () => {
             <Route index element={<DummyOutlet />} />
           </Route>
         </Routes>
-      </MemoryRouter>
+      </MemoryRouter>,
     );
 
     await waitFor(() => {
@@ -106,7 +106,7 @@ describe("ProfileLayout", () => {
             <Route index element={<DummyOutlet />} />
           </Route>
         </Routes>
-      </MemoryRouter>
+      </MemoryRouter>,
     );
 
     await waitFor(() => {
@@ -131,7 +131,7 @@ describe("ProfileLayout", () => {
             <Route index element={<DummyOutlet />} />
           </Route>
         </Routes>
-      </MemoryRouter>
+      </MemoryRouter>,
     );
 
     await waitFor(() => {
@@ -151,7 +151,7 @@ describe("ProfileLayout", () => {
             <Route index element={<DummyOutlet />} />
           </Route>
         </Routes>
-      </MemoryRouter>
+      </MemoryRouter>,
     );
 
     await waitFor(() => {

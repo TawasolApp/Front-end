@@ -12,7 +12,7 @@ describe("ProfilePicture Component", () => {
         isOwner={true}
         onImageClick={vi.fn()}
         onUpload={vi.fn()}
-      />
+      />,
     );
 
     const img = screen.getByAltText("Profile"); // updated alt text
@@ -29,7 +29,7 @@ describe("ProfilePicture Component", () => {
         isOwner={true}
         onImageClick={handleClick}
         onUpload={vi.fn()}
-      />
+      />,
     );
 
     const img = screen.getByAltText("Profile"); // updated alt text
@@ -47,7 +47,7 @@ describe("ProfilePicture Component", () => {
         isOwner={true}
         onImageClick={vi.fn()}
         onUpload={handleUpload}
-      />
+      />,
     );
 
     const uploadButton = screen.getByRole("button", { name: "+" }); // the "+" icon is the button content
@@ -64,7 +64,7 @@ describe("ProfilePicture Component", () => {
         isOwner={false}
         onImageClick={vi.fn()}
         onUpload={vi.fn()}
-      />
+      />,
     );
 
     const buttons = screen.queryAllByRole("button");

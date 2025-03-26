@@ -7,7 +7,6 @@ const middlewares = defaults();
 server.use(middlewares);
 server.use(bodyParser);
 
-
 const supportedTypes = ["education", "experience", "skills", "certifications"];
 // GET all users
 server.get("/profile", (req, res) => {
@@ -100,7 +99,7 @@ server.patch("/profile/:userId/education/:itemId", (req, res) => {
   const updatedItems = user
     .get("education")
     .map((item) =>
-      String(item.id) === itemId ? { ...item, ...req.body } : item
+      String(item.id) === itemId ? { ...item, ...req.body } : item,
     )
     .value();
   user.assign({ education: updatedItems }).write();
@@ -115,7 +114,7 @@ server.patch("/profile/:userId/experience/:itemId", (req, res) => {
   const updatedItems = user
     .get("experience")
     .map((item) =>
-      String(item.id) === itemId ? { ...item, ...req.body } : item
+      String(item.id) === itemId ? { ...item, ...req.body } : item,
     )
     .value();
   user.assign({ experience: updatedItems }).write();
@@ -130,7 +129,7 @@ server.patch("/profile/:userId/certifications/:itemId", (req, res) => {
   const updatedItems = user
     .get("certifications")
     .map((item) =>
-      String(item.id) === itemId ? { ...item, ...req.body } : item
+      String(item.id) === itemId ? { ...item, ...req.body } : item,
     )
     .value();
   user.assign({ certifications: updatedItems }).write();
@@ -147,7 +146,7 @@ server.patch("/profile/:userId/skills/:itemId", (req, res) => {
   const updatedItems = user
     .get("skills")
     .map((item) =>
-      String(item.id) === itemId ? { ...item, ...req.body } : item
+      String(item.id) === itemId ? { ...item, ...req.body } : item,
     )
     .value();
 
@@ -207,7 +206,6 @@ server.delete("/profile/:userId/skills/:itemId", (req, res) => {
   res.status(204).end();
 });
 
-
 const currentUser = {
   id: "mohsobh",
   name: "Mohamed Sobh",
@@ -230,7 +228,6 @@ server.get("/posts", (req, res) => {
 
 server.post("/posts", (req, res) => {
   const { authorId, content, media, taggedUsers, visibility } = req.body;
-
 
   // Basic validation
   if (!authorId || !content) {
@@ -629,4 +626,3 @@ server.use(_router);
 server.listen(5000, () => {
   console.log("Mock server running at http://localhost:5000");
 });
-

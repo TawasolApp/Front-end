@@ -39,7 +39,7 @@ describe("ImageUploadModal Component", () => {
         isOpen={false}
         onClose={mockOnClose}
         onUpload={mockOnUpload}
-      />
+      />,
     );
     expect(container.innerHTML).toBe("");
   });
@@ -50,7 +50,7 @@ describe("ImageUploadModal Component", () => {
         isOpen={true}
         onClose={mockOnClose}
         onUpload={mockOnUpload}
-      />
+      />,
     );
 
     expect(screen.getByText("Upload Image")).toBeInTheDocument();
@@ -64,7 +64,7 @@ describe("ImageUploadModal Component", () => {
         isOpen={true}
         onClose={mockOnClose}
         onUpload={mockOnUpload}
-      />
+      />,
     );
     fireEvent.click(screen.getByText("Cancel"));
     expect(mockOnClose).toHaveBeenCalled();
@@ -76,7 +76,7 @@ describe("ImageUploadModal Component", () => {
         isOpen={true}
         onClose={mockOnClose}
         onUpload={mockOnUpload}
-      />
+      />,
     );
 
     const file = new File(["dummy-content"], "test.png", { type: "image/png" });
@@ -98,7 +98,7 @@ describe("ImageUploadModal Component", () => {
         isOpen={true}
         onClose={mockOnClose}
         onUpload={mockOnUpload}
-      />
+      />,
     );
 
     const file = new File(["image-data"], "avatar.jpg", { type: "image/jpeg" });

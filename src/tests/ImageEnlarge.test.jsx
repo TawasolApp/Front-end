@@ -1,4 +1,3 @@
-
 import { describe, it, vi, expect, beforeEach, afterEach } from "vitest";
 import { render, screen, fireEvent, cleanup } from "@testing-library/react";
 import ImageEnlarge from "../pages/UserProfile/Components/HeaderComponents/ImageEnlarge";
@@ -21,14 +20,14 @@ describe("ImageEnlarge Component", () => {
         isOpen={false}
         profilePicture={testImage}
         onClose={vi.fn()}
-      />
+      />,
     );
     expect(screen.queryByAltText("Profile Enlarged")).not.toBeInTheDocument();
   });
 
   it("does not render if profilePicture is missing", () => {
     render(
-      <ImageEnlarge isOpen={true} profilePicture={null} onClose={vi.fn()} />
+      <ImageEnlarge isOpen={true} profilePicture={null} onClose={vi.fn()} />,
     );
     expect(screen.queryByAltText("Profile Enlarged")).not.toBeInTheDocument();
   });
@@ -39,7 +38,7 @@ describe("ImageEnlarge Component", () => {
         isOpen={true}
         profilePicture={testImage}
         onClose={vi.fn()}
-      />
+      />,
     );
     expect(screen.getByAltText("Profile Enlarged")).toBeInTheDocument();
   });
@@ -51,7 +50,7 @@ describe("ImageEnlarge Component", () => {
         isOpen={true}
         profilePicture={testImage}
         onClose={onClose}
-      />
+      />,
     );
     fireEvent.click(screen.getByRole("button"));
     expect(onClose).toHaveBeenCalled();
@@ -63,7 +62,7 @@ describe("ImageEnlarge Component", () => {
         isOpen={true}
         profilePicture={testImage}
         onClose={vi.fn()}
-      />
+      />,
     );
     expect(document.body.classList.contains("overflow-hidden")).toBe(true);
     unmount();

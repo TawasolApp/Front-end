@@ -12,7 +12,7 @@ describe("CoverPhoto Component", () => {
         isOwner={true}
         onImageClick={vi.fn()}
         onUpload={vi.fn()}
-      />
+      />,
     );
 
     const img = screen.getByAltText("Cover");
@@ -29,7 +29,7 @@ describe("CoverPhoto Component", () => {
         isOwner={true}
         onImageClick={handleClick}
         onUpload={vi.fn()}
-      />
+      />,
     );
 
     const img = screen.getByAltText("Cover");
@@ -46,7 +46,7 @@ describe("CoverPhoto Component", () => {
         isOwner={true}
         onImageClick={vi.fn()}
         onUpload={handleUpload}
-      />
+      />,
     );
 
     const uploadBtn = screen.getByRole("button");
@@ -63,7 +63,7 @@ describe("CoverPhoto Component", () => {
         isOwner={false}
         onImageClick={vi.fn()}
         onUpload={vi.fn()}
-      />
+      />,
     );
 
     const button = screen.queryByRole("button");

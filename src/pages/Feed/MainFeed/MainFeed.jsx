@@ -4,7 +4,6 @@ import FeedPosts from "./FeedPosts/FeedPosts";
 import { axiosInstance } from "../../../apis/axios";
 
 const MainFeed = () => {
-
   // TODO: change this to redux states
   const currentAuthorId = "mohsobh";
   const currentAuthorName = "Mohamed Sobh";

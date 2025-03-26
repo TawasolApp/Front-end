@@ -43,7 +43,7 @@ describe("EditProfileModal", () => {
         isOpen={true}
         onSave={onSave}
         onClose={onClose}
-      />
+      />,
     );
     expect(screen.getByLabelText(/first name \*/i)).toBeInTheDocument();
     expect(screen.getByLabelText(/last name \*/i)).toBeInTheDocument();
@@ -59,7 +59,7 @@ describe("EditProfileModal", () => {
         isOpen={true}
         onSave={onSave}
         onClose={onClose}
-      />
+      />,
     );
     fireEvent.change(screen.getByLabelText(/first name \*/i), {
       target: { value: "Fatma" },
@@ -78,7 +78,7 @@ describe("EditProfileModal", () => {
         isOpen={true}
         onSave={onSave}
         onClose={onClose}
-      />
+      />,
     );
     fireEvent.change(screen.getByLabelText(/first name \*/i), {
       target: { value: "Fatma Updated" },
@@ -87,7 +87,7 @@ describe("EditProfileModal", () => {
 
     await waitFor(() => {
       expect(onSave).toHaveBeenCalledWith(
-        expect.objectContaining({ firstName: "Fatma Updated" })
+        expect.objectContaining({ firstName: "Fatma Updated" }),
       );
       expect(onClose).toHaveBeenCalled();
     });
@@ -106,7 +106,7 @@ describe("EditProfileModal", () => {
         isOpen={true}
         onSave={onSave}
         onClose={onClose}
-      />
+      />,
     );
 
     fireEvent.click(screen.getByText(/save/i));
@@ -114,7 +114,7 @@ describe("EditProfileModal", () => {
       expect(screen.getByText(/first name is required/i)).toBeInTheDocument();
       expect(screen.getByText(/last name is required/i)).toBeInTheDocument();
       expect(
-        screen.getByText(/country\/region is required/i)
+        screen.getByText(/country\/region is required/i),
       ).toBeInTheDocument();
       expect(screen.getByText(/industry is required/i)).toBeInTheDocument();
     });
@@ -127,7 +127,7 @@ describe("EditProfileModal", () => {
         isOpen={true}
         onSave={onSave}
         onClose={onClose}
-      />
+      />,
     );
     fireEvent.change(screen.getByLabelText(/Work Experience/i), {
       target: { value: "0" },
@@ -153,7 +153,7 @@ describe("EditProfileModal", () => {
         isOpen={true}
         onSave={onSave}
         onClose={onClose}
-      />
+      />,
     );
 
     fireEvent.change(screen.getByLabelText(/Work Experience/i), {
@@ -176,7 +176,7 @@ describe("EditProfileModal", () => {
           firstName: "Fatma",
           selectedExperienceIndex: 0,
           selectedEducationIndex: 0,
-        })
+        }),
       );
     });
   });
@@ -188,7 +188,7 @@ describe("EditProfileModal", () => {
         isOpen={true}
         onSave={onSave}
         onClose={onClose}
-      />
+      />,
     );
     fireEvent.click(screen.getByLabelText(/close modal/i));
     expect(onClose).toHaveBeenCalled();
@@ -201,7 +201,7 @@ describe("EditProfileModal", () => {
         isOpen={true}
         onSave={onSave}
         onClose={onClose}
-      />
+      />,
     );
     fireEvent.change(screen.getByLabelText(/first name \*/i), {
       target: { value: "Changed" },
@@ -217,7 +217,7 @@ describe("EditProfileModal", () => {
         isOpen={true}
         onSave={onSave}
         onClose={onClose}
-      />
+      />,
     );
     fireEvent.change(screen.getByLabelText(/first name \*/i), {
       target: { value: "Changed" },
@@ -238,7 +238,7 @@ describe("EditProfileModal", () => {
         isOpen={true}
         onSave={onSave}
         onClose={onClose}
-      />
+      />,
     );
     expect(screen.getByText(/no skill added/i)).toBeInTheDocument();
   });
@@ -250,7 +250,7 @@ describe("EditProfileModal", () => {
         isOpen={true}
         onSave={onSave}
         onClose={onClose}
-      />
+      />,
     );
     expect(document.body.style.overflow).toBe("hidden");
     unmount();
@@ -267,13 +267,13 @@ describe("EditProfileModal", () => {
         isOpen={true}
         onSave={onSave}
         onClose={onClose}
-      />
+      />,
     );
     fireEvent.click(screen.getByText(/save/i));
     await waitFor(() => {
       expect(consoleSpy).toHaveBeenCalledWith(
         "Failed to update profile:",
-        error.message
+        error.message,
       );
     });
     consoleSpy.mockRestore();

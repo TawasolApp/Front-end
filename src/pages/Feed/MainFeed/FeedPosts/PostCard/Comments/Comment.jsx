@@ -30,28 +30,36 @@ const Comment = ({ comment, handleDeleteComment, setComments }) => {
     let reacts = {};
     if (reactionTypeAdd) reacts[reactionTypeAdd] = 1;
     if (reactionTypeRemove) reacts[reactionTypeRemove] = 0;
-  
+
     try {
       axiosInstance.post(`posts/react/${comment.id}`, {
         reactions: reacts,
         postType: "Comment",
       });
-  
+
       setLocalComment((prev) => {
         const newReactions = { ...prev.reactions };
         if (reactionTypeAdd) newReactions[reactionTypeAdd] += 1;
         if (reactionTypeRemove) newReactions[reactionTypeRemove] -= 1;
-  
+
         // Update comments in CommentsContainer
         setComments((prevComments) =>
           prevComments.map((c) =>
             c.id === comment.id
-              ? { ...c, reactions: newReactions, reactType: reactionTypeAdd || null }
-              : c
-          )
+              ? {
+                  ...c,
+                  reactions: newReactions,
+                  reactType: reactionTypeAdd || null,
+                }
+              : c,
+          ),
         );
-  
-        return { ...prev, reactions: newReactions, reactType: reactionTypeAdd || null };
+
+        return {
+          ...prev,
+          reactions: newReactions,
+          reactType: reactionTypeAdd || null,
+        };
       });
     } catch (e) {
       console.log(e.message);

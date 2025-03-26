@@ -8,13 +8,13 @@ vi.mock(
   "../../src/pages/UserProfile/Components/HeaderComponents/ProfileHeader",
   () => ({
     default: () => <div data-testid="profile-header">ProfileHeader</div>,
-  })
+  }),
 );
 vi.mock(
   "../../src/pages/UserProfile/Components/Sections/EducationSection",
   () => ({
     default: () => <div data-testid="education-section">EducationSection</div>,
-  })
+  }),
 );
 vi.mock(
   "../../src/pages/UserProfile/Components/Sections/ExperienceSection",
@@ -22,13 +22,13 @@ vi.mock(
     default: () => (
       <div data-testid="experience-section">ExperienceSection</div>
     ),
-  })
+  }),
 );
 vi.mock(
   "../../src/pages/UserProfile/Components/Sections/SkillsSection",
   () => ({
     default: () => <div data-testid="skills-section">SkillsSection</div>,
-  })
+  }),
 );
 vi.mock(
   "../../src/pages/UserProfile/Components/Sections/CertificationsSection",
@@ -36,7 +36,7 @@ vi.mock(
     default: () => (
       <div data-testid="certifications-section">CertificationsSection</div>
     ),
-  })
+  }),
 );
 
 // ✅ Mock useOutletContext

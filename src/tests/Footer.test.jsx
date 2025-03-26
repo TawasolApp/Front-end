@@ -1,4 +1,3 @@
-
 import { describe, it, expect } from "vitest";
 import { render, screen } from "@testing-library/react";
 import Footer from "../../src/pages/UserProfile/Components/Footer";
@@ -14,7 +13,7 @@ describe("Footer component", () => {
     expect(screen.getByText("Visit our Help Center.")).toBeInTheDocument();
     expect(screen.getByText("Go to Settings.")).toBeInTheDocument();
     expect(
-      screen.getByText("Learn more about Recommended Content.")
+      screen.getByText("Learn more about Recommended Content."),
     ).toBeInTheDocument();
   });
 
@@ -26,7 +25,7 @@ describe("Footer component", () => {
 
     // Optional: check for specific options
     expect(
-      screen.getByRole("option", { name: /english/i })
+      screen.getByRole("option", { name: /english/i }),
     ).toBeInTheDocument();
     expect(screen.getByRole("option", { name: /arabic/i })).toBeInTheDocument();
   });
@@ -34,7 +33,7 @@ describe("Footer component", () => {
   it("displays the copyright", () => {
     render(<Footer />);
     expect(
-      screen.getByText(/linkedin corporation © 2025/i)
+      screen.getByText(/linkedin corporation © 2025/i),
     ).toBeInTheDocument();
   });
 });

@@ -78,7 +78,9 @@ describe("LikeButton Component", () => {
   });
 
   it("renders the correct icon and label for an initial reaction", () => {
-    render(<LikeButton initReactValue="Celebrate" handleReaction={mockOnChange} />);
+    render(
+      <LikeButton initReactValue="Celebrate" handleReaction={mockOnChange} />,
+    );
 
     // Should show the celebrate icon
     expect(screen.getByTestId("celebrate-icon")).toBeInTheDocument();

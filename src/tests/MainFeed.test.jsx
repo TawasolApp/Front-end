@@ -11,7 +11,9 @@ import MainFeed from "../pages/Feed/MainFeed/MainFeed";
 
 // Mock child components
 vi.mock("../pages/Feed/MainFeed/SharePost/SharePost", () => ({
-  default: ({ handleSharePost }) => (  // Changed from sharePost to handleSharePost
+  default: (
+    { handleSharePost }, // Changed from sharePost to handleSharePost
+  ) => (
     <div data-testid="share-post" className="mock-share-post">
       <button
         data-testid="share-button"

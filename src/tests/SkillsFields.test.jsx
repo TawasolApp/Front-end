@@ -23,7 +23,10 @@ describe("SkillsFields Component", () => {
 
   it("renders errors if provided", () => {
     render(
-      <SkillsFields {...defaultProps} errors={{ skill: "Skill is required" }} />
+      <SkillsFields
+        {...defaultProps}
+        errors={{ skill: "Skill is required" }}
+      />,
     );
 
     expect(screen.getByText("Skill is required")).toBeInTheDocument();
@@ -44,12 +47,12 @@ describe("SkillsFields Component", () => {
       <SkillsFields
         {...defaultProps}
         formData={{ skill: "React", position: "Frontend Developer" }}
-      />
+      />,
     );
 
     expect(screen.getByLabelText(/skill \*/i)).toHaveValue("React");
     expect(screen.getByLabelText(/position \(optional\)/i)).toHaveValue(
-      "Frontend Developer"
+      "Frontend Developer",
     );
   });
 });

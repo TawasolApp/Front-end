@@ -49,7 +49,7 @@ function GenericPage({ title, type }) {
 
         response = await axios.patch(
           `/profile/${user.id}/${type}/${itemId}`,
-          updatedItem
+          updatedItem,
         );
         //  faster
         // const updated = [...data];
@@ -59,8 +59,8 @@ function GenericPage({ title, type }) {
         // safer as replace only the updated item
         setData((prev) =>
           prev.map((item) =>
-            item.id === response.data.id ? response.data : item
-          )
+            item.id === response.data.id ? response.data : item,
+          ),
         );
       }
 
