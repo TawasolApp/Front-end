@@ -18,12 +18,12 @@ export default defineConfig({
     coverage: {
       all: true,
       exclude: [
-        "./src/pages/CompanyPage/testdata.js",
+        "./src/pages/Company/testdata.js",
         "**/tests/**",
         "**/*.test.{js,jsx}",
         "**/__mocks__/**",
         "node_modules/**",
-        "src/pages/CompanyPage/Components/PostSlide.jsx",
+        "src/pages/Company/Components/Slider/PostSlide.jsx",
         "node_modules",
         "tests",
         "vite.config.js",
