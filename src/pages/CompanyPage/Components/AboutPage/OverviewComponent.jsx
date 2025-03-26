@@ -1,5 +1,5 @@
-import React, { useState } from "react";
-function Overviewcomponent(props) {
+import React from "react";
+function OverviewComponent(props) {
   return (
     <div className="mt-4">
       <p className="font-bold text-text">{props.title}</p>
@@ -7,4 +7,4 @@ function Overviewcomponent(props) {
     </div>
   );
 }
-export default Overviewcomponent;
+export default OverviewComponent;

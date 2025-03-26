@@ -1,8 +1,8 @@
 import React from "react";
-import { FiX } from "react-icons/fi"; // Import close icon
+import { FiX } from "react-icons/fi";
 
 function ImageEnlarge({ profilePicture, isOpen, onClose }) {
-  if (!isOpen) return null; // Don't render if modal is closed
+  if (!isOpen) return null;
 
   return (
     <div

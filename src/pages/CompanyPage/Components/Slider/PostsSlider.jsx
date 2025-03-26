@@ -1,14 +1,14 @@
 import React, { useRef } from "react";
 import PostSlide from "./PostSlide";
-import posts from "../poststest";
+import posts from "../../poststest";
 import { AiOutlineLeft, AiOutlineRight } from "react-icons/ai";
-import { useNavigate, useParams } from "react-router-dom"; // Import useParams
-import { HiOutlineDocumentText } from "react-icons/hi"; // Import document icon
+import { useNavigate, useParams } from "react-router-dom";
+import { HiOutlineDocumentText } from "react-icons/hi";
 
 function PostsSlider({ setActiveButton }) {
   const sliderRef = useRef(null);
   const navigate = useNavigate();
-  const { companyId } = useParams(); // Dynamically get companyId from URL
+  const { companyId } = useParams();
 
   const scrollLeft = () => {
     if (sliderRef.current) {
@@ -67,7 +67,7 @@ function PostsSlider({ setActiveButton }) {
             <p className="text-text2 text-center mb-4 ">Show all posts</p>
             <button
               className="border border-blue-600 text-blue-600 py-2 px-6 rounded-full font-semibold flex items-center justify-center gap-2 hover:border-2 transition "
-              onClick={() => navigate(`/company/${companyId}/posts`)} // Use dynamic companyId
+              onClick={() => navigate(`/company/${companyId}/posts`)}
             >
               Show all →
             </button>
@@ -85,7 +85,7 @@ function PostsSlider({ setActiveButton }) {
       </div>
       <button
         className="w-full py-2 text-navbuttons border-t border-gray-300 mt-4 "
-        onClick={() => navigate(`/company/${companyId}/posts`)} // Use dynamic companyId
+        onClick={() => navigate(`/company/${companyId}/posts`)}
       >
         Show all posts →
       </button>

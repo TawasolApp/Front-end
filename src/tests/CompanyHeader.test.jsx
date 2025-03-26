@@ -1,7 +1,7 @@
 import { describe, expect, test, vi, beforeEach } from "vitest";
 import { render, screen, waitFor, fireEvent } from "@testing-library/react";
 import { formatNumbers } from "../utils/formatNumbers";
-import CompanyHeader from "../pages/CompanyPage/Components/CompanyHeader";
+import CompanyHeader from "../pages/CompanyPage/Components/GenericComponents/CompanyHeader";
 import { axiosInstance } from "../apis/axios";
 import { MemoryRouter } from "react-router-dom";
 
@@ -66,39 +66,39 @@ describe("CompanyHeader", () => {
     render(
       <MemoryRouter>
         <CompanyHeader companyId="test-company" />
-      </MemoryRouter>,
+      </MemoryRouter>
     );
 
     await waitFor(() =>
-      expect(screen.getByText("+ Follow")).toBeInTheDocument(),
+      expect(screen.getByText("+ Follow")).toBeInTheDocument()
     );
 
     fireEvent.click(screen.getByText("+ Follow"));
     await waitFor(() =>
-      expect(screen.getByText("✓ Following")).toBeInTheDocument(),
+      expect(screen.getByText("✓ Following")).toBeInTheDocument()
     );
 
     fireEvent.click(screen.getByText("✓ Following")); // Open unfollow modal
     await waitFor(() =>
       expect(
-        screen.getByText(/Are you sure you want to unfollow/i),
-      ).toBeInTheDocument(),
+        screen.getByText(/Are you sure you want to unfollow/i)
+      ).toBeInTheDocument()
     );
 
     fireEvent.click(screen.getByLabelText("Confirm Unfollow"));
     await waitFor(() =>
-      expect(screen.getByText("+ Follow")).toBeInTheDocument(),
+      expect(screen.getByText("+ Follow")).toBeInTheDocument()
     );
   });
   test("renders company info correctly", async () => {
     render(
       <MemoryRouter>
         <CompanyHeader companyId="test-company" />
-      </MemoryRouter>,
+      </MemoryRouter>
     );
     // Wait for the company name to appear
     await waitFor(() =>
-      expect(screen.getByText("Test Company")).toBeInTheDocument(),
+      expect(screen.getByText("Test Company")).toBeInTheDocument()
     );
     // Wait until the logo and banner are rendered
     const bannerImage = await screen.findByAltText("Company Banner");
@@ -109,19 +109,19 @@ describe("CompanyHeader", () => {
     // Verify other company details
     expect(screen.getByText(/A test company description/)).toBeInTheDocument();
     expect(
-      screen.getByText((content) => content.includes("1K followers")),
+      screen.getByText((content) => content.includes("1K followers"))
     ).toBeInTheDocument();
     expect(screen.getByText("+ Follow")).toBeInTheDocument();
     expect(screen.getByText("Visit website")).toBeInTheDocument();
     expect(
-      screen.getByText((content) => content.includes("201-500 employees")),
+      screen.getByText((content) => content.includes("201-500 employees"))
     ).toBeInTheDocument();
   });
   test("opens image enlarge modal when banner is clicked", async () => {
     render(
       <MemoryRouter>
         <CompanyHeader companyId="test-company" />
-      </MemoryRouter>,
+      </MemoryRouter>
     );
 
     const banner = await screen.findByAltText("Company Banner");
@@ -137,7 +137,7 @@ describe("CompanyHeader", () => {
     render(
       <MemoryRouter>
         <CompanyHeader companyId="test-company" />
-      </MemoryRouter>,
+      </MemoryRouter>
     );
 
     const banner = await screen.findByAltText("Company Banner");
@@ -155,19 +155,19 @@ describe("CompanyHeader", () => {
     render(
       <MemoryRouter>
         <CompanyHeader companyId="test-company" />
-      </MemoryRouter>,
+      </MemoryRouter>
     );
 
     // Step 1: Wait for "+ Follow" button
     await waitFor(() =>
-      expect(screen.getByText("+ Follow")).toBeInTheDocument(),
+      expect(screen.getByText("+ Follow")).toBeInTheDocument()
     );
 
     // Step 2: Click "+ Follow" → Should change to "✓ Following"
     fireEvent.click(screen.getByText("+ Follow"));
 
     await waitFor(() =>
-      expect(screen.getByText("✓ Following")).toBeInTheDocument(),
+      expect(screen.getByText("✓ Following")).toBeInTheDocument()
     );
 
     // Step 3: Click "✓ Following" → Opens Unfollow Modal
@@ -175,8 +175,8 @@ describe("CompanyHeader", () => {
 
     await waitFor(() =>
       expect(
-        screen.getByText(/Are you sure you want to unfollow/i),
-      ).toBeInTheDocument(),
+        screen.getByText(/Are you sure you want to unfollow/i)
+      ).toBeInTheDocument()
     );
 
     // Step 4: Click "Close Unfollow" → Modal should disappear
@@ -185,8 +185,8 @@ describe("CompanyHeader", () => {
 
     await waitFor(() =>
       expect(
-        screen.queryByText(/Are you sure you want to unfollow/i),
-      ).not.toBeInTheDocument(),
+        screen.queryByText(/Are you sure you want to unfollow/i)
+      ).not.toBeInTheDocument()
     );
 
     // Step 5: Click "✓ Following" again → Reopen modal
@@ -194,8 +194,8 @@ describe("CompanyHeader", () => {
 
     await waitFor(() =>
       expect(
-        screen.getByText(/Are you sure you want to unfollow/i),
-      ).toBeInTheDocument(),
+        screen.getByText(/Are you sure you want to unfollow/i)
+      ).toBeInTheDocument()
     );
 
     // Step 6: Click "Unfollow" → Should change back to "+ Follow"
@@ -203,7 +203,7 @@ describe("CompanyHeader", () => {
     fireEvent.click(confirmunfollow);
 
     await waitFor(() =>
-      expect(screen.getByText("+ Follow")).toBeInTheDocument(),
+      expect(screen.getByText("+ Follow")).toBeInTheDocument()
     );
   });
 
@@ -211,12 +211,12 @@ describe("CompanyHeader", () => {
     render(
       <MemoryRouter>
         <CompanyHeader companyId="test-company" />
-      </MemoryRouter>,
+      </MemoryRouter>
     );
 
     // Wait for company data to load
     await waitFor(() =>
-      expect(screen.getByText("Test Company")).toBeInTheDocument(),
+      expect(screen.getByText("Test Company")).toBeInTheDocument()
     );
     const moreOptionsBtn = screen.getByLabelText("More options");
     fireEvent.click(moreOptionsBtn);
@@ -230,7 +230,7 @@ describe("CompanyHeader", () => {
     render(
       <MemoryRouter>
         <CompanyHeader companyId="test-company" />
-      </MemoryRouter>,
+      </MemoryRouter>
     );
 
     const moreOptionsBtn = await screen.findByLabelText("More options");
@@ -244,11 +244,11 @@ describe("CompanyHeader", () => {
     render(
       <MemoryRouter>
         <CompanyHeader companyId="test-company" />
-      </MemoryRouter>,
+      </MemoryRouter>
     );
 
     await waitFor(() =>
-      expect(screen.getByText("Test Company")).toBeInTheDocument(),
+      expect(screen.getByText("Test Company")).toBeInTheDocument()
     );
     const editBtn = screen.getByLabelText("Edit Company");
     fireEvent.click(editBtn);
@@ -264,7 +264,7 @@ describe("CompanyHeader", () => {
       render(
         <MemoryRouter>
           <CompanyHeader companyId="test-company" />
-        </MemoryRouter>,
+        </MemoryRouter>
       );
 
       await screen.findByText(button);
@@ -273,7 +273,7 @@ describe("CompanyHeader", () => {
 
       expect(mockNavigate).toHaveBeenCalledWith(
         `/company/test-company/${button.toLowerCase()}`,
-        expect.any(Object),
+        expect.any(Object)
       );
     });
   });

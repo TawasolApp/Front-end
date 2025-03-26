@@ -1,6 +1,6 @@
 import React from "react";
 import { useEffect } from "react";
-const Unfollowmodal = ({ show, cancel, confirm }) => {
+const UnfollowModal = ({ show, cancel, confirm }) => {
   useEffect(() => {
     if (show) {
       document.body.classList.add("overflow-hidden");
@@ -53,4 +53,4 @@ const Unfollowmodal = ({ show, cancel, confirm }) => {
   );
 };
 
-export default Unfollowmodal;
+export default UnfollowModal;

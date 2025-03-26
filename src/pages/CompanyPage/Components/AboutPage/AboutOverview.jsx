@@ -1,7 +1,6 @@
-import React, { useState } from "react";
-import Overviewbox from "./Overviewbox.jsx";
-import Overviewcomponent from "./Overviewcomponent.jsx";
-function Aboutoverview(props) {
+import React from "react";
+import OverviewComponent from "./OverviewComponent.jsx";
+function AboutOverview(props) {
   // const isAdmin = true;
   const company = props.company;
   return (
@@ -37,36 +36,36 @@ function Aboutoverview(props) {
         </div>
       )}
       {company?.contactNumber && (
-        <Overviewcomponent title="Phone" content={company.contactNumber} />
+        <OverviewComponent title="Phone" content={company.contactNumber} />
       )}
       {company?.isVerified && company?.verification_date && (
-        <Overviewcomponent
+        <OverviewComponent
           title="Verified Page"
           content={company.verification_date}
         />
       )}
       {company?.industry && (
-        <Overviewcomponent title="Industry" content={company.industry} />
+        <OverviewComponent title="Industry" content={company.industry} />
       )}
 
       {company?.companySize && (
-        <Overviewcomponent
+        <OverviewComponent
           title="Company Size"
           content={`${company.companySize}+ employees`}
         />
       )}
 
       {company?.address && (
-        <Overviewcomponent title="Headquarters" content={company.address} />
+        <OverviewComponent title="Headquarters" content={company.address} />
       )}
 
       {company?.companyType && (
-        <Overviewcomponent title="Type" content={company.companyType} />
+        <OverviewComponent title="Type" content={company.companyType} />
       )}
       {company?.founded && (
-        <Overviewcomponent title="Founded" content={company.founded} />
+        <OverviewComponent title="Founded" content={company.founded} />
       )}
     </div>
   );
 }
-export default Aboutoverview;
+export default AboutOverview;

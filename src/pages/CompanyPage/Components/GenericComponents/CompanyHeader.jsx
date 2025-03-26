@@ -1,18 +1,15 @@
 import React, { useState, useEffect } from "react";
-import LoadingPage from "../../LoadingPage/LoadingPage.jsx";
-import Homepage from "./HomePage.jsx";
-import Aboutpage from "./AboutPage.jsx";
+import LoadingPage from "../../../LoadingPage/LoadingPage.jsx";
 import { FiEdit } from "react-icons/fi";
-import Unfollowmodal from "./Unfollowmodal.jsx";
-import EditAboutModal from "./EditAboutModal.jsx";
+import UnfollowModal from "../Modals/UnfollowModal.jsx";
+import EditAboutModal from "../Modals/EditAboutModal.jsx";
 import { FiMoreHorizontal } from "react-icons/fi";
 import { useNavigate, useLocation } from "react-router-dom";
 import { FiExternalLink } from "react-icons/fi";
-import ImageEnlarge from "./ImageEnlarge.jsx";
-import PostsPage from "./PostsPage.jsx";
-import MoreOptionsModal from "./MoreOptionsModal.jsx";
-import { formatNumbers } from "../../../utils/formatNumbers.js";
-import { axiosInstance } from "../../../apis/axios.js";
+import ImageEnlarge from "../HomePage/ImageEnlarge.jsx";
+import MoreOptionsModal from "../Modals/MoreOptionsModal.jsx";
+import { formatNumbers } from "../../../../utils/formatNumbers.js";
+import { axiosInstance } from "../../../../apis/axios.js";
 function CompanyHeader({ companyId }) {
   const navigate = useNavigate();
   const location = useLocation(); // Get current URL
@@ -54,7 +51,7 @@ function CompanyHeader({ companyId }) {
   //on click call togglefollow
   const toggleFollow = () => {
     if (isFollowing) {
-      setShowModal(true); // Show unfollow modal
+      setShowModal(true);
     } else {
       axiosInstance
         .post(`/companies/${companyId}/follow`)
@@ -184,7 +181,7 @@ function CompanyHeader({ companyId }) {
           </div>
         </div>
       </div>
-      <Unfollowmodal
+      <UnfollowModal
         show={showModal}
         cancel={() => setShowModal(false)} //cancel
         confirm={confirmUnfollow} //unfollow

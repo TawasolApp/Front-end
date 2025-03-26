@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { FiUpload } from "react-icons/fi";
-import { axiosInstance as axios } from "../../../apis/axios";
+import { axiosInstance as axios } from "../../../../apis/axios";
 import { useNavigate } from "react-router-dom";
 
 function CreateCompanyPage() {

@@ -1,15 +1,14 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate, useLocation, useParams } from "react-router-dom";
-import Overviewbox from "./Overviewbox.jsx";
-import Aboutpage from "./AboutPage.jsx";
-import PostsSlider from "./PostsSlider.jsx";
-import LoadingPage from "../../LoadingPage/LoadingPage.jsx";
-import JobOpenings from "./JobOpenings.jsx";
-import { axiosInstance } from "../../../apis/axios.js";
-function Homepage() {
+import AboutOverview from "../AboutPage/AboutOverview.jsx";
+import AboutLocations from "../AboutPage/AboutLocations.jsx";
+import LoadingPage from "../../../LoadingPage/LoadingPage.jsx";
+import { axiosInstance } from "../../../../apis/axios.js";
+function AboutPage() {
+  const navigate = useNavigate();
   const location = useLocation();
   const { companyId } = useParams();
-  const [company, setCompany] = useState(location.state?.company || null);
+  const [company, setCompany] = useState(location.state?.company || null); //to get state passed in navigation
   const [loading, setLoading] = useState(!company);
   useEffect(() => {
     if (!company) {
@@ -29,10 +28,9 @@ function Homepage() {
   }
   return (
     <div>
-      {company?.overview && <Overviewbox company={company} />}
-      <PostsSlider />
-      <JobOpenings company={company} />
+      <AboutOverview company={company} />
+      <AboutLocations company={company} />
     </div>
   );
 }
-export default Homepage;
+export default AboutPage;

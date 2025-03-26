@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { axiosInstance as axios } from "../../../apis/axios";
+import { axiosInstance as axios } from "../../../../apis/axios";
 
 function EditAboutModal({ show, companyData, onClose }) {
   const [errorMessage, setErrorMessage] = useState("");
@@ -56,7 +56,7 @@ function EditAboutModal({ show, companyData, onClose }) {
     try {
       const response = await axios.patch(
         `/companies/${companyData.companyId}`,
-        formData,
+        formData
       );
       console.log(" Company updated:", response.data);
 
@@ -77,7 +77,7 @@ function EditAboutModal({ show, companyData, onClose }) {
     return () => document.body.classList.remove("overflow-hidden");
   }, [show]);
 
-  if (!show) return null; // Hide modal if not visible
+  if (!show) return null;
 
   return (
     <div className="fixed inset-0 flex items-center justify-center bg-modalbackground z-[999]">
