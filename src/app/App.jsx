@@ -1,10 +1,10 @@
 import "./App.css";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
-import CompanyLayout from "../pages/CompanyPage/CompanyLayout";
-import PostsPage from "../pages/CompanyPage/Components/Pages/PostsPage.jsx";
-import AboutPage from "../pages/CompanyPage/Components/Pages/AboutPage.jsx";
-import HomePage from "../pages/CompanyPage/Components/Pages/HomePage.jsx";
-import CreateCompanyPage from "../pages/CompanyPage/Components/CreateCompanyPage/CreateCompanyPage";
+import CompanyLayout from "../pages/Company/CompanyLayout.jsx";
+import PostsPage from "../pages/Company/Components/Pages/PostsPage.jsx";
+import AboutPage from "../pages/Company/Components/Pages/AboutPage.jsx";
+import HomePage from "../pages/Company/Components/Pages/HomePage.jsx";
+import CreateCompanyPage from "../pages/Company/Components/CreateCompanyPage/CreateCompanyPage.jsx";
 import FeedContainer from "../pages/Feed/FeedContainer";
 import SavedPostsContainer from "../pages/SavedPosts/SavedPostsContainer";
 

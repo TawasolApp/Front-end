@@ -1,7 +1,7 @@
 import { describe, expect, test, vi, beforeEach } from "vitest";
 import { render, screen, waitFor, fireEvent } from "@testing-library/react";
 import { formatNumbers } from "../utils/formatNumbers";
-import CompanyHeader from "../pages/CompanyPage/Components/GenericComponents/CompanyHeader";
+import CompanyHeader from "../pages/Company/Components/GenericComponents/CompanyHeader";
 import { axiosInstance } from "../apis/axios";
 import { MemoryRouter } from "react-router-dom";
 

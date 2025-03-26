@@ -10,13 +10,13 @@ function PostsSlider({ setActiveButton }) {
   const navigate = useNavigate();
   const { companyId } = useParams();
 
-  const scrollLeft = () => {
+  const handleScrollLeft = () => {
     if (sliderRef.current) {
       sliderRef.current.scrollBy({ left: -350, behavior: "smooth" });
     }
   };
 
-  const scrollRight = () => {
+  const handleScrollRight = () => {
     if (sliderRef.current) {
       sliderRef.current.scrollBy({ left: 350, behavior: "smooth" });
     }
@@ -34,14 +34,14 @@ function PostsSlider({ setActiveButton }) {
           <button
             className="bg-modalbackground p-2 rounded-full hover:bg-sliderbutton transition border border-white shadow-sm"
             aria-label="scroll-left"
-            onClick={scrollLeft}
+            onClick={handleScrollLeft}
           >
             <AiOutlineLeft size={20} className="text-text" />
           </button>
           <button
             className="bg-modalbackground p-2 rounded-full hover:bg-sliderbutton transition border border-white shadow-sm"
             aria-label="scroll-right"
-            onClick={scrollRight}
+            onClick={handleScrollRight}
           >
             <AiOutlineRight size={20} className="text-text" />
           </button>

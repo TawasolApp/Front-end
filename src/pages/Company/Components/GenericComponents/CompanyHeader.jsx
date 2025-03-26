@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import LoadingPage from "../../../LoadingPage/LoadingPage.jsx";
+import LoadingPage from "../../../LoadingScreen/LoadingPage.jsx";
 import { FiEdit } from "react-icons/fi";
 import UnfollowModal from "../Modals/UnfollowModal.jsx";
 import EditAboutModal from "../Modals/EditAboutModal.jsx";
@@ -49,7 +49,7 @@ function CompanyHeader({ companyId }) {
   const activeButton = pathParts.length >= 3 ? pathParts[3] || "home" : "home";
 
   //on click call togglefollow
-  const toggleFollow = () => {
+  const handleFollowToggling = () => {
     if (isFollowing) {
       setShowModal(true);
     } else {
@@ -125,7 +125,7 @@ function CompanyHeader({ companyId }) {
             {/* Follow Button */}
             <button
               className="px-4 h-9 min-w-max rounded-full transition duration-300 border-2 border-blue-700 bg-boxbackground text-blue-700 font-medium text-sm flex items-center justify-center"
-              onClick={toggleFollow}
+              onClick={handleFollowToggling}
             >
               {isFollowing ? "✓ Following" : "+ Follow"}
             </button>

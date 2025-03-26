@@ -1,7 +1,7 @@
 import { describe, test, expect, vi, beforeEach } from "vitest";
 import { render, screen, waitFor } from "@testing-library/react";
 import { MemoryRouter, Route, Routes } from "react-router-dom";
-import CompanyLayout from "../pages/CompanyPage/Components/CompanyLayout";
+import CompanyLayout from "../pages/Company/Components/CompanyLayout";
 import { axiosInstance } from "../apis/axios";
 
 // Mock axios
@@ -41,7 +41,7 @@ describe("CompanyLayout", () => {
         <Routes>
           <Route path="/company/:companyId/*" element={<CompanyLayout />} />
         </Routes>
-      </MemoryRouter>,
+      </MemoryRouter>
     );
 
     // Wait for the layout to finish loading
@@ -72,7 +72,7 @@ describe("CompanyLayout", () => {
             element={<div data-testid="redirected-home" />}
           />
         </Routes>
-      </MemoryRouter>,
+      </MemoryRouter>
     );
 
     await waitFor(() => {

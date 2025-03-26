@@ -1,6 +1,6 @@
 import { render, screen, waitFor } from "@testing-library/react";
 import { MemoryRouter, Route, Routes } from "react-router-dom";
-import Homepage from "../pages/CompanyPage/Components/Pages/HomePage";
+import Homepage from "../pages/Company/Components/Pages/HomePage";
 import { vi } from "vitest";
 import { axiosInstance } from "../apis/axios";
 
