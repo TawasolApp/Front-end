@@ -9,7 +9,7 @@ const TextModal = ({
   currentAuthorName,
   currentAuthorPicture,
   setIsModalOpen,
-  sharePost,
+  handleSubmitFunction,
   initialText = "",
 }) => {
   const [text, setText] = useState(initialText);
@@ -31,7 +31,7 @@ const TextModal = ({
   const handleSubmit = (e) => {
     e.preventDefault();
     if (!text.trim()) return;
-    sharePost(text, visibilityType);
+    handleSubmitFunction(text, visibilityType);
     setIsModalOpen();
     setText("");
   };

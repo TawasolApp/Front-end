@@ -74,7 +74,7 @@ const CommentsContainer = ({
     }
   }, [postId]);
 
-  const onAddComment = async (text) => {
+  const handleAddComment = async (text) => {
     try {
       const response = await axiosInstance.post(`/posts/comment/${postId}`, {
         content: text,
@@ -99,7 +99,7 @@ const CommentsContainer = ({
 
   return (
     <>
-      <AddForm handleAddFunction={onAddComment} type="Comment" />
+      <AddForm handleAddFunction={handleAddComment} type="Comment" />
       {error && <div className="text-red-500 font-black p-4">{error}</div>}
       {loading && (
         <div className="p-4 flex justify-center">
@@ -116,6 +116,7 @@ const CommentsContainer = ({
             <Comment
               comment={comment}
               handleDeleteComment={handleDeleteComment}
+              setComments={setComments}
             />
           </div>
         ))}

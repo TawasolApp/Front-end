@@ -3,19 +3,19 @@ import ThumbUpOffAltIcon from "@mui/icons-material/ThumbUpOffAlt";
 import reactionIcons from "../../../../GenericComponents/reactionIcons";
 import ReactionPicker from "../../../../GenericComponents/ReactionPicker";
 
-const LikeButton = ({ initReactValue, onChange }) => {
+const LikeButton = ({ initReactValue, handleReaction }) => {
   const [currentReaction, setCurrentReaction] = useState(initReactValue);
 
-  const handleReaction = (reactionType) => {
+  const handleReactionInternal = (reactionType) => {
     if (currentReaction === null) {
       setCurrentReaction(reactionType);
-      onChange && onChange(reactionType, null);
+      handleReaction && handleReaction(reactionType, null);
     } else if (currentReaction === reactionType) {
       setCurrentReaction(null);
-      onChange && onChange(null, reactionType);
+      handleReaction && handleReaction(null, reactionType);
     } else {
       setCurrentReaction(reactionType);
-      onChange && onChange(reactionType, currentReaction);
+      handleReaction && handleReaction(reactionType, currentReaction);
     }
   };
 
@@ -48,10 +48,10 @@ const LikeButton = ({ initReactValue, onChange }) => {
   };
 
   return (
-    <ReactionPicker onSelectReaction={handleReaction}>
+    <ReactionPicker onSelectReaction={handleReactionInternal}>
       <button
         className="flex items-center gap-1 p-2 hover:bg-buttonIconHover hover:transition-all duration-200 w-full justify-center group"
-        onClick={() => handleReaction(currentReaction || "Like")}
+        onClick={() => handleReactionInternal(currentReaction || "Like")}
       >
         {renderButtonContent()}
       </button>

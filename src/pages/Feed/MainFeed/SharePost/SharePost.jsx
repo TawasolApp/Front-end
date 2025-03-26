@@ -2,7 +2,7 @@ import { useState } from "react";
 import Avatar from "@mui/material/Avatar";
 import TextModal from "./TextModal";
 
-const SharePost = ({ sharePost }) => {
+const SharePost = ({ handleSharePost }) => {
   // TODO: change this to redux states
   const currentAuthorId = "mohsobh";
   const currentAuthorName = "Mohamed Sobh";
@@ -39,7 +39,7 @@ const SharePost = ({ sharePost }) => {
           currentAuthorName={currentAuthorName}
           currentAuthorPicture={currentAuthorPicture}
           setIsModalOpen={() => setIsModalOpen(false)}
-          sharePost={sharePost}
+          handleSubmitFunction={handleSharePost}
         />
       )}
     </>

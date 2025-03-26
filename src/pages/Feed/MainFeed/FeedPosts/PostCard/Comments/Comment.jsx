@@ -13,7 +13,7 @@ import AddForm from "./AddForm";
 import { formatDate } from "../../../../../../utils";
 import { axiosInstance } from "../../../../../../apis/axios";
 
-const Comment = ({ comment, handleDeleteComment }) => {
+const Comment = ({ comment, handleDeleteComment, setComments }) => {
   // TODO: change this to redux states
   const currentAuthorId = "mohsobh";
   const currentAuthorName = "Mohamed Sobh";
@@ -30,21 +30,28 @@ const Comment = ({ comment, handleDeleteComment }) => {
     let reacts = {};
     if (reactionTypeAdd) reacts[reactionTypeAdd] = 1;
     if (reactionTypeRemove) reacts[reactionTypeRemove] = 0;
-
+  
     try {
       axiosInstance.post(`posts/react/${comment.id}`, {
         reactions: reacts,
         postType: "Comment",
       });
+  
       setLocalComment((prev) => {
         const newReactions = { ...prev.reactions };
-        if (reactionTypeAdd) {
-          newReactions[reactionTypeAdd] += 1;
-        }
-        if (reactionTypeRemove) {
-          newReactions[reactionTypeRemove] -= 1;
-        }
-        return { ...prev, reactions: newReactions };
+        if (reactionTypeAdd) newReactions[reactionTypeAdd] += 1;
+        if (reactionTypeRemove) newReactions[reactionTypeRemove] -= 1;
+  
+        // Update comments in CommentsContainer
+        setComments((prevComments) =>
+          prevComments.map((c) =>
+            c.id === comment.id
+              ? { ...c, reactions: newReactions, reactType: reactionTypeAdd || null }
+              : c
+          )
+        );
+  
+        return { ...prev, reactions: newReactions, reactType: reactionTypeAdd || null };
       });
     } catch (e) {
       console.log(e.message);
@@ -53,8 +60,8 @@ const Comment = ({ comment, handleDeleteComment }) => {
 
   let menuItems = [
     {
-      text: "Report post",
-      onClick: () => console.log("Reported post"),
+      text: "Report comment",
+      onClick: () => console.log("Reported post"), // TODO: when reporting is implemented
       icon: FlagIcon,
     },
   ];
@@ -132,7 +139,7 @@ const Comment = ({ comment, handleDeleteComment }) => {
               <ActivitiesHolder
                 initReactValue={localComment.reactType}
                 reactions={localComment.reactions}
-                onReactionChange={handleReaction}
+                handleReaction={handleReaction}
                 setShowReactions={() => {
                   setShowReactions(true);
                 }}

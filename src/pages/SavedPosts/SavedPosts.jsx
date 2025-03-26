@@ -14,7 +14,7 @@ const SavedPosts = () => {
     }
   };
 
-  const deletePost = async (postId) => {
+  const handleDeletePost = async (postId) => {
     try {
       await axiosInstance.delete(`/delete/${postId}`);
       setLocalPosts((prevPosts) =>
@@ -36,7 +36,7 @@ const SavedPosts = () => {
         localPosts.map((post) => {
           return (
             <div key={post.id}>
-              <PostCard post={post} deletePost={deletePost} />
+              <PostCard post={post} handleDeletePost={handleDeletePost} />
             </div>
           );
         })}

@@ -24,7 +24,7 @@ const EngagementMetrics = ({
     <div className="flex items-center justify-between text-textPlaceholder pb-1 mx-4 border-b border-cardBorder">
       <button
         className="flex items-center hover:transition-all group"
-        onClick={() => setShowLikes(true)}
+        onClick={setShowLikes}
       >
         <div className="flex -space-x-2">
           {topReactions.map(([reactionType]) => {
@@ -46,7 +46,7 @@ const EngagementMetrics = ({
         {comments > 0 && (
           <button
             className="text-xs mx-1 hover:underline hover:text-textPlaceholderHover"
-            onClick={() => setShowComments(true)}
+            onClick={setShowComments}
           >
             {comments} {comments === 1 ? "comment" : "comments"}
           </button>
@@ -55,7 +55,7 @@ const EngagementMetrics = ({
         {reposts > 0 && (
           <button
             className="text-xs mx-1 hover:underline hover:text-textPlaceholderHover"
-            onClick={() => setShowReposts(true)}
+            onClick={setShowReposts}
           >
             {reposts} {reposts === 1 ? "repost" : "reposts"}
           </button>

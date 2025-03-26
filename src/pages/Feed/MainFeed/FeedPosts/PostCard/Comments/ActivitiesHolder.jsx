@@ -5,7 +5,7 @@ import ReactionPicker from "../../../../GenericComponents/ReactionPicker";
 const ActivitiesHolder = ({
   initReactValue = null,
   reactions,
-  onReactionChange,
+  handleReaction,
   setShowReactions,
   replies,
   setShowReplies,
@@ -24,15 +24,15 @@ const ActivitiesHolder = ({
     };
   }, [reactions]);
 
-  const handleReaction = (reactionType) => {
+  const handleReactionInternal = (reactionType) => {
     if (currentReaction === null) {
-      onReactionChange(reactionType, null);
+      handleReaction(reactionType, null);
       setCurrentReaction(reactionType);
     } else if (currentReaction === reactionType) {
-      onReactionChange(null, reactionType);
+      handleReaction(null, reactionType);
       setCurrentReaction(null);
     } else {
-      onReactionChange(reactionType, currentReaction);
+      handleReaction(reactionType, currentReaction);
       setCurrentReaction(reactionType);
     }
   };
@@ -59,10 +59,10 @@ const ActivitiesHolder = ({
     <div className="flex items-center text-textLightActivity">
       {/* Reactions Section */}
       <div className="flex items-center">
-        <ReactionPicker onSelectReaction={handleReaction}>
+        <ReactionPicker onSelectReaction={handleReactionInternal}>
           <button
             className="flex px-1 items-center rounded-md hover:bg-buttonIconHover transition-all duration-200"
-            onClick={() => handleReaction(currentReaction || "like")}
+            onClick={() => handleReactionInternal(currentReaction || "Like")}
           >
             <ReactionDisplay />
           </button>

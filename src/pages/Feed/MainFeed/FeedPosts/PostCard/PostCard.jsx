@@ -19,7 +19,7 @@ import { axiosInstance } from "../../../../../apis/axios";
 import TextModal from "../../SharePost/TextModal";
 import DeletePostModal from "../DeleteModal/DeletePostModal";
 
-const PostCard = ({ post, deletePost }) => {
+const PostCard = ({ post, handleDeletePost }) => {
   // TODO: change this to redux states
   const currentAuthorId = "mohsobh";
   const currentAuthorName = "Mohamed Sobh";
@@ -39,30 +39,30 @@ const PostCard = ({ post, deletePost }) => {
     {
       text: localPost.isSaved ? "Unsave post" : "Save post",
       onClick: () => {
-        savePost();
+        handleSavePost();
       },
       icon: localPost.isSaved ? BookmarkIcon : BookmarkBorderIcon, // Import and use actual icon component
     },
     {
       text: "Report post",
-      onClick: () => console.log("Reported post"),
+      onClick: () => console.log("Reported post"), // TODO: when reporting is implemented
       icon: FlagIcon,
     },
     {
       text: `Unfollow ${localPost.authorName}`,
-      onClick: () => console.log("User unfollowed"),
+      onClick: () => console.log("User unfollowed"),  // TODO: Phase 3 to integrate with noor
       icon: HighlightOffIcon,
     },
     {
       text: "Copy link to post",
       onClick: () => {
-        copyPost();
+        handleCopyPost();
       },
       icon: LinkIcon,
     },
   ];
 
-  const updatePost = async (text, visibility) => {
+  const handleEditPost = async (text, visibility) => {
     try {
       await axiosInstance.patch(`/posts/${localPost.id}`, {
         authorId: currentAuthorId,
@@ -97,7 +97,7 @@ const PostCard = ({ post, deletePost }) => {
     });
   }
 
-  const savePost = () => {
+  const handleSavePost = () => {
     try {
       if (localPost.isSaved) axiosInstance.delete(`posts/save/${localPost.id}`);
       else axiosInstance.post(`posts/save/${localPost.id}`);
@@ -110,7 +110,7 @@ const PostCard = ({ post, deletePost }) => {
     }
   };
 
-  const copyPost = async () => {
+  const handleCopyPost = async () => {
     await navigator.clipboard.writeText(
       `http://localhost:5173/posts/${localPost.id}`,
     );
@@ -162,15 +162,15 @@ const PostCard = ({ post, deletePost }) => {
         reactions={localPost.reactions}
         comments={localPost.comments}
         reposts={localPost.reposts}
-        setShowLikes={setShowLikes}
-        setShowComments={setShowComments}
-        setShowReposts={setShowReposts}
+        setShowLikes={() => setShowLikes(true)}
+        setShowComments={() => setShowComments(true)}
+        setShowReposts={() => setShowReposts(true)}
       />
 
       <ActivitiesHolder
         initReactValue={localPost.reactType}
-        onChange={handleReaction}
-        setShowComments={setShowComments}
+        handleReaction={handleReaction}
+        setShowComments={() => setShowComments(true)}
       />
 
       {showComments && (
@@ -193,7 +193,7 @@ const PostCard = ({ post, deletePost }) => {
           currentAuthorName={currentAuthorName}
           currentAuthorPicture={currentAuthorPicture}
           setIsModalOpen={() => setShowEditModal(false)}
-          sharePost={updatePost}
+          handleSubmitFunction={handleEditPost}
           initialText={localPost.content}
         />
       )}
@@ -202,7 +202,7 @@ const PostCard = ({ post, deletePost }) => {
         <DeletePostModal
           closeModal={() => setShowDeleteModal(false)}
           deleteFunc={async () => {
-            await deletePost(localPost.id);
+            await handleDeletePost(localPost.id);
             setShowDeleteModal(false);
           }}
           commentOrPost="Post"
