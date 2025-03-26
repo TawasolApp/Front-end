@@ -20,6 +20,8 @@ vi.mock("../apis/axios", () => {
 // Import the mock so we can make assertions on it
 import { axiosInstance } from "../apis/axios";
 
+const mockSetComments = vi.fn();
+
 // Mock icons
 vi.mock("@mui/icons-material/MoreHoriz", () => ({
   default: () => <div data-testid="more-icon">MoreHorizIcon</div>,
@@ -79,14 +81,14 @@ vi.mock(
     default: ({
       initReactValue,
       reactions,
-      onReactionChange,
+      handleReaction,
       setShowReactions,
       replies,
     }) => (
       <div data-testid="activities-holder">
         <button
           data-testid="reaction-button"
-          onClick={() => onReactionChange("like", null)}
+          onClick={() => handleReaction("Like", null)}
         >
           React
         </button>
@@ -176,6 +178,7 @@ describe("Comment Component", () => {
       <Comment
         comment={ownComment}
         handleDeleteComment={mockHandleDeleteComment}
+        setComments={mockSetComments}
       />,
     );
 
@@ -201,11 +204,12 @@ describe("Comment Component", () => {
       <Comment
         comment={ownComment}
         handleDeleteComment={mockHandleDeleteComment}
+        setComments={mockSetComments}
       />,
     );
 
     // Check for menu items
-    expect(screen.getByTestId("menu-item-0")).toHaveTextContent("Report post");
+    expect(screen.getByTestId("menu-item-0")).toHaveTextContent("Report comment");
     expect(screen.getByTestId("menu-item-1")).toHaveTextContent("Edit comment");
     expect(screen.getByTestId("menu-item-2")).toHaveTextContent(
       "Delete comment",
@@ -224,7 +228,7 @@ describe("Comment Component", () => {
     );
 
     // Check for menu items
-    expect(screen.getByTestId("menu-item-0")).toHaveTextContent("Report post");
+    expect(screen.getByTestId("menu-item-0")).toHaveTextContent("Report comment");
 
     // Only 1 menu item
     expect(screen.getAllByTestId(/menu-item-\d+/).length).toBe(1);
@@ -237,6 +241,7 @@ describe("Comment Component", () => {
       <Comment
         comment={ownComment}
         handleDeleteComment={mockHandleDeleteComment}
+        setComments={mockSetComments}
       />,
     );
 
@@ -320,6 +325,7 @@ describe("Comment Component", () => {
       <Comment
         comment={ownComment}
         handleDeleteComment={mockHandleDeleteComment}
+        setComments={mockSetComments}
       />,
     );
 
@@ -329,7 +335,7 @@ describe("Comment Component", () => {
     // Check if axios post was called correctly
     await waitFor(() => {
       expect(axiosInstance.post).toHaveBeenCalledWith("posts/react/123", {
-        reactions: { like: 1 },
+        reactions: { Like: 1 },
         postType: "Comment",
       });
     });

@@ -12,7 +12,7 @@ vi.mock("@mui/icons-material/ThumbUpOffAlt", () => ({
   ),
 }));
 
-// Mock the reaction icons
+// Mock the reaction icons - keep capitalized to match component
 vi.mock("../pages/Feed/GenericComponents/reactionIcons", () => ({
   default: {
     Like: {
@@ -45,7 +45,7 @@ vi.mock("../pages/Feed/GenericComponents/reactionIcons", () => ({
   },
 }));
 
-// Mock the ReactionPicker component - remove the automatic trigger
+// Fix the ReactionPicker mock to use onSelectReaction
 vi.mock("../pages/Feed/GenericComponents/ReactionPicker", () => ({
   default: ({ children, onSelectReaction }) => (
     <div data-testid="reaction-picker">
@@ -68,7 +68,7 @@ describe("LikeButton Component", () => {
   });
 
   it("renders the default state when no reaction is selected", () => {
-    render(<LikeButton onChange={mockOnChange} />);
+    render(<LikeButton handleReaction={mockOnChange} />);
 
     // Should show default thumbs up icon
     expect(screen.getByTestId("thumbup-icon")).toBeInTheDocument();
@@ -78,7 +78,7 @@ describe("LikeButton Component", () => {
   });
 
   it("renders the correct icon and label for an initial reaction", () => {
-    render(<LikeButton initReactValue="Celebrate" onChange={mockOnChange} />);
+    render(<LikeButton initReactValue="Celebrate" handleReaction={mockOnChange} />);
 
     // Should show the celebrate icon
     expect(screen.getByTestId("celebrate-icon")).toBeInTheDocument();
@@ -88,37 +88,37 @@ describe("LikeButton Component", () => {
   });
 
   it("toggles reaction when clicking the button with no initial reaction", () => {
-    render(<LikeButton onChange={mockOnChange} />);
+    render(<LikeButton handleReaction={mockOnChange} />);
 
     // Click the like button
     fireEvent.click(screen.getByText("Like").closest("button"));
 
-    // Should call onChange exactly once with the "Like" reaction and null as previous
+    // Should call handleReaction exactly once with the "Like" reaction and null as previous
     expect(mockOnChange).toHaveBeenCalledTimes(1);
   });
 
   it("removes reaction when clicking the button with the same reaction", () => {
-    render(<LikeButton initReactValue="Like" onChange={mockOnChange} />);
+    render(<LikeButton initReactValue="Like" handleReaction={mockOnChange} />);
 
     // Click the like button - find by text content
     fireEvent.click(screen.getByText("Like").closest("button"));
 
-    // Should call onChange with null (removing reaction) and "Like" as previous
+    // Should call handleReaction with null (removing reaction) and "Like" as previous
     expect(mockOnChange).toHaveBeenCalledWith(null, "Like");
   });
 
   it("changes reaction when selecting a different one", () => {
-    render(<LikeButton initReactValue="Like" onChange={mockOnChange} />);
+    render(<LikeButton initReactValue="Like" handleReaction={mockOnChange} />);
 
     // Click on the reaction picker (mocked to trigger 'Celebrate')
     fireEvent.click(screen.getByTestId("mock-reaction-selector"));
 
-    // Should call onChange with 'Celebrate' as new and 'Like' as previous
+    // Should call handleReaction with 'Celebrate' as new and 'Like' as previous
     expect(mockOnChange).toHaveBeenCalledWith("Celebrate", "Like");
   });
 
-  it("handles undefined onChange prop gracefully for rendering", () => {
-    // Should not throw errors when onChange is not provided for basic rendering
+  it("handles undefined handleReaction prop gracefully for rendering", () => {
+    // Should not throw errors when handleReaction is not provided for basic rendering
     expect(() => render(<LikeButton />)).not.toThrow();
 
     // Verify that basic elements still render properly
@@ -126,10 +126,9 @@ describe("LikeButton Component", () => {
     expect(screen.getByText("Like")).toBeInTheDocument();
   });
 
-  // Add a separate test for interaction with a provided onChange
-  it("works correctly when onChange is provided", () => {
-    // Render with the onChange prop
-    render(<LikeButton onChange={mockOnChange} />);
+  it("works correctly when handleReaction is provided", () => {
+    // Render with the handleReaction prop
+    render(<LikeButton handleReaction={mockOnChange} />);
 
     // Interaction should work
     fireEvent.click(screen.getByText("Like").closest("button"));
@@ -137,7 +136,7 @@ describe("LikeButton Component", () => {
   });
 
   it("applies correct styling to button and icons", () => {
-    render(<LikeButton onChange={mockOnChange} />);
+    render(<LikeButton handleReaction={mockOnChange} />);
 
     // Button should have correct classes - find by text content
     const button = screen.getByText("Like").closest("button");
@@ -162,7 +161,7 @@ describe("LikeButton Component", () => {
   });
 
   it("wraps button with ReactionPicker", () => {
-    render(<LikeButton onChange={mockOnChange} />);
+    render(<LikeButton handleReaction={mockOnChange} />);
 
     // Should render the ReactionPicker component
     expect(screen.getByTestId("reaction-picker")).toBeInTheDocument();

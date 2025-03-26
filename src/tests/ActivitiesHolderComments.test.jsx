@@ -6,7 +6,7 @@ import ActivitiesHolder from "../pages/Feed/MainFeed/FeedPosts/PostCard/Comments
 // Mock dependencies with the right casing for reaction types
 vi.mock("../pages/Feed/GenericComponents/reactionIcons", () => ({
   default: {
-    like: {
+    Like: {  // Capitalized to match component code
       Icon: ({ className }) => (
         <div data-testid="like-icon" className={className}>
           Like Icon
@@ -15,7 +15,7 @@ vi.mock("../pages/Feed/GenericComponents/reactionIcons", () => ({
       color: "blue",
       label: "Like",
     },
-    celebrate: {
+    Celebrate: {  // Capitalized
       Icon: ({ className }) => (
         <div data-testid="celebrate-icon" className={className}>
           Celebrate Icon
@@ -24,7 +24,7 @@ vi.mock("../pages/Feed/GenericComponents/reactionIcons", () => ({
       color: "yellow",
       label: "Celebrate",
     },
-    support: {
+    Support: {  // Capitalized
       Icon: ({ className }) => (
         <div data-testid="support-icon" className={className}>
           Support Icon
@@ -33,7 +33,7 @@ vi.mock("../pages/Feed/GenericComponents/reactionIcons", () => ({
       color: "purple",
       label: "Support",
     },
-    insightful: {
+    Insightful: {  // Capitalized
       Icon: ({ className }) => (
         <div data-testid="insightful-icon" className={className}>
           Insightful Icon
@@ -51,7 +51,7 @@ vi.mock("../pages/Feed/GenericComponents/ReactionPicker", () => ({
       {children}
       <button
         data-testid="select-celebrate"
-        onClick={() => onSelectReaction("celebrate")}
+        onClick={() => onSelectReaction("Celebrate")}  // Capitalized
       >
         Select Celebrate
       </button>
@@ -66,10 +66,10 @@ describe("Comment ActivitiesHolder Component", () => {
 
   // Sample reaction data - ensure these keys match exactly with the mock above
   const sampleReactions = {
-    like: 5,
-    celebrate: 3,
-    support: 1,
-    insightful: 0,
+    Like: 5,
+    Celebrate: 3,
+    Support: 1,
+    Insightful: 0,
   };
 
   beforeEach(() => {
@@ -184,7 +184,7 @@ describe("Comment ActivitiesHolder Component", () => {
     render(
       <ActivitiesHolder
         reactions={sampleReactions}
-        onReactionChange={mockOnReactionChange}
+        handleReaction={mockOnReactionChange}
         setShowReactions={mockSetShowReactions}
         replies={0}
         setShowReplies={mockSetShowReplies}
@@ -195,13 +195,13 @@ describe("Comment ActivitiesHolder Component", () => {
     fireEvent.click(screen.getByText("Like").closest("button"));
 
     // Should call onReactionChange with 'like' (default reaction)
-    expect(mockOnReactionChange).toHaveBeenCalledWith("like", null);
+    expect(mockOnReactionChange).toHaveBeenCalledWith("Like", null);
   });
 
   it("displays the current reaction when one is active", () => {
     render(
       <ActivitiesHolder
-        initReactValue="celebrate"
+        initReactValue="Celebrate"
         reactions={sampleReactions}
         onReactionChange={mockOnReactionChange}
         setShowReactions={mockSetShowReactions}
@@ -219,9 +219,9 @@ describe("Comment ActivitiesHolder Component", () => {
   it("changes reaction when selecting a different one", () => {
     render(
       <ActivitiesHolder
-        initReactValue="like"
+        initReactValue="Like"
         reactions={sampleReactions}
-        onReactionChange={mockOnReactionChange}
+        handleReaction={mockOnReactionChange}
         setShowReactions={mockSetShowReactions}
         replies={0}
         setShowReplies={mockSetShowReplies}
@@ -232,15 +232,15 @@ describe("Comment ActivitiesHolder Component", () => {
     fireEvent.click(screen.getByTestId("select-celebrate"));
 
     // Should call onReactionChange with 'celebrate' as new and 'like' as previous
-    expect(mockOnReactionChange).toHaveBeenCalledWith("celebrate", "like");
+    expect(mockOnReactionChange).toHaveBeenCalledWith("Celebrate", "Like");
   });
 
   it("removes reaction when clicking the same reaction", () => {
     render(
       <ActivitiesHolder
-        initReactValue="like"
+        initReactValue="Like"
         reactions={sampleReactions}
-        onReactionChange={mockOnReactionChange}
+        handleReaction={mockOnReactionChange}
         setShowReactions={mockSetShowReactions}
         replies={0}
         setShowReplies={mockSetShowReplies}
@@ -251,14 +251,14 @@ describe("Comment ActivitiesHolder Component", () => {
     fireEvent.click(screen.getByText("Like").closest("button"));
 
     // Should call onReactionChange with null as new and 'like' as previous
-    expect(mockOnReactionChange).toHaveBeenCalledWith(null, "like");
+    expect(mockOnReactionChange).toHaveBeenCalledWith(null, "Like");
   });
 
   it("handles empty reactions object gracefully", () => {
     render(
       <ActivitiesHolder
         reactions={{}}
-        onReactionChange={mockOnReactionChange}
+        handleReaction={mockOnReactionChange}
         setShowReactions={mockSetShowReactions}
         replies={0}
         setShowReplies={mockSetShowReplies}
