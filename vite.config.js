@@ -14,16 +14,43 @@ export default defineConfig({
   test: {
     coverage: {
       all: true,
-      include: ["src/pages/UserProfile/**/*.{js,jsx}"],
       exclude: [
-        "**/tests/**",
-        "**/*.test.{js,jsx}",
-        "**/__mocks__/**",
-        "node_modules/**",
-      ],
-    },
-    globals: true,
-    environment: "jsdom",
-    setupFiles: "./src/setupTests.js",
+        provider: "v8",
+        environment: "jsdom", // Ensures DOM methods are available
+        globals: true, // Enables `describe`, `test`, etc. globally
+        coverage: {
+          all: true,
+            exclude: [
+              "./src/pages/CompanyPage/testdata.js",
+              "**/tests/**",
+              "**/*.test.{js,jsx}",
+              "node_modules/**",
+              "src/pages/CompanyPage/Components/PostSlide.jsx",
+              "vite.config.js",
+              "tailwind.config.js",
+              "postcss.config.js",
+              "package.json",
+              "index.html",
+              "eslint.config.js",
+              ".gitignore",
+              "src/setupTests.js",
+              "src/main.jsx",
+              "src/utils/**",
+              "src/store/**",
+              "src/pages/Feed/MainFeed/FeedPosts/PostCard/Content/MediaContent**",
+              "src/pages/Feed/MainFeed/FeedPosts/PostCard/Comments/Reply.jsx",
+              "src/pages/Feed/GenericComponents/reactionIcons.js",
+              "src/mocks/**",
+              "src/apis/**",
+              "src/assets/**",
+              "src/app/**",
+            ],
+        },
+        globals: true,
+        environment: "jsdom",
+        setupFiles: "./src/setupTests.js",
+  },
+  server: {
+    historyApiFallback: true,
   },
 });

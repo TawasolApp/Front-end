@@ -1,5 +1,4 @@
 import "./App.css";
-import { getIconComponent } from "../utils";
 import {
   BrowserRouter as Router,
   Routes,
@@ -13,8 +12,15 @@ import EducationPage from "../pages/UserProfile/Components/Pages/EducationPage";
 import ExperiencePage from "../pages/UserProfile/Components/Pages/ExperiencePage";
 import CertificationsPage from "../pages/UserProfile/Components/Pages/CertificationsPage";
 import SkillsPage from "../pages/UserProfile/Components/Pages/SkillsPage";
+import CompanyLayout from "../pages/CompanyPage/Components/CompanyLayout";
+import PostsPage from "../pages/CompanyPage/Components/PostsPage";
+import Aboutpage from "../pages/CompanyPage/Components/AboutPage";
+import Homepage from "../pages/CompanyPage/Components/HomePage";
+import CreateCompanyPage from "../pages/CompanyPage/Components/CreateCompanyPage";
+import FeedContainer from "../pages/Feed/FeedContainer";
+import SavedPostsContainer from "../pages/SavedPosts/SavedPostsContainer";
 
-function App() {
+const App = () => {
   const isOwner = true;
   return (
     <Router>
@@ -33,9 +39,19 @@ function App() {
           {/* user Connnections */}
           <Route path="connections" element={<Connections />} />
         </Route>
+        <Route path="/" element={<FeedContainer />} />
+        <Route path="/feed/" element={<FeedContainer />} />
+        <Route path="/my-items/saved-posts" element={<SavedPostsContainer />} />
+        <Route path="/in/:usedId/" element={<h1>HelloWorld</h1>} />
+        {/* Ensure companyId is part of the URL */}
+        <Route path="/company/:companyId/*" element={<CompanyLayout />}>
+          <Route index element={<Homepage />} />
+          <Route path="home" element={<Homepage />} />
+          <Route path="about" element={<Aboutpage />} />
+          <Route path="posts" element={<PostsPage />} />
+        </Route>
+        <Route path="/company/setup/new" element={<CreateCompanyPage />} />
 
-        {/*  Fallback */}
-        <Route path="*" element={<Navigate to="/users" />} />
       </Routes>
     </Router>
   );
