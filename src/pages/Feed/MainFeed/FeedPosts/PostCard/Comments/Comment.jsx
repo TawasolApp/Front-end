@@ -53,8 +53,8 @@ const Comment = ({ comment, handleDeleteComment }) => {
 
   let menuItems = [
     {
-      text: "Report post",
-      onClick: () => console.log("Reported post"),
+      text: "Report comment",
+      onClick: () => console.log("Reported post"), // TODO: when reporting is implemented
       icon: FlagIcon,
     },
   ];
@@ -132,7 +132,7 @@ const Comment = ({ comment, handleDeleteComment }) => {
               <ActivitiesHolder
                 initReactValue={localComment.reactType}
                 reactions={localComment.reactions}
-                onReactionChange={handleReaction}
+                handleReaction={handleReaction}
                 setShowReactions={() => {
                   setShowReactions(true);
                 }}

@@ -4,6 +4,7 @@ import FeedPosts from "./FeedPosts/FeedPosts";
 import { axiosInstance } from "../../../apis/axios";
 
 const MainFeed = () => {
+
   // TODO: change this to redux states
   const currentAuthorId = "mohsobh";
   const currentAuthorName = "Mohamed Sobh";
@@ -78,7 +79,7 @@ const MainFeed = () => {
     fetchPosts(nextPage);
   };
 
-  const sharePost = async (text, visibility) => {
+  const handleSharePost = async (text, visibility) => {
     try {
       const response = await axiosInstance.post("posts", {
         authorId: currentAuthorId,
@@ -93,7 +94,7 @@ const MainFeed = () => {
     }
   };
 
-  const deletePost = async (postId) => {
+  const handleDeletePost = async (postId) => {
     try {
       await axiosInstance.delete(`/delete/${postId}`);
       setPosts((prevPosts) => prevPosts.filter((post) => post.id !== postId));
@@ -104,12 +105,12 @@ const MainFeed = () => {
 
   return (
     <>
-      <SharePost sharePost={sharePost} />
+      <SharePost handleSharePost={handleSharePost} />
       <div className="sm:rounded-lg rounded-none">
         <FeedPosts
           posts={posts}
           lastPostRef={lastPostElementRef}
-          deletePost={deletePost}
+          deletePost={handleDeletePost}
         />
 
         {loading && (

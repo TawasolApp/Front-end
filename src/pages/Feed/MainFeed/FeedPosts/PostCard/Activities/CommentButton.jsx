@@ -4,7 +4,7 @@ const CommentButton = ({ setShowComments }) => {
   return (
     <button
       className="p-2 flex items-center justify-center gap-1 hover:bg-buttonIconHover hover:transition-all duration-200 group"
-      onClick={() => setShowComments(true)}
+      onClick={setShowComments}
     >
       <ChatBubbleOutlineIcon
         sx={{ fontSize: 16 }}
