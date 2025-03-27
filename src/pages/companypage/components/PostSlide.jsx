@@ -4,7 +4,7 @@ import { AiOutlineLike } from "react-icons/ai";
 
 function PostSlide({ post }) {
   return (
-    <div className="bg-white rounded-2xl border border-gray-400 p-4 w-[350px] flex-shrink-0 flex flex-col justify-between min-h-[400px] h-[400px]">
+    <div className="bg-boxbackground rounded-2xl border border-gray-400 p-4 w-[350px] flex-shrink-0 flex flex-col justify-between min-h-[400px] h-[400px]">
       {/* Company Info */}
       <div>
         <div className="flex items-center gap-3 mb-2">
@@ -14,11 +14,13 @@ function PostSlide({ post }) {
             className="w-10 h-10 rounded-full object-contain"
           />
           <div>
-            <h2 className="font-semibold text-gray-900 text-sm">
+            <h2 className="font-semibold text-companyheader1 text-sm">
               {post.companyName}
             </h2>
-            <p className="text-gray-500 text-xs">{post.followers} followers</p>
-            <p className="text-gray-500 text-xs">
+            <p className="text-companyheader2 text-xs">
+              {post.followers} followers
+            </p>
+            <p className="text-companyheader2 text-xs">
               {post.timeAgo} <span className="font-bold">·</span>{" "}
               {post.edited ? (
                 <>
@@ -32,7 +34,9 @@ function PostSlide({ post }) {
         </div>
 
         {/* Post Content */}
-        <p className="text-gray-700 text-sm mb-2 line-clamp-3">{post.text}</p>
+        <p className="text-postsslider text-sm mb-2 line-clamp-3">
+          {post.text}
+        </p>
       </div>
 
       {/* Post Media (Image/Video/Article/Document) */}
