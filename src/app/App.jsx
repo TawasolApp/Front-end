@@ -29,6 +29,11 @@ import Aboutpage from "../pages/CompanyPage/Components/AboutPage";
 import Homepage from "../pages/CompanyPage/Components/HomePage";
 import CreateCompanyPage from "../pages/CompanyPage/Components/CreateCompanyPage";
 
+import NetworkBox from "../pages/mynetworkpage/mynetworkpage";
+import Connections from "../pages/connectionpage/ConnectionPage";
+import BlockedPage from "../pages/mynetworkpage/components/BlockedPage"; 
+import FollowPage from '../pages/mynetworkpage/components/FollowPage'; 
+
 import FeedContainer from "../pages/Feed/FeedContainer";
 import SavedPostsContainer from "../pages/SavedPosts/SavedPostsContainer";
 
@@ -59,6 +64,11 @@ const App = () => {
           <Route path="skills" element={<SkillsPage />} />
           <Route path="connections" element={<Connections />} />
         </Route>
+
+        <Route path="/" element={<NetworkBox />} />
+        <Route path="/connections" element={<Connections />} />
+        <Route path="/blocked" element={<BlockedPage />} />
+        <Route path="/follow" element={<FollowPage />} />
         
         <Route path="/feed/" element={<FeedContainer />} />
         <Route path="/my-items/saved-posts" element={<SavedPostsContainer />} />
