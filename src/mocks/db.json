@@ -1,5 +1,5 @@
 {
-  "users": [
+  "auth": [
     {
       "id": "1",
       "email": "Khalid",
@@ -35,10 +35,10 @@
       "firstName": "Test",
       "lastName": "Test"
     }
-],
+  ],
   "users": [
     {
-      "id" = 1,
+      "id": 1,
       "firstName": "Fatimah",
       "lastName": "Gama Zein",
       "profilePicture": "https://th.bing.com/th/id/OIP.AxXeQv751lyx0ltppBIg6QHaHa?rs=1&pid=ImgDetMain",
@@ -865,16 +865,16 @@
       "content": "Hello ya khaled!",
       "replies": [],
       "reactions": {
-        "Love": 0,
+        "Love": 1,
         "Celebrate": 0,
         "Insightful": 0,
         "Funny": 0,
         "Support": 0,
-        "Like": 1
+        "Like": 0
       },
       "taggedUsers": [],
       "timestamp": "2025-03-23T23:36:13.468Z",
-      "reactType": "Like"
+      "reactType": "Love"
     },
     {
       "id": "1742772985121",
@@ -1149,16 +1149,6 @@
       "authorBio": "Computer Engineering Student at Cairo University"
     },
     {
-      "likeId": "1742772973468-mohsobh-Like",
-      "postId": "1742772973468",
-      "authorId": "mohsobh",
-      "authorType": "User",
-      "type": "Like",
-      "authorName": "Mohamed Sobh",
-      "authorPicture": "https://media.licdn.com/dms/image/v2/D4D03AQH7Ais8BxRXzw/profile-displayphoto-shrink_100_100/profile-displayphoto-shrink_100_100/0/1721080103981?e=1747872000&v=beta&t=nDnZdgCqkI8v5B2ymXZzluMZVlF6h_o-dN1pA95Fzv4",
-      "authorBio": "Computer Engineering Student at Cairo University"
-    },
-    {
       "likeId": "1742772985121-mohsobh-Celebrate",
       "postId": "1742772985121",
       "authorId": "mohsobh",
@@ -1184,6 +1174,16 @@
       "authorId": "mohsobh",
       "authorType": "User",
       "type": "Support",
+      "authorName": "Mohamed Sobh",
+      "authorPicture": "https://media.licdn.com/dms/image/v2/D4D03AQH7Ais8BxRXzw/profile-displayphoto-shrink_100_100/profile-displayphoto-shrink_100_100/0/1721080103981?e=1747872000&v=beta&t=nDnZdgCqkI8v5B2ymXZzluMZVlF6h_o-dN1pA95Fzv4",
+      "authorBio": "Computer Engineering Student at Cairo University"
+    },
+    {
+      "likeId": "1742772973468-mohsobh-Love",
+      "postId": "1742772973468",
+      "authorId": "mohsobh",
+      "authorType": "User",
+      "type": "Love",
       "authorName": "Mohamed Sobh",
       "authorPicture": "https://media.licdn.com/dms/image/v2/D4D03AQH7Ais8BxRXzw/profile-displayphoto-shrink_100_100/profile-displayphoto-shrink_100_100/0/1721080103981?e=1747872000&v=beta&t=nDnZdgCqkI8v5B2ymXZzluMZVlF6h_o-dN1pA95Fzv4",
       "authorBio": "Computer Engineering Student at Cairo University"

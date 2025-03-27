@@ -4,7 +4,6 @@
  */
 import axios from "axios";
 
-
 const BASE_URL = String(import.meta.env.VITE_APP_BASE_URL || "").trim();
 
 const axiosInstance = axios.create({
@@ -23,7 +22,7 @@ axiosInstance.interceptors.request.use(
     }
     return config;
   },
-  (error) => Promise.reject(error)
+  (error) => Promise.reject(error),
 );
 
 axiosInstance.interceptors.response.use(
@@ -51,7 +50,7 @@ axiosInstance.interceptors.response.use(
       }
     }
     return Promise.reject(error);
-  }
+  },
 );
 
 export { axiosInstance };

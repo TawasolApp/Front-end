@@ -27,7 +27,7 @@ describe("SignUpForm", () => {
     return render(
       <BrowserRouter>
         <SignUpForm onSubmit={mockOnSubmit} />
-      </BrowserRouter>
+      </BrowserRouter>,
     );
   };
 
@@ -100,7 +100,7 @@ describe("SignUpForm", () => {
 
       await waitFor(() => {
         const errorMessage = screen.getByText(
-          /invalid email|enter a valid email/i
+          /invalid email|enter a valid email/i,
         );
         expect(errorMessage).toBeInTheDocument();
       });
@@ -111,7 +111,7 @@ describe("SignUpForm", () => {
 
       await waitFor(() => {
         const errorMessage = screen.queryByText(
-          /invalid email|enter a valid email/i
+          /invalid email|enter a valid email/i,
         );
         expect(errorMessage).not.toBeInTheDocument();
       });
@@ -128,7 +128,7 @@ describe("SignUpForm", () => {
       await waitFor(() => {
         // Look for the exact error message shown in your component
         const errorMessage = screen.getByText(
-          /Password must be at least 6 characters long/i
+          /Password must be at least 6 characters long/i,
         );
         expect(errorMessage).toBeInTheDocument();
       });
@@ -142,7 +142,7 @@ describe("SignUpForm", () => {
       await waitFor(() => {
         // Check that the error message is gone
         const errorMessage = screen.queryByText(
-          /Password must be at least 6 characters long/i
+          /Password must be at least 6 characters long/i,
         );
         expect(errorMessage).not.toBeInTheDocument();
       });
@@ -272,7 +272,7 @@ describe("SignUpForm", () => {
           expect.objectContaining({
             email: "valid@example.com",
             password: "Password123!",
-          })
+          }),
         );
 
         // Check that the second argument is a function (without specifying its type)
@@ -312,7 +312,7 @@ describe("SignUpForm", () => {
           expect.objectContaining({
             email: "valid@example.com",
             password: "Password123!",
-          })
+          }),
         );
 
         // Check that the second argument is a function (without specifying its type)
@@ -330,7 +330,7 @@ describe("SignUpForm", () => {
             onSubmit={mockOnSubmit}
             emailError="Email already in use"
           />
-        </BrowserRouter>
+        </BrowserRouter>,
       );
 
       expect(container).toBeInTheDocument();
@@ -373,10 +373,10 @@ describe("SignUpForm", () => {
 
       await waitFor(() => {
         const errorMessage = screen.getByText(
-          /invalid email|enter a valid email/i
+          /invalid email|enter a valid email/i,
         );
         expect(errorMessage.className).toMatch(
-          /text-red|text-error|text-danger/
+          /text-red|text-error|text-danger/,
         );
       });
     });

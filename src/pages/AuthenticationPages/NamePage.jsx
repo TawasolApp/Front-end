@@ -32,7 +32,7 @@ const NamePage = () => {
       navigate("/auth/signup/location");
     } catch (error) {
       alert(
-        `Registration Failed: ${error.response?.data?.message || error.message}`
+        `Registration Failed: ${error.response?.data?.message || error.message}`,
       );
     }
   };

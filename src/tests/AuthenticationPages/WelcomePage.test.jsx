@@ -20,7 +20,7 @@ describe("WelcomePage", () => {
       render(<WelcomePage />);
       const headings = screen.getAllByRole("heading");
       expect(headings.some((h) => h.textContent.includes("Welcome"))).toBe(
-        true
+        true,
       );
     });
 
@@ -49,7 +49,7 @@ describe("WelcomePage", () => {
       const mobileContainer = document.querySelector(".block.lg\\:hidden");
       const heading = mobileContainer.querySelector("h1");
       expect(heading).toHaveTextContent(
-        "Welcome to your professional community"
+        "Welcome to your professional community",
       );
       expect(heading).toHaveClass("text-3xl");
     });
@@ -67,7 +67,7 @@ describe("WelcomePage", () => {
       const desktopContainer = document.querySelector(".hidden.lg\\:flex");
       const heading = desktopContainer.querySelector("h1");
       expect(heading).toHaveTextContent(
-        "Welcome to your professional community"
+        "Welcome to your professional community",
       );
       expect(heading).toHaveClass("text-5xl");
     });
@@ -76,18 +76,18 @@ describe("WelcomePage", () => {
       render(<WelcomePage />);
       const leftColumn = document.querySelector(".flex-1.max-w-2xl.mr-12");
       expect(
-        leftColumn.querySelector('[data-testid="welcome-form"]')
+        leftColumn.querySelector('[data-testid="welcome-form"]'),
       ).toBeInTheDocument();
     });
 
     it("renders image in the right column", () => {
       render(<WelcomePage />);
       const rightColumn = document.querySelector(
-        ".flex-1.max-w-2xl:not(.mr-12)"
+        ".flex-1.max-w-2xl:not(.mr-12)",
       );
       expect(rightColumn.querySelector("img")).toHaveAttribute(
         "src",
-        "mock-image-path"
+        "mock-image-path",
       );
     });
   });
@@ -102,7 +102,7 @@ describe("WelcomePage", () => {
     it("applies text color class to headings", () => {
       render(<WelcomePage />);
       const headings = screen.getAllByText(
-        "Welcome to your professional community"
+        "Welcome to your professional community",
       );
       headings.forEach((heading) => {
         expect(heading).toHaveClass("text-textHomeTitle");

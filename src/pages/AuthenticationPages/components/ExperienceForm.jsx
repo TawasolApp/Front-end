@@ -181,7 +181,7 @@ const ExperienceForm = ({ onSubmit }) => {
           )}
         </>
       )}
-  
+
       {/* Student Fields */}
       {isStudent && (
         <>
@@ -198,10 +198,13 @@ const ExperienceForm = ({ onSubmit }) => {
             containerClassName="!mb-4"
             required
           />
-  
+
           <div className="flex flex-col sm:flex-row gap-4 sm:gap-6 mb-4">
             <div className="w-full sm:w-1/2">
-              <label htmlFor="startYear" className="block text-textHomeTitle text-lg font-normal mb-1">
+              <label
+                htmlFor="startYear"
+                className="block text-textHomeTitle text-lg font-normal mb-1"
+              >
                 Start year *
               </label>
               <select
@@ -216,7 +219,7 @@ const ExperienceForm = ({ onSubmit }) => {
                 <option value="">-</option>
                 {Array.from(
                   { length: 50 },
-                  (_, i) => new Date().getFullYear() - i
+                  (_, i) => new Date().getFullYear() - i,
                 ).map((year) => (
                   <option key={year} value={year}>
                     {year}
@@ -225,7 +228,10 @@ const ExperienceForm = ({ onSubmit }) => {
               </select>
             </div>
             <div className="w-full sm:w-1/2">
-              <label htmlFor="endYear" className="block text-textHomeTitle text-lg font-normal mb-1">
+              <label
+                htmlFor="endYear"
+                className="block text-textHomeTitle text-lg font-normal mb-1"
+              >
                 End year (or expected) *
               </label>
               <select
@@ -240,7 +246,7 @@ const ExperienceForm = ({ onSubmit }) => {
                 <option value="">-</option>
                 {Array.from(
                   { length: 50 },
-                  (_, i) => new Date().getFullYear() + 7 - i
+                  (_, i) => new Date().getFullYear() + 7 - i,
                 ).map((year) => (
                   <option key={year} value={year}>
                     {year}
@@ -249,7 +255,7 @@ const ExperienceForm = ({ onSubmit }) => {
               </select>
             </div>
           </div>
-  
+
           {/* Error messages */}
           <div className="w-full mb-4">
             {startYearError && (
@@ -263,7 +269,7 @@ const ExperienceForm = ({ onSubmit }) => {
               </p>
             )}
           </div>
-  
+
           {/* Age Verification */}
           <div className="mb-6 w-full flex flex-col sm:flex-row items-center justify-between p-4 sm:p-6 border border-gray-300 rounded-lg">
             <span className="text-textHomeTitle text-lg sm:text-xl mb-2 sm:mb-0">
@@ -297,7 +303,7 @@ const ExperienceForm = ({ onSubmit }) => {
               </label>
             </div>
           </div>
-  
+
           {/* Date of Birth Fields */}
           {!isOver16 && (
             <div className="mb-6">
@@ -306,7 +312,10 @@ const ExperienceForm = ({ onSubmit }) => {
               </label>
               <div className="flex flex-col sm:flex-row gap-3 sm:gap-4">
                 <div className="w-full sm:w-1/3">
-                  <label htmlFor="month" className="block text-textHomeTitle text-lg font-normal mb-1">
+                  <label
+                    htmlFor="month"
+                    className="block text-textHomeTitle text-lg font-normal mb-1"
+                  >
                     Month *
                   </label>
                   <select
@@ -319,13 +328,18 @@ const ExperienceForm = ({ onSubmit }) => {
                     <option value="">-</option>
                     {Array.from({ length: 12 }, (_, i) => (
                       <option key={i + 1} value={i + 1}>
-                        {new Date(0, i).toLocaleString("default", { month: "long" })}
+                        {new Date(0, i).toLocaleString("default", {
+                          month: "long",
+                        })}
                       </option>
                     ))}
                   </select>
                 </div>
                 <div className="w-full sm:w-1/3">
-                  <label htmlFor="day" className="block text-textHomeTitle text-lg font-normal mb-1">
+                  <label
+                    htmlFor="day"
+                    className="block text-textHomeTitle text-lg font-normal mb-1"
+                  >
                     Day *
                   </label>
                   <select
@@ -344,7 +358,10 @@ const ExperienceForm = ({ onSubmit }) => {
                   </select>
                 </div>
                 <div className="w-full sm:w-1/3">
-                  <label htmlFor="year" className="block text-textHomeTitle text-lg font-normal mb-1">
+                  <label
+                    htmlFor="year"
+                    className="block text-textHomeTitle text-lg font-normal mb-1"
+                  >
                     Year *
                   </label>
                   <select
@@ -356,7 +373,10 @@ const ExperienceForm = ({ onSubmit }) => {
                   >
                     <option value="">-</option>
                     {Array.from({ length: 100 }, (_, i) => (
-                      <option key={new Date().getFullYear() - i} value={new Date().getFullYear() - i}>
+                      <option
+                        key={new Date().getFullYear() - i}
+                        value={new Date().getFullYear() - i}
+                      >
                         {new Date().getFullYear() - i}
                       </option>
                     ))}
@@ -367,7 +387,7 @@ const ExperienceForm = ({ onSubmit }) => {
           )}
         </>
       )}
-  
+
       {/* I'm a Student Button */}
       <div className="mb-6 flex items-center">
         <button
@@ -378,7 +398,7 @@ const ExperienceForm = ({ onSubmit }) => {
           {isStudent ? "I'm not a student" : "I'm a student"}
         </button>
       </div>
-  
+
       <BlueSubmitButton text="Continue" disabled={!isFormValid()} />
     </form>
   );

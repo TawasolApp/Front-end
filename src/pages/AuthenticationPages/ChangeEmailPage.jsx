@@ -13,7 +13,7 @@ const ChangeEmailPage = () => {
     newEmail,
     currentPassword,
     setEmailError,
-    setCurrentPasswordError
+    setCurrentPasswordError,
   ) => {
     try {
       const response = await axiosInstance.patch(
@@ -21,7 +21,7 @@ const ChangeEmailPage = () => {
         {
           newEmail,
           password: currentPassword,
-        }
+        },
       );
 
       dispatch(setEmail(newEmail));

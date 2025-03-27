@@ -22,7 +22,7 @@ const EmailTokenVerificationPage = () => {
         await axiosInstance.get(`/users/confirm-email-change?token=${token}`);
         setStatus("success");
         setMessage(
-          "Email updated successfully! You can now log in with your new email."
+          "Email updated successfully! You can now log in with your new email.",
         );
 
         // Redirect after 3 seconds
@@ -31,7 +31,7 @@ const EmailTokenVerificationPage = () => {
         setStatus("error");
         if (error.response?.status === 400) {
           setMessage(
-            "Invalid or expired token. Please request a new verification email."
+            "Invalid or expired token. Please request a new verification email.",
           );
         } else if (error.response?.status === 404) {
           setMessage("User not found. Please contact support.");
@@ -51,8 +51,8 @@ const EmailTokenVerificationPage = () => {
           {status === "verifying"
             ? "Verifying Email"
             : status === "success"
-            ? "Success!"
-            : "Error"}
+              ? "Success!"
+              : "Error"}
         </h2>
 
         <p className="mb-6">{message}</p>

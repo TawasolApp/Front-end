@@ -152,7 +152,7 @@ const ChangePasswordForm = () => {
               setNewPasswordError("Please enter your new password.");
             } else if (newPassword.length < 8) {
               setNewPasswordError(
-                "Your password is too short. It should be at least 8 characters long"
+                "Your password is too short. It should be at least 8 characters long",
               );
             }
           }}
@@ -197,9 +197,9 @@ const ChangePasswordForm = () => {
 
       {/* Buttons */}
       <div className="flex flex-col space-y-4 mt-6">
-        <BlueSubmitButton 
-          text={loading ? "Saving..." : "Save Password"} 
-          disabled={!isFormValid() || loading} 
+        <BlueSubmitButton
+          text={loading ? "Saving..." : "Save Password"}
+          disabled={!isFormValid() || loading}
         />
         <button
           type="button"

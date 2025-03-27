@@ -1,7 +1,7 @@
 import React from "react";
 import ExperienceForm from "./components/ExperienceForm";
 
-const ExperiencePage = () => {
+const ExperienceAuthPage = () => {
   const handleSubmit = (experienceData) => {
     console.log("Experience Data:", experienceData);
   };
@@ -20,4 +20,4 @@ const ExperiencePage = () => {
   );
 };
 
-export default ExperiencePage;
+export default ExperienceAuthPage;

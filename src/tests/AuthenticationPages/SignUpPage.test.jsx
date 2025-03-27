@@ -91,7 +91,7 @@ describe("SignUpPage", () => {
     return render(
       <BrowserRouter>
         <SignUpPage />
-      </BrowserRouter>
+      </BrowserRouter>,
     );
   };
 
@@ -110,7 +110,7 @@ describe("SignUpPage", () => {
     it("renders the title", () => {
       renderSignUpPage();
       const title = screen.getByText(
-        /Make the most of your professional life/i
+        /Make the most of your professional life/i,
       );
       expect(title).toBeInTheDocument();
     });
@@ -204,7 +204,7 @@ describe("SignUpPage", () => {
       // Check that error was logged
       await waitFor(() => {
         expect(consoleSpy).toHaveBeenCalledWith(
-          "Network error or server is down"
+          "Network error or server is down",
         );
       });
 
