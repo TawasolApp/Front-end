@@ -2,6 +2,43 @@
   "users": [
     {
       "id": "1",
+      "email": "Khalid",
+      "password": "123456789",
+      "firstName": "Khalid",
+      "lastNAme": "Ali"
+    },
+    {
+      "id": 2,
+      "email": "Khalid@gmail.c",
+      "password": "123456",
+      "firstName": "",
+      "lastName": ""
+    },
+    {
+      "id": 3,
+      "email": "ali@gmail.com",
+      "password": "123456",
+      "firstName": "Khalid",
+      "lastName": "Ali"
+    },
+    {
+      "id": 4,
+      "email": "email@g.com",
+      "password": "123456",
+      "firstName": "email",
+      "lastName": "email"
+    },
+    {
+      "id": 5,
+      "email": "Test@gmail.com",
+      "password": "123456",
+      "firstName": "Test",
+      "lastName": "Test"
+    }
+],
+  "users": [
+    {
+      "id" = 1,
       "firstName": "Fatimah",
       "lastName": "Gama Zein",
       "profilePicture": "https://th.bing.com/th/id/OIP.AxXeQv751lyx0ltppBIg6QHaHa?rs=1&pid=ImgDetMain",

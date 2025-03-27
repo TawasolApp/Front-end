@@ -12,6 +12,9 @@ export default defineConfig({
     }),
   ],
   test: {
+    environment: "jsdom", // Ensures DOM methods are available
+    globals: true, // Enables describe, test, etc. globally
+    coverage: {
     provider: "v8",
     environment: "jsdom", // Ensures DOM methods are available
     globals: true, // Enables `describe`, `test`, etc. globally

@@ -4,6 +4,10 @@ export default {
   theme: {
     extend: {
       colors: {
+        mainBackground: "rgb(var(--main-background))",
+        cardBackground: "rgb(var(--card-background))",
+        cardBackgroundHover: "rgb(var(--card-background-hover))",
+        cardBorder: "rgb(var(--card-border))",
         background: "rgb(var(--background))",
         boxbackground: "rgb(var(--boxbackground))",
         boxheading: "rgb(var(--boxheading))",
@@ -25,10 +29,10 @@ export default {
         card: "rgb(var(--card-border))",
         itemBorder: "rgb(var(--item-border))",
         itemBorderFocus: "rgb(var(--item-border-focus))",
-
         textTitle: "rgb(var(--text-title))",
         textHeavyTitle: "rgb(var(--text-heavy-title))",
         textHeavyTitleHover: "rgb(var(--text-heavy-title-hover))",
+        textHomeTitle: "rgb(var(--text-home-title))",
         textDate: "rgb(var(--text-date))",
         textBreakpoint: "rgb(var(--text-breakpoint))",
         textContent: "rgb(var(--text-content))",
