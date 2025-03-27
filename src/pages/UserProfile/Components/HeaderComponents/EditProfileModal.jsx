@@ -1,0 +1,346 @@
+import React, { useState, useEffect } from "react";
+import { axiosInstance as axios } from "../../../../apis/axios.js";
+
+function EditProfileModal({ user, isOpen, onClose, onSave }) {
+  const [editedUser, setEditedUser] = useState({ ...user });
+  const [errors, setErrors] = useState({});
+  const [showDiscardModal, setShowDiscardModal] = useState(false);
+  const [selectedExperienceIndex, setSelectedExperienceIndex] = useState(0);
+  const [selectedEducationIndex, setSelectedEducationIndex] = useState(0);
+  const [isSaving, setIsSaving] = useState(false);
+
+  useEffect(() => {
+    if (isOpen) {
+      setEditedUser({ ...user });
+      setErrors({});
+    }
+  }, [isOpen, user]);
+
+  //  Prevent background scroll when modal is open
+  useEffect(() => {
+    if (isOpen) {
+      document.body.style.overflow = "hidden";
+    } else {
+      document.body.style.overflow = "";
+    }
+
+    return () => {
+      document.body.style.overflow = "";
+    };
+  }, [isOpen]);
+
+  useEffect(() => {
+    const saveProfile = async () => {
+      if (isSaving) {
+        console.log("Saving profile data...");
+
+        let validationErrors = {};
+        if (!editedUser.firstName?.trim())
+          validationErrors.firstName = "First Name is required.";
+        if (!editedUser.lastName?.trim())
+          validationErrors.lastName = "Last Name is required.";
+        if (!editedUser.country?.trim())
+          validationErrors.country = "Country/Region is required.";
+        if (!editedUser.industry?.trim())
+          validationErrors.industry = "Industry is required.";
+
+        if (Object.keys(validationErrors).length > 0) {
+          setErrors(validationErrors);
+          setIsSaving(false);
+          return;
+        }
+
+        const updates = {};
+        for (let key in editedUser) {
+          if (editedUser[key] !== user[key]) {
+            updates[key] = editedUser[key];
+          }
+        }
+
+        try {
+          // PATCH request to update the profile
+          const response = await axios.patch("/profile", {
+            id: user.id, // Send the user ID in the body
+            ...updates,
+            selectedExperienceIndex,
+            selectedEducationIndex,
+          });
+
+          // Call onSave with updated data after successful save
+          onSave({
+            ...response.data,
+            selectedExperienceIndex,
+            selectedEducationIndex,
+          });
+          onClose(); // Close the modal after successful save
+        } catch (err) {
+          console.error(
+            "Failed to update profile:",
+            err.response?.data || err.message,
+          );
+        }
+
+        setIsSaving(false); // Reset saving state
+      }
+    };
+
+    saveProfile();
+  }, [
+    isSaving,
+    editedUser,
+    selectedExperienceIndex,
+    selectedEducationIndex,
+    user,
+    onClose,
+    onSave,
+  ]);
+
+  function handleSave() {
+    setIsSaving(true); // Set isSaving to true, triggering the useEffect above
+  }
+
+  function handleChange(event) {
+    const { name, value } = event.target;
+    setEditedUser((prevUser) => ({
+      ...prevUser,
+      [name]: value,
+    }));
+  }
+
+  function handleCancel() {
+    const isChanged = JSON.stringify(editedUser) !== JSON.stringify(user);
+    if (isChanged) {
+      setShowDiscardModal(true);
+    } else {
+      onClose();
+    }
+  }
+
+  function confirmDiscard() {
+    setShowDiscardModal(false);
+    onClose();
+  }
+  return (
+    <div
+      className={`fixed inset-0 z-50 ${
+        isOpen ? "flex" : "hidden"
+      } items-center justify-center bg-black bg-opacity-50`}
+    >
+      {/*  the previous div to prevent bg scrolling */}
+      <div
+        className="bg-boxbackground w-[95%] sm:w-[600px] p-6 rounded-lg shadow-lg 
+                max-h-screen sm:max-h-[90vh] overflow-y-auto relative"
+      >
+        <button
+          onClick={handleCancel}
+          className="absolute top-4 right-4 text-l text-gray-600 hover:text-gray-900"
+          aria-label="Close modal"
+        >
+          ✖
+        </button>
+        <h2 className="text-xl font-bold mb-4 text-text">Edit Profile</h2>
+        <label
+          htmlFor="firstName"
+          className="block text-sm font-medium text-text2"
+        >
+          First name *
+        </label>
+        <input
+          id="firstName"
+          type="text"
+          name="firstName"
+          value={editedUser.firstName || ""}
+          onChange={handleChange}
+          className={`border p-2 w-full mb-2 bg-boxbackground text-companyheader2 ${
+            errors.firstName ? "border-red-500" : ""
+          }`}
+        />
+        {errors.firstName && (
+          <p className="text-red-500 text-sm">{errors.firstName}</p>
+        )}
+        <label
+          htmlFor="lastName"
+          className="block text-sm font-medium text-text2"
+        >
+          Last name *
+        </label>
+        <input
+          id="lastName"
+          type="text"
+          name="lastName"
+          value={editedUser.lastName || ""}
+          onChange={handleChange}
+          className={`border p-2 w-full mb-2 bg-boxbackground text-companyheader2 ${
+            errors.lastName ? "border-red-500" : ""
+          }`}
+        />
+        {errors.lastName && (
+          <p className="text-red-500 text-sm" data-testid="lastName-error">
+            {errors.lastName}
+          </p>
+        )}
+        <label htmlFor="bio" className="block text-sm font-medium text-text2">
+          Bio
+        </label>
+        <textarea
+          id="bio"
+          name="bio"
+          value={editedUser.bio || ""}
+          onChange={handleChange}
+          className="border p-2 w-full mb-2 h-20 bg-boxbackground text-companyheader2"
+        />
+        <label
+          htmlFor="country"
+          className="block text-sm font-medium text-text2"
+        >
+          Country/Region *
+        </label>
+        <input
+          id="country"
+          type="text"
+          name="country"
+          value={editedUser.country || ""}
+          onChange={handleChange}
+          className={`border p-2 w-full mb-2 bg-boxbackground text-companyheader2  ${
+            errors.country ? "border-red-500" : ""
+          }`}
+        />
+        {errors.country && (
+          <p className="text-red-500 text-sm" data-testid="country-error">
+            {errors.country}
+          </p>
+        )}
+        <label htmlFor="city" className="block text-sm font-medium text-text2">
+          City (Optional)
+        </label>
+        <input
+          id="city"
+          type="text"
+          name="city"
+          value={editedUser.city || ""}
+          onChange={handleChange}
+          className="border p-2 w-full mb-2 bg-boxbackground text-companyheader2"
+        />
+        <label
+          htmlFor="industry"
+          className="block text-sm font-medium text-text2"
+        >
+          Industry *
+        </label>
+        <input
+          id="industry"
+          type="text"
+          name="industry"
+          value={editedUser.industry || ""}
+          onChange={handleChange}
+          className={`border p-2 w-full mb-2  bg-boxbackground text-companyheader2 ${
+            errors.industry ? "border-red-500" : ""
+          }`}
+        />
+        {errors.industry && (
+          <p className="text-red-500 text-sm" data-testid="industry-error">
+            {errors.industry}
+          </p>
+        )}
+        <label
+          htmlFor="experience"
+          className="block text-sm font-medium text-text2"
+        >
+          Work Experience
+        </label>
+        <select
+          id="experience"
+          name="experience"
+          className="border p-2 w-full mb-2 bg-boxbackground text-companyheader2"
+          value={selectedExperienceIndex}
+          onChange={(e) => setSelectedExperienceIndex(Number(e.target.value))}
+        >
+          {editedUser.experience?.map((exp, index) => (
+            <option key={index} value={index}>
+              {exp.title} at {exp.company}
+            </option>
+          ))}
+        </select>
+        <label
+          htmlFor="education"
+          className="block text-sm font-medium text-text2"
+        >
+          Education
+        </label>
+        <select
+          id="education"
+          name="education"
+          className="border p-2 w-full mb-2 bg-boxbackground text-companyheader2"
+          value={selectedEducationIndex}
+          onChange={(e) => setSelectedEducationIndex(Number(e.target.value))}
+        >
+          {editedUser.education?.map((edu, index) => (
+            <option key={index} value={index}>
+              {edu.institution} - {edu.degree}
+            </option>
+          ))}
+        </select>
+        <label
+          htmlFor="skills"
+          className="block text-sm font-medium text-text2 "
+        >
+          Skills
+        </label>
+        <select
+          id="skills"
+          name="skills"
+          className="border p-2 w-full mb-2 bg-boxbackground text-companyheader2"
+        >
+          {Array.isArray(editedUser.skills) && editedUser.skills.length > 0 ? (
+            editedUser.skills.map((skill, index) => (
+              <option key={index}>{skill.skillName}</option>
+            ))
+          ) : (
+            <option>No Skill added</option>
+          )}
+        </select>
+        <div className="flex justify-end mt-4">
+          <button
+            onClick={handleSave}
+            className="px-4 py-2 bg-blue-500 text-white rounded-md"
+          >
+            Save
+          </button>
+        </div>
+      </div>
+      {showDiscardModal && (
+        <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
+          <div className="bg-boxbackground p-6 rounded-lg shadow-lg w-[350px] relative">
+            <button
+              onClick={() => setShowDiscardModal(false)}
+              className="absolute top-2 right-2 text-gray-500 hover:text-gray-700 p-2 text-2xl p-3"
+            >
+              &times;
+            </button>
+            <h3 className="text-lg font-semibold text-text">Discard changes</h3>
+            <p className="text-companyheader2 mt-2 ">
+              Are you sure you want to discard the changes you made?
+            </p>
+
+            <div className="flex justify-end mt-4 space-x-2">
+              <button
+                onClick={() => setShowDiscardModal(false)}
+                className="px-4 py-2 border border-blue-500 text-blue-500 rounded-full hover:bg-blue-50 transition duration-200"
+              >
+                No thanks
+              </button>
+              <button
+                onClick={confirmDiscard}
+                className="px-4 py-2 bg-blue-600 text-white rounded-full hover:bg-blue-700 transition duration-200"
+              >
+                Discard
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+    </div>
+  );
+}
+
+export default EditProfileModal;

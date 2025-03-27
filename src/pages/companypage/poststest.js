@@ -1,10 +1,13 @@
+import logoImage from "../../assets/images/elsewedyicon.jpeg";
+import mediaImage from "../../assets/images/testpost.jpeg";
+
 const posts = [
   {
     companyName: "ELSEWEDY ELECTRIC",
-    logo: "src/assets/images/elsewedyicon.jpeg",
+    logo: logoImage, // Use imported image
     timeAgo: "1w",
     text: "Elsewedy Cables, Safety That Lasts.",
-    media: "src/assets/images/testpost.jpeg",
+    media: mediaImage, // Use imported image
     mediaType: "image",
     likes: 687,
     comments: 11,
@@ -13,10 +16,10 @@ const posts = [
   },
   {
     companyName: "Tech Innovators",
-    logo: "src/assets/images/elsewedyicon.jpeg",
+    logo: logoImage,
     timeAgo: "3d",
     text: "Our latest innovation is here! Stay tuned for the big reveal. 🚀",
-    media: "src/assets/images/elsewedyicon.jpeg",
+    media: logoImage,
     mediaType: "image",
     likes: 450,
     comments: 20,
@@ -25,10 +28,10 @@ const posts = [
   },
   {
     companyName: "AI Research Hub",
-    logo: "src/assets/images/elsewedyicon.jpeg",
+    logo: logoImage,
     timeAgo: "5d",
     text: "Read our latest article on the future of AI.",
-    media: "src/assets/images/elsewedyicon.jpeg",
+    media: logoImage,
     mediaType: "image",
     likes: 310,
     comments: 15,
@@ -37,10 +40,10 @@ const posts = [
   },
   {
     companyName: "Cloud Solutions",
-    logo: "src/assets/images/elsewedyicon.jpeg",
+    logo: logoImage,
     timeAgo: "2h",
     text: "Download our latest whitepaper on cloud security.",
-    media: "src/assets/images/elsewedyicon.jpeg",
+    media: logoImage,
     mediaType: "image",
     likes: 220,
     comments: 8,

@@ -2,8 +2,8 @@
  * To use this structure
  * import { axiosInstance as axios } from './apis/axios'
  */
-
 import axios from "axios";
+
 
 const BASE_URL = String(import.meta.env.VITE_APP_BASE_URL || "").trim();
 

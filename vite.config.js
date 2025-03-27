@@ -15,10 +15,17 @@ export default defineConfig({
     environment: "jsdom", // Ensures DOM methods are available
     globals: true, // Enables describe, test, etc. globally
     coverage: {
-      provider: "v8",
+    provider: "v8",
+    environment: "jsdom", // Ensures DOM methods are available
+    globals: true, // Enables `describe`, `test`, etc. globally
+    coverage: {
+      all: true,
       exclude: [
-        "node_modules",
-        "tests",
+        "./src/pages/CompanyPage/testdata.js",
+        "**/tests/**",
+        "**/*.test.{js,jsx}",
+        "node_modules/**",
+        "src/pages/CompanyPage/Components/PostSlide.jsx",
         "vite.config.js",
         "tailwind.config.js",
         "postcss.config.js",
@@ -37,9 +44,11 @@ export default defineConfig({
         "src/apis/**",
         "src/assets/**",
         "src/app/**",
-        "src/pages/CompanyPage/**",
-        "src/pages/LoadingPage/**",
       ],
     },
+    setupFiles: "./src/setupTests.js",
+  },
+  server: {
+    historyApiFallback: true,
   },
 });
