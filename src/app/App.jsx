@@ -16,7 +16,7 @@ import ChangeEmailPage from "../pages/AuthenticationPages/ChangeEmailPage";
 import EmailTokenVerificationPage from "../pages/AuthenticationPages/EmailTokenVerifocationPage";
 
 import ProfilePage from "../pages/UserProfile/Components/ProfilePage";
-import Connections from "../pages/UserProfile/Components/Connections";
+import ProfileConnections from "../pages/UserProfile/Components/Connections";
 import ProfileLayout from "../pages/UserProfile/Components/profileLayout";
 import EducationPage from "../pages/UserProfile/Components/Pages/EducationPage";
 import ExperiencePage from "../pages/UserProfile/Components/Pages/ExperiencePage";
@@ -62,15 +62,14 @@ const App = () => {
           <Route path="experience" element={<ExperiencePage />} />
           <Route path="certifications" element={<CertificationsPage />} />
           <Route path="skills" element={<SkillsPage />} />
-          <Route path="connections" element={<Connections />} />
+          <Route path="connections" element={<ProfileConnections />} />
         </Route>
 
-        <Route path="/" element={<NetworkBox />} />
         <Route path="/connections" element={<Connections />} />
         <Route path="/blocked" element={<BlockedPage />} />
         <Route path="/follow" element={<FollowPage />} />
         
-        <Route path="/feed/" element={<FeedContainer />} />
+        <Route path="/feed" element={<FeedContainer />} />
         <Route path="/my-items/saved-posts" element={<SavedPostsContainer />} />
 
         <Route path="/company/:companyId/*" element={<CompanyLayout />}>

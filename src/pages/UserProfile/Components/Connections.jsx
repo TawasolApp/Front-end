@@ -2,7 +2,7 @@
 import React, { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 
-function Connections() {
+function ProfileConnections() {
   const navigate = useNavigate();
 
   return (
@@ -18,4 +18,4 @@ function Connections() {
   );
 }
 
-export default Connections;
+export default ProfileConnections;
