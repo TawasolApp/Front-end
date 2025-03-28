@@ -1,31 +1,15 @@
 import React, { useState } from "react";
-import InputField from "./InputField";
-import BlueSubmitButton from "./BlueSubmitButton";
 import { useSelector } from "react-redux";
 
 const EmailVerificationForm = () => {
-  const [code, setCode] = useState("");
-  const [error, setError] = useState("");
-
   const { email } = useSelector((state) => state.authentication);
-
-  const handleSubmit = (e) => {
-    e.preventDefault();
-
-    if (!code) {
-      setError("Please enter your email.");
-      return;
-    }
-
-    console.log("Verification code:", code);
-  };
 
   const serializeEmail = (email) => {
     return email[0] + "*****@" + email.split("@")[1];
   };
 
   return (
-    <form onSubmit={handleSubmit}>
+    <div>
       <h2 className="text-3xl font-semibold text-textHomeTitle mb-8">
         Email Verification Pending
       </h2>
@@ -51,7 +35,7 @@ const EmailVerificationForm = () => {
           Resend code
         </button>
       </div>
-    </form>
+    </div>
   );
 };
 

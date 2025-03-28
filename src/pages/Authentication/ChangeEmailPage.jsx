@@ -1,5 +1,5 @@
 import React from "react";
-import ChangeEmailForm from "./components/ChangeEmailForm";
+import ChangeEmailForm from "./Forms/ChangeEmailForm";
 import { useDispatch } from "react-redux";
 import { setEmail } from "../../store/authenticationSlice";
 import { axiosInstance } from "../../apis/axios";

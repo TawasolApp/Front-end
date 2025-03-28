@@ -1,5 +1,5 @@
 import React from "react";
-import SignInForm from "./components/SignInForm";
+import SignInForm from "./Forms/SignInForm";
 import { axiosInstance } from "../../apis/axios";
 import { useDispatch } from "react-redux";
 import {

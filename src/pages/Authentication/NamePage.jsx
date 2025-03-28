@@ -1,5 +1,5 @@
 import React from "react";
-import NameForm from "./components/NameForm";
+import NameForm from "./Forms/NameForm";
 import { useDispatch, useSelector } from "react-redux";
 import { setFirstName, setLastName } from "../../store/authenticationSlice";
 import { axiosInstance } from "../../apis/axios";

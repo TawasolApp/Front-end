@@ -1,5 +1,5 @@
 import React from "react";
-import WelcomeForm from "./components/WelcomeForm";
+import WelcomeForm from "./Forms/WelcomeForm";
 import WelcomeImage from "../../assets/images/WelcomeImage.jpeg";
 
 const WelcomePage = () => {

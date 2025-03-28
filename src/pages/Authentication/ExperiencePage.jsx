@@ -1,5 +1,5 @@
 import React from "react";
-import ExperienceForm from "./components/ExperienceForm";
+import ExperienceForm from "./Forms/ExperienceForm";
 
 const ExperienceAuthPage = () => {
   const handleSubmit = (experienceData) => {

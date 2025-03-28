@@ -1,5 +1,5 @@
 import React from "react";
-import SignUpForm from "./components/SignUpForm";
+import SignUpForm from "./Forms/SignUpForm";
 import { useDispatch } from "react-redux";
 import { setEmail, setPassword } from "../../store/authenticationSlice";
 import { axiosInstance } from "../../apis/axios";

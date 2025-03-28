@@ -1,6 +1,6 @@
 import React, { useState } from "react";
-import InputField from "./InputField";
-import BlueSubmitButton from "./BlueSubmitButton";
+import InputField from "../GenericComponents/InputField";
+import BlueSubmitButton from "../GenericComponents//BlueSubmitButton";
 import ArrowBack from "@mui/icons-material/ArrowBack";
 import { axiosInstance } from "../../../apis/axios";
 import { useNavigate } from "react-router-dom";

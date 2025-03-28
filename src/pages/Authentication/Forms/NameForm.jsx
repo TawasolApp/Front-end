@@ -1,6 +1,6 @@
 import React, { useRef, useState } from "react";
-import InputField from "./InputField";
-import BlueSubmitButton from "./BlueSubmitButton";
+import InputField from "../GenericComponents//InputField";
+import BlueSubmitButton from "../GenericComponents//BlueSubmitButton";
 import ReCAPTCHA from "react-google-recaptcha";
 
 const NameForm = ({ onSubmit }) => {

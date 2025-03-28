@@ -1,5 +1,5 @@
 import React from "react";
-import LocationForm from "./components/LocationForm";
+import LocationForm from "./Forms/LocationForm";
 import { useNavigate } from "react-router-dom";
 
 const LocationPage = () => {
