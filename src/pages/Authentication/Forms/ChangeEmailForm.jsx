@@ -1,6 +1,6 @@
 import React, { useState } from "react";
-import BlueSubmitButton from "./BlueSubmitButton";
-import InputField from "./InputField";
+import BlueSubmitButton from "../GenericComponents/BlueSubmitButton";
+import InputField from "../GenericComponents/InputField";
 import { useSelector } from "react-redux";
 
 const ChangeEmailForm = ({ onSubmit }) => {

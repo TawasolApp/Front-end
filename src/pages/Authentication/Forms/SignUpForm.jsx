@@ -1,20 +1,24 @@
 import React, { useState } from "react";
-import InputField from "./InputField";
-import SignWithGoogle from "./SignWithGoogle";
-import Divider from "./Divider";
-import BlueSubmitButton from "./BlueSubmitButton";
+import Divider from "../GenericComponents//Divider";
+import SignWithGoogle from "../GenericComponents//SignWithGoogle";
+import InputField from "../GenericComponents//InputField";
+import BlueSubmitButton from "../GenericComponents//BlueSubmitButton";
 import { Link } from "react-router-dom";
 
-const SignInForm = ({ onSubmit }) => {
+const SignUpForm = ({ onSubmit }) => {
   const [formData, setFormData] = useState({
     email: "",
     password: "",
   });
 
   const [showPassword, setShowPassword] = useState(false);
-  const [emailError, setEmailError] = useState("");
   const [passwordError, setPasswordError] = useState("");
-  const [credentialsError, setCredentialsError] = useState("");
+  const [emailError, setEmailError] = useState("");
+
+  const validateEmail = (email) => {
+    const regex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    return regex.test(email);
+  };
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -29,20 +33,19 @@ const SignInForm = ({ onSubmit }) => {
     if (name === "password" && passwordError) {
       setPasswordError("");
     }
-    setCredentialsError("");
   };
 
   const handleEmailBlur = () => {
-    if (!formData.email) {
-      setEmailError("Please enter your email.");
+    if (!validateEmail(formData.email)) {
+      setEmailError("Please enter a valid email address.");
     } else {
       setEmailError("");
     }
   };
 
   const handlePasswordBlur = () => {
-    if (!formData.password) {
-      setPasswordError("Please enter your password.");
+    if (formData.password.length < 6) {
+      setPasswordError("Password must be at least 6 characters long.");
     } else {
       setPasswordError("");
     }
@@ -50,15 +53,11 @@ const SignInForm = ({ onSubmit }) => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    if (!formData.email) {
-      setEmailError("Please enter your email.");
+    if (formData.password.length < 6) {
+      setPasswordError("Password must be at least 6 characters long");
       return;
     }
-    if (!formData.password) {
-      setPasswordError("Please enter your password.");
-      return;
-    }
-    onSubmit(formData, setCredentialsError);
+    onSubmit(formData, setEmailError);
   };
 
   const togglePasswordVisibility = () => {
@@ -66,17 +65,9 @@ const SignInForm = ({ onSubmit }) => {
   };
 
   return (
-    <form onSubmit={handleSubmit} className="space-y-4 sm:space-y-6">
-      <h1 className="text-3xl sm:text-4xl md:text-5xl font-semibold mb-6 sm:mb-8 text-textHomeTitle">
-        Sign in
-      </h1>
-
-      <SignWithGoogle />
-
-      <Divider />
-
+    <form onSubmit={handleSubmit} className="space-y-4 md:space-y-6">
       <InputField
-        type="text"
+        type="email"
         id="email"
         name="email"
         labelText="Email"
@@ -87,12 +78,11 @@ const SignInForm = ({ onSubmit }) => {
         required
         error={emailError}
       />
-
       <InputField
         type={showPassword ? "text" : "password"}
         id="password"
         name="password"
-        labelText="Password"
+        labelText="Password (6+ characters)"
         value={formData.password}
         onChange={handleChange}
         onBlur={handlePasswordBlur}
@@ -103,40 +93,34 @@ const SignInForm = ({ onSubmit }) => {
         showPassword={showPassword}
         error={passwordError}
       />
-
-      {credentialsError && (
-        <p className="text-red-500 text-base sm:text-lg mt-2">
-          {credentialsError}
-        </p>
-      )}
-
-      <div className="mb-4 sm:mb-6">
-        <Link
-          to="/auth/forgot-password"
-          className="text-buttonSubmitEnable hover:underline text-base sm:text-lg"
-        >
-          Forgot password?
-        </Link>
-      </div>
-
-      <div className="mb-6 flex items-center">
+      <div className="mb-4 md:mb-6 flex items-center">
         <input
           type="checkbox"
-          id="keepLoggedIn"
-          className="w-4 h-4 sm:w-5 sm:h-5 mr-2 accent-green-600"
+          id="rememberMe"
+          className="w-4 h-4 sm:w-5 sm:h-5 mr-2 accent-buttonSubmitEnable"
           defaultChecked
         />
         <label
-          htmlFor="keepLoggedIn"
-          className="text-textContent text-base sm:text-lg"
+          htmlFor="rememberMe"
+          className="text-textContent text-base sm:text-lg md:text-xl"
         >
-          Keep me logged in
+          Remember me
         </label>
       </div>
-
-      <BlueSubmitButton text="Sign in" />
+      <BlueSubmitButton text="Join" />
+      <Divider />
+      <SignWithGoogle />
+      <p className="mt-4 md:mt-6 text-center text-textContent text-base sm:text-lg md:text-xl">
+        Already on Tawasol?{" "}
+        <Link
+          to="/auth/signin"
+          className="text-buttonSubmitEnable hover:underline"
+        >
+          Sign in
+        </Link>
+      </p>
     </form>
   );
 };
 
-export default SignInForm;
+export default SignUpForm;

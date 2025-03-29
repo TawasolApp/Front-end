@@ -1,6 +1,6 @@
 import React, { useState } from "react";
-import InputField from "./InputField";
-import BlueSubmitButton from "./BlueSubmitButton";
+import InputField from "../GenericComponents//InputField";
+import BlueSubmitButton from "../GenericComponents//BlueSubmitButton";
 
 const ExperienceForm = ({ onSubmit }) => {
   // Employee fields

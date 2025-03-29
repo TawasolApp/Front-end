@@ -2,18 +2,18 @@ import "./App.css";
 
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 
-import SignUpPage from "../pages/AuthenticationPages/SignUpPage";
-import SignInPage from "../pages/AuthenticationPages/SignInPage";
-import NamePage from "../pages/AuthenticationPages/NamePage";
-import LocationPage from "../pages/AuthenticationPages/LocationPage";
-import ExperienceAuthPage from "../pages/AuthenticationPages/ExperiencePage";
-import ChangePasswordPage from "../pages/AuthenticationPages/ChangePasswordPage";
-import ForgotPasswordPage from "../pages/AuthenticationPages/ForgotPasswordPage";
-import EmailVerificationPage from "../pages/AuthenticationPages/EmailVerificationPage";
-import NewPasswordPage from "../pages/AuthenticationPages/NewPasswordPage";
-import WelcomePage from "../pages/AuthenticationPages/WelcomePage";
-import ChangeEmailPage from "../pages/AuthenticationPages/ChangeEmailPage";
-import EmailTokenVerificationPage from "../pages/AuthenticationPages/EmailTokenVerifocationPage";
+import SignUpPage from "../pages/Authentication/SignUpPage";
+import SignInPage from "../pages/Authentication/SignInPage";
+import NamePage from "../pages/Authentication/NamePage";
+import LocationPage from "../pages/Authentication/LocationPage";
+import ExperienceAuthPage from "../pages/Authentication/ExperiencePage";
+import ChangePasswordPage from "../pages/Authentication/ChangePasswordPage";
+import ForgotPasswordPage from "../pages/Authentication/ForgotPasswordPage";
+import EmailVerificationPage from "../pages/Authentication/EmailVerificationPage";
+import NewPasswordPage from "../pages/Authentication/NewPasswordPage";
+import WelcomePage from "../pages/Authentication/WelcomePage";
+import ChangeEmailPage from "../pages/Authentication/ChangeEmailPage";
+import EmailTokenVerificationPage from "../pages/Authentication/EmailTokenVerifocationPage";
 
 import ProfilePage from "../pages/UserProfile/Components/ProfilePage";
 import ProfileConnections from "../pages/UserProfile/Components/Connections";
