@@ -7,6 +7,8 @@ export default {
         mainBackground: "rgb(var(--main-background))",
         cardBackground: "rgb(var(--card-background))",
         cardBackgroundHover: "rgb(var(--card-background-hover))",
+        inputBackground: "rgb(var(--input-background))",
+        inputBackgroundHover: "rgb(var(--input-background-hover))",
         cardBorder: "rgb(var(--card-border))",
         background: "rgb(var(--background))",
         boxbackground: "rgb(var(--boxbackground))",
