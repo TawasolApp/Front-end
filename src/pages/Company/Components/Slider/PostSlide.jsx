@@ -1,5 +1,5 @@
 import React from "react";
-import { FaRegComment, FaRetweet, FaPaperPlane } from "react-icons/fa"; // FaRetweet for Repost
+import { FaRegComment, FaRetweet, FaPaperPlane } from "react-icons/fa";
 import { AiOutlineLike } from "react-icons/ai";
 
 function PostSlide({ post }) {

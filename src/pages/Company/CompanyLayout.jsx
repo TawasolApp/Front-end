@@ -1,10 +1,10 @@
 import { Outlet, useParams, useNavigate } from "react-router-dom";
 import { useState, useEffect } from "react";
-import CompanyHeader from "./CompanyHeader.jsx";
-import Footer from "./Footer.jsx";
-import LoadingPage from "../../LoadingPage/LoadingPage.jsx";
-import jobs from "../jobs.js";
-import { axiosInstance } from "../../../apis/axios.js";
+import CompanyHeader from "./Components/GenericComponents/CompanyHeader.jsx";
+import Footer from "./Components/GenericComponents/Footer.jsx";
+import LoadingPage from "../LoadingScreen/LoadingPage.jsx";
+import jobs from "./jobs.js";
+import { axiosInstance } from "../../apis/axios.js";
 
 function CompanyLayout() {
   const { companyId } = useParams();
@@ -40,7 +40,7 @@ function CompanyLayout() {
     <div className="bg-background pt-4 pb-4">
       <CompanyHeader companyId={companyId || defaultCompanyId} />
       <div className="max-w-6xl mx-auto mt-4">
-        <Outlet context={{ jobs }} /> {/* Pass jobs via context if needed */}
+        <Outlet context={{ jobs }} />
       </div>
       <Footer />
     </div>

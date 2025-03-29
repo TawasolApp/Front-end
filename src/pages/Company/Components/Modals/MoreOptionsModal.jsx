@@ -1,6 +1,4 @@
 import React from "react";
-import { useEffect } from "react";
-import { useNavigate } from "react-router-dom";
 import { FiMessageSquare, FiFlag, FiPlusCircle } from "react-icons/fi";
 const MoreOptionsModal = ({ show, onClose, navigate }) => {
   if (!show) return null;

@@ -39,7 +39,7 @@ function PostsPage() {
       {/* Posts Content */}
       <div className="mt-4">
         <h2 className="text-lg font-semibold">{activeFilter} Posts</h2>
-        {/* Your posts filtering logic here */}
+        {/* posts filtering logic here */}
       </div>
     </div>
   );

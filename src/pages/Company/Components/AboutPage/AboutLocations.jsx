@@ -1,11 +1,10 @@
 import React from "react";
 import { FiExternalLink } from "react-icons/fi";
 
-function AboutLocations(props) {
-  const company = props.company;
+function AboutLocations({ company }) {
   const mapUrl = company.mapsloc; // The exact location link from the backend
   const embedUrl = `https://www.google.com/maps?q=${encodeURIComponent(
-    company.address,
+    company.address
   )}&output=embed`;
 
   return (

@@ -1,10 +1,10 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate, useLocation, useParams } from "react-router-dom";
-import Aboutoverview from "./AboutOverview";
-import AboutLocations from "./AboutLocations";
-import LoadingPage from "../../LoadingPage/LoadingPage";
-import { axiosInstance } from "../../../apis/axios";
-function Aboutpage() {
+import AboutOverview from "../AboutPage/AboutOverview.jsx";
+import AboutLocations from "../AboutPage/AboutLocations.jsx";
+import LoadingPage from "../../../LoadingScreen/LoadingPage.jsx";
+import { axiosInstance } from "../../../../apis/axios.js";
+function AboutPage() {
   const navigate = useNavigate();
   const location = useLocation();
   const { companyId } = useParams();
@@ -28,9 +28,9 @@ function Aboutpage() {
   }
   return (
     <div>
-      <Aboutoverview company={company} />
+      <AboutOverview company={company} />
       <AboutLocations company={company} />
     </div>
   );
 }
-export default Aboutpage;
+export default AboutPage;

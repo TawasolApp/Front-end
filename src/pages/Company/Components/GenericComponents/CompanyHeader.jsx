@@ -1,18 +1,15 @@
 import React, { useState, useEffect } from "react";
-import LoadingPage from "../../LoadingPage/LoadingPage.jsx";
-import Homepage from "./HomePage.jsx";
-import Aboutpage from "./AboutPage.jsx";
+import LoadingPage from "../../../LoadingScreen/LoadingPage.jsx";
 import { FiEdit } from "react-icons/fi";
-import Unfollowmodal from "./Unfollowmodal.jsx";
-import EditAboutModal from "./EditAboutModal.jsx";
+import UnfollowModal from "../Modals/UnfollowModal.jsx";
+import EditAboutModal from "../Modals/EditAboutModal.jsx";
 import { FiMoreHorizontal } from "react-icons/fi";
 import { useNavigate, useLocation } from "react-router-dom";
 import { FiExternalLink } from "react-icons/fi";
-import ImageEnlarge from "./ImageEnlarge.jsx";
-import PostsPage from "./PostsPage.jsx";
-import MoreOptionsModal from "./MoreOptionsModal.jsx";
-import { formatNumbers } from "../../../utils/formatNumbers.js";
-import { axiosInstance } from "../../../apis/axios.js";
+import ImageEnlarge from "../HomePage/ImageEnlarge.jsx";
+import MoreOptionsModal from "../Modals/MoreOptionsModal.jsx";
+import { formatNumbers } from "../../../../utils/formatNumbers.js";
+import { axiosInstance } from "../../../../apis/axios.js";
 function CompanyHeader({ companyId }) {
   const navigate = useNavigate();
   const location = useLocation(); // Get current URL
@@ -52,9 +49,9 @@ function CompanyHeader({ companyId }) {
   const activeButton = pathParts.length >= 3 ? pathParts[3] || "home" : "home";
 
   //on click call togglefollow
-  const toggleFollow = () => {
+  const handleFollowToggling = () => {
     if (isFollowing) {
-      setShowModal(true); // Show unfollow modal
+      setShowModal(true);
     } else {
       axiosInstance
         .post(`/companies/${companyId}/follow`)
@@ -128,7 +125,7 @@ function CompanyHeader({ companyId }) {
             {/* Follow Button */}
             <button
               className="px-4 h-9 min-w-max rounded-full transition duration-300 border-2 border-blue-700 bg-boxbackground text-blue-700 font-medium text-sm flex items-center justify-center"
-              onClick={toggleFollow}
+              onClick={handleFollowToggling}
             >
               {isFollowing ? "✓ Following" : "+ Follow"}
             </button>
@@ -184,7 +181,7 @@ function CompanyHeader({ companyId }) {
           </div>
         </div>
       </div>
-      <Unfollowmodal
+      <UnfollowModal
         show={showModal}
         cancel={() => setShowModal(false)} //cancel
         confirm={confirmUnfollow} //unfollow

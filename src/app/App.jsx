@@ -23,11 +23,11 @@ import ExperiencePage from "../pages/UserProfile/Components/Pages/ExperiencePage
 import CertificationsPage from "../pages/UserProfile/Components/Pages/CertificationsPage";
 import SkillsPage from "../pages/UserProfile/Components/Pages/SkillsPage";
 
-import CompanyLayout from "../pages/CompanyPage/Components/CompanyLayout";
-import PostsPage from "../pages/CompanyPage/Components/PostsPage";
-import Aboutpage from "../pages/CompanyPage/Components/AboutPage";
-import Homepage from "../pages/CompanyPage/Components/HomePage";
-import CreateCompanyPage from "../pages/CompanyPage/Components/CreateCompanyPage";
+import CompanyLayout from "../pages/Company/CompanyLayout.jsx";
+import PostsPage from "../pages/Company/Components/Pages/PostsPage.jsx";
+import AboutPage from "../pages/Company/Components/Pages/AboutPage.jsx";
+import HomePage from "../pages/Company/Components/Pages/HomePage.jsx";
+import CreateCompanyPage from "../pages/Company/Components/CreateCompanyPage/CreateCompanyPage.jsx";
 
 import NetworkBox from "../pages/mynetworkpage/mynetworkpage";
 import Connections from "../pages/connectionpage/ConnectionPage";
@@ -82,9 +82,9 @@ const App = () => {
         <Route path="/my-items/saved-posts" element={<SavedPostsContainer />} />
 
         <Route path="/company/:companyId/*" element={<CompanyLayout />}>
-          <Route index element={<Homepage />} />
-          <Route path="home" element={<Homepage />} />
-          <Route path="about" element={<Aboutpage />} />
+          <Route index element={<HomePage />} />
+          <Route path="home" element={<HomePage />} />
+          <Route path="about" element={<AboutPage />} />
           <Route path="posts" element={<PostsPage />} />
         </Route>
         <Route path="/company/setup/new" element={<CreateCompanyPage />} />

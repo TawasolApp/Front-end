@@ -1,8 +1,8 @@
 import React, { useState } from "react";
-import { FiPlusCircle } from "react-icons/fi"; // Import plus icon
+// import { FiPlusCircle } from "react-icons/fi";
 // import AddJobOpeningModal from "./AddJobOpeningModal";
-import { useNavigate, useParams } from "react-router-dom"; // Import useParams
-import jobs from "../jobs"; // Import jobs from the jobs file
+import { useNavigate, useParams } from "react-router-dom";
+import jobs from "../../jobs";
 
 function JobOpenings({ company }) {
   const isAdmin = true; // Change to 'true' to see "Add Job Opening" button
