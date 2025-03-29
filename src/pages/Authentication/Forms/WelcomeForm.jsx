@@ -20,7 +20,7 @@ const WelcomeForm = () => {
         onClick={handleSignInWithEmail}
         className="w-full flex items-center justify-center 
                    bg-cardBackground text-textContent 
-                   py-3 sm:py-4 px-4 border-2 border-cardBorder 
+                   py-3 sm:py-4 px-4 border-2 border-itemBorder 
                    rounded-full hover:bg-cardBackgroundHover 
                    focus:outline-none focus:border-itemBorderFocus 
                    text-lg sm:text-xl font-medium 

@@ -9,7 +9,7 @@ const SignWithGoogle = () => {
       type="button"
       className="
         w-full flex items-center justify-center gap-3
-        py-3 sm:py-4 px-4 rounded-full border-2 border-cardBorder
+        py-3 sm:py-4 px-4 rounded-full border-2 border-itemBorder
         text-lg sm:text-xl font-medium
         bg-cardBackground text-textContent hover:bg-cardBackgroundHover
         focus:outline-none focus:border-itemBorderFocus
