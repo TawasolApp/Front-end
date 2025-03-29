@@ -46,7 +46,7 @@ const SignInPage = () => {
       <div className="bg-cardBackground p-6 sm:p-8 md:p-10 rounded-lg shadow-lg w-full max-w-md sm:max-w-lg">
         <SignInForm onSubmit={handleSignIn} />
       </div>
-      <p className="mt-4 sm:mt-6 text-center text-textPlaceholder text-base sm:text-lg md:text-xl">
+      <p className="mt-4 sm:mt-6 text-center text-textContent text-base sm:text-lg md:text-xl">
         New to Tawasol?{" "}
         <Link
           to="/auth/signup"

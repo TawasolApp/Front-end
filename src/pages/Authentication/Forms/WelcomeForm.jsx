@@ -29,7 +29,7 @@ const WelcomeForm = () => {
         Sign in with Email
       </button>
 
-      <p className="mt-4 sm:mt-6 text-center text-textPlaceholder text-base sm:text-lg">
+      <p className="mt-4 sm:mt-6 text-center text-textContent text-base sm:text-lg">
         New to Tawasol?{" "}
         <Link
           to="/auth/signup"

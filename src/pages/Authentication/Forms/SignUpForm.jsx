@@ -110,7 +110,7 @@ const SignUpForm = ({ onSubmit }) => {
       <BlueSubmitButton text="Join" />
       <Divider />
       <SignWithGoogle />
-      <p className="mt-4 md:mt-6 text-center text-textPlaceholder text-base sm:text-lg md:text-xl">
+      <p className="mt-4 md:mt-6 text-center text-textContent text-base sm:text-lg md:text-xl">
         Already on Tawasol?{" "}
         <Link
           to="/auth/signin"
