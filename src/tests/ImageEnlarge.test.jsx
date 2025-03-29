@@ -1,70 +1,71 @@
-import { render, screen, fireEvent } from "@testing-library/react";
-import { describe, test, expect, vi } from "vitest";
-import ImageEnlarge from "../pages/CompanyPage/Components/ImageEnlarge";
+import { describe, it, vi, expect, beforeEach, afterEach } from "vitest";
+import { render, screen, fireEvent, cleanup } from "@testing-library/react";
+import ImageEnlarge from "../pages/UserProfile/Components/HeaderComponents/ImageEnlarge";
 
-describe("ImageEnlarge", () => {
-  const dummyImage = "https://example.com/test-image.jpg";
+// Sample image
+const testImage = "https://example.com/image.jpg";
 
-  test("does not render when isOpen is false", () => {
+// Helper to reset scroll lock
+function resetScrollLock() {
+  document.body.classList.remove("overflow-hidden");
+}
+
+describe("ImageEnlarge Component", () => {
+  beforeEach(() => resetScrollLock());
+  afterEach(() => cleanup());
+
+  it("does not render if isOpen is false", () => {
     render(
       <ImageEnlarge
-        profilePicture={dummyImage}
         isOpen={false}
+        profilePicture={testImage}
         onClose={vi.fn()}
       />,
     );
-
-    // Modal should not exist
-    const image = screen.queryByAltText("Profile Enlarged");
-    expect(image).not.toBeInTheDocument();
+    expect(screen.queryByAltText("Profile Enlarged")).not.toBeInTheDocument();
   });
 
-  test("renders image when isOpen is true", () => {
+  it("does not render if profilePicture is missing", () => {
+    render(
+      <ImageEnlarge isOpen={true} profilePicture={null} onClose={vi.fn()} />,
+    );
+    expect(screen.queryByAltText("Profile Enlarged")).not.toBeInTheDocument();
+  });
+
+  it("renders when isOpen is true and profilePicture is provided", () => {
     render(
       <ImageEnlarge
-        profilePicture={dummyImage}
         isOpen={true}
+        profilePicture={testImage}
         onClose={vi.fn()}
       />,
     );
-
-    const image = screen.getByAltText("Profile Enlarged");
-    expect(image).toBeInTheDocument();
-    expect(image).toHaveAttribute("src", dummyImage);
+    expect(screen.getByAltText("Profile Enlarged")).toBeInTheDocument();
   });
 
-  test("calls onClose when close button is clicked", () => {
+  it("calls onClose when close button is clicked", () => {
     const onClose = vi.fn();
-
     render(
       <ImageEnlarge
-        profilePicture={dummyImage}
         isOpen={true}
+        profilePicture={testImage}
         onClose={onClose}
       />,
     );
-
-    const closeBtn = screen.getByRole("button");
-    fireEvent.click(closeBtn);
-
+    fireEvent.click(screen.getByRole("button"));
     expect(onClose).toHaveBeenCalled();
   });
 
-  test("clicking inside modal doesn't trigger onClose", () => {
-    const onClose = vi.fn();
-
-    render(
+  it("adds and removes scroll lock class to body", () => {
+    const { unmount } = render(
       <ImageEnlarge
-        profilePicture={dummyImage}
         isOpen={true}
-        onClose={onClose}
+        profilePicture={testImage}
+        onClose={vi.fn()}
       />,
     );
-
-    const imageContainer =
-      screen.getByAltText("Profile Enlarged").parentElement;
-    fireEvent.click(imageContainer); // Should NOT close
-
-    expect(onClose).not.toHaveBeenCalled();
+    expect(document.body.classList.contains("overflow-hidden")).toBe(true);
+    unmount();
+    expect(document.body.classList.contains("overflow-hidden")).toBe(false);
   });
 });

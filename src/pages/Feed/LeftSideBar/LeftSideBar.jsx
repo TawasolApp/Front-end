@@ -57,7 +57,7 @@ const LeftSideBar = () => {
         </div>
       </div>
 
-      <Link to={`/in/${currentAuthorId}`}>
+      <Link to={`/users/${currentAuthorId}`}>
         <div className="pt-10 pb-4 text-center px-2">
           <h2 className="font-semibold text-base text-authorName">
             {currentAuthorName}

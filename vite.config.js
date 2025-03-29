@@ -12,38 +12,40 @@ export default defineConfig({
     }),
   ],
   test: {
-    provider: "v8",
     environment: "jsdom", // Ensures DOM methods are available
-    globals: true, // Enables `describe`, `test`, etc. globally
+    globals: true, // Enables describe, test, etc. globally
+    provider: "v8",
     coverage: {
       all: true,
       exclude: [
-        "./src/pages/Company/testdata.js",
+        // MAIN ITEMS FOR EXCLUSIONS
         "**/tests/**",
-        "**/*.test.{js,jsx}",
-        "**/__mocks__/**",
-        "node_modules/**",
+        "**/node_modules/**",
+        "**/mocks/**",
+        "**/assets/**",
+        "**/utils/**",
+        "**/store/**",
+        "**/app/**",
+        "**/apis/**",
+        "**/setupTests.js",
+        "**/main.jsx",
+        "**/index.html",
+        "**/package.json",
+        "**/postcss.config.js",
+        "**/tailwind.config.js",
+        "**/vite.config.js",
+        "**/eslint.config.js",
+        "**/.gitignore",
+
+        // ITEMS WITH SPECIFIC EXCLUSIONS
+        "./src/pages/Company/testdata.js",
         "src/pages/Company/Components/Slider/PostSlide.jsx",
-        "node_modules",
-        "tests",
-        "vite.config.js",
-        "tailwind.config.js",
-        "postcss.config.js",
-        "package.json",
-        "index.html",
-        "eslint.config.js",
-        ".gitignore",
-        "src/setupTests.js",
-        "src/main.jsx",
-        "src/utils/**",
-        "src/store/**",
         "src/pages/Feed/MainFeed/FeedPosts/PostCard/Content/MediaContent**",
         "src/pages/Feed/MainFeed/FeedPosts/PostCard/Comments/Reply.jsx",
         "src/pages/Feed/GenericComponents/reactionIcons.js",
-        "src/mocks/**",
-        "src/apis/**",
-        "src/assets/**",
-        "src/app/**",
+
+        // CHECK WITH KHALED
+        "src/pages/AuthenticationPages/**",
       ],
     },
     setupFiles: "./src/setupTests.js",

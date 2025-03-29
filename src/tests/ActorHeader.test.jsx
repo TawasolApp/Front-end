@@ -93,7 +93,7 @@ describe("ActorHeader Component", () => {
 
     const links = container.querySelectorAll("a");
     links.forEach((link) => {
-      expect(link.getAttribute("href")).toBe("/in/user123");
+      expect(link.getAttribute("href")).toBe("/users/user123");
     });
   });
 

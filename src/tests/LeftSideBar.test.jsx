@@ -81,7 +81,7 @@ describe("LeftSideBar Component", () => {
     const { container } = renderWithRouter(<LeftSideBar />);
 
     // Check for profile link
-    const profileLink = container.querySelector('a[href="/in/mohsobh"]');
+    const profileLink = container.querySelector('a[href="/users/mohsobh"]');
     expect(profileLink).toBeInTheDocument();
 
     // Check for saved items link

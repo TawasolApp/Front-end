@@ -1,11 +1,529 @@
 import pkg from "json-server";
 const { create, router, defaults, bodyParser } = pkg;
 const server = create();
-const _router = router("src/mocks/db.json");
+const _router = router("./src/mocks/db.json");
 const middlewares = defaults();
 
 server.use(middlewares);
 server.use(bodyParser);
+
+server.get("/connections/list", (req, res) => {
+  try {
+    let connections = _router.db.get("connections").value();
+    res.status(200).json(connections);
+  } catch (error) {
+    res.status(500).json({ message: "Failed to retrieve list of connections" });
+  }
+});
+
+server.get("/connections/pending", (req, res) => {
+  try {
+    const pendingConnections = _router.db.get("pendingConnections").value();
+    res.status(200).jsonp(pendingConnections);
+  } catch (error) {
+    res.status(500).jsonp({ error: "Failed to retrieve pending connections" });
+  }
+});
+
+server.patch("/connections/:userId", (req, res) => {
+  try {
+    const { userId } = req.params;
+    const { isAccept } = req.body; // Extract isAccept flag
+    const db = _router.db;
+
+    // Find user in pendingConnections
+    const pendingConnections = db.get("pendingConnections").value();
+    const user = pendingConnections.find((u) => u.userId === userId);
+
+    if (!user) {
+      return res.status(404).json({ message: "User ID does not exist" });
+    }
+
+    // If accepted, move to connections
+    if (isAccept) {
+      db.get("connections").push(user).write();
+    }
+
+    // Remove from pendingConnections regardless
+    db.get("pendingConnections").remove({ userId }).write();
+
+    res.status(200).json({
+      message: isAccept
+        ? "Connection request accepted"
+        : "Connection request ignored",
+      user,
+    });
+  } catch (error) {
+    res
+      .status(500)
+      .json({ message: "Failed to update connection request status" });
+  }
+});
+
+server.delete("/connections/:userId", (req, res) => {
+  try {
+    const { userId } = req.params;
+    const db = _router.db;
+
+    // Check if the user exists in connections
+    const connections = db.get("connections").value();
+    const user = connections.find((u) => u.userId === userId);
+
+    if (!user) {
+      return res.status(404).json({ message: "User ID does not exist" });
+    }
+
+    // Remove user from connections
+    db.get("connections").remove({ userId }).write();
+
+    res.status(204).send(); // No Content (success)
+  } catch (error) {
+    res.status(500).json({ message: "Failed to remove connection" });
+  }
+});
+
+server.get("/connections/following", (req, res) => {
+  try {
+    const following = _router.db.get("following").value();
+    res.status(200).json(following);
+  } catch (error) {
+    res.status(500).json({ message: "Failed to retrieve list of followings" });
+  }
+});
+
+server.get("/connections/followers", (req, res) => {
+  try {
+    const followers = _router.db.get("followers").value();
+    res.status(200).json(followers);
+  } catch (error) {
+    res.status(500).json({ message: "Failed to retrieve list of followers" });
+  }
+});
+
+server.post("/connections/follow", (req, res) => {
+  try {
+    const { userId } = req.body;
+    const db = _router.db;
+
+    console.log("Looking for follower with userId:", userId); // Debug log
+
+    // 1. Find user in followers list
+    const followers = db.get("followers").value();
+    const follower = followers.find((f) => f.userId == userId); // Note: using == for type coercion
+
+    if (!follower) {
+      console.log("Follower not found in:", followers); // Debug log
+      return res.status(404).json({ message: "User not found in followers" });
+    }
+
+    // 2. Add to following list
+    db.get("following").push(follower).write();
+
+    console.log("Added to following:", follower); // Debug log
+    return res.status(201).json(follower);
+  } catch (error) {
+    console.error("Follow error:", error);
+    return res.status(500).json({ message: "Failed to follow user" });
+  }
+});
+
+server.delete("/connections/unfollow/:userId", (req, res) => {
+  try {
+    const { userId } = req.params;
+    const db = _router.db;
+
+    // Check if the user exists in following
+    const followingList = db.get("following").value();
+    const user = followingList.find((u) => u.userId === userId);
+
+    if (!user) {
+      return res.status(404).json({ message: "User ID does not exist" });
+    }
+
+    // Remove user from following
+    db.get("following").remove({ userId }).write();
+
+    res.status(204).send(); // No Content (success)
+  } catch (error) {
+    res.status(500).json({ message: "Failed to unfollow user" });
+  }
+});
+
+server.post("/auth/check-email", (req, res) => {
+  const { email } = req.body;
+
+  if (!email) {
+    return res.status(400).json({ message: "Email is required" });
+  }
+
+  const users = _router.db.get("auth").value();
+  const userExists = users.some((u) => u.email === email);
+  if (userExists) {
+    return res.status(409).json({ message: "Email is already in use" });
+  }
+
+  return res.status(200).json({ message: "Email is available" });
+});
+
+server.post("/auth/register", (req, res) => {
+  const { email, password, firstName, lastName } = req.body;
+
+  if (!email || !password) {
+    return res.status(400).send();
+  }
+
+  const users = _router.db.get("auth").value();
+  const existingUser = users.find((user) => user.email === email);
+
+  if (existingUser) {
+    return res.status(409).send();
+  }
+
+  const newUser = {
+    id: users.length + 1,
+    email,
+    password,
+    firstName: firstName || "",
+    lastName: lastName || "",
+  };
+
+  _router.db.get("auth").push(newUser).write();
+
+  return res.status(201).send();
+});
+
+server.post("/auth/login", (req, res) => {
+  const { email, password } = req.body;
+
+  const users = _router.db.get("auth").value();
+  const user = users.find(
+    (user) => user.email === email && user.password === password,
+  );
+
+  if (!user) {
+    return res.status(401).send();
+  }
+
+  return res.status(200).json({
+    token: "mock_access_token",
+    refreshToken: "mock_refresh_token",
+  });
+});
+
+server.patch("/user/update-password", (req, res) => {
+  const { currentPassword, newPassword } = req.body;
+  const users = _router.db.get("auth").value();
+
+  const userId = "1"; // Mock user ID with 1 for simplicity
+  const user = users.find((u) => u.id === userId);
+
+  if (!user) {
+    return res.status(404).json({ message: "User not found" });
+  }
+
+  if (user.password !== currentPassword) {
+    return res.status(400).json({ message: "Incorrect current password" });
+  }
+
+  user.password = newPassword;
+  _router.db
+    .get("auth")
+    .find({ id: userId })
+    .assign({ password: newPassword })
+    .write();
+
+  return res.status(200).json({ message: "Password changed successfully" });
+});
+
+server.post("/auth/forgot-password", (req, res) => {
+  return res.status(200).json({
+    message: "If this email exists, a password reset link has been sent",
+  });
+});
+
+// Add these endpoints to your existing server.js
+server.get("/users/confirm-email-change", (req, res) => {
+  const { token } = req.query;
+
+  if (!token) {
+    return res.status(400).json({ message: "Token is required" });
+  }
+
+  // Mock token verification - in real app this would check your database
+  const users = _router.db.get("auth").value();
+  const pendingChanges = _router.db.get("pendingEmailChanges").value() || [];
+
+  const changeRequest = pendingChanges.find((req) => req.token === token);
+
+  if (!changeRequest) {
+    return res.status(400).json({ message: "Invalid or expired token" });
+  }
+
+  // Update user's email
+  const user = users.find((u) => u.id === changeRequest.userId);
+  if (!user) {
+    return res.status(404).json({ message: "User not found" });
+  }
+
+  user.email = changeRequest.newEmail;
+  _router.db
+    .get("auth")
+    .find({ id: changeRequest.userId })
+    .assign(user)
+    .write();
+
+  // Remove the pending change
+  _router.db
+    .set(
+      "pendingEmailChanges",
+      pendingChanges.filter((req) => req.token !== token),
+    )
+    .write();
+
+  return res.status(200).json({ message: "Email updated successfully" });
+});
+
+server.patch("/users/request-email-update", (req, res) => {
+  const { newEmail, password } = req.body;
+  const users = _router.db.get("auth").value();
+
+  const userId = "1"; // For simplicity
+  const user = users.find((u) => u.id === userId);
+
+  if (!user) {
+    return res.status(404).json({ message: "User not found" });
+  }
+
+  if (user.password !== password) {
+    return res.status(400).json({ message: "Incorrect password" });
+  }
+
+  if (users.some((u) => u.email === newEmail)) {
+    return res.status(409).json({ message: "Email already exists" });
+  }
+
+  const token = `mock_token_${Math.random().toString(36).substring(2, 9)}`;
+  const pendingChanges = _router.db.get("pendingEmailChanges").value() || [];
+
+  _router.db
+    .set("pendingEmailChanges", [
+      ...pendingChanges,
+      {
+        userId,
+        newEmail,
+        token,
+        createdAt: new Date().toISOString(),
+      },
+    ])
+    .write();
+
+  const verificationLink = `http://localhost:5173/auth/email-token-verification?token=${token}`;
+  console.log(`Mock verification email sent with link: ${verificationLink}`);
+
+  return res.status(200).json({
+    message: "Verification email sent",
+    mockVerificationLink: verificationLink, // For testing
+  });
+});
+
+const supportedTypes = ["education", "experience", "skills", "certifications"];
+// GET all users
+server.get("/profile", (req, res) => {
+  const users = _router.db.get("users").value();
+  res.status(200).json(users);
+});
+
+//////////Main User Apis\\\\\\\\\\
+// GET user profile by ID
+server.get("/profile/:id", (req, res) => {
+  const userId = req.params.id; // keep as string
+  const users = _router.db.get("users").value();
+  const user = users.find((u) => String(u.id) === String(userId));
+
+  if (user) {
+    res.jsonp(user);
+  } else {
+    res.status(404).jsonp({ error: "User not found" });
+  }
+});
+
+// PATCH main profile data
+server.patch("/profile", (req, res) => {
+  const users = _router.db.get("users").value();
+  const { id, ...updates } = req.body;
+
+  const userIndex = users.findIndex((u) => String(u.id) === String(id));
+  if (userIndex === -1) {
+    return res.status(404).json({ error: "User not found" });
+  }
+
+  const updatedUser = { ...users[userIndex], ...updates };
+  _router.db
+    .get("users")
+    .find({ id: String(id) })
+    .assign(updatedUser)
+    .write();
+
+  res.status(200).json(updatedUser);
+});
+
+//////////education , skills, experinces ,, certifications Apis\\\\\\\\\\
+
+server.post("/profile/:id/education", (req, res) => {
+  const userId = req.params.id;
+  const newItem = { id: Date.now().toString(), ...req.body };
+  const user = _router.db.get("users").find({ id: String(userId) });
+  if (!user.value()) return res.status(404).json({ error: "User not found" });
+  const items = user.get("education").value() || [];
+  user.assign({ education: [...items, newItem] }).write();
+  return res.status(201).json(newItem);
+});
+
+server.post("/profile/:id/experience", (req, res) => {
+  const userId = req.params.id;
+  const newItem = { id: Date.now().toString(), ...req.body };
+  const user = _router.db.get("users").find({ id: String(userId) });
+  if (!user.value()) return res.status(404).json({ error: "User not found" });
+  const items = user.get("experience").value() || [];
+  user.assign({ experience: [...items, newItem] }).write();
+  return res.status(201).json(newItem);
+});
+
+server.post("/profile/:id/certifications", (req, res) => {
+  const userId = req.params.id;
+  const newItem = { id: Date.now().toString(), ...req.body };
+  const user = _router.db.get("users").find({ id: String(userId) });
+  if (!user.value()) return res.status(404).json({ error: "User not found" });
+  const items = user.get("certifications").value() || [];
+  user.assign({ certifications: [...items, newItem] }).write();
+  return res.status(201).json(newItem);
+});
+server.post("/profile/:id/skills", (req, res) => {
+  const userId = req.params.id;
+  const newItem = { id: Date.now().toString(), ...req.body };
+
+  const user = _router.db.get("users").find({ id: String(userId) });
+  if (!user.value()) return res.status(404).json({ error: "User not found" });
+
+  const items = user.get("skills").value() || [];
+  user.assign({ skills: [...items, newItem] }).write();
+
+  return res.status(201).json(newItem);
+});
+
+server.patch("/profile/:userId/education/:itemId", (req, res) => {
+  const { userId, itemId } = req.params;
+  const user = _router.db.get("users").find({ id: String(userId) });
+  if (!user.value()) return res.status(404).json({ error: "User not found" });
+  const updatedItems = user
+    .get("education")
+    .map((item) =>
+      String(item.id) === itemId ? { ...item, ...req.body } : item,
+    )
+    .value();
+  user.assign({ education: updatedItems }).write();
+  const updatedItem = updatedItems.find((item) => String(item.id) === itemId);
+  res.status(200).json(updatedItem);
+});
+
+server.patch("/profile/:userId/experience/:itemId", (req, res) => {
+  const { userId, itemId } = req.params;
+  const user = _router.db.get("users").find({ id: String(userId) });
+  if (!user.value()) return res.status(404).json({ error: "User not found" });
+  const updatedItems = user
+    .get("experience")
+    .map((item) =>
+      String(item.id) === itemId ? { ...item, ...req.body } : item,
+    )
+    .value();
+  user.assign({ experience: updatedItems }).write();
+  const updatedItem = updatedItems.find((item) => String(item.id) === itemId);
+  res.status(200).json(updatedItem);
+});
+
+server.patch("/profile/:userId/certifications/:itemId", (req, res) => {
+  const { userId, itemId } = req.params;
+  const user = _router.db.get("users").find({ id: String(userId) });
+  if (!user.value()) return res.status(404).json({ error: "User not found" });
+  const updatedItems = user
+    .get("certifications")
+    .map((item) =>
+      String(item.id) === itemId ? { ...item, ...req.body } : item,
+    )
+    .value();
+  user.assign({ certifications: updatedItems }).write();
+  const updatedItem = updatedItems.find((item) => String(item.id) === itemId);
+  res.status(200).json(updatedItem);
+});
+
+server.patch("/profile/:userId/skills/:itemId", (req, res) => {
+  const { userId, itemId } = req.params;
+
+  const user = _router.db.get("users").find({ id: String(userId) });
+  if (!user.value()) return res.status(404).json({ error: "User not found" });
+
+  const updatedItems = user
+    .get("skills")
+    .map((item) =>
+      String(item.id) === itemId ? { ...item, ...req.body } : item,
+    )
+    .value();
+
+  user.assign({ skills: updatedItems }).write();
+
+  const updatedItem = updatedItems.find((item) => String(item.id) === itemId);
+  res.status(200).json(updatedItem);
+});
+
+server.delete("/profile/:userId/education/:itemId", (req, res) => {
+  const { userId, itemId } = req.params;
+  const user = _router.db.get("users").find({ id: String(userId) });
+  if (!user.value()) return res.status(404).json({ error: "User not found" });
+  const filteredItems = user
+    .get("education")
+    .filter((item) => String(item.id) !== itemId)
+    .value();
+  user.assign({ education: filteredItems }).write();
+  res.status(204).end();
+});
+
+server.delete("/profile/:userId/experience/:itemId", (req, res) => {
+  const { userId, itemId } = req.params;
+  const user = _router.db.get("users").find({ id: String(userId) });
+  if (!user.value()) return res.status(404).json({ error: "User not found" });
+  const filteredItems = user
+    .get("experience")
+    .filter((item) => String(item.id) !== itemId)
+    .value();
+  user.assign({ experience: filteredItems }).write();
+  res.status(204).end();
+});
+
+server.delete("/profile/:userId/certifications/:itemId", (req, res) => {
+  const { userId, itemId } = req.params;
+  const user = _router.db.get("users").find({ id: String(userId) });
+  if (!user.value()) return res.status(404).json({ error: "User not found" });
+  const filteredItems = user
+    .get("certifications")
+    .filter((item) => String(item.id) !== itemId)
+    .value();
+  user.assign({ certifications: filteredItems }).write();
+  res.status(204).end();
+});
+server.delete("/profile/:userId/skills/:itemId", (req, res) => {
+  const { userId, itemId } = req.params;
+
+  const user = _router.db.get("users").find({ id: String(userId) });
+  if (!user.value()) return res.status(404).json({ error: "User not found" });
+
+  const filteredItems = user
+    .get("skills")
+    .filter((item) => String(item.id) !== itemId)
+    .value();
+
+  user.assign({ skills: filteredItems }).write();
+  res.status(204).end();
+});
 
 const currentUser = {
   id: "mohsobh",
@@ -422,6 +940,7 @@ server.delete("/companies/:companyId/unfollow", (req, res) => {
     company: company.value(),
   });
 });
+
 server.use(_router);
 
 server.listen(5000, () => {

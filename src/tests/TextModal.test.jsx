@@ -36,7 +36,7 @@ describe("TextModal Component", () => {
     currentAuthorName: "John Doe",
     currentAuthorPicture: "profile-picture.jpg",
     setIsModalOpen: vi.fn(),
-    sharePost: vi.fn(),
+    handleSubmitFunction: vi.fn(),
     initialText: "",
   };
 
@@ -120,7 +120,7 @@ describe("TextModal Component", () => {
     const form = screen.getByRole("textbox").closest("form");
     fireEvent.submit(form);
 
-    expect(mockProps.sharePost).toHaveBeenCalledWith(
+    expect(mockProps.handleSubmitFunction).toHaveBeenCalledWith(
       "New post content",
       "Public",
     );
@@ -133,7 +133,7 @@ describe("TextModal Component", () => {
     const form = screen.getByRole("textbox").closest("form");
     fireEvent.submit(form);
 
-    expect(mockProps.sharePost).not.toHaveBeenCalled();
+    expect(mockProps.handleSubmitFunction).not.toHaveBeenCalled();
     expect(mockProps.setIsModalOpen).not.toHaveBeenCalled();
   });
 
@@ -164,7 +164,7 @@ describe("TextModal Component", () => {
     fireEvent.submit(form);
 
     // Verify the sharePost function was called with the correct visibility
-    expect(mockProps.sharePost).toHaveBeenCalledWith(
+    expect(mockProps.handleSubmitFunction).toHaveBeenCalledWith(
       "New post content",
       "Public",
     );

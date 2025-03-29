@@ -15,7 +15,7 @@ const ActorHeader = ({
 }) => {
   return (
     <div className={`flex items-start gap-2 w-full`}>
-      <Link to={`/in/${authorId}`}>
+      <Link to={`/users/${authorId}`}>
         <Avatar
           src={authorPicture}
           sx={{
@@ -27,7 +27,7 @@ const ActorHeader = ({
       </Link>
 
       <div className={`flex-1 min-w-0 max-w-${iconSize}`}>
-        <Link to={`/in/${authorId}`}>
+        <Link to={`/users/${authorId}`}>
           <h3 className="font-medium text-sm text-authorName hover:text-authorNameHover hover:underline leading-tight truncate">
             {authorName}
           </h3>

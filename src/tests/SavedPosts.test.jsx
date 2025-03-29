@@ -12,12 +12,12 @@ vi.mock("../apis/axios", () => ({
 }));
 
 vi.mock("../pages/Feed/MainFeed/FeedPosts/PostCard/PostCard", () => ({
-  default: ({ post, deletePost }) => (
+  default: ({ post, handleDeletePost }) => (
     <div data-testid={`post-${post.id}`} className="post-card-mock">
       <h3>{post.content}</h3>
       <button
         data-testid={`delete-btn-${post.id}`}
-        onClick={() => deletePost(post.id)}
+        onClick={() => handleDeletePost(post.id)}
       >
         Delete Post
       </button>
@@ -35,7 +35,7 @@ describe("SavedPosts Component", () => {
       authorId: "user1",
       authorName: "Test User",
       content: "First saved post",
-      reactions: { like: 5 },
+      reactions: { Like: 5 },
       comments: 2,
       timestamp: "2025-03-24T10:00:00Z",
     },
@@ -44,7 +44,7 @@ describe("SavedPosts Component", () => {
       authorId: "user2",
       authorName: "Another User",
       content: "Second saved post",
-      reactions: { like: 3 },
+      reactions: { Like: 3 },
       comments: 1,
       timestamp: "2025-03-24T09:00:00Z",
     },

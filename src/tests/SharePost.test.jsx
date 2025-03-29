@@ -18,7 +18,7 @@ vi.mock("../pages/Feed/MainFeed/SharePost/TextModal", () => ({
     currentAuthorName,
     currentAuthorPicture,
     setIsModalOpen,
-    sharePost,
+    handleSubmitFunction,
   }) => (
     <div data-testid="mock-text-modal">
       <h2>Create Post as {currentAuthorName}</h2>
@@ -29,7 +29,7 @@ vi.mock("../pages/Feed/MainFeed/SharePost/TextModal", () => ({
       <button
         data-testid="share-btn"
         onClick={() => {
-          sharePost("Test post content", "Anyone");
+          handleSubmitFunction("Test post content", "Anyone");
           setIsModalOpen();
         }}
       >
@@ -47,7 +47,7 @@ describe("SharePost Component", () => {
   });
 
   it("renders correctly with avatar and start post button", () => {
-    render(<SharePost sharePost={mockSharePost} />);
+    render(<SharePost handleSharePost={mockSharePost} />);
 
     // Check avatar is displayed
     const avatar = screen.getByTestId("mock-avatar");
@@ -66,7 +66,7 @@ describe("SharePost Component", () => {
   });
 
   it("opens text modal when clicking the start post button", () => {
-    render(<SharePost sharePost={mockSharePost} />);
+    render(<SharePost handleSharePost={mockSharePost} />);
 
     // Click the "Start a post" button
     const postButton = screen.getByText("Start a post");
@@ -81,7 +81,7 @@ describe("SharePost Component", () => {
   });
 
   it("closes modal when clicking close button", () => {
-    render(<SharePost sharePost={mockSharePost} />);
+    render(<SharePost handleSharePost={mockSharePost} />);
 
     // Open the modal first
     const postButton = screen.getByText("Start a post");
@@ -99,7 +99,7 @@ describe("SharePost Component", () => {
   });
 
   it("calls sharePost function when sharing from the modal", () => {
-    render(<SharePost sharePost={mockSharePost} />);
+    render(<SharePost handleSharePost={mockSharePost} />);
 
     // Open the modal
     fireEvent.click(screen.getByText("Start a post"));
@@ -116,7 +116,7 @@ describe("SharePost Component", () => {
   });
 
   it("renders with the correct CSS classes on the container", () => {
-    const { container } = render(<SharePost sharePost={mockSharePost} />);
+    const { container } = render(<SharePost handleSharePost={mockSharePost} />);
 
     const mainContainer = container.firstChild;
     expect(mainContainer).toHaveClass("bg-cardBackground");
@@ -130,7 +130,7 @@ describe("SharePost Component", () => {
   });
 
   it("renders the button with the correct CSS classes", () => {
-    render(<SharePost sharePost={mockSharePost} />);
+    render(<SharePost handleSharePost={mockSharePost} />);
 
     const button = screen.getByText("Start a post").closest("button");
     expect(button).toHaveClass("flex-1");
