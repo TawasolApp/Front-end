@@ -27,6 +27,7 @@ import CompanyLayout from "../pages/Company/CompanyLayout.jsx";
 import PostsPage from "../pages/Company/Components/Pages/PostsPage.jsx";
 import AboutPage from "../pages/Company/Components/Pages/AboutPage.jsx";
 import HomePage from "../pages/Company/Components/Pages/HomePage.jsx";
+import JobsPage from "../pages/Company/Components/Pages/JobsPage.jsx";
 import CreateCompanyPage from "../pages/Company/Components/CreateCompanyPage/CreateCompanyPage.jsx";
 
 import NetworkBox from "../pages/mynetworkpage/mynetworkpage";
@@ -86,6 +87,7 @@ const App = () => {
           <Route path="home" element={<HomePage />} />
           <Route path="about" element={<AboutPage />} />
           <Route path="posts" element={<PostsPage />} />
+          <Route path="jobs" element={<JobsPage />} />
         </Route>
         <Route path="/company/setup/new" element={<CreateCompanyPage />} />
       </Routes>

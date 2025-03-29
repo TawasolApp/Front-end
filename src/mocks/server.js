@@ -197,7 +197,7 @@ server.post("/auth/login", (req, res) => {
 
   const users = _router.db.get("auth").value();
   const user = users.find(
-    (user) => user.email === email && user.password === password,
+    (user) => user.email === email && user.password === password
   );
 
   if (!user) {
@@ -276,7 +276,7 @@ server.get("/users/confirm-email-change", (req, res) => {
   _router.db
     .set(
       "pendingEmailChanges",
-      pendingChanges.filter((req) => req.token !== token),
+      pendingChanges.filter((req) => req.token !== token)
     )
     .write();
 
@@ -418,7 +418,7 @@ server.patch("/profile/:userId/education/:itemId", (req, res) => {
   const updatedItems = user
     .get("education")
     .map((item) =>
-      String(item.id) === itemId ? { ...item, ...req.body } : item,
+      String(item.id) === itemId ? { ...item, ...req.body } : item
     )
     .value();
   user.assign({ education: updatedItems }).write();
@@ -433,7 +433,7 @@ server.patch("/profile/:userId/experience/:itemId", (req, res) => {
   const updatedItems = user
     .get("experience")
     .map((item) =>
-      String(item.id) === itemId ? { ...item, ...req.body } : item,
+      String(item.id) === itemId ? { ...item, ...req.body } : item
     )
     .value();
   user.assign({ experience: updatedItems }).write();
@@ -448,7 +448,7 @@ server.patch("/profile/:userId/certifications/:itemId", (req, res) => {
   const updatedItems = user
     .get("certifications")
     .map((item) =>
-      String(item.id) === itemId ? { ...item, ...req.body } : item,
+      String(item.id) === itemId ? { ...item, ...req.body } : item
     )
     .value();
   user.assign({ certifications: updatedItems }).write();
@@ -465,7 +465,7 @@ server.patch("/profile/:userId/skills/:itemId", (req, res) => {
   const updatedItems = user
     .get("skills")
     .map((item) =>
-      String(item.id) === itemId ? { ...item, ...req.body } : item,
+      String(item.id) === itemId ? { ...item, ...req.body } : item
     )
     .value();
 
@@ -658,7 +658,7 @@ server.post("/posts/react/:postId", (req, res) => {
           ...entity.reactions,
           [existingReaction.type]: Math.max(
             (entity.reactions[existingReaction.type] || 0) - 1,
-            0,
+            0
           ),
         },
         reactType: null,
@@ -668,7 +668,7 @@ server.post("/posts/react/:postId", (req, res) => {
 
   // Add new reaction
   const reactionTypeAdd = Object.keys(reactions).find(
-    (type) => reactions[type] === 1,
+    (type) => reactions[type] === 1
   );
   if (reactionTypeAdd) {
     const newReaction = {
@@ -938,6 +938,69 @@ server.delete("/companies/:companyId/unfollow", (req, res) => {
   res.status(200).json({
     message: "Company unfollowed successfully",
     company: company.value(),
+  });
+});
+// GET - Fetch all posts for a specific company
+server.get("/companies/:companyId/posts", (req, res) => {
+  const { companyId } = req.params;
+  console.log("Requested companyId:", companyId);
+
+  const allPosts = _router.db.get("posts").value();
+
+  const filtered = allPosts.filter(
+    (post) => post.authorId === companyId && post.authorType === "Company"
+  );
+
+  const sorted = filtered.sort(
+    (a, b) => new Date(b.timestamp) - new Date(a.timestamp)
+  );
+
+  console.log("Returning posts:", sorted);
+  res.jsonp(sorted);
+});
+// POST - Create a new post for a specific company
+server.post("/companies/:companyId/updates", (req, res) => {
+  const { companyId } = req.params;
+  const { content, media, visibility } = req.body;
+
+  if (!content) {
+    return res.status(400).json({ error: "Content is required" });
+  }
+  const company = _router.db.get("companies").find({ companyId }).value();
+
+  if (!company) {
+    return res.status(404).json({ error: "Company not found" });
+  }
+
+  const newPost = {
+    id: Date.now().toString(),
+    authorId: companyId,
+    authorName: company.name,
+    authorPicture: company.logo,
+    content,
+    media: media || [],
+    reactions: {
+      Love: 0,
+      Celebrate: 0,
+      Insightful: 0,
+      Funny: 0,
+      Support: 0,
+      Like: 0,
+    },
+    comments: 0,
+    shares: 0,
+    taggedUsers: [],
+    visibility: visibility || "Public",
+    authorType: "Company",
+    reactType: null,
+    timestamp: new Date().toISOString(),
+  };
+
+  _router.db.get("posts").push(newPost).write();
+
+  res.status(201).json({
+    message: "Post created successfully",
+    post: newPost,
   });
 });
 

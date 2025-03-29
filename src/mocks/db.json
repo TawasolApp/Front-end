@@ -456,7 +456,7 @@
     {
       "companyId": "elsewedy-electric",
       "name": "elsewedy electric",
-      "isFollowing": true,
+      "isFollowing": false,
       "isVerified": true,
       "logo": "https://media.licdn.com/dms/image/v2/C560BAQF2a3ilv6hXXw/company-logo_200_200/company-logo_200_200/0/1631303609923?e=1747872000&v=beta&t=M9wVeJt_Zk6nNOEnz5X6PQVoUzb8wzaSFYK9JeRNA60",
       "description": "Manufacturer of Cables & Electrical Products and Integrated Infrastructure Provider",
@@ -465,7 +465,7 @@
       "companyType": "Privately Held",
       "industry": "appliances,electrical and electronics",
       "overview": "A global leader that has evolved from a local manufacturer of electrical products into an integrated infrastructure solutions provider; with over 19,000 employees and with recorded revenues of more than USD 5 billion in 2023  . We Operate in five key business sectors: Wire, Cable & Accessories, Electrical Products, Engineering & Construction, Digital Solutions, and Infrastructure Investments. With a strong presence in 19 different countries, 31 production facilities spread across African and Asian countries including Egypt, Algeria, KSA, Qatar, Indonesia, Pakistan, and Tanzania. We export a wide range of high-end products to over 110 countries worldwide. At the heart of our approach is an all-in-one integrated Engineering, Procurement & Construction (EPC) service, enabling us to deliver the most complex turnkey projects on time and with the highest efficiency.A vital part of our mission is ensuring that the communities where we operate develop and flourish. We work to facilitate the global transition toward a sustainable energy future, whereby we established green energy projects and smart cities across Africa, the Middle East, and Eastern Europe. In alignment with our 2030 sustainability strategy, we aim to extend and enhance our positive impact, provide energy services to a growing customer base, and drive decarbonization, digitalization, and sustainable transition in Egypt and beyond. Our growth has been driven by hiring talents and empowering businesses and communities where we operate. We enable customers to digitize and meet the challenges of an ever-changing world. Our extensive range of digital solutions allows them to become smarter, faster, and more agile. We are committed to doing our best to serve our customers while caring for the environment. We aim to use our knowledge of our environmental impact to better develop more sustainable business scenarios and evaluate our future policies.",
-      "founded": "1955",
+      "founded": "1966",
       "website": "https://elsewedyelectric.com/en/default",
       "address": "New cairo,cairo",
       "location": "https://maps.app.goo.gl/fEh4pBYt6LvTFxQE8",
@@ -874,6 +874,77 @@
       "authorType": "User",
       "reactType": "Insightful",
       "timestamp": "2025-03-25T12:12:55.106Z"
+    },
+    {
+      "id": "1512003",
+      "isSaved": true,
+      "authorId": "elsewedy-electric",
+      "authorName": "Elsewedy Electric",
+      "authorPicture": "https://media.licdn.com/dms/image/v2/C560BAQF2a3ilv6hXXw/company-logo_200_200/company-logo_200_200/0/1631303609923?e=1747872000&v=beta&t=M9wVeJt_Zk6nNOEnz5X6PQVoUzb8wzaSFYK9JeRNA60",
+      "content": "Test post 1",
+      "media": [],
+      "reactions": {
+        "Love": 0,
+        "Celebrate": 0,
+        "Insightful": 1,
+        "Funny": 0,
+        "Support": 0,
+        "Like": 0
+      },
+      "comments": 2,
+      "shares": 0,
+      "taggedUsers": [],
+      "visibility": "Public",
+      "authorType": "Company",
+      "reactType": "Insightful",
+      "timestamp": "2025-03-17T23:15:11.484Z"
+    },
+    {
+      "id": "1512004",
+      "isSaved": true,
+      "authorId": "elsewedy-electric",
+      "authorName": "Elsewedy Electric",
+      "authorPicture": "https://media.licdn.com/dms/image/v2/C560BAQF2a3ilv6hXXw/company-logo_200_200/company-logo_200_200/0/1631303609923?e=1747872000&v=beta&t=M9wVeJt_Zk6nNOEnz5X6PQVoUzb8wzaSFYK9JeRNA60",
+      "content": "Test post 2",
+      "media": [],
+      "reactions": {
+        "Love": 0,
+        "Celebrate": 0,
+        "Insightful": 1,
+        "Funny": 0,
+        "Support": 0,
+        "Like": 0
+      },
+      "comments": 2,
+      "shares": 0,
+      "taggedUsers": [],
+      "visibility": "Public",
+      "authorType": "Company",
+      "reactType": "Insightful",
+      "timestamp": "2025-03-17T23:15:11.484Z"
+    },
+    {
+      "id": "1743221303817",
+      "authorId": "elsewedy-electric",
+      "authorName": "elsewedy electric",
+      "authorPicture": "https://media.licdn.com/dms/image/v2/C560BAQF2a3ilv6hXXw/company-logo_200_200/company-logo_200_200/0/1631303609923?e=1747872000&v=beta&t=M9wVeJt_Zk6nNOEnz5X6PQVoUzb8wzaSFYK9JeRNA60",
+      "content": "test post 3",
+      "media": [],
+      "reactions": {
+        "Love": 1,
+        "Celebrate": 0,
+        "Insightful": 0,
+        "Funny": 0,
+        "Support": 0,
+        "Like": 0
+      },
+      "comments": 0,
+      "shares": 0,
+      "taggedUsers": [],
+      "visibility": "Public",
+      "authorType": "Company",
+      "reactType": "Love",
+      "timestamp": "2025-03-29T04:08:23.817Z"
     }
   ],
   "comments": [
@@ -1245,6 +1316,16 @@
     {
       "likeId": "1742772973468-mohsobh-Love",
       "postId": "1742772973468",
+      "authorId": "mohsobh",
+      "authorType": "User",
+      "type": "Love",
+      "authorName": "Mohamed Sobh",
+      "authorPicture": "https://media.licdn.com/dms/image/v2/D4D03AQH7Ais8BxRXzw/profile-displayphoto-shrink_100_100/profile-displayphoto-shrink_100_100/0/1721080103981?e=1747872000&v=beta&t=nDnZdgCqkI8v5B2ymXZzluMZVlF6h_o-dN1pA95Fzv4",
+      "authorBio": "Computer Engineering Student at Cairo University"
+    },
+    {
+      "likeId": "1743221303817-mohsobh-Love",
+      "postId": "1743221303817",
       "authorId": "mohsobh",
       "authorType": "User",
       "type": "Love",
