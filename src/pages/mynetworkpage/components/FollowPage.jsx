@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { axiosInstance } from '../../../apis/axios';
+import { axiosInstance } from "../../../apis/axios";
 
 const FollowPage = () => {
   const [activeTab, setActiveTab] = useState("following");
@@ -29,7 +29,7 @@ const FollowPage = () => {
   const handleUnfollow = async (userId) => {
     try {
       await axiosInstance.delete(`/connections/unfollow/${userId}`);
-      setFollowing(following.filter(user => user.userId !== userId));
+      setFollowing(following.filter((user) => user.userId !== userId));
       setShowUnfollowModal(false);
     } catch (error) {
       console.error("Error unfollowing user:", error);
@@ -39,17 +39,21 @@ const FollowPage = () => {
   const handleFollow = async (user) => {
     try {
       console.log("Attempting to follow user:", user.userId);
-      
-      const response = await axiosInstance.post("/connections/follow", {
-        userId: user.userId
-      }, {
-        headers: {
-          'Content-Type': 'application/json'
-        }
-      });
-  
+
+      const response = await axiosInstance.post(
+        "/connections/follow",
+        {
+          userId: user.userId,
+        },
+        {
+          headers: {
+            "Content-Type": "application/json",
+          },
+        },
+      );
+
       console.log("Follow response:", response);
-      
+
       if (response.status === 201) {
         setFollowing([...following, response.data]);
       }
@@ -58,7 +62,7 @@ const FollowPage = () => {
         message: error.message,
         response: error.response?.data,
         status: error.response?.status,
-        config: error.config
+        config: error.config,
       });
     }
   };
@@ -73,7 +77,7 @@ const FollowPage = () => {
   };
 
   const isFollowing = (userId) => {
-    return following.some(user => user.userId === userId);
+    return following.some((user) => user.userId === userId);
   };
 
   return (
@@ -101,7 +105,7 @@ const FollowPage = () => {
                 />
               </svg>
             </button>
-            
+
             <h3 className="text-lg font-semibold pb-2 border-b border-gray-200 dark:border-[#2a3038] pr-8 dark:text-[#f0f2f5]">
               Unfollow
             </h3>
@@ -119,7 +123,6 @@ const FollowPage = () => {
                 onClick={() => handleUnfollow(userToUnfollow.userId)}
                 className="px-3 py-1 bg-blue-700 hover:bg-blue-800 text-white rounded-3xl text-sm"
                 data-testid="unfollow2"
-                
               >
                 Unfollow
               </button>
@@ -130,7 +133,9 @@ const FollowPage = () => {
 
       <div className="bg-white dark:bg-[#1e2229] p-4 sm:p-6 rounded-lg shadow-md w-full mx-auto max-w-full sm:max-w-[900px] border border-gray-200 dark:border-[#2a3038]">
         <div className="border-b border-gray-200 dark:border-[#2a3038] pb-4 mb-4">
-          <h1 className="text-xl font-semibold dark:text-[#f0f2f5]">My Network</h1>
+          <h1 className="text-xl font-semibold dark:text-[#f0f2f5]">
+            My Network
+          </h1>
         </div>
 
         <div className="flex border-b border-gray-200 dark:border-[#2a3038] mb-4">
@@ -154,14 +159,19 @@ const FollowPage = () => {
             <p className="text-sm text-gray-500 dark:text-[#959ea9] mb-4">
               You are following {following.length} people out of your network
             </p>
-            
+
             <div className="pt-2">
               {following.length > 0 ? (
-                following.map(user => (
-                  <div key={user.userId} className="mb-4 pb-4 border-b border-gray-200 dark:border-[#2a3038]">
+                following.map((user) => (
+                  <div
+                    key={user.userId}
+                    className="mb-4 pb-4 border-b border-gray-200 dark:border-[#2a3038]"
+                  >
                     <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-2">
                       <div className="w-full sm:w-3/4 overflow-hidden">
-                        <h3 className="font-bold dark:text-[#f0f2f5]">{user.username}</h3>
+                        <h3 className="font-bold dark:text-[#f0f2f5]">
+                          {user.username}
+                        </h3>
                         <p className="text-sm text-gray-600 dark:text-[#c1c9d4] truncate">
                           {user.headline}
                         </p>
@@ -177,7 +187,9 @@ const FollowPage = () => {
                   </div>
                 ))
               ) : (
-                <p className="text-gray-500 dark:text-[#959ea9]">You're not following anyone yet.</p>
+                <p className="text-gray-500 dark:text-[#959ea9]">
+                  You're not following anyone yet.
+                </p>
               )}
             </div>
           </div>
@@ -186,13 +198,18 @@ const FollowPage = () => {
             <p className="text-sm text-gray-500 dark:text-[#959ea9] mb-4">
               {followers.length} people are following you
             </p>
-            
+
             {followers.length > 0 ? (
-              followers.map(user => (
-                <div key={user.userId} className="mb-4 pb-4 border-b border-gray-200 dark:border-[#2a3038]">
+              followers.map((user) => (
+                <div
+                  key={user.userId}
+                  className="mb-4 pb-4 border-b border-gray-200 dark:border-[#2a3038]"
+                >
                   <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-2">
                     <div className="w-full sm:w-3/4 overflow-hidden">
-                      <h3 className="font-bold dark:text-[#f0f2f5]">{user.username}</h3>
+                      <h3 className="font-bold dark:text-[#f0f2f5]">
+                        {user.username}
+                      </h3>
                       <p className="text-sm text-gray-600 dark:text-[#c1c9d4] truncate">
                         {user.headline}
                       </p>
@@ -216,7 +233,9 @@ const FollowPage = () => {
                 </div>
               ))
             ) : (
-              <p className="text-gray-500 dark:text-[#959ea9]">You don't have any followers yet.</p>
+              <p className="text-gray-500 dark:text-[#959ea9]">
+                You don't have any followers yet.
+              </p>
             )}
           </div>
         )}

@@ -1,6 +1,12 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef } from "react";
 
-const ConnectionCard = ({ imageUrl, username, experience, connectionDate, onRemove }) => {
+const ConnectionCard = ({
+  imageUrl,
+  username,
+  experience,
+  connectionDate,
+  onRemove,
+}) => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isConfirmationOpen, setIsConfirmationOpen] = useState(false);
   const menuRef = useRef(null);
@@ -24,11 +30,11 @@ const ConnectionCard = ({ imageUrl, username, experience, connectionDate, onRemo
     };
 
     if (isMenuOpen) {
-      document.addEventListener('mousedown', handleClickOutside);
+      document.addEventListener("mousedown", handleClickOutside);
     }
 
     return () => {
-      document.removeEventListener('mousedown', handleClickOutside);
+      document.removeEventListener("mousedown", handleClickOutside);
     };
   }, [isMenuOpen]);
 
@@ -47,8 +53,12 @@ const ConnectionCard = ({ imageUrl, username, experience, connectionDate, onRemo
             <h3 className="text-lg font-semibold hover:underline cursor-pointer dark:text-[#f0f2f5]">
               {username}
             </h3>
-            <p className="text-sm text-gray-700 dark:text-[#c1c9d4]">{experience}</p>
-            <p className="text-xs text-gray-500 dark:text-[#959ea9] mt-1">{connectionDate}</p>
+            <p className="text-sm text-gray-700 dark:text-[#c1c9d4]">
+              {experience}
+            </p>
+            <p className="text-xs text-gray-500 dark:text-[#959ea9] mt-1">
+              {connectionDate}
+            </p>
           </div>
         </div>
 
@@ -61,7 +71,7 @@ const ConnectionCard = ({ imageUrl, username, experience, connectionDate, onRemo
           <div className="relative" ref={menuRef}>
             <button
               onClick={toggleMenu}
-              data-testid="menu-button" 
+              data-testid="menu-button"
               className="p-1.5 text-black dark:text-[#c1c9d4] hover:text-black dark:hover:text-[#f0f2f5] focus:outline-none"
             >
               <svg
@@ -130,11 +140,14 @@ const ConnectionCard = ({ imageUrl, username, experience, connectionDate, onRemo
               </svg>
             </button>
 
-            <h2 className="text-xl font-semibold mb-4 dark:text-[#f0f2f5]">Remove Connection</h2>
+            <h2 className="text-xl font-semibold mb-4 dark:text-[#f0f2f5]">
+              Remove Connection
+            </h2>
             <div className="border-t border-gray-200 dark:border-[#2a3038] mb-4"></div>
 
             <p className="text-gray-700 dark:text-[#c1c9d4] mb-4">
-              Are you sure you want to remove {username} as a connection? Don't worry, {username} won't be notified by LinkedIn.
+              Are you sure you want to remove {username} as a connection? Don't
+              worry, {username} won't be notified by LinkedIn.
             </p>
 
             <div className="flex justify-end space-x-4">

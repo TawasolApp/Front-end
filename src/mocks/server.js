@@ -7,7 +7,6 @@ const middlewares = defaults();
 server.use(middlewares);
 server.use(bodyParser);
 
-
 server.get("/connections/list", (req, res) => {
   try {
     let connections = _router.db.get("connections").value();
@@ -17,10 +16,9 @@ server.get("/connections/list", (req, res) => {
   }
 });
 
-
-server.get('/connections/pending', (req, res) => {
+server.get("/connections/pending", (req, res) => {
   try {
-    const pendingConnections = _router.db.get('pendingConnections').value();
+    const pendingConnections = _router.db.get("pendingConnections").value();
     res.status(200).jsonp(pendingConnections);
   } catch (error) {
     res.status(500).jsonp({ error: "Failed to retrieve pending connections" });
@@ -49,15 +47,18 @@ server.patch("/connections/:userId", (req, res) => {
     // Remove from pendingConnections regardless
     db.get("pendingConnections").remove({ userId }).write();
 
-    res.status(200).json({ 
-      message: isAccept ? "Connection request accepted" : "Connection request ignored", 
-      user 
+    res.status(200).json({
+      message: isAccept
+        ? "Connection request accepted"
+        : "Connection request ignored",
+      user,
     });
   } catch (error) {
-    res.status(500).json({ message: "Failed to update connection request status" });
+    res
+      .status(500)
+      .json({ message: "Failed to update connection request status" });
   }
 });
-
 
 server.delete("/connections/:userId", (req, res) => {
   try {
@@ -81,8 +82,6 @@ server.delete("/connections/:userId", (req, res) => {
   }
 });
 
-
-
 server.get("/connections/following", (req, res) => {
   try {
     const following = _router.db.get("following").value();
@@ -91,7 +90,6 @@ server.get("/connections/following", (req, res) => {
     res.status(500).json({ message: "Failed to retrieve list of followings" });
   }
 });
-
 
 server.get("/connections/followers", (req, res) => {
   try {
@@ -108,11 +106,11 @@ server.post("/connections/follow", (req, res) => {
     const db = _router.db;
 
     console.log("Looking for follower with userId:", userId); // Debug log
-    
+
     // 1. Find user in followers list
     const followers = db.get("followers").value();
-    const follower = followers.find(f => f.userId == userId); // Note: using == for type coercion
-    
+    const follower = followers.find((f) => f.userId == userId); // Note: using == for type coercion
+
     if (!follower) {
       console.log("Follower not found in:", followers); // Debug log
       return res.status(404).json({ message: "User not found in followers" });
@@ -120,16 +118,14 @@ server.post("/connections/follow", (req, res) => {
 
     // 2. Add to following list
     db.get("following").push(follower).write();
-    
+
     console.log("Added to following:", follower); // Debug log
     return res.status(201).json(follower);
-
   } catch (error) {
     console.error("Follow error:", error);
     return res.status(500).json({ message: "Failed to follow user" });
   }
 });
-
 
 server.delete("/connections/unfollow/:userId", (req, res) => {
   try {
@@ -168,7 +164,6 @@ server.post("/auth/check-email", (req, res) => {
 
   return res.status(200).json({ message: "Email is available" });
 });
-
 
 server.post("/auth/register", (req, res) => {
   const { email, password, firstName, lastName } = req.body;

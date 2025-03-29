@@ -37,7 +37,9 @@ describe("ConnectionCard", () => {
     expect(screen.getByText(/are you sure you want to remove/i)).toBeTruthy();
     const cancelButton = screen.getByRole("button", { name: /cancel/i });
     fireEvent.click(cancelButton);
-    expect(screen.queryByText(/are you sure you want to remove/i)).not.toBeTruthy();
+    expect(
+      screen.queryByText(/are you sure you want to remove/i),
+    ).not.toBeTruthy();
   });
 
   it("triggers onRemove when 'Remove' is clicked in the modal", () => {

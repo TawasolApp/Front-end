@@ -32,7 +32,12 @@ const BlockedPage = () => {
             viewBox="0 0 24 24"
             stroke="currentColor"
           >
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 19l-7-7m0 0l7-7m-7 7h18" />
+            <path
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              strokeWidth={2}
+              d="M10 19l-7-7m0 0l7-7m-7 7h18"
+            />
           </svg>
           Back
         </button>
@@ -40,16 +45,22 @@ const BlockedPage = () => {
         {/* Title */}
         <h2 className="text-lg font-bold dark:text-[#f0f2f5]">Blocking</h2>
         <p className="text-sm text-gray-500 dark:text-[#959ea9] mb-4">
-          You're currently blocking {blockedUsers.length} person{blockedUsers.length !== 1 ? "s" : ""}.
+          You're currently blocking {blockedUsers.length} person
+          {blockedUsers.length !== 1 ? "s" : ""}.
         </p>
 
         {/* Blocked Users List */}
         {blockedUsers.length > 0 ? (
           blockedUsers.map((user) => (
-            <div key={user.id} className="flex items-center justify-between p-3 border-b border-gray-200 dark:border-[#2a3038]">
+            <div
+              key={user.id}
+              className="flex items-center justify-between p-3 border-b border-gray-200 dark:border-[#2a3038]"
+            >
               <div className="flex items-center">
                 <BlockIcon className="text-black dark:text-red-500 text-xs mr-1" />
-                <p className="font-semibold dark:text-[#f0f2f5]">{user.username}</p>
+                <p className="font-semibold dark:text-[#f0f2f5]">
+                  {user.username}
+                </p>
               </div>
               <button
                 onClick={() => handleUnblock(user.id)}
@@ -61,12 +72,16 @@ const BlockedPage = () => {
           ))
         ) : (
           <div>
-            <p className="text-gray-500 dark:text-[#959ea9] mb-4">You're currently not blocking anyone.</p>
+            <p className="text-gray-500 dark:text-[#959ea9] mb-4">
+              You're currently not blocking anyone.
+            </p>
             <p className="text-sm text-gray-500 dark:text-[#c1c9d4]">
-              Need to block or report someone? Go to their profile and select "Block/Report" from the menu.
+              Need to block or report someone? Go to their profile and select
+              "Block/Report" from the menu.
             </p>
             <p className="text-sm text-gray-500 dark:text-[#c1c9d4] mt-2">
-              Once blocked, any profile views will disappear from each other's "Who's Viewed My Profile" sections.
+              Once blocked, any profile views will disappear from each other's
+              "Who's Viewed My Profile" sections.
             </p>
           </div>
         )}

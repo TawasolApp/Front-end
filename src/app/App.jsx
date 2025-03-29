@@ -31,8 +31,8 @@ import CreateCompanyPage from "../pages/CompanyPage/Components/CreateCompanyPage
 
 import NetworkBox from "../pages/mynetworkpage/mynetworkpage";
 import Connections from "../pages/connectionpage/ConnectionPage";
-import BlockedPage from "../pages/mynetworkpage/components/BlockedPage"; 
-import FollowPage from '../pages/mynetworkpage/components/FollowPage'; 
+import BlockedPage from "../pages/mynetworkpage/components/BlockedPage";
+import FollowPage from "../pages/mynetworkpage/components/FollowPage";
 
 import FeedContainer from "../pages/Feed/FeedContainer";
 import SavedPostsContainer from "../pages/SavedPosts/SavedPostsContainer";
@@ -47,11 +47,20 @@ const App = () => {
         <Route path="/auth/signup" element={<SignUpPage />} />
         <Route path="/auth/signup/name" element={<NamePage />} />
         <Route path="/auth/signup/location" element={<LocationPage />} />
-        <Route path="/auth/signup/experience" element={<ExperienceAuthPage />} />
+        <Route
+          path="/auth/signup/experience"
+          element={<ExperienceAuthPage />}
+        />
         <Route path="/auth/update-password" element={<ChangePasswordPage />} />
         <Route path="/auth/forgot-password" element={<ForgotPasswordPage />} />
-        <Route path="/auth/email-verification" element={<EmailVerificationPage />} />
-        <Route path="/auth/email-token-verification" element={<EmailTokenVerificationPage />} />
+        <Route
+          path="/auth/email-verification"
+          element={<EmailVerificationPage />}
+        />
+        <Route
+          path="/auth/email-token-verification"
+          element={<EmailTokenVerificationPage />}
+        />
         <Route path="/auth/new-password" element={<NewPasswordPage />} />
         <Route path="/auth/update-email" element={<ChangeEmailPage />} />
 
@@ -68,7 +77,7 @@ const App = () => {
         <Route path="/connections" element={<Connections />} />
         <Route path="/blocked" element={<BlockedPage />} />
         <Route path="/follow" element={<FollowPage />} />
-        
+
         <Route path="/feed" element={<FeedContainer />} />
         <Route path="/my-items/saved-posts" element={<SavedPostsContainer />} />
 
@@ -79,7 +88,6 @@ const App = () => {
           <Route path="posts" element={<PostsPage />} />
         </Route>
         <Route path="/company/setup/new" element={<CreateCompanyPage />} />
-        
       </Routes>
     </Router>
   );
