@@ -76,7 +76,7 @@ function PostsSlider({ setActiveButton }) {
           ))}
 
           {/* Last Slide */}
-          <div className="bg-boxbackground rounded-2xl border border-gray-400 p-4 w-[350px] flex-shrink-0 flex flex-col justify-between min-h-[400px] h-[400px]">
+          <div className="bg-boxbackground rounded-2xl border border-gray-700 p-4 w-[350px] flex-shrink-0 flex flex-col justify-between min-h-[400px] h-[400px]">
             <HiOutlineDocumentText className="text-gray-500 w-12 h-12 mb-3" />
             <p className="text-text2 text-center mb-4">Show all posts</p>
             <button
