@@ -47,7 +47,7 @@ const EmailTokenVerificationPage = () => {
   return (
     <div className="min-h-screen flex items-start pt-20 justify-center bg-mainBackground">
       <div className="bg-cardBackground p-10 rounded-lg w-full max-w-xl shadow-md text-center">
-        <h2 className="text-2xl font-semibold mb-4 text-textHomeTitle">
+        <h2 className="text-2xl font-semibold mb-4 text-textContent">
           {status === "verifying"
             ? "Verifying Email"
             : status === "success"
@@ -55,12 +55,12 @@ const EmailTokenVerificationPage = () => {
               : "Error"}
         </h2>
 
-        <p className="mb-6">{message}</p>
+        <p className="mb-6 text-textContent text-lg">{message}</p>
 
         {status === "error" && (
           <button
             onClick={() => navigate(-2)}
-            className="bg-cardBackground text-buttonSubmitEnable px-4 py-2 rounded hover:underline transition"
+            className="bg-cardBackground text-lg text-buttonSubmitEnable px-4 py-2 rounded hover:underline transition"
           >
             Back
           </button>

@@ -146,7 +146,7 @@ const ExperienceForm = ({ onSubmit }) => {
             onChange={handleJobTitleChange}
             placeholder=""
             labelClassName="!text-lg !font-normal"
-            inputClassName="!py-1 !text-lg rounded-md !border-black !border"
+            inputClassName="!py-1 !text-lg rounded-md"
             containerClassName="!mb-4"
             required
           />
@@ -161,7 +161,7 @@ const ExperienceForm = ({ onSubmit }) => {
                 onChange={handleEmploymentTypeChange}
                 placeholder=""
                 labelClassName="!text-lg !font-normal"
-                inputClassName="!py-1 !text-lg rounded-md !border-black !border"
+                inputClassName="!py-1 !text-lg rounded-md"
                 containerClassName="!mb-4"
               />
               <InputField
@@ -173,7 +173,7 @@ const ExperienceForm = ({ onSubmit }) => {
                 onChange={handleCompanyChange}
                 placeholder=""
                 labelClassName="!text-lg !font-normal"
-                inputClassName="!py-1 !text-lg rounded-md !border-black !border"
+                inputClassName="!py-1 !text-lg rounded-md"
                 containerClassName="!mb-4"
                 required
               />
@@ -194,7 +194,7 @@ const ExperienceForm = ({ onSubmit }) => {
             onChange={handleSchoolChange}
             placeholder=""
             labelClassName="!text-lg !font-normal"
-            inputClassName="!py-1 !text-lg rounded-md !border-black !border"
+            inputClassName="!py-1 !text-lg rounded-md"
             containerClassName="!mb-4"
             required
           />
@@ -203,7 +203,7 @@ const ExperienceForm = ({ onSubmit }) => {
             <div className="w-full sm:w-1/2">
               <label
                 htmlFor="startYear"
-                className="block text-textHomeTitle text-lg font-normal mb-1"
+                className="block text-textContent text-lg font-normal mb-1"
               >
                 Start year *
               </label>
@@ -213,7 +213,7 @@ const ExperienceForm = ({ onSubmit }) => {
                 value={startYear}
                 onChange={handleStartYearChange}
                 onBlur={handleStartYearBlur}
-                className="w-full px-3 py-2 border border-black rounded-md text-lg focus:outline-none focus:border-blue-500"
+                className="w-full px-3 py-2 border border-itemBorder rounded-md text-lg bg-inputBackground hover:bg-inputBackgroundHover text-textContent"
                 required
               >
                 <option value="">-</option>
@@ -230,7 +230,7 @@ const ExperienceForm = ({ onSubmit }) => {
             <div className="w-full sm:w-1/2">
               <label
                 htmlFor="endYear"
-                className="block text-textHomeTitle text-lg font-normal mb-1"
+                className="block text-textContent text-lg font-normal mb-1"
               >
                 End year (or expected) *
               </label>
@@ -240,7 +240,7 @@ const ExperienceForm = ({ onSubmit }) => {
                 value={endYear}
                 onChange={handleEndYearChange}
                 onBlur={handleEndYearBlur}
-                className="w-full px-3 py-2 border border-black rounded-md text-lg focus:outline-none focus:border-blue-500"
+                className="w-full px-3 py-2 border border-itemBorder rounded-md text-lg bg-inputBackground hover:bg-inputBackgroundHover text-textContent"
                 required
               >
                 <option value="">-</option>
@@ -271,12 +271,12 @@ const ExperienceForm = ({ onSubmit }) => {
           </div>
 
           {/* Age Verification */}
-          <div className="mb-6 w-full flex flex-col sm:flex-row items-center justify-between p-4 sm:p-6 border border-gray-300 rounded-lg">
-            <span className="text-textHomeTitle text-lg sm:text-xl mb-2 sm:mb-0">
+          <div className="mb-6 w-full flex flex-col sm:flex-row items-center justify-between p-4 sm:p-6 border border-itemBorder rounded-lg">
+            <span className="text-textContent text-lg sm:text-xl mb-2 sm:mb-0">
               I'm over 16
             </span>
             <div className="flex items-center gap-3">
-              <span className="text-textHomeTitle text-lg sm:text-xl">
+              <span className="text-textContent text-lg sm:text-xl">
                 {isOver16 ? "Yes" : "No"}
               </span>
               <label className="flex items-center cursor-pointer">
@@ -291,7 +291,7 @@ const ExperienceForm = ({ onSubmit }) => {
                   />
                   <div
                     className={`w-10 h-6 rounded-full shadow-inner transition-colors duration-200 ${
-                      isOver16 ? "bg-green-500" : "bg-gray-400"
+                      isOver16 ? "bg-buttonSubmitEnable" : "bg-gray-400"
                     }`}
                   ></div>
                   <div
@@ -307,14 +307,14 @@ const ExperienceForm = ({ onSubmit }) => {
           {/* Date of Birth Fields */}
           {!isOver16 && (
             <div className="mb-6">
-              <label className="block text-textHomeTitle text-lg font-semibold mb-2">
+              <label className="block text-textContent text-lg font-semibold mb-2">
                 Date of birth *
               </label>
               <div className="flex flex-col sm:flex-row gap-3 sm:gap-4">
                 <div className="w-full sm:w-1/3">
                   <label
                     htmlFor="month"
-                    className="block text-textHomeTitle text-lg font-normal mb-1"
+                    className="block text-textContent text-lg font-normal mb-1"
                   >
                     Month *
                   </label>
@@ -322,7 +322,7 @@ const ExperienceForm = ({ onSubmit }) => {
                     name="month"
                     value={birthDate.month}
                     onChange={handleBirthDateChange}
-                    className="w-full px-3 py-2 border border-black rounded-md text-lg focus:outline-none focus:border-blue-500"
+                    className="w-full px-3 py-2 border border-itemBorder rounded-md text-lg bg-inputBackground hover:bg-inputBackgroundHover text-textContent"
                     required
                   >
                     <option value="">-</option>
@@ -338,7 +338,7 @@ const ExperienceForm = ({ onSubmit }) => {
                 <div className="w-full sm:w-1/3">
                   <label
                     htmlFor="day"
-                    className="block text-textHomeTitle text-lg font-normal mb-1"
+                    className="block text-textContent text-lg font-normal mb-1"
                   >
                     Day *
                   </label>
@@ -346,7 +346,7 @@ const ExperienceForm = ({ onSubmit }) => {
                     name="day"
                     value={birthDate.day}
                     onChange={handleBirthDateChange}
-                    className="w-full px-3 py-2 border border-black rounded-md text-lg focus:outline-none focus:border-blue-500"
+                    className="w-full px-3 py-2 border border-itemBorder rounded-md text-lg bg-inputBackground hover:bg-inputBackgroundHover text-textContent"
                     required
                   >
                     <option value="">-</option>
@@ -360,7 +360,7 @@ const ExperienceForm = ({ onSubmit }) => {
                 <div className="w-full sm:w-1/3">
                   <label
                     htmlFor="year"
-                    className="block text-textHomeTitle text-lg font-normal mb-1"
+                    className="block text-textContent text-lg font-normal mb-1"
                   >
                     Year *
                   </label>
@@ -368,7 +368,7 @@ const ExperienceForm = ({ onSubmit }) => {
                     name="year"
                     value={birthDate.year}
                     onChange={handleBirthDateChange}
-                    className="w-full px-3 py-2 border border-black rounded-md text-lg focus:outline-none focus:border-blue-500"
+                    className="w-full px-3 py-2 border border-itemBorder rounded-md text-lg bg-inputBackground hover:bg-inputBackgroundHover text-textContent"
                     required
                   >
                     <option value="">-</option>
@@ -393,7 +393,7 @@ const ExperienceForm = ({ onSubmit }) => {
         <button
           type="button"
           onClick={handleIsStudentChange}
-          className="bg-cardBackground w-full text-textHomeTitle px-6 py-3 rounded-lg hover:bg-buttonSubmitDisable text-xl sm:text-2xl font-medium transition duration-200 ease-in-out"
+          className="bg-cardBackground w-full text-textContent px-6 py-3 rounded-lg hover:bg-buttonSubmitDisable text-xl sm:text-2xl font-medium transition duration-200 ease-in-out"
         >
           {isStudent ? "I'm not a student" : "I'm a student"}
         </button>

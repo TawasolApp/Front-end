@@ -94,8 +94,8 @@ const NameForm = ({ onSubmit }) => {
       <div className="grid place-items-center my-6">
         <ReCAPTCHA
           ref={recaptchaRef}
-          sitekey="6LdMDv0qAAAAAC935jMxhIW2ZSMaei6Hs1YU2PyR" // Replace with actual site key
-          className="bg-[rgb(var(--card-background))] p-2 rounded-lg shadow-md"
+          sitekey="6LdMDv0qAAAAAC935jMxhIW2ZSMaei6Hs1YU2PyR" // Store it in a better way (env var)
+          className="bg-cardBackground text-textContent p-2 rounded-lg"
         />
       </div>
 

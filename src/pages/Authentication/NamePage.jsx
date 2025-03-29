@@ -38,11 +38,11 @@ const NamePage = () => {
   };
 
   return (
-    <div className="min-h-screen flex flex-col items-center justify-center bg-[rgb(var(--main-background))] px-4 sm:px-8 md:px-12 lg:px-24">
-      <h1 className="text-4xl md:text-5xl font-normal mb-8 text-textHomeTitle text-center max-w-screen-lg">
+    <div className="min-h-screen flex flex-col items-center justify-center bg-mainBackground px-4 sm:px-8 md:px-12 lg:px-24">
+      <h1 className="text-4xl md:text-5xl font-normal mb-8 text-textHeavyTitle text-center max-w-screen-lg">
         Make the most of your professional life
       </h1>
-      <div className="bg-[rgb(var(--card-background))] p-10 rounded-lg shadow-lg w-full max-w-lg min-w-[350px]">
+      <div className="bg-cardBackground p-10 rounded-lg shadow-lg w-full max-w-lg min-w-[350px]">
         <NameForm onSubmit={handleName} />
       </div>
     </div>

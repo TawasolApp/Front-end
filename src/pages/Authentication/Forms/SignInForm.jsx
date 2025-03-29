@@ -67,7 +67,7 @@ const SignInForm = ({ onSubmit }) => {
 
   return (
     <form onSubmit={handleSubmit} className="space-y-4 sm:space-y-6">
-      <h1 className="text-3xl sm:text-4xl md:text-5xl font-semibold mb-6 sm:mb-8 text-textHomeTitle">
+      <h1 className="text-3xl sm:text-4xl md:text-5xl font-semibold mb-6 sm:mb-8 text-textHeavyTitle">
         Sign in
       </h1>
 
@@ -123,7 +123,7 @@ const SignInForm = ({ onSubmit }) => {
         <input
           type="checkbox"
           id="keepLoggedIn"
-          className="w-4 h-4 sm:w-5 sm:h-5 mr-2 accent-green-600"
+          className="w-4 h-4 sm:w-5 sm:h-5 mr-2 accent-buttonSubmitEnable"
           defaultChecked
         />
         <label
