@@ -31,6 +31,7 @@ function PostsSlider({ setActiveButton }) {
       sliderRef.current.scrollBy({ left: 350, behavior: "smooth" });
     }
   };
+  if (posts.length === 0) return null;
 
   return (
     <div

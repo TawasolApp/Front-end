@@ -538,6 +538,22 @@
       "email": "",
       "contactNumber": "",
       "logo": ""
+    },
+    {
+      "companyId": "hhhh",
+      "name": "hhhh",
+      "description": "hhhh is a leading company in the soft drinks sector.",
+      "overview": "",
+      "founded": null,
+      "industry": "soft drinks",
+      "companySize": "51-400 employees",
+      "companyType": "Self-employed",
+      "website": "",
+      "address": "",
+      "location": "",
+      "email": "",
+      "contactNumber": "",
+      "logo": ""
     }
   ],
   "posts": [
@@ -1605,6 +1621,48 @@
       "experienceLevel": "rr",
       "companyId": "elsewedy-electric",
       "createdAt": "2025-03-30T13:59:50.000Z"
+    }
+  ],
+  "applicants": [
+    {
+      "jobId": "job-001",
+      "companyId": "elsewedy-electric",
+      "userId": "1",
+      "username": "Fatma Gamal",
+      "profilePicture": "https://media.licdn.com/dms/image/v2/D4E12AQEud3Ll5MI7cQ/article-inline_image-shrink_1000_1488/article-inline_image-shrink_1000_1488/0/1660833954461?e=1748476800&v=beta&t=oBHYyt20lluc86BGZj-1Cc3FVWWwTDq8g8uuyg79qZI",
+      "headline": "headline"
+    },
+    {
+      "jobId": "job-001",
+      "companyId": "elsewedy-electric",
+      "userId": "2",
+      "username": "Mohamed sobh",
+      "profilePicture": "https://media.licdn.com/dms/image/v2/D4E12AQEud3Ll5MI7cQ/article-inline_image-shrink_1000_1488/article-inline_image-shrink_1000_1488/0/1660833954461?e=1748476800&v=beta&t=oBHYyt20lluc86BGZj-1Cc3FVWWwTDq8g8uuyg79qZI",
+      "headline": "headline"
+    },
+    {
+      "jobId": "job-001",
+      "companyId": "elsewedy-electric",
+      "userId": "3",
+      "username": "Maryam Awed",
+      "profilePicture": "https://media.licdn.com/dms/image/v2/D4E12AQEud3Ll5MI7cQ/article-inline_image-shrink_1000_1488/article-inline_image-shrink_1000_1488/0/1660833954461?e=1748476800&v=beta&t=oBHYyt20lluc86BGZj-1Cc3FVWWwTDq8g8uuyg79qZI",
+      "headline": "headline"
+    },
+    {
+      "jobId": "job-004",
+      "companyId": "elsewedy-electric",
+      "userId": "4",
+      "username": "Engy Mohamed",
+      "profilePicture": "https://media.licdn.com/dms/image/v2/D4E12AQEud3Ll5MI7cQ/article-inline_image-shrink_1000_1488/article-inline_image-shrink_1000_1488/0/1660833954461?e=1748476800&v=beta&t=oBHYyt20lluc86BGZj-1Cc3FVWWwTDq8g8uuyg79qZI",
+      "headline": "headline"
+    },
+    {
+      "jobId": "job-004",
+      "companyId": "elsewedy-electric",
+      "userId": "5",
+      "username": "Tasneem Ahmed",
+      "profilePicture": "https://media.licdn.com/dms/image/v2/D4E12AQEud3Ll5MI7cQ/article-inline_image-shrink_1000_1488/article-inline_image-shrink_1000_1488/0/1660833954461?e=1748476800&v=beta&t=oBHYyt20lluc86BGZj-1Cc3FVWWwTDq8g8uuyg79qZI",
+      "headline": "headline"
     }
   ]
 }

@@ -1,18 +1,37 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
+import { axiosInstance } from "../../../../apis/axios";
 
-const mockApplicants = {
-  "job-001": [
-    { id: "a1", name: "Ahmed Samir", email: "ahmed@example.com" },
-    { id: "a2", name: "Fatma Gamal", email: "fatma@example.com" },
-  ],
-  "job-002": [{ id: "a3", name: "Lina Adel", email: "lina@example.com" }],
-};
+function JobApplications({ job, companyId }) {
+  const [applicants, setApplicants] = useState([]);
+  const [loading, setLoading] = useState(false);
 
-function JobApplications({ job }) {
-  if (!job)
+  useEffect(() => {
+    if (!job || !companyId) return;
+
+    const fetchApplicants = async () => {
+      setLoading(true);
+      try {
+        const response = await axiosInstance.get(
+          `/companies/${companyId}/applicants`,
+          {
+            params: { job: job.id },
+          }
+        );
+        setApplicants(response.data);
+      } catch (error) {
+        console.error("Failed to fetch applicants:", error);
+        setApplicants([]);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchApplicants();
+  }, [job, companyId]);
+
+  if (!job) {
     return <div className="w-1/2 p-6">Select a job to see applicants</div>;
-
-  const applicants = mockApplicants[job.id] || [];
+  }
 
   return (
     <div className="w-1/2 p-6 overflow-y-auto text-text bg-boxbackground rounded-md shadow">
@@ -20,14 +39,28 @@ function JobApplications({ job }) {
         Applicants for {job.position}
       </h2>
 
-      {applicants.length === 0 ? (
+      {loading ? (
+        <p className="text-sm text-gray-400">Loading applicants...</p>
+      ) : applicants.length === 0 ? (
         <p className="text-sm text-gray-400">No applicants yet.</p>
       ) : (
         <ul className="space-y-2">
           {applicants.map((applicant) => (
-            <li key={applicant.id} className="border p-3 rounded">
-              <p className="font-medium">{applicant.name}</p>
-              <p className="text-sm text-gray-400">{applicant.email}</p>
+            <li
+              key={applicant.userId}
+              className="border p-3 rounded flex items-center gap-4"
+            >
+              <img
+                src={applicant.profilePicture}
+                alt={`${applicant.username}'s profile`}
+                className="w-10 h-10 rounded-full object-cover"
+              />
+              <div>
+                <p className="font-medium text-text">{applicant.username}</p>
+                <p className="text-sm text-companysubheader">
+                  {applicant.headline}
+                </p>
+              </div>
             </li>
           ))}
         </ul>

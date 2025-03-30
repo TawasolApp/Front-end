@@ -47,7 +47,7 @@ function OwnerView({
             logo={logo}
             name={name}
           />
-          <JobApplications job={selectedJob} />
+          <JobApplications job={selectedJob} companyId={companyId} />
         </div>
       </div>
     </div>

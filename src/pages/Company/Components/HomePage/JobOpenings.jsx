@@ -31,7 +31,7 @@ function JobOpenings({ company }) {
       });
     }
   };
-
+  if (jobs.length === 0) return null;
   return (
     <div
       className="relative bg-boxbackground p-4 shadow-md rounded-md w-full max-w-3xl mx-auto pb-0 mb-8 mt-8"
@@ -83,7 +83,7 @@ function JobOpenings({ company }) {
             {jobs.map((job) => (
               <div
                 key={job.id}
-                className="flex-shrink-0 w-[300px] min-h-[280px] bg-boxbackground border border-gray-700 rounded-xl shadow-sm p-4"
+                className="flex-shrink-0 w-[260px] min-h-[260px] bg-boxbackground border border-gray-700 rounded-xl shadow-sm p-4"
               >
                 <img
                   src={company.logo}
@@ -91,7 +91,7 @@ function JobOpenings({ company }) {
                   className="w-20 h-20 object-contain mb-2"
                 />
                 <h2 className="text-text font-semibold text-md mb-1">
-                  {job.title}
+                  {job.position}
                 </h2>
                 <p className="text-sm text-normaltext">
                   {company.name?.toUpperCase()}

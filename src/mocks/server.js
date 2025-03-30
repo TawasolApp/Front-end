@@ -1026,6 +1026,23 @@ server.get("/companies/:companyId/jobs", (req, res) => {
   const jobs = _router.db.get("jobs").filter({ companyId }).value();
   res.status(200).json(jobs);
 });
+//GET- get applicants of job
+server.get("/companies/:companyId/applicants", (req, res) => {
+  const { companyId } = req.params;
+  const { job } = req.query;
+
+  const applicants = _router.db.get("applicants").value();
+
+  const filteredApplicants = applicants.filter((applicant) => {
+    return (
+      String(applicant.companyId) === String(companyId) &&
+      (!job || String(applicant.jobId) === String(job))
+    );
+  });
+
+  res.status(200).json(filteredApplicants);
+});
+
 server.use(_router);
 
 server.listen(5000, () => {
