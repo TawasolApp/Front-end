@@ -17,7 +17,7 @@ function JobCard({ job, onClick, isSelected, logo, name }) {
       )}
 
       <div>
-        <h2 className="font-semibold text-md text-blue-800">{job.title}</h2>
+        <h2 className="font-semibold text-md text-blue-800">{job.position}</h2>
         <p className="text-sm text-text">{name?.toUpperCase()}</p>
         <p className="text-xs text-overviewcomponenttext">{job.location}</p>
       </div>

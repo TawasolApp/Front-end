@@ -1504,5 +1504,107 @@
       "authorPicture": "https://media.licdn.com/dms/image/v2/D4D03AQH7Ais8BxRXzw/profile-displayphoto-shrink_100_100/profile-displayphoto-shrink_100_100/0/1721080103981?e=1747872000&v=beta&t=nDnZdgCqkI8v5B2ymXZzluMZVlF6h_o-dN1pA95Fzv4",
       "authorBio": "Computer Engineering Student at Cairo University"
     }
+  ],
+  "jobs": [
+    {
+      "id": "job-001",
+      "position": "Frontend Developer",
+      "industry": "Computer ",
+      "description": "We're hiring a frontend engineer to build UI with React.",
+      "location": "Cairo, Egypt",
+      "salary": 2000,
+      "employmentType": "Full-time",
+      "locationType": "On-site",
+      "companyId": "elsewedy-electric",
+      "experienceLevel": "2 years"
+    },
+    {
+      "id": "job-002",
+      "position": "Backend Engineer",
+      "industry": "Computer ",
+      "description": "Build scalable APIs using Node.js and MongoDB.",
+      "location": "Remote",
+      "salary": 2000,
+      "employmentType": "Part-time",
+      "locationType": "On-site",
+      "companyId": "google",
+      "experienceLevel": "2 years"
+    },
+    {
+      "id": "job-003",
+      "position": "Backend Engineer",
+      "industry": "Computer ",
+      "description": "Build scalable APIs using Node.js and MongoDB.",
+      "location": "Remote",
+      "salary": 2000,
+      "employmentType": "Part-time",
+      "locationType": "On-site",
+      "companyId": "elsewedy-electric",
+      "experienceLevel": "2 years"
+    },
+    {
+      "id": "job-004",
+      "position": "Backend Engineer",
+      "industry": "Computer ",
+      "description": "Build scalable APIs using Node.js and MongoDB.",
+      "location": "Cairo, Egypt",
+      "salary": 2000,
+      "employmentType": "Part-time",
+      "locationType": "On-site",
+      "companyId": "elsewedy-electric",
+      "experienceLevel": "2 years"
+    },
+    {
+      "id": "1743337857353",
+      "position": "web developer",
+      "industry": "appliances,electrical and electronics",
+      "description": "ffff",
+      "location": "cairo",
+      "salary": "3000",
+      "employmentType": "Full-time",
+      "locationType": "On-site",
+      "companyId": "undefined",
+      "createdAt": "2025-03-30T12:30:57.353Z",
+      "experienceLevel": "2 years"
+    },
+    {
+      "id": "1743338777979",
+      "position": "web developerxxxx",
+      "industry": "computer",
+      "description": "xxxxx",
+      "location": "october",
+      "salary": "50000",
+      "employmentType": "Full-time",
+      "locationType": "On-site",
+      "companyId": "elsewedy-electric",
+      "createdAt": "2025-03-30T12:46:17.979Z",
+      "experienceLevel": "2 years"
+    },
+    {
+      "id": "1743341295554",
+      "position": "developer",
+      "industry": "computer",
+      "description": "ffff",
+      "location": "october",
+      "salary": "3000",
+      "employmentType": "Full-time",
+      "locationType": "On-site",
+      "experienceLevel": "3 years",
+      "companyId": "elsewedy-electric",
+      "createdAt": "2025-03-30T13:28:15.555Z"
+    },
+    {
+      "id": "1743343190000",
+      "position": "xxxx",
+      "industry": "xxxxxxx",
+      "description": "sssss",
+      "location": "xxx",
+      "salary": "2344",
+      "employmentType": "Full-time",
+      "locationType": "On-site",
+      "experienceLevel": "rr",
+      "companyId": "elsewedy-electric",
+      "createdAt": "2025-03-30T13:59:50.000Z"
+    }
   ]
 }

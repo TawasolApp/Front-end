@@ -9,8 +9,12 @@ function JobsPage() {
   const isAdmin = true;
   const location = useLocation();
   const { companyId } = useParams();
+
   const [company, setCompany] = useState(location.state?.company || null);
   const [loading, setLoading] = useState(!company);
+  const [jobs, setJobs] = useState([]);
+  const [selectedJob, setSelectedJob] = useState(null);
+
   useEffect(() => {
     if (!company) {
       setLoading(true);
@@ -24,15 +28,47 @@ function JobsPage() {
     }
   }, [company, companyId]);
 
+  useEffect(() => {
+    if (companyId) {
+      axiosInstance
+        .get(`/companies/${companyId}/jobs`)
+        .then((res) => {
+          setJobs(res.data);
+          setSelectedJob(res.data[0]);
+        })
+        .catch((err) => console.error("Failed to fetch jobs", err));
+    }
+  }, [companyId]);
+
+  const handleJobAdded = (newJob) => {
+    setJobs((prev) => [newJob, ...prev]);
+    setSelectedJob(newJob);
+  };
+
   if (loading) {
     return <LoadingPage />;
   }
+
   return (
     <div>
       {isAdmin ? (
-        <OwnerView logo={company.logo} name={company.name} />
+        <OwnerView
+          logo={company.logo}
+          name={company.name}
+          companyId={companyId}
+          onJobAdded={handleJobAdded}
+          jobs={jobs}
+          selectedJob={selectedJob}
+          onSelectJob={setSelectedJob}
+        />
       ) : (
-        <ViewerView logo={company.logo} name={company.name} />
+        <ViewerView
+          logo={company.logo}
+          name={company.name}
+          jobs={jobs}
+          selectedJob={selectedJob}
+          onSelectJob={setSelectedJob}
+        />
       )}
     </div>
   );

@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { FaExternalLinkAlt, FaRegBookmark } from "react-icons/fa";
 import ApplyModal from "./ApplyModal";
 
 function JobDetails({ job, logo, name }) {
@@ -6,41 +7,62 @@ function JobDetails({ job, logo, name }) {
 
   if (!job) return <div className="w-1/2 p-6">Select a job to see details</div>;
 
-  const handleApplyClick = () => {
-    setIsApplyOpen(true);
-  };
-
-  const handleCloseModal = () => {
-    setIsApplyOpen(false);
-  };
+  const handleApplyClick = () => setIsApplyOpen(true);
+  const handleCloseModal = () => setIsApplyOpen(false);
 
   return (
-    <div className="w-1/2 p-6 overflow-y-auto">
-      <div className="flex items-center gap-4 mb-4">
-        {logo && (
-          <img
-            src={logo}
-            alt={name}
-            className="h-12 w-12 object-contain rounded-md"
-          />
-        )}
-        <div>
-          <h1 className="text-xl font-bold text-text">{job.title}</h1>
-          <p className="text-md text-text">{name?.toUpperCase()}</p>
-          <p className="text-sm text-overviewcomponenttext">{job.location}</p>
+    <div className="w-1/2 p-6 overflow-y-auto text-text bg-boxbackground rounded-md shadow">
+      <div className="flex items-start justify-between">
+        <div className="flex items-center gap-3">
+          {logo && (
+            <img src={logo} alt={name} className="h-10 w-10 rounded-md" />
+          )}
+          <p className="text-sm font-semibold text-normaltext uppercase">
+            {name}
+          </p>
         </div>
       </div>
 
-      <p className="text-sm text-text">{job.description}</p>
+      <h1 className="mt-2 text-2xl font-semibold text-text">{job.position}</h1>
 
-      <div className="mt-4 flex gap-2">
+      <p className="text-sm text-companysubheader mt-1">{job.location}</p>
+
+      <div className="mt-3 flex gap-2">
+        <span className="bg-selectedjob px-3 py-1 rounded-full text-xs text-text">
+          {job.locationType || "On-site"}
+        </span>
+        <span className="bg-selectedjob px-3 py-1 rounded-full text-xs text-text">
+          {job.employmentType || "Full-time"}
+        </span>
+      </div>
+
+      <div className="mt-4 flex gap-3">
         <button
           onClick={handleApplyClick}
-          className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700"
+          className="flex items-center gap-2 bg-blue-600 hover:bg-blue-700 text-text px-5 py-2 rounded-md text-sm font-medium"
         >
+          <FaExternalLinkAlt className="w-4 h-4" />
           Apply
         </button>
-        <button className="border px-4 py-2 rounded text-text">Save</button>
+        <button className="flex items-center gap-2 border border-white px-5 py-2 rounded-md text-sm font-medium text-text hover:bg-white hover:text-black transition">
+          <FaRegBookmark className="w-4 h-4" />
+          Save
+        </button>
+      </div>
+      {/* About the Job */}
+      <div className="mt-8">
+        <h3 className="text-lg font-semibold mb-2">About the Job</h3>
+        <p className="text-sm text-normaltext leading-relaxed">
+          {job.description}
+        </p>
+      </div>
+
+      {/* Experience */}
+      <div className="mt-6">
+        <h3 className="text-lg font-semibold mb-2">Experience</h3>
+        <p className="text-sm text-normaltext leading-relaxed">
+          {job.experienceLevel}
+        </p>
       </div>
 
       {isApplyOpen && (

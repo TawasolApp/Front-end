@@ -1,13 +1,26 @@
-import React, { useRef } from "react";
+import React, { useRef, useState, useEffect } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { AiOutlineLeft, AiOutlineRight } from "react-icons/ai";
-import mockJobs from "../../jobstest";
+import { axiosInstance } from "../../../../apis/axios";
 
 function JobOpenings({ company }) {
   const navigate = useNavigate();
   const { companyId } = useParams();
   const sliderRef = useRef(null);
-  const jobs = mockJobs.slice(0, 6);
+  const [jobs, setJobs] = useState([]);
+
+  useEffect(() => {
+    const fetchJobs = async () => {
+      try {
+        const res = await axiosInstance.get(`/companies/${companyId}/jobs`);
+        setJobs(res.data.slice(0, 6));
+      } catch (err) {
+        console.error("Failed to fetch job openings:", err);
+      }
+    };
+
+    if (companyId) fetchJobs();
+  }, [companyId]);
 
   const handleScroll = (direction) => {
     if (sliderRef.current) {
@@ -53,8 +66,8 @@ function JobOpenings({ company }) {
           ref={sliderRef}
           className="flex space-x-4 overflow-x-scroll scroll-smooth"
           style={{
-            scrollbarWidth: "none", // Firefox
-            msOverflowStyle: "none", // IE/Edge
+            scrollbarWidth: "none",
+            msOverflowStyle: "none",
           }}
         >
           {/* Hide scrollbar for WebKit */}
