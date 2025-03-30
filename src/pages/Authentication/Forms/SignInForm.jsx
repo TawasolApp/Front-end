@@ -113,7 +113,7 @@ const SignInForm = ({ onSubmit }) => {
       <div className="mb-4 sm:mb-6">
         <Link
           to="/auth/forgot-password"
-          className="text-buttonSubmitEnable hover:underline text-base sm:text-lg"
+          className="font-medium text-buttonSubmitEnable hover:underline text-base sm:text-lg"
         >
           Forgot password?
         </Link>

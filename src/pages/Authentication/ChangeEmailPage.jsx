@@ -4,6 +4,7 @@ import { useDispatch } from "react-redux";
 import { setEmail } from "../../store/authenticationSlice";
 import { axiosInstance } from "../../apis/axios";
 import { useNavigate } from "react-router-dom";
+import AuthenticationHeader from "./GenericComponents/AuthenticationHeader";
 
 const ChangeEmailPage = () => {
   const dispatch = useDispatch();
@@ -42,7 +43,9 @@ const ChangeEmailPage = () => {
   };
 
   return (
-    <div className="min-h-screen flex items-start pt-20 justify-center bg-mainBackground">
+    <div className="min-h-screen flex items-start pt-20 justify-center bg-mainBackground overflow-x-hidden">
+      <AuthenticationHeader hideButtons={true} />
+
       <div className="bg-cardBackground p-10 rounded-lg w-full max-w-xl shadow-md">
         <ChangeEmailForm onSubmit={handleSubmit} />
       </div>
