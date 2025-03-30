@@ -4,6 +4,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { setFirstName, setLastName } from "../../store/authenticationSlice";
 import { axiosInstance } from "../../apis/axios";
 import { useNavigate } from "react-router-dom";
+import AuthenticationHeader from "./GenericComponents/AuthenticationHeader";
 
 const NamePage = () => {
   const dispatch = useDispatch();
@@ -38,7 +39,9 @@ const NamePage = () => {
   };
 
   return (
-    <div className="min-h-screen flex flex-col items-center justify-center bg-mainBackground px-4 sm:px-8 md:px-12 lg:px-24">
+    <div className="min-h-screen flex flex-col items-center justify-center bg-mainBackground px-4 sm:px-8 md:px-12 lg:px-24 overflow-x-hidden">
+      <AuthenticationHeader hideButtons={true}/>
+
       <h1 className="text-4xl md:text-5xl font-normal mb-8 text-textHeavyTitle text-center max-w-screen-lg">
         Make the most of your professional life
       </h1>

@@ -4,6 +4,7 @@ import { useDispatch } from "react-redux";
 import { setEmail, setPassword } from "../../store/authenticationSlice";
 import { axiosInstance } from "../../apis/axios";
 import { useNavigate } from "react-router-dom";
+import AuthenticationHeader from "./GenericComponents/AuthenticationHeader";
 
 const SignUpPage = () => {
   const dispatch = useDispatch();
@@ -38,6 +39,8 @@ const SignUpPage = () => {
 
   return (
     <div className="min-h-screen flex flex-col items-center justify-center bg-mainBackground px-4 sm:px-6 lg:px-8">
+      <AuthenticationHeader hideButtons={true} />
+
       <h1 className="text-2xl sm:text-3xl md:text-4xl font-normal mb-4 sm:mb-6 md:mb-8 text-textHeavyTitle text-center">
         Make the most of your professional life
       </h1>

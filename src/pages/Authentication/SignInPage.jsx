@@ -8,6 +8,7 @@ import {
   setToken,
 } from "../../store/authenticationSlice";
 import { Link } from "react-router-dom";
+import AuthenticationHeader from "./GenericComponents/AuthenticationHeader";
 
 const SignInPage = () => {
   const dispatch = useDispatch();
@@ -43,6 +44,8 @@ const SignInPage = () => {
 
   return (
     <div className="min-h-screen flex flex-col items-center justify-center bg-mainBackground px-4 sm:px-6">
+      <AuthenticationHeader hideButtons={true} />
+
       <div className="bg-cardBackground p-6 sm:p-8 md:p-10 rounded-lg shadow-lg w-full max-w-md sm:max-w-lg">
         <SignInForm onSubmit={handleSignIn} />
       </div>

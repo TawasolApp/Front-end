@@ -271,7 +271,7 @@ const ExperienceForm = ({ onSubmit }) => {
           </div>
 
           {/* Age Verification */}
-          <div className="mb-6 w-full flex flex-col sm:flex-row items-center justify-between p-4 sm:p-6 border border-itemBorder rounded-lg">
+          <div className="mb-6 w-full flex items-center justify-between p-4 sm:p-6 border border-itemBorder rounded-lg">
             <span className="text-textContent text-lg sm:text-xl mb-2 sm:mb-0">
               I'm over 16
             </span>
