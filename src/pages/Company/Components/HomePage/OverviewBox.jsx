@@ -25,7 +25,7 @@ function OverviewBox({ company }) {
       </p>
       <button
         onClick={() => setExpanded(!expanded)}
-        className="text-companyheader2 hover:underline hover:decoration-blue-500"
+        className="text-companysubheader hover:underline hover:decoration-blue-500"
       >
         {expanded || (company?.overview?.length ?? 0) < 100 ? "" : "See More"}
       </button>

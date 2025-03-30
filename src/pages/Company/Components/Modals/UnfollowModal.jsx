@@ -3,15 +3,13 @@ import { useEffect } from "react";
 const UnfollowModal = ({ show, cancel, confirm }) => {
   useEffect(() => {
     if (show) {
-      document.body.classList.add("overflow-hidden");
-    } else {
-      document.body.classList.remove("overflow-hidden");
+      document.body.style.overflow = "hidden";
     }
-
     return () => {
-      document.body.classList.remove("overflow-hidden");
+      document.body.style.overflow = "auto";
     };
   }, [show]);
+
   if (!show) return null;
 
   return (
@@ -27,7 +25,7 @@ const UnfollowModal = ({ show, cancel, confirm }) => {
         <h2 className="text-lg font-semibold text-text">
           Are you sure you want to unfollow?
         </h2>
-        <p className="text-sm text-text2 mt-2 pt-2 border-t-1 border-gray-200 border-b-1 pb-2">
+        <p className="text-sm text-normaltext mt-2 pt-2 border-t-1 border-gray-200 border-b-1 pb-2">
           You’ll no longer receive notifications from this Page, and you won’t
           see its updates in your feed.
         </p>

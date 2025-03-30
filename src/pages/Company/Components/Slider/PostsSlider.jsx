@@ -78,7 +78,7 @@ function PostsSlider({ setActiveButton }) {
           {/* Last Slide */}
           <div className="bg-boxbackground rounded-2xl border border-gray-700 p-4 w-[350px] flex-shrink-0 flex flex-col justify-between min-h-[400px] h-[400px]">
             <HiOutlineDocumentText className="text-gray-500 w-12 h-12 mb-3" />
-            <p className="text-text2 text-center mb-4">Show all posts</p>
+            <p className="text-normaltext text-center mb-4">Show all posts</p>
             <button
               className="border border-blue-600 text-blue-600 py-2 px-6 rounded-full font-semibold flex items-center justify-center gap-2 hover:border-2 transition"
               onClick={() => navigate(`/company/${companyId}/posts`)}

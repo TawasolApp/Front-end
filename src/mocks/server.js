@@ -841,7 +841,7 @@ server.delete("/posts/comments/:commentId", (req, res) => {
 
   res.status(404).json({ error: "Comment not found" });
 });
-
+/*********************************************************** COMPANY PAGE ***********************************************************/
 server.get("/companies/:companyId", (req, res) => {
   console.log("Fetching company details...");
 
@@ -1003,7 +1003,29 @@ server.post("/companies/:companyId/updates", (req, res) => {
     post: newPost,
   });
 });
+//POST- add job opening for specific company
+server.post("/companies/:companyId/jobs", (req, res) => {
+  const { companyId } = req.params;
+  const newJob = {
+    id: Date.now().toString(),
+    ...req.body,
+    companyId,
+    createdAt: new Date().toISOString(),
+  };
 
+  const db = _router.db;
+  const jobs = db.get("jobs").value() || [];
+
+  db.set("jobs", [...jobs, newJob]).write();
+
+  res.status(201).json(newJob);
+});
+//GET- get all job openings for specific company
+server.get("/companies/:companyId/jobs", (req, res) => {
+  const { companyId } = req.params;
+  const jobs = _router.db.get("jobs").filter({ companyId }).value();
+  res.status(200).json(jobs);
+});
 server.use(_router);
 
 server.listen(5000, () => {

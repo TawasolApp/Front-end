@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { FiX } from "react-icons/fi";
 import { axiosInstance } from "../../../../apis/axios";
 import { useParams } from "react-router-dom";
@@ -6,6 +6,14 @@ import { useParams } from "react-router-dom";
 function StartPostModal({ isOpen, onClose, logo, name, onPostSuccess }) {
   const { companyId } = useParams();
   const [content, setContent] = useState("");
+  useEffect(() => {
+    if (isOpen) {
+      document.body.style.overflow = "hidden";
+    }
+    return () => {
+      document.body.style.overflow = "auto";
+    };
+  }, [isOpen]);
 
   const handlePost = async () => {
     if (!content.trim()) return;

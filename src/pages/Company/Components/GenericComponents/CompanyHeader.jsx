@@ -117,7 +117,7 @@ function CompanyHeader({ companyId }) {
           </div>
 
           <p className="text-companyheader1">{company.description}</p>
-          <p className="text-companyheader2 mt-1">
+          <p className="text-companysubheader mt-1">
             {company.address} · {formatNumbers(company.followers)} followers ·{" "}
             {company.companySize}
           </p>
