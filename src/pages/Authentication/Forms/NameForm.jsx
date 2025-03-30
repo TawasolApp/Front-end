@@ -94,7 +94,7 @@ const NameForm = ({ onSubmit }) => {
       <div className="grid place-items-center my-6">
         <ReCAPTCHA
           ref={recaptchaRef}
-          sitekey="6LdMDv0qAAAAAC935jMxhIW2ZSMaei6Hs1YU2PyR" // Store it in a better way (env var)
+          sitekey={String(import.meta.env.VITE_APP_RECAPTCHA_SITE_KEY || "").trim()}
           className="bg-cardBackground text-textContent p-2 rounded-lg"
         />
       </div>
