@@ -1,21 +1,18 @@
 import React, { useEffect, useState } from "react";
 import { axiosInstance } from "../../../../apis/axios";
 
-function JobApplications({ job, companyId }) {
+function JobApplications({ job }) {
   const [applicants, setApplicants] = useState([]);
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
-    if (!job || !companyId) return;
+    if (!job) return;
 
     const fetchApplicants = async () => {
       setLoading(true);
       try {
         const response = await axiosInstance.get(
-          `/companies/${companyId}/applicants`,
-          {
-            params: { job: job.id },
-          }
+          `/companies/jobs/${job.id}/applicants`
         );
         setApplicants(response.data);
       } catch (error) {
@@ -27,14 +24,16 @@ function JobApplications({ job, companyId }) {
     };
 
     fetchApplicants();
-  }, [job, companyId]);
+  }, [job]);
 
   if (!job) {
-    return <div className="w-1/2 p-6">Select a job to see applicants</div>;
+    return (
+      <div className="w-full md:w-1/2 p-6">Select a job to see applicants</div>
+    );
   }
 
   return (
-    <div className="w-1/2 p-6 overflow-y-auto text-text bg-boxbackground rounded-md shadow">
+    <div className="w-full md:w-1/2 p-4 md:p-6 overflow-y-auto text-text bg-boxbackground rounded-md shadow">
       <h2 className="text-xl font-semibold mb-4">
         Applicants for {job.position}
       </h2>
@@ -44,20 +43,20 @@ function JobApplications({ job, companyId }) {
       ) : applicants.length === 0 ? (
         <p className="text-sm text-gray-400">No applicants yet.</p>
       ) : (
-        <ul className="space-y-2">
+        <ul className="space-y-3">
           {applicants.map((applicant) => (
             <li
               key={applicant.userId}
-              className="border p-3 rounded flex items-center gap-4"
+              className="flex items-center gap-4 p-3 border border-gray-700 rounded-md bg-boxbackground"
             >
               <img
                 src={applicant.profilePicture}
                 alt={`${applicant.username}'s profile`}
                 className="w-10 h-10 rounded-full object-cover"
               />
-              <div>
-                <p className="font-medium text-text">{applicant.username}</p>
-                <p className="text-sm text-companysubheader">
+              <div className="min-w-0">
+                <p className="font-medium truncate">{applicant.username}</p>
+                <p className="text-sm text-companysubheader truncate">
                   {applicant.headline}
                 </p>
               </div>
