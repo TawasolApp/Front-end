@@ -9,7 +9,7 @@ import AddJobModal from "../JobsPage/AddJobModal";
 import Analytics from "../JobsPage/Analytics.jsx";
 
 function JobsPage() {
-  const isAdmin = true; // you can toggle or pass this dynamically
+  const isAdmin = true;
   const location = useLocation();
   const { companyId } = useParams();
 
@@ -19,7 +19,6 @@ function JobsPage() {
   const [selectedJob, setSelectedJob] = useState(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
 
-  // Fetch company if not passed via route
   useEffect(() => {
     if (!company) {
       setLoading(true);
@@ -33,7 +32,7 @@ function JobsPage() {
     }
   }, [company, companyId]);
 
-  // Fetch jobs on mount and when switching views
+  // Fetch jobs
   useEffect(() => {
     if (companyId) {
       axiosInstance

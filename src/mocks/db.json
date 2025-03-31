@@ -1535,7 +1535,7 @@
       "locationType": "On-site",
       "employmentType": "Full-time",
       "postDate": "2025-03-31T21:00:20.455Z",
-      "applicantCount": 3
+      "applicantCount": 7
     },
     {
       "id": "1743454919168",
@@ -1550,7 +1550,7 @@
       "locationType": "On-site",
       "employmentType": "Part-time",
       "postDate": "2025-03-31T21:01:59.168Z",
-      "applicantCount": 0
+      "applicantCount": 1
     },
     {
       "id": "1743454820458",
@@ -1566,6 +1566,21 @@
       "employmentType": "Full-time",
       "postDate": "2025-03-31T21:00:20.455Z",
       "applicantCount": 0
+    },
+    {
+      "id": "1743457897007",
+      "company": "elsewedy-electric",
+      "isOpen": true,
+      "position": "web developer",
+      "industry": "computer",
+      "description": "company website implemintation",
+      "location": "cairo",
+      "salary": "60000",
+      "experienceLevel": "Internship",
+      "locationType": "On-site",
+      "employmentType": "Full-time",
+      "postDate": "2025-03-31T21:51:37.007Z",
+      "applicantCount": 4
     }
   ],
   "applicants": [
@@ -1587,6 +1602,78 @@
     },
     {
       "jobId": "1743454820455",
+      "companyId": "elsewedy-electric",
+      "userId": "3",
+      "username": "Maryam Awed",
+      "profilePicture": "https://media.licdn.com/dms/image/v2/D4E12AQEud3Ll5MI7cQ/article-inline_image-shrink_1000_1488/article-inline_image-shrink_1000_1488/0/1660833954461?e=1748476800&v=beta&t=oBHYyt20lluc86BGZj-1Cc3FVWWwTDq8g8uuyg79qZI",
+      "headline": "headline"
+    },
+    {
+      "jobId": "1743454820455",
+      "companyId": "elsewedy-electric",
+      "userId": "1",
+      "username": "Aisha Tawfik",
+      "profilePicture": "https://media.licdn.com/dms/image/v2/D4E12AQEud3Ll5MI7cQ/article-inline_image-shrink_1000_1488/article-inline_image-shrink_1000_1488/0/1660833954461?e=1748476800&v=beta&t=oBHYyt20lluc86BGZj-1Cc3FVWWwTDq8g8uuyg79qZI",
+      "headline": "headline"
+    },
+    {
+      "jobId": "1743454820455",
+      "companyId": "elsewedy-electric",
+      "userId": "2",
+      "username": "Engy Mohamed",
+      "profilePicture": "https://media.licdn.com/dms/image/v2/D4E12AQEud3Ll5MI7cQ/article-inline_image-shrink_1000_1488/article-inline_image-shrink_1000_1488/0/1660833954461?e=1748476800&v=beta&t=oBHYyt20lluc86BGZj-1Cc3FVWWwTDq8g8uuyg79qZI",
+      "headline": "headline"
+    },
+    {
+      "jobId": "1743454820455",
+      "companyId": "elsewedy-electric",
+      "userId": "3",
+      "username": "Tasneem Ahmed",
+      "profilePicture": "https://media.licdn.com/dms/image/v2/D4E12AQEud3Ll5MI7cQ/article-inline_image-shrink_1000_1488/article-inline_image-shrink_1000_1488/0/1660833954461?e=1748476800&v=beta&t=oBHYyt20lluc86BGZj-1Cc3FVWWwTDq8g8uuyg79qZI",
+      "headline": "headline"
+    },
+    {
+      "jobId": "1743454820455",
+      "companyId": "elsewedy-electric",
+      "userId": "1",
+      "username": "Mohab Yasser",
+      "profilePicture": "https://media.licdn.com/dms/image/v2/D4E12AQEud3Ll5MI7cQ/article-inline_image-shrink_1000_1488/article-inline_image-shrink_1000_1488/0/1660833954461?e=1748476800&v=beta&t=oBHYyt20lluc86BGZj-1Cc3FVWWwTDq8g8uuyg79qZI",
+      "headline": "headline"
+    },
+    {
+      "jobId": "1743457897007",
+      "companyId": "elsewedy-electric",
+      "userId": "2",
+      "username": "Mohamed sobh",
+      "profilePicture": "https://media.licdn.com/dms/image/v2/D4E12AQEud3Ll5MI7cQ/article-inline_image-shrink_1000_1488/article-inline_image-shrink_1000_1488/0/1660833954461?e=1748476800&v=beta&t=oBHYyt20lluc86BGZj-1Cc3FVWWwTDq8g8uuyg79qZI",
+      "headline": "headline"
+    },
+    {
+      "jobId": "1743457897007",
+      "companyId": "elsewedy-electric",
+      "userId": "3",
+      "username": "Maryam Awed",
+      "profilePicture": "https://media.licdn.com/dms/image/v2/D4E12AQEud3Ll5MI7cQ/article-inline_image-shrink_1000_1488/article-inline_image-shrink_1000_1488/0/1660833954461?e=1748476800&v=beta&t=oBHYyt20lluc86BGZj-1Cc3FVWWwTDq8g8uuyg79qZI",
+      "headline": "headline"
+    },
+    {
+      "jobId": "1743457897007",
+      "companyId": "elsewedy-electric",
+      "userId": "1",
+      "username": "Fatma Gamal",
+      "profilePicture": "https://media.licdn.com/dms/image/v2/D4E12AQEud3Ll5MI7cQ/article-inline_image-shrink_1000_1488/article-inline_image-shrink_1000_1488/0/1660833954461?e=1748476800&v=beta&t=oBHYyt20lluc86BGZj-1Cc3FVWWwTDq8g8uuyg79qZI",
+      "headline": "headline"
+    },
+    {
+      "jobId": "1743457897007",
+      "companyId": "elsewedy-electric",
+      "userId": "2",
+      "username": "Mohamed sobh",
+      "profilePicture": "https://media.licdn.com/dms/image/v2/D4E12AQEud3Ll5MI7cQ/article-inline_image-shrink_1000_1488/article-inline_image-shrink_1000_1488/0/1660833954461?e=1748476800&v=beta&t=oBHYyt20lluc86BGZj-1Cc3FVWWwTDq8g8uuyg79qZI",
+      "headline": "headline"
+    },
+    {
+      "jobId": "1743454919168",
       "companyId": "elsewedy-electric",
       "userId": "3",
       "username": "Maryam Awed",
