@@ -85,7 +85,7 @@ function JobsPage() {
       )}
 
       <div className="bg-boxbackground p-4 shadow-md rounded-md w-full">
-        <div className="flex h-[600px] bg-boxbackground shadow rounded-md">
+        <div className="flex flex-col md:flex-row h-auto md:h-[600px] gap-4">
           {/* Left: Fixed Job List */}
           <JobsList
             jobs={jobs}

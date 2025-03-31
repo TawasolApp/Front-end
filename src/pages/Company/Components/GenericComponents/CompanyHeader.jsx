@@ -7,6 +7,7 @@ import { FiMoreHorizontal } from "react-icons/fi";
 import { useNavigate, useLocation } from "react-router-dom";
 import { FiExternalLink } from "react-icons/fi";
 import ImageEnlarge from "../HomePage/ImageEnlarge.jsx";
+import FollowersModal from "../Modals/FollowersModal.jsx";
 import MoreOptionsModal from "../Modals/MoreOptionsModal.jsx";
 import { formatNumbers } from "../../../../utils/formatNumbers.js";
 import { axiosInstance } from "../../../../apis/axios.js";
@@ -21,6 +22,7 @@ function CompanyHeader({ companyId }) {
   const [showMoreModal, setShowMoreModal] = useState(false);
   const [showEditModal, setShowEditModal] = useState(false);
   const [isPhotoClicked, setIsOpen] = useState(false);
+  const [showFollowersModal, setShowFollowersModal] = useState(false);
   useEffect(() => {
     if (companyId) {
       setLoading(true);
@@ -118,8 +120,14 @@ function CompanyHeader({ companyId }) {
 
           <p className="text-companyheader1">{company.description}</p>
           <p className="text-companysubheader mt-1">
-            {company.address} · {formatNumbers(company.followers)} followers ·{" "}
-            {company.companySize}
+            {company.address} ·{" "}
+            <button
+              onClick={() => setShowFollowersModal(true)}
+              className="underline hover:text-blue-600 transition font-medium"
+            >
+              {formatNumbers(company.followers)} followers
+            </button>{" "}
+            · {company.companySize}
           </p>
           <div className="mt-4 flex flex-nowrap gap-2 sm:gap-3 pb-4 items-center justify-start">
             {/* Follow Button */}
@@ -196,6 +204,10 @@ function CompanyHeader({ companyId }) {
         profilePicture={company.banner}
         isOpen={isPhotoClicked}
         onClose={() => setIsOpen(false)}
+      />
+      <FollowersModal
+        show={showFollowersModal}
+        onClose={() => setShowFollowersModal(false)}
       />
     </div>
   );

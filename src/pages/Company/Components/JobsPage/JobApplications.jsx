@@ -28,12 +28,14 @@ function JobApplications({ job }) {
 
   if (!job) {
     return (
-      <div className="w-full md:w-1/2 p-6">Select a job to see applicants</div>
+      <div className="w-full md:w-1/2 p-4 md:p-6 text-center text-companysubheader">
+        Select a job to see applicants
+      </div>
     );
   }
 
   return (
-    <div className="w-full md:w-1/2 p-4 md:p-6 overflow-y-auto text-text bg-boxbackground rounded-md shadow">
+    <div className="w-full md:w-1/2 p-4 md:p-6 overflow-y-auto text-text bg-boxbackground rounded-md shadow max-h-[70vh] md:max-h-full">
       <h2 className="text-xl font-semibold mb-4">
         Applicants for {job.position}
       </h2>
@@ -52,7 +54,7 @@ function JobApplications({ job }) {
               <img
                 src={applicant.profilePicture}
                 alt={`${applicant.username}'s profile`}
-                className="w-10 h-10 rounded-full object-cover"
+                className="w-10 h-10 rounded-full object-cover shrink-0"
               />
               <div className="min-w-0">
                 <p className="font-medium truncate">{applicant.username}</p>

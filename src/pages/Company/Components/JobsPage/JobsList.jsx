@@ -3,7 +3,7 @@ import JobCard from "./JobCard";
 
 function JobsList({ jobs, onSelectJob, selectedJob, logo, name }) {
   return (
-    <div className="w-1/2 border-r overflow-y-auto">
+    <div className="w-full md:w-1/2 border-b md:border-b-0 md:border-r max-h-[300px] md:max-h-full overflow-y-auto pr-2">
       {jobs.map((job) => (
         <JobCard
           key={job.id}

@@ -15,8 +15,8 @@ function JobDetails({ job, logo, name }) {
   const handleCloseModal = () => setIsApplyOpen(false);
 
   return (
-    <div className="w-full md:w-1/2 p-6 overflow-y-auto text-text bg-boxbackground rounded-md shadow">
-      <div className="flex items-start justify-between">
+    <div className="w-full md:w-1/2 p-4 md:p-6 overflow-y-auto text-text bg-boxbackground rounded-md shadow max-h-[70vh] md:max-h-full">
+      <div className="flex items-start justify-between flex-wrap">
         <div className="flex items-center gap-3">
           {logo && (
             <img src={logo} alt={name} className="h-10 w-10 rounded-md" />
@@ -42,7 +42,7 @@ function JobDetails({ job, logo, name }) {
         )}
       </p>
 
-      <div className="mt-3 flex gap-2">
+      <div className="mt-3 flex flex-wrap gap-2">
         <span className="bg-selectedjob px-3 py-1 rounded-full text-xs text-text">
           {job.locationType || "On-site"}
         </span>
