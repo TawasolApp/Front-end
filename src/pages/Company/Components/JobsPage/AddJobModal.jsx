@@ -10,7 +10,7 @@ function AddJobModal({ onClose, companyId, onJobAdded }) {
     salary: "",
     employmentType: "Full-time",
     locationType: "On-site",
-    experienceLevel: "",
+    experienceLevel: "Internship",
   });
 
   useEffect(() => {
@@ -46,7 +46,7 @@ function AddJobModal({ onClose, companyId, onJobAdded }) {
         salary: "",
         employmentType: "Full-time",
         locationType: "On-site",
-        experienceLevel: "",
+        experienceLevel: "Internship",
       });
 
       onClose();
@@ -157,15 +157,21 @@ function AddJobModal({ onClose, companyId, onJobAdded }) {
             </div>
             <div>
               <label className="block text-sm mb-1">Experience Level*</label>
-              <input
-                type="text"
+              <select
                 name="experienceLevel"
                 value={formData.experienceLevel}
                 onChange={handleChange}
                 required
-                placeholder="e.g. 2 years"
                 className="w-full p-2 border rounded bg-boxbackground text-text"
-              />
+              >
+                <option value="">Select experience level</option>
+                <option value="Internship">Internship</option>
+                <option value="Entry-level">Entry-level</option>
+                <option value="Mid-level">Mid-level</option>
+                <option value="Senior-level">Senior-level</option>
+                <option value="Director">Director</option>
+                <option value="Executive">Executive</option>
+              </select>
             </div>
           </div>
 

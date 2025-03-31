@@ -1,12 +1,15 @@
-import React from "react";
-import OwnerView from "../JobsPage/OwnerView";
-import ViewerView from "../JobsPage/ViewerView";
+import React, { useEffect, useState } from "react";
 import { useLocation, useParams } from "react-router-dom";
-import { useEffect, useState } from "react";
 import { axiosInstance } from "../../../../apis/axios.js";
 import LoadingPage from "../../../LoadingScreen/LoadingPage.jsx";
+import JobsList from "../JobsPage/JobsList.jsx";
+import JobDetails from "../JobsPage/JobDetails";
+import JobApplications from "../JobsPage/JobApplications";
+import AddJobModal from "../JobsPage/AddJobModal";
+import Analytics from "../JobsPage/Analytics.jsx";
+
 function JobsPage() {
-  const isAdmin = true;
+  const isAdmin = true; // you can toggle or pass this dynamically
   const location = useLocation();
   const { companyId } = useParams();
 
@@ -14,7 +17,9 @@ function JobsPage() {
   const [loading, setLoading] = useState(!company);
   const [jobs, setJobs] = useState([]);
   const [selectedJob, setSelectedJob] = useState(null);
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
+  // Fetch company if not passed via route
   useEffect(() => {
     if (!company) {
       setLoading(true);
@@ -28,49 +33,84 @@ function JobsPage() {
     }
   }, [company, companyId]);
 
+  // Fetch jobs on mount and when switching views
   useEffect(() => {
     if (companyId) {
       axiosInstance
         .get(`/companies/${companyId}/jobs`)
         .then((res) => {
           setJobs(res.data);
-          setSelectedJob(res.data[0]);
+          setSelectedJob(res.data[0] || null);
         })
         .catch((err) => console.error("Failed to fetch jobs", err));
     }
-  }, [companyId]);
+  }, [companyId, isAdmin]);
 
-  const handleJobAdded = (newJob) => {
-    setJobs((prev) => [newJob, ...prev]);
-    setSelectedJob(newJob);
+  const handleJobAdded = () => {
+    axiosInstance
+      .get(`/companies/${companyId}/jobs`)
+      .then((res) => {
+        setJobs(res.data);
+        setSelectedJob(res.data[0] || null);
+      })
+      .catch((err) => console.error("Failed to refetch jobs after add", err));
   };
+
+  const handleOpenModal = () => setIsModalOpen(true);
+  const handleCloseModal = () => setIsModalOpen(false);
 
   if (loading) {
     return <LoadingPage />;
   }
 
   return (
-    <div>
-      {isAdmin ? (
-        <OwnerView
-          logo={company.logo}
-          name={company.name}
+    <div className="w-full max-w-3xl mx-auto mb-8">
+      {/* Post Job Button (only for admin/owner) */}
+      {isAdmin && (
+        <div className="flex justify-end mb-4">
+          <button
+            onClick={handleOpenModal}
+            className="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition"
+          >
+            Post a Job Opening
+          </button>
+        </div>
+      )}
+
+      {isModalOpen && (
+        <AddJobModal
+          onClose={handleCloseModal}
           companyId={companyId}
           onJobAdded={handleJobAdded}
-          jobs={jobs}
-          selectedJob={selectedJob}
-          onSelectJob={setSelectedJob}
-        />
-      ) : (
-        <ViewerView
-          logo={company.logo}
-          name={company.name}
-          jobs={jobs}
-          selectedJob={selectedJob}
-          onSelectJob={setSelectedJob}
         />
       )}
+
+      <div className="bg-boxbackground p-4 shadow-md rounded-md w-full">
+        <div className="flex h-[600px] bg-boxbackground shadow rounded-md">
+          {/* Left: Fixed Job List */}
+          <JobsList
+            jobs={jobs}
+            onSelectJob={setSelectedJob}
+            selectedJob={selectedJob}
+            logo={company.logo}
+            name={company.name}
+          />
+
+          {/* Right: Conditional Panel */}
+          {isAdmin ? (
+            <JobApplications job={selectedJob} />
+          ) : (
+            <JobDetails
+              job={selectedJob}
+              logo={company.logo}
+              name={company.name}
+            />
+          )}
+        </div>
+      </div>
+      {isAdmin && <Analytics jobs={jobs} />}
     </div>
   );
 }
+
 export default JobsPage;

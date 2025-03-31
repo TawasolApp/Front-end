@@ -1003,14 +1003,33 @@ server.post("/companies/:companyId/updates", (req, res) => {
     post: newPost,
   });
 });
-//POST- add job opening for specific company
 server.post("/companies/:companyId/jobs", (req, res) => {
   const { companyId } = req.params;
+  const {
+    position,
+    industry,
+    description,
+    location,
+    salary,
+    experienceLevel,
+    locationType,
+    employmentType,
+  } = req.body;
+
   const newJob = {
-    id: Date.now().toString(),
-    ...req.body,
-    companyId,
-    createdAt: new Date().toISOString(),
+    id: Date.now().toString(), // unique string ID
+    company: companyId, // matches schema
+    isOpen: true, // new job is open by default
+    position,
+    industry,
+    description,
+    location,
+    salary,
+    experienceLevel,
+    locationType,
+    employmentType,
+    postDate: new Date().toISOString(),
+    applicantCount: 0,
   };
 
   const db = _router.db;
@@ -1020,27 +1039,46 @@ server.post("/companies/:companyId/jobs", (req, res) => {
 
   res.status(201).json(newJob);
 });
-//GET- get all job openings for specific company
+
 server.get("/companies/:companyId/jobs", (req, res) => {
   const { companyId } = req.params;
-  const jobs = _router.db.get("jobs").filter({ companyId }).value();
+
+  const jobs = _router.db
+    .get("jobs")
+    .filter((job) => job.companyId === companyId || job.company === companyId)
+    .value();
+
   res.status(200).json(jobs);
 });
 //GET- get applicants of job
-server.get("/companies/:companyId/applicants", (req, res) => {
-  const { companyId } = req.params;
-  const { job } = req.query;
+server.get("/companies/jobs/:jobId/applicants", (req, res) => {
+  const { jobId } = req.params;
+  const { name } = req.query;
 
-  const applicants = _router.db.get("applicants").value();
+  try {
+    const db = _router.db;
 
-  const filteredApplicants = applicants.filter((applicant) => {
-    return (
-      String(applicant.companyId) === String(companyId) &&
-      (!job || String(applicant.jobId) === String(job))
-    );
-  });
+    // Get all applicants from the DB
+    const applicants = db.get("applicants").value();
 
-  res.status(200).json(filteredApplicants);
+    // Filter applicants by jobId and optionally by name
+    const filteredApplicants = applicants.filter((applicant) => {
+      const matchesJob = String(applicant.jobId) === String(jobId);
+      const matchesName =
+        !name || applicant.name?.toLowerCase().includes(name.toLowerCase());
+      return matchesJob && matchesName;
+    });
+
+    // Simulate job existence check (optional but aligns with 404 case)
+    const jobExists = db.get("jobs").find({ id: jobId }).value();
+    if (!jobExists) {
+      return res.status(404).json({ message: "Job not found." });
+    }
+
+    res.status(200).json(filteredApplicants);
+  } catch (error) {
+    res.status(500).json({ message: "Failed to retrieve applicants list." });
+  }
 });
 
 server.use(_router);
