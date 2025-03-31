@@ -32,7 +32,7 @@ function ProfileLayout() {
         } else if (id) {
           // Slug exists — fetch that user
           const res = await axios.get(`/profile/${id}`);
-          // console.log("Fetched user:", res.data); // ✅ Add this!
+          console.log("Fetched user:", res.data); //TEST
 
           if (!res.data) {
             navigate("/notfound");

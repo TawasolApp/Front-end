@@ -7,7 +7,6 @@ const middlewares = defaults();
 server.use(middlewares);
 server.use(bodyParser);
 
-
 const supportedTypes = ["education", "experience", "skills", "certifications"];
 // GET all users
 server.get("/profile", (req, res) => {
@@ -24,6 +23,7 @@ server.get("/profile/:id", (req, res) => {
 
   if (user) {
     res.jsonp(user);
+    // console.log("hi from the server", res);
   } else {
     res.status(404).jsonp({ error: "User not found" });
   }
@@ -82,14 +82,22 @@ server.post("/profile/:id/certifications", (req, res) => {
 });
 server.post("/profile/:id/skills", (req, res) => {
   const userId = req.params.id;
-  const newItem = { id: Date.now().toString(), ...req.body };
+  const newItem = { ...req.body }; //  no  id generation
+
+  if (!newItem.skill) {
+    return res.status(400).json({ error: "Missing skill name" });
+  }
 
   const user = _router.db.get("users").find({ id: String(userId) });
   if (!user.value()) return res.status(404).json({ error: "User not found" });
 
   const items = user.get("skills").value() || [];
-  user.assign({ skills: [...items, newItem] }).write();
+  const alreadyExists = items.some((item) => item.skill === newItem.skill);
+  if (alreadyExists) {
+    return res.status(409).json({ error: "Skill already exists" });
+  }
 
+  user.assign({ skills: [...items, newItem] }).write();
   return res.status(201).json(newItem);
 });
 
@@ -147,13 +155,15 @@ server.patch("/profile/:userId/skills/:itemId", (req, res) => {
   const updatedItems = user
     .get("skills")
     .map((item) =>
-      String(item.id) === itemId ? { ...item, ...req.body } : item
+      String(item.skill) === itemId ? { ...item, ...req.body } : item
     )
     .value();
 
   user.assign({ skills: updatedItems }).write();
 
-  const updatedItem = updatedItems.find((item) => String(item.id) === itemId);
+  const updatedItem = updatedItems.find(
+    (item) => String(item.skill) === itemId
+  );
   res.status(200).json(updatedItem);
 });
 
@@ -200,13 +210,12 @@ server.delete("/profile/:userId/skills/:itemId", (req, res) => {
 
   const filteredItems = user
     .get("skills")
-    .filter((item) => String(item.id) !== itemId)
+    .filter((item) => String(item.skill) !== itemId)
     .value();
 
   user.assign({ skills: filteredItems }).write();
   res.status(204).end();
 });
-
 
 const currentUser = {
   id: "mohsobh",
@@ -230,7 +239,6 @@ server.get("/posts", (req, res) => {
 
 server.post("/posts", (req, res) => {
   const { authorId, content, media, taggedUsers, visibility } = req.body;
-
 
   // Basic validation
   if (!authorId || !content) {
@@ -342,7 +350,7 @@ server.post("/posts/react/:postId", (req, res) => {
           ...entity.reactions,
           [existingReaction.type]: Math.max(
             (entity.reactions[existingReaction.type] || 0) - 1,
-            0,
+            0
           ),
         },
         reactType: null,
@@ -352,7 +360,7 @@ server.post("/posts/react/:postId", (req, res) => {
 
   // Add new reaction
   const reactionTypeAdd = Object.keys(reactions).find(
-    (type) => reactions[type] === 1,
+    (type) => reactions[type] === 1
   );
   if (reactionTypeAdd) {
     const newReaction = {
@@ -629,4 +637,3 @@ server.use(_router);
 server.listen(5000, () => {
   console.log("Mock server running at http://localhost:5000");
 });
-

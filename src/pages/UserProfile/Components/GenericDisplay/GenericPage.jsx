@@ -45,10 +45,16 @@ function GenericPage({ title, type }) {
 
       //  PATCH — Edit existing item (uses id)
       if (editMode && editIndex !== null && data[editIndex]) {
-        const itemId = data[editIndex].id;
+        let originalKey;
+        if (type === "skills") {
+          originalKey = data[editIndex].skill; // always use the original skill name
+          updatedItem.skill = originalKey; // prevent renaming the skill
+        } else {
+          originalKey = data[editIndex].id;
+        }
 
         response = await axios.patch(
-          `/profile/${user.id}/${type}/${itemId}`,
+          `/profile/${user.id}/${type}/${originalKey}`,
           updatedItem
         );
         //  faster
@@ -58,9 +64,10 @@ function GenericPage({ title, type }) {
 
         // safer as replace only the updated item
         setData((prev) =>
-          prev.map((item) =>
-            item.id === response.data.id ? response.data : item
-          )
+          prev.map((item) => {
+            const itemKey = type === "skills" ? item.skill : item.id;
+            return itemKey === originalKey ? response.data : item;
+          })
         );
       }
 
@@ -69,10 +76,18 @@ function GenericPage({ title, type }) {
         response = await axios.post(`/profile/${user.id}/${type}`, updatedItem);
 
         if (!response?.data) {
-          throw new Error("❌ No data returned from backend");
+          throw new Error(" No data returned from backend");
         }
 
-        setData((prev) => [...prev, response.data]);
+        const newKey =
+          type === "skills" ? response.data.skill : response.data.id;
+        const exists = data.some((item) =>
+          type === "skills" ? item.skill === newKey : item.id === newKey
+        );
+
+        if (!exists) {
+          setData((prev) => [...prev, response.data]);
+        }
       }
     } catch (err) {
       console.error("Failed to save item:", err);
@@ -84,9 +99,10 @@ function GenericPage({ title, type }) {
   };
 
   const handleDelete = async () => {
-    if (!user?.id || editIndex === null || !data[editIndex]?.id) return;
+    if (!user?.id || editIndex === null || !data[editIndex]) return;
 
-    const itemId = data[editIndex].id;
+    const itemId =
+      type === "skills" ? data[editIndex].skill : data[editIndex].id;
 
     try {
       await axios.delete(`/profile/${user.id}/${type}/${itemId}`);
@@ -148,7 +164,14 @@ function GenericPage({ title, type }) {
       {/* Card List */}
       <div className="space-y-4">
         {data.map((item, index) => (
-          <div key={item.id ?? index} className="relative group">
+          <div
+            key={
+              type === "skills"
+                ? (item.skill ?? `skill-${index}`)
+                : (item.id ?? index)
+            }
+            className="relative group"
+          >
             <GenericCard
               item={item}
               type={type}

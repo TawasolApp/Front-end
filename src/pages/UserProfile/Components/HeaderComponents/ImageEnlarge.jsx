@@ -32,7 +32,7 @@ function ImageEnlarge({ profilePicture, isOpen, onClose }) {
         <img
           src={profilePicture}
           alt="Profile Enlarged"
-          className="max-w-full max-h-screen object-contain"
+          className="max-w-full max-h-[90vh] object-contain"
         />
       </div>
     </div>

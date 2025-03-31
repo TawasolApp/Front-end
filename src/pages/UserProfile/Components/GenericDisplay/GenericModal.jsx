@@ -153,6 +153,7 @@ function GenericModal({
     if (type === "skills") {
       if (!formData.skill) newErrors.skill = "Please provide a skill";
     }
+
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
   };
@@ -208,6 +209,7 @@ function GenericModal({
               formData={formData}
               handleChange={handleChange}
               errors={errors}
+              editMode={editMode} // wont show skillname if edit
             />
           )}
           {type === "certifications" && (

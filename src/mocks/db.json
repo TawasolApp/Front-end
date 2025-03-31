@@ -2,10 +2,10 @@
   "users": [
     {
       "id": "1",
-      "firstName": "Fatimah",
-      "lastName": "Gama Zein",
-      "profilePicture": "https://th.bing.com/th/id/OIP.AxXeQv751lyx0ltppBIg6QHaHa?rs=1&pid=ImgDetMain",
-      "coverPhoto": "",
+      "firstName": "Rana",
+      "lastName": "Sherif ",
+      "profilePicture": "https://th.bing.com/th/id/OIP.srNFFzORAaERcWvhwgPzVAHaHa?rs=1&pid=ImgDetMain",
+      "coverPhoto": "https://th.bing.com/th/id/OIP.srNFFzORAaERcWvhwgPzVAHaHa?rs=1&pid=ImgDetMain",
       "resume": "https://linkedin.com/in/fatma-gamal",
       "headline": "Student at Cairo University faculty of Engineering",
       "bio": "I am a motivated Software Engineer ",
@@ -23,7 +23,7 @@
           "company": "Google",
           "location": "San Francisco, CA",
           "description": "Worked on developing scalable web applications.",
-          "employmentType": "Full-time",
+          "employmentType": "Temporary",
           "locationType": "On-site",
           "id": "3af1d711-92ae-4a84-b2ff-0f4d95dcc8d8",
           "startMonth": "December",
@@ -51,22 +51,12 @@
           "description": "Designed UI components and improved user flows.",
           "currentlyWorking": true,
           "employmentType": "Internship"
-        },
-        {
-          "id": "1742918855839",
-          "currentlyWorking": true,
-          "startMonth": "December",
-          "startYear": "2007",
-          "company": "Microsoft",
-          "title": "UI/UX Intern",
-          "location": "Remote",
-          "description": "Designed UI components and improved user flows."
         }
       ],
       "education": [
         {
           "id": "959a50e8-2c55-4d85-84a0-ab1c414aa7e3",
-          "institution": "Stanford University",
+          "institution": "Stanford Uni",
           "degree": "Master's",
           "grade": "4.0 GPA",
           "startMonth": "November",
@@ -126,21 +116,10 @@
       "selectedEducationIndex": 0,
       "skills": [
         {
-          "skill": "Kotlin",
-          "position": "Android Developer Intern at Banque Misr",
-          "endorsements": 2,
-          "id": "2a0b8e72-3385-436a-8e63-9417e9ed1045"
+          "skill": "how"
         },
         {
-          "skill": "Java",
-          "position": "Android Developer Intern at Banque Misr",
-          "endorsements": 0,
-          "id": "2029666a-5975-41c7-9e22-b332d07fab1b"
-        },
-        {
-          "id": "1742918882726",
-          "skill": "xml",
-          "position": "front end developer "
+          "skill": "Kotlin "
         }
       ]
     },
@@ -222,15 +201,13 @@
           "skillName": "Kotlin",
           "position": "Android Developer Intern at Banque Misr",
           "endorsements": 2,
-          "recentEndorsement": "Endorsed by 2 people in the last 3 months",
-          "id": "2a0b8e72-3385-436a-8e63-9417e9ed1045"
+          "recentEndorsement": "Endorsed by 2 people in the last 3 months"
         },
         {
           "skillName": "Java",
           "position": "Android Developer Intern at Banque Misr",
           "endorsements": 0,
-          "recentEndorsement": "Endorsed by 3 people in the last 1 year",
-          "id": "2029666a-5975-41c7-9e22-b332d07fab1b"
+          "recentEndorsement": "Endorsed by 3 people in the last 1 year"
         }
       ],
       "planDetails": [
@@ -325,8 +302,7 @@
           "skillName": "React",
           "position": "Content Creator and Frontend Dev",
           "endorsements": 5,
-          "recentEndorsement": "Endorsed by 3 people in the last 6 months",
-          "id": "8b954a99-9623-4548-873e-734633791d94"
+          "recentEndorsement": "Endorsed by 3 people in the last 6 months"
         }
       ],
       "planDetails": [

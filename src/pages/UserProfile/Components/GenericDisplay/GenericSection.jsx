@@ -34,7 +34,14 @@ function GenericSection({ title, type, items, isOwner, user }) {
       const response = await axios.post(`/profile/${user.id}/${type}`, newItem);
 
       if (response?.data) {
-        setData((prev) => [...prev, response.data]);
+        const newKey =
+          type === "skills" ? response.data.skill : response.data.id;
+        const exists = data.some((item) =>
+          type === "skills" ? item.skill === newKey : item.id === newKey
+        );
+        if (!exists) {
+          setData((prev) => [...prev, response.data]);
+        }
       }
     } catch (err) {
       console.error("Failed to save item:", err); // ✅ Add this line
@@ -91,7 +98,7 @@ function GenericSection({ title, type, items, isOwner, user }) {
       {/* Cards */}
       <div className="flex flex-col gap-4">
         {data.slice(0, 2).map((item, index) => (
-          <div key={item.id ?? index}>
+          <div key={type === "skills" ? item.skill : (item.id ?? index)}>
             <GenericCard
               item={item}
               type={type}

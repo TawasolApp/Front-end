@@ -1,29 +1,57 @@
 import React, { useState, useEffect } from "react";
-import { FiUpload } from "react-icons/fi";
+import { FiUpload, FiTrash2 } from "react-icons/fi";
 
-function ImageUploadModal({ isOpen, onClose, onUpload }) {
+function ImageUploadModal({
+  isOpen,
+  onClose,
+  onUpload,
+  currentImage,
+  defaultImage,
+  uploadType, // 'profile' or 'cover'
+}) {
   const [selectedImage, setSelectedImage] = useState(null);
+  const [isSaving, setIsSaving] = useState(false);
 
   useEffect(() => {
-    // Lock scrolling when the modal is open
     if (isOpen) {
       document.body.classList.add("overflow-hidden");
     } else {
       document.body.classList.remove("overflow-hidden");
     }
-    // Clean up when the modal is closed
     return () => document.body.classList.remove("overflow-hidden");
-  }, [isOpen]); // Run the effect when isOpen changes
+  }, [isOpen]);
 
-  if (!isOpen) return null; // If modal isn't open, render nothing
-  // Handle file selection
+  const isDefaultImage = currentImage === defaultImage;
+
   const handleFileChange = (event) => {
     const file = event.target.files[0];
     if (file) {
-      const imageUrl = URL.createObjectURL(file);
-      setSelectedImage(imageUrl);
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        setSelectedImage(reader.result);
+      };
+      reader.readAsDataURL(file);
     }
   };
+
+  const handleSave = () => {
+    if (!selectedImage) return;
+    setIsSaving(true);
+    onUpload(selectedImage);
+    setSelectedImage(null);
+    setIsSaving(false);
+    onClose();
+  };
+
+  const handleDelete = () => {
+    setIsSaving(true);
+    onUpload(null);
+    setSelectedImage(null);
+    setIsSaving(false);
+    onClose();
+  };
+
+  if (!isOpen) return null;
 
   return (
     <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
@@ -64,16 +92,26 @@ function ImageUploadModal({ isOpen, onClose, onUpload }) {
           <button
             onClick={onClose}
             className="px-4 py-2 text-gray-600 border border-gray-300 rounded-md"
+            disabled={isSaving}
           >
             Cancel
           </button>
+
+          {currentImage && currentImage !== defaultImage && !selectedImage && (
+            <button
+              onClick={handleDelete}
+              className="px-4 py-2 bg-red-500 text-white rounded-md flex items-center gap-1"
+              disabled={isSaving}
+            >
+              <FiTrash2 /> Delete
+            </button>
+          )}
+
           {selectedImage && (
             <button
               className="px-4 py-2 bg-blue-500 text-white rounded-md"
-              onClick={() => {
-                onUpload(selectedImage);
-                onClose();
-              }}
+              onClick={handleSave}
+              disabled={isSaving}
             >
               Save
             </button>

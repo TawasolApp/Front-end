@@ -140,6 +140,14 @@ function ProfileHeader({ user, isOwner, onSave, experienceRef, educationRef }) {
         isOpen={isUploadOpen}
         onClose={() => setIsUploadOpen(false)}
         onUpload={handleUpload}
+        currentImage={
+          uploadType === "profile" ? user.profilePicture : user.coverPhoto
+        }
+        defaultImage={
+          uploadType === "profile" ? defaultProfilePicture : defaultCoverPhoto
+        }
+        uploadType={uploadType}
+        userId={user.id}
       />
       <EditProfileModal
         user={editedUser}
