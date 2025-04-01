@@ -195,6 +195,8 @@ const PostCard = ({ post, handleDeletePost }) => {
           setIsModalOpen={() => setShowEditModal(false)}
           handleSubmitFunction={handleEditPost}
           initialText={localPost.content}
+          initialTaggedUsers={localPost.taggedUsers}
+          initialVisiblity={localPost.visibility}
         />
       )}
 

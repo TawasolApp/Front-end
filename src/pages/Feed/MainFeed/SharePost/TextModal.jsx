@@ -13,10 +13,12 @@ const TextModal = ({
   setIsModalOpen,
   handleSubmitFunction,
   initialText = "",
+  initialTaggedUsers=[],
+  initialVisiblity="Public"
 }) => {
   const [text, setText] = useState(initialText);
-  const [visibilityType, setVisibilityType] = useState("Public");
-  const [taggedUsers, setTaggedUsers] = useState([]);
+  const [visibilityType, setVisibilityType] = useState(initialVisiblity);
+  const [taggedUsers, setTaggedUsers] = useState(initialTaggedUsers);
 
   const menuItems = [
     {
