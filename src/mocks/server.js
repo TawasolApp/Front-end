@@ -1,4 +1,8 @@
 import pkg from "json-server";
+import express from "express";
+import multer from "multer";
+import path from "path";
+import fs from "fs";
 const { create, router, defaults, bodyParser } = pkg;
 const server = create();
 const _router = router("./src/mocks/db.json");
@@ -7,7 +11,55 @@ const middlewares = defaults();
 server.use(middlewares);
 server.use(bodyParser);
 
-const supportedTypes = ["education", "experience", "skills", "certifications"];
+//  Image upload setup
+const uploadDir = "./public/uploads";
+if (!fs.existsSync(uploadDir)) {
+  fs.mkdirSync(uploadDir, { recursive: true });
+}
+
+const storage = multer.diskStorage({
+  destination: (req, file, cb) => cb(null, uploadDir),
+  filename: (req, file, cb) => {
+    const ext = path.extname(file.originalname);
+    const filename = `${Date.now()}-${Math.random().toString(36).substring(7)}${ext}`;
+    cb(null, filename);
+  },
+});
+const upload = multer({ storage });
+
+//  Mock image upload endpoint
+server.post("/api/upload", upload.single("image"), (req, res) => {
+  if (!req.file) {
+    return res.status(400).json({ error: "No file uploaded" });
+  }
+  const fileUrl = `http://localhost:5000/uploads/${req.file.filename}`;
+  return res.status(200).json({ url: fileUrl });
+});
+
+//  Serve uploaded images statically
+server.use("/uploads", express.static(uploadDir));
+
+//  PATCH user profile with uploaded image URL
+server.patch("/profile/:id", (req, res) => {
+  const { id } = req.params;
+  const updates = req.body;
+  const db = _router.db;
+  const user = db
+    .get("users")
+    .find({ id: String(id) })
+    .value();
+
+  if (!user) return res.status(404).json({ error: "User not found" });
+
+  const updatedUser = { ...user, ...updates };
+  db.get("users")
+    .find({ id: String(id) })
+    .assign(updatedUser)
+    .write();
+
+  return res.status(200).json(updatedUser);
+});
+
 // GET all users
 server.get("/profile", (req, res) => {
   const users = _router.db.get("users").value();

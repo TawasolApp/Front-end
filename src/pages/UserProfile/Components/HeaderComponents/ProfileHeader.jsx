@@ -8,6 +8,7 @@ import EditProfileModal from "./EditProfileModal";
 import ImageUploadModal from "../ImageUploadModal";
 import ImageEnlarge from "./ImageEnlarge";
 import ViewerView from "../ViewerView";
+import { axiosInstance as axios } from "../../../../apis/axios";
 
 function ProfileHeader({ user, isOwner, onSave, experienceRef, educationRef }) {
   const [editedUser, setEditedUser] = useState(user);
@@ -31,12 +32,48 @@ function ProfileHeader({ user, isOwner, onSave, experienceRef, educationRef }) {
     setIsUploadOpen(true);
   }
 
-  function handleUpload(imageUrl) {
-    setEditedUser((prev) => ({
-      ...prev,
-      [uploadType === "profile" ? "profilePicture" : "coverPhoto"]: imageUrl,
-    }));
-    setIsUploadOpen(false);
+  // function handleUpload(imageUrl) {
+  //   setEditedUser((prev) => ({
+  //     ...prev,
+  //     [uploadType === "profile" ? "profilePicture" : "coverPhoto"]: imageUrl,
+  //   }));
+  //   setIsUploadOpen(false);
+  // }
+  async function handleUpload(fileOrNull) {
+    const field = uploadType === "profile" ? "profilePicture" : "coverPhoto";
+
+    if (fileOrNull === null) {
+      //  Handle image deletion
+      try {
+        await axios.patch(`/profile/${user.id}`, { [field]: null });
+        setEditedUser((prev) => ({ ...prev, [field]: null }));
+      } catch (err) {
+        console.error("Failed to delete image:", err);
+      }
+      return;
+    }
+
+    try {
+      const formData = new FormData();
+      formData.append("image", fileOrNull); // actual File object
+      formData.append("userId", user.id); // optional if  backend needs it
+
+      // Replace this with your actual backend endpoint
+      const res = await fetch("http://localhost:5000/api/upload", {
+        method: "POST",
+        body: formData,
+      });
+
+      if (!res.ok) throw new Error("Upload failed");
+      const data = await res.json();
+      const imageUrl = data.url;
+
+      //  Save image URL to profile
+      await axios.patch(`/profile/${user.id}`, { [field]: imageUrl });
+      setEditedUser((prev) => ({ ...prev, [field]: imageUrl }));
+    } catch (err) {
+      console.error("Image upload failed:", err);
+    }
   }
 
   function handleImageClick(imageUrl) {
@@ -141,7 +178,9 @@ function ProfileHeader({ user, isOwner, onSave, experienceRef, educationRef }) {
         onClose={() => setIsUploadOpen(false)}
         onUpload={handleUpload}
         currentImage={
-          uploadType === "profile" ? user.profilePicture : user.coverPhoto
+          uploadType === "profile"
+            ? editedUser.profilePicture
+            : editedUser.coverPhoto
         }
         defaultImage={
           uploadType === "profile" ? defaultProfilePicture : defaultCoverPhoto

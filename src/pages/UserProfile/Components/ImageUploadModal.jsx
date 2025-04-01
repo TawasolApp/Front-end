@@ -9,7 +9,8 @@ function ImageUploadModal({
   defaultImage,
   uploadType, // 'profile' or 'cover'
 }) {
-  const [selectedImage, setSelectedImage] = useState(null);
+  const [selectedFile, setSelectedFile] = useState(null); // holds actual File object
+  const [previewImage, setPreviewImage] = useState(null); // base64 for preview
   const [isSaving, setIsSaving] = useState(false);
 
   useEffect(() => {
@@ -26,27 +27,30 @@ function ImageUploadModal({
   const handleFileChange = (event) => {
     const file = event.target.files[0];
     if (file) {
+      setSelectedFile(file); //  this is what i send to backend
       const reader = new FileReader();
       reader.onloadend = () => {
-        setSelectedImage(reader.result);
+        setPreviewImage(reader.result); // for preview only
       };
       reader.readAsDataURL(file);
     }
   };
 
   const handleSave = () => {
-    if (!selectedImage) return;
+    if (!selectedFile) return;
     setIsSaving(true);
-    onUpload(selectedImage);
-    setSelectedImage(null);
+    onUpload(selectedFile); // ✅ send real File object
+    setSelectedFile(null);
+    setPreviewImage(null);
     setIsSaving(false);
     onClose();
   };
 
   const handleDelete = () => {
     setIsSaving(true);
-    onUpload(null);
-    setSelectedImage(null);
+    onUpload(null); // tells parent to remove image
+    setSelectedFile(null);
+    setPreviewImage(null);
     setIsSaving(false);
     onClose();
   };
@@ -61,9 +65,9 @@ function ImageUploadModal({
         {/* Upload Section */}
         <div className="border-dashed border-2 border-gray-300 p-4 text-center">
           <label htmlFor="fileUpload" className="cursor-pointer">
-            {selectedImage ? (
+            {previewImage ? (
               <img
-                src={selectedImage}
+                src={previewImage}
                 alt="Preview"
                 className="w-full h-40 object-cover rounded-md"
               />
@@ -97,7 +101,7 @@ function ImageUploadModal({
             Cancel
           </button>
 
-          {currentImage && currentImage !== defaultImage && !selectedImage && (
+          {currentImage && currentImage !== defaultImage && !previewImage && (
             <button
               onClick={handleDelete}
               className="px-4 py-2 bg-red-500 text-white rounded-md flex items-center gap-1"
@@ -107,7 +111,7 @@ function ImageUploadModal({
             </button>
           )}
 
-          {selectedImage && (
+          {previewImage && (
             <button
               className="px-4 py-2 bg-blue-500 text-white rounded-md"
               onClick={handleSave}
