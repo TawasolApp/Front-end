@@ -622,6 +622,16 @@ server.patch("/posts/:postId", (req, res) => {
   res.status(200).json({ message: "Post updated successfully" });
 });
 
+server.get("/users/search", (req, res) => {
+  const { name } = req.query;
+  const users = _router.db
+    .get("users")
+    .filter((user) => user.firstName.toLowerCase().includes(name.toLowerCase()))
+    .value();
+  console.log(users);
+  res.jsonp(users);
+});
+
 /*********************************************************** REACTIONS ***********************************************************/
 server.post("/posts/react/:postId", (req, res) => {
   const { postId } = req.params;
@@ -857,6 +867,7 @@ server.get("/companies/:companyId", (req, res) => {
 
   res.json(company);
 });
+
 //  PATCH - Update company details
 server.patch("/companies/:companyId", (req, res) => {
   console.log("Updating company details...");

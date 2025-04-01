@@ -78,13 +78,13 @@ const MainFeed = () => {
     fetchPosts(nextPage);
   };
 
-  const handleSharePost = async (text, visibility) => {
+  const handleSharePost = async (text, visibility, taggedUsers) => {
     try {
       const response = await axiosInstance.post("posts", {
         authorId: currentAuthorId,
         content: text,
         media: [],
-        taggedUsers: [],
+        taggedUsers: taggedUsers,
         visibility: visibility,
       });
       setPosts((prevPosts) => [response.data, ...prevPosts]);
