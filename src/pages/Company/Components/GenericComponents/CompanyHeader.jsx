@@ -208,6 +208,7 @@ function CompanyHeader({ companyId }) {
       <FollowersModal
         show={showFollowersModal}
         onClose={() => setShowFollowersModal(false)}
+        companyId={companyId}
       />
     </div>
   );

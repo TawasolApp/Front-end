@@ -2,20 +2,25 @@ import React, { useRef, useState, useEffect } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { AiOutlineLeft, AiOutlineRight } from "react-icons/ai";
 import { axiosInstance } from "../../../../apis/axios";
+import LoadingPage from "../../../LoadingScreen/LoadingPage";
 
 function JobOpenings({ company }) {
   const navigate = useNavigate();
   const { companyId } = useParams();
   const sliderRef = useRef(null);
   const [jobs, setJobs] = useState([]);
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     const fetchJobs = async () => {
+      setLoading(true);
       try {
         const res = await axiosInstance.get(`/companies/${companyId}/jobs`);
         setJobs(res.data.slice(0, 6));
       } catch (err) {
         console.error("Failed to fetch job openings:", err);
+      } finally {
+        setLoading(false);
       }
     };
 
@@ -31,6 +36,9 @@ function JobOpenings({ company }) {
       });
     }
   };
+  if (loading) {
+    return <LoadingPage />;
+  }
   if (jobs.length === 0) return null;
   return (
     <div

@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { FiUpload } from "react-icons/fi";
 import { axiosInstance as axios } from "../../../../apis/axios";
 import { useNavigate } from "react-router-dom";
+import LoadingPage from "../../../LoadingScreen/LoadingPage";
 
 function CreateCompanyPage() {
   const [companyName, setName] = useState("");
@@ -89,7 +90,9 @@ function CreateCompanyPage() {
       setLoading(false);
     }
   }
-
+  if (loading) {
+    return <LoadingPage />;
+  }
   return (
     <div className="bg-background">
       <div className="max-w-7xl mx-auto p-6 bg-background">

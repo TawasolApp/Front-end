@@ -1080,6 +1080,34 @@ server.get("/companies/jobs/:jobId/applicants", (req, res) => {
     res.status(500).json({ message: "Failed to retrieve applicants list." });
   }
 });
+// GET - Get followers of a company
+server.get("/companies/:companyId/followers", (req, res) => {
+  const { companyId } = req.params;
+  const { name } = req.query;
+
+  try {
+    const db = _router.db;
+
+    // Get all connections
+    const allConnections = db.get("companyConnections").value();
+
+    // Filter by companyId and optionally by name
+    const followers = allConnections.filter((connection) => {
+      const matchesCompany = connection.companyId === companyId;
+      const matchesName =
+        !name ||
+        connection.username?.toLowerCase().includes(name.toLowerCase());
+      return matchesCompany && matchesName;
+    });
+
+    // Optional cleanup: remove companyId from each entry
+    const cleanedFollowers = followers.map(({ companyId, ...user }) => user);
+
+    res.status(200).json(cleanedFollowers);
+  } catch (error) {
+    res.status(500).json({ message: "Failed to retrieve company followers." });
+  }
+});
 
 server.use(_router);
 

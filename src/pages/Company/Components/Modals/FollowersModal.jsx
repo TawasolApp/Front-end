@@ -1,11 +1,40 @@
-import React, { useEffect } from "react";
-import { mockFollowers } from "../../mockFollowers";
+import React, { useEffect, useState } from "react";
+import { axiosInstance } from "../../../../apis/axios";
+import LoadingPage from "../../../LoadingScreen/LoadingPage";
 
-function FollowersModal({ show, onClose }) {
+function FollowersModal({ show, onClose, companyId }) {
+  const [followers, setFollowers] = useState([]);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState(null);
+
   useEffect(() => {
-    if (show) document.body.style.overflow = "hidden";
-    return () => (document.body.style.overflow = "auto");
-  }, [show]);
+    if (show) {
+      document.body.style.overflow = "hidden";
+
+      const fetchFollowers = async () => {
+        setLoading(true);
+        setError(null);
+
+        try {
+          const response = await axiosInstance.get(
+            `/companies/${companyId}/followers`
+          );
+          setFollowers(response.data);
+        } catch (err) {
+          setError("Failed to load followers.");
+          setFollowers([]);
+        } finally {
+          setLoading(false);
+        }
+      };
+
+      fetchFollowers();
+    }
+
+    return () => {
+      document.body.style.overflow = "auto";
+    };
+  }, [show, companyId]);
 
   if (!show) return null;
 
@@ -22,12 +51,16 @@ function FollowersModal({ show, onClose }) {
           </button>
         </div>
 
-        {/* Followers List */}
-        {mockFollowers.length === 0 ? (
+        {/* Content */}
+        {loading ? (
+          <LoadingPage />
+        ) : error ? (
+          <p className="text-red-500 text-sm">{error}</p>
+        ) : followers.length === 0 ? (
           <p className="text-companysubheader text-sm">No followers yet.</p>
         ) : (
           <ul className="space-y-3">
-            {mockFollowers.map((follower) => (
+            {followers.map((follower) => (
               <li
                 key={follower.userId}
                 className="flex items-center gap-4 border border-companysubheader p-3 rounded-md"

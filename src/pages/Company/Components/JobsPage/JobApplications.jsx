@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { axiosInstance } from "../../../../apis/axios";
+import LoadingPage from "../../../LoadingScreen/LoadingPage";
 
 function JobApplications({ job }) {
   const [applicants, setApplicants] = useState([]);
@@ -41,7 +42,9 @@ function JobApplications({ job }) {
       </h2>
 
       {loading ? (
-        <p className="text-sm text-gray-400">Loading applicants...</p>
+        <div className="flex justify-center items-center min-h-[150px]">
+          <LoadingPage />
+        </div>
       ) : applicants.length === 0 ? (
         <p className="text-sm text-gray-400">No applicants yet.</p>
       ) : (
