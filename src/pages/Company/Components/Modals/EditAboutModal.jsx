@@ -70,10 +70,13 @@ function EditAboutModal({ show, companyData, onClose }) {
 
   useEffect(() => {
     if (show) {
-      document.body.style.overflow = "hidden";
+      document.body.classList.add("overflow-hidden");
+    } else {
+      document.body.classList.remove("overflow-hidden");
     }
+
     return () => {
-      document.body.style.overflow = "auto";
+      document.body.classList.remove("overflow-hidden");
     };
   }, [show]);
 

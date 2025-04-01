@@ -38,8 +38,6 @@ export default defineConfig({
         "**/.gitignore",
 
         // ITEMS WITH SPECIFIC EXCLUSIONS
-        "./src/pages/Company/testdata.js",
-        "src/pages/Company/Components/Slider/PostSlide.jsx",
         "src/pages/Feed/MainFeed/FeedPosts/PostCard/Content/MediaContent**",
         "src/pages/Feed/MainFeed/FeedPosts/PostCard/Comments/Reply.jsx",
         "src/pages/Feed/GenericComponents/reactionIcons.js",

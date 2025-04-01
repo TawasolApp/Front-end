@@ -1,6 +1,6 @@
 import { render, screen, fireEvent } from "@testing-library/react";
 import { describe, test, expect, vi, beforeEach } from "vitest";
-import Overviewbox from "../pages/CompanyPage/Components/Overviewbox";
+import Overviewbox from "../../pages/Company/Components/HomePage/OverviewBox";
 import { MemoryRouter } from "react-router-dom";
 
 // Mock useNavigate and useParams
@@ -26,7 +26,7 @@ describe("Overviewbox", () => {
     render(
       <MemoryRouter>
         <Overviewbox company={{ overview: shortOverview }} />
-      </MemoryRouter>,
+      </MemoryRouter>
     );
 
     expect(screen.getByTestId("overview-box")).toBeInTheDocument();
@@ -39,7 +39,7 @@ describe("Overviewbox", () => {
     render(
       <MemoryRouter>
         <Overviewbox company={{ overview: longOverview }} />
-      </MemoryRouter>,
+      </MemoryRouter>
     );
 
     expect(screen.getByText("See More")).toBeInTheDocument();
@@ -49,7 +49,7 @@ describe("Overviewbox", () => {
     render(
       <MemoryRouter>
         <Overviewbox company={{ overview: longOverview }} />
-      </MemoryRouter>,
+      </MemoryRouter>
     );
 
     const seeMoreBtn = screen.getByText("See More");
@@ -63,7 +63,7 @@ describe("Overviewbox", () => {
     render(
       <MemoryRouter>
         <Overviewbox company={{ overview: shortOverview }} />
-      </MemoryRouter>,
+      </MemoryRouter>
     );
 
     const btn = screen.getByText("Show all details →");
@@ -75,7 +75,7 @@ describe("Overviewbox", () => {
     const { container } = render(
       <MemoryRouter>
         <Overviewbox company={null} />
-      </MemoryRouter>,
+      </MemoryRouter>
     );
 
     expect(container.firstChild).toBeNull();
@@ -97,7 +97,7 @@ describe("Overviewbox", () => {
     render(
       <MemoryRouter>
         <Overviewbox company={{}} />
-      </MemoryRouter>,
+      </MemoryRouter>
     );
 
     expect(screen.queryByText("See More")).not.toBeInTheDocument();

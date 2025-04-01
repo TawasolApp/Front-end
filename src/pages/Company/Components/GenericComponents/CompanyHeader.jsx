@@ -11,38 +11,27 @@ import FollowersModal from "../Modals/FollowersModal.jsx";
 import MoreOptionsModal from "../Modals/MoreOptionsModal.jsx";
 import { formatNumbers } from "../../../../utils/formatNumbers.js";
 import { axiosInstance } from "../../../../apis/axios.js";
-function CompanyHeader({ companyId }) {
+function CompanyHeader({
+  company,
+  showAdminIcons,
+  setShowAdminIcons,
+  isAdmin,
+}) {
   const navigate = useNavigate();
   const location = useLocation(); // Get current URL
-  const [company, setCompany] = useState(null);
-  const [loading, setLoading] = useState(true);
-  const isAdmin = true;
   const [isFollowing, setIsFollowing] = useState(false);
   const [showModal, setShowModal] = useState(false);
   const [showMoreModal, setShowMoreModal] = useState(false);
   const [showEditModal, setShowEditModal] = useState(false);
   const [isPhotoClicked, setIsOpen] = useState(false);
   const [showFollowersModal, setShowFollowersModal] = useState(false);
-  useEffect(() => {
-    if (companyId) {
-      setLoading(true);
-      axiosInstance
-        .get(`/companies/${companyId}`)
-        .then((response) => {
-          setCompany(response.data);
-          setIsFollowing(response.data.isFollowing);
-        })
-        .catch((error) => console.error("Error fetching company:", error))
-        .finally(() => setLoading(false));
-    }
-  }, [companyId]);
 
-  if (loading) {
+  if (!company) {
     return <LoadingPage />;
   }
 
   const handleNavigation = (route) => {
-    navigate(`/company/${companyId}/${route.toLowerCase()}`, {
+    navigate(`/company/${company.companyId}/${route.toLowerCase()}`, {
       state: { company },
     });
   };
@@ -56,7 +45,7 @@ function CompanyHeader({ companyId }) {
       setShowModal(true);
     } else {
       axiosInstance
-        .post(`/companies/${companyId}/follow`)
+        .post(`/companies/${company.companyId}/follow`)
         .then(() => {
           setIsFollowing(true);
         })
@@ -66,7 +55,7 @@ function CompanyHeader({ companyId }) {
 
   const confirmUnfollow = () => {
     axiosInstance
-      .delete(`/companies/${companyId}/unfollow`)
+      .delete(`/companies/${company.companyId}/unfollow`)
       .then(() => {
         setIsFollowing(false);
         setShowModal(false);
@@ -107,7 +96,7 @@ function CompanyHeader({ companyId }) {
             <h1 className="text-2xl font-semibold uppercase text-text">
               {company.name}
             </h1>
-            {isAdmin && (
+            {showAdminIcons && (
               <button
                 className="absolute right-0 bg-boxbackground p-2 rounded-full shadow-md border border-gray-300 transition"
                 aria-label="Edit Company"
@@ -129,7 +118,7 @@ function CompanyHeader({ companyId }) {
             </button>{" "}
             · {company.companySize}
           </p>
-          <div className="mt-4 flex flex-nowrap gap-2 sm:gap-3 pb-4 items-center justify-start">
+          <div className="mt-4 flex flex-nowrap gap-2 sm:gap-3 pb-4 items-center justify-start relative">
             {/* Follow Button */}
             <button
               className="px-4 h-9 min-w-max rounded-full transition duration-300 border-2 border-blue-700 bg-boxbackground text-blue-700 font-medium text-sm flex items-center justify-center"
@@ -167,6 +156,23 @@ function CompanyHeader({ companyId }) {
                 />
               )}
             </div>
+            {/* Admin/User View Toggle Button */}
+            {showAdminIcons && isAdmin && (
+              <button
+                className="px-4 h-9 min-w-max rounded-full transition duration-300 border-2 border-blue-700 bg-blue-700 text-white font-medium text-sm flex items-center justify-center absolute right-0"
+                onClick={() => setShowAdminIcons(false)} // Toggle to user view
+              >
+                Show User View
+              </button>
+            )}
+            {!showAdminIcons && isAdmin && (
+              <button
+                className="px-4 h-9 min-w-max rounded-full transition duration-300 border-2 border-blue-700 bg-blue-700 text-white font-medium text-sm flex items-center justify-center absolute right-0"
+                onClick={() => setShowAdminIcons(true)} // Toggle to admin view
+              >
+                Show Admin View
+              </button>
+            )}
           </div>
 
           <div>
@@ -208,7 +214,7 @@ function CompanyHeader({ companyId }) {
       <FollowersModal
         show={showFollowersModal}
         onClose={() => setShowFollowersModal(false)}
-        companyId={companyId}
+        companyId={company.companyId}
       />
     </div>
   );

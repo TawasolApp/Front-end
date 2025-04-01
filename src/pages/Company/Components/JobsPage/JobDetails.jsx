@@ -61,29 +61,35 @@ function JobDetails({ job, logo, name }) {
         </button>
       </div>
 
-      {/* About the Job */}
-      <div className="mt-8">
-        <h3 className="text-lg font-semibold mb-2">About the Job</h3>
-        <p className="text-sm text-companysubheader leading-relaxed">
-          {job.description}
-        </p>
-      </div>
+      {/* About the Job Section (only if description is available) */}
+      {job.description && (
+        <div className="mt-8">
+          <h3 className="text-lg font-semibold mb-2">About the Job</h3>
+          <p className="text-sm text-companysubheader leading-relaxed">
+            {job.description}
+          </p>
+        </div>
+      )}
 
-      {/* Experience */}
-      <div className="mt-6">
-        <h3 className="text-lg font-semibold mb-2">Experience</h3>
-        <p className="text-sm text-companysubheader leading-relaxed">
-          {job.experienceLevel}
-        </p>
-      </div>
+      {/* Experience Section (only if experienceLevel is available) */}
+      {job.experienceLevel && (
+        <div className="mt-6">
+          <h3 className="text-lg font-semibold mb-2">Experience</h3>
+          <p className="text-sm text-companysubheader leading-relaxed">
+            {job.experienceLevel}
+          </p>
+        </div>
+      )}
 
-      {/* Salary */}
-      <div className="mt-6">
-        <h3 className="text-lg font-semibold mb-2">Salary</h3>
-        <p className="text-sm text-companysubheader leading-relaxed">
-          {job.salary}
-        </p>
-      </div>
+      {/* Salary Section (only if salary is available) */}
+      {job.salary && (
+        <div className="mt-6">
+          <h3 className="text-lg font-semibold mb-2">Salary</h3>
+          <p className="text-sm text-companysubheader leading-relaxed">
+            {job.salary}
+          </p>
+        </div>
+      )}
 
       {isApplyOpen && (
         <ApplyModal onClose={handleCloseModal} job={job} company={name} />

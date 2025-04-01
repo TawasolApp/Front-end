@@ -1,7 +1,8 @@
 import React from "react";
 import { FiExternalLink } from "react-icons/fi";
-
-function AboutLocations({ company }) {
+import { useOutletContext } from "react-router-dom";
+function AboutLocations() {
+  const { company } = useOutletContext();
   const mapUrl = company.mapsloc; // The exact location link from the backend
   const embedUrl = `https://www.google.com/maps?q=${encodeURIComponent(
     company.address

@@ -1,7 +1,7 @@
 import React from "react";
 import { render, screen, fireEvent } from "@testing-library/react";
 import { describe, test, expect, vi } from "vitest";
-import MoreOptionsModal from "../pages/CompanyPage/Components/MoreOptionsModal";
+import MoreOptionsModal from "../../pages/Company/Components/Modals/MoreOptionsModal";
 
 describe("MoreOptionsModal", () => {
   const onCloseMock = vi.fn();
@@ -13,7 +13,7 @@ describe("MoreOptionsModal", () => {
         show={false}
         onClose={onCloseMock}
         navigate={navigateMock}
-      />,
+      />
     );
     expect(container.firstChild).toBeNull();
   });
@@ -24,7 +24,7 @@ describe("MoreOptionsModal", () => {
         show={true}
         onClose={onCloseMock}
         navigate={navigateMock}
-      />,
+      />
     );
     expect(screen.getByText("Send in a message")).toBeInTheDocument();
     expect(screen.getByText("Report abuse")).toBeInTheDocument();
@@ -37,7 +37,7 @@ describe("MoreOptionsModal", () => {
         show={true}
         onClose={onCloseMock}
         navigate={navigateMock}
-      />,
+      />
     );
 
     fireEvent.click(screen.getByText("Create a Tawasol Page"));

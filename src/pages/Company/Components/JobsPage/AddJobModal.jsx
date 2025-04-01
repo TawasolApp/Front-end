@@ -86,14 +86,13 @@ function AddJobModal({ onClose, companyId, onJobAdded }) {
             </div>
 
             <div>
-              <label className="block text-sm mb-1">Industry*</label>
+              <label className="block text-sm mb-1">Industry</label>
               <input
                 type="text"
                 name="industry"
                 value={formData.industry}
                 placeholder="Computer"
                 onChange={handleChange}
-                required
                 className="w-full p-2 border rounded bg-boxbackground text-text"
               />
             </div>
@@ -112,13 +111,12 @@ function AddJobModal({ onClose, companyId, onJobAdded }) {
             </div>
 
             <div>
-              <label className="block text-sm mb-1">Salary*</label>
+              <label className="block text-sm mb-1">Salary</label>
               <input
                 type="number"
                 name="salary"
                 value={formData.salary}
                 onChange={handleChange}
-                required
                 className="w-full p-2 border rounded bg-boxbackground text-text"
               />
             </div>
@@ -142,7 +140,7 @@ function AddJobModal({ onClose, companyId, onJobAdded }) {
             </div>
 
             <div>
-              <label className="block text-sm mb-1">Workplace Type*</label>
+              <label className="block text-sm mb-1">Location Type*</label>
               <select
                 name="locationType"
                 value={formData.locationType}
@@ -156,12 +154,11 @@ function AddJobModal({ onClose, companyId, onJobAdded }) {
               </select>
             </div>
             <div>
-              <label className="block text-sm mb-1">Experience Level*</label>
+              <label className="block text-sm mb-1">Experience Level</label>
               <select
                 name="experienceLevel"
                 value={formData.experienceLevel}
                 onChange={handleChange}
-                required
                 className="w-full p-2 border rounded bg-boxbackground text-text"
               >
                 <option value="">Select experience level</option>
@@ -176,13 +173,12 @@ function AddJobModal({ onClose, companyId, onJobAdded }) {
           </div>
 
           <div>
-            <label className="block text-sm mb-1">Description*</label>
+            <label className="block text-sm mb-1">Description</label>
             <textarea
               name="description"
               value={formData.description}
               onChange={handleChange}
               rows="6"
-              required
               className="w-full p-2 border rounded bg-boxbackground text-text"
             />
           </div>

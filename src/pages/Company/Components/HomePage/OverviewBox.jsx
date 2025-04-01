@@ -1,10 +1,11 @@
 import React, { useState } from "react";
-import { useNavigate, useParams } from "react-router-dom";
+import { useNavigate, useParams, useOutletContext } from "react-router-dom";
 
-function OverviewBox({ company }) {
+function OverviewBox() {
   const navigate = useNavigate();
   const { companyId } = useParams();
   const [expanded, setExpanded] = useState(false);
+  const { company } = useOutletContext();
 
   if (!company) {
     return null;

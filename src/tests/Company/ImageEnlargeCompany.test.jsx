@@ -1,6 +1,6 @@
 import { render, screen, fireEvent } from "@testing-library/react";
 import { describe, test, expect, vi } from "vitest";
-import ImageEnlarge from "../pages/CompanyPage/Components/ImageEnlarge";
+import ImageEnlarge from "../../pages/Company/Components/HomePage/ImageEnlarge";
 
 describe("ImageEnlarge", () => {
   const dummyImage = "https://example.com/test-image.jpg";
@@ -11,7 +11,7 @@ describe("ImageEnlarge", () => {
         profilePicture={dummyImage}
         isOpen={false}
         onClose={vi.fn()}
-      />,
+      />
     );
 
     // Modal should not exist
@@ -25,7 +25,7 @@ describe("ImageEnlarge", () => {
         profilePicture={dummyImage}
         isOpen={true}
         onClose={vi.fn()}
-      />,
+      />
     );
 
     const image = screen.getByAltText("Profile Enlarged");
@@ -41,7 +41,7 @@ describe("ImageEnlarge", () => {
         profilePicture={dummyImage}
         isOpen={true}
         onClose={onClose}
-      />,
+      />
     );
 
     const closeBtn = screen.getByRole("button");
@@ -58,7 +58,7 @@ describe("ImageEnlarge", () => {
         profilePicture={dummyImage}
         isOpen={true}
         onClose={onClose}
-      />,
+      />
     );
 
     const imageContainer =

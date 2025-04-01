@@ -1,16 +1,16 @@
 import React, { useRef, useState, useEffect } from "react";
-import { useNavigate, useParams } from "react-router-dom";
+import { useNavigate, useParams, useOutletContext } from "react-router-dom";
 import { AiOutlineLeft, AiOutlineRight } from "react-icons/ai";
 import { axiosInstance } from "../../../../apis/axios";
 import LoadingPage from "../../../LoadingScreen/LoadingPage";
 
-function JobOpenings({ company }) {
+function JobOpenings() {
   const navigate = useNavigate();
   const { companyId } = useParams();
   const sliderRef = useRef(null);
   const [jobs, setJobs] = useState([]);
   const [loading, setLoading] = useState(false);
-
+  const { company } = useOutletContext();
   useEffect(() => {
     const fetchJobs = async () => {
       setLoading(true);

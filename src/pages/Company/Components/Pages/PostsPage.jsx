@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { useSearchParams, useNavigate } from "react-router-dom";
-import { useLocation, useParams } from "react-router-dom";
+import { useOutletContext } from "react-router-dom";
+import { useParams } from "react-router-dom";
 import { axiosInstance } from "../../../../apis/axios.js";
 import AddPosts from "../PostsPage/AddPosts";
 import LoadingPage from "../../../LoadingScreen/LoadingPage.jsx";
@@ -9,14 +10,12 @@ import PostCard from "../../../Feed/MainFeed/FeedPosts/PostCard/PostCard.jsx";
 function PostsPage() {
   const [searchParams, setSearchParams] = useSearchParams();
   const navigate = useNavigate();
-  const isAdmin = true;
   const currentFilter = searchParams.get("feedView") || "All";
   const [activeFilter, setActiveFilter] = useState(currentFilter);
   const filters = ["All", "Images", "Videos", "Articles", "Documents"];
 
-  const location = useLocation();
+  const { company, showAdminIcons, setShowAdminIcons } = useOutletContext();
   const { companyId } = useParams();
-  const [company, setCompany] = useState(location.state?.company || null);
   const [loading, setLoading] = useState(!company);
   const [posts, setPosts] = useState([]);
 
@@ -25,26 +24,19 @@ function PostsPage() {
   }, [activeFilter, setSearchParams]);
 
   useEffect(() => {
-    if (!company) {
-      setLoading(true);
-      axiosInstance
-        .get(`/companies/${companyId}`)
-        .then((response) => {
-          setCompany(response.data);
-        })
-        .catch((error) => console.error("Error fetching company:", error))
-        .finally(() => setLoading(false));
-    }
-  }, [company, companyId]);
-
-  useEffect(() => {
     if (companyId) {
+      setLoading(true);
       axiosInstance
         .get(`/companies/${companyId}/posts`)
         .then((response) => {
           setPosts(response.data);
         })
-        .catch((error) => console.error("Error fetching posts:", error));
+        .catch((error) => {
+          console.error("Error fetching posts:", error);
+        })
+        .finally(() => {
+          setLoading(false); // Set loading to false when the fetch completes
+        });
     }
   }, [companyId]);
 
@@ -62,7 +54,7 @@ function PostsPage() {
 
   return (
     <div className="w-full max-w-3xl mx-auto space-y-6">
-      {isAdmin && (
+      {showAdminIcons && (
         <AddPosts
           logo={company.logo}
           name={company.name}

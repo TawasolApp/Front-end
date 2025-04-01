@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { useLocation, useParams } from "react-router-dom";
+import { useParams, useOutletContext } from "react-router-dom";
 import { axiosInstance } from "../../../../apis/axios.js";
 import LoadingPage from "../../../LoadingScreen/LoadingPage.jsx";
 import JobsList from "../JobsPage/JobsList.jsx";
@@ -9,50 +9,38 @@ import AddJobModal from "../JobsPage/AddJobModal";
 import Analytics from "../JobsPage/Analytics.jsx";
 
 function JobsPage() {
-  const isAdmin = true;
-  const location = useLocation();
+  const { company, showAdminIcons, setShowAdminIcons } = useOutletContext();
   const { companyId } = useParams();
-
-  const [company, setCompany] = useState(location.state?.company || null);
   const [loading, setLoading] = useState(!company);
   const [jobs, setJobs] = useState([]);
   const [selectedJob, setSelectedJob] = useState(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
 
-  useEffect(() => {
-    if (!company) {
-      setLoading(true);
-      axiosInstance
-        .get(`/companies/${companyId}`)
-        .then((response) => {
-          setCompany(response.data);
-        })
-        .catch((error) => console.error("Error fetching company:", error))
-        .finally(() => setLoading(false));
-    }
-  }, [company, companyId]);
-
   // Fetch jobs
   useEffect(() => {
     if (companyId) {
+      setLoading(true);
       axiosInstance
         .get(`/companies/${companyId}/jobs`)
         .then((res) => {
           setJobs(res.data);
           setSelectedJob(res.data[0] || null);
         })
-        .catch((err) => console.error("Failed to fetch jobs", err));
+        .catch((err) => console.error("Failed to fetch jobs", err))
+        .finally(() => setLoading(false));
     }
-  }, [companyId, isAdmin]);
+  }, [companyId]);
 
   const handleJobAdded = () => {
+    setLoading(true);
     axiosInstance
       .get(`/companies/${companyId}/jobs`)
       .then((res) => {
         setJobs(res.data);
         setSelectedJob(res.data[0] || null);
       })
-      .catch((err) => console.error("Failed to refetch jobs after add", err));
+      .catch((err) => console.error("Failed to refetch jobs after add", err))
+      .finally(() => setLoading(false));
   };
 
   const handleOpenModal = () => setIsModalOpen(true);
@@ -65,7 +53,7 @@ function JobsPage() {
   return (
     <div className="w-full max-w-3xl mx-auto mb-8">
       {/* Post Job Button (only for admin/owner) */}
-      {isAdmin && (
+      {showAdminIcons && (
         <div className="flex justify-end mb-4">
           <button
             onClick={handleOpenModal}
@@ -96,7 +84,7 @@ function JobsPage() {
           />
 
           {/* Right: Conditional Panel */}
-          {isAdmin ? (
+          {showAdminIcons ? (
             <JobApplications job={selectedJob} />
           ) : (
             <JobDetails
@@ -107,7 +95,7 @@ function JobsPage() {
           )}
         </div>
       </div>
-      {isAdmin && <Analytics jobs={jobs} />}
+      {showAdminIcons && <Analytics jobs={jobs} />}
     </div>
   );
 }
