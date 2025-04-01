@@ -29,10 +29,10 @@ import AboutPage from "../pages/Company/Components/Pages/AboutPage.jsx";
 import HomePage from "../pages/Company/Components/Pages/HomePage.jsx";
 import CreateCompanyPage from "../pages/Company/Components/CreateCompanyPage/CreateCompanyPage.jsx";
 
-import NetworkBox from "../pages/mynetworkpage/mynetworkpage";
-import Connections from "../pages/connectionpage/ConnectionPage";
-import BlockedPage from "../pages/mynetworkpage/components/BlockedPage";
-import FollowPage from "../pages/mynetworkpage/components/FollowPage";
+import NetworkBox from "../pages/mynetworkpage/NetworkBox";
+import ConnectionPage from "../pages/mynetworkpage/Connections/ConnectionPage";
+import BlockedPage from "../pages/mynetworkpage/BlockedPage";
+import FollowPage from "../pages/mynetworkpage/FollowPage";
 
 import FeedContainer from "../pages/Feed/FeedContainer";
 import SavedPostsContainer from "../pages/SavedPosts/SavedPostsContainer";
@@ -74,7 +74,7 @@ const App = () => {
           <Route path="connections" element={<ProfileConnections />} />
         </Route>
 
-        <Route path="/connections" element={<Connections />} />
+        <Route path="/connections" element={<ConnectionPage />} />
         <Route path="/blocked" element={<BlockedPage />} />
         <Route path="/follow" element={<FollowPage />} />
 

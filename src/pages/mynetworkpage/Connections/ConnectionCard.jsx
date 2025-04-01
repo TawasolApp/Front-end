@@ -41,7 +41,7 @@ const ConnectionCard = ({
   return (
     <>
       {/* Connection Card */}
-      <div className="flex items-center justify-between p-3 bg-white dark:bg-[#1e2229] border border-gray-200 dark:border-[#2a3038] rounded-lg shadow-sm transition-shadow w-full">
+      <div className="flex items-center justify-between p-3 bg-cardBackground border border-cardBorder rounded-lg shadow-sm transition-shadow w-full">
         {/* Left Section */}
         <div className="flex items-center flex-1">
           <img
@@ -50,13 +50,13 @@ const ConnectionCard = ({
             className="w-12 h-12 rounded-full object-cover"
           />
           <div className="ml-3 flex-1">
-            <h3 className="text-lg font-semibold hover:underline cursor-pointer dark:text-[#f0f2f5]">
+            <h3 className="text-lg font-semibold hover:underline cursor-pointer text-textHeavyTitle">
               {username}
             </h3>
-            <p className="text-sm text-gray-700 dark:text-[#c1c9d4]">
+            <p className="text-sm text-textActivity">
               {experience}
             </p>
-            <p className="text-xs text-gray-500 dark:text-[#959ea9] mt-1">
+            <p className="text-xs text-textPlaceholder mt-1">
               {connectionDate}
             </p>
           </div>
@@ -64,7 +64,7 @@ const ConnectionCard = ({
 
         {/* Right Section */}
         <div className="flex items-center space-x-3">
-          <button className="px-3 py-1.5 bg-transparent font-semibold border border-blue-700 dark:border-[#3d7bc8] text-blue-700 dark:text-[#3d7bc8] rounded-full hover:bg-blue-50 dark:hover:bg-[#2a3038] transition-colors text-sm">
+          <button className="px-3 py-1.5 bg-transparent font-semibold border border-buttonSubmitEnable text-buttonSubmitEnable rounded-full hover:bg-buttonSubmitEnableHover transition-colors text-sm">
             Message
           </button>
 
@@ -72,7 +72,7 @@ const ConnectionCard = ({
             <button
               onClick={toggleMenu}
               data-testid="menu-button"
-              className="p-1.5 text-black dark:text-[#c1c9d4] hover:text-black dark:hover:text-[#f0f2f5] focus:outline-none"
+              className="p-1.5 text-icon hover:text-textHeavyTitle focus:outline-none"
             >
               <svg
                 xmlns="http://www.w3.org/2000/svg"
@@ -91,10 +91,10 @@ const ConnectionCard = ({
             </button>
 
             {isMenuOpen && (
-              <div className="absolute right-0 mt-2 w-48 bg-white dark:bg-[#1e2229] border border-gray-200 dark:border-[#2a3038] rounded-lg shadow-lg z-10">
+              <div className="absolute right-0 mt-2 w-48 bg-cardBackground border border-cardBorder rounded-lg shadow-lg z-10">
                 <button
                   onClick={openConfirmation}
-                  className="w-full px-4 py-2 text-sm text-black dark:text-[#c1c9d4] hover:bg-gray-100 dark:hover:bg-[#2a3038] flex items-center"
+                  className="w-full px-4 py-2 text-sm text-textHeavyTitle hover:bg-cardBackgroundHover flex items-center"
                 >
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
@@ -119,10 +119,10 @@ const ConnectionCard = ({
       {/* Confirmation Modal */}
       {isConfirmationOpen && (
         <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
-          <div className="bg-white dark:bg-[#1e2229] p-6 rounded-lg shadow-lg w-[500px] relative border border-gray-200 dark:border-[#2a3038]">
+          <div className="bg-cardBackground p-6 rounded-lg shadow-lg w-[500px] relative border border-cardBorder">
             <button
               onClick={closeConfirmation}
-              className="absolute top-4 right-4 p-2 text-gray-600 dark:text-[#959ea9] hover:bg-gray-100 dark:hover:bg-[#2a3038] rounded-full focus:outline-none transition-colors"
+              className="absolute top-4 right-4 p-2 text-icon hover:bg-cardBackgroundHover rounded-full focus:outline-none transition-colors"
             >
               <svg
                 xmlns="http://www.w3.org/2000/svg"
@@ -140,12 +140,12 @@ const ConnectionCard = ({
               </svg>
             </button>
 
-            <h2 className="text-xl font-semibold mb-4 dark:text-[#f0f2f5]">
+            <h2 className="text-xl font-semibold mb-4 text-textHeavyTitle">
               Remove Connection
             </h2>
-            <div className="border-t border-gray-200 dark:border-[#2a3038] mb-4"></div>
+            <div className="border-t border-cardBorder mb-4"></div>
 
-            <p className="text-gray-700 dark:text-[#c1c9d4] mb-4">
+            <p className="text-textContent mb-4">
               Are you sure you want to remove {username} as a connection? Don't
               worry, {username} won't be notified by LinkedIn.
             </p>
@@ -153,13 +153,13 @@ const ConnectionCard = ({
             <div className="flex justify-end space-x-4">
               <button
                 onClick={closeConfirmation}
-                className="px-4 py-2 text-sm text-blue-600 dark:text-[#3d7bc8] bg-white dark:bg-[#1e2229] border border-blue-600 dark:border-[#3d7bc8] rounded-3xl hover:bg-blue-50 dark:hover:bg-[#2a3038] transition-colors"
+                className="px-4 py-2 text-sm text-buttonSubmitEnable bg-cardBackground border border-buttonSubmitEnable rounded-3xl hover:bg-buttonSubmitEnableHover transition-colors"
               >
                 Cancel
               </button>
               <button
                 onClick={handleRemove}
-                className="px-4 py-2 text-sm text-white bg-blue-600 hover:bg-blue-700 rounded-3xl transition-colors"
+                className="px-4 py-2 text-sm text-buttonSubmitText bg-buttonSubmitEnable hover:bg-buttonSubmitEnableHover rounded-3xl transition-colors"
               >
                 Remove
               </button>

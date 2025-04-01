@@ -6,13 +6,6 @@
       "profilePicture": "https://example.com/khalid.jpg",
       "headline": "Software Engineer",
       "createdAt": "2025-03-24T12:00:00Z"
-    },
-    {
-      "userId": "3",
-      "username": "Omar Salah",
-      "profilePicture": "https://example.com/omar.jpg",
-      "headline": "Data Scientist",
-      "createdAt": "2025-03-22T12:30:00Z"
     }
   ],
   "pendingConnections": [
@@ -98,6 +91,13 @@
       "password": "123456",
       "firstName": "Test",
       "lastName": "Test"
+    },
+    {
+      "id": 6,
+      "email": "omarsalah04@gmail.com",
+      "password": "omarsalah",
+      "firstName": "Omar",
+      "lastName": "Moselhi"
     }
   ],
   "users": [
