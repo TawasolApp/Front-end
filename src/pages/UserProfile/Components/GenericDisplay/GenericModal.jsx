@@ -174,7 +174,7 @@ function GenericModal({
   return (
     isOpen && (
       <div
-        className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-40"
+        className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50"
         data-testid="generic-modal"
       >
         <div

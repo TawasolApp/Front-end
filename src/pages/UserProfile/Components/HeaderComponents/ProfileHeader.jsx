@@ -56,7 +56,7 @@ function ProfileHeader({ user, isOwner, onSave, experienceRef, educationRef }) {
   }
 
   return (
-    <div className="w-full bg-boxbackground rounded-md shadow max-w-3xl mx-auto mb-8 relative">
+    <div className="w-full bg-boxbackground rounded-md shadow max-w-3xl mx-auto mb-2 relative">
       {/* Cover Photo */}
       <div className="relative">
         <CoverPhoto

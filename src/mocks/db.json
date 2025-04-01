@@ -2,15 +2,15 @@
   "users": [
     {
       "id": "1",
-      "firstName": "Rana",
-      "lastName": "Sherif ",
-      "profilePicture": "https://th.bing.com/th/id/OIP.srNFFzORAaERcWvhwgPzVAHaHa?rs=1&pid=ImgDetMain",
-      "coverPhoto": "https://th.bing.com/th/id/OIP.srNFFzORAaERcWvhwgPzVAHaHa?rs=1&pid=ImgDetMain",
+      "firstName": "Jana",
+      "lastName": "Samy",
+      "profilePicture": "",
+      "coverPhoto": "",
       "resume": "https://linkedin.com/in/fatma-gamal",
       "headline": "Student at Cairo University faculty of Engineering",
-      "bio": "I am a motivated Software Engineer ",
+      "bio": "I am a motivated student ",
       "country": "Egypt",
-      "city": "Cairo",
+      "city": "Giza",
       "industry": "Computer ",
       "connectionCount": 50,
       "achievements": "Dean's List Award",
@@ -18,18 +18,6 @@
       "isOwner": true,
       "visibility": "Public",
       "experience": [
-        {
-          "title": "Frontend Developer",
-          "company": "Google",
-          "location": "San Francisco, CA",
-          "description": "Worked on developing scalable web applications.",
-          "employmentType": "Temporary",
-          "locationType": "On-site",
-          "id": "3af1d711-92ae-4a84-b2ff-0f4d95dcc8d8",
-          "startMonth": "December",
-          "startYear": "2010",
-          "currentlyWorking": true
-        },
         {
           "id": "6d70b97c-65bb-4173-af67-f16cf61a0c9b",
           "title": "Software Engineer",
@@ -51,6 +39,13 @@
           "description": "Designed UI components and improved user flows.",
           "currentlyWorking": true,
           "employmentType": "Internship"
+        },
+        {
+          "id": "1743464891510",
+          "company": "elsewedy electric",
+          "startMonth": "November",
+          "startYear": "2008",
+          "title": "zgd"
         }
       ],
       "education": [
@@ -116,10 +111,13 @@
       "selectedEducationIndex": 0,
       "skills": [
         {
-          "skill": "how"
+          "skill": "Kotlin "
         },
         {
-          "skill": "Kotlin "
+          "skill": "dggsxx"
+        },
+        {
+          "skill": "gedzf"
         }
       ]
     },
@@ -140,71 +138,18 @@
       "email": "mohamed@example.com",
       "isOwner": false,
       "visibility": "Public",
-      "experience": [
-        {
-          "title": "Software Engineer",
-          "company": "Google",
-          "location": "San Francisco, CA",
-          "description": "Worked on developing scalable web applications.",
-          "employmentType": "Full-time",
-          "locationType": "Onsite",
-          "id": "425a3fcc-e32d-45aa-aeec-c08d7dc15814"
-        },
-        {
-          "title": "Frontend Developer",
-          "company": "Microsoft",
-          "location": "Redmond, WA",
-          "description": "Built UI components for enterprise applications.",
-          "employmentType": "Full-time",
-          "locationType": "Hybrid",
-          "id": "096eb06f-3a62-4f8a-a305-bfd18581bbd3"
-        }
-      ],
-      "education": [
-        {
-          "institution": "Harvard University",
-          "degree": "Bachelor's",
-          "field": "Computer Science",
-          "description": "Studied software engineering and AI.",
-          "grade": "3.9 GPA",
-          "activities": "tt",
-          "id": "234bfd72-fc41-4567-9c0d-bbb8b38db01c"
-        },
-        {
-          "institution": "Stanford University",
-          "degree": "Master's",
-          "field": "Artificial Intelligence",
-          "description": "Focused on deep learning and data science.",
-          "grade": "4.0 GPA",
-          "activities": "tt",
-          "id": "020a7d74-13ab-4c2f-842c-bb2539d796c5"
-        }
-      ],
-      "certifications": [
-        {
-          "name": "AWS Certified Solutions Architect",
-          "company": "Amazon Web Services (AWS)",
-          "issueDate": "2023-05-20",
-          "expirationDate": "2026-05-20",
-          "id": "604ae3db-88d1-455b-944a-ff74fb54a48e"
-        },
-        {
-          "name": "Google Cloud Professional Data Engineer",
-          "company": "Google Cloud",
-          "issueDate": "2022-11-15",
-          "expirationDate": "2025-11-15",
-          "id": "ed6c2757-86bf-4ee0-b2f5-c6a093d95a1f"
-        }
-      ],
+      "experience": [],
+      "education": [],
+      "certifications": [],
       "skills": [
         {
-          "skillName": "Kotlin",
+          "skill": "Kotlin",
           "position": "Android Developer Intern at Banque Misr",
           "endorsements": 2,
           "recentEndorsement": "Endorsed by 2 people in the last 3 months"
         },
         {
-          "skillName": "Java",
+          "skill": "Java",
           "position": "Android Developer Intern at Banque Misr",
           "endorsements": 0,
           "recentEndorsement": "Endorsed by 3 people in the last 1 year"
@@ -299,7 +244,7 @@
       ],
       "skills": [
         {
-          "skillName": "React",
+          "skill": "React",
           "position": "Content Creator and Frontend Dev",
           "endorsements": 5,
           "recentEndorsement": "Endorsed by 3 people in the last 6 months"
@@ -590,14 +535,14 @@
         "Insightful": 0,
         "Funny": 0,
         "Support": 0,
-        "Like": 0
+        "Like": 1
       },
       "comments": 0,
       "shares": 0,
       "taggedUsers": [],
       "visibility": "Public",
       "authorType": "User",
-      "reactType": null,
+      "reactType": "Like",
       "timestamp": "2025-03-25T20:25:11.101Z"
     },
     {
@@ -635,19 +580,19 @@
       "content": "Hosted a workshop on modern JavaScript frameworks today. The energy and enthusiasm were incredible! 🚀👩‍💻",
       "media": [],
       "reactions": {
-        "Love": 1,
+        "Love": 0,
         "Celebrate": 0,
         "Insightful": 0,
         "Funny": 0,
         "Support": 0,
-        "Like": 0
+        "Like": 1
       },
       "comments": 1,
       "shares": 0,
       "taggedUsers": [],
       "visibility": "Public",
       "authorType": "User",
-      "reactType": "Love",
+      "reactType": "Like",
       "timestamp": "2025-03-27T14:05:33.303Z"
     },
     {
@@ -1058,16 +1003,6 @@
       "authorBio": "Computer Engineering Student at Cairo University"
     },
     {
-      "likeId": "10-mohsobh-Love",
-      "postId": "10",
-      "authorId": "mohsobh",
-      "authorType": "User",
-      "type": "Love",
-      "authorName": "Mohamed Sobh",
-      "authorPicture": "https://media.licdn.com/dms/image/v2/D4D03AQH7Ais8BxRXzw/profile-displayphoto-shrink_100_100/profile-displayphoto-shrink_100_100/0/1721080103981?e=1747872000&v=beta&t=nDnZdgCqkI8v5B2ymXZzluMZVlF6h_o-dN1pA95Fzv4",
-      "authorBio": "Computer Engineering Student at Cairo University"
-    },
-    {
       "likeId": "1742904775106-mohsobh-Insightful",
       "postId": "1742904775106",
       "authorId": "mohsobh",
@@ -1123,6 +1058,26 @@
       "authorId": "mohsobh",
       "authorType": "User",
       "type": "Support",
+      "authorName": "Mohamed Sobh",
+      "authorPicture": "https://media.licdn.com/dms/image/v2/D4D03AQH7Ais8BxRXzw/profile-displayphoto-shrink_100_100/profile-displayphoto-shrink_100_100/0/1721080103981?e=1747872000&v=beta&t=nDnZdgCqkI8v5B2ymXZzluMZVlF6h_o-dN1pA95Fzv4",
+      "authorBio": "Computer Engineering Student at Cairo University"
+    },
+    {
+      "likeId": "8-mohsobh-Like",
+      "postId": "8",
+      "authorId": "mohsobh",
+      "authorType": "User",
+      "type": "Like",
+      "authorName": "Mohamed Sobh",
+      "authorPicture": "https://media.licdn.com/dms/image/v2/D4D03AQH7Ais8BxRXzw/profile-displayphoto-shrink_100_100/profile-displayphoto-shrink_100_100/0/1721080103981?e=1747872000&v=beta&t=nDnZdgCqkI8v5B2ymXZzluMZVlF6h_o-dN1pA95Fzv4",
+      "authorBio": "Computer Engineering Student at Cairo University"
+    },
+    {
+      "likeId": "10-mohsobh-Like",
+      "postId": "10",
+      "authorId": "mohsobh",
+      "authorType": "User",
+      "type": "Like",
       "authorName": "Mohamed Sobh",
       "authorPicture": "https://media.licdn.com/dms/image/v2/D4D03AQH7Ais8BxRXzw/profile-displayphoto-shrink_100_100/profile-displayphoto-shrink_100_100/0/1721080103981?e=1747872000&v=beta&t=nDnZdgCqkI8v5B2ymXZzluMZVlF6h_o-dN1pA95Fzv4",
       "authorBio": "Computer Engineering Student at Cairo University"

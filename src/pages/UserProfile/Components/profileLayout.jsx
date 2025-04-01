@@ -12,32 +12,32 @@ function ProfileLayout() {
 
   // Extract the ID from the URL slug: "fatma-gamal-1" → "1"
   const id = profileSlug?.split("-").pop();
-
   useEffect(() => {
     const fetchUser = async () => {
       try {
         if (!profileSlug) {
-          // No slug provided — fetch the first user and redirect
           const res = await axios.get("/profile");
           const firstUser = res.data?.[0];
-
           if (firstUser) {
-            const slug = `${firstUser.firstName?.toLowerCase()}-${firstUser.lastName?.toLowerCase()}-${
-              firstUser.id
-            }`;
+            const slug = `${firstUser.firstName?.toLowerCase()}-${firstUser.lastName?.toLowerCase()}-${firstUser.id}`;
             navigate(`/users/${slug}`, { replace: true });
           } else {
             navigate("/notfound");
           }
         } else if (id) {
-          // Slug exists — fetch that user
           const res = await axios.get(`/profile/${id}`);
-          console.log("Fetched user:", res.data); //TEST
+          const fetchedUser = res.data;
 
-          if (!res.data) {
+          if (!fetchedUser) {
             navigate("/notfound");
           } else {
-            setUser(res.data);
+            setUser(fetchedUser);
+
+            // 🔁 Compare slug name with current name
+            const expectedSlug = `${fetchedUser.firstName?.toLowerCase()}-${fetchedUser.lastName?.toLowerCase()}-${fetchedUser.id}`;
+            if (profileSlug !== expectedSlug) {
+              navigate(`/users/${expectedSlug}`, { replace: true });
+            }
           }
         }
       } catch (err) {

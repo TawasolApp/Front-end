@@ -1,12 +1,32 @@
 import React, { useState } from "react";
 import GenericModal from "./GenericModal";
 
+//  Helper to check if a card should be rendered
+//  it is extra checking although modal wont accept any empty fields for them if db is corruupted or sth
+
+const isCardEmpty = (item, type) => {
+  switch (type) {
+    case "education":
+      return !item?.institution;
+    case "experience":
+      return !item?.company && !item?.title;
+    case "skills":
+      return !item?.skill;
+    case "certifications":
+      return !item?.name;
+    default:
+      return false;
+  }
+};
+// add issueOrganization for certifactes in checking
 function GenericCard({ item, isOwner, type, onEdit, showEditIcons = false }) {
   const [isEndorsed, setIsEndorsed] = useState(false);
   const [endorsementCount, setEndorsementCount] = useState(
     item.endorsements || 0
   );
   const [isModalOpen, setIsModalOpen] = useState(false);
+  // Prevent rendering empty cards
+  if (isCardEmpty(item, type)) return null;
 
   const handleEndorse = () => {
     setEndorsementCount((prev) => (isEndorsed ? prev - 1 : prev + 1));
