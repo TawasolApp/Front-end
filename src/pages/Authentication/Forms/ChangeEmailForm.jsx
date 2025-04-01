@@ -31,7 +31,7 @@ const ChangeEmailForm = ({ onSubmit }) => {
   const handleSubmit = (e) => {
     e.preventDefault();
     if (!newEmail) {
-      alert("Please enter your email.");
+      setEmailError("Please enter your email.");
       return;
     }
     if (!validateEmail(newEmail)) {

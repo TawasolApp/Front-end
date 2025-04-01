@@ -13,7 +13,7 @@ const NamePage = () => {
 
   const handleName = async (formData, captchaToken) => {
     if (!email || !password) {
-      alert("Error: Missing email or password. Please sign up again.");
+      console.error("Error: Missing email or password. Please sign up again.");
       return;
     }
 
@@ -32,7 +32,7 @@ const NamePage = () => {
 
       navigate("/auth/signup/location");
     } catch (error) {
-      alert(
+      console.error(
         `Registration Failed: ${error.response?.data?.message || error.message}`,
       );
     }

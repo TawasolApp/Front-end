@@ -26,7 +26,7 @@ const LocationForm = ({ onSubmit }) => {
   const handleSubmit = (e) => {
     e.preventDefault();
     if (!location) {
-      alert("Please enter your location.");
+      setLocationError("Please enter your location.");
       return;
     }
     onSubmit(location);
