@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
-import { axiosInstance } from "../../../../apis/axios";
-import ActorHeader from "../../GenericComponents/ActorHeader";
+import { axiosInstance } from "../../../apis/axios";
+import ActorHeader from "./ActorHeader";
 
 const DropdownUsers = ({ name, onSelect }) => {
   const [users, setUsers] = useState([]);

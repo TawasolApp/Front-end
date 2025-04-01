@@ -2,8 +2,9 @@ import { useState, useRef, useEffect } from "react";
 import PublicIcon from "@mui/icons-material/Public";
 import PeopleIcon from "@mui/icons-material/People";
 import Avatar from "@mui/material/Avatar";
-import DropdownUsers from "./DropdownUsers";
+import DropdownUsers from "../../GenericComponents/DropdownUsers";
 import DropdownMenu from "../../GenericComponents/DropdownMenu";
+import TextEditor from "../../GenericComponents/TextEditor";
 import CloseIcon from "@mui/icons-material/Close";
 
 const TextModal = ({
@@ -16,10 +17,6 @@ const TextModal = ({
   const [text, setText] = useState(initialText);
   const [visibilityType, setVisibilityType] = useState("Public");
   const [taggedUsers, setTaggedUsers] = useState([]);
-  const [mentionStart, setMentionStart] = useState(null);
-  const [searchQuery, setSearchQuery] = useState("");
-  const [prevTagPattern, setPrevTagPattern] = useState("");
-  const textareaRef = useRef(null);
 
   const menuItems = [
     {
@@ -34,65 +31,6 @@ const TextModal = ({
     },
   ];
 
-  // Track when a mention pattern is deleted
-  useEffect(() => {
-    const checkForDeletedMention = () => {
-      // If we have a previous tag pattern but it's no longer in the text
-      if (prevTagPattern && !text.includes(prevTagPattern) && taggedUsers.length > 0) {
-        // Remove the last tagged user
-        setTaggedUsers(prev => {
-          const newTaggedUsers = [...prev];
-          newTaggedUsers.pop();
-          return newTaggedUsers;
-        });
-        // Clear the previous tag pattern
-        setPrevTagPattern("");
-      }
-    };
-    
-    checkForDeletedMention();
-  }, [text, prevTagPattern, taggedUsers]);
-
-  const handleTextChange = (e) => {
-    const value = e.target.value;
-    setText(value);
-
-    // Check for @ mentions
-    const caretPos = e.target.selectionStart;
-    const textBeforeCaret = value.slice(0, caretPos);
-    const atIndex = textBeforeCaret.lastIndexOf("@");
-
-    if (atIndex >= 0) {
-      const currentWord = textBeforeCaret.slice(atIndex + 1);
-      if (/^[a-zA-Z0-9_]*$/.test(currentWord)) {
-        setMentionStart(atIndex);
-        setSearchQuery(currentWord);
-        return;
-      }
-    }
-
-    setMentionStart(null);
-    setSearchQuery("");
-  };
-
-  const handleUserSelect = (userId, firstName, lastName) => {
-    const mentionIndex = text.lastIndexOf(
-      "@",
-      textareaRef.current.selectionStart - 1,
-    );
-    if (mentionIndex === -1) return;
-    
-    // Create a bold tag pattern for the mention
-    const tagPattern = `@${firstName} ${lastName}`;
-    const newText = text.slice(0, mentionIndex) + tagPattern + " " + text.slice(textareaRef.current.selectionStart);
-    setText(newText);
-
-    setTaggedUsers((prev) => [...prev, userId]);
-    setPrevTagPattern(tagPattern); // Store the tag pattern for deletion detection
-    setMentionStart(null);
-    setSearchQuery("");
-  };
-
   const handleSubmit = (e) => {
     e.preventDefault();
     if (!text.trim()) return;
@@ -100,9 +38,7 @@ const TextModal = ({
     setIsModalOpen();
     setText("");
     setTaggedUsers([]);
-    setPrevTagPattern("");
   };
-
 
   return (
     <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
@@ -146,34 +82,14 @@ const TextModal = ({
         </div>
 
         <form className="px-4 pb-4" onSubmit={handleSubmit}>
-          <div className="relative">
-            <textarea
-              ref={textareaRef}
-              placeholder="What do you want to talk about?"
-              className="w-full h-48 p-2 resize-none focus:outline-none text-lg text-textContent bg-cardBackground"
-              value={text}
-              onChange={handleTextChange}
-              required
-            />
-
-            {mentionStart !== null && (
-              <div
-                className="absolute"
-                style={{
-                  top: textareaRef.current
-                    ? textareaRef.current.offsetTop +
-                      textareaRef.current.scrollTop +
-                      20
-                    : 0,
-                  left: textareaRef.current
-                    ? textareaRef.current.offsetLeft + mentionStart * 8
-                    : 0,
-                }}
-              >
-                <DropdownUsers name={searchQuery} onSelect={handleUserSelect} />
-              </div>
-            )}
-          </div>
+          <TextEditor
+            placeholder="What do you want to talk about?"
+            className="w-full h-48 p-2 resize-none focus:outline-none text-lg text-textContent bg-cardBackground"
+            text={text}
+            setText={setText}
+            taggedUsers={taggedUsers}
+            setTaggedUsers={setTaggedUsers}
+          />
 
           <div className="flex justify-end mt-2">
             <button
