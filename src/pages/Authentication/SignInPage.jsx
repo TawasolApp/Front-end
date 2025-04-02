@@ -3,31 +3,54 @@ import SignInForm from "./Forms/SignInForm";
 import { axiosInstance } from "../../apis/axios";
 import { useDispatch } from "react-redux";
 import {
+  setBio,
   setEmail,
+  setFirstName,
+  setLastName,
+  setLocation,
+  setPicture,
   setRefreshToken,
   setToken,
+  setType,
+  setUserId,
 } from "../../store/authenticationSlice";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import AuthenticationHeader from "./GenericComponents/AuthenticationHeader";
 
 const SignInPage = () => {
   const dispatch = useDispatch();
+  const navigate = useNavigate();
 
   const handleSignIn = async (formData, setCredentialsError) => {
     try {
-      const response = await axiosInstance.post("/auth/login", {
+      const userResponse = await axiosInstance.post("/auth/login", {
         email: formData.email,
         password: formData.password,
       });
 
-      if (response.status === 200) {
-        const { token, refreshToken } = response.data;
+      if (userResponse.status === 200) {
+        const { userId, token, refreshToken } = userResponse.data;
 
         dispatch(setEmail(formData.email));
+        dispatch(setUserId(userId));
         dispatch(setToken(token));
         dispatch(setRefreshToken(refreshToken));
 
-        // TODO: Redirect user to dashboard or protected page
+        const profileResponse = await axiosInstance.get(`/profile/${userId}`);
+
+        if (profileResponse.status === 200) {
+          const { firstName, lastName, location, bio, type, picture } =
+            profileResponse.data;
+
+          dispatch(setFirstName(firstName));
+          dispatch(setLastName(lastName));
+          dispatch(setLocation(location));
+          dispatch(setBio(bio));
+          dispatch(setType(type));
+          dispatch(setPicture(picture));
+
+          navigate("/feed");
+        }
       }
     } catch (error) {
       if (error.response && error.response.status === 400) {

@@ -7,6 +7,10 @@ const initialState = {
   location: localStorage.getItem("location") || "",
   token: localStorage.getItem("token") || null,
   refreshToken: localStorage.getItem("refreshToken") || null,
+  userId: localStorage.getItem("userId") || null,
+  bio: localStorage.getItem("bio") || "",
+  type: localStorage.getItem("type") || "",
+  picture: localStorage.getItem("picture") || "",
 };
 
 export const authenticationSlice = createSlice({
@@ -40,6 +44,22 @@ export const authenticationSlice = createSlice({
       state.refreshToken = action.payload;
       localStorage.setItem("refreshToken", action.payload);
     },
+    setUserId: (state, action) => {
+      state.userId = action.payload;
+      localStorage.setItem("userId", action.payload);
+    },
+    setBio: (state, action) => {
+      state.bio = action.payload;
+      localStorage.setItem("bio", action.payload);
+    },
+    setType: (state, action) => {
+      state.type = action.payload;
+      localStorage.setItem("type", action.payload);
+    },
+    setPicture: (state, action) => {
+      state.picture = action.payload;
+      localStorage.setItem("picture", action.payload);
+    },
     logout: (state) => {
       state.email = "";
       state.password = "";
@@ -48,12 +68,20 @@ export const authenticationSlice = createSlice({
       state.location = "";
       state.token = null;
       state.refreshToken = null;
+      state.userId = null;
+      state.bio = "";
+      state.type = "";
+      state.picture = "";
       localStorage.removeItem("email");
       localStorage.removeItem("firstName");
       localStorage.removeItem("lastName");
       localStorage.removeItem("location");
       localStorage.removeItem("token");
       localStorage.removeItem("refreshToken");
+      localStorage.removeItem("userId");
+      localStorage.removeItem("bio");
+      localStorage.removeItem("type");
+      localStorage.removeItem("picture");
     },
   },
 });
@@ -66,6 +94,10 @@ export const {
   setLocation,
   setToken,
   setRefreshToken,
+  setUserId,
+  setBio,
+  setType,
+  setPicture,
   logout,
 } = authenticationSlice.actions;
 

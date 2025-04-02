@@ -3,11 +3,21 @@ import ExperienceForm from "./Forms/ExperienceForm";
 import AuthenticationHeader from "./GenericComponents/AuthenticationHeader";
 import { useSelector } from "react-redux";
 import { axiosInstance } from "../../apis/axios";
+import {
+  setBio,
+  setPicture,
+  setRefreshToken,
+  setToken,
+  setType,
+  setUserId,
+} from "../../store/authenticationSlice";
+import { useNavigate } from "react-router-dom";
 
 const ExperienceAuthPage = () => {
-  const { firstName, lastName, location } = useSelector(
+  const { email, password, firstName, lastName, location } = useSelector(
     (state) => state.authentication
   );
+  const navigate = useNavigate();
 
   const handleSubmit = async (experienceData) => {
     let profileData = {
@@ -36,18 +46,48 @@ const ExperienceAuthPage = () => {
     }
 
     try {
-      const response = await axiosInstance.post(
-        "/profile",
-        profileData,
-      );
-
-      console.log("Success:", response.data);
+      await axiosInstance.post("/profile", profileData);
     } catch (error) {
       console.error("Error submitting data:", error);
+      return;
     }
 
-    // TODO: login request,
-    // then request user profile and store it in states
+    try {
+      const userResponse = await axiosInstance.post("/auth/login", {
+        email,
+        password,
+      });
+
+      if (userResponse.status === 200) {
+        const { userId, token, refreshToken } = userResponse.data;
+
+        dispatch(setUserId(userId));
+        dispatch(setToken(token));
+        dispatch(setRefreshToken(refreshToken));
+
+        const profileResponse = await axiosInstance.get(`/profile/${userId}`);
+
+        if (profileResponse.status === 200) {
+          const { bio, type, picture } = profileResponse.data;
+
+          dispatch(setBio(bio));
+          dispatch(setType(type));
+          dispatch(setPicture(picture));
+
+          navigate("/feed");
+        }
+      }
+    } catch (error) {
+      if (error.response && error.response.status === 400) {
+        console.error("Email not verified.");
+      } else if (error.response && error.response.status === 401) {
+        console.error("Invalid email or password.");
+      } else if (error.response && error.response.status === 404) {
+        console.error("User not found.");
+      } else {
+        console.error("Login failed", error);
+      }
+    }
   };
 
   return (
