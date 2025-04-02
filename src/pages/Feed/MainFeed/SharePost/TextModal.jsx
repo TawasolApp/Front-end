@@ -35,7 +35,8 @@ const TextModal = ({
   const handleSubmit = (e) => {
     e.preventDefault();
     if (!text.trim()) return;
-    handleSubmitFunction(text, visibilityType, taggedUsers);
+    // TODO ADD MEDIA HERE
+    handleSubmitFunction(text, undefined, visibilityType, taggedUsers);
     setIsModalOpen();
     setText("");
     setTaggedUsers([]);

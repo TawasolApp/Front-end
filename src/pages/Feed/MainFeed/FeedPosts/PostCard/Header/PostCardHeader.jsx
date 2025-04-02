@@ -12,7 +12,7 @@ const PostCardHeader = ({
   visibility,
   menuItems,
   modal,
-  handleClosePostModal
+  handleClosePostModal,
 }) => {
   return (
     <div className="relative">

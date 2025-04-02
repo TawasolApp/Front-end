@@ -21,9 +21,6 @@ const MainFeed = () => {
   const observer = useRef();
   const isFetching = useRef(false);
 
-  const [postModal, setPostModal] = useState(null);
-  const [mediaIndex, setMediaIndex] = useState(0);
-
   const lastPostElementRef = useCallback(
     (node) => {
       if (loading) return;
@@ -106,16 +103,6 @@ const MainFeed = () => {
     }
   };
 
-  const handleOpenPostModal = (post, mediaIndex) => {
-    setPostModal(post);
-    setMediaIndex(mediaIndex);
-  }
-
-  const handleClosePostModal = () => {
-    setPostModal(null);
-    setMediaIndex(0);
-  }
-
   return (
     <>
       <SharePost handleSharePost={handleSharePost} />
@@ -124,7 +111,6 @@ const MainFeed = () => {
           posts={posts}
           lastPostRef={lastPostElementRef}
           handleDeletePost={handleDeletePost}
-          handleOpenPostModal={handleOpenPostModal}
         />
 
         {loading && (
@@ -139,14 +125,6 @@ const MainFeed = () => {
           </div>
         )}
       </div>
-      {(postModal !== null) && (
-        <PostModal
-          post={postModal}
-          mediaIndex={mediaIndex}
-          handleDeletePost={handleDeletePost}
-          handleClosePostModal={handleClosePostModal}
-        />
-      )}
     </>
   );
 };

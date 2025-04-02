@@ -35,9 +35,7 @@ const MediaDisplay = ({ media, handleOpenPostModal }) => {
               ${mediaCount >= 4 && index === 3 ? "row-start-3" : ""}
             `}
         >
-          <button
-            onClick={() => handleOpenPostModal(index)}
-          >
+          <button onClick={() => handleOpenPostModal(index)}>
             <MediaItem url={url} />
             {remaining > 0 && index === 3 && (
               <div className="absolute inset-0 bg-black/50 flex items-center justify-center">
@@ -47,7 +45,6 @@ const MediaDisplay = ({ media, handleOpenPostModal }) => {
               </div>
             )}
           </button>
-          
         </div>
       ))}
     </div>

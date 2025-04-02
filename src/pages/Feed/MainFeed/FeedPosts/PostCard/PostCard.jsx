@@ -15,19 +15,18 @@ import ActivitiesHolder from "./Activities/ActivitiesHolder";
 import CommentsContainer from "./Comments/CommentsContainer";
 import ReactionsModal from "../ReactionModal/ReactionsModal";
 
-import { axiosInstance } from "../../../../../apis/axios";
 import TextModal from "../../SharePost/TextModal";
 import DeletePostModal from "../DeleteModal/DeletePostModal";
 
 const PostCard = ({
   post,
+  handleSavePost,
   handleDeletePost,
-  modal = false,
-  handleOpenPostModal,
-  handleClosePostModal,
-  className="bg-cardBackground rounded-none sm:rounded-lg border border-cardBorder mb-4"
+  handleReaction,
+  handleEditPost,
+  incrementCommentsNumber,
+  setShowPostModal,
 }) => {
-
   // TODO: change this to redux states
   const currentAuthorId = "mohsobh";
   const currentAuthorName = "Mohamed Sobh";
@@ -36,7 +35,6 @@ const PostCard = ({
   const currentAuthorBio = "Computer Engineering Student at Cairo University";
   const currentAuthorType = "User";
 
-  const [localPost, setLocalPost] = useState(post);
   const [showLikes, setShowLikes] = useState(false);
   const [showComments, setShowComments] = useState(false);
   const [showReposts, setShowReposts] = useState(false);
@@ -45,11 +43,9 @@ const PostCard = ({
 
   let menuItems = [
     {
-      text: localPost.isSaved ? "Unsave post" : "Save post",
-      onClick: () => {
-        handleSavePost();
-      },
-      icon: localPost.isSaved ? BookmarkIcon : BookmarkBorderIcon,
+      text: post.isSaved ? "Unsave post" : "Save post",
+      onClick: () => handleSavePost(),
+      icon: post.isSaved ? BookmarkIcon : BookmarkBorderIcon,
     },
     {
       text: "Report post",
@@ -57,7 +53,7 @@ const PostCard = ({
       icon: FlagIcon,
     },
     {
-      text: `Unfollow ${localPost.authorName}`,
+      text: `Unfollow ${post.authorName}`,
       onClick: () => console.log("User unfollowed"), // TODO: Phase 3 to integrate with noor
       icon: HighlightOffIcon,
     },
@@ -68,27 +64,7 @@ const PostCard = ({
     },
   ];
 
-  const handleEditPost = async (text, visibility, taggedUsers) => {
-    try {
-      await axiosInstance.patch(`/posts/${localPost.id}`, {
-        authorId: currentAuthorId,
-        content: text,
-        media: [],
-        taggedUsers: taggedUsers,
-        visibility: visibility,
-      });
-      setLocalPost((prev) => ({
-        ...prev,
-        content: text,
-        visibility: visibility,
-      }));
-    } catch (e) {
-      setShowEditModal(false);
-      console.log(e.message);
-    }
-  };
-  
-  if (localPost.authorId === currentAuthorId) {
+  if (post.authorId === currentAuthorId) {
     menuItems.push({
       text: "Edit post",
       onClick: () => {
@@ -103,86 +79,53 @@ const PostCard = ({
     });
   }
 
-  const handleSavePost = () => {
-    try {
-      if (localPost.isSaved) axiosInstance.delete(`posts/save/${localPost.id}`);
-      else axiosInstance.post(`posts/save/${localPost.id}`);
-
-      setLocalPost((prev) => {
-        return { ...prev, isSaved: !prev.isSaved };
-      });
-    } catch (e) {
-      console.log(`ERROR: ${e.message}`);
-    }
-  };
-
   const handleCopyPost = async () => {
     await navigator.clipboard.writeText(
-      `http://localhost:5173/posts/${localPost.id}`,
+      `http://localhost:5173/posts/${post.id}`,
     );
   };
 
- const handleReaction = (reactionTypeAdd, reactionTypeRemove) => {
-    let reacts = {};
-    if (reactionTypeAdd) reacts[reactionTypeAdd] = 1;
-    if (reactionTypeRemove) reacts[reactionTypeRemove] = 0;
+  const handleEditPostInternal = (text, media, visibility, taggedUsers) => {
     try {
-      axiosInstance.post(`posts/react/${localPost.id}`, {
-        reactions: reacts,
-        postType: "Post",
-      });
-
-      setLocalPost((prev) => {
-        const newReactions = { ...prev.reactions };
-        if (reactionTypeAdd) newReactions[reactionTypeAdd] += 1;
-        if (reactionTypeRemove) newReactions[reactionTypeRemove] -= 1;
-        return { ...prev, reactions: newReactions };
-      });
+      handleEditPost(text, media, visibility, taggedUsers);
     } catch (e) {
-      console.log(`ERROR: ${e.message}`);
+      setShowEditModal(false);
+      console.log(e.message);
     }
   };
 
-  const incrementCommentsNumber = (incOrDec) => {
-    setLocalPost((prev) => ({
-      ...prev,
-      comments: prev.comments + (incOrDec === "inc" ? 1 : -1),
-    }));
-  };
-
   return (
-    <div className={className}>
+    <div className="bg-cardBackground rounded-none sm:rounded-lg border border-cardBorder mb-4">
       <PostCardHeader
-        authorId={localPost.authorId}
-        authorName={localPost.authorName}
-        authorBio={localPost.authorBio}
-        authorPicture={localPost.authorPicture}
-        timestamp={localPost.timestamp}
-        visibility={localPost.visibility}
+        authorId={post.authorId}
+        authorName={post.authorName}
+        authorBio={post.authorBio}
+        authorPicture={post.authorPicture}
+        timestamp={post.timestamp}
+        visibility={post.visibility}
         menuItems={menuItems}
-        modal={modal}
-        handleClosePostModal={handleClosePostModal}
+        modal={false}
       />
 
       <PostContent
-        content={localPost.content}
-        taggedUsers={localPost.taggedUsers}
-        media={localPost.media}
-        modal={modal}
-        handleOpenPostModal={(index) => handleOpenPostModal(post, index)}
+        content={post.content}
+        taggedUsers={post.taggedUsers}
+        media={post.media}
+        modal={false}
+        handleOpenPostModal={setShowPostModal}
       />
 
       <EngagementMetrics
-        reactions={localPost.reactions}
-        comments={localPost.comments}
-        reposts={localPost.reposts}
+        reactions={post.reactions}
+        comments={post.comments}
+        reposts={post.reposts}
         setShowLikes={() => setShowLikes(true)}
         setShowComments={() => setShowComments(true)}
         setShowReposts={() => setShowReposts(true)}
       />
 
       <ActivitiesHolder
-        initReactValue={localPost.reactType}
+        initReactValue={post.reactType}
         handleReaction={handleReaction}
         setShowComments={() => setShowComments(true)}
       />
@@ -197,7 +140,7 @@ const PostCard = ({
 
       {showLikes && (
         <ReactionsModal
-          APIURL={`/posts/reactions/${localPost.id}`}
+          APIURL={`/posts/reactions/${post.id}`}
           setShowLikes={() => setShowLikes(false)}
         />
       )}
@@ -207,10 +150,10 @@ const PostCard = ({
           currentAuthorName={currentAuthorName}
           currentAuthorPicture={currentAuthorPicture}
           setIsModalOpen={() => setShowEditModal(false)}
-          handleSubmitFunction={handleEditPost}
-          initialText={localPost.content}
-          initialTaggedUsers={localPost.taggedUsers}
-          initialVisiblity={localPost.visibility}
+          handleSubmitFunction={handleEditPostInternal}
+          initialText={post.content}
+          initialTaggedUsers={post.taggedUsers}
+          initialVisiblity={post.visibility}
         />
       )}
 
@@ -218,7 +161,7 @@ const PostCard = ({
         <DeletePostModal
           closeModal={() => setShowDeleteModal(false)}
           deleteFunc={async () => {
-            await handleDeletePost(localPost.id);
+            await handleDeletePost(post.id);
             setShowDeleteModal(false);
           }}
           commentOrPost="Post"
