@@ -205,6 +205,7 @@ server.post("/auth/login", (req, res) => {
   }
 
   return res.status(200).json({
+    userId: "1",
     token: "mock_access_token",
     refreshToken: "mock_refresh_token",
   });
