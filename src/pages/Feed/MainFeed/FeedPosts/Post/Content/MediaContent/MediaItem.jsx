@@ -30,7 +30,7 @@ const MediaItem = ({ url, disabled = false }) => {
               <source src={url} type={`video/${url.split(".").pop()}`} />
             </video>
             {/* Add play overlay indicator on all videos for consistency */}
-            <div className="absolute inset-0 bg-black/20 flex items-center justify-center pointer-events-none">
+            {disabled && (<div className="absolute inset-0 bg-black/20 flex items-center justify-center pointer-events-none">
               <div className="bg-black/50 rounded-full p-2">
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
@@ -47,7 +47,7 @@ const MediaItem = ({ url, disabled = false }) => {
                   <polygon points="5 3 19 12 5 21 5 3"></polygon>
                 </svg>
               </div>
-            </div>
+            </div>)}
           </div>
         );
 

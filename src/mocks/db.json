@@ -847,7 +847,9 @@
       },
       "comments": 7,
       "shares": 0,
-      "taggedUsers": ["2"],
+      "taggedUsers": [
+        "2"
+      ],
       "visibility": "Public",
       "authorType": "User",
       "reactType": "Celebrate",
@@ -920,7 +922,9 @@
       "authorPicture": "https://media.licdn.com/dms/image/v2/D4D03AQH7Ais8BxRXzw/profile-displayphoto-shrink_100_100/profile-displayphoto-shrink_100_100/0/1721080103981?e=1747872000&v=beta&t=nDnZdgCqkI8v5B2ymXZzluMZVlF6h_o-dN1pA95Fzv4",
       "authorBio": "Computer Engineering Student at Cairo University",
       "content": "test 1 item",
-      "media": ["http://localhost:5000/public/images/1743606897643.jpg"],
+      "media": [
+        "http://localhost:5000/public/images/1743606897643.jpg"
+      ],
       "reactions": {
         "Love": 0,
         "Celebrate": 0,
@@ -976,7 +980,6 @@
       "authorBio": "Computer Engineering Student at Cairo University",
       "content": "test vid + image",
       "media": [
-        "http://localhost:5000/public/images/1743607037799.jpg",
         "http://localhost:5000/public/videos/1743607040876.mp4"
       ],
       "reactions": {
@@ -1003,7 +1006,9 @@
       "authorPicture": "https://media.licdn.com/dms/image/v2/D4D03AQH7Ais8BxRXzw/profile-displayphoto-shrink_100_100/profile-displayphoto-shrink_100_100/0/1721080103981?e=1747872000&v=beta&t=nDnZdgCqkI8v5B2ymXZzluMZVlF6h_o-dN1pA95Fzv4",
       "authorBio": "Computer Engineering Student at Cairo University",
       "content": "test doc",
-      "media": ["http://localhost:5000/public/documents/1743608230285.pdf"],
+      "media": [
+        "http://localhost:5000/public/documents/1743608230285.pdf"
+      ],
       "reactions": {
         "Love": 0,
         "Celebrate": 0,

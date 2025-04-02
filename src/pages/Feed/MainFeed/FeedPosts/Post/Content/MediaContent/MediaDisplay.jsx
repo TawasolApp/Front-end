@@ -51,7 +51,7 @@ const MediaDisplay = ({ media, handleOpenPostModal }) => {
             ) : (
               // All other media - clickable for modal
               <button
-                onClick={() => handleOpenPostModal(index)}
+                onClick={() => !(isVideo(url) && mediaCount === 1) && handleOpenPostModal(index)}
                 className="w-full h-full"
               >
                 <MediaItem url={url} disabled={isDisabledVideo} />
