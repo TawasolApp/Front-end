@@ -21,7 +21,6 @@ const SignUpPage = () => {
         dispatch(setEmail(formData.email));
         dispatch(setPassword(formData.password));
 
-        // TODO: Navigate to NamePage
         navigate("/auth/signup/name");
       }
     } catch (error) {

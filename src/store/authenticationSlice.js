@@ -4,6 +4,7 @@ const initialState = {
   email: localStorage.getItem("email") || "",
   firstName: localStorage.getItem("firstName") || "",
   lastName: localStorage.getItem("lastName") || "",
+  location: localStorage.getItem("location") || "",
   token: localStorage.getItem("token") || null,
   refreshToken: localStorage.getItem("refreshToken") || null,
 };
@@ -24,6 +25,10 @@ export const authenticationSlice = createSlice({
       state.lastName = action.payload;
       localStorage.setItem("lastName", action.payload);
     },
+    setLocation: (state, action) => {
+      state.location = action.payload;
+      localStorage.setItem("location", action.payload);
+    },
     setPassword: (state, action) => {
       state.password = action.payload;
     },
@@ -40,11 +45,13 @@ export const authenticationSlice = createSlice({
       state.password = "";
       state.firstName = "";
       state.lastName = "";
+      state.location = "";
       state.token = null;
       state.refreshToken = null;
       localStorage.removeItem("email");
       localStorage.removeItem("firstName");
       localStorage.removeItem("lastName");
+      localStorage.removeItem("location");
       localStorage.removeItem("token");
       localStorage.removeItem("refreshToken");
     },
@@ -56,6 +63,7 @@ export const {
   setFirstName,
   setLastName,
   setPassword,
+  setLocation,
   setToken,
   setRefreshToken,
   logout,

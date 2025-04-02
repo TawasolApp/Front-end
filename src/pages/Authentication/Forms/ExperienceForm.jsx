@@ -7,6 +7,7 @@ const ExperienceForm = ({ onSubmit }) => {
   const [jobTitle, setJobTitle] = useState("");
   const [employmentType, setEmploymentType] = useState("");
   const [company, setCompany] = useState("");
+  const [workStartDate, setWorkStartDate] = useState({ month: "", day: "", year: "" });
   const [showAdditionalFields, setShowAdditionalFields] = useState(false);
 
   // Student fields
@@ -32,6 +33,11 @@ const ExperienceForm = ({ onSubmit }) => {
 
   const handleCompanyChange = (e) => {
     setCompany(e.target.value);
+  };
+
+  const handleWorkStartDateChange = (e) => {
+    const { name, value } = e.target;
+    setWorkStartDate({ ...workStartDate, [name]: value });
   };
 
   const handleSchoolChange = (e) => {
@@ -93,23 +99,41 @@ const ExperienceForm = ({ onSubmit }) => {
   const handleSubmit = (e) => {
     e.preventDefault();
 
+    let formattedWorkStartDate = "";
+    if (workStartDate?.year && workStartDate?.month && workStartDate?.day) {
+        const dateStr = `${workStartDate.year}-${workStartDate.month.padStart(2, "0")}-${workStartDate.day.padStart(2, "0")}`;
+        const parsedDate = new Date(dateStr);
+        
+        if (!isNaN(parsedDate.getTime())) {
+            formattedWorkStartDate = parsedDate.toISOString().split("T")[0];
+        }
+    }
+
+    let formattedStartYear = "";
+    if (startYear) {
+      formattedStartYear = startYear + "-10-01";
+    }
+    let formattedEndYear = "";
+    if (endYear) {
+      formattedEndYear = endYear + "-06-01";
+    }
+
     const experienceData = isStudent
       ? {
           isStudent: true,
           school,
-          startYear,
-          endYear,
-          isOver16,
-          ...(!isOver16 && { birthDate }),
+          startDate: formattedStartYear,
+          endDate: formattedEndYear,
         }
       : {
           isStudent: false,
-          jobTitle,
+          title: jobTitle,
           employmentType,
           company,
+          startDate: formattedWorkStartDate,
         };
 
-    onSubmit(experienceData); // Pass experience data to the parent component
+    onSubmit(experienceData);
   };
 
   const isFormValid = () => {
@@ -128,7 +152,7 @@ const ExperienceForm = ({ onSubmit }) => {
         );
       }
     } else {
-      return jobTitle && company;
+      return jobTitle && company && employmentType && workStartDate.year && workStartDate.month && workStartDate.day;
     }
   };
 
@@ -152,18 +176,31 @@ const ExperienceForm = ({ onSubmit }) => {
           />
           {showAdditionalFields && (
             <>
-              <InputField
-                type="text"
-                id="employmentType"
-                name="employmentType"
-                labelText="Employment type"
-                value={employmentType}
-                onChange={handleEmploymentTypeChange}
-                placeholder=""
-                labelClassName="!text-lg !font-normal"
-                inputClassName="!py-1 !text-lg rounded-md"
-                containerClassName="!mb-4"
-              />
+              <div className={`mb-4 sm:mb-5 md:mb-6`}>
+                <label
+                  className={`block text-textContent text-lg !font-normal mb-1`}
+                  htmlFor="employmentType"
+                >
+                  Employment type *
+                </label>
+                <select
+                  id="employmentType"
+                  name="employmentType"
+                  value={employmentType}
+                  onChange={handleEmploymentTypeChange}
+                  className={`w-full px-3 py-1 !text-lg rounded-md border-2 border-itemBorder bg-inputBackground hover:bg-inputBackgroundHover text-textContent cursor-pointer`}
+                  required
+                >
+                  <option value="">Select employment type</option>
+                  <option value="full_time">Full-time</option>
+                  <option value="part_time">Part-time</option>
+                  <option value="self_employed">Self-employed</option>
+                  <option value="freelance">Freelance</option>
+                  <option value="contract">Contract</option>
+                  <option value="internship">Internship</option>
+                  <option value="apprenticeship">Apprenticeship</option>
+                </select>
+              </div>
               <InputField
                 type="text"
                 id="company"
@@ -177,6 +214,85 @@ const ExperienceForm = ({ onSubmit }) => {
                 containerClassName="!mb-4"
                 required
               />
+              {/* Work Start Date */}
+              <div className="mb-6">
+                <label className="block text-textContent text-lg font-semibold mb-2">
+                  Work Start Date *
+                </label>
+                <div className="flex flex-col sm:flex-row gap-3 sm:gap-4">
+                  <div className="w-full sm:w-1/3">
+                    <label
+                      htmlFor="month"
+                      className="block text-textContent text-lg font-normal mb-1"
+                    >
+                      Month *
+                    </label>
+                    <select
+                      name="month"
+                      value={workStartDate.month}
+                      onChange={handleWorkStartDateChange}
+                      className="w-full px-3 py-2 border border-itemBorder rounded-md text-lg bg-inputBackground hover:bg-inputBackgroundHover text-textContent"
+                      required
+                    >
+                      <option value="">-</option>
+                      {Array.from({ length: 12 }, (_, i) => (
+                        <option key={i + 1} value={i + 1}>
+                          {new Date(0, i).toLocaleString("default", {
+                            month: "long",
+                          })}
+                        </option>
+                      ))}
+                    </select>
+                  </div>
+                  <div className="w-full sm:w-1/3">
+                    <label
+                      htmlFor="day"
+                      className="block text-textContent text-lg font-normal mb-1"
+                    >
+                      Day *
+                    </label>
+                    <select
+                      name="day"
+                      value={workStartDate.day}
+                      onChange={handleWorkStartDateChange}
+                      className="w-full px-3 py-2 border border-itemBorder rounded-md text-lg bg-inputBackground hover:bg-inputBackgroundHover text-textContent"
+                      required
+                    >
+                      <option value="">-</option>
+                      {Array.from({ length: 31 }, (_, i) => (
+                        <option key={i + 1} value={i + 1}>
+                          {i + 1}
+                        </option>
+                      ))}
+                    </select>
+                  </div>
+                  <div className="w-full sm:w-1/3">
+                    <label
+                      htmlFor="year"
+                      className="block text-textContent text-lg font-normal mb-1"
+                    >
+                      Year *
+                    </label>
+                    <select
+                      name="year"
+                      value={workStartDate.year}
+                      onChange={handleWorkStartDateChange}
+                      className="w-full px-3 py-2 border border-itemBorder rounded-md text-lg bg-inputBackground hover:bg-inputBackgroundHover text-textContent"
+                      required
+                    >
+                      <option value="">-</option>
+                      {Array.from({ length: 50 }, (_, i) => (
+                        <option
+                          key={new Date().getFullYear() - i}
+                          value={new Date().getFullYear() - i}
+                        >
+                          {new Date().getFullYear() - i}
+                        </option>
+                      ))}
+                    </select>
+                  </div>
+                </div>
+              </div>
             </>
           )}
         </>
@@ -219,7 +335,7 @@ const ExperienceForm = ({ onSubmit }) => {
                 <option value="">-</option>
                 {Array.from(
                   { length: 50 },
-                  (_, i) => new Date().getFullYear() - i,
+                  (_, i) => new Date().getFullYear() - i
                 ).map((year) => (
                   <option key={year} value={year}>
                     {year}
@@ -246,7 +362,7 @@ const ExperienceForm = ({ onSubmit }) => {
                 <option value="">-</option>
                 {Array.from(
                   { length: 50 },
-                  (_, i) => new Date().getFullYear() + 7 - i,
+                  (_, i) => new Date().getFullYear() + 7 - i
                 ).map((year) => (
                   <option key={year} value={year}>
                     {year}
