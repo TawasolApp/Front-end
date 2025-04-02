@@ -59,7 +59,7 @@ const PostContainer = ({ post, handleDeletePost }) => {
         const newReactions = { ...prev.reactions };
         if (reactionTypeAdd) newReactions[reactionTypeAdd] += 1;
         if (reactionTypeRemove) newReactions[reactionTypeRemove] -= 1;
-        return { ...prev, reactions: newReactions };
+        return { ...prev, reactions: newReactions, reactType: reactionTypeAdd || null};
       });
     } catch (e) {
       console.log(`ERROR: ${e.message}`);
@@ -84,6 +84,14 @@ const PostContainer = ({ post, handleDeletePost }) => {
         incrementCommentsNumber={incrementCommentsNumber}
         setShowPostModal={() => setShowPostModal(true)}
       />
+      {showPostModal && (
+        <PostModal
+            post={localPost}
+            handleReaction={handleReaction}
+            handleClosePostModal={() => setShowPostModal(false)}
+            incrementCommentsNumber={incrementCommentsNumber}
+        />
+      )}
     </>
   );
 };

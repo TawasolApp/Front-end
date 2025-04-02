@@ -4,24 +4,20 @@ import reactionIcons from "../../../../GenericComponents/reactionIcons";
 import ReactionPicker from "../../../../GenericComponents/ReactionPicker";
 
 const LikeButton = ({ initReactValue, handleReaction }) => {
-  const [currentReaction, setCurrentReaction] = useState(initReactValue);
 
   const handleReactionInternal = (reactionType) => {
-    if (currentReaction === null) {
-      setCurrentReaction(reactionType);
+    if (initReactValue === null) {
       handleReaction && handleReaction(reactionType, null);
-    } else if (currentReaction === reactionType) {
-      setCurrentReaction(null);
+    } else if (initReactValue === reactionType) {
       handleReaction && handleReaction(null, reactionType);
     } else {
-      setCurrentReaction(reactionType);
-      handleReaction && handleReaction(reactionType, currentReaction);
+      handleReaction && handleReaction(reactionType, initReactValue);
     }
   };
 
   const renderButtonContent = () => {
-    if (currentReaction) {
-      const { Icon, color, label } = reactionIcons[currentReaction];
+    if (initReactValue) {
+      const { Icon, color, label } = reactionIcons[initReactValue];
       return (
         <>
           <Icon style={{ color }} className="w-4 h-4 group-hover:text-black" />
@@ -51,7 +47,7 @@ const LikeButton = ({ initReactValue, handleReaction }) => {
     <ReactionPicker onSelectReaction={handleReactionInternal}>
       <button
         className="flex items-center gap-1 p-2 hover:bg-buttonIconHover hover:transition-all duration-200 w-full justify-center group"
-        onClick={() => handleReactionInternal(currentReaction || "Like")}
+        onClick={() => handleReactionInternal(initReactValue || "Like")}
       >
         {renderButtonContent()}
       </button>
