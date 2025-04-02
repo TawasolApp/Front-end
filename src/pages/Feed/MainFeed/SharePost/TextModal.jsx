@@ -5,11 +5,11 @@ import Avatar from "@mui/material/Avatar";
 import DropdownMenu from "../../GenericComponents/DropdownMenu";
 import TextEditor from "../../GenericComponents/TextEditor";
 import CloseIcon from "@mui/icons-material/Close";
-import PermMediaIcon from '@mui/icons-material/PermMedia';
-import ImageIcon from '@mui/icons-material/Image';
-import VideoLibraryIcon from '@mui/icons-material/VideoLibrary';
-import PictureAsPdfIcon from '@mui/icons-material/PictureAsPdf';
-import CancelIcon from '@mui/icons-material/Cancel';
+import PermMediaIcon from "@mui/icons-material/PermMedia";
+import ImageIcon from "@mui/icons-material/Image";
+import VideoLibraryIcon from "@mui/icons-material/VideoLibrary";
+import PictureAsPdfIcon from "@mui/icons-material/PictureAsPdf";
+import CancelIcon from "@mui/icons-material/Cancel";
 import { axiosInstance } from "../../../../apis/axios";
 
 const TextModal = ({
@@ -42,48 +42,66 @@ const TextModal = ({
   ];
 
   const handleFileChange = async (e) => {
+    // Prevent adding files if PDF exists
+    if (media.some(url => getMediaType(url) === 'document')) return;
+
     const files = Array.from(e.target.files);
     e.target.value = ""; // Clear input
-  
+
     const uploadPromises = files.map(async (file) => {
       const formData = new FormData();
-      formData.append('file', file);
+      formData.append("file", file);
       try {
-        const response = await axiosInstance.post('/api/uploadImage', formData, {
-          headers: { 'Content-Type': 'multipart/form-data' }
-        });
-        console.log('Upload successful:', response.data);
+        const response = await axiosInstance.post(
+          "/api/uploadImage",
+          formData,
+          {
+            headers: { "Content-Type": "multipart/form-data" },
+          },
+        );
+        console.log("Upload successful:", response.data);
         return response.data;
       } catch (error) {
-        console.error('Upload failed:', error);
+        console.error("Upload failed:", error);
         return null;
       }
     });
 
     const newUrls = (await Promise.all(uploadPromises)).filter(Boolean);
-    setMedia(prev => [...prev, ...newUrls]);
+    const hasPDF = newUrls.some(url => url.includes('/documents/'));
+    if (hasPDF) {
+      // Keep only the first PDF and clear others
+      const pdfUrl = newUrls.find(url => url.includes('/documents/'));
+      setMedia([pdfUrl]);
+    } else {
+      setMedia(prev => [...prev, ...newUrls]);
+    }
   };
 
   const getMediaType = (url) => {
-    if (url.includes('/images/')) return 'image';
-    if (url.includes('/videos/')) return 'video';
-    return 'document';
+    if (url.includes("/images/")) return "image";
+    if (url.includes("/videos/")) return "video";
+    return "document";
   };
 
   const renderMediaPreview = (url) => {
     const type = getMediaType(url);
-    
-    switch(type) {
-      case 'image':
-        return <img src={url} className="w-full h-32 object-cover rounded-lg" />;
-      case 'video':
-        return <video src={url} className="w-full h-32 object-cover rounded-lg" />;
+
+    switch (type) {
+      case "image":
+        return (
+          <img src={url} className="w-full h-32 object-cover rounded-lg" />
+        );
+      case "video":
+        return (
+          <video src={url} className="w-full h-32 object-cover rounded-lg" />
+        );
       default:
         return (
           <div className="w-full h-32 flex items-center justify-center bg-gray-100 rounded-lg">
             <PictureAsPdfIcon className="w-10 h-10 text-red-500" />
             <span className="text-xs mt-1 truncate">
-              {url.split('/').pop()}
+              {url.split("/").pop()}
             </span>
           </div>
         );
@@ -91,10 +109,10 @@ const TextModal = ({
   };
 
   const removeMedia = (index) => {
-    setMedia(prev => prev.filter((_, i) => i !== index));
+    setMedia((prev) => prev.filter((_, i) => i !== index));
   };
-  
-  const isSubmitEnabled = text.trim() !== '' || media.length > 0;
+
+  const isSubmitEnabled = text.trim() !== "" || media.length > 0;
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -108,12 +126,12 @@ const TextModal = ({
 
   // Helper to get media icon based on type
   const getMediaIcon = (type) => {
-    switch(type) {
-      case 'image':
+    switch (type) {
+      case "image":
         return <ImageIcon className="text-white w-4 h-4" />;
-      case 'video':
+      case "video":
         return <VideoLibraryIcon className="text-white w-4 h-4" />;
-      case 'doc':
+      case "doc":
         return <PictureAsPdfIcon className="text-white w-4 h-4" />;
       default:
         return <PermMediaIcon className="text-white w-4 h-4" />;
@@ -176,7 +194,10 @@ const TextModal = ({
             <div className="mt-4 border border-gray-200 rounded-lg p-2 overflow-x-auto">
               <div className="flex space-x-2">
                 {media.map((item, index) => (
-                  <div key={index} className="relative group rounded-lg overflow-hidden min-w-[120px] w-32 h-32">
+                  <div
+                    key={index}
+                    className="relative group rounded-lg overflow-hidden min-w-[120px] w-32 h-32"
+                  >
                     {renderMediaPreview(item)}
 
                     {/* Remove Media Button */}
@@ -200,15 +221,16 @@ const TextModal = ({
 
           <div className="flex justify-between items-center mt-4">
             {/* Media Upload Button */}
-            <button 
+            <button
               type="button"
-              className="p-2 rounded-md hover:bg-buttonIconHover flex items-center gap-1 font-semibold text-textActivity hover:text-textActivityHover"
+              className="p-2 rounded-md hover:bg-buttonIconHover flex items-center gap-1 font-semibold text-textActivity hover:text-textActivityHover disabled:cursor-not-allowed"
               onClick={() => fileInputRef.current.click()}
+              disabled={media.some(url => url.includes('/documents/'))}
             >
               <PermMediaIcon className="w-5 h-5" />
               <span className="text-sm">Add Media</span>
             </button>
-            
+
             {/* Hidden file input */}
             <input
               type="file"

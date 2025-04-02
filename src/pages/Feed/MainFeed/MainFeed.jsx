@@ -79,7 +79,6 @@ const MainFeed = () => {
   };
 
   const handleSharePost = async (text, media, visibility, taggedUsers) => {
-    
     try {
       const response = await axiosInstance.post("posts", {
         authorId: currentAuthorId,

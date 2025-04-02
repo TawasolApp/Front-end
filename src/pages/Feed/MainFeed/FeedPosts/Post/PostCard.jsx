@@ -26,7 +26,7 @@ const PostCard = ({
   handleEditPost,
   incrementCommentsNumber,
   setShowPostModal,
-  setMediaIndex
+  setMediaIndex,
 }) => {
   // TODO: change this to redux states
   const currentAuthorId = "mohsobh";
@@ -98,7 +98,7 @@ const PostCard = ({
   const handleOpenPostModal = (index) => {
     setMediaIndex(index);
     setShowPostModal(true);
-  }
+  };
 
   return (
     <div className="bg-cardBackground rounded-none sm:rounded-lg border border-cardBorder mb-4">

@@ -39,8 +39,12 @@ const PostModal = ({
         onClick={(e) => e.stopPropagation()}
       >
         {/* Media container with black space */}
-        <div className="md:flex-1 w-full h-[60%] md:h-full bg-black flex items-center justify-center relative">
-          <MediaCarousel media={post.media} mediaIndex={mediaIndex} />
+        <div className="md:flex-1 w-full h-[70vh] md:h-full bg-black flex items-center justify-center relative">
+          <MediaCarousel 
+            media={post.media} 
+            mediaIndex={mediaIndex}
+            onClick={(e) => e.stopPropagation()}
+          />
         </div>
 
         {/* Post card container */}

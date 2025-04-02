@@ -58,7 +58,6 @@ server.post("/api/uploadImage", upload.single("file"), (req, res) => {
 
 server.use("/public", express.static(uploadDir));
 
-
 server.get("/connections/list", (req, res) => {
   try {
     let connections = _router.db.get("connections").value();
@@ -597,7 +596,6 @@ server.get("/posts", (req, res) => {
 });
 
 server.post("/posts", (req, res) => {
-
   // Get data from request body
   const authorId = req.body.authorId;
   const content = req.body.text || req.body.content; // Accept either name
@@ -606,7 +604,8 @@ server.post("/posts", (req, res) => {
   const mediaItems = req.body.media || [];
 
   // Basic validation
-  if (!authorId || !content) return res.status(400).json({ error: "authorId and content are required" });
+  if (!authorId || !content)
+    return res.status(400).json({ error: "authorId and content are required" });
 
   const newPost = {
     id: Date.now().toString(),
