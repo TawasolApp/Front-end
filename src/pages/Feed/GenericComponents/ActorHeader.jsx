@@ -12,6 +12,7 @@ const ActorHeader = ({
   timestamp,
   visibility,
   iconSize = 48,
+  enableLink = true,
 }) => {
   return (
     <div className={`flex items-start gap-2 w-full`}>
@@ -27,14 +28,25 @@ const ActorHeader = ({
       </Link>
 
       <div className={`flex-1 min-w-0 max-w-${iconSize}`}>
-        <Link to={`/users/${authorId}`}>
-          <h3 className="font-medium text-sm text-authorName hover:text-authorNameHover hover:underline leading-tight truncate">
-            {authorName}
-          </h3>
-          <p className="text-xs font-semibold text-authorBio mt-px truncate">
-            {authorBio}
-          </p>
-        </Link>
+        {enableLink ? (
+          <Link to={`/users/${authorId}`}>
+            <h3 className="font-medium text-sm text-authorName hover:text-authorNameHover hover:underline leading-tight truncate text-left">
+              {authorName}
+            </h3>
+            <p className="text-xs font-semibold text-authorBio mt-px truncate text-left">
+              {authorBio}
+            </p>
+          </Link>
+        ) : (
+          <>
+            <h3 className="font-medium text-sm text-authorName hover:text-authorNameHover hover:underline leading-tight truncate text-left">
+              {authorName}
+            </h3>
+            <p className="text-xs font-semibold text-authorBio mt-px truncate text-left">
+              {authorBio}
+            </p>
+          </>
+        )}
 
         {timestamp && (
           <div className="flex items-center gap-1 mt-0.5">

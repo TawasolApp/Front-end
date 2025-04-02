@@ -541,16 +541,39 @@ server.get("/posts", (req, res) => {
   const startIndex = (page - 1) * limit;
   const allPosts = _router.db.get("posts").orderBy("timestamp", "desc").value();
   const paginatedPosts = allPosts.slice(startIndex, startIndex + limit);
-  console.log(paginatedPosts);
   res.jsonp(paginatedPosts);
 });
 
 server.post("/posts", (req, res) => {
-  const { authorId, content, media, taggedUsers, visibility } = req.body;
 
+  console.log(req);
+  // Get data from request body
+  const authorId = req.body.authorId;
+  const content = req.body.text || req.body.content; // Accept either name
+  const visibility = req.body.visibility;
+  const taggedUsers = req.body.taggedUsers || [];
+  const mediaItems = req.body.media || [];
+  console.log(authorId)
   // Basic validation
   if (!authorId || !content) {
     return res.status(400).json({ error: "authorId and content are required" });
+  }
+
+  // Process media (handle both FormData and JSON formats)
+  let processedMedia = [];
+  if (Array.isArray(mediaItems)) {
+    processedMedia = mediaItems.map(item => {
+      // If it's already a file from FormData
+      if (item instanceof File) {
+        return URL.createObjectURL(item);
+      }
+      // If it has a file property
+      else if (item && item.file) {
+        return URL.createObjectURL(item.file);
+      }
+      // Otherwise just return the item
+      return item;
+    });
   }
 
   const newPost = {
@@ -561,7 +584,7 @@ server.post("/posts", (req, res) => {
     authorPicture: currentUser.picture,
     authorBio: currentUser.bio,
     content: content,
-    media: media,
+    media: processedMedia,
     reactions: {
       Love: 0,
       Celebrate: 0,
@@ -578,13 +601,8 @@ server.post("/posts", (req, res) => {
     reactType: null,
     timestamp: new Date().toISOString(),
   };
-
-  // Access the existing posts
   const posts = _router.db.get("posts");
-
-  // Add the new post and persist the change
   posts.push(newPost).write();
-
   res.status(201).json(newPost);
 });
 
@@ -620,6 +638,16 @@ server.patch("/posts/:postId", (req, res) => {
     })
     .write();
   res.status(200).json({ message: "Post updated successfully" });
+});
+
+server.get("/users/search", (req, res) => {
+  const { name } = req.query;
+  const users = _router.db
+    .get("users")
+    .filter((user) => user.firstName.toLowerCase().includes(name.toLowerCase()))
+    .value();
+  console.log(users);
+  res.jsonp(users);
 });
 
 /*********************************************************** REACTIONS ***********************************************************/
@@ -808,11 +836,11 @@ server.post("/posts/comment/:postId", (req, res) => {
 
 server.patch("/posts/comments/:commentId", (req, res) => {
   const { commentId } = req.params;
-  const { content, taggedUsers } = req.body;
+  const { content, tagged } = req.body;
 
   const data = _router.db.get("comments").find({ id: commentId });
   if (data) {
-    data.assign({ content: content }).write();
+    data.assign({ content: content, taggedUsers: tagged }).write();
     return res.status(200).json({ message: "Comment edited successfully" });
   }
   return res.status(404).json({ message: "Comment not found" });
@@ -857,6 +885,7 @@ server.get("/companies/:companyId", (req, res) => {
 
   res.json(company);
 });
+
 //  PATCH - Update company details
 server.patch("/companies/:companyId", (req, res) => {
   console.log("Updating company details...");

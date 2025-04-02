@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { axiosInstance } from "../../apis/axios";
-import PostCard from "../Feed/MainFeed/FeedPosts/PostCard/PostCard";
+import PostContainer from "../Feed/MainFeed/FeedPosts/PostContainer";
 
 const SavedPosts = () => {
   const [localPosts, setLocalPosts] = useState([]);
@@ -36,7 +36,7 @@ const SavedPosts = () => {
         localPosts.map((post) => {
           return (
             <div key={post.id}>
-              <PostCard post={post} handleDeletePost={handleDeletePost} />
+              <PostContainer post={post} handleDeletePost={handleDeletePost} />
             </div>
           );
         })}

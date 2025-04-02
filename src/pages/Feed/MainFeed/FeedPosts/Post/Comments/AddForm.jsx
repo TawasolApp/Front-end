@@ -1,9 +1,11 @@
 import { useState, useRef, useEffect } from "react";
 import { Avatar } from "@mui/material";
+import TextEditor from "../../../../GenericComponents/TextEditor";
 
 const AddForm = ({
   handleAddFunction,
   initialText = "",
+  initialTaggedUsers = [],
   close = null,
   type,
 }) => {
@@ -16,6 +18,7 @@ const AddForm = ({
   const currentAuthorType = "User";
 
   const [commentText, setCommentText] = useState(initialText);
+  const [taggedUsers, setTaggedUsers] = useState(initialTaggedUsers);
   const hasText = commentText.trim().length > 0;
   const textareaRef = useRef(null);
 
@@ -26,7 +29,7 @@ const AddForm = ({
       textareaRef.current.style.height = "auto";
 
       // Set the new height based on whether there's text or it's a Reply type
-      if (hasText || type === "Reply") {
+      if (hasText || type !== "Comment") {
         // Set the new height based on scrollHeight (with a min expanded height)
         const newHeight = Math.max(64, textareaRef.current.scrollHeight);
         textareaRef.current.style.height = `${newHeight}px`;
@@ -40,13 +43,13 @@ const AddForm = ({
   const handleSubmit = (e) => {
     e.preventDefault();
     if (commentText.trim()) {
-      handleAddFunction(commentText);
+      handleAddFunction(commentText, taggedUsers);
       setCommentText("");
     }
   };
 
   // Determine whether to show expanded or collapsed view
-  const isExpanded = hasText || type === "Reply";
+  const isExpanded = hasText || type !== "Comment";
 
   return (
     <div className="flex items-start pt-1 pb-2 px-4">
@@ -59,14 +62,20 @@ const AddForm = ({
       </div>
 
       <form onSubmit={handleSubmit} className="flex-1 relative" role="form">
-        <textarea
-          ref={textareaRef}
+        <TextEditor
           placeholder={
-            type === "Comment" ? "Add a comment..." : "Edit Comment..."
+            type === "Comment"
+              ? "Add a comment..."
+              : type === "Edit Comment"
+                ? "Edit Comment..."
+                : "Add a Reply..."
           }
           className={`w-full px-3 py-1.5 bg-form ${isExpanded ? "rounded-xl" : "rounded-2xl"} border border-itemBorder focus:outline-none focus:border-itemBorderFocus ${isExpanded ? "pb-8" : "pb-1.5"} resize-none transition-all duration-200 overflow-hidden min-w-0 break-words text-textContent`}
-          value={commentText}
-          onChange={(e) => setCommentText(e.target.value)}
+          text={commentText}
+          setText={setCommentText}
+          taggedUsers={taggedUsers}
+          setTaggedUsers={setTaggedUsers}
+          externalTextareaRef={textareaRef}
           rows={1}
           style={{ wordWrap: "break-word", overflowWrap: "break-word" }}
         />
