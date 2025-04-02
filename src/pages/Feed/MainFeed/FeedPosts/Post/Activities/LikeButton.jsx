@@ -4,7 +4,6 @@ import reactionIcons from "../../../../GenericComponents/reactionIcons";
 import ReactionPicker from "../../../../GenericComponents/ReactionPicker";
 
 const LikeButton = ({ initReactValue, handleReaction }) => {
-
   const handleReactionInternal = (reactionType) => {
     if (initReactValue === null) {
       handleReaction && handleReaction(reactionType, null);

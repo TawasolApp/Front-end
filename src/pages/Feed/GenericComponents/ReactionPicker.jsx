@@ -108,7 +108,7 @@ const ReactionPicker = ({ onSelectReaction, children }) => {
       {showPicker && (
         <div
           ref={pickerRef}
-          className={`absolute h-16 bottom-full mb-2 flex items-center bg-cardBackground rounded-full shadow-lg px-2 border border-itemBorder z-10 transition-all duration-300 ${hoveredIcon ? "scale-90" : ""}`}
+          className={`absolute h-16 bottom-full mb-2 flex items-center bg-cardBackground rounded-full shadow-lg px-2 border border-itemBorder z-[60] transition-all duration-300 ${hoveredIcon ? "scale-90" : ""}`}
         >
           {Object.entries(reactionIcons).map(
             ([reactionType, { Icon, color, label }], index, array) => {

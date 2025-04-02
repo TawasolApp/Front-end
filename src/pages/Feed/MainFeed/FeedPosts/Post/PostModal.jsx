@@ -6,15 +6,15 @@ import EngagementMetrics from "./Metrics/EngagementMetrics";
 import ActivitiesHolder from "./Activities/ActivitiesHolder";
 import CommentsContainer from "./Comments/CommentsContainer";
 import ReactionsModal from "../ReactionModal/ReactionsModal";
-
+import MediaCarousel from "./MediaCarousel/MediaCarousel";
 
 const PostModal = ({
   post,
+  mediaIndex,
   handleReaction,
   incrementCommentsNumber,
-  handleClosePostModal
+  handleClosePostModal,
 }) => {
-
   useEffect(() => {
     // Disable scrolling on the body when the modal opens
     document.body.style.overflow = "hidden";
@@ -23,8 +23,6 @@ const PostModal = ({
       document.body.style.overflow = "";
     };
   }, []);
-
-  const mediaUrl = post.media[0]; // Assuming single media for now
 
   const [showLikes, setShowLikes] = useState(false);
   const [showComments, setShowComments] = useState(false);
@@ -37,22 +35,16 @@ const PostModal = ({
     >
       {/* Main modal container */}
       <div
-        className="bg-white rounded-xl w-full max-w-6xl h-[80vh] flex overflow-hidden"
+        className="bg-white rounded-xl w-full max-w-6xl h-[80vh] flex flex-col md:flex-row overflow-hidden"
         onClick={(e) => e.stopPropagation()}
       >
         {/* Media container with black space */}
-        <div className="flex-1 bg-cardBackground flex items-center justify-center relative">
-          <div className="max-w-full max-h-full">
-            <img
-              src={mediaUrl}
-              alt="Post media"
-              className="max-h-[80vh] object-contain"
-            />
-          </div>
+        <div className="md:flex-1 w-full h-[60%] md:h-full bg-black flex items-center justify-center relative">
+          <MediaCarousel media={post.media} mediaIndex={mediaIndex} />
         </div>
 
         {/* Post card container */}
-        <div className="w-[500px] flex-shrink-0 border-l border-cardBorder h-full bg-cardBackground overflow-y-auto">
+        <div className="w-full md:w-[500px] flex-shrink-0 border-t md:border-l md:border-t-0 border-cardBorder h-[40%] md:h-full bg-cardBackground overflow-y-auto">
           <div className="bg-cardBackground rounded-none">
             <PostCardHeader
               authorId={post.authorId}

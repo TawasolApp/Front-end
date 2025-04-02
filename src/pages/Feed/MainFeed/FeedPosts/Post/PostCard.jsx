@@ -26,6 +26,7 @@ const PostCard = ({
   handleEditPost,
   incrementCommentsNumber,
   setShowPostModal,
+  setMediaIndex
 }) => {
   // TODO: change this to redux states
   const currentAuthorId = "mohsobh";
@@ -94,6 +95,11 @@ const PostCard = ({
     }
   };
 
+  const handleOpenPostModal = (index) => {
+    setMediaIndex(index);
+    setShowPostModal(true);
+  }
+
   return (
     <div className="bg-cardBackground rounded-none sm:rounded-lg border border-cardBorder mb-4">
       <PostCardHeader
@@ -112,7 +118,7 @@ const PostCard = ({
         taggedUsers={post.taggedUsers}
         media={post.media}
         modal={false}
-        handleOpenPostModal={setShowPostModal}
+        handleOpenPostModal={(index) => handleOpenPostModal(index)}
       />
 
       <EngagementMetrics

@@ -14,6 +14,7 @@ const PostContainer = ({ post, handleDeletePost }) => {
 
   const [localPost, setLocalPost] = useState(post);
   const [showPostModal, setShowPostModal] = useState(false);
+  const [mediaIndex, setMediaIndex] = useState(0);
 
   const handleEditPost = async (text, media, visibility, taggedUsers) => {
     await axiosInstance.patch(`/posts/${localPost.id}`, {
@@ -59,7 +60,11 @@ const PostContainer = ({ post, handleDeletePost }) => {
         const newReactions = { ...prev.reactions };
         if (reactionTypeAdd) newReactions[reactionTypeAdd] += 1;
         if (reactionTypeRemove) newReactions[reactionTypeRemove] -= 1;
-        return { ...prev, reactions: newReactions, reactType: reactionTypeAdd || null};
+        return {
+          ...prev,
+          reactions: newReactions,
+          reactType: reactionTypeAdd || null,
+        };
       });
     } catch (e) {
       console.log(`ERROR: ${e.message}`);
@@ -83,13 +88,15 @@ const PostContainer = ({ post, handleDeletePost }) => {
         handleEditPost={handleEditPost}
         incrementCommentsNumber={incrementCommentsNumber}
         setShowPostModal={() => setShowPostModal(true)}
+        setMediaIndex={setMediaIndex}
       />
       {showPostModal && (
         <PostModal
-            post={localPost}
-            handleReaction={handleReaction}
-            handleClosePostModal={() => setShowPostModal(false)}
-            incrementCommentsNumber={incrementCommentsNumber}
+          post={localPost}
+          mediaIndex={mediaIndex}
+          handleReaction={handleReaction}
+          handleClosePostModal={() => setShowPostModal(false)}
+          incrementCommentsNumber={incrementCommentsNumber}
         />
       )}
     </>
