@@ -105,7 +105,17 @@ const MainFeed = () => {
       console.log(e.message);
     }
   };
-  
+
+  const handleOpenPostModal = (post, mediaIndex) => {
+    setPostModal(post);
+    setMediaIndex(mediaIndex);
+  }
+
+  const handleClosePostModal = () => {
+    setPostModal(null);
+    setMediaIndex(0);
+  }
+
   return (
     <>
       <SharePost handleSharePost={handleSharePost} />
@@ -114,6 +124,7 @@ const MainFeed = () => {
           posts={posts}
           lastPostRef={lastPostElementRef}
           handleDeletePost={handleDeletePost}
+          handleOpenPostModal={handleOpenPostModal}
         />
 
         {loading && (

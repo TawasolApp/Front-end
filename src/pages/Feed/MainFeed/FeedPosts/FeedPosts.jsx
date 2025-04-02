@@ -1,6 +1,6 @@
 import PostCard from "./PostCard/PostCard";
 
-const FeedPosts = ({ posts, lastPostRef, handleDeletePost }) => {
+const FeedPosts = ({ posts, lastPostRef, handleDeletePost, handleOpenPostModal, handleClosePostModal }) => {
   return (
     <div className="space-y-4 w-full">
       {posts &&
@@ -9,7 +9,11 @@ const FeedPosts = ({ posts, lastPostRef, handleDeletePost }) => {
           if (index === posts.length - 1) {
             return (
               <div ref={lastPostRef} key={post.id || index}>
-                <PostCard post={post} handleDeletePosts={handleDeletePost} />
+                <PostCard
+                  post={post}
+                  handleDeletePost={handleDeletePost}
+                  handleOpenPostModal={handleOpenPostModal}
+                />
               </div>
             );
           }
@@ -18,6 +22,8 @@ const FeedPosts = ({ posts, lastPostRef, handleDeletePost }) => {
               key={post.id || index}
               post={post}
               handleDeletePost={handleDeletePost}
+              handleOpenPostModal={handleOpenPostModal}
+              handleClosePostModal={handleClosePostModal}
             />
           );
         })}
