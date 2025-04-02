@@ -11,10 +11,15 @@ const MediaCarousel = ({ media, mediaIndex }) => {
     setCurrentMediaIndex((prev) => Math.max(prev - 1, 0));
   };
 
+  // Determine media type from URL
+  const getMediaType = (url) => {
+    return url.includes('/videos/') ? 'video' : 'image';
+  };
+
   return (
     <div className="relative h-full w-full flex items-center justify-center">
       {/* Navigation buttons */}
-      <div className="absolute inset-0 flex items-center justify-between z-10 px-2">
+      <div className="absolute inset-0 flex items-center justify-between z-20 px-2">
         <button
           onClick={handlePrev}
           disabled={currentMediaIndex === 0}
@@ -55,21 +60,29 @@ const MediaCarousel = ({ media, mediaIndex }) => {
         </button>
       </div>
 
-      {/* Image container */}
-      <div className="relative w-full h-full flex items-center justify-center z-0">
-        {media.map((url, index) => (
+      {/* Media container */}
+      <div className="relative w-full h-full flex items-center justify-center z-10">
+      {media.map((url, index) => (
           <div
             key={url}
             className={`absolute inset-0 flex items-center justify-center ${
               index === currentMediaIndex ? "opacity-100" : "opacity-0"
-            }`}
+            } transition-opacity duration-300`}
           >
-            <div className="flex items-center justify-center max-w-full max-h-full w-full h-full">
-              <img
-                src={url}
-                alt={`Post media ${index + 1}`}
-                className="w-full h-full max-w-full max-h-full object-contain"
-              />
+            <div className="relative w-full h-full"> {/* Add relative here */}
+              {getMediaType(url) === 'video' ? (
+                <video 
+                  src={url}
+                  className="w-full h-full max-w-full max-h-full object-contain relative z-0"
+                  controls
+                />
+              ) : (
+                <img
+                  src={url}
+                  alt={`Post media ${index + 1}`}
+                  className="w-full h-full max-w-full max-h-full object-contain relative z-0"
+                />
+              )}
             </div>
           </div>
         ))}
