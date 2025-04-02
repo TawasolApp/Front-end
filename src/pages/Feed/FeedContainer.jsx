@@ -19,7 +19,7 @@ const FeedContainer = () => {
           </div>
 
           {/* Main Feed - changes width based on breakpoints */}
-          <main className="w-full mt-4 md:mt-0 md:ml-4 md:flex-1 lg:w-full lg:max-w-md xl:max-w-xl xl:flex-shrink-0 xl:pt-4">
+          <main className="w-full min-w-[430px] mt-4 md:mt-0 md:ml-4 md:flex-1 lg:w-full lg:max-w-md xl:max-w-xl xl:flex-shrink-0 xl:pt-4">
             <MainFeed />
           </main>
 

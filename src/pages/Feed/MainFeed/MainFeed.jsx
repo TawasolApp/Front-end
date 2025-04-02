@@ -78,12 +78,13 @@ const MainFeed = () => {
     fetchPosts(nextPage);
   };
 
-  const handleSharePost = async (text, visibility, taggedUsers) => {
+  const handleSharePost = async (text, media, visibility, taggedUsers) => {
+    
     try {
       const response = await axiosInstance.post("posts", {
         authorId: currentAuthorId,
         content: text,
-        media: [],
+        media: media,
         taggedUsers: taggedUsers,
         visibility: visibility,
       });

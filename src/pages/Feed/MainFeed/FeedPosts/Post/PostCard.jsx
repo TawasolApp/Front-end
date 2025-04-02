@@ -160,6 +160,7 @@ const PostCard = ({
           initialText={post.content}
           initialTaggedUsers={post.taggedUsers}
           initialVisiblity={post.visibility}
+          initialMedia={post.media}
         />
       )}
 

@@ -20,7 +20,7 @@ const PostContainer = ({ post, handleDeletePost }) => {
     await axiosInstance.patch(`/posts/${localPost.id}`, {
       authorId: currentAuthorId,
       content: text,
-      // TODO ADD MEDIA HERE
+      media: media,
       taggedUsers: taggedUsers,
       visibility: visibility,
     });
