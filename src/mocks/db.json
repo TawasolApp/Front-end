@@ -919,9 +919,7 @@
       },
       "comments": 0,
       "shares": 0,
-      "taggedUsers": [
-        "2"
-      ],
+      "taggedUsers": ["2"],
       "visibility": "Public",
       "authorType": "User",
       "reactType": null,

@@ -12,8 +12,8 @@ const TextModal = ({
   setIsModalOpen,
   handleSubmitFunction,
   initialText = "",
-  initialTaggedUsers=[],
-  initialVisiblity="Public"
+  initialTaggedUsers = [],
+  initialVisiblity = "Public",
 }) => {
   const [text, setText] = useState(initialText);
   const [visibilityType, setVisibilityType] = useState(initialVisiblity);

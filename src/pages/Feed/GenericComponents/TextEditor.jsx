@@ -9,8 +9,8 @@ const TextEditor = ({
   taggedUsers,
   setTaggedUsers,
   externalTextareaRef = null,
-  rows=undefined,
-  style=undefined
+  rows = undefined,
+  style = undefined,
 }) => {
   const [mentionStart, setMentionStart] = useState(null);
   const [searchQuery, setSearchQuery] = useState("");
@@ -25,26 +25,26 @@ const TextEditor = ({
     const mentionRegex = /@\*\*([^*]+)\*\*/g;
     const currentPatterns = [];
     let match;
-    
+
     while ((match = mentionRegex.exec(text)) !== null) {
       currentPatterns.push(match[0]);
     }
-    
+
     // Check if any patterns were removed
     if (tagPatterns.length > currentPatterns.length) {
       // Find which patterns were removed
       const removedPatterns = tagPatterns.filter(
-        pattern => !currentPatterns.includes(pattern)
+        (pattern) => !currentPatterns.includes(pattern),
       );
-      
+
       // For each removed pattern, remove the corresponding user
       removedPatterns.forEach(() => {
-        setTaggedUsers(prev => {
+        setTaggedUsers((prev) => {
           // Find the index of the removed pattern
           const patternIndex = tagPatterns.findIndex(
-            pattern => !currentPatterns.includes(pattern)
+            (pattern) => !currentPatterns.includes(pattern),
           );
-          
+
           // If found, remove the user at that index
           if (patternIndex !== -1) {
             const newTaggedUsers = [...prev];
@@ -55,7 +55,7 @@ const TextEditor = ({
         });
       });
     }
-    
+
     // Update the stored patterns
     setTagPatterns(currentPatterns);
   }, [text, taggedUsers]);
@@ -83,16 +83,23 @@ const TextEditor = ({
   };
 
   const handleUserSelect = (userId, firstName, lastName) => {
-    const mentionIndex = text.lastIndexOf("@", textareaRef.current.selectionStart - 1);
+    const mentionIndex = text.lastIndexOf(
+      "@",
+      textareaRef.current.selectionStart - 1,
+    );
     if (mentionIndex === -1) return;
 
     const tagPattern = `@**${firstName} ${lastName}**`;
-    const newText = text.slice(0, mentionIndex) + tagPattern + " " + text.slice(textareaRef.current.selectionStart);
+    const newText =
+      text.slice(0, mentionIndex) +
+      tagPattern +
+      " " +
+      text.slice(textareaRef.current.selectionStart);
     setText(newText);
     setTaggedUsers((prev) => [...prev, userId]);
-    
+
     // Update tag patterns array
-    setTagPatterns(prev => [...prev, tagPattern]);
+    setTagPatterns((prev) => [...prev, tagPattern]);
     setMentionStart(null);
     setSearchQuery("");
   };

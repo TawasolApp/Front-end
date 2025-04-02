@@ -5,7 +5,7 @@ import TextEditor from "../../../../GenericComponents/TextEditor";
 const AddForm = ({
   handleAddFunction,
   initialText = "",
-  initialTaggedUsers=[],
+  initialTaggedUsers = [],
   close = null,
   type,
 }) => {
@@ -63,7 +63,13 @@ const AddForm = ({
 
       <form onSubmit={handleSubmit} className="flex-1 relative" role="form">
         <TextEditor
-          placeholder={type === "Comment" ? "Add a comment..." : (type === "Edit Comment" ? "Edit Comment..." : "Add a Reply...")}
+          placeholder={
+            type === "Comment"
+              ? "Add a comment..."
+              : type === "Edit Comment"
+                ? "Edit Comment..."
+                : "Add a Reply..."
+          }
           className={`w-full px-3 py-1.5 bg-form ${isExpanded ? "rounded-xl" : "rounded-2xl"} border border-itemBorder focus:outline-none focus:border-itemBorderFocus ${isExpanded ? "pb-8" : "pb-1.5"} resize-none transition-all duration-200 overflow-hidden min-w-0 break-words text-textContent`}
           text={commentText}
           setText={setCommentText}

@@ -1,10 +1,6 @@
 import TextViewer from "../../../../../GenericComponents/TextViewer";
 
-const TextContent = ({
-  content,
-  taggedUsers
-}) => {
-
+const TextContent = ({ content, taggedUsers }) => {
   return (
     <div className="pb-2 mx-4">
       <TextViewer

@@ -41,7 +41,7 @@ const PostCard = ({ post, handleDeletePost }) => {
       onClick: () => {
         handleSavePost();
       },
-      icon: localPost.isSaved ? BookmarkIcon : BookmarkBorderIcon, // Import and use actual icon component
+      icon: localPost.isSaved ? BookmarkIcon : BookmarkBorderIcon,
     },
     {
       text: "Report post",

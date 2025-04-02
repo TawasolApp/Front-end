@@ -98,7 +98,7 @@ const Comment = ({ comment, handleDeleteComment, setComments }) => {
       setLocalComment((prev) => ({
         ...prev,
         content: text,
-        taggedUsers: taggedUsers
+        taggedUsers: taggedUsers,
       }));
     } catch (e) {
       console.log(e.message);
