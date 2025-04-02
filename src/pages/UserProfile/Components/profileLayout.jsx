@@ -8,7 +8,7 @@ function ProfileLayout() {
   const navigate = useNavigate();
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
-  const isOwner = true; // Replace with real auth logic
+  const isOwner = false; // Replace with real auth logic
 
   // Extract the ID from the URL slug: "fatma-gamal-1" → "1"
   const id = profileSlug?.split("-").pop();
