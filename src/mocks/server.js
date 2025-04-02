@@ -25,6 +25,15 @@ server.get("/connections/pending", (req, res) => {
   }
 });
 
+server.get("/connections/sent", (req, res) => {
+  try {
+    const sentConnections = _router.db.get("sentConnections").value();
+    res.status(200).jsonp(sentConnections);
+  } catch (error) {
+    res.status(500).jsonp({ error: "Failed to retrieve sent connections" });
+  }
+});
+
 server.patch("/connections/:userId", (req, res) => {
   try {
     const { userId } = req.params;

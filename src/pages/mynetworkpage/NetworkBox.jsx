@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 import { axiosInstance } from "../../apis/axios";
 import PeopleIcon from "@mui/icons-material/People";
 import BlockIcon from "@mui/icons-material/Block";
@@ -105,13 +105,19 @@ const NetworkBox = () => {
         <div className="flex-1 space-y-6">
           {/* Invitations Box */}
           <div className="bg-cardBackground rounded-lg shadow-md border border-cardBorder overflow-hidden">
-            <div className="p-6 border-b border-cardBorder">
+            <div className="p-6 border-b border-cardBorder flex justify-between items-center">
               <h2 className="text-xl font-semibold text-textHeavyTitle">
                 Invitations{" "}
                 <span className="text-textPlaceholder">
                   ({pendingRequests.length})
                 </span>
               </h2>
+              <Link 
+                to="/manage-connections"
+                className="px-4 py-2 text-medium font-medium text-textActivity hover:bg-buttonIconHover rounded-3xl transition-colors"
+              >
+                Manage
+              </Link>
             </div>
 
             {pendingRequests.length > 0 ? (
@@ -171,7 +177,7 @@ const NetworkBox = () => {
             <p className="text-textPlaceholder mb-4">
               Millions of members use Premium
             </p>
-            <button className="px-4 py-2 bg-amber-100 dark:bg-amber-900 hover:bg-amber-200 dark:hover:bg-amber-800 text-amber-800 dark:text-amber-200 font-medium rounded-lg transition-colors">
+            <button className="px-4 py-2 bg-amberLight hover:bg-amberLightHover text-amberTextLight dark:text-amberTextDark font-medium rounded-lg transition-colors">
               Try Premium for EGPO
             </button>
             <p className="text-textPlaceholder mt-3 text-sm">

@@ -17,6 +17,22 @@
       "createdAt": "2023-05-15T10:30:00Z"
     }
   ],
+  "sentConnections": [
+    {
+      "userId": "5",
+      "username": "JaneDoe",
+      "profilePicture": "/images/jane.jpg",
+      "headline": "Product Manager at Meta",
+      "createdAt": "2023-05-20T14:45:00Z"
+    },
+    {
+      "userId": "6",
+      "username": "JohnSmith",
+      "profilePicture": "/images/john.jpg",
+      "headline": "UX Designer at Apple",
+      "createdAt": "2023-05-18T09:15:00Z"
+    }
+  ],
   "following": [
     {
       "userId": "5",
