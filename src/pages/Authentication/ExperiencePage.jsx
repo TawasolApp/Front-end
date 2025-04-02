@@ -1,10 +1,53 @@
 import React from "react";
 import ExperienceForm from "./Forms/ExperienceForm";
 import AuthenticationHeader from "./GenericComponents/AuthenticationHeader";
+import { useSelector } from "react-redux";
+import { axiosInstance } from "../../apis/axios";
 
 const ExperienceAuthPage = () => {
-  const handleSubmit = (experienceData) => {
-    console.log("Experience Data:", experienceData);
+  const { firstName, lastName, location } = useSelector(
+    (state) => state.authentication
+  );
+
+  const handleSubmit = async (experienceData) => {
+    let profileData = {
+      firstName,
+      lastName,
+      location,
+    };
+
+    if (experienceData.isStudent) {
+      profileData.education = [
+        {
+          school: experienceData.school,
+          startDate: experienceData.startDate,
+          endDate: experienceData.endDate,
+        },
+      ];
+    } else {
+      profileData.workExperience = [
+        {
+          title: experienceData.title,
+          employmentType: experienceData.employmentType,
+          company: experienceData.company,
+          startDate: experienceData.startDate,
+        },
+      ];
+    }
+
+    try {
+      const response = await axiosInstance.post(
+        "/profile",
+        profileData,
+      );
+
+      console.log("Success:", response.data);
+    } catch (error) {
+      console.error("Error submitting data:", error);
+    }
+
+    // TODO: login request,
+    // then request user profile and store it in states
   };
 
   return (
