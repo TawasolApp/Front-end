@@ -1,8 +1,7 @@
-import { useState, useRef, useEffect } from "react";
+import { useState } from "react";
 import PublicIcon from "@mui/icons-material/Public";
 import PeopleIcon from "@mui/icons-material/People";
 import Avatar from "@mui/material/Avatar";
-import DropdownUsers from "../../GenericComponents/DropdownUsers";
 import DropdownMenu from "../../GenericComponents/DropdownMenu";
 import TextEditor from "../../GenericComponents/TextEditor";
 import CloseIcon from "@mui/icons-material/Close";

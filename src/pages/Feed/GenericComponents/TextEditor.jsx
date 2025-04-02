@@ -1,4 +1,4 @@
-import { useState, useRef, useEffect } from "react";
+import { useState, useRef, useEffect, useImperativeHandle } from "react";
 import DropdownUsers from "./DropdownUsers";
 
 const TextEditor = ({
@@ -8,34 +8,57 @@ const TextEditor = ({
   setText,
   taggedUsers,
   setTaggedUsers,
+  externalTextareaRef = null,
+  rows=undefined,
+  style=undefined
 }) => {
   const [mentionStart, setMentionStart] = useState(null);
   const [searchQuery, setSearchQuery] = useState("");
-  const [prevTagPattern, setPrevTagPattern] = useState("");
+  const [tagPatterns, setTagPatterns] = useState([]);
   const textareaRef = useRef(null);
 
-  // Track when a mention pattern is deleted
-  useEffect(() => {
-    const checkForDeletedMention = () => {
-      // If we have a previous tag pattern but it's no longer in the text
-      if (
-        prevTagPattern &&
-        !text.includes(prevTagPattern) &&
-        taggedUsers.length > 0
-      ) {
-        // Remove the last tagged user
-        setTaggedUsers((prev) => {
-          const newTaggedUsers = [...prev];
-          newTaggedUsers.pop();
-          return newTaggedUsers;
-        });
-        // Clear the previous tag pattern
-        setPrevTagPattern("");
-      }
-    };
+  // Allow the parent to access the same textarea reference if externalTextareaRef is provided
+  useImperativeHandle(externalTextareaRef, () => textareaRef.current);
 
-    checkForDeletedMention();
-  }, [text, prevTagPattern, taggedUsers]);
+  // Track all mentions in the text when tags are added or text changes
+  useEffect(() => {
+    const mentionRegex = /@\*\*([^*]+)\*\*/g;
+    const currentPatterns = [];
+    let match;
+    
+    while ((match = mentionRegex.exec(text)) !== null) {
+      currentPatterns.push(match[0]);
+    }
+    
+    // Check if any patterns were removed
+    if (tagPatterns.length > currentPatterns.length) {
+      // Find which patterns were removed
+      const removedPatterns = tagPatterns.filter(
+        pattern => !currentPatterns.includes(pattern)
+      );
+      
+      // For each removed pattern, remove the corresponding user
+      removedPatterns.forEach(() => {
+        setTaggedUsers(prev => {
+          // Find the index of the removed pattern
+          const patternIndex = tagPatterns.findIndex(
+            pattern => !currentPatterns.includes(pattern)
+          );
+          
+          // If found, remove the user at that index
+          if (patternIndex !== -1) {
+            const newTaggedUsers = [...prev];
+            newTaggedUsers.splice(patternIndex, 1);
+            return newTaggedUsers;
+          }
+          return prev;
+        });
+      });
+    }
+    
+    // Update the stored patterns
+    setTagPatterns(currentPatterns);
+  }, [text, taggedUsers]);
 
   const handleTextChange = (e) => {
     const value = e.target.value;
@@ -60,23 +83,16 @@ const TextEditor = ({
   };
 
   const handleUserSelect = (userId, firstName, lastName) => {
-    const mentionIndex = text.lastIndexOf(
-      "@",
-      textareaRef.current.selectionStart - 1,
-    );
+    const mentionIndex = text.lastIndexOf("@", textareaRef.current.selectionStart - 1);
     if (mentionIndex === -1) return;
 
-    // Create a bold tag pattern for the mention
-    const tagPattern = `@${firstName} ${lastName}`;
-    const newText =
-      text.slice(0, mentionIndex) +
-      tagPattern +
-      " " +
-      text.slice(textareaRef.current.selectionStart);
+    const tagPattern = `@**${firstName} ${lastName}**`;
+    const newText = text.slice(0, mentionIndex) + tagPattern + " " + text.slice(textareaRef.current.selectionStart);
     setText(newText);
-
     setTaggedUsers((prev) => [...prev, userId]);
-    setPrevTagPattern(tagPattern); // Store the tag pattern for deletion detection
+    
+    // Update tag patterns array
+    setTagPatterns(prev => [...prev, tagPattern]);
     setMentionStart(null);
     setSearchQuery("");
   };
@@ -90,6 +106,8 @@ const TextEditor = ({
         value={text}
         onChange={handleTextChange}
         required
+        rows={rows || undefined}
+        style={style || {}}
       />
 
       {mentionStart !== null && (

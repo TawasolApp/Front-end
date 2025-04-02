@@ -109,7 +109,7 @@ const MainFeed = () => {
         <FeedPosts
           posts={posts}
           lastPostRef={lastPostElementRef}
-          deletePost={handleDeletePost}
+          handleDeletePost={handleDeletePost}
         />
 
         {loading && (

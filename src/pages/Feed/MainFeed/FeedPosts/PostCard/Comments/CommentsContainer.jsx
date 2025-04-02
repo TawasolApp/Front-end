@@ -74,11 +74,11 @@ const CommentsContainer = ({
     }
   }, [postId]);
 
-  const handleAddComment = async (text) => {
+  const handleAddComment = async (text, taggedUsers) => {
     try {
       const response = await axiosInstance.post(`/posts/comment/${postId}`, {
         content: text,
-        taggedUsers: [],
+        taggedUsers: taggedUsers,
       });
       incrementCommentsNumber("inc");
       setComments((prevComments) => [response.data, ...prevComments]);

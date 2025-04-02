@@ -12,6 +12,7 @@ import ReactionsModal from "../../ReactionModal/ReactionsModal";
 import AddForm from "./AddForm";
 import { formatDate } from "../../../../../../utils";
 import { axiosInstance } from "../../../../../../apis/axios";
+import TextViewer from "../../../../GenericComponents/TextViewer";
 
 const Comment = ({ comment, handleDeleteComment, setComments }) => {
   // TODO: change this to redux states
@@ -87,16 +88,17 @@ const Comment = ({ comment, handleDeleteComment, setComments }) => {
     });
   }
 
-  const handleEditComment = async (text) => {
+  const handleEditComment = async (text, taggedUsers) => {
     try {
       setEditorMode(false);
       await axiosInstance.patch(`/posts/comments/${localComment.id}`, {
         content: text,
-        tagged: [],
+        tagged: taggedUsers,
       });
       setLocalComment((prev) => ({
         ...prev,
         content: text,
+        taggedUsers: taggedUsers
       }));
     } catch (e) {
       console.log(e.message);
@@ -109,8 +111,9 @@ const Comment = ({ comment, handleDeleteComment, setComments }) => {
         <AddForm
           handleAddFunction={handleEditComment}
           initialText={localComment.content}
+          initialTaggedUsers={localComment.taggedUsers}
           close={() => setEditorMode(false)}
-          type="Reply"
+          type="Edit Comment"
         />
       ) : (
         <article>
@@ -136,9 +139,12 @@ const Comment = ({ comment, handleDeleteComment, setComments }) => {
 
           <CommentThreadWrapper>
             <div className="pl-2">
-              <p className="text-sm font-normal text-textContent">
-                {localComment.content}
-              </p>
+              <TextViewer
+                text={localComment.content}
+                maxChars={200}
+                maxLines={2}
+                taggedUsers={localComment.taggedUsers}
+              />
             </div>
           </CommentThreadWrapper>
 

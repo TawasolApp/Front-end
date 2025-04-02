@@ -62,13 +62,13 @@ const PostCard = ({ post, handleDeletePost }) => {
     },
   ];
 
-  const handleEditPost = async (text, visibility) => {
+  const handleEditPost = async (text, visibility, taggedUsers) => {
     try {
       await axiosInstance.patch(`/posts/${localPost.id}`, {
         authorId: currentAuthorId,
         content: text,
         media: [],
-        taggedUsers: [],
+        taggedUsers: taggedUsers,
         visibility: visibility,
       });
       setLocalPost((prev) => ({
@@ -156,7 +156,11 @@ const PostCard = ({ post, handleDeletePost }) => {
         menuItems={menuItems}
       />
 
-      <PostContent content={localPost.content} media={localPost.media} />
+      <PostContent
+        content={localPost.content}
+        taggedUsers={localPost.taggedUsers}
+        media={localPost.media}
+      />
 
       <EngagementMetrics
         reactions={localPost.reactions}

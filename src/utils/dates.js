@@ -7,7 +7,7 @@ export const formatDate = (timestamp) => {
   const now = dayjs();
   const date = dayjs(timestamp);
 
-  if (now.diff(date, "minute") < 1) return "Just now";
+  if (now.diff(date, "minute") < 1) return "now";
   if (now.diff(date, "minute") < 60) return `${now.diff(date, "minute")}m`;
   if (now.diff(date, "hour") < 24) return `${now.diff(date, "hour")}h`;
   if (now.diff(date, "day") === 1) return "Yesterday";

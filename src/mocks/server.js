@@ -818,11 +818,11 @@ server.post("/posts/comment/:postId", (req, res) => {
 
 server.patch("/posts/comments/:commentId", (req, res) => {
   const { commentId } = req.params;
-  const { content, taggedUsers } = req.body;
+  const { content, tagged } = req.body;
 
   const data = _router.db.get("comments").find({ id: commentId });
   if (data) {
-    data.assign({ content: content }).write();
+    data.assign({ content: content, taggedUsers: tagged }).write();
     return res.status(200).json({ message: "Comment edited successfully" });
   }
   return res.status(404).json({ message: "Comment not found" });
