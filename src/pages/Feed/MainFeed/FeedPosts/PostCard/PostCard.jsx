@@ -19,7 +19,15 @@ import { axiosInstance } from "../../../../../apis/axios";
 import TextModal from "../../SharePost/TextModal";
 import DeletePostModal from "../DeleteModal/DeletePostModal";
 
-const PostCard = ({ post, handleDeletePost }) => {
+const PostCard = ({
+  post,
+  handleDeletePost,
+  modal = false,
+  handleOpenPostModal,
+  handleClosePostModal,
+  className="bg-cardBackground rounded-none sm:rounded-lg border border-cardBorder mb-4"
+}) => {
+
   // TODO: change this to redux states
   const currentAuthorId = "mohsobh";
   const currentAuthorName = "Mohamed Sobh";
@@ -55,9 +63,7 @@ const PostCard = ({ post, handleDeletePost }) => {
     },
     {
       text: "Copy link to post",
-      onClick: () => {
-        handleCopyPost();
-      },
+      onClick: () => handleCopyPost(),
       icon: LinkIcon,
     },
   ];
@@ -81,7 +87,7 @@ const PostCard = ({ post, handleDeletePost }) => {
       console.log(e.message);
     }
   };
-
+  
   if (localPost.authorId === currentAuthorId) {
     menuItems.push({
       text: "Edit post",
@@ -116,7 +122,7 @@ const PostCard = ({ post, handleDeletePost }) => {
     );
   };
 
-  const handleReaction = (reactionTypeAdd, reactionTypeRemove) => {
+ const handleReaction = (reactionTypeAdd, reactionTypeRemove) => {
     let reacts = {};
     if (reactionTypeAdd) reacts[reactionTypeAdd] = 1;
     if (reactionTypeRemove) reacts[reactionTypeRemove] = 0;
@@ -145,7 +151,7 @@ const PostCard = ({ post, handleDeletePost }) => {
   };
 
   return (
-    <div className="bg-cardBackground rounded-none sm:rounded-lg border border-cardBorder mb-4">
+    <div className={className}>
       <PostCardHeader
         authorId={localPost.authorId}
         authorName={localPost.authorName}
@@ -154,12 +160,16 @@ const PostCard = ({ post, handleDeletePost }) => {
         timestamp={localPost.timestamp}
         visibility={localPost.visibility}
         menuItems={menuItems}
+        modal={modal}
+        handleClosePostModal={handleClosePostModal}
       />
 
       <PostContent
         content={localPost.content}
         taggedUsers={localPost.taggedUsers}
         media={localPost.media}
+        modal={modal}
+        handleOpenPostModal={(index) => handleOpenPostModal(post, index)}
       />
 
       <EngagementMetrics

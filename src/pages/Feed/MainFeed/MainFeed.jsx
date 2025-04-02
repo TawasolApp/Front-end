@@ -2,6 +2,7 @@ import { useState, useEffect, useRef, useCallback } from "react";
 import SharePost from "./SharePost/SharePost";
 import FeedPosts from "./FeedPosts/FeedPosts";
 import { axiosInstance } from "../../../apis/axios";
+import PostModal from "./FeedPosts/PostModal/PostModal";
 
 const MainFeed = () => {
   // TODO: change this to redux states
@@ -19,6 +20,9 @@ const MainFeed = () => {
 
   const observer = useRef();
   const isFetching = useRef(false);
+
+  const [postModal, setPostModal] = useState(null);
+  const [mediaIndex, setMediaIndex] = useState(0);
 
   const lastPostElementRef = useCallback(
     (node) => {
@@ -101,7 +105,7 @@ const MainFeed = () => {
       console.log(e.message);
     }
   };
-
+  
   return (
     <>
       <SharePost handleSharePost={handleSharePost} />
@@ -124,6 +128,14 @@ const MainFeed = () => {
           </div>
         )}
       </div>
+      {(postModal !== null) && (
+        <PostModal
+          post={postModal}
+          mediaIndex={mediaIndex}
+          handleDeletePost={handleDeletePost}
+          handleClosePostModal={handleClosePostModal}
+        />
+      )}
     </>
   );
 };

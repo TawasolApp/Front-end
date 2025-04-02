@@ -1,6 +1,6 @@
 import MediaItem from "./MediaItem";
 
-const MediaDisplay = ({ media }) => {
+const MediaDisplay = ({ media, handleOpenPostModal }) => {
   if (!media || media.length === 0) return null;
 
   const mediaCount = media.length;
@@ -16,7 +16,7 @@ const MediaDisplay = ({ media }) => {
 
   return (
     <div
-      className={`grid ${getGridLayout()} gap-0.5 overflow-hidden ${mediaCount >= 3 ? "h-96" : ""}`}
+      className={`grid ${getGridLayout()} pb-2 gap-0.5 overflow-hidden ${mediaCount >= 3 ? "h-96" : ""}`}
     >
       {displayMedia.map((url, index) => (
         <div
@@ -35,14 +35,19 @@ const MediaDisplay = ({ media }) => {
               ${mediaCount >= 4 && index === 3 ? "row-start-3" : ""}
             `}
         >
-          <MediaItem url={url} />
-          {remaining > 0 && index === 3 && (
-            <div className="absolute inset-0 bg-black/50 flex items-center justify-center">
-              <span className="text-white text-2xl font-bold">
-                +{remaining}
-              </span>
-            </div>
-          )}
+          <button
+            onClick={() => handleOpenPostModal(index)}
+          >
+            <MediaItem url={url} />
+            {remaining > 0 && index === 3 && (
+              <div className="absolute inset-0 bg-black/50 flex items-center justify-center">
+                <span className="text-white text-2xl font-bold">
+                  +{remaining}
+                </span>
+              </div>
+            )}
+          </button>
+          
         </div>
       ))}
     </div>

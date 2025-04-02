@@ -10,7 +10,7 @@ const CommentButton = ({ setShowComments }) => {
         sx={{ fontSize: 16 }}
         className="text-textActivity group-hover:text-textActivityHover"
       />
-      <span className="text-sm font-semibold text-textActivity group-hover:text-textActivityHove">
+      <span className="text-sm font-semibold text-textActivity group-hover:text-textActivityHover">
         Comment
       </span>
     </button>
