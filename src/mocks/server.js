@@ -7,6 +7,58 @@ const middlewares = defaults();
 server.use(middlewares);
 server.use(bodyParser);
 
+import express from "express";
+import multer from "multer";
+import path from "path";
+import fs from "fs";
+
+const uploadDir = "public";
+const subdirectories = ["images", "videos", "documents"];
+subdirectories.forEach((subdir) => {
+  const fullPath = path.join(uploadDir, subdir);
+  if (!fs.existsSync(fullPath)) {
+    fs.mkdirSync(fullPath, { recursive: true }); // Ensure full path is created
+  }
+});
+
+// Configure multer to store files
+const storage = multer.diskStorage({
+  destination: (req, file, cb) => {
+    let folder = "documents"; // Default folder
+    if (file.mimetype.startsWith("image/")) folder = "images";
+    if (file.mimetype.startsWith("video/")) folder = "videos";
+
+    cb(null, path.join(uploadDir, folder)); // Store in correct subdirectory
+  },
+  filename: (req, file, cb) => {
+    cb(null, Date.now() + path.extname(file.originalname)); // Unique filename
+  },
+});
+
+const upload = multer({ storage });
+
+// API to handle file uploads
+server.post("/api/uploadImage", upload.single("file"), (req, res) => {
+  if (!req.file) {
+    return res.status(400).json({ error: "No file uploaded" });
+  }
+
+  // Determine file type
+  const determineFileType = (mimetype) => {
+    if (mimetype.startsWith("image/")) return "image";
+    if (mimetype.startsWith("video/")) return "video";
+    if (mimetype === "application/pdf") return "document";
+    return "document"; // Default to document
+  };
+  const fileType = determineFileType(req.file.mimetype);
+  const fileUrl = `http://localhost:5000/public/${fileType}s/${req.file.filename}`;
+
+  return res.status(201).json(fileUrl);
+});
+
+server.use("/public", express.static(uploadDir));
+
+
 server.get("/connections/list", (req, res) => {
   try {
     let connections = _router.db.get("connections").value();
@@ -546,35 +598,15 @@ server.get("/posts", (req, res) => {
 
 server.post("/posts", (req, res) => {
 
-  console.log(req);
   // Get data from request body
   const authorId = req.body.authorId;
   const content = req.body.text || req.body.content; // Accept either name
   const visibility = req.body.visibility;
   const taggedUsers = req.body.taggedUsers || [];
   const mediaItems = req.body.media || [];
-  console.log(authorId)
-  // Basic validation
-  if (!authorId || !content) {
-    return res.status(400).json({ error: "authorId and content are required" });
-  }
 
-  // Process media (handle both FormData and JSON formats)
-  let processedMedia = [];
-  if (Array.isArray(mediaItems)) {
-    processedMedia = mediaItems.map(item => {
-      // If it's already a file from FormData
-      if (item instanceof File) {
-        return URL.createObjectURL(item);
-      }
-      // If it has a file property
-      else if (item && item.file) {
-        return URL.createObjectURL(item.file);
-      }
-      // Otherwise just return the item
-      return item;
-    });
-  }
+  // Basic validation
+  if (!authorId || !content) return res.status(400).json({ error: "authorId and content are required" });
 
   const newPost = {
     id: Date.now().toString(),
@@ -584,7 +616,7 @@ server.post("/posts", (req, res) => {
     authorPicture: currentUser.picture,
     authorBio: currentUser.bio,
     content: content,
-    media: processedMedia,
+    media: mediaItems,
     reactions: {
       Love: 0,
       Celebrate: 0,

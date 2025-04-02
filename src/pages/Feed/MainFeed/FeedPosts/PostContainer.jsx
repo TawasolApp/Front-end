@@ -29,6 +29,7 @@ const PostContainer = ({ post, handleDeletePost }) => {
       ...prev,
       content: text,
       taggedUsers: taggedUsers,
+      media: media,
       visibility: visibility,
     }));
   };
