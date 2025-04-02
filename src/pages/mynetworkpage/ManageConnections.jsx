@@ -54,21 +54,17 @@ const ManageConnections = () => {
   };
 
   const handleWithdraw = async (userId) => {
-    try {
-      await axiosInstance.delete(`/connections/sent/${userId}`);
-      setSentRequests(prev => prev.filter(request => request.userId !== userId));
-    } catch (error) {
+    
       console.error("Failed to withdraw request:", error);
-      setError("Failed to withdraw request. Please try again.");
-    }
+     
   };
 
   return (
     <div className="min-h-screen bg-mainBackground p-4 sm:p-6">
       <div className="bg-cardBackground p-4 sm:p-6 rounded-lg shadow-md w-full mx-auto max-w-full sm:max-w-[900px] border border-cardBorder">
         <div className="border-b border-cardBorder pb-4 mb-4">
-          <div className="flex items-center justify-center"> {/* Changed this line */}
-            <h1 className="text-xl font-semibold text-textHeavyTitle">
+          <div className="flex items-center justify-start"> {/* Changed this line */}
+            <h1 className="text-lg font-semibold text-textHeavyTitle">
               Manage Invitations
             </h1>
           </div>
@@ -83,7 +79,7 @@ const ManageConnections = () => {
             }`}
             onClick={() => setActiveTab("received")}
           >
-            Received ({pendingRequests.length})
+            Received 
           </button>
           <button
             className={`px-3 py-1 sm:px-4 sm:py-2 font-semibold text-sm sm:text-base ${
@@ -93,7 +89,7 @@ const ManageConnections = () => {
             }`}
             onClick={() => setActiveTab("sent")}
           >
-            Sent ({sentRequests.length})
+            Sent 
           </button>
         </div>
 

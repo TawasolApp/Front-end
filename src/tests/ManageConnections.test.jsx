@@ -74,7 +74,7 @@ describe("ManageConnections", () => {
 
     render(<ManageConnections />);
 
-    const sentTab = screen.getByText("Sent (0)");
+    const sentTab = screen.getByText("Sent");
     fireEvent.click(sentTab);
 
     await waitFor(() => {
@@ -169,7 +169,7 @@ describe("ManageConnections", () => {
 
     render(<ManageConnections />);
 
-    const sentTab = screen.getByText("Sent (0)");
+    const sentTab = screen.getByText("Sent");
     fireEvent.click(sentTab);
 
     await waitFor(() => {
