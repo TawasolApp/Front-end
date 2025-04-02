@@ -1,5 +1,6 @@
 import { useState } from "react";
-import PostCard from "./PostCard/PostCard";
+import PostCard from "./Post/PostCard";
+import PostModal from "./Post/PostModal";
 import { axiosInstance } from "../../../../apis/axios";
 
 const PostContainer = ({ post, handleDeletePost }) => {

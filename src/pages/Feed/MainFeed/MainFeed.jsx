@@ -2,7 +2,6 @@ import { useState, useEffect, useRef, useCallback } from "react";
 import SharePost from "./SharePost/SharePost";
 import FeedPosts from "./FeedPosts/FeedPosts";
 import { axiosInstance } from "../../../apis/axios";
-import PostModal from "./FeedPosts/PostModal/PostModal";
 
 const MainFeed = () => {
   // TODO: change this to redux states

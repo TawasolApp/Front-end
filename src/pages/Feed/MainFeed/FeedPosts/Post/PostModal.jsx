@@ -1,4 +1,3 @@
-import PostCard from "../PostCard/PostCard";
 
 const PostModal = ({ mediaIndex }) => {
   const mediaUrl = post.media[0]; // Assuming single media for now
@@ -26,16 +25,7 @@ const PostModal = ({ mediaIndex }) => {
 
         {/* Post card container */}
         <div className="w-[500px] flex-shrink-0 border-l border-cardBorder h-full bg-cardBackground">
-          <PostCard
-            post={post}
-            handleDeletePost={handleDeletePost}
-            modal={true}
-            handleClosePostModal={handleClosePostModal}
-            className="bg-cardBackground rounded-none "
-            incrementCommentsNumber={(incOrDec) =>
-              incrementCommentsNumber(post.id, incOrDec)
-            }
-          />
+  
         </div>
       </div>
     </div>
