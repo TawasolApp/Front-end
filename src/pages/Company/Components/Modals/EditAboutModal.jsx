@@ -4,6 +4,7 @@ import { axiosInstance as axios } from "../../../../apis/axios";
 function EditAboutModal({ show, companyData, onClose }) {
   const [errorMessage, setErrorMessage] = useState("");
   const [formData, setFormData] = useState({
+    name: "",
     logo: "",
     banner: "",
     description: "",
@@ -22,7 +23,7 @@ function EditAboutModal({ show, companyData, onClose }) {
   useEffect(() => {
     if (show && companyData) {
       setFormData({
-        name: null,
+        name: companyData.name,
         logo: companyData.logo || "",
         banner: companyData.banner || "",
         description: companyData.description || "",

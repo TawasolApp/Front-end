@@ -455,7 +455,7 @@
   "companies": [
     {
       "companyId": "elsewedy-electric",
-      "name": null,
+      "name": "elsewedy electric",
       "isFollowing": false,
       "isVerified": false,
       "isManager": true,
@@ -471,8 +471,13 @@
       "address": "New cairo,cairo",
       "location": "https://maps.app.goo.gl/fEh4pBYt6LvTFxQE8",
       "email": "elsewedyelectric@yahoo.com",
-      "contactNumber": 19159,
-      "banner": "https://media.licdn.com/dms/image/v2/D563DAQE4HioUznS0qQ/image-scale_191_1128/B56ZVMz7QJGoAg-/0/1740750438895/elsewedyelectric_cover?e=1744239600&v=beta&t=fe4Yc08ksyoXUa8DuSOljgRE7RyYbf8dSo3pamB9cWk"
+      "contactNumber": "19019",
+      "banner": "https://media.licdn.com/dms/image/v2/D563DAQE4HioUznS0qQ/image-scale_191_1128/B56ZVMz7QJGoAg-/0/1740750438895/elsewedyelectric_cover?e=1744239600&v=beta&t=fe4Yc08ksyoXUa8DuSOljgRE7RyYbf8dSo3pamB9cWk",
+      "Managers": [
+        "1",
+        "2",
+        "3"
+      ]
     },
     {
       "companyId": "google",
