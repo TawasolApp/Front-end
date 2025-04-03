@@ -121,13 +121,19 @@ function CompanyHeader({
             · {company.companySize}
           </p>
           <div className="mt-4 flex flex-nowrap gap-2 sm:gap-3 pb-4 items-center justify-start relative">
-            {/* Follow Button */}
-            {!showAdminIcons && (
+            {/* Follow Button Users */}
+            {!showAdminIcons && !isAdmin && (
               <button
                 className="px-4 h-9 min-w-max rounded-full transition duration-300 border-2 border-blue-700 bg-boxbackground text-blue-700 font-medium text-sm flex items-center justify-center"
                 onClick={handleFollowToggling}
               >
                 {isFollowing ? "✓ Following" : "+ Follow"}
+              </button>
+            )}
+            {/* Follow Button Admin */}
+            {!showAdminIcons && isAdmin && (
+              <button className="px-4 h-9 min-w-max rounded-full transition duration-300 border-2 border-blue-700 bg-boxbackground text-blue-700 font-medium text-sm flex items-center justify-center">
+                + Follow
               </button>
             )}
 

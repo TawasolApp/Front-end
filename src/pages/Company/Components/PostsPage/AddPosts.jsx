@@ -1,8 +1,14 @@
 import React, { useState } from "react";
-import StartPostModal from "./StartPostModal";
+import TextModal from "../../../Feed/MainFeed/SharePost/TextModal";
 
 function AddPosts({ logo, name, companyId, onPostSuccess }) {
-  const [modalOpen, setModalOpen] = useState(false);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const handlePostSubmit = (content) => {
+    // You can hardcode visibility or pass it dynamically if you want
+    onPostSuccess(content, "Public");
+    setIsModalOpen(false);
+  };
+
   return (
     <div className="bg-boxbackground p-4 shadow-md rounded-md w-full max-w-3xl mx-auto mb-6">
       {/* Top section with input only */}
@@ -21,20 +27,20 @@ function AddPosts({ logo, name, companyId, onPostSuccess }) {
           <input
             type="text"
             placeholder="Start a post"
-            onClick={() => setModalOpen(true)}
+            onClick={() => setIsModalOpen(true)}
             className="w-full bg-transparent border border-gray-500 text-text rounded-full px-4 py-2 focus:outline-none cursor-pointer"
           />
         </div>
       </div>
 
-      <StartPostModal
-        isOpen={modalOpen}
-        onClose={() => setModalOpen(false)}
-        logo={logo}
-        name={name}
-        companyId={companyId}
-        onPostSuccess={onPostSuccess}
-      />
+      {isModalOpen && (
+        <TextModal
+          currentAuthorName={name}
+          currentAuthorPicture={logo}
+          setIsModalOpen={setIsModalOpen}
+          handleSubmitFunction={handlePostSubmit}
+        />
+      )}
     </div>
   );
 }

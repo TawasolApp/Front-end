@@ -29,19 +29,23 @@ function PostsPage() {
     if (companyId) {
       setLoading(true);
       axiosInstance
-        .get(`/companies/${companyId}/posts`)
+        .get("/posts")
         .then((response) => {
-          setPosts(response.data);
+          const filteredPosts = response.data.filter(
+            (post) => post.authorId?.toString() === companyId
+          );
+          setPosts(filteredPosts);
+
           if (postIdFromUrl) {
-            const post = response.data.find((p) => p.id === postIdFromUrl);
-            setSelectedPost(post); // Set selected post based on postId from URL
+            const post = filteredPosts.find((p) => p.id === postIdFromUrl);
+            setSelectedPost(post);
           }
         })
         .catch((error) => {
           console.error("Error fetching posts:", error);
         })
         .finally(() => {
-          setLoading(false); // Set loading to false when the fetch completes
+          setLoading(false);
         });
     }
   }, [companyId]);
@@ -50,9 +54,29 @@ function PostsPage() {
     setPosts((prevPosts) => prevPosts.filter((post) => post.id !== postId));
   };
 
-  const handleAddPost = (newPost) => {
-    setPosts((prevPosts) => [newPost, ...prevPosts]);
+  const handleSharePost = async (text, visibility) => {
+    try {
+      const response = await axiosInstance.post("/posts", {
+        authorId: String(companyId),
+        authorName: company.name,
+        authorPicture: company.logo,
+        authorBio: "",
+        content: text,
+        media: [],
+        taggedUsers: [],
+        visibility,
+      });
+
+      const newPost = response.data;
+
+      if (newPost.authorId?.toString() === companyId) {
+        setPosts((prevPosts) => [newPost, ...prevPosts]);
+      }
+    } catch (err) {
+      console.error("Error creating post:", err);
+    }
   };
+
   // Scroll to the specific post when it's selected
   useEffect(() => {
     if (selectedPost) {
@@ -73,7 +97,7 @@ function PostsPage() {
           logo={company.logo}
           name={company.name}
           companyId={company.companyId}
-          onPostSuccess={handleAddPost}
+          onPostSuccess={handleSharePost}
         />
       )}
 
