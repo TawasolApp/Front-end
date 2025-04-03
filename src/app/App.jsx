@@ -29,11 +29,11 @@ import AboutPage from "../pages/Company/Components/Pages/AboutPage.jsx";
 import HomePage from "../pages/Company/Components/Pages/HomePage.jsx";
 import CreateCompanyPage from "../pages/Company/Components/CreateCompanyPage/CreateCompanyPage.jsx";
 
-import NetworkBox from "../pages/mynetworkpage/NetworkBox";
-import ConnectionPage from "../pages/mynetworkpage/Connections/ConnectionPage";
-import BlockedPage from "../pages/mynetworkpage/BlockedPage";
-import FollowPage from "../pages/mynetworkpage/FollowPage";
-import ManageConnections from "../pages/mynetworkpage/ManageConnections";
+import NetworkBox from "../pages/MyNetwork/NetworkBox";
+import ConnectionPage from "../pages/MyNetwork/Connections/ConnectionPage";
+import BlockedPage from "../pages/MyNetwork/BlockedPage";
+import FollowPage from "../pages/MyNetwork/FollowPage";
+import ManageConnections from "../pages/MyNetwork/ManageConnections";
 
 import FeedContainer from "../pages/Feed/FeedContainer";
 import SavedPostsContainer from "../pages/SavedPosts/SavedPostsContainer";
