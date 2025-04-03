@@ -34,7 +34,16 @@ function CreateCompanyPage() {
     if (!orgType.trim())
       newErrors.orgType = "Please select an organization type.";
     if (!agreeTerms) newErrors.agreeTerms = "You must agree to the terms.";
-
+    // Email validation (required and must be in correct format)
+    if (!email.trim()) {
+      newErrors.email = "Please enter an email address.";
+    }
+    if (!website.trim()) {
+      newErrors.website = "Please enter the company website.";
+    }
+    if (!contactNumber.trim()) {
+      newErrors.contactNumber = "Please enter a contact number.";
+    }
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
   }
@@ -50,28 +59,29 @@ function CreateCompanyPage() {
     }
 
     const newCompany = {
-      companyId: companyName.toLowerCase().replace(/\s+/g, "-"),
       name: companyName,
-      description: `${companyName} is a leading company in the ${industry} sector.`,
-      overview,
-      founded: parseInt(founded),
-      industry,
+      logo: base64Logo,
+      banner: null,
+      description: tagline,
       companySize: orgSize,
       companyType: orgType,
+      industry,
+      overview,
+      founded: parseInt(founded),
       website,
       address,
       location,
       email,
       contactNumber,
-      logo: base64Logo,
     };
 
     try {
       const response = await axios.post("/companies", newCompany);
       if (response.status === 201) {
         setSuccessMessage("Company page created successfully!");
+        const createdCompany = response.data.company;
         setTimeout(() => {
-          navigate(`/company/${newCompany.companyId}/home`);
+          navigate(`/company/${createdCompany.companyId}/home`);
         }, 2000);
       }
     } catch (error) {
@@ -122,41 +132,25 @@ function CreateCompanyPage() {
               )}
             </div>
 
-            {/* Website */}
+            {/* Description */}
             <div>
               <label className="block text-sm text-normaltext mb-1">
-                Website
+                Tagline
               </label>
-              <input
-                type="url"
-                id="company-website"
-                data-testid="company-website"
-                className="w-full p-1 border text-sm border-gray-400 rounded-md bg-boxbackground text-normaltext"
-                placeholder="Begin with http://, https:// or www."
+              <textarea
+                value={tagline}
+                id="company-tagline"
+                data-testid="company-tagline"
+                onChange={(e) => setTagline(e.target.value)}
+                className="w-full p-2 border rounded-md bg-boxbackground text-normaltext"
+                placeholder="ex: An information services firm helping small businesses succeed."
+                maxLength={120}
               />
+              <p className="text-xs text-gray-500">
+                Use your tagline to briefly describe what your organization
+                does. This can be changed later.
+              </p>
             </div>
-
-            {/* Industry */}
-            <div>
-              <label className="block text-sm text-normaltext mb-1">
-                Industry*
-              </label>
-              <input
-                type="text"
-                id="company-industry"
-                data-testid="company-industry"
-                value={industry}
-                onChange={(e) => setIndustry(e.target.value)}
-                className={`w-full p-1 border text-sm border-gray-400 rounded-md bg-boxbackground text-normaltext ${
-                  errors.industry ? "border-red-500" : "border-gray-400"
-                }`}
-                placeholder="ex: Information Services"
-              />
-              {errors.industry && (
-                <p className="text-red-500 text-xs mt-1">{errors.industry}</p>
-              )}
-            </div>
-
             {/* Organization Size */}
             <div>
               <label className="block text-sm text-normaltext mb-1">
@@ -183,7 +177,6 @@ function CreateCompanyPage() {
                 <p className="text-red-500 text-xs mt-1">{errors.orgSize}</p>
               )}
             </div>
-
             {/* Organization Type */}
             <div>
               <label className="block text-sm text-normaltext mb-1">
@@ -212,6 +205,26 @@ function CreateCompanyPage() {
                 <p className="text-red-500 text-xs mt-1">{errors.orgType}</p>
               )}
             </div>
+            {/* Industry */}
+            <div>
+              <label className="block text-sm text-normaltext mb-1">
+                Industry*
+              </label>
+              <input
+                type="text"
+                id="company-industry"
+                data-testid="company-industry"
+                value={industry}
+                onChange={(e) => setIndustry(e.target.value)}
+                className={`w-full p-1 border text-sm border-gray-400 rounded-md bg-boxbackground text-normaltext ${
+                  errors.industry ? "border-red-500" : "border-gray-400"
+                }`}
+                placeholder="ex: Information Services"
+              />
+              {errors.industry && (
+                <p className="text-red-500 text-xs mt-1">{errors.industry}</p>
+              )}
+            </div>
             {/* Overview */}
             <div>
               <label className="block text-sm text-normaltext mb-1">
@@ -237,6 +250,26 @@ function CreateCompanyPage() {
                 className="w-full p-1 border text-sm rounded-md bg-boxbackground text-normaltext"
                 placeholder="e.g., 1999"
               />
+            </div>
+            {/* Website */}
+            <div>
+              <label className="block text-sm text-normaltext mb-1">
+                Website*
+              </label>
+              <input
+                type="url"
+                value={website}
+                id="company-website"
+                data-testid="company-website"
+                onChange={(e) => setWebsite(e.target.value)}
+                className={`w-full p-1 border text-sm border-gray-400 rounded-md bg-boxbackground text-normaltext ${
+                  errors.website ? "border-red-500" : "border-gray-400"
+                }`}
+                placeholder="Begin with http://, https:// or www."
+              />
+              {errors.website && (
+                <p className="text-red-500 text-xs mt-1">{errors.website}</p>
+              )}
             </div>
 
             {/* Address */}
@@ -270,30 +303,43 @@ function CreateCompanyPage() {
             {/* Email */}
             <div>
               <label className="block text-sm text-normaltext mb-1">
-                Email
+                Email*
               </label>
               <input
                 type="email"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
-                className="w-full p-1 border text-sm rounded-md bg-boxbackground text-normaltext"
+                className={`w-full p-1 border text-sm rounded-md bg-boxbackground text-normaltext ${
+                  errors.email ? "border-red-500" : "border-gray-400"
+                }`}
                 placeholder="example@company.com"
               />
+              {errors.email && (
+                <p className="text-red-500 text-xs mt-1">{errors.email}</p>
+              )}
             </div>
 
             {/* Contact Number */}
             <div>
               <label className="block text-sm text-normaltext mb-1">
-                Contact Number
+                Contact Number*
               </label>
               <input
                 type="tel"
                 value={contactNumber}
                 onChange={(e) => setContactNumber(e.target.value)}
-                className="w-full p-1 border text-sm rounded-md bg-boxbackground text-normaltext"
+                className={`w-full p-1 border text-sm rounded-md bg-boxbackground text-normaltext ${
+                  errors.contactNumber ? "border-red-500" : "border-gray-400"
+                }`}
                 placeholder="+20 123 456 7890"
               />
+              {errors.contactNumber && (
+                <p className="text-red-500 text-xs mt-1">
+                  {errors.contactNumber}
+                </p>
+              )}
             </div>
+
             {/* Logo Upload */}
             <div>
               <label className="block text-sm text-normaltext mb-1">Logo</label>
@@ -328,26 +374,6 @@ function CreateCompanyPage() {
               </p>
             </div>
 
-            {/* Tagline */}
-            <div>
-              <label className="block text-sm text-normaltext mb-1">
-                Tagline
-              </label>
-              <textarea
-                value={tagline}
-                id="company-tagline"
-                data-testid="company-tagline"
-                onChange={(e) => setTagline(e.target.value)}
-                className="w-full p-2 border rounded-md bg-boxbackground text-normaltext"
-                placeholder="ex: An information services firm helping small businesses succeed."
-                maxLength={120}
-              />
-              <p className="text-xs text-gray-500">
-                Use your tagline to briefly describe what your organization
-                does. This can be changed later.
-              </p>
-            </div>
-
             {/* Verification Checkbox */}
             <div className="flex items-start gap-2">
               <input
@@ -366,11 +392,6 @@ function CreateCompanyPage() {
             {errors.agreeTerms && (
               <p className="text-red-500 text-xs mt-1">{errors.agreeTerms}</p>
             )}
-
-            {/* Terms Link */}
-            <p className="text-blue-600 cursor-pointer hover:underline font-medium text-sm">
-              Read the LinkedIn Pages Terms
-            </p>
           </div>
 
           {/* Right Page Preview */}

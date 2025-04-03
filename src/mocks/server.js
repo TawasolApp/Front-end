@@ -972,26 +972,64 @@ server.post("/companies", (req, res) => {
   console.log("Creating a new company...");
 
   const newCompany = req.body; // Get request body (new company data)
-  if (!newCompany.companyId || !newCompany.name || !newCompany.description) {
+
+  // Check required fields (companyId, name, and companySize)
+  if (
+    !newCompany.name ||
+    !newCompany.companySize ||
+    !newCompany.companyType ||
+    !newCompany.industry ||
+    !newCompany.email ||
+    !newCompany.website ||
+    !newCompany.contactNumber
+  ) {
     return res.status(400).json({ error: "Missing required fields" });
   }
 
-  // Check if company already exists
+  // Generate companyId based on company name (slug format: lowercase, spaces replaced with hyphens)
+  const companyId = newCompany.name.toLowerCase().replace(/\s+/g, "-");
+
+  // Check if company already exists (based on companyId)
   const existingCompany = _router.db
     .get("companies")
-    .find({ companyId: newCompany.companyId })
+    .find({ companyId })
     .value();
+
   if (existingCompany) {
     return res
       .status(409)
       .json({ error: "Company with this ID already exists" });
   }
 
-  _router.db.get("companies").push(newCompany).write(); // Add to database
+  // Add the new company to the database
+  _router.db
+    .get("companies")
+    .push({
+      companyId,
+      isManager: true,
+      name: newCompany.name,
+      logo: newCompany.logo || "",
+      banner: newCompany.banner || "",
+      description: newCompany.description || "",
+      companySize: newCompany.companySize,
+      companyType: newCompany.companyType,
+      industry: newCompany.industry,
+      overview: newCompany.overview || "",
+      founded: newCompany.founded || null,
+      website: newCompany.website,
+      address: newCompany.address || "",
+      location: newCompany.location || "",
+      email: newCompany.email,
+      contactNumber: newCompany.contactNumber,
+    })
+    .write(); // Add to database
 
   res.status(201).json({
     message: "Company page created successfully",
-    company: newCompany,
+    company: {
+      companyId,
+      ...newCompany,
+    },
   });
 });
 
@@ -1032,69 +1070,7 @@ server.delete("/companies/:companyId/unfollow", (req, res) => {
     company: company.value(),
   });
 });
-// GET - Fetch all posts for a specific company
-server.get("/companies/:companyId/posts", (req, res) => {
-  const { companyId } = req.params;
-  console.log("Requested companyId:", companyId);
-
-  const allPosts = _router.db.get("posts").value();
-
-  const filtered = allPosts.filter(
-    (post) => post.authorId === companyId && post.authorType === "Company"
-  );
-
-  const sorted = filtered.sort(
-    (a, b) => new Date(b.timestamp) - new Date(a.timestamp)
-  );
-
-  console.log("Returning posts:", sorted);
-  res.jsonp(sorted);
-});
-// POST - Create a new post for a specific company
-server.post("/companies/:companyId/updates", (req, res) => {
-  const { companyId } = req.params;
-  const { content, media, visibility } = req.body;
-
-  if (!content) {
-    return res.status(400).json({ error: "Content is required" });
-  }
-  const company = _router.db.get("companies").find({ companyId }).value();
-
-  if (!company) {
-    return res.status(404).json({ error: "Company not found" });
-  }
-
-  const newPost = {
-    id: Date.now().toString(),
-    authorId: companyId,
-    authorName: company.name,
-    authorPicture: company.logo,
-    content,
-    media: media || [],
-    reactions: {
-      Love: 0,
-      Celebrate: 0,
-      Insightful: 0,
-      Funny: 0,
-      Support: 0,
-      Like: 0,
-    },
-    comments: 0,
-    shares: 0,
-    taggedUsers: [],
-    visibility: visibility || "Public",
-    authorType: "Company",
-    reactType: null,
-    timestamp: new Date().toISOString(),
-  };
-
-  _router.db.get("posts").push(newPost).write();
-
-  res.status(201).json({
-    message: "Post created successfully",
-    post: newPost,
-  });
-});
+// add new job opening
 server.post("/companies/:companyId/jobs", (req, res) => {
   const { companyId } = req.params;
   const {
@@ -1131,7 +1107,7 @@ server.post("/companies/:companyId/jobs", (req, res) => {
 
   res.status(201).json(newJob);
 });
-
+// get job openings of a company
 server.get("/companies/:companyId/jobs", (req, res) => {
   const { companyId } = req.params;
 
@@ -1199,6 +1175,48 @@ server.get("/companies/:companyId/followers", (req, res) => {
   } catch (error) {
     res.status(500).json({ message: "Failed to retrieve company followers." });
   }
+});
+server.post("/companies/:companyId/managers", (req, res) => {
+  const { companyId } = req.params;
+  const { userId } = req.body;
+
+  if (!companyId || !userId) {
+    return res.status(400).json({ message: "Invalid company ID/user ID." });
+  }
+
+  const db = _router.db;
+
+  const company = db
+    .get("companies")
+    .find((c) => c.companyId.toString() === companyId.toString())
+    .value();
+
+  const user = db.get("users").find({ id: userId.toString() }).value();
+
+  if (!company) {
+    return res.status(404).json({ message: "Company not found." });
+  }
+
+  if (!user) {
+    return res.status(404).json({ message: "User not found." });
+  }
+
+  if (!company.Managers) {
+    company.Managers = [];
+  }
+
+  if (company.Managers.includes(userId)) {
+    return res.status(409).json({ message: "User already a manager" });
+  }
+
+  company.Managers.push(userId);
+
+  db.get("companies")
+    .find((c) => c.companyId.toString() === companyId.toString())
+    .assign({ Managers: company.Managers })
+    .write();
+
+  return res.status(201).json({ message: "Manager added successfully." });
 });
 
 server.use(_router);

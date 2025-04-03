@@ -11,6 +11,7 @@ import FollowersModal from "../Modals/FollowersModal.jsx";
 import MoreOptionsModal from "../Modals/MoreOptionsModal.jsx";
 import { formatNumbers } from "../../../../utils/formatNumbers.js";
 import { axiosInstance } from "../../../../apis/axios.js";
+import AddManagerModal from "../Modals/AddManagerModal.jsx";
 function CompanyHeader({
   company,
   showAdminIcons,
@@ -25,6 +26,7 @@ function CompanyHeader({
   const [showEditModal, setShowEditModal] = useState(false);
   const [isPhotoClicked, setIsOpen] = useState(false);
   const [showFollowersModal, setShowFollowersModal] = useState(false);
+  const [showAddManagerModal, setShowAddManagerModal] = useState(false);
 
   if (!company) {
     return <LoadingPage />;
@@ -107,7 +109,9 @@ function CompanyHeader({
             )}
           </div>
 
-          <p className="text-companyheader1">{company.description}</p>
+          <p className="text-companyheader1 font-semibold">
+            {company.description}
+          </p>
           <p className="text-companysubheader mt-1">
             {company.address} ·{" "}
             <button
@@ -119,13 +123,30 @@ function CompanyHeader({
             · {company.companySize}
           </p>
           <div className="mt-4 flex flex-nowrap gap-2 sm:gap-3 pb-4 items-center justify-start relative">
-            {/* Follow Button */}
-            <button
-              className="px-4 h-9 min-w-max rounded-full transition duration-300 border-2 border-blue-700 bg-boxbackground text-blue-700 font-medium text-sm flex items-center justify-center"
-              onClick={handleFollowToggling}
-            >
-              {isFollowing ? "✓ Following" : "+ Follow"}
-            </button>
+            {/* Follow Button Users */}
+            {!showAdminIcons && !isAdmin && (
+              <button
+                className="px-4 h-9 min-w-max rounded-full transition duration-300 border-2 border-blue-700 bg-boxbackground text-blue-700 font-medium text-sm flex items-center justify-center"
+                onClick={handleFollowToggling}
+              >
+                {isFollowing ? "✓ Following" : "+ Follow"}
+              </button>
+            )}
+            {/* Follow Button Admin */}
+            {!showAdminIcons && isAdmin && (
+              <button className="px-4 h-9 min-w-max rounded-full transition duration-300 border-2 border-blue-700 bg-boxbackground text-blue-700 font-medium text-sm flex items-center justify-center">
+                + Follow
+              </button>
+            )}
+            {/* Add manager button */}
+            {showAdminIcons && isAdmin && (
+              <button
+                className="px-4 h-9 min-w-max rounded-full transition duration-300 border-2 border-blue-700 bg-boxbackground text-blue-700 font-medium text-sm flex items-center justify-center"
+                onClick={() => setShowAddManagerModal(true)}
+              >
+                Add Manager
+              </button>
+            )}
 
             {/* Visit Website Button */}
             <a
@@ -204,6 +225,7 @@ function CompanyHeader({
         show={showEditModal}
         companyData={company}
         onClose={() => setShowEditModal(false)}
+        name={company.name}
       />
 
       <ImageEnlarge
@@ -214,6 +236,11 @@ function CompanyHeader({
       <FollowersModal
         show={showFollowersModal}
         onClose={() => setShowFollowersModal(false)}
+        companyId={company.companyId}
+      />
+      <AddManagerModal
+        show={showAddManagerModal}
+        onClose={() => setShowAddManagerModal(false)}
         companyId={company.companyId}
       />
     </div>

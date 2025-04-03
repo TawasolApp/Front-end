@@ -12,12 +12,14 @@ function PostsPage() {
   const navigate = useNavigate();
   const currentFilter = searchParams.get("feedView") || "All";
   const [activeFilter, setActiveFilter] = useState(currentFilter);
+  const postIdFromUrl = searchParams.get("postId");
   const filters = ["All", "Images", "Videos", "Articles", "Documents"];
 
   const { company, showAdminIcons, setShowAdminIcons } = useOutletContext();
   const { companyId } = useParams();
   const [loading, setLoading] = useState(!company);
   const [posts, setPosts] = useState([]);
+  const [selectedPost, setSelectedPost] = useState(null);
 
   useEffect(() => {
     setSearchParams({ feedView: activeFilter });
@@ -27,15 +29,23 @@ function PostsPage() {
     if (companyId) {
       setLoading(true);
       axiosInstance
-        .get(`/companies/${companyId}/posts`)
+        .get("/posts")
         .then((response) => {
-          setPosts(response.data);
+          const filteredPosts = response.data.filter(
+            (post) => post.authorId?.toString() === companyId
+          );
+          setPosts(filteredPosts);
+
+          if (postIdFromUrl) {
+            const post = filteredPosts.find((p) => p.id === postIdFromUrl);
+            setSelectedPost(post);
+          }
         })
         .catch((error) => {
           console.error("Error fetching posts:", error);
         })
         .finally(() => {
-          setLoading(false); // Set loading to false when the fetch completes
+          setLoading(false);
         });
     }
   }, [companyId]);
@@ -44,10 +54,38 @@ function PostsPage() {
     setPosts((prevPosts) => prevPosts.filter((post) => post.id !== postId));
   };
 
-  const handleAddPost = (newPost) => {
-    setPosts((prevPosts) => [newPost, ...prevPosts]);
+  const handleSharePost = async (text, visibility) => {
+    try {
+      const response = await axiosInstance.post("/posts", {
+        authorId: String(companyId),
+        authorName: company.name,
+        authorPicture: company.logo,
+        authorBio: "",
+        content: text,
+        media: [],
+        taggedUsers: [],
+        visibility,
+      });
+
+      const newPost = response.data;
+
+      if (newPost.authorId?.toString() === companyId) {
+        setPosts((prevPosts) => [newPost, ...prevPosts]);
+      }
+    } catch (err) {
+      console.error("Error creating post:", err);
+    }
   };
 
+  // Scroll to the specific post when it's selected
+  useEffect(() => {
+    if (selectedPost) {
+      const postElement = document.getElementById(`post-${selectedPost.id}`);
+      if (postElement) {
+        postElement.scrollIntoView({ behavior: "smooth", block: "center" });
+      }
+    }
+  }, [selectedPost]);
   if (loading) {
     return <LoadingPage />;
   }
@@ -59,7 +97,7 @@ function PostsPage() {
           logo={company.logo}
           name={company.name}
           companyId={company.companyId}
-          onPostSuccess={handleAddPost}
+          onPostSuccess={handleSharePost}
         />
       )}
 
@@ -88,11 +126,13 @@ function PostsPage() {
       <div className="space-y-6">
         {posts.length > 0 ? (
           posts.map((post) => (
-            <PostCard
-              key={post.id}
-              post={post}
-              handleDeletePost={handleDeletePost}
-            />
+            <div key={post.id} id={`post-${post.id}`}>
+              <PostCard
+                key={post.id}
+                post={post}
+                handleDeletePost={handleDeletePost}
+              />
+            </div>
           ))
         ) : (
           <p className="text-gray-500 text-center">No posts available.</p>

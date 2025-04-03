@@ -11,8 +11,8 @@ function CompanyLayout() {
   const [companyData, setCompanyData] = useState(null);
   const [loading, setLoading] = useState(true);
   const [defaultCompanyId, setDefaultCompanyId] = useState(null);
-  const isAdmin = true;
-  const [showAdminIcons, setShowAdminIcons] = useState(isAdmin);
+  const [isAdmin, setIsAdmin] = useState(false);
+  const [showAdminIcons, setShowAdminIcons] = useState(false);
   useEffect(() => {
     if (companyId) {
       // If companyId is present in the URL, fetch the company data for that companyId
@@ -20,6 +20,7 @@ function CompanyLayout() {
         .get(`/companies/${companyId}`)
         .then((response) => {
           setCompanyData(response.data);
+          setIsAdmin(response.data.isManager);
         })
         .catch((error) => {
           console.error("❌ Error fetching company:", error);
@@ -47,13 +48,14 @@ function CompanyLayout() {
         .finally(() => setLoading(false));
     }
   }, [companyId, navigate]);
-
+  useEffect(() => {
+    setShowAdminIcons(isAdmin);
+  }, [isAdmin]);
   if (loading) {
     return <LoadingPage />;
   }
-
   return (
-    <div className="bg-background pt-4 pb-4">
+    <div className="bg-mainBackground pt-4 pb-4">
       <CompanyHeader
         company={companyData}
         showAdminIcons={showAdminIcons}

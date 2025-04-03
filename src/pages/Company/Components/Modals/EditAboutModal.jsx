@@ -4,6 +4,7 @@ import { axiosInstance as axios } from "../../../../apis/axios";
 function EditAboutModal({ show, companyData, onClose }) {
   const [errorMessage, setErrorMessage] = useState("");
   const [formData, setFormData] = useState({
+    name: "",
     logo: "",
     banner: "",
     description: "",
@@ -13,9 +14,7 @@ function EditAboutModal({ show, companyData, onClose }) {
     website: "",
     contactNumber: "",
     isVerified: false,
-    verification_date: "",
     founded: "",
-    specialities: "",
     email: "",
     location: "",
     companyType: "",
@@ -24,6 +23,7 @@ function EditAboutModal({ show, companyData, onClose }) {
   useEffect(() => {
     if (show && companyData) {
       setFormData({
+        name: companyData.name,
         logo: companyData.logo || "",
         banner: companyData.banner || "",
         description: companyData.description || "",
@@ -33,9 +33,7 @@ function EditAboutModal({ show, companyData, onClose }) {
         website: companyData.website || "",
         contactNumber: companyData.contactNumber || "",
         isVerified: companyData.isVerified || false,
-        verification_date: companyData.verification_date || "",
         founded: companyData.founded || "",
-        specialities: companyData.specialities || "",
         location: companyData.location || "",
         email: companyData.email || "",
         companyType: companyData.companyType || "",
@@ -222,22 +220,6 @@ function EditAboutModal({ show, companyData, onClose }) {
             />
             <label className="font-medium text-normaltext">Verified Page</label>
           </div>
-
-          {/* Verification Date */}
-          {formData.isVerified && (
-            <div className="mb-4">
-              <label className="block font-medium text-normaltext bg-boxbackground">
-                Verification Date
-              </label>
-              <input
-                type="text"
-                name="verification_date"
-                className="w-full p-2 border rounded-md bg-boxbackground text-normaltext"
-                value={formData.verification_date}
-                onChange={handleChange}
-              />
-            </div>
-          )}
           {/* Email */}
           <div className="mb-4">
             <label className="block font-medium text-normaltext">Email</label>
@@ -283,18 +265,6 @@ function EditAboutModal({ show, companyData, onClose }) {
               name="companyType"
               className="w-full p-2 border rounded-md bg-boxbackground text-normaltext"
               value={formData.companyType}
-              onChange={handleChange}
-            />
-          </div>
-          {/* Specialities */}
-          <div className="mb-4">
-            <label className="block font-medium text-normaltext">
-              Specialities
-            </label>
-            <textarea
-              name="specialities"
-              className="w-full p-2 border rounded-md bg-boxbackground text-normaltext"
-              value={formData.specialities}
               onChange={handleChange}
             />
           </div>
