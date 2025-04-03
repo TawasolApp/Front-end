@@ -52,7 +52,7 @@ const ForgotPasswordForm = () => {
 
   return (
     <form onSubmit={handleSubmit}>
-      <h2 className="text-4xl font-semibold text-textHomeTitle mb-8">
+      <h2 className="text-4xl font-semibold text-textContent mb-8">
         Forgot password
       </h2>
 
@@ -72,7 +72,7 @@ const ForgotPasswordForm = () => {
       />
 
       {/* Info Text */}
-      <p className="text-textHomeTitle text-lg my-8">
+      <p className="text-textPlaceholder text-lg my-8">
         We’ll send a verification code to this email if it matches an existing
         Tawasol account.
       </p>
@@ -83,7 +83,7 @@ const ForgotPasswordForm = () => {
         <button
           type="button"
           onClick={handleBack}
-          className="text-textHomeTitle text-xl font-medium p-2 rounded-full transition duration-200 ease-in-out hover:bg-[rgb(var(--hover-bg))] hover:underline"
+          className="text-textContent text-xl font-medium p-2 rounded-full transition duration-200 ease-in-out hover:underline"
         >
           Back
         </button>

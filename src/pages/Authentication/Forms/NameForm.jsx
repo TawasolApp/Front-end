@@ -11,6 +11,7 @@ const NameForm = ({ onSubmit }) => {
 
   const [firstNameError, setFirstNameError] = useState("");
   const [lastNameError, setLastNameError] = useState("");
+  const [captchaError, setCaptchaError] = useState("");
   const recaptchaRef = useRef(null);
 
   const handleChange = (e) => {
@@ -58,9 +59,10 @@ const NameForm = ({ onSubmit }) => {
     const captchaToken = await recaptchaRef.current.getValue();
 
     if (!captchaToken) {
-      alert("Please complete the CAPTCHA.");
+      setCaptchaError("Please complete the CAPTCHA.");
       return;
     }
+    setCaptchaError("");
 
     onSubmit(formData, captchaToken);
   };
@@ -94,9 +96,16 @@ const NameForm = ({ onSubmit }) => {
       <div className="grid place-items-center my-6">
         <ReCAPTCHA
           ref={recaptchaRef}
-          sitekey="6LdMDv0qAAAAAC935jMxhIW2ZSMaei6Hs1YU2PyR" // Replace with actual site key
-          className="bg-[rgb(var(--card-background))] p-2 rounded-lg shadow-md"
+          sitekey={String(
+            import.meta.env.VITE_APP_RECAPTCHA_SITE_KEY || ""
+          ).trim()}
+          className="bg-cardBackground text-textContent p-2 rounded-lg"
         />
+        {captchaError && (
+          <p className="text-red-500 text-sm sm:text-base md:text-lg mt-1 sm:mt-2">
+            {captchaError}
+          </p>
+        )}
       </div>
 
       <BlueSubmitButton text="Continue" />
