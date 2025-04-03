@@ -937,6 +937,7 @@ server.patch("/companies/:companyId", (req, res) => {
     updatedCompany: company.value(),
   });
 });
+
 //  POST - Create a new company
 server.post("/companies", (req, res) => {
   console.log("Creating a new company...");
@@ -964,6 +965,7 @@ server.post("/companies", (req, res) => {
     company: newCompany,
   });
 });
+
 // POST - Follow a company
 server.post("/companies/:companyId/follow", (req, res) => {
   console.log("Following company...");

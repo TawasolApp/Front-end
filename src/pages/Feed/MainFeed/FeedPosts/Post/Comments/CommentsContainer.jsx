@@ -11,11 +11,6 @@ const CommentsContainer = () => {
   useEffect(() => {
     if (post.id) {
       fetchComments();
-      return () => {
-        if (abortControllerRef.current) {
-          abortControllerRef.current.abort();
-        }
-      };
     }
   }, [post.id]);
 

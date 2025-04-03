@@ -96,6 +96,7 @@ const Comment = ({ comment }) => {
           <CommentThreadWrapper>
             <div className="pl-1 pt-2">
               <ActivitiesHolder
+                currentReaction={comment.reactType}
                 initReactValue={comment.reactType}
                 reactions={comment.reactions}
                 handleReaction={(reactionTypeAdd, reactionTypeRemove) =>

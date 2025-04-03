@@ -83,11 +83,11 @@ export const PostProvider = ({ children, initialPost, handleDeletePost }) => {
       if (abortControllerRef.current) {
         abortControllerRef.current.abort();
       }
-
+  
       // Create new controller for this request
       const controller = new AbortController();
       abortControllerRef.current = controller;
-
+  
       const response = await axiosInstance.get(`/posts/comments/${post.id}`, {
         params: {
           page: commentPage,
@@ -96,14 +96,24 @@ export const PostProvider = ({ children, initialPost, handleDeletePost }) => {
         },
         signal: controller.signal,
       });
-
+  
       const newComments = response.data;
-      setComments((prev) => [...newComments, ...prev]);
+  
+      setComments((prev) => {
+        // Merge and remove duplicates based on comment ID
+        const mergedComments = [...newComments, ...prev];
+        const uniqueComments = Array.from(
+          new Map(mergedComments.map((comment) => [comment.id, comment])).values()
+        );
+  
+        return uniqueComments;
+      });
+  
       setCommentPage((prev) => prev + 1);
-      setHasMoreComments(post.comments > comments.length + 2);
+      setHasMoreComments(post.comments > comments.length + newComments.length);
     } catch (e) {
-      if (err.name === "CanceledError") return;
-      if (err.response?.status === 404) {
+      if (e.name === "CanceledError") return;
+      if (e.response?.status === 404) {
         setHasMoreComments(false);
       } else {
         throw new Error("Error in fetching comments!");
@@ -162,18 +172,26 @@ export const PostProvider = ({ children, initialPost, handleDeletePost }) => {
       reactions: reacts,
       postType: "Comment",
     });
-    // Update comments in CommentsContainer
+
     setComments((prevComments) =>
-      prevComments.map((c) =>
-        c.id === commentId
-          ? {
-              ...c,
-              reactions: newReactions,
-              reactType: reactionTypeAdd || null,
-            }
-          : c,
-      ),
-    );
+        prevComments.map((c) =>
+          c.id === commentId
+            ? {
+                ...c,
+                reactions: {
+                  ...c.reactions, // Ensure we copy the existing reactions properly
+                  [reactionTypeAdd]: reactionTypeAdd
+                    ? (c.reactions[reactionTypeAdd] || 0) + 1
+                    : c.reactions[reactionTypeAdd], // Increment safely
+                  [reactionTypeRemove]: reactionTypeRemove
+                    ? Math.max((c.reactions[reactionTypeRemove] || 1) - 1, 0)
+                    : c.reactions[reactionTypeRemove], // Decrement safely, ensuring no negative values
+                },
+                reactType: reactionTypeAdd || null,
+              }
+            : c
+        )
+      );
   };
 
   const handleAddReplyToComment = async (commentId, text, taggedUsers) => {};
@@ -195,6 +213,7 @@ export const PostProvider = ({ children, initialPost, handleDeletePost }) => {
   const value = {
     /******************************************************** Main parameters ********************************************************/
     post,
+    comments,
 
     /***************************************************** Secondary parameters ******************************************************/
     hasMoreComments,
