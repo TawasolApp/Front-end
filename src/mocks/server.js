@@ -881,26 +881,64 @@ server.post("/companies", (req, res) => {
   console.log("Creating a new company...");
 
   const newCompany = req.body; // Get request body (new company data)
-  if (!newCompany.companyId || !newCompany.name || !newCompany.description) {
+
+  // Check required fields (companyId, name, and companySize)
+  if (
+    !newCompany.name ||
+    !newCompany.companySize ||
+    !newCompany.companyType ||
+    !newCompany.industry ||
+    !newCompany.email ||
+    !newCompany.website ||
+    !newCompany.contactNumber
+  ) {
     return res.status(400).json({ error: "Missing required fields" });
   }
 
-  // Check if company already exists
+  // Generate companyId based on company name (slug format: lowercase, spaces replaced with hyphens)
+  const companyId = newCompany.name.toLowerCase().replace(/\s+/g, "-");
+
+  // Check if company already exists (based on companyId)
   const existingCompany = _router.db
     .get("companies")
-    .find({ companyId: newCompany.companyId })
+    .find({ companyId })
     .value();
+
   if (existingCompany) {
     return res
       .status(409)
       .json({ error: "Company with this ID already exists" });
   }
 
-  _router.db.get("companies").push(newCompany).write(); // Add to database
+  // Add the new company to the database
+  _router.db
+    .get("companies")
+    .push({
+      companyId,
+      isManager: true,
+      name: newCompany.name,
+      logo: newCompany.logo || "",
+      banner: newCompany.banner || "",
+      description: newCompany.description || "",
+      companySize: newCompany.companySize,
+      companyType: newCompany.companyType,
+      industry: newCompany.industry,
+      overview: newCompany.overview || "",
+      founded: newCompany.founded || null,
+      website: newCompany.website,
+      address: newCompany.address || "",
+      location: newCompany.location || "",
+      email: newCompany.email,
+      contactNumber: newCompany.contactNumber,
+    })
+    .write(); // Add to database
 
   res.status(201).json({
     message: "Company page created successfully",
-    company: newCompany,
+    company: {
+      companyId,
+      ...newCompany,
+    },
   });
 });
 // POST - Follow a company

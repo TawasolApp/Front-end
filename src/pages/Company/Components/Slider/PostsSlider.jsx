@@ -5,7 +5,7 @@ import { HiOutlineDocumentText } from "react-icons/hi";
 import { axiosInstance } from "../../../../apis/axios.js";
 import PostCard from "../../../Feed/MainFeed/FeedPosts/PostCard/PostCard.jsx";
 
-function PostsSlider({ setActiveButton }) {
+function PostsSlider() {
   const sliderRef = useRef(null);
   const navigate = useNavigate();
   const { companyId } = useParams();
@@ -30,6 +30,10 @@ function PostsSlider({ setActiveButton }) {
     if (sliderRef.current) {
       sliderRef.current.scrollBy({ left: 350, behavior: "smooth" });
     }
+  };
+  const handlePostClick = (postId) => {
+    // Update URL with postId and scroll down to that post
+    navigate(`/company/${companyId}/posts?postId=${postId}`);
   };
   if (posts.length === 0) return null;
 
@@ -71,6 +75,7 @@ function PostsSlider({ setActiveButton }) {
             <div
               key={post.id}
               className="flex-shrink-0 w-[350px] min-h-[400px] bg-boxbackground border border-gray-700 rounded-xl shadow-sm p-4"
+              onClick={() => handlePostClick(post.id)}
             >
               <PostCard post={post} />
             </div>

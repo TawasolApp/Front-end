@@ -12,12 +12,14 @@ function PostsPage() {
   const navigate = useNavigate();
   const currentFilter = searchParams.get("feedView") || "All";
   const [activeFilter, setActiveFilter] = useState(currentFilter);
+  const postIdFromUrl = searchParams.get("postId");
   const filters = ["All", "Images", "Videos", "Articles", "Documents"];
 
   const { company, showAdminIcons, setShowAdminIcons } = useOutletContext();
   const { companyId } = useParams();
   const [loading, setLoading] = useState(!company);
   const [posts, setPosts] = useState([]);
+  const [selectedPost, setSelectedPost] = useState(null);
 
   useEffect(() => {
     setSearchParams({ feedView: activeFilter });
@@ -30,6 +32,10 @@ function PostsPage() {
         .get(`/companies/${companyId}/posts`)
         .then((response) => {
           setPosts(response.data);
+          if (postIdFromUrl) {
+            const post = response.data.find((p) => p.id === postIdFromUrl);
+            setSelectedPost(post); // Set selected post based on postId from URL
+          }
         })
         .catch((error) => {
           console.error("Error fetching posts:", error);
@@ -47,7 +53,15 @@ function PostsPage() {
   const handleAddPost = (newPost) => {
     setPosts((prevPosts) => [newPost, ...prevPosts]);
   };
-
+  // Scroll to the specific post when it's selected
+  useEffect(() => {
+    if (selectedPost) {
+      const postElement = document.getElementById(`post-${selectedPost.id}`);
+      if (postElement) {
+        postElement.scrollIntoView({ behavior: "smooth", block: "center" });
+      }
+    }
+  }, [selectedPost]);
   if (loading) {
     return <LoadingPage />;
   }
@@ -88,11 +102,13 @@ function PostsPage() {
       <div className="space-y-6">
         {posts.length > 0 ? (
           posts.map((post) => (
-            <PostCard
-              key={post.id}
-              post={post}
-              handleDeletePost={handleDeletePost}
-            />
+            <div key={post.id} id={`post-${post.id}`}>
+              <PostCard
+                key={post.id}
+                post={post}
+                handleDeletePost={handleDeletePost}
+              />
+            </div>
           ))
         ) : (
           <p className="text-gray-500 text-center">No posts available.</p>
