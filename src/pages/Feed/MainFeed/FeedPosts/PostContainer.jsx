@@ -1,7 +1,7 @@
 import { useState } from "react";
+import { PostProvider } from "./PostContext";
 import PostCard from "./Post/PostCard";
 import PostModal from "./Post/PostModal";
-import { axiosInstance } from "../../../../apis/axios";
 
 const PostContainer = ({ post, handleDeletePost }) => {
   // TODO: change this to redux states
@@ -12,103 +12,22 @@ const PostContainer = ({ post, handleDeletePost }) => {
   const currentAuthorBio = "Computer Engineering Student at Cairo University";
   const currentAuthorType = "User";
 
-  /*********************************************************************************************** POSTS API ***********************************************************************************************/
-  const [localPost, setLocalPost] = useState(post);
   const [showPostModal, setShowPostModal] = useState(false);
   const [mediaIndex, setMediaIndex] = useState(0);
 
-  const handleEditPost = async (text, media, visibility, taggedUsers) => {
-    await axiosInstance.patch(`/posts/${localPost.id}`, {
-      authorId: currentAuthorId,
-      content: text,
-      media: media,
-      taggedUsers: taggedUsers,
-      visibility: visibility,
-    });
-
-    setLocalPost((prev) => ({
-      ...prev,
-      content: text,
-      taggedUsers: taggedUsers,
-      media: media,
-      visibility: visibility,
-    }));
-  };
-
-  const handleSavePost = () => {
-    try {
-      if (localPost.isSaved) axiosInstance.delete(`posts/save/${localPost.id}`);
-      else axiosInstance.post(`posts/save/${localPost.id}`);
-
-      setLocalPost((prev) => {
-        return { ...prev, isSaved: !prev.isSaved };
-      });
-    } catch (e) {
-      console.log(`ERROR: ${e.message}`);
-    }
-  };
-
-  const handleReactionOnPost = (reactionTypeAdd, reactionTypeRemove) => {
-    let reacts = {};
-    if (reactionTypeAdd) reacts[reactionTypeAdd] = 1;
-    if (reactionTypeRemove) reacts[reactionTypeRemove] = 0;
-    try {
-      axiosInstance.post(`posts/react/${localPost.id}`, {
-        reactions: reacts,
-        postType: "Post",
-      });
-
-      setLocalPost((prev) => {
-        const newReactions = { ...prev.reactions };
-        if (reactionTypeAdd) newReactions[reactionTypeAdd] += 1;
-        if (reactionTypeRemove) newReactions[reactionTypeRemove] -= 1;
-        return {
-          ...prev,
-          reactions: newReactions,
-          reactType: reactionTypeAdd || null,
-        };
-      });
-    } catch (e) {
-      console.log(`ERROR: ${e.message}`);
-    }
-  };
-
-  const incrementCommentsNumber = (incOrDec) => {
-    setLocalPost((prev) => ({
-      ...prev,
-      comments: prev.comments + (incOrDec === "inc" ? 1 : -1),
-    }));
-  };
-
-  /*********************************************************************************************** COMMENTS API ***********************************************************************************************/
-  const [comments, setComments] = useState([]);
-  
   return (
-    <>
+    <PostProvider initialPost={post} handleDeletePost={handleDeletePost}>
       <PostCard
-        post={localPost}
-        handleSavePost={handleSavePost}
-        handleDeletePost={handleDeletePost}
-        handleReaction={handleReactionOnPost}
-        handleEditPost={handleEditPost}
-        incrementCommentsNumber={incrementCommentsNumber}
         setShowPostModal={() => setShowPostModal(true)}
         setMediaIndex={setMediaIndex}
-        comments={comments}
-        setComments={setComments}
       />
       {showPostModal && (
         <PostModal
-          post={localPost}
           mediaIndex={mediaIndex}
-          handleReaction={handleReactionOnPost}
           handleClosePostModal={() => setShowPostModal(false)}
-          incrementCommentsNumber={incrementCommentsNumber}
-          comments={comments}
-          setComments={setComments}
         />
       )}
-    </>
+    </PostProvider>
   );
 };
 

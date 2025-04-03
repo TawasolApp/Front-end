@@ -83,7 +83,7 @@ const AddForm = ({
         <div
           className={`absolute right-2 ${isExpanded ? "bottom-3.5" : "hidden"} flex space-x-2`}
         >
-          {type === "Reply" && (
+          {(type === "Reply" || type === "Edit Comment") && (
             <button
               type="button"
               onClick={close}

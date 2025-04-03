@@ -1,6 +1,10 @@
+import { usePost } from "../../../PostContext";
 import MediaItem from "./MediaItem";
 
-const MediaDisplay = ({ media, handleOpenPostModal }) => {
+const MediaDisplay = ({ handleOpenPostModal }) => {
+  const { post } = usePost();
+  const media = post.media;
+
   if (!media || media.length === 0) return null;
 
   const mediaCount = media.length;
@@ -51,7 +55,10 @@ const MediaDisplay = ({ media, handleOpenPostModal }) => {
             ) : (
               // All other media - clickable for modal
               <button
-                onClick={() => !(isVideo(url) && mediaCount === 1) && handleOpenPostModal(index)}
+                onClick={() =>
+                  !(isVideo(url) && mediaCount === 1) &&
+                  handleOpenPostModal(index)
+                }
                 className="w-full h-full"
               >
                 <MediaItem url={url} disabled={isDisabledVideo} />

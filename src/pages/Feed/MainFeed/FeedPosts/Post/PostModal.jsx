@@ -7,16 +7,11 @@ import ActivitiesHolder from "./Activities/ActivitiesHolder";
 import CommentsContainer from "./Comments/CommentsContainer";
 import ReactionsModal from "../ReactionModal/ReactionsModal";
 import MediaCarousel from "./MediaCarousel/MediaCarousel";
+import { usePost } from "../PostContext";
 
-const PostModal = ({
-  post,
-  mediaIndex,
-  handleReaction,
-  incrementCommentsNumber,
-  handleClosePostModal,
-  comments,
-  setComments
-}) => {
+const PostModal = ({ mediaIndex, handleClosePostModal }) => {
+  const { post } = usePost();
+
   useEffect(() => {
     // Disable scrolling on the body when the modal opens
     document.body.style.overflow = "hidden";
@@ -42,8 +37,8 @@ const PostModal = ({
       >
         {/* Media container with black space */}
         <div className="md:flex-1 w-full h-[70vh] md:h-full bg-black flex items-center justify-center relative">
-          <MediaCarousel 
-            media={post.media} 
+          <MediaCarousel
+            media={post.media}
             mediaIndex={mediaIndex}
             onClick={(e) => e.stopPropagation()}
           />
@@ -53,43 +48,22 @@ const PostModal = ({
         <div className="w-full md:w-[500px] flex-shrink-0 border-t md:border-l md:border-t-0 border-cardBorder h-[40%] md:h-full bg-cardBackground overflow-y-auto">
           <div className="bg-cardBackground rounded-none">
             <PostCardHeader
-              authorId={post.authorId}
-              authorName={post.authorName}
-              authorBio={post.authorBio}
-              authorPicture={post.authorPicture}
-              timestamp={post.timestamp}
-              visibility={post.visibility}
               modal={true}
               handleClosePostModal={handleClosePostModal}
             />
-            <PostContent
-              content={post.content}
-              taggedUsers={post.taggedUsers}
-              media={post.media}
-              modal={true}
-            />
+
+            <PostContent modal={true} />
+
             <EngagementMetrics
-              reactions={post.reactions}
-              comments={post.comments}
-              reposts={post.reposts}
               setShowLikes={() => setShowLikes(true)}
               setShowComments={() => setShowComments(true)}
               setShowReposts={() => setShowReposts(true)}
             />
-            <ActivitiesHolder
-              initReactValue={post.reactType}
-              handleReaction={handleReaction}
-              setShowComments={() => setShowComments(true)}
-            />
-            {showComments && (
-              <CommentsContainer
-                postId={post.id}
-                incrementCommentsNumber={incrementCommentsNumber}
-                commentsCount={post.comments}
-                comments={comments}
-                setComments={setComments}
-              />
-            )}
+
+            <ActivitiesHolder setShowComments={() => setShowComments(true)} />
+
+            {showComments && <CommentsContainer />}
+
             {showLikes && (
               <ReactionsModal
                 APIURL={`/posts/reactions/${post.id}`}

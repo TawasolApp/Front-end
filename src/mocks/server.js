@@ -449,6 +449,7 @@ server.post("/profile/:id/certifications", (req, res) => {
   user.assign({ certifications: [...items, newItem] }).write();
   return res.status(201).json(newItem);
 });
+
 server.post("/profile/:id/skills", (req, res) => {
   const userId = req.params.id;
   const newItem = { id: Date.now().toString(), ...req.body };
@@ -561,6 +562,7 @@ server.delete("/profile/:userId/certifications/:itemId", (req, res) => {
   user.assign({ certifications: filteredItems }).write();
   res.status(204).end();
 });
+
 server.delete("/profile/:userId/skills/:itemId", (req, res) => {
   const { userId, itemId } = req.params;
 
@@ -579,8 +581,7 @@ server.delete("/profile/:userId/skills/:itemId", (req, res) => {
 const currentUser = {
   id: "mohsobh",
   name: "Mohamed Sobh",
-  picture:
-    "https://media.licdn.com/dms/image/v2/D4D03AQH7Ais8BxRXzw/profile-displayphoto-shrink_100_100/profile-displayphoto-shrink_100_100/0/1721080103981?e=1747872000&v=beta&t=nDnZdgCqkI8v5B2ymXZzluMZVlF6h_o-dN1pA95Fzv4",
+  picture: "https://media.licdn.com/dms/image/v2/D4D03AQH7Ais8BxRXzw/profile-displayphoto-shrink_100_100/profile-displayphoto-shrink_100_100/0/1721080103981?e=1747872000&v=beta&t=nDnZdgCqkI8v5B2ymXZzluMZVlF6h_o-dN1pA95Fzv4",
   bio: "Computer Engineering Student at Cairo University",
   type: "User",
 };
