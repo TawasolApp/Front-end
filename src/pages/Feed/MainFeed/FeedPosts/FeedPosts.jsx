@@ -1,4 +1,4 @@
-import PostCard from "./PostCard/PostCard";
+import PostContainer from "./PostContainer";
 
 const FeedPosts = ({ posts, lastPostRef, handleDeletePost }) => {
   return (
@@ -9,12 +9,15 @@ const FeedPosts = ({ posts, lastPostRef, handleDeletePost }) => {
           if (index === posts.length - 1) {
             return (
               <div ref={lastPostRef} key={post.id || index}>
-                <PostCard post={post} handleDeletePosts={handleDeletePost} />
+                <PostContainer
+                  post={post}
+                  handleDeletePost={handleDeletePost}
+                />
               </div>
             );
           }
           return (
-            <PostCard
+            <PostContainer
               key={post.id || index}
               post={post}
               handleDeletePost={handleDeletePost}

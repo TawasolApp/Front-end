@@ -34,8 +34,8 @@ const InputField = ({
           value={value}
           onChange={onChange}
           onBlur={onBlur}
-          className={`w-full px-3 sm:px-4 py-2 sm:py-3 border-2 border-inputBorder rounded-lg hover:border-inputBorderHover hover:bg-inputBackground focus:outline-none focus:border-inputBorderFocus text-base sm:text-lg md:text-xl cursor-pointer ${inputClassName} ${
-            error && "border-red-500"
+          className={`w-full px-3 sm:px-4 py-2 sm:py-3 border-2 border-itemBorder rounded-lg bg-inputBackground hover:bg-inputBackgroundHover text-textContent text-base sm:text-lg md:text-xl cursor-pointer ${inputClassName} ${
+            error && "!border-red-500"
           }`}
           placeholder={placeholder}
           required={required}

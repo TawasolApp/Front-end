@@ -1,5 +1,5 @@
 import { render, screen, fireEvent } from "@testing-library/react";
-import ConnectionCard from "../pages/connectionpage/components/ConnectionCard";
+import ConnectionCard from "../pages/mynetworkpage/Connections/ConnectionCard";
 import { describe, it, expect, vi } from "vitest";
 
 const mockProps = {

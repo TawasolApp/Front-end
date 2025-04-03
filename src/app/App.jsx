@@ -30,10 +30,11 @@ import HomePage from "../pages/Company/Components/Pages/HomePage.jsx";
 import JobsPage from "../pages/Company/Components/Pages/JobsPage.jsx";
 import CreateCompanyPage from "../pages/Company/Components/CreateCompanyPage/CreateCompanyPage.jsx";
 
-import NetworkBox from "../pages/mynetworkpage/mynetworkpage";
-import Connections from "../pages/connectionpage/ConnectionPage";
-import BlockedPage from "../pages/mynetworkpage/components/BlockedPage";
-import FollowPage from "../pages/mynetworkpage/components/FollowPage";
+import NetworkBox from "../pages/MyNetwork/NetworkBox";
+import ConnectionPage from "../pages/MyNetwork/Connections/ConnectionPage";
+import BlockedPage from "../pages/MyNetwork/BlockedPage";
+import FollowPage from "../pages/MyNetwork/FollowPage";
+import ManageConnections from "../pages/MyNetwork/ManageConnections";
 
 import FeedContainer from "../pages/Feed/FeedContainer";
 import SavedPostsContainer from "../pages/SavedPosts/SavedPostsContainer";
@@ -75,9 +76,10 @@ const App = () => {
           <Route path="connections" element={<ProfileConnections />} />
         </Route>
 
-        <Route path="/connections" element={<Connections />} />
+        <Route path="/connections" element={<ConnectionPage />} />
         <Route path="/blocked" element={<BlockedPage />} />
         <Route path="/follow" element={<FollowPage />} />
+        <Route path="/manage-connections" element={<ManageConnections />} />
 
         <Route path="/feed" element={<FeedContainer />} />
         <Route path="/my-items/saved-posts" element={<SavedPostsContainer />} />

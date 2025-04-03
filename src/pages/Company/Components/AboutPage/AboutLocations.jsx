@@ -5,7 +5,7 @@ function AboutLocations() {
   const { company } = useOutletContext();
   const mapUrl = company.mapsloc; // The exact location link from the backend
   const embedUrl = `https://www.google.com/maps?q=${encodeURIComponent(
-    company.address
+    company.address,
   )}&output=embed`;
 
   return (

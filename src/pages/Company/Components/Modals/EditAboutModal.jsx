@@ -56,7 +56,7 @@ function EditAboutModal({ show, companyData, onClose }) {
     try {
       const response = await axios.patch(
         `/companies/${companyData.companyId}`,
-        formData
+        formData,
       );
       console.log(" Company updated:", response.data);
 
