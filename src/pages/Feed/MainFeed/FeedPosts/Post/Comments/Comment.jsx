@@ -16,8 +16,12 @@ import { usePost } from "../../PostContext";
 import ReplyContainer from "./ReplyContainer";
 
 const Comment = ({ comment }) => {
-  const { handleDeleteComment, handleEditComment, handleReactOnComment, handleAddReplyToComment } =
-    usePost();
+  const {
+    handleDeleteComment,
+    handleEditComment,
+    handleReactOnComment,
+    handleAddReplyToComment,
+  } = usePost();
 
   // TODO: change this to redux states
   const currentAuthorId = "mohsobh";
@@ -116,9 +120,7 @@ const Comment = ({ comment }) => {
             </div>
           </CommentThreadWrapper>
 
-          {showReplies && (
-            <ReplyContainer commentId={comment.id}/>
-          )}
+          {showReplies && <ReplyContainer commentId={comment.id} />}
 
           {showReactions && (
             <ReactionsModal

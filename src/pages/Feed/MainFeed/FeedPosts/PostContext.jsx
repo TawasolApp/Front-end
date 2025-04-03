@@ -226,12 +226,16 @@ export const PostProvider = ({ children, initialPost, handleDeletePost }) => {
         const uniqueReplies = Array.from(
           new Map(mergedReplies.map((reply) => [reply.id, reply])).values(),
         );
-        const wantedComment = comments.find(comment => comment.id === commentId);
+        const wantedComment = comments.find(
+          (comment) => comment.id === commentId,
+        );
         return {
           ...prevReplies,
           [commentId]: {
             data: uniqueReplies,
-            hasMore: wantedComment.replies.length > existingReplies.length + newReplies.length,
+            hasMore:
+              wantedComment.replies.length >
+              existingReplies.length + newReplies.length,
             replyPage: currentPage + 1,
           },
         };
@@ -357,12 +361,15 @@ export const PostProvider = ({ children, initialPost, handleDeletePost }) => {
                     ? (reply.reactions[reactionTypeAdd] || 0) + 1
                     : reply.reactions[reactionTypeAdd],
                   [reactionTypeRemove]: reactionTypeRemove
-                    ? Math.max((reply.reactions[reactionTypeRemove] || 1) - 1, 0)
+                    ? Math.max(
+                        (reply.reactions[reactionTypeRemove] || 1) - 1,
+                        0,
+                      )
                     : reply.reactions[reactionTypeRemove],
                 },
                 reactType: reactionTypeAdd || null,
               }
-            : reply
+            : reply,
         ),
       },
     }));

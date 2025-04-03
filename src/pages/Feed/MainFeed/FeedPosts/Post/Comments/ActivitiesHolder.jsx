@@ -11,7 +11,6 @@ const ActivitiesHolder = ({
   replies,
   setShowReplies,
 }) => {
-
   // Memoized calculations
   const { topReactions, totalLikes } = useMemo(() => {
     const filtered = Object.entries(reactions)
