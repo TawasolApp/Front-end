@@ -1,6 +1,6 @@
 import { render, screen } from "@testing-library/react";
 import { describe, test, expect } from "vitest";
-import Footer from "../pages/CompanyPage/Components/Footer";
+import Footer from "../../pages/Company/Components/GenericComponents/Footer";
 
 describe("Footer", () => {
   test("renders important links and help sections", () => {
@@ -17,13 +17,13 @@ describe("Footer", () => {
     expect(screen.getByText("Visit our Help Center.")).toBeInTheDocument();
 
     expect(
-      screen.getByText("Manage your account & privacy"),
+      screen.getByText("Manage your account & privacy")
     ).toBeInTheDocument();
     expect(screen.getByText("Go to Settings.")).toBeInTheDocument();
 
     expect(screen.getByText("Recommendation Transparency")).toBeInTheDocument();
     expect(
-      screen.getByText("Learn more about Recommended Content."),
+      screen.getByText("Learn more about Recommended Content.")
     ).toBeInTheDocument();
   });
 
@@ -39,7 +39,7 @@ describe("Footer", () => {
   test("shows copyright", () => {
     render(<Footer />);
     expect(
-      screen.getByText(/LinkedIn Corporation © 2025/),
+      screen.getByText(/LinkedIn Corporation © 2025/)
     ).toBeInTheDocument();
   });
 });

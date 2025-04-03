@@ -4,6 +4,7 @@ import { axiosInstance as axios } from "../../../../apis/axios";
 function EditAboutModal({ show, companyData, onClose }) {
   const [errorMessage, setErrorMessage] = useState("");
   const [formData, setFormData] = useState({
+    name: "",
     logo: "",
     banner: "",
     description: "",
@@ -13,9 +14,7 @@ function EditAboutModal({ show, companyData, onClose }) {
     website: "",
     contactNumber: "",
     isVerified: false,
-    verification_date: "",
     founded: "",
-    specialities: "",
     email: "",
     location: "",
     companyType: "",
@@ -24,6 +23,7 @@ function EditAboutModal({ show, companyData, onClose }) {
   useEffect(() => {
     if (show && companyData) {
       setFormData({
+        name: companyData.name,
         logo: companyData.logo || "",
         banner: companyData.banner || "",
         description: companyData.description || "",
@@ -33,9 +33,7 @@ function EditAboutModal({ show, companyData, onClose }) {
         website: companyData.website || "",
         contactNumber: companyData.contactNumber || "",
         isVerified: companyData.isVerified || false,
-        verification_date: companyData.verification_date || "",
         founded: companyData.founded || "",
-        specialities: companyData.specialities || "",
         location: companyData.location || "",
         email: companyData.email || "",
         companyType: companyData.companyType || "",
@@ -74,13 +72,16 @@ function EditAboutModal({ show, companyData, onClose }) {
     } else {
       document.body.classList.remove("overflow-hidden");
     }
-    return () => document.body.classList.remove("overflow-hidden");
+
+    return () => {
+      document.body.classList.remove("overflow-hidden");
+    };
   }, [show]);
 
   if (!show) return null;
 
   return (
-    <div className="fixed inset-0 flex items-center justify-center bg-modalbackground z-[999]">
+    <div className="fixed inset-0 bg-modalbackground z-[999] flex justify-center items-center px-4">
       <div className="bg-boxbackground rounded-lg shadow-xl w-[90%] max-w-3xl relative flex flex-col h-[80vh]">
         {/* Sticky Header */}
         <div className="p-4 flex justify-between items-center bg-boxbackground sticky top-0 z-10 rounded-lg">
@@ -97,7 +98,7 @@ function EditAboutModal({ show, companyData, onClose }) {
         <div className="overflow-y-auto px-6 py-4 flex-1">
           {/* Company Banner */}
           <div className="mb-6">
-            <label className="block font-medium text-text2">Banner</label>
+            <label className="block font-medium text-normaltext">Banner</label>
             <div className="w-full h-32 border border-gray-300 overflow-hidden">
               <img
                 src={formData.banner || "https://via.placeholder.com/600x200"}
@@ -108,7 +109,7 @@ function EditAboutModal({ show, companyData, onClose }) {
             <input
               type="text"
               name="banner"
-              className="mt-2 p-2 border rounded-md w-full bg-boxbackground text-text2"
+              className="mt-2 p-2 border rounded-md w-full bg-boxbackground text-normaltext"
               value={formData.banner}
               onChange={handleChange}
               placeholder="Enter new banner URL"
@@ -126,7 +127,7 @@ function EditAboutModal({ show, companyData, onClose }) {
             <input
               type="text"
               name="logo"
-              className="mt-2 p-2 border rounded-md w-full bg-boxbackground text-text2"
+              className="mt-2 p-2 border rounded-md w-full bg-boxbackground text-normaltext"
               value={formData.logo}
               onChange={handleChange}
               placeholder="Enter new logo URL"
@@ -134,20 +135,24 @@ function EditAboutModal({ show, companyData, onClose }) {
           </div>
           {/* Overview */}
           <div className="mb-4">
-            <label className="block font-medium text-text2">Overview</label>
+            <label className="block font-medium text-normaltext">
+              Overview
+            </label>
             <textarea
               name="overview"
-              className="w-full p-2 border rounded-md bg-boxbackground text-text2"
+              className="w-full p-2 border rounded-md bg-boxbackground text-normaltext"
               value={formData.overview}
               onChange={handleChange}
             />
           </div>
           {/* Description */}
           <div className="mb-4">
-            <label className="block font-medium text-text2">Description</label>
+            <label className="block font-medium text-normaltext">
+              Description
+            </label>
             <textarea
               name="description"
-              className="w-full p-2 border rounded-md bg-boxbackground text-text2"
+              className="w-full p-2 border rounded-md bg-boxbackground text-normaltext"
               value={formData.description}
               onChange={handleChange}
             />
@@ -155,11 +160,13 @@ function EditAboutModal({ show, companyData, onClose }) {
 
           {/* Industry */}
           <div className="mb-4">
-            <label className="block font-medium text-text2">Industry</label>
+            <label className="block font-medium text-normaltext">
+              Industry
+            </label>
             <input
               type="text"
               name="industry"
-              className="w-full p-2 border rounded-md bg-boxbackground text-text2"
+              className="w-full p-2 border rounded-md bg-boxbackground text-normaltext"
               value={formData.industry}
               onChange={handleChange}
             />
@@ -167,33 +174,35 @@ function EditAboutModal({ show, companyData, onClose }) {
 
           {/* Location */}
           <div className="mb-4">
-            <label className="block font-medium text-text2">Location</label>
+            <label className="block font-medium text-normaltext">
+              Location
+            </label>
             <input
               type="text"
               name="address"
-              className="w-full p-2 border rounded-md bg-boxbackground text-text2"
+              className="w-full p-2 border rounded-md bg-boxbackground text-normaltext"
               value={formData.address}
               onChange={handleChange}
             />
           </div>
           {/* Website */}
           <div className="mb-4">
-            <label className="block font-medium text-text2">Website</label>
+            <label className="block font-medium text-normaltext">Website</label>
             <input
               type="text"
               name="website"
-              className="w-full p-2 border rounded-md bg-boxbackground text-text2"
+              className="w-full p-2 border rounded-md bg-boxbackground text-normaltext"
               value={formData.website}
               onChange={handleChange}
             />
           </div>
           {/* Phone Number */}
           <div className="mb-4">
-            <label className="block font-medium text-text2">Phone</label>
+            <label className="block font-medium text-normaltext">Phone</label>
             <input
               type="text"
               name="contactNumber"
-              className="w-full p-2 border rounded-md bg-boxbackground text-text2"
+              className="w-full p-2 border rounded-md bg-boxbackground text-normaltext"
               value={formData.contactNumber}
               onChange={handleChange}
             />
@@ -209,88 +218,66 @@ function EditAboutModal({ show, companyData, onClose }) {
               onChange={handleChange}
               className="mr-2 "
             />
-            <label className="font-medium text-text2">Verified Page</label>
+            <label className="font-medium text-normaltext">Verified Page</label>
           </div>
-
-          {/* Verification Date */}
-          {formData.isVerified && (
-            <div className="mb-4">
-              <label className="block font-medium text-text2 bg-boxbackground">
-                Verification Date
-              </label>
-              <input
-                type="text"
-                name="verification_date"
-                className="w-full p-2 border rounded-md bg-boxbackground text-text2"
-                value={formData.verification_date}
-                onChange={handleChange}
-              />
-            </div>
-          )}
           {/* Email */}
           <div className="mb-4">
-            <label className="block font-medium text-text2">Email</label>
+            <label className="block font-medium text-normaltext">Email</label>
             <input
               type="text"
               name="email"
-              className="w-full p-2 border rounded-md bg-boxbackground text-text2"
+              className="w-full p-2 border rounded-md bg-boxbackground text-normaltext"
               value={formData.email}
               onChange={handleChange}
             />
           </div>
           {/* Founded Year */}
           <div className="mb-4">
-            <label className="block font-medium text-text2">Founded</label>
+            <label className="block font-medium text-normaltext">Founded</label>
             <input
               type="text"
               name="founded"
-              className="w-full p-2 border rounded-md bg-boxbackground text-text2"
+              className="w-full p-2 border rounded-md bg-boxbackground text-normaltext"
               value={formData.founded}
               onChange={handleChange}
             />
           </div>
           {/* companySize */}
           <div className="mb-4">
-            <label className="block font-medium text-text2">Company Size</label>
+            <label className="block font-medium text-normaltext">
+              Company Size
+            </label>
             <input
               type="text"
               name="companySize"
-              className="w-full p-2 border rounded-md bg-boxbackground text-text2"
+              className="w-full p-2 border rounded-md bg-boxbackground text-normaltext"
               value={formData.companySize}
               onChange={handleChange}
             />
           </div>
           {/* companyType */}
           <div className="mb-4">
-            <label className="block font-medium text-text2">Company Type</label>
+            <label className="block font-medium text-normaltext">
+              Company Type
+            </label>
             <input
               type="text"
               name="companyType"
-              className="w-full p-2 border rounded-md bg-boxbackground text-text2"
+              className="w-full p-2 border rounded-md bg-boxbackground text-normaltext"
               value={formData.companyType}
-              onChange={handleChange}
-            />
-          </div>
-          {/* Specialities */}
-          <div className="mb-4">
-            <label className="block font-medium text-text2">Specialities</label>
-            <textarea
-              name="specialities"
-              className="w-full p-2 border rounded-md bg-boxbackground text-text2"
-              value={formData.specialities}
               onChange={handleChange}
             />
           </div>
 
           {/* Maps Location */}
           <div className="mb-4">
-            <label className="block font-medium text-text2">
+            <label className="block font-medium text-normaltext">
               Google Maps Location
             </label>
             <input
               type="text"
               name="location"
-              className="w-full p-2 border rounded-md bg-boxbackground text-text2"
+              className="w-full p-2 border rounded-md bg-boxbackground text-normaltext"
               value={formData.location}
               onChange={handleChange}
             />

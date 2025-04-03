@@ -1,10 +1,11 @@
 import React, { useState } from "react";
-import { useNavigate, useParams } from "react-router-dom";
+import { useNavigate, useParams, useOutletContext } from "react-router-dom";
 
-function OverviewBox({ company }) {
+function OverviewBox() {
   const navigate = useNavigate();
   const { companyId } = useParams();
   const [expanded, setExpanded] = useState(false);
+  const { company } = useOutletContext();
 
   if (!company) {
     return null;
@@ -25,7 +26,7 @@ function OverviewBox({ company }) {
       </p>
       <button
         onClick={() => setExpanded(!expanded)}
-        className="text-companyheader2 hover:underline hover:decoration-blue-500"
+        className="text-companysubheader hover:underline hover:decoration-blue-500"
       >
         {expanded || (company?.overview?.length ?? 0) < 100 ? "" : "See More"}
       </button>

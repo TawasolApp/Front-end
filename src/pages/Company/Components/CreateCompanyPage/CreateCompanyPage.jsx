@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { FiUpload } from "react-icons/fi";
 import { axiosInstance as axios } from "../../../../apis/axios";
 import { useNavigate } from "react-router-dom";
+import LoadingPage from "../../../LoadingScreen/LoadingPage";
 
 function CreateCompanyPage() {
   const [companyName, setName] = useState("");
@@ -9,6 +10,15 @@ function CreateCompanyPage() {
   const [industry, setIndustry] = useState("");
   const [orgSize, setOrgSize] = useState("");
   const [orgType, setOrgType] = useState("");
+  const [overview, setOverview] = useState("");
+  const [founded, setFounded] = useState("");
+  const [website, setWebsite] = useState("");
+  const [address, setAddress] = useState("");
+  const [location, setLocation] = useState("");
+  const [email, setEmail] = useState("");
+  const [contactNumber, setContactNumber] = useState("");
+  const [logoFile, setLogoFile] = useState(null);
+  const [logoPreview, setLogoPreview] = useState(null);
   const [agreeTerms, setAgreeTerms] = useState(false);
   const [errors, setErrors] = useState({});
   const [loading, setLoading] = useState(false);
@@ -24,36 +34,54 @@ function CreateCompanyPage() {
     if (!orgType.trim())
       newErrors.orgType = "Please select an organization type.";
     if (!agreeTerms) newErrors.agreeTerms = "You must agree to the terms.";
-
+    // Email validation (required and must be in correct format)
+    if (!email.trim()) {
+      newErrors.email = "Please enter an email address.";
+    }
+    if (!website.trim()) {
+      newErrors.website = "Please enter the company website.";
+    }
+    if (!contactNumber.trim()) {
+      newErrors.contactNumber = "Please enter a contact number.";
+    }
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
   }
 
   async function handleSubmit() {
-    if (!validateForm()) {
-      return; // Stop submission if there are validation errors
-    }
+    if (!validateForm()) return;
 
     setLoading(true);
 
-    // Prepare company data for API request
+    let base64Logo = "";
+    if (logoFile) {
+      base64Logo = await getBase64(logoFile);
+    }
+
     const newCompany = {
-      companyId: companyName.toLowerCase(),
       name: companyName,
-      industry: industry,
+      logo: base64Logo,
+      banner: null,
+      description: tagline,
       companySize: orgSize,
       companyType: orgType,
-      description: `${companyName} is a leading company in the ${industry} sector.`,
+      industry,
+      overview,
+      founded: parseInt(founded),
+      website,
+      address,
+      location,
+      email,
+      contactNumber,
     };
 
     try {
-      // Send POST request to create company
       const response = await axios.post("/companies", newCompany);
-
       if (response.status === 201) {
         setSuccessMessage("Company page created successfully!");
+        const createdCompany = response.data.company;
         setTimeout(() => {
-          navigate(`/company/${newCompany.companyId}/home`);
+          navigate(`/company/${createdCompany.companyId}/home`);
         }, 2000);
       }
     } catch (error) {
@@ -72,7 +100,9 @@ function CreateCompanyPage() {
       setLoading(false);
     }
   }
-
+  if (loading) {
+    return <LoadingPage />;
+  }
   return (
     <div className="bg-background">
       <div className="max-w-7xl mx-auto p-6 bg-background">
@@ -81,14 +111,16 @@ function CreateCompanyPage() {
           <div className="space-y-4 bg-boxbackground p-6 rounded-xl border border-gray-300 shadow-md">
             {/* Name */}
             <div>
-              <label className="block text-sm text-text2 mb-1">Name*</label>
+              <label className="block text-sm text-normaltext mb-1">
+                Name*
+              </label>
               <input
                 type="text"
                 value={companyName}
                 id="company-name"
                 data-testid="company-name"
                 onChange={(e) => setName(e.target.value)}
-                className={`w-full p-1 border text-sm bg-boxbackground border-gray-400 rounded-md text-text2 ${
+                className={`w-full p-1 border text-sm bg-boxbackground border-gray-400 rounded-md text-normaltext ${
                   errors.companyName ? "border-red-500" : "border-gray-400"
                 }`}
                 placeholder="Add your organization’s name"
@@ -100,40 +132,28 @@ function CreateCompanyPage() {
               )}
             </div>
 
-            {/* Website */}
+            {/* Description */}
             <div>
-              <label className="block text-sm text-text2 mb-1">Website</label>
-              <input
-                type="url"
-                id="company-website"
-                data-testid="company-website"
-                className="w-full p-1 border text-sm border-gray-400 rounded-md bg-boxbackground text-text2"
-                placeholder="Begin with http://, https:// or www."
+              <label className="block text-sm text-normaltext mb-1">
+                Tagline
+              </label>
+              <textarea
+                value={tagline}
+                id="company-tagline"
+                data-testid="company-tagline"
+                onChange={(e) => setTagline(e.target.value)}
+                className="w-full p-2 border rounded-md bg-boxbackground text-normaltext"
+                placeholder="ex: An information services firm helping small businesses succeed."
+                maxLength={120}
               />
+              <p className="text-xs text-gray-500">
+                Use your tagline to briefly describe what your organization
+                does. This can be changed later.
+              </p>
             </div>
-
-            {/* Industry */}
-            <div>
-              <label className="block text-sm text-text2 mb-1">Industry*</label>
-              <input
-                type="text"
-                id="company-industry"
-                data-testid="company-industry"
-                value={industry}
-                onChange={(e) => setIndustry(e.target.value)}
-                className={`w-full p-1 border text-sm border-gray-400 rounded-md bg-boxbackground text-text2 ${
-                  errors.industry ? "border-red-500" : "border-gray-400"
-                }`}
-                placeholder="ex: Information Services"
-              />
-              {errors.industry && (
-                <p className="text-red-500 text-xs mt-1">{errors.industry}</p>
-              )}
-            </div>
-
             {/* Organization Size */}
             <div>
-              <label className="block text-sm text-text2 mb-1">
+              <label className="block text-sm text-normaltext mb-1">
                 Organization size*
               </label>
               <select
@@ -147,24 +167,19 @@ function CreateCompanyPage() {
                 }`}
               >
                 <option value="">Select size</option>
-                <option>0-1 employees</option>
-                <option>2-10 employees</option>
-                <option>11-50 employees</option>
-                <option>51-200 employees</option>
-                <option>201-500 employees</option>
-                <option>501-1,000 employees</option>
-                <option>1,001-5,000 employees</option>
-                <option>5,001-10,000 employees</option>
-                <option>10,000+ employees</option>
+                <option>1-50 employees</option>
+                <option>51-400 employees</option>
+                <option>401-1000 employees</option>
+                <option>1001-10000 employees</option>
+                <option>10K+ employees</option>
               </select>
               {errors.orgSize && (
                 <p className="text-red-500 text-xs mt-1">{errors.orgSize}</p>
               )}
             </div>
-
             {/* Organization Type */}
             <div>
-              <label className="block text-sm text-text2 mb-1">
+              <label className="block text-sm text-normaltext mb-1">
                 Organization type*
               </label>
               <select
@@ -190,44 +205,172 @@ function CreateCompanyPage() {
                 <p className="text-red-500 text-xs mt-1">{errors.orgType}</p>
               )}
             </div>
+            {/* Industry */}
+            <div>
+              <label className="block text-sm text-normaltext mb-1">
+                Industry*
+              </label>
+              <input
+                type="text"
+                id="company-industry"
+                data-testid="company-industry"
+                value={industry}
+                onChange={(e) => setIndustry(e.target.value)}
+                className={`w-full p-1 border text-sm border-gray-400 rounded-md bg-boxbackground text-normaltext ${
+                  errors.industry ? "border-red-500" : "border-gray-400"
+                }`}
+                placeholder="ex: Information Services"
+              />
+              {errors.industry && (
+                <p className="text-red-500 text-xs mt-1">{errors.industry}</p>
+              )}
+            </div>
+            {/* Overview */}
+            <div>
+              <label className="block text-sm text-normaltext mb-1">
+                Overview
+              </label>
+              <textarea
+                value={overview}
+                onChange={(e) => setOverview(e.target.value)}
+                className="w-full p-2 border rounded-md bg-boxbackground text-normaltext"
+                placeholder="Brief description of your company"
+              />
+            </div>
+
+            {/* Founded */}
+            <div>
+              <label className="block text-sm text-normaltext mb-1">
+                Founded Year
+              </label>
+              <input
+                type="number"
+                value={founded}
+                onChange={(e) => setFounded(e.target.value)}
+                className="w-full p-1 border text-sm rounded-md bg-boxbackground text-normaltext"
+                placeholder="e.g., 1999"
+              />
+            </div>
+            {/* Website */}
+            <div>
+              <label className="block text-sm text-normaltext mb-1">
+                Website*
+              </label>
+              <input
+                type="url"
+                value={website}
+                id="company-website"
+                data-testid="company-website"
+                onChange={(e) => setWebsite(e.target.value)}
+                className={`w-full p-1 border text-sm border-gray-400 rounded-md bg-boxbackground text-normaltext ${
+                  errors.website ? "border-red-500" : "border-gray-400"
+                }`}
+                placeholder="Begin with http://, https:// or www."
+              />
+              {errors.website && (
+                <p className="text-red-500 text-xs mt-1">{errors.website}</p>
+              )}
+            </div>
+
+            {/* Address */}
+            <div>
+              <label className="block text-sm text-normaltext mb-1">
+                Address
+              </label>
+              <input
+                type="text"
+                value={address}
+                onChange={(e) => setAddress(e.target.value)}
+                className="w-full p-1 border text-sm rounded-md bg-boxbackground text-normaltext"
+                placeholder="123 Example Street"
+              />
+            </div>
+
+            {/* Location */}
+            <div>
+              <label className="block text-sm text-normaltext mb-1">
+                Location
+              </label>
+              <input
+                type="text"
+                value={location}
+                onChange={(e) => setLocation(e.target.value)}
+                className="w-full p-1 border text-sm rounded-md bg-boxbackground text-normaltext"
+                placeholder="City, Country"
+              />
+            </div>
+
+            {/* Email */}
+            <div>
+              <label className="block text-sm text-normaltext mb-1">
+                Email*
+              </label>
+              <input
+                type="email"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                className={`w-full p-1 border text-sm rounded-md bg-boxbackground text-normaltext ${
+                  errors.email ? "border-red-500" : "border-gray-400"
+                }`}
+                placeholder="example@company.com"
+              />
+              {errors.email && (
+                <p className="text-red-500 text-xs mt-1">{errors.email}</p>
+              )}
+            </div>
+
+            {/* Contact Number */}
+            <div>
+              <label className="block text-sm text-normaltext mb-1">
+                Contact Number*
+              </label>
+              <input
+                type="tel"
+                value={contactNumber}
+                onChange={(e) => setContactNumber(e.target.value)}
+                className={`w-full p-1 border text-sm rounded-md bg-boxbackground text-normaltext ${
+                  errors.contactNumber ? "border-red-500" : "border-gray-400"
+                }`}
+                placeholder="+20 123 456 7890"
+              />
+              {errors.contactNumber && (
+                <p className="text-red-500 text-xs mt-1">
+                  {errors.contactNumber}
+                </p>
+              )}
+            </div>
+
             {/* Logo Upload */}
             <div>
-              <label className="block text-sm text-text2 mb-1">Logo</label>
+              <label className="block text-sm text-normaltext mb-1">Logo</label>
               <div className="w-full min-h-[100px] border border-gray-400 rounded-md bg-uploadimage relative flex flex-col items-center justify-center px-4 py-6 text-center">
                 <div className="flex flex-col items-center justify-center gap-1 text-gray-600">
-                  <FiUpload className="text-2xl font-semibold text-text2" />
-                  <p className="font-semibold text-sm text-text2">
+                  <FiUpload className="text-2xl font-semibold text-normaltext" />
+                  <p className="font-semibold text-sm text-normaltext">
                     Choose file
                   </p>
-                  <p className="text-text2 text-xs">Upload to see preview</p>
+                  <p className="text-normaltext text-xs">
+                    Upload to see preview
+                  </p>
                 </div>
+
                 <input
                   type="file"
                   id="company-logo"
+                  accept="image/*"
                   className="absolute inset-0 opacity-0 cursor-pointer"
+                  onChange={(e) => {
+                    const file = e.target.files[0];
+                    if (file) {
+                      setLogoFile(file);
+                      setLogoPreview(URL.createObjectURL(file));
+                    }
+                  }}
                 />
               </div>
 
               <p className="text-xs text-gray-500 mt-1">
                 300 x 300px recommended. JPGs, JPEGs, and PNGs supported.
-              </p>
-            </div>
-
-            {/* Tagline */}
-            <div>
-              <label className="block text-sm text-text2 mb-1">Tagline</label>
-              <textarea
-                value={tagline}
-                id="company-tagline"
-                data-testid="company-tagline"
-                onChange={(e) => setTagline(e.target.value)}
-                className="w-full p-2 border rounded-md bg-boxbackground text-text2"
-                placeholder="ex: An information services firm helping small businesses succeed."
-                maxLength={120}
-              />
-              <p className="text-xs text-gray-500">
-                Use your tagline to briefly describe what your organization
-                does. This can be changed later.
               </p>
             </div>
 
@@ -249,11 +392,6 @@ function CreateCompanyPage() {
             {errors.agreeTerms && (
               <p className="text-red-500 text-xs mt-1">{errors.agreeTerms}</p>
             )}
-
-            {/* Terms Link */}
-            <p className="text-blue-600 cursor-pointer hover:underline font-medium text-sm">
-              Read the LinkedIn Pages Terms
-            </p>
           </div>
 
           {/* Right Page Preview */}
@@ -264,7 +402,20 @@ function CreateCompanyPage() {
               </h3>
               <div className="bg-background w-full p-6 rounded-b-xl">
                 <div className="mt-4 bg-boxbackground pt-4 pb-4 rounded-xl px-6">
-                  <div className="h-32 w-32 bg-gray-200 mx-auto rounded-full mb-4"></div>
+                  <div className="h-32 w-32 mx-auto rounded-full mb-4 overflow-hidden border border-gray-300 bg-white flex items-center justify-center">
+                    {logoPreview ? (
+                      <img
+                        src={logoPreview}
+                        alt="Logo Preview"
+                        className="w-full h-full object-contain"
+                      />
+                    ) : (
+                      <span className="text-sm text-gray-400">
+                        Logo Preview
+                      </span>
+                    )}
+                  </div>
+
                   <h4 className="text-lg font-bold text-text">
                     {companyName || "Company Name"}
                   </h4>

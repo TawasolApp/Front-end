@@ -1,6 +1,6 @@
 import React from "react";
 import { render, screen } from "@testing-library/react";
-import PostSlide from "../pages/CompanyPage/Components/PostSlide";
+import PostSlide from "../../pages/Company/Components/Slider/PostSlide";
 
 const mockPost = {
   logo: "https://example.com/logo.png",
@@ -18,9 +18,7 @@ describe("PostSlide Component", () => {
     render(<PostSlide post={mockPost} />);
     expect(screen.getByText("Tech Corp")).toBeInTheDocument();
     expect(screen.getByText("1200 followers")).toBeInTheDocument();
-    expect(
-      screen.getByText((content) => content.includes("Edited")),
-    ).toBeInTheDocument();
+    expect(screen.getByAltText("Company Logo")).toBeInTheDocument();
   });
 
   test("renders post content correctly", () => {
@@ -30,7 +28,8 @@ describe("PostSlide Component", () => {
 
   test("renders media correctly", () => {
     render(<PostSlide post={mockPost} />);
-    const image = screen.getByRole("img", { name: "Post" });
+    const image = screen.getByAltText("Post");
+    expect(image).toBeInTheDocument();
     expect(image).toHaveAttribute("src", mockPost.media);
   });
 

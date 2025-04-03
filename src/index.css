@@ -40,16 +40,16 @@
   --postsbuttoncolor: 255, 255, 255; /* white */
   --text: 0, 0, 0; /* black */
   --companyheader1: 17, 24, 39; /* gray-900 */
-  --companyheader2: 107, 114, 128; /* gray-500 */
+  --companysubheader: 107, 114, 128; /* gray-500 */
   --navbuttons: 55, 65, 81; /* gray-700 */
   --overview: 17, 24, 39; /* gray-900 */
   --overviewcomponenttext: 107, 114, 128; /* gray-500 */
   --postsslider: 55, 65, 81; /* gray-700 */
-  --text2: 55, 65, 81; /* gray-700 */
+  --normaltext: 55, 65, 81; /* gray-700 */
   --modalbackground: 229, 231, 235; /* Light mode (gray-200) */
   --sliderbutton: 209, 213, 219; /* gray-300 */
   --uploadimage: 243, 244, 246;
-
+  --selectedjob: 229, 231, 235;
   --item-border-hover: 200, 200, 200;
   --button-hover: 240, 240, 240;
   --error: 239, 68, 68; /* red-500 */
@@ -100,16 +100,16 @@
   --postsbuttoncolor: 27, 31, 35; /* custom dark gray */
   --text: 255, 255, 255; /* white */
   --companyheader1: 255, 255, 255; /* white */
-  --companyheader2: 155, 156, 158; /* custom gray */
+  --companysubheader: 155, 156, 158; /* custom gray */
   --navbuttons: 153, 154, 156; /* custom gray */
   --overview: 153, 154, 156; /* custom gray */
   --overviewcomponenttext: 153, 154, 156; /* custom gray */
   --postsslider: 255, 255, 255; /* custom gray */
-  --text2: 255, 255, 255; /* white */
+  --normaltext: 255, 255, 255; /* white */
   --modalbackground: 27, 31, 35; /* Dark mode */
   --sliderbutton: 75, 85, 99; /* custom gray */
   --uploadimage: 75, 85, 99;
-
+  --selectedjob: 55, 65, 81; /* gray-700 */
   --item-border-hover: 90, 90, 90;
   --button-hover: 50, 50, 50;
   --error: 239, 68, 68; /* red-500 */
@@ -120,9 +120,4 @@
   --amber-dark-hover: 92, 33, 13; /* custom darker amber */
   --amber-text-light: 253, 230, 138; /* amber-200 */
   --amber-text-dark: 254, 243, 199; /* amber-100 */
-}
-
-.dark img.darken {
-  filter: brightness(0.8) contrast(1.1);
-  transition: filter 300ms ease;
 }

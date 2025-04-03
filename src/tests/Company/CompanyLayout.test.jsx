@@ -1,11 +1,11 @@
 import { describe, test, expect, vi, beforeEach } from "vitest";
 import { render, screen, waitFor } from "@testing-library/react";
 import { MemoryRouter, Route, Routes } from "react-router-dom";
-import CompanyLayout from "../pages/Company/Components/CompanyLayout";
-import { axiosInstance } from "../apis/axios";
+import CompanyLayout from "../../pages/Company/CompanyLayout";
+import { axiosInstance } from "../../apis/axios";
 
 // Mock axios
-vi.mock("../apis/axios", () => ({
+vi.mock("../../apis/axios", () => ({
   axiosInstance: {
     get: vi.fn(),
     post: vi.fn(),
@@ -15,13 +15,19 @@ vi.mock("../apis/axios", () => ({
 }));
 const mockedAxios = axiosInstance;
 
-// Mock child components (CompanyHeader, Footer, and Outlet)
-vi.mock("../pages/companypage/components/CompanyHeader", () => ({
-  default: () => <div data-testid="company-header" />,
-}));
-vi.mock("../pages/companypage/components/Footer", () => ({
+// Mock CompanyHeader
+vi.mock(
+  "../../pages/Company/Components/GenericComponents/CompanyHeader",
+  () => ({
+    default: () => <div data-testid="company-header" />,
+  })
+);
+
+// Mock Footer
+vi.mock("../../pages/Company/Components/GenericComponents/Footer", () => ({
   default: () => <div data-testid="footer" />,
 }));
+
 vi.mock("react-router-dom", async () => {
   const actual = await vi.importActual("react-router-dom");
   return {

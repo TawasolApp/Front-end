@@ -1,11 +1,11 @@
 import { render, screen, waitFor } from "@testing-library/react";
 import { MemoryRouter, Routes, Route } from "react-router-dom";
 import { vi } from "vitest";
-import { axiosInstance as axios } from "../apis/axios";
-import Aboutpage from "../pages/companypage/components/AboutPage";
+import { axiosInstance as axios } from "../../apis/axios";
+import AboutPage from "../../pages/Company/Components/Pages/AboutPage";
 
 // Mock axios
-vi.mock("../apis/axios", () => ({
+vi.mock("../../apis/axios", () => ({
   axiosInstance: {
     get: vi.fn(),
   },
@@ -31,14 +31,14 @@ test("renders Aboutoverview and AboutLocations on Aboutpage", async () => {
   render(
     <MemoryRouter initialEntries={["/company/test-company/about"]}>
       <Routes>
-        <Route path="/company/:companyId/about" element={<Aboutpage />} />
+        <Route path="/company/:companyId/about" element={<AboutPage />} />
       </Routes>
-    </MemoryRouter>,
+    </MemoryRouter>
   );
 
   // Wait for async loading
   await waitFor(() =>
-    expect(screen.getByTestId("about-overview")).toBeInTheDocument(),
+    expect(screen.getByTestId("about-overview")).toBeInTheDocument()
   );
 
   // Assertions

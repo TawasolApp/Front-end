@@ -1,7 +1,8 @@
 import React from "react";
 import OverviewComponent from "./OverviewComponent.jsx";
-function AboutOverview({ company }) {
-  // const isAdmin = true;
+import { useOutletContext } from "react-router-dom";
+function AboutOverview() {
+  const { company } = useOutletContext();
   return (
     <div
       className="bg-boxbackground p-6 shadow-md rounded-md w-full max-w-3xl mx-auto pb-4 mb-8 relative"
@@ -11,14 +12,6 @@ function AboutOverview({ company }) {
         <h1 className="text-2xl font-semibold mb-2 text-boxheading">
           Overview
         </h1>
-        {/* {isAdmin && (
-          <button
-            className="absolute top-4 right-4 bg-white p-2 rounded-full shadow-md border border-gray-300 hover:bg-gray-100 transition"
-            onClick={() => alert("Edit Overview")}
-          >
-            <FiEdit className="text-gray-600 w-5 h-5" />
-          </button>
-        )} */}
       </div>
       <p className="text-overview">{company.overview}</p>
       {company?.website && (

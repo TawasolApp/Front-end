@@ -1,7 +1,7 @@
 import { render, screen } from "@testing-library/react";
 import { describe, test, expect } from "vitest";
-import Aboutoverview from "../pages/CompanyPage/Components/AboutOverview";
-describe("Aboutoverview", () => {
+import AboutOverview from "../../pages/Company/Components/AboutPage/AboutOverview";
+describe("AboutOverview", () => {
   const mockCompany = {
     overview: "A great company with innovative products.",
     website: "https://example.com",
@@ -16,27 +16,27 @@ describe("Aboutoverview", () => {
   };
 
   test("renders the main container and title", () => {
-    render(<Aboutoverview company={mockCompany} />);
+    render(<AboutOverview company={mockCompany} />);
     expect(screen.getByTestId("about-overview")).toBeInTheDocument();
     expect(screen.getByText("Overview")).toBeInTheDocument();
   });
 
   test("renders overview text", () => {
-    render(<Aboutoverview company={mockCompany} />);
+    render(<AboutOverview company={mockCompany} />);
     expect(
-      screen.getByText("A great company with innovative products."),
+      screen.getByText("A great company with innovative products.")
     ).toBeInTheDocument();
   });
 
   test("renders website with link", () => {
-    render(<Aboutoverview company={mockCompany} />);
+    render(<AboutOverview company={mockCompany} />);
     const link = screen.getByRole("link", { name: mockCompany.website });
     expect(link).toBeInTheDocument();
     expect(link).toHaveAttribute("href", mockCompany.website);
   });
 
   test("renders all additional info using Overviewcomponent", () => {
-    render(<Aboutoverview company={mockCompany} />);
+    render(<AboutOverview company={mockCompany} />);
     expect(screen.getByText("Phone")).toBeInTheDocument();
     expect(screen.getByText("123-456-7890")).toBeInTheDocument();
 
@@ -64,7 +64,7 @@ describe("Aboutoverview", () => {
       overview: "Partial overview",
     };
 
-    render(<Aboutoverview company={partialCompany} />);
+    render(<AboutOverview company={partialCompany} />);
     expect(screen.queryByText("Website")).not.toBeInTheDocument();
     expect(screen.queryByText("Phone")).not.toBeInTheDocument();
     expect(screen.queryByText("Verified Page")).not.toBeInTheDocument();

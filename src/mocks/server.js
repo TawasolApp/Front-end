@@ -257,7 +257,7 @@ server.post("/auth/login", (req, res) => {
 
   const users = _router.db.get("auth").value();
   const user = users.find(
-    (user) => user.email === email && user.password === password,
+    (user) => user.email === email && user.password === password
   );
 
   if (!user) {
@@ -337,7 +337,7 @@ server.get("/users/confirm-email-change", (req, res) => {
   _router.db
     .set(
       "pendingEmailChanges",
-      pendingChanges.filter((req) => req.token !== token),
+      pendingChanges.filter((req) => req.token !== token)
     )
     .write();
 
@@ -480,7 +480,7 @@ server.patch("/profile/:userId/education/:itemId", (req, res) => {
   const updatedItems = user
     .get("education")
     .map((item) =>
-      String(item.id) === itemId ? { ...item, ...req.body } : item,
+      String(item.id) === itemId ? { ...item, ...req.body } : item
     )
     .value();
   user.assign({ education: updatedItems }).write();
@@ -495,7 +495,7 @@ server.patch("/profile/:userId/experience/:itemId", (req, res) => {
   const updatedItems = user
     .get("experience")
     .map((item) =>
-      String(item.id) === itemId ? { ...item, ...req.body } : item,
+      String(item.id) === itemId ? { ...item, ...req.body } : item
     )
     .value();
   user.assign({ experience: updatedItems }).write();
@@ -510,7 +510,7 @@ server.patch("/profile/:userId/certifications/:itemId", (req, res) => {
   const updatedItems = user
     .get("certifications")
     .map((item) =>
-      String(item.id) === itemId ? { ...item, ...req.body } : item,
+      String(item.id) === itemId ? { ...item, ...req.body } : item
     )
     .value();
   user.assign({ certifications: updatedItems }).write();
@@ -527,7 +527,7 @@ server.patch("/profile/:userId/skills/:itemId", (req, res) => {
   const updatedItems = user
     .get("skills")
     .map((item) =>
-      String(item.id) === itemId ? { ...item, ...req.body } : item,
+      String(item.id) === itemId ? { ...item, ...req.body } : item
     )
     .value();
 
@@ -729,7 +729,7 @@ server.post("/posts/react/:postId", (req, res) => {
           ...entity.reactions,
           [existingReaction.type]: Math.max(
             (entity.reactions[existingReaction.type] || 0) - 1,
-            0,
+            0
           ),
         },
         reactType: null,
@@ -739,7 +739,7 @@ server.post("/posts/react/:postId", (req, res) => {
 
   // Add new reaction
   const reactionTypeAdd = Object.keys(reactions).find(
-    (type) => reactions[type] === 1,
+    (type) => reactions[type] === 1
   );
   if (reactionTypeAdd) {
     const newReaction = {
@@ -930,7 +930,7 @@ server.delete("/posts/comments/:commentId", (req, res) => {
 
   res.status(404).json({ error: "Comment not found" });
 });
-
+/*********************************************************** COMPANY PAGE ***********************************************************/
 server.get("/companies/:companyId", (req, res) => {
   console.log("Fetching company details...");
 
@@ -972,26 +972,64 @@ server.post("/companies", (req, res) => {
   console.log("Creating a new company...");
 
   const newCompany = req.body; // Get request body (new company data)
-  if (!newCompany.companyId || !newCompany.name || !newCompany.description) {
+
+  // Check required fields (companyId, name, and companySize)
+  if (
+    !newCompany.name ||
+    !newCompany.companySize ||
+    !newCompany.companyType ||
+    !newCompany.industry ||
+    !newCompany.email ||
+    !newCompany.website ||
+    !newCompany.contactNumber
+  ) {
     return res.status(400).json({ error: "Missing required fields" });
   }
 
-  // Check if company already exists
+  // Generate companyId based on company name (slug format: lowercase, spaces replaced with hyphens)
+  const companyId = newCompany.name.toLowerCase().replace(/\s+/g, "-");
+
+  // Check if company already exists (based on companyId)
   const existingCompany = _router.db
     .get("companies")
-    .find({ companyId: newCompany.companyId })
+    .find({ companyId })
     .value();
+
   if (existingCompany) {
     return res
       .status(409)
       .json({ error: "Company with this ID already exists" });
   }
 
-  _router.db.get("companies").push(newCompany).write(); // Add to database
+  // Add the new company to the database
+  _router.db
+    .get("companies")
+    .push({
+      companyId,
+      isManager: true,
+      name: newCompany.name,
+      logo: newCompany.logo || "",
+      banner: newCompany.banner || "",
+      description: newCompany.description || "",
+      companySize: newCompany.companySize,
+      companyType: newCompany.companyType,
+      industry: newCompany.industry,
+      overview: newCompany.overview || "",
+      founded: newCompany.founded || null,
+      website: newCompany.website,
+      address: newCompany.address || "",
+      location: newCompany.location || "",
+      email: newCompany.email,
+      contactNumber: newCompany.contactNumber,
+    })
+    .write(); // Add to database
 
   res.status(201).json({
     message: "Company page created successfully",
-    company: newCompany,
+    company: {
+      companyId,
+      ...newCompany,
+    },
   });
 });
 
@@ -1031,6 +1069,154 @@ server.delete("/companies/:companyId/unfollow", (req, res) => {
     message: "Company unfollowed successfully",
     company: company.value(),
   });
+});
+// add new job opening
+server.post("/companies/:companyId/jobs", (req, res) => {
+  const { companyId } = req.params;
+  const {
+    position,
+    industry,
+    description,
+    location,
+    salary,
+    experienceLevel,
+    locationType,
+    employmentType,
+  } = req.body;
+
+  const newJob = {
+    id: Date.now().toString(), // unique string ID
+    company: companyId, // matches schema
+    isOpen: true, // new job is open by default
+    position,
+    industry,
+    description,
+    location,
+    salary,
+    experienceLevel,
+    locationType,
+    employmentType,
+    postDate: new Date().toISOString(),
+    applicantCount: 0,
+  };
+
+  const db = _router.db;
+  const jobs = db.get("jobs").value() || [];
+
+  db.set("jobs", [...jobs, newJob]).write();
+
+  res.status(201).json(newJob);
+});
+// get job openings of a company
+server.get("/companies/:companyId/jobs", (req, res) => {
+  const { companyId } = req.params;
+
+  const jobs = _router.db
+    .get("jobs")
+    .filter((job) => job.companyId === companyId || job.company === companyId)
+    .value();
+
+  res.status(200).json(jobs);
+});
+//GET- get applicants of job
+server.get("/companies/jobs/:jobId/applicants", (req, res) => {
+  const { jobId } = req.params;
+  const { name } = req.query;
+
+  try {
+    const db = _router.db;
+
+    // Get all applicants from the DB
+    const applicants = db.get("applicants").value();
+
+    // Filter applicants by jobId and optionally by name
+    const filteredApplicants = applicants.filter((applicant) => {
+      const matchesJob = String(applicant.jobId) === String(jobId);
+      const matchesName =
+        !name || applicant.name?.toLowerCase().includes(name.toLowerCase());
+      return matchesJob && matchesName;
+    });
+
+    // Simulate job existence check (optional but aligns with 404 case)
+    const jobExists = db.get("jobs").find({ id: jobId }).value();
+    if (!jobExists) {
+      return res.status(404).json({ message: "Job not found." });
+    }
+
+    res.status(200).json(filteredApplicants);
+  } catch (error) {
+    res.status(500).json({ message: "Failed to retrieve applicants list." });
+  }
+});
+// GET - Get followers of a company
+server.get("/companies/:companyId/followers", (req, res) => {
+  const { companyId } = req.params;
+  const { name } = req.query;
+
+  try {
+    const db = _router.db;
+
+    // Get all connections
+    const allConnections = db.get("companyConnections").value();
+
+    // Filter by companyId and optionally by name
+    const followers = allConnections.filter((connection) => {
+      const matchesCompany = connection.companyId === companyId;
+      const matchesName =
+        !name ||
+        connection.username?.toLowerCase().includes(name.toLowerCase());
+      return matchesCompany && matchesName;
+    });
+
+    // Optional cleanup: remove companyId from each entry
+    const cleanedFollowers = followers.map(({ companyId, ...user }) => user);
+
+    res.status(200).json(cleanedFollowers);
+  } catch (error) {
+    res.status(500).json({ message: "Failed to retrieve company followers." });
+  }
+});
+server.post("/companies/:companyId/managers", (req, res) => {
+  const { companyId } = req.params;
+  const { userId } = req.body;
+
+  if (!companyId || !userId) {
+    return res.status(400).json({ message: "Invalid company ID/user ID." });
+  }
+
+  const db = _router.db;
+
+  const company = db
+    .get("companies")
+    .find((c) => c.companyId.toString() === companyId.toString())
+    .value();
+
+  const user = db.get("users").find({ id: userId.toString() }).value();
+
+  if (!company) {
+    return res.status(404).json({ message: "Company not found." });
+  }
+
+  if (!user) {
+    return res.status(404).json({ message: "User not found." });
+  }
+
+  if (!company.Managers) {
+    company.Managers = [];
+  }
+
+  if (company.Managers.includes(userId)) {
+    return res.status(409).json({ message: "User already a manager" });
+  }
+
+  company.Managers.push(userId);
+
+  db.get("companies")
+    .find((c) => c.companyId.toString() === companyId.toString())
+    .assign({ Managers: company.Managers })
+    .write();
+
+  return res.status(201).json({ message: "Manager added successfully." });
 });
 
 server.use(_router);

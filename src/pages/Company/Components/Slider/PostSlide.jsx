@@ -17,10 +17,10 @@ function PostSlide({ post }) {
             <h2 className="font-semibold text-companyheader1 text-sm">
               {post.companyName}
             </h2>
-            <p className="text-companyheader2 text-xs">
+            <p className="text-companysubheader text-xs">
               {post.followers} followers
             </p>
-            <p className="text-companyheader2 text-xs">
+            <p className="text-companysubheader text-xs">
               {post.timeAgo} <span className="font-bold">·</span>{" "}
               {post.edited ? (
                 <>
