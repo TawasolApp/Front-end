@@ -226,17 +226,16 @@ export const PostProvider = ({ children, initialPost, handleDeletePost }) => {
         const uniqueReplies = Array.from(
           new Map(mergedReplies.map((reply) => [reply.id, reply])).values(),
         );
-
+        const wantedComment = comments.find(comment => comment.id === commentId);
         return {
           ...prevReplies,
           [commentId]: {
             data: uniqueReplies,
-            hasMore: newReplies.length > 0, // If new replies exist, there are more to fetch
+            hasMore: wantedComment.replies.length > existingReplies.length + newReplies.length,
             replyPage: currentPage + 1,
           },
         };
       });
-      console.log(replies);
     } catch (e) {
       if (e.name === "CanceledError") return;
       if (e.response?.status === 404) {

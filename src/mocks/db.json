@@ -544,7 +544,7 @@
         "Support": 0,
         "Like": 0
       },
-      "comments": 1,
+      "comments": 2,
       "shares": 0,
       "taggedUsers": [],
       "visibility": "Public",
@@ -569,7 +569,7 @@
         "Support": 0,
         "Like": 0
       },
-      "comments": 0,
+      "comments": 2,
       "shares": 0,
       "taggedUsers": [],
       "visibility": "Public",
@@ -588,6 +588,8 @@
       "authorBio": "Computer Engineering Student at Cairo University",
       "content": "adding acomment for replies",
       "replies": [
+        "dummy reply",
+        "dummy reply",
         "dummy reply",
         "dummy reply"
       ],
@@ -636,12 +638,157 @@
         "Love": 0,
         "Celebrate": 0,
         "Insightful": 0,
+        "Funny": 1,
+        "Support": 0,
+        "like": 0
+      },
+      "taggedUsers": [],
+      "timestamp": "2025-04-03T13:17:40.849Z",
+      "reactType": "Funny"
+    },
+    {
+      "id": "1743686480453",
+      "postId": "1743667792401",
+      "authorId": "mohsobh",
+      "authorName": "Mohamed Sobh",
+      "authorPicture": "https://media.licdn.com/dms/image/v2/D4D03AQH7Ais8BxRXzw/profile-displayphoto-shrink_100_100/profile-displayphoto-shrink_100_100/0/1721080103981?e=1747872000&v=beta&t=nDnZdgCqkI8v5B2ymXZzluMZVlF6h_o-dN1pA95Fzv4",
+      "authorBio": "Computer Engineering Student at Cairo University",
+      "content": "com 1",
+      "replies": [],
+      "reactions": {
+        "Love": 0,
+        "Celebrate": 0,
+        "Insightful": 0,
         "Funny": 0,
         "Support": 0,
         "like": 0
       },
       "taggedUsers": [],
-      "timestamp": "2025-04-03T13:17:40.849Z"
+      "timestamp": "2025-04-03T13:21:20.453Z"
+    },
+    {
+      "id": "1743686483171",
+      "postId": "1743667792401",
+      "authorId": "mohsobh",
+      "authorName": "Mohamed Sobh",
+      "authorPicture": "https://media.licdn.com/dms/image/v2/D4D03AQH7Ais8BxRXzw/profile-displayphoto-shrink_100_100/profile-displayphoto-shrink_100_100/0/1721080103981?e=1747872000&v=beta&t=nDnZdgCqkI8v5B2ymXZzluMZVlF6h_o-dN1pA95Fzv4",
+      "authorBio": "Computer Engineering Student at Cairo University",
+      "content": "com 2 ",
+      "replies": [],
+      "reactions": {
+        "Love": 0,
+        "Celebrate": 0,
+        "Insightful": 0,
+        "Funny": 0,
+        "Support": 0,
+        "like": 0
+      },
+      "taggedUsers": [],
+      "timestamp": "2025-04-03T13:21:23.171Z"
+    },
+    {
+      "id": "1743686766303",
+      "postId": "1743684778133",
+      "authorId": "mohsobh",
+      "authorName": "Mohamed Sobh",
+      "authorPicture": "https://media.licdn.com/dms/image/v2/D4D03AQH7Ais8BxRXzw/profile-displayphoto-shrink_100_100/profile-displayphoto-shrink_100_100/0/1721080103981?e=1747872000&v=beta&t=nDnZdgCqkI8v5B2ymXZzluMZVlF6h_o-dN1pA95Fzv4",
+      "authorBio": "Computer Engineering Student at Cairo University",
+      "content": "ttt",
+      "replies": [],
+      "reactions": {
+        "Love": 0,
+        "Celebrate": 0,
+        "Insightful": 1,
+        "Funny": 0,
+        "Support": 0,
+        "like": 0
+      },
+      "taggedUsers": [],
+      "timestamp": "2025-04-03T13:26:06.303Z",
+      "reactType": "Insightful"
+    },
+    {
+      "id": "1743686799533",
+      "postId": "1743684778133",
+      "authorId": "mohsobh",
+      "authorName": "Mohamed Sobh",
+      "authorPicture": "https://media.licdn.com/dms/image/v2/D4D03AQH7Ais8BxRXzw/profile-displayphoto-shrink_100_100/profile-displayphoto-shrink_100_100/0/1721080103981?e=1747872000&v=beta&t=nDnZdgCqkI8v5B2ymXZzluMZVlF6h_o-dN1pA95Fzv4",
+      "authorBio": "Computer Engineering Student at Cairo University",
+      "content": "test add",
+      "replies": [],
+      "reactions": {
+        "Love": 0,
+        "Celebrate": 0,
+        "Insightful": 0,
+        "Funny": 0,
+        "Support": 0,
+        "like": 0
+      },
+      "taggedUsers": [],
+      "timestamp": "2025-04-03T13:26:39.533Z"
+    },
+    {
+      "id": "1743686821633",
+      "postId": "1",
+      "authorId": "mohsobh",
+      "authorName": "Mohamed Sobh",
+      "authorPicture": "https://media.licdn.com/dms/image/v2/D4D03AQH7Ais8BxRXzw/profile-displayphoto-shrink_100_100/profile-displayphoto-shrink_100_100/0/1721080103981?e=1747872000&v=beta&t=nDnZdgCqkI8v5B2ymXZzluMZVlF6h_o-dN1pA95Fzv4",
+      "authorBio": "Computer Engineering Student at Cairo University",
+      "content": "tttt",
+      "replies": [
+        "dummy reply",
+        "dummy reply"
+      ],
+      "reactions": {
+        "Love": 0,
+        "Celebrate": 0,
+        "Insightful": 0,
+        "Funny": 0,
+        "Support": 0,
+        "like": 0
+      },
+      "taggedUsers": [],
+      "timestamp": "2025-04-03T13:27:01.633Z"
+    },
+    {
+      "id": "1743686826126",
+      "postId": "1743686821633",
+      "authorId": "mohsobh",
+      "authorName": "Mohamed Sobh",
+      "authorPicture": "https://media.licdn.com/dms/image/v2/D4D03AQH7Ais8BxRXzw/profile-displayphoto-shrink_100_100/profile-displayphoto-shrink_100_100/0/1721080103981?e=1747872000&v=beta&t=nDnZdgCqkI8v5B2ymXZzluMZVlF6h_o-dN1pA95Fzv4",
+      "authorBio": "Computer Engineering Student at Cairo University",
+      "content": "sss",
+      "replies": [],
+      "reactions": {
+        "Love": 0,
+        "Celebrate": 0,
+        "Insightful": 0,
+        "Funny": 0,
+        "Support": 0,
+        "like": 0
+      },
+      "taggedUsers": [],
+      "timestamp": "2025-04-03T13:27:06.126Z"
+    },
+    {
+      "id": "1743686834177",
+      "postId": "1743686821633",
+      "authorId": "mohsobh",
+      "authorName": "Mohamed Sobh",
+      "authorPicture": "https://media.licdn.com/dms/image/v2/D4D03AQH7Ais8BxRXzw/profile-displayphoto-shrink_100_100/profile-displayphoto-shrink_100_100/0/1721080103981?e=1747872000&v=beta&t=nDnZdgCqkI8v5B2ymXZzluMZVlF6h_o-dN1pA95Fzv4",
+      "authorBio": "Computer Engineering Student at Cairo University",
+      "content": "dasda ",
+      "replies": [],
+      "reactions": {
+        "Love": 0,
+        "Celebrate": 0,
+        "Insightful": 0,
+        "Funny": 0,
+        "Support": 0,
+        "like": 0
+      },
+      "taggedUsers": [],
+      "timestamp": "2025-04-03T13:27:14.177Z"
     }
   ],
   "reactions": [
@@ -661,6 +808,26 @@
       "authorId": "mohsobh",
       "authorType": "User",
       "type": "Love",
+      "authorName": "Mohamed Sobh",
+      "authorPicture": "https://media.licdn.com/dms/image/v2/D4D03AQH7Ais8BxRXzw/profile-displayphoto-shrink_100_100/profile-displayphoto-shrink_100_100/0/1721080103981?e=1747872000&v=beta&t=nDnZdgCqkI8v5B2ymXZzluMZVlF6h_o-dN1pA95Fzv4",
+      "authorBio": "Computer Engineering Student at Cairo University"
+    },
+    {
+      "likeId": "1743686766303-mohsobh-Insightful",
+      "postId": "1743686766303",
+      "authorId": "mohsobh",
+      "authorType": "User",
+      "type": "Insightful",
+      "authorName": "Mohamed Sobh",
+      "authorPicture": "https://media.licdn.com/dms/image/v2/D4D03AQH7Ais8BxRXzw/profile-displayphoto-shrink_100_100/profile-displayphoto-shrink_100_100/0/1721080103981?e=1747872000&v=beta&t=nDnZdgCqkI8v5B2ymXZzluMZVlF6h_o-dN1pA95Fzv4",
+      "authorBio": "Computer Engineering Student at Cairo University"
+    },
+    {
+      "likeId": "1743686260849-mohsobh-Funny",
+      "postId": "1743686260849",
+      "authorId": "mohsobh",
+      "authorType": "User",
+      "type": "Funny",
       "authorName": "Mohamed Sobh",
       "authorPicture": "https://media.licdn.com/dms/image/v2/D4D03AQH7Ais8BxRXzw/profile-displayphoto-shrink_100_100/profile-displayphoto-shrink_100_100/0/1721080103981?e=1747872000&v=beta&t=nDnZdgCqkI8v5B2ymXZzluMZVlF6h_o-dN1pA95Fzv4",
       "authorBio": "Computer Engineering Student at Cairo University"

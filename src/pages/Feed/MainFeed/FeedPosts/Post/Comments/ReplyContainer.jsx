@@ -10,8 +10,6 @@ const ReplyContainer = ({ commentId }) => {
 
     const { replies, fetchReplies, handleAddReplyToComment } = usePost();
 
-    console.log(replies); console.log(commentId);
-
     useEffect(() => {
         fetchReplies(commentId);
     }, [commentId]);
