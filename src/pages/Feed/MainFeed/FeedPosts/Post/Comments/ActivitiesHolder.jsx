@@ -71,7 +71,7 @@ const ActivitiesHolder = ({
               onClick={setShowReactions}
             >
               {topReactions.map(([reactionType]) => {
-                const { Icon, color } = reactionIcons[reactionType];
+                const { Icon, _ } = reactionIcons[reactionType];
                 return (
                   <div key={reactionType} className="relative">
                     <Icon className="w-4 h-4" />
@@ -91,7 +91,7 @@ const ActivitiesHolder = ({
       </span>
       <button
         className="text-sm font-semibold text-textLightActivity px-1 rounded-md hover:bg-buttonIconHover transition-all duration-200"
-        onClick={() => setShowReplies(true)}
+        onClick={setShowReplies}
       >
         Reply
       </button>

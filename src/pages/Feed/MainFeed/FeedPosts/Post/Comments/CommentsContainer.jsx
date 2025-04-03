@@ -16,7 +16,9 @@ const CommentsContainer = () => {
 
   return (
     <>
-      <AddForm handleAddFunction={handleAddComment} type="Comment" />
+      <div className="px-4">
+        <AddForm handleAddFunction={handleAddComment} type="Comment" />
+      </div>
 
       {comments &&
         comments.length > 0 &&

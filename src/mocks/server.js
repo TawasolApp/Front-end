@@ -819,51 +819,87 @@ server.get("/posts/comments/:postId", (req, res) => {
 
 server.post("/posts/comment/:postId", (req, res) => {
   const { postId } = req.params;
-  const { content, taggedUsers } = req.body;
+  const { content, taggedUsers, isReply } = req.body;
 
-  console.log(`Adding comment to postId: ${postId}`);
-  console.log(`Comment content: ${content}`);
 
-  const commentId = Date.now().toString();
-  const createdAt = new Date().toISOString();
+  if (!isReply) {
+    const commentId = Date.now().toString();
+    const createdAt = new Date().toISOString();
+  
+    const newComment = {
+      id: commentId,
+      postId: postId,
+      authorId: currentUser.id,
+      authorName: currentUser.name,
+      authorPicture: currentUser.picture,
+      authorBio: currentUser.bio,
+      content: content,
+      replies: [],
+      reactions: {
+        Love: 0,
+        Celebrate: 0,
+        Insightful: 0,
+        Funny: 0,
+        Support: 0,
+        like: 0,
+      },
+      taggedUsers: taggedUsers || [],
+      timestamp: createdAt,
+    };
+  
+    // Add the comment to the database
+    _router.db.get("comments").push(newComment).write();
+  
+    // Update the comment count for the post
+    const post = _router.db.get("posts").find({ id: postId }).value();
+  
+    if (post) {
+      _router.db
+        .get("posts")
+        .find({ id: postId })
+        .assign({ comments: (post.comments || 0) + 1 })
+        .write();
+    }
+  
+    // Return the newly created comment
+    res.status(201).jsonp(newComment);
+  } else {
+    // Create a new reply
+    const newReply = {
+      authorId: currentUser.id,
+      authorName: currentUser.name,
+      authorPicture: currentUser.picture,
+      authorBio: currentUser.bio,
+      text: content,
+      reactions: {
+        Love: 0,
+        Celebrate: 0,
+        Insightful: 0,
+        Funny: 0,
+        Support: 0,
+        like: 0,
+      },
+      reactType: null,
+      taggedUsers: taggedUsers || [],
+    };
 
-  const newComment = {
-    id: commentId,
-    postId: postId,
-    authorId: currentUser.id,
-    authorName: currentUser.name,
-    authorPicture: currentUser.picture,
-    authorBio: currentUser.bio,
-    content: content,
-    replies: [],
-    reactions: {
-      Love: 0,
-      Celebrate: 0,
-      Insightful: 0,
-      Funny: 0,
-      Support: 0,
-      like: 0,
-    },
-    taggedUsers: taggedUsers || [],
-    timestamp: createdAt,
-  };
+    // Find the parent comment
+    const parentComment = _router.db.get("comments").find({ id: postId }).value();
 
-  // Add the comment to the database
-  _router.db.get("comments").push(newComment).write();
+    if (!parentComment) {
+      return res.status(404).jsonp({ error: "Parent comment not found" });
+    }
 
-  // Update the comment count for the post
-  const post = _router.db.get("posts").find({ id: postId }).value();
-
-  if (post) {
+    // Append the reply to the correct comment
     _router.db
-      .get("posts")
+      .get("comments")
       .find({ id: postId })
-      .assign({ comments: (post.comments || 0) + 1 })
+      .assign({ replies: [...parentComment.replies, newReply] })
       .write();
-  }
 
-  // Return the newly created comment
-  res.status(201).jsonp(newComment);
+    return res.status(201).jsonp(newReply);
+  }
+  
 });
 
 server.patch("/posts/comments/:commentId", (req, res) => {

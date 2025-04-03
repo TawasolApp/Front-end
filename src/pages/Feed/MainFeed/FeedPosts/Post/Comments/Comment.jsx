@@ -13,9 +13,10 @@ import AddForm from "./AddForm";
 import { formatDate } from "../../../../../../utils";
 import TextViewer from "../../../../GenericComponents/TextViewer";
 import { usePost } from "../../PostContext";
+import Reply from "./Reply";
 
 const Comment = ({ comment }) => {
-  const { handleDeleteComment, handleEditComment, handleReactOnComment } =
+  const { handleDeleteComment, handleEditComment, handleReactOnComment, handleAddReplyToComment } =
     usePost();
 
   // TODO: change this to redux states
@@ -23,6 +24,7 @@ const Comment = ({ comment }) => {
 
   const [showReactions, setShowReactions] = useState(false);
   const [editorMode, setEditorMode] = useState(false);
+  const [showReplies, setShowReplies] = useState(false);
 
   let menuItems = [
     {
@@ -53,13 +55,15 @@ const Comment = ({ comment }) => {
   return (
     <>
       {editorMode ? (
-        <AddForm
-          handleAddFunction={handleEditCommentInternal}
-          initialText={comment.content}
-          initialTaggedUsers={comment.taggedUsers}
-          close={() => setEditorMode(false)}
-          type="Edit Comment"
-        />
+        <div className="px-4">
+          <AddForm
+            handleAddFunction={handleEditCommentInternal}
+            initialText={comment.content}
+            initialTaggedUsers={comment.taggedUsers}
+            close={() => setEditorMode(false)}
+            type="Edit Comment"
+          />
+        </div>
       ) : (
         <article>
           <div className="flex px-4 pt-1 pb-2">
@@ -82,7 +86,7 @@ const Comment = ({ comment }) => {
             </div>
           </div>
 
-          <CommentThreadWrapper>
+          <CommentThreadWrapper hasReplies={showReplies}>
             <div className="pl-2">
               <TextViewer
                 text={comment.content}
@@ -93,11 +97,10 @@ const Comment = ({ comment }) => {
             </div>
           </CommentThreadWrapper>
 
-          <CommentThreadWrapper>
+          <CommentThreadWrapper hasReplies={showReplies}>
             <div className="pl-1 pt-2">
               <ActivitiesHolder
                 currentReaction={comment.reactType}
-                initReactValue={comment.reactType}
                 reactions={comment.reactions}
                 handleReaction={(reactionTypeAdd, reactionTypeRemove) =>
                   handleReactOnComment(
@@ -108,9 +111,31 @@ const Comment = ({ comment }) => {
                 }
                 setShowReactions={() => setShowReactions(true)}
                 replies={comment.replies.length}
+                setShowReplies={() => setShowReplies(true)}
               />
             </div>
           </CommentThreadWrapper>
+
+          {showReplies && (
+            <>
+              {comment.replies && comment.replies.length > 0 && comment.replies.map((reply, _) => (
+                <Reply
+                  key={reply.id}
+                  reply={reply}
+                />
+              ))}
+              <CommentThreadWrapper hasReplies={true} isLastReply={true}>
+              <div className="pt-2 px-2">
+                <AddForm
+                  handleAddFunction={(text, taggedUsers) =>
+                    handleAddReplyToComment(comment.id, text, taggedUsers)
+                  }
+                  type="Reply"
+                />
+              </div>
+              </CommentThreadWrapper>
+            </>
+          )}
 
           {showReactions && (
             <ReactionsModal

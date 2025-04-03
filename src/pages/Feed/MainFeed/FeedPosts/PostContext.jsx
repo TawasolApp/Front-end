@@ -125,6 +125,7 @@ export const PostProvider = ({ children, initialPost, handleDeletePost }) => {
     const response = await axiosInstance.post(`/posts/comment/${post.id}`, {
       content: text,
       taggedUsers: taggedUsers,
+      isReply: false
     });
     setPost((prev) => ({
       ...prev,
@@ -194,7 +195,22 @@ export const PostProvider = ({ children, initialPost, handleDeletePost }) => {
       );
   };
 
-  const handleAddReplyToComment = async (commentId, text, taggedUsers) => {};
+  const handleAddReplyToComment = async (commentId, text, taggedUsers) => {
+    const response = await axiosInstance.post(`/posts/comment/${commentId}`, {
+        content: text,
+        tagged: taggedUsers,
+        isReply: true
+    });
+    setComments((prevComments) =>
+      prevComments.map((comment) =>
+        comment.id === commentId
+          ? {
+              ...comment,
+              replies: [...comment.replies, response.data], // Append new reply
+            }
+          : comment
+    ));
+  };
 
   const handleEditReplyToComment = async (replyId, text, taggedUsers) => {};
 

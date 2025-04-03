@@ -5,9 +5,12 @@ import DropdownMenu from "../../../../GenericComponents/DropdownMenu";
 import ActorHeader from "../../../../GenericComponents/ActorHeader";
 import ActivitiesHolder from "./ActivitiesHolder";
 import { formatDate } from "../../../../../../utils";
+import CommentThreadWrapper from "./CommentThreadWrapper";
+import { usePost } from "../../PostContext";
 
 const Reply = ({ reply }) => {
-  const [localReply, setLocalReply] = useState(reply);
+
+  const { handleReactOnReplyToComment } = usePost();
 
   const menuItems = [
     {
@@ -17,59 +20,49 @@ const Reply = ({ reply }) => {
     },
   ];
 
-  const handleReaction = (reactionTypeAdd, reactionTypeRemove) => {
-    setLocalReply((prev) => {
-      const newReactions = { ...prev.reactions };
-
-      if (reactionTypeAdd) {
-        newReactions[reactionTypeAdd] += 1;
-      }
-      if (reactionTypeRemove) {
-        newReactions[reactionTypeRemove] -= 1;
-      }
-
-      return { ...prev, reactions: newReactions };
-    });
-  };
 
   return (
-    <div className="items-start px-4 pt-1">
-      <div className="flex">
-        <ActorHeader
-          authorId={authorId}
-          authorName={reply.authorName}
-          authorBio={reply.authorBio}
-          authorPicture={reply.authorPicture}
-          iconSize={32}
-        />
-
-        <div className="ml-auto flex items-center gap-2">
-          <span className="text-xs text-gray-500">
-            {formatDate(reply.timestamp)}
-          </span>
-          <DropdownMenu menuItems={menuItems} position="right-0">
-            <button className="text-gray-500 hover:bg-gray-100 rounded-full p-1">
-              <MoreHorizIcon className="w-5 h-5" />
-            </button>
-          </DropdownMenu>
+    <CommentThreadWrapper hasReplies={true}>
+      <div className="items-start px-4 pt-1">
+        <div className="flex">
+          <ActorHeader
+            authorId={reply.authorId}
+            authorName={reply.authorName}
+            authorBio={reply.authorBio}
+            authorPicture={reply.authorPicture}
+            iconSize={32}
+          />
+          <div className="ml-auto flex items-center gap-2">
+            <span className="text-xs text-gray-500">
+              {formatDate(reply.timestamp)}
+            </span>
+            <DropdownMenu menuItems={menuItems} position="right-0">
+              <button className="text-gray-500 hover:bg-gray-100 rounded-full p-1">
+                <MoreHorizIcon className="w-5 h-5" />
+              </button>
+            </DropdownMenu>
+          </div>
         </div>
-      </div>
 
-      {/* Comment Text */}
-      <p className="text-sm text-gray-800 mt-1">{reply.text}</p>
+        <p className="text-sm text-gray-800 mt-1">{reply.text}</p>
 
-      {/* Actions Row */}
-      <div className="flex items-center gap-2">
         <ActivitiesHolder
-          reactions={localReply.reactions}
-          onReactionChange={handleReaction}
+          currentReaction={reply.reactType}
+          reactions={reply.reactions}
+          handleReaction={(reactionTypeAdd, reactionTypeRemove) =>
+            handleReactOnReplyToComment(
+              reply.id,
+              reactionTypeAdd,
+              reactionTypeRemove,
+            )
+          }
+          setShowReactions={() => setShowReactions(true)}
+          replies={comment.replies.length}
+          setShowReplies={() => setShowReplies(true)}
         />
-        <span className="text-gray-300">·</span>
-        <button className="text-xs text-gray-500 hover:text-blue-600 px-2 py-1 -mx-2 rounded-sm">
-          Reply
-        </button>
+
       </div>
-    </div>
+    </CommentThreadWrapper>
   );
 };
 export default Reply;

@@ -537,11 +537,11 @@
         "http://localhost:5000/public/images/1743658328495.jpeg"
       ],
       "reactions": {
-        "Love": 0,
+        "Love": 1,
         "Celebrate": 0,
         "Insightful": 0,
         "Funny": 0,
-        "Support": 1,
+        "Support": 0,
         "Like": 0
       },
       "comments": 4,
@@ -549,7 +549,7 @@
       "taggedUsers": [],
       "visibility": "Public",
       "authorType": "User",
-      "reactType": "Support",
+      "reactType": "Love",
       "timestamp": "2025-03-17T23:15:11.484Z"
     },
     {
@@ -665,16 +665,6 @@
   ],
   "reactions": [
     {
-      "likeId": "1-mohsobh-Support",
-      "postId": "1",
-      "authorId": "mohsobh",
-      "authorType": "User",
-      "type": "Support",
-      "authorName": "Mohamed Sobh",
-      "authorPicture": "https://media.licdn.com/dms/image/v2/D4D03AQH7Ais8BxRXzw/profile-displayphoto-shrink_100_100/profile-displayphoto-shrink_100_100/0/1721080103981?e=1747872000&v=beta&t=nDnZdgCqkI8v5B2ymXZzluMZVlF6h_o-dN1pA95Fzv4",
-      "authorBio": "Computer Engineering Student at Cairo University"
-    },
-    {
       "likeId": "1743666903816-mohsobh-Insightful",
       "postId": "1743666903816",
       "authorId": "mohsobh",
@@ -700,6 +690,16 @@
       "authorId": "mohsobh",
       "authorType": "User",
       "type": "Funny",
+      "authorName": "Mohamed Sobh",
+      "authorPicture": "https://media.licdn.com/dms/image/v2/D4D03AQH7Ais8BxRXzw/profile-displayphoto-shrink_100_100/profile-displayphoto-shrink_100_100/0/1721080103981?e=1747872000&v=beta&t=nDnZdgCqkI8v5B2ymXZzluMZVlF6h_o-dN1pA95Fzv4",
+      "authorBio": "Computer Engineering Student at Cairo University"
+    },
+    {
+      "likeId": "1-mohsobh-Love",
+      "postId": "1",
+      "authorId": "mohsobh",
+      "authorType": "User",
+      "type": "Love",
       "authorName": "Mohamed Sobh",
       "authorPicture": "https://media.licdn.com/dms/image/v2/D4D03AQH7Ais8BxRXzw/profile-displayphoto-shrink_100_100/profile-displayphoto-shrink_100_100/0/1721080103981?e=1747872000&v=beta&t=nDnZdgCqkI8v5B2ymXZzluMZVlF6h_o-dN1pA95Fzv4",
       "authorBio": "Computer Engineering Student at Cairo University"
