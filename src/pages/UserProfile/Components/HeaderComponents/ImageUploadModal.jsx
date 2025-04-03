@@ -39,7 +39,7 @@ function ImageUploadModal({
   const handleSave = () => {
     if (!selectedFile) return;
     setIsSaving(true);
-    onUpload(selectedFile); // ✅ send real File object
+    onUpload(selectedFile); //  send real File object
     setSelectedFile(null);
     setPreviewImage(null);
     setIsSaving(false);

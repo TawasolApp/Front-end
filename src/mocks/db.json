@@ -13,9 +13,7 @@
       "city": "Giza",
       "industry": "Computer ",
       "connectionCount": 50,
-      "achievements": "Dean's List Award",
       "email": "fatma@example.com",
-      "isOwner": true,
       "visibility": "Public",
       "experience": [
         {

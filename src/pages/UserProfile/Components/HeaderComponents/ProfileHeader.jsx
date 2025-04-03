@@ -5,9 +5,10 @@ import ProfilePicture from "./ProfilePicture";
 import defaultProfilePicture from "../../../../assets/images/defaultProfilePicture.png";
 import defaultCoverPhoto from "../../../../assets/images/defaultCoverPhoto.png";
 import EditProfileModal from "./EditProfileModal";
-import ImageUploadModal from "../ImageUploadModal";
+import ImageUploadModal from "./ImageUploadModal";
 import ImageEnlarge from "./ImageEnlarge";
-import ViewerView from "../ViewerView";
+import ViewerView from "./ViewerView";
+import ContactInfoModal from "./ContactInfoModal";
 import { axiosInstance as axios } from "../../../../apis/axios";
 
 function ProfileHeader({ user, isOwner, onSave, experienceRef, educationRef }) {
@@ -18,32 +19,25 @@ function ProfileHeader({ user, isOwner, onSave, experienceRef, educationRef }) {
   const [uploadType, setUploadType] = useState(null);
   const navigate = useNavigate();
   const { profileSlug } = useParams();
+  const [isContactOpen, setIsContactOpen] = useState(false);
   if (!editedUser) return null;
-
   const experienceIndex = editedUser.selectedExperienceIndex ?? 0;
   const educationIndex = editedUser.selectedEducationIndex ?? 0;
 
   useEffect(() => {
     setEditedUser(user);
   }, [user]);
-
+  //  to open upload modal
   function openUploadModal(type) {
     setUploadType(type);
     setIsUploadOpen(true);
   }
-
-  // function handleUpload(imageUrl) {
-  //   setEditedUser((prev) => ({
-  //     ...prev,
-  //     [uploadType === "profile" ? "profilePicture" : "coverPhoto"]: imageUrl,
-  //   }));
-  //   setIsUploadOpen(false);
-  // }
+  // handling the upload moda fn
   async function handleUpload(fileOrNull) {
     const field = uploadType === "profile" ? "profilePicture" : "coverPhoto";
 
     if (fileOrNull === null) {
-      //  Handle image deletion
+      // Handle image deletion
       try {
         await axios.patch(`/profile/${user.id}`, { [field]: null });
         setEditedUser((prev) => ({ ...prev, [field]: null }));
@@ -55,20 +49,17 @@ function ProfileHeader({ user, isOwner, onSave, experienceRef, educationRef }) {
 
     try {
       const formData = new FormData();
-      formData.append("image", fileOrNull); // actual File object
-      formData.append("userId", user.id); // optional if  backend needs it
+      formData.append("image", fileOrNull);
+      formData.append("userId", user.id);
 
-      // Replace this with your actual backend endpoint
-      const res = await fetch("http://localhost:5000/api/upload", {
-        method: "POST",
-        body: formData,
+      const uploadRes = await axios.post("/api/upload", formData, {
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
       });
 
-      if (!res.ok) throw new Error("Upload failed");
-      const data = await res.json();
-      const imageUrl = data.url;
+      const imageUrl = uploadRes.data.url;
 
-      //  Save image URL to profile
       await axios.patch(`/profile/${user.id}`, { [field]: imageUrl });
       setEditedUser((prev) => ({ ...prev, [field]: imageUrl }));
     } catch (err) {
@@ -132,7 +123,12 @@ function ProfileHeader({ user, isOwner, onSave, experienceRef, educationRef }) {
         <p className="text-sm text-gray-600">Student at Cairo University</p>
         <p className="text-sm text-gray-600">
           {editedUser.city}, {editedUser.country} ·{" "}
-          <span className="text-gray-600 cursor-pointer">Contact info</span>
+          <span
+            className="text-blue-700 font-semibold cursor-pointer hover:underline"
+            onClick={() => setIsContactOpen(true)}
+          >
+            Contact info
+          </span>
         </p>
         <p
           className="text-blue-600 text-sm cursor-pointer hover:underline mt-1"
@@ -193,6 +189,19 @@ function ProfileHeader({ user, isOwner, onSave, experienceRef, educationRef }) {
         isOpen={isEditing}
         onClose={() => setIsEditing(false)}
         onSave={handleSave}
+      />
+      <ContactInfoModal
+        user={editedUser}
+        isOpen={isContactOpen}
+        onClose={() => setIsContactOpen(false)}
+        isOwner={isOwner}
+        onSave={(updatedFields) => {
+          const updatedUser = { ...editedUser, ...updatedFields };
+          setEditedUser(updatedUser);
+          onSave?.(updatedUser);
+          // Optionally PATCH to backend:
+          axios.patch(`/profile/${user.id}`, updatedFields);
+        }}
       />
     </div>
   );

@@ -21,7 +21,6 @@ import FeedContainer from "../pages/Feed/FeedContainer";
 import SavedPostsContainer from "../pages/SavedPosts/SavedPostsContainer";
 
 const App = () => {
-  const isOwner = true;
   return (
     <Router>
       <Routes>
@@ -38,6 +37,7 @@ const App = () => {
           <Route path="skills" element={<SkillsPage />} />
           {/* user Connnections */}
           <Route path="connections" element={<Connections />} />
+          {/* add here navigation to edit email page  */}
         </Route>
         <Route path="/" element={<FeedContainer />} />
         <Route path="/feed/" element={<FeedContainer />} />
@@ -51,10 +51,9 @@ const App = () => {
           <Route path="posts" element={<PostsPage />} />
         </Route>
         <Route path="/company/setup/new" element={<CreateCompanyPage />} />
-
       </Routes>
     </Router>
   );
-}
+};
 
 export default App;

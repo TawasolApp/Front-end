@@ -20,7 +20,7 @@ function ProfileLayout() {
           const firstUser = res.data?.[0];
           if (firstUser) {
             const slug = `${firstUser.firstName?.toLowerCase()}-${firstUser.lastName?.toLowerCase()}-${firstUser.id}`;
-            navigate(`/users/${slug}`, { replace: true });
+            navigate(`/users/${slug}`);
           } else {
             navigate("/notfound");
           }
@@ -29,20 +29,22 @@ function ProfileLayout() {
           const fetchedUser = res.data;
 
           if (!fetchedUser) {
-            navigate("/notfound");
+            // navigate("/notfound");
+            window.location.replace("/error-404");
           } else {
             setUser(fetchedUser);
 
-            // 🔁 Compare slug name with current name
+            //  Compare slug name with current name
             const expectedSlug = `${fetchedUser.firstName?.toLowerCase()}-${fetchedUser.lastName?.toLowerCase()}-${fetchedUser.id}`;
             if (profileSlug !== expectedSlug) {
-              navigate(`/users/${expectedSlug}`, { replace: true });
+              navigate(`/users/${expectedSlug}`);
             }
           }
         }
       } catch (err) {
-        console.error("❌ Error loading profile:", err);
-        navigate("/notfound");
+        console.error(" Error loading profile:", err);
+        // navigate("/notfound");
+        window.location.replace("/error-404");
       } finally {
         setLoading(false);
       }
@@ -52,6 +54,7 @@ function ProfileLayout() {
   }, [profileSlug, id, navigate]);
 
   if (loading) return <p data-testid="loading">Loading...</p>; // Simple fallback
+  if (!user) return null;
 
   return (
     <div className="bg-background pt-4 pb-4">
