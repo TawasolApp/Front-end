@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { axiosInstance } from "../../../apis/axios";
+import { axiosInstance } from "../../apis/axios";
 
 const FollowPage = () => {
   const [activeTab, setActiveTab] = useState("following");
@@ -38,8 +38,6 @@ const FollowPage = () => {
 
   const handleFollow = async (user) => {
     try {
-      console.log("Attempting to follow user:", user.userId);
-
       const response = await axiosInstance.post(
         "/connections/follow",
         {
@@ -51,8 +49,6 @@ const FollowPage = () => {
           },
         },
       );
-
-      console.log("Follow response:", response);
 
       if (response.status === 201) {
         setFollowing([...following, response.data]);
@@ -81,14 +77,14 @@ const FollowPage = () => {
   };
 
   return (
-    <div className="min-h-screen bg-stone-100 dark:bg-black p-4 sm:p-6">
+    <div className="min-h-screen bg-mainBackground p-4 sm:p-6">
       {/* Unfollow Confirmation Modal */}
       {showUnfollowModal && userToUnfollow && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-          <div className="bg-white dark:bg-[#1e2229] p-4 rounded-lg shadow-lg w-full mx-4 sm:w-80 sm:mx-0 relative border border-gray-200 dark:border-[#2a3038]">
+          <div className="bg-cardBackground p-4 rounded-lg shadow-lg w-full mx-4 sm:w-80 sm:mx-0 relative border border-cardBorder">
             <button
               onClick={closeConfirmation}
-              className="absolute top-4 right-4 p-2 text-gray-600 dark:text-[#959ea9] hover:bg-gray-100 dark:hover:bg-[#2a3038] rounded-full focus:outline-none transition-colors"
+              className="absolute top-4 right-4 p-2 text-icon hover:bg-buttonIconHover rounded-full focus:outline-none transition-colors"
             >
               <svg
                 xmlns="http://www.w3.org/2000/svg"
@@ -106,22 +102,22 @@ const FollowPage = () => {
               </svg>
             </button>
 
-            <h3 className="text-lg font-semibold pb-2 border-b border-gray-200 dark:border-[#2a3038] pr-8 dark:text-[#f0f2f5]">
+            <h3 className="text-lg font-semibold pb-2 border-b border-cardBorder pr-8 text-textHeavyTitle">
               Unfollow
             </h3>
-            <p className="text-gray-700 dark:text-[#c1c9d4] py-3 border-b border-gray-200 dark:border-[#2a3038]">
+            <p className="text-textContent py-3 border-b border-cardBorder">
               You are about to unfollow {userToUnfollow.username}
             </p>
             <div className="flex justify-end space-x-3 pt-3">
               <button
                 onClick={closeConfirmation}
-                className="px-3 py-1 border-2 border-blue-700 dark:border-[#3d7bc8] text-blue-700 dark:text-[#3d7bc8] hover:bg-blue-100 dark:hover:bg-[#2a3038] rounded-3xl text-sm"
+                className="px-3 py-1 border-2 border-buttonSubmitEnable text-buttonSubmitEnable hover:bg-buttonSubmitEnableHover rounded-3xl text-sm"
               >
                 Cancel
               </button>
               <button
                 onClick={() => handleUnfollow(userToUnfollow.userId)}
-                className="px-3 py-1 bg-blue-700 hover:bg-blue-800 text-white rounded-3xl text-sm"
+                className="px-3 py-1 bg-buttonSubmitEnable hover:bg-buttonSubmitEnableHover text-buttonSubmitText rounded-3xl text-sm"
                 data-testid="unfollow2"
               >
                 Unfollow
@@ -131,23 +127,31 @@ const FollowPage = () => {
         </div>
       )}
 
-      <div className="bg-white dark:bg-[#1e2229] p-4 sm:p-6 rounded-lg shadow-md w-full mx-auto max-w-full sm:max-w-[900px] border border-gray-200 dark:border-[#2a3038]">
-        <div className="border-b border-gray-200 dark:border-[#2a3038] pb-4 mb-4">
-          <h1 className="text-xl font-semibold dark:text-[#f0f2f5]">
+      <div className="bg-cardBackground p-4 sm:p-6 rounded-lg shadow-md w-full mx-auto max-w-full sm:max-w-[900px] border border-cardBorder">
+        <div className="border-b border-cardBorder pb-4 mb-4">
+          <h1 className="text-xl font-semibold text-textHeavyTitle">
             My Network
           </h1>
         </div>
 
-        <div className="flex border-b border-gray-200 dark:border-[#2a3038] mb-4">
+        <div className="flex border-b border-cardBorder mb-4">
           <button
-            className={`px-3 py-1 sm:px-4 sm:py-2 font-semibold text-sm sm:text-base ${activeTab === "following" ? "text-green-800 dark:text-green-500 border-b-2 border-green-800 dark:border-green-500" : "text-gray-500 dark:text-[#959ea9]"}`}
+            className={`px-3 py-1 sm:px-4 sm:py-2 font-semibold text-sm sm:text-base ${
+              activeTab === "following"
+                ? "text-listSelected border-b-2 border-listSelected"
+                : "text-textPlaceholder"
+            }`}
             onClick={() => setActiveTab("following")}
             data-testid="followingButton"
           >
             Following
           </button>
           <button
-            className={`px-3 py-1 sm:px-4 sm:py-2 font-semibold text-sm sm:text-base ${activeTab === "followers" ? "text-green-800 dark:text-green-500 border-b-2 border-green-800 dark:border-green-500" : "text-gray-500 dark:text-[#959ea9]"}`}
+            className={`px-3 py-1 sm:px-4 sm:py-2 font-semibold text-sm sm:text-base ${
+              activeTab === "followers"
+                ? "text-listSelected border-b-2 border-listSelected"
+                : "text-textPlaceholder"
+            }`}
             onClick={() => setActiveTab("followers")}
           >
             Followers
@@ -156,7 +160,7 @@ const FollowPage = () => {
 
         {activeTab === "following" ? (
           <div>
-            <p className="text-sm text-gray-500 dark:text-[#959ea9] mb-4">
+            <p className="text-sm text-textPlaceholder mb-4">
               You are following {following.length} people out of your network
             </p>
 
@@ -165,21 +169,21 @@ const FollowPage = () => {
                 following.map((user) => (
                   <div
                     key={user.userId}
-                    className="mb-4 pb-4 border-b border-gray-200 dark:border-[#2a3038]"
+                    className="mb-4 pb-4 border-b border-cardBorder"
                   >
                     <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-2">
                       <div className="w-full sm:w-3/4 overflow-hidden">
-                        <h3 className="font-bold dark:text-[#f0f2f5]">
+                        <h3 className="font-bold text-textHeavyTitle">
                           {user.username}
                         </h3>
-                        <p className="text-sm text-gray-600 dark:text-[#c1c9d4] truncate">
+                        <p className="text-sm text-textActivity truncate">
                           {user.headline}
                         </p>
                       </div>
                       <button
                         onClick={() => promptUnfollow(user)}
                         data-testid="followingButton2"
-                        className="px-4 py-1 sm:px-5 sm:py-2 text-sm font-semibold text-gray-700 dark:text-[#c1c9d4] border-2 border-gray-300 dark:border-[#2a3038] hover:border-gray-400 dark:hover:border-[#3a4048] rounded-full hover:bg-gray-100 dark:hover:bg-[#2a3038] hover:font-bold shrink-0 transition-all w-full sm:w-auto text-center"
+                        className="px-4 py-1 sm:px-5 sm:py-2 text-sm font-semibold text-textActivity border-2 border-itemBorder hover:border-itemBorderHover rounded-full hover:bg-buttonIconHover hover:font-bold shrink-0 transition-all w-full sm:w-auto text-center"
                       >
                         Following
                       </button>
@@ -187,7 +191,7 @@ const FollowPage = () => {
                   </div>
                 ))
               ) : (
-                <p className="text-gray-500 dark:text-[#959ea9]">
+                <p className="text-textPlaceholder">
                   You're not following anyone yet.
                 </p>
               )}
@@ -195,7 +199,7 @@ const FollowPage = () => {
           </div>
         ) : (
           <div>
-            <p className="text-sm text-gray-500 dark:text-[#959ea9] mb-4">
+            <p className="text-sm text-textPlaceholder mb-4">
               {followers.length} people are following you
             </p>
 
@@ -203,28 +207,28 @@ const FollowPage = () => {
               followers.map((user) => (
                 <div
                   key={user.userId}
-                  className="mb-4 pb-4 border-b border-gray-200 dark:border-[#2a3038]"
+                  className="mb-4 pb-4 border-b border-cardBorder"
                 >
                   <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-2">
                     <div className="w-full sm:w-3/4 overflow-hidden">
-                      <h3 className="font-bold dark:text-[#f0f2f5]">
+                      <h3 className="font-bold text-textHeavyTitle">
                         {user.username}
                       </h3>
-                      <p className="text-sm text-gray-600 dark:text-[#c1c9d4] truncate">
+                      <p className="text-sm text-textActivity truncate">
                         {user.headline}
                       </p>
                     </div>
                     {isFollowing(user.userId) ? (
                       <button
                         onClick={() => promptUnfollow(user)}
-                        className="px-4 py-1 sm:px-5 sm:py-2 text-sm font-semibold text-gray-700 dark:text-[#c1c9d4] border-2 border-gray-300 dark:border-[#2a3038] hover:border-gray-400 dark:hover:border-[#3a4048] rounded-full hover:bg-gray-100 dark:hover:bg-[#2a3038] hover:font-bold shrink-0 transition-all w-full sm:w-auto text-center"
+                        className="px-4 py-1 sm:px-5 sm:py-2 text-sm font-semibold text-textActivity border-2 border-itemBorder hover:border-itemBorderHover rounded-full hover:bg-buttonIconHover hover:font-bold shrink-0 transition-all w-full sm:w-auto text-center"
                       >
                         Following
                       </button>
                     ) : (
                       <button
                         onClick={() => handleFollow(user)}
-                        className="px-4 py-1 sm:px-5 sm:py-2 text-sm font-semibold text-blue-600 dark:text-[#3d7bc8] border-2 border-blue-300 dark:border-[#3d7bc8] hover:border-blue-400 dark:hover:border-[#4d8bff] rounded-full hover:bg-blue-50 dark:hover:bg-[#2a3038] hover:font-bold shrink-0 transition-all w-full sm:w-auto text-center"
+                        className="px-4 py-1 sm:px-5 sm:py-2 text-sm font-semibold text-buttonSubmitEnable border-2 border-buttonSubmitEnable hover:border-buttonSubmitEnableHover rounded-full hover:bg-buttonSubmitEnableHover hover:font-bold shrink-0 transition-all w-full sm:w-auto text-center"
                       >
                         Follow
                       </button>
@@ -233,7 +237,7 @@ const FollowPage = () => {
                 </div>
               ))
             ) : (
-              <p className="text-gray-500 dark:text-[#959ea9]">
+              <p className="text-textPlaceholder">
                 You don't have any followers yet.
               </p>
             )}

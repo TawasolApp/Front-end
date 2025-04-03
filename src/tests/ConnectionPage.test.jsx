@@ -2,7 +2,7 @@ import { describe, it, expect, beforeEach } from "vitest";
 import { render, screen, fireEvent, waitFor } from "@testing-library/react";
 import { vi } from "vitest";
 import React from "react";
-import Connections from "../pages/connectionpage/ConnectionPage";
+import Connections from "../pages/mynetworkpage/Connections/ConnectionPage";
 import { axiosInstance } from "../apis/axios";
 
 vi.mock("../apis/axios", () => ({

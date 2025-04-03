@@ -3,7 +3,7 @@ import { render, screen, fireEvent, waitFor } from "@testing-library/react";
 import { vi } from "vitest";
 import React from "react";
 import { MemoryRouter } from "react-router-dom";
-import NetworkBox from "../pages/mynetworkpage/mynetworkpage";
+import NetworkBox from "../pages/mynetworkpage/NetworkBox";
 import { axiosInstance } from "../apis/axios";
 
 vi.mock("../apis/axios", () => ({

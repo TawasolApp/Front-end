@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from "react";
-import ConnectionCard from "./components/ConnectionCard";
-import { axiosInstance } from "../../apis/axios";
+import ConnectionCard from "./ConnectionCard";
+import { axiosInstance } from "../../../apis/axios";
 
-const Connections = () => {
+const ConnectionPage = () => {
   const [connections, setConnections] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -31,8 +31,7 @@ const Connections = () => {
         prevConnections.filter((connection) => connection.userId !== userId),
       );
     } catch (error) {
-      console.error("Failed to remove connection:", error);
-      alert("Error: Unable to remove connection.");
+      setError("Unable to remove connection.");
     }
   };
 
@@ -64,11 +63,11 @@ const Connections = () => {
   );
 
   return (
-    <div className="p-4 bg-stone-100 dark:bg-black min-h-screen flex justify-center">
+    <div className="p-4 bg-mainBackground min-h-screen flex justify-center">
       <div className="w-full max-w-4xl">
         {/* Header Section */}
-        <div className="bg-white dark:bg-[#1e2229] border border-gray-200 dark:border-[#2a3038] rounded-t-lg shadow-sm p-4 border-b-0">
-          <h1 className="text-xl dark:text-[#f0f2f5]">
+        <div className="bg-cardBackground border border-cardBorder rounded-t-lg shadow-sm p-4 border-b-0">
+          <h1 className="text-xl text-textHeavyTitle">
             {filteredConnections.length} Connection
             {filteredConnections.length !== 1 ? "s" : ""}
           </h1>
@@ -79,7 +78,7 @@ const Connections = () => {
             <div className="flex items-center relative">
               <label
                 htmlFor="sortBy"
-                className="text-sm text-gray-600 dark:text-[#959ea9]"
+                className="text-sm text-textPlaceholder"
               >
                 Sort by:
               </label>
@@ -88,30 +87,30 @@ const Connections = () => {
                   id="sortBy"
                   value={sortBy}
                   onChange={handleSortChange}
-                  className="pl-2 pr-7 py-1 text-sm text-gray-600 dark:text-[#c1c9d4] bg-white dark:bg-[#1e2229] border border-gray-300 dark:border-[#2a3038] rounded focus:outline-none focus:ring-1 focus:ring-blue-500 appearance-none cursor-pointer"
+                  className="pl-2 pr-7 py-1 text-sm text-textPlaceholder bg-cardBackground border border-cardBorder rounded focus:outline-none focus:ring-1 focus:ring-buttonSubmitEnable appearance-none cursor-pointer"
                 >
                   <option
                     value="recentlyAdded"
-                    className="dark:bg-[#1e2229] dark:text-[#c1c9d4]"
+                    className="bg-cardBackground text-textPlaceholder"
                   >
                     Recently added
                   </option>
                   <option
                     value="firstName"
-                    className="dark:bg-[#1e2229] dark:text-[#c1c9d4]"
+                    className="bg-cardBackground text-textPlaceholder"
                   >
                     First name
                   </option>
                   <option
                     value="lastName"
-                    className="dark:bg-[#1e2229] dark:text-[#c1c9d4]"
+                    className="bg-cardBackground text-textPlaceholder"
                   >
                     Last name
                   </option>
                 </select>
                 <div className="absolute right-2 top-1/2 transform -translate-y-1/2 pointer-events-none">
                   <svg
-                    className="w-4 h-4 text-gray-600 dark:text-[#959ea9]"
+                    className="w-4 h-4 text-textPlaceholder"
                     fill="none"
                     stroke="currentColor"
                     viewBox="0 0 24 24"
@@ -134,11 +133,11 @@ const Connections = () => {
                 placeholder="Search by name"
                 value={searchQuery}
                 onChange={handleSearchChange}
-                className="w-48 p-2 pl-10 border border-gray-600 dark:border-[#2a3038] rounded-lg focus:outline-none focus:border-blue-500 text-sm font-semibold dark:bg-[#1e2229] dark:text-[#c1c9d4]"
+                className="w-48 p-2 pl-10 border border-cardBorder rounded-lg focus:outline-none focus:border-buttonSubmitEnable text-sm font-semibold bg-cardBackground text-textPlaceholder"
               />
               <svg
                 xmlns="http://www.w3.org/2000/svg"
-                className="h-5 w-5 absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-700 dark:text-[#959ea9]"
+                className="h-5 w-5 absolute left-3 top-1/2 transform -translate-y-1/2 text-textPlaceholder"
                 fill="none"
                 viewBox="0 0 24 24"
                 stroke="currentColor"
@@ -156,12 +155,12 @@ const Connections = () => {
 
         {/* Loading and Error States */}
         {loading && (
-          <p className="text-center text-gray-600 dark:text-[#959ea9] mt-4">
+          <p className="text-center text-textPlaceholder mt-4">
             Loading...
           </p>
         )}
         {error && (
-          <p className="text-center text-red-500 dark:text-red-400 mt-4">
+          <p className="text-center text-error mt-4">
             {error}
           </p>
         )}
@@ -177,15 +176,9 @@ const Connections = () => {
                   experience={connection.headline}
                   connectionDate={`Connected on ${new Date(connection.createdAt).toLocaleDateString()}`}
                   onRemove={() => handleRemoveConnection(connection.userId)}
-                  darkModeColors={{
-                    bg: "#1e2229",
-                    textPrimary: "#f0f2f5",
-                    textSecondary: "#c1c9d4",
-                    border: "#2a3038",
-                  }}
                 />
                 {index !== filteredConnections.length - 1 && (
-                  <div className="border-t border-gray-200 dark:border-[#2a3038]"></div>
+                  <div className="border-t border-cardBorder"></div>
                 )}
               </div>
             ))}
@@ -196,4 +189,4 @@ const Connections = () => {
   );
 };
 
-export default Connections;
+export default ConnectionPage;

@@ -1,7 +1,0 @@
-### Follow a user
-POST http://localhost:5000/connections/follow
-Content-Type: application/json
-
-{
-  "userId": "6"
-}

@@ -49,6 +49,17 @@
   --modalbackground: 229, 231, 235; /* Light mode (gray-200) */
   --sliderbutton: 209, 213, 219; /* gray-300 */
   --uploadimage: 243, 244, 246;
+
+  --item-border-hover: 200, 200, 200;
+  --button-hover: 240, 240, 240;
+  --error: 239, 68, 68; /* red-500 */
+  --error-dark: 220, 38, 38; /* red-600 */
+  --amber-light: 254, 243, 199; /* amber-100 */
+  --amber-dark: 146, 64, 14; /* amber-900 */
+  --amber-light-hover: 253, 230, 138; /* amber-200 */
+  --amber-dark-hover: 124, 45, 18; /* amber-800 */
+  --amber-text-light: 146, 64, 14; /* amber-800 */
+  --amber-text-dark: 253, 230, 138; /* amber-200 */
 }
 
 .dark {
@@ -98,6 +109,17 @@
   --modalbackground: 27, 31, 35; /* Dark mode */
   --sliderbutton: 75, 85, 99; /* custom gray */
   --uploadimage: 75, 85, 99;
+
+  --item-border-hover: 90, 90, 90;
+  --button-hover: 50, 50, 50;
+  --error: 239, 68, 68; /* red-500 */
+  --error-dark: 248, 113, 113; /* red-400 */
+  --amber-light: 146, 64, 14; /* amber-900 */
+  --amber-dark: 68, 28, 0; /* custom darker amber */
+  --amber-light-hover: 124, 45, 18; /* amber-800 */
+  --amber-dark-hover: 92, 33, 13; /* custom darker amber */
+  --amber-text-light: 253, 230, 138; /* amber-200 */
+  --amber-text-dark: 254, 243, 199; /* amber-100 */
 }
 
 .dark img.darken {

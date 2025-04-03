@@ -6,13 +6,6 @@
       "profilePicture": "https://example.com/khalid.jpg",
       "headline": "Software Engineer",
       "createdAt": "2025-03-24T12:00:00Z"
-    },
-    {
-      "userId": "3",
-      "username": "Omar Salah",
-      "profilePicture": "https://example.com/omar.jpg",
-      "headline": "Data Scientist",
-      "createdAt": "2025-03-22T12:30:00Z"
     }
   ],
   "pendingConnections": [
@@ -22,6 +15,22 @@
       "profilePicture": "/images/omar.jpg",
       "headline": "Software Engineer at Google",
       "createdAt": "2023-05-15T10:30:00Z"
+    }
+  ],
+  "sentConnections": [
+    {
+      "userId": "5",
+      "username": "JaneDoe",
+      "profilePicture": "/images/jane.jpg",
+      "headline": "Product Manager at Meta",
+      "createdAt": "2023-05-20T14:45:00Z"
+    },
+    {
+      "userId": "6",
+      "username": "JohnSmith",
+      "profilePicture": "/images/john.jpg",
+      "headline": "UX Designer at Apple",
+      "createdAt": "2023-05-18T09:15:00Z"
     }
   ],
   "following": [
@@ -98,6 +107,13 @@
       "password": "123456",
       "firstName": "Test",
       "lastName": "Test"
+    },
+    {
+      "id": 6,
+      "email": "omarsalah04@gmail.com",
+      "password": "omarsalah",
+      "firstName": "Omar",
+      "lastName": "Moselhi"
     }
   ],
   "users": [

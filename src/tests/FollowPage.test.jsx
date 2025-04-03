@@ -3,7 +3,7 @@ import { describe, it, expect, beforeEach } from "vitest";
 import { render, screen, fireEvent } from "@testing-library/react";
 import { vi } from "vitest";
 import React from "react";
-import FollowPage from "../pages/mynetworkpage/components/FollowPage";
+import FollowPage from "../pages/mynetworkpage/FollowPage";
 import { axiosInstance } from "../apis/axios";
 
 // Mock axios instance with proper Promise-based functions
