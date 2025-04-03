@@ -13,7 +13,7 @@ import AddForm from "./AddForm";
 import { formatDate } from "../../../../../../utils";
 import TextViewer from "../../../../GenericComponents/TextViewer";
 import { usePost } from "../../PostContext";
-import Reply from "./Reply";
+import ReplyContainer from "./ReplyContainer";
 
 const Comment = ({ comment }) => {
   const { handleDeleteComment, handleEditComment, handleReactOnComment, handleAddReplyToComment } =
@@ -98,7 +98,7 @@ const Comment = ({ comment }) => {
           </CommentThreadWrapper>
 
           <CommentThreadWrapper hasReplies={showReplies}>
-            <div className="pl-1 pt-2">
+            <div className="pl-1 pt-1">
               <ActivitiesHolder
                 currentReaction={comment.reactType}
                 reactions={comment.reactions}
@@ -117,24 +117,7 @@ const Comment = ({ comment }) => {
           </CommentThreadWrapper>
 
           {showReplies && (
-            <>
-              {comment.replies && comment.replies.length > 0 && comment.replies.map((reply, _) => (
-                <Reply
-                  key={reply.id}
-                  reply={reply}
-                />
-              ))}
-              <CommentThreadWrapper hasReplies={true} isLastReply={true}>
-              <div className="pt-2 px-2">
-                <AddForm
-                  handleAddFunction={(text, taggedUsers) =>
-                    handleAddReplyToComment(comment.id, text, taggedUsers)
-                  }
-                  type="Reply"
-                />
-              </div>
-              </CommentThreadWrapper>
-            </>
+            <ReplyContainer commentId={comment.id}/>
           )}
 
           {showReactions && (

@@ -23,7 +23,7 @@ const CommentThreadWrapper = ({
           )}
         </div>
       ) : (
-        <div className="w-[15px] flex-shrink-0" />
+        <div className="pl-8" />
       )}
 
       {/* Fixed: Full-width children container */}

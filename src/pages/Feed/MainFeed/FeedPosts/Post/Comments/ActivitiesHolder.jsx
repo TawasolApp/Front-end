@@ -7,6 +7,7 @@ const ActivitiesHolder = ({
   reactions,
   handleReaction,
   setShowReactions,
+  isReply = false,
   replies,
   setShowReplies,
 }) => {
@@ -41,7 +42,7 @@ const ActivitiesHolder = ({
           Like
         </span>
       );
-    const { Icon, color, label } = reactionIcons[currentReaction];
+    const { _, color, label } = reactionIcons[currentReaction];
     return (
       <div className="flex items-center">
         <span style={{ color }} className="text-sm font-semibold">
@@ -97,7 +98,7 @@ const ActivitiesHolder = ({
       </button>
 
       {/* Reply Button */}
-      {replies > 0 && (
+      {!isReply && replies > 0 && (
         <>
           <span className="text-textLightActivity pr-1 text-xs font-light">
             •

@@ -688,12 +688,13 @@ server.post("/posts/react/:postId", (req, res) => {
   const { reactions, postType } = req.body;
 
   // Determine which database table to use
-  const entityType = postType === "Comment" ? "comments" : "posts";
+  const entityType = postType === "Post" ? "posts" : "comments";
   const entityTable = _router.db.get(entityType);
   const reactionsTable = _router.db.get("reactions");
 
   // Find the target entity (post or comment)
   const entity = entityTable.find({ id: postId }).value();
+  console.log(`Searching ${entity}`);
   if (!entity) {
     return res.status(404).json({ error: `${postType} not found` });
   }
@@ -821,38 +822,36 @@ server.post("/posts/comment/:postId", (req, res) => {
   const { postId } = req.params;
   const { content, taggedUsers, isReply } = req.body;
 
+  const commentId = Date.now().toString();
+  const createdAt = new Date().toISOString();
+
+  const newComment = {
+    id: commentId,
+    postId: postId,
+    authorId: currentUser.id,
+    authorName: currentUser.name,
+    authorPicture: currentUser.picture,
+    authorBio: currentUser.bio,
+    content: content,
+    replies: [],
+    reactions: {
+      Love: 0,
+      Celebrate: 0,
+      Insightful: 0,
+      Funny: 0,
+      Support: 0,
+      like: 0,
+    },
+    taggedUsers: taggedUsers || [],
+    timestamp: createdAt,
+  };
+
+  // Add the comment to the database
+  _router.db.get("comments").push(newComment).write();
 
   if (!isReply) {
-    const commentId = Date.now().toString();
-    const createdAt = new Date().toISOString();
-  
-    const newComment = {
-      id: commentId,
-      postId: postId,
-      authorId: currentUser.id,
-      authorName: currentUser.name,
-      authorPicture: currentUser.picture,
-      authorBio: currentUser.bio,
-      content: content,
-      replies: [],
-      reactions: {
-        Love: 0,
-        Celebrate: 0,
-        Insightful: 0,
-        Funny: 0,
-        Support: 0,
-        like: 0,
-      },
-      taggedUsers: taggedUsers || [],
-      timestamp: createdAt,
-    };
-  
-    // Add the comment to the database
-    _router.db.get("comments").push(newComment).write();
-  
     // Update the comment count for the post
     const post = _router.db.get("posts").find({ id: postId }).value();
-  
     if (post) {
       _router.db
         .get("posts")
@@ -860,46 +859,20 @@ server.post("/posts/comment/:postId", (req, res) => {
         .assign({ comments: (post.comments || 0) + 1 })
         .write();
     }
-  
-    // Return the newly created comment
-    res.status(201).jsonp(newComment);
   } else {
-    // Create a new reply
-    const newReply = {
-      authorId: currentUser.id,
-      authorName: currentUser.name,
-      authorPicture: currentUser.picture,
-      authorBio: currentUser.bio,
-      text: content,
-      reactions: {
-        Love: 0,
-        Celebrate: 0,
-        Insightful: 0,
-        Funny: 0,
-        Support: 0,
-        like: 0,
-      },
-      reactType: null,
-      taggedUsers: taggedUsers || [],
-    };
-
     // Find the parent comment
     const parentComment = _router.db.get("comments").find({ id: postId }).value();
-
     if (!parentComment) {
       return res.status(404).jsonp({ error: "Parent comment not found" });
     }
-
     // Append the reply to the correct comment
     _router.db
       .get("comments")
       .find({ id: postId })
-      .assign({ replies: [...parentComment.replies, newReply] })
+      .assign({ replies: [...parentComment.replies, "dummy reply"] })
       .write();
-
-    return res.status(201).jsonp(newReply);
   }
-  
+  res.status(201).jsonp(newComment);
 });
 
 server.patch("/posts/comments/:commentId", (req, res) => {
@@ -932,6 +905,16 @@ server.delete("/posts/comments/:commentId", (req, res) => {
 
       comments.remove({ id: commentId }).write();
       return res.status(200).json({ message: "Comment deleted successfully" });
+    } else {
+      const wantedParentComment = comments.find({ id: wantedComment.postId }).value();
+      console.log(wantedParentComment);
+      if (wantedParentComment) {
+        comments.find({ id: wantedComment.postId })
+          .assign({ replies: wantedComment.replies.slice(0, -1) }) // Removes last element
+          .write();
+        comments.remove({ id: commentId }).write();
+        return res.status(200).json({ message: "Reply deleted successfully" });
+      }
     }
   }
 
