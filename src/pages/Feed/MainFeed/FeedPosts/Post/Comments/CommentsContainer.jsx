@@ -9,6 +9,8 @@ const CommentsContainer = ({
   postId,
   incrementCommentsNumber,
   commentsCount,
+  comments,
+  setComments
 }) => {
   // TODO: change this to redux states
   const currentAuthorId = "mohsobh";
@@ -18,7 +20,6 @@ const CommentsContainer = ({
   const currentAuthorBio = "Computer Engineering Student at Cairo University";
   const currentAuthorType = "User";
 
-  const [comments, setComments] = useState([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
 
@@ -48,7 +49,7 @@ const CommentsContainer = ({
       });
 
       const newComments = response.data;
-      setComments((prev) => [...prev, ...newComments]);
+      setComments((prev) => [...newComments, ...prev]);
       setPageNum((prev) => prev + 1);
       setHasMore(commentsCount > comments.length + 2);
     } catch (err) {

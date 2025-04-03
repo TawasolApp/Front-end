@@ -14,6 +14,8 @@ const PostModal = ({
   handleReaction,
   incrementCommentsNumber,
   handleClosePostModal,
+  comments,
+  setComments
 }) => {
   useEffect(() => {
     // Disable scrolling on the body when the modal opens
@@ -84,6 +86,8 @@ const PostModal = ({
                 postId={post.id}
                 incrementCommentsNumber={incrementCommentsNumber}
                 commentsCount={post.comments}
+                comments={comments}
+                setComments={setComments}
               />
             )}
             {showLikes && (

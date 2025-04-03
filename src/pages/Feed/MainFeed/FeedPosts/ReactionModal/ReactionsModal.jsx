@@ -72,7 +72,7 @@ const ReactionsModal = ({ APIURL, setShowLikes }) => {
 
         <div className="pt-4 pl-6 pr-12 pb-0">
           <h3 className="text-lg font-semibold text-header">Reactions</h3>
-          <div className="flex border-b h-[56px] flex-shrink-0">
+          <div className="flex border-b border-cardBorder h-[56px] flex-shrink-0">
             <TabButton
               label="All"
               count={reactionCounts.all}

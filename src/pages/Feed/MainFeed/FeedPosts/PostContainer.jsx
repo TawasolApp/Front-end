@@ -12,6 +12,7 @@ const PostContainer = ({ post, handleDeletePost }) => {
   const currentAuthorBio = "Computer Engineering Student at Cairo University";
   const currentAuthorType = "User";
 
+  /*********************************************************************************************** POSTS API ***********************************************************************************************/
   const [localPost, setLocalPost] = useState(post);
   const [showPostModal, setShowPostModal] = useState(false);
   const [mediaIndex, setMediaIndex] = useState(0);
@@ -47,7 +48,7 @@ const PostContainer = ({ post, handleDeletePost }) => {
     }
   };
 
-  const handleReaction = (reactionTypeAdd, reactionTypeRemove) => {
+  const handleReactionOnPost = (reactionTypeAdd, reactionTypeRemove) => {
     let reacts = {};
     if (reactionTypeAdd) reacts[reactionTypeAdd] = 1;
     if (reactionTypeRemove) reacts[reactionTypeRemove] = 0;
@@ -79,25 +80,32 @@ const PostContainer = ({ post, handleDeletePost }) => {
     }));
   };
 
+  /*********************************************************************************************** COMMENTS API ***********************************************************************************************/
+  const [comments, setComments] = useState([]);
+  
   return (
     <>
       <PostCard
         post={localPost}
         handleSavePost={handleSavePost}
         handleDeletePost={handleDeletePost}
-        handleReaction={handleReaction}
+        handleReaction={handleReactionOnPost}
         handleEditPost={handleEditPost}
         incrementCommentsNumber={incrementCommentsNumber}
         setShowPostModal={() => setShowPostModal(true)}
         setMediaIndex={setMediaIndex}
+        comments={comments}
+        setComments={setComments}
       />
       {showPostModal && (
         <PostModal
           post={localPost}
           mediaIndex={mediaIndex}
-          handleReaction={handleReaction}
+          handleReaction={handleReactionOnPost}
           handleClosePostModal={() => setShowPostModal(false)}
           incrementCommentsNumber={incrementCommentsNumber}
+          comments={comments}
+          setComments={setComments}
         />
       )}
     </>

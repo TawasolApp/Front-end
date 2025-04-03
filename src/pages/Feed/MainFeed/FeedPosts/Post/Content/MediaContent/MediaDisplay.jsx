@@ -27,7 +27,7 @@ const MediaDisplay = ({ media, handleOpenPostModal }) => {
 
   return (
     <div
-      className={`grid ${getGridLayout()} gap-1 rounded-none overflow-hidden`}
+      className={`grid ${getGridLayout()} gap-1 rounded-none overflow-hidden mb-2`}
     >
       {displayMedia.map((url, index) => {
         // Check if this is a video with multiple media items

@@ -27,6 +27,8 @@ const PostCard = ({
   incrementCommentsNumber,
   setShowPostModal,
   setMediaIndex,
+  comments,
+  setComments
 }) => {
   // TODO: change this to redux states
   const currentAuthorId = "mohsobh";
@@ -141,6 +143,8 @@ const PostCard = ({
           postId={post.id}
           incrementCommentsNumber={incrementCommentsNumber}
           commentsCount={post.comments}
+          comments={comments}
+          setComments={setComments}
         />
       )}
 
