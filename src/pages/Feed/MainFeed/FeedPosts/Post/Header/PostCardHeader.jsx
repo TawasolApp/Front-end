@@ -15,6 +15,7 @@ const PostCardHeader = ({ menuItems, modal, handleClosePostModal }) => {
           authorName={post.authorName}
           authorPicture={post.authorPicture}
           authorBio={post.authorBio}
+          authorType={post.authorType}
           timestamp={post.timestamp}
           visibility={post.visibility}
         />

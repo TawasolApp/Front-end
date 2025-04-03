@@ -9,6 +9,7 @@ const ActorHeader = ({
   authorName,
   authorBio,
   authorPicture,
+  authorType = "User",
   timestamp,
   visibility,
   iconSize = 48,
@@ -16,7 +17,7 @@ const ActorHeader = ({
 }) => {
   return (
     <div className={`flex items-start gap-2 w-full`}>
-      <Link to={`/users/${authorId}`}>
+      <Link to={authorType === "User" ? `/users/${authorId}` : `/company/${authorId}`}>
         <Avatar
           src={authorPicture}
           sx={{

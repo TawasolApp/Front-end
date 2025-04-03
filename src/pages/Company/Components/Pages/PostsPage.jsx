@@ -5,7 +5,7 @@ import { useParams } from "react-router-dom";
 import { axiosInstance } from "../../../../apis/axios.js";
 import AddPosts from "../PostsPage/AddPosts";
 import LoadingPage from "../../../LoadingScreen/LoadingPage.jsx";
-import PostCard from "../../../Feed/MainFeed/FeedPosts/PostCard/PostCard.jsx";
+import PostContainer from "../../../Feed/MainFeed/FeedPosts/PostContainer.jsx";
 
 function PostsPage() {
   const [searchParams, setSearchParams] = useSearchParams();
@@ -127,7 +127,7 @@ function PostsPage() {
         {posts.length > 0 ? (
           posts.map((post) => (
             <div key={post.id} id={`post-${post.id}`}>
-              <PostCard
+              <PostContainer
                 key={post.id}
                 post={post}
                 handleDeletePost={handleDeletePost}

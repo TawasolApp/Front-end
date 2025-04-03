@@ -3,7 +3,7 @@ import { useNavigate, useParams } from "react-router-dom";
 import { AiOutlineLeft, AiOutlineRight } from "react-icons/ai";
 import { HiOutlineDocumentText } from "react-icons/hi";
 import { axiosInstance } from "../../../../apis/axios.js";
-import PostCard from "../../../Feed/MainFeed/FeedPosts/PostCard/PostCard.jsx";
+import PostContainer from "../../../Feed/MainFeed/FeedPosts/PostContainer.jsx";
 
 function PostsSlider() {
   const sliderRef = useRef(null);
@@ -77,7 +77,7 @@ function PostsSlider() {
               className="flex-shrink-0 w-[350px] min-h-[400px] bg-boxbackground border border-gray-700 rounded-xl shadow-sm p-4"
               onClick={() => handlePostClick(post.id)}
             >
-              <PostCard post={post} />
+              <PostContainer post={post} />
             </div>
           ))}
 
