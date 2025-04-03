@@ -50,7 +50,5 @@ export default defineConfig({
     },
     setupFiles: "./src/setupTests.js",
   },
-  server: {
-    historyApiFallback: true,
-  },
+
 });
