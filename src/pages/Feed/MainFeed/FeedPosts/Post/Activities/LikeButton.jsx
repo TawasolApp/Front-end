@@ -2,15 +2,18 @@ import { useState } from "react";
 import ThumbUpOffAltIcon from "@mui/icons-material/ThumbUpOffAlt";
 import reactionIcons from "../../../../GenericComponents/reactionIcons";
 import ReactionPicker from "../../../../GenericComponents/ReactionPicker";
+import { usePost } from "../../PostContext";
 
-const LikeButton = ({ initReactValue, handleReaction }) => {
+const LikeButton = () => {
+  const { post, handleReactOnPost } = usePost();
+  const initReactValue = post.reactType;
   const handleReactionInternal = (reactionType) => {
     if (initReactValue === null) {
-      handleReaction && handleReaction(reactionType, null);
+      handleReactOnPost && handleReactOnPost(reactionType, null);
     } else if (initReactValue === reactionType) {
-      handleReaction && handleReaction(null, reactionType);
+      handleReactOnPost && handleReactOnPost(null, reactionType);
     } else {
-      handleReaction && handleReaction(reactionType, initReactValue);
+      handleReactOnPost && handleReactOnPost(reactionType, initReactValue);
     }
   };
 

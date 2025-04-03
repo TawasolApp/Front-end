@@ -13,7 +13,7 @@ const MediaCarousel = ({ media, mediaIndex }) => {
 
   // Determine media type from URL
   const getMediaType = (url) => {
-    return url.includes('/videos/') ? 'video' : 'image';
+    return url.includes("/videos/") ? "video" : "image";
   };
 
   return (
@@ -62,16 +62,18 @@ const MediaCarousel = ({ media, mediaIndex }) => {
 
       {/* Media container */}
       <div className="relative w-full h-full flex items-center justify-center z-10">
-      {media.map((url, index) => (
+        {media.map((url, index) => (
           <div
             key={url}
             className={`absolute inset-0 flex items-center justify-center ${
               index === currentMediaIndex ? "opacity-100" : "opacity-0"
             } transition-opacity duration-300`}
           >
-            <div className="relative w-full h-full"> {/* Add relative here */}
-              {getMediaType(url) === 'video' ? (
-                <video 
+            <div className="relative w-full h-full">
+              {" "}
+              {/* Add relative here */}
+              {getMediaType(url) === "video" ? (
+                <video
                   src={url}
                   className="w-full h-full max-w-full max-h-full object-contain relative z-0"
                   controls

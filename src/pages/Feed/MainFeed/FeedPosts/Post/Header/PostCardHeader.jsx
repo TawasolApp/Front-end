@@ -2,28 +2,21 @@ import MoreHorizIcon from "@mui/icons-material/MoreHoriz";
 import CloseIcon from "@mui/icons-material/Close";
 import ActorHeader from "../../../../GenericComponents/ActorHeader";
 import DropdownMenu from "../../../../GenericComponents/DropdownMenu";
+import { usePost } from "../../PostContext";
 
-const PostCardHeader = ({
-  authorId,
-  authorName,
-  authorBio,
-  authorPicture,
-  timestamp,
-  visibility,
-  menuItems,
-  modal,
-  handleClosePostModal,
-}) => {
+const PostCardHeader = ({ menuItems, modal, handleClosePostModal }) => {
+  const { post } = usePost();
+
   return (
     <div className="relative">
       <div className="pr-16 pl-3 pt-3 mb-2">
         <ActorHeader
-          authorId={authorId}
-          authorName={authorName}
-          authorPicture={authorPicture}
-          authorBio={authorBio}
-          timestamp={timestamp}
-          visibility={visibility}
+          authorId={post.authorId}
+          authorName={post.authorName}
+          authorPicture={post.authorPicture}
+          authorBio={post.authorBio}
+          timestamp={post.timestamp}
+          visibility={post.visibility}
         />
       </div>
       <div className="absolute right-3 top-1">

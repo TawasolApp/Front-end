@@ -3,15 +3,14 @@ import reactionIcons from "../../../../GenericComponents/reactionIcons";
 import ReactionPicker from "../../../../GenericComponents/ReactionPicker";
 
 const ActivitiesHolder = ({
-  initReactValue = null,
+  currentReaction,
   reactions,
   handleReaction,
   setShowReactions,
+  isReply = false,
   replies,
   setShowReplies,
 }) => {
-  const [currentReaction, setCurrentReaction] = useState(initReactValue);
-
   // Memoized calculations
   const { topReactions, totalLikes } = useMemo(() => {
     const filtered = Object.entries(reactions)
@@ -27,13 +26,10 @@ const ActivitiesHolder = ({
   const handleReactionInternal = (reactionType) => {
     if (currentReaction === null) {
       handleReaction(reactionType, null);
-      setCurrentReaction(reactionType);
     } else if (currentReaction === reactionType) {
       handleReaction(null, reactionType);
-      setCurrentReaction(null);
     } else {
       handleReaction(reactionType, currentReaction);
-      setCurrentReaction(reactionType);
     }
   };
 
@@ -45,7 +41,7 @@ const ActivitiesHolder = ({
           Like
         </span>
       );
-    const { Icon, color, label } = reactionIcons[currentReaction];
+    const { _, color, label } = reactionIcons[currentReaction];
     return (
       <div className="flex items-center">
         <span style={{ color }} className="text-sm font-semibold">
@@ -75,7 +71,7 @@ const ActivitiesHolder = ({
               onClick={setShowReactions}
             >
               {topReactions.map(([reactionType]) => {
-                const { Icon, color } = reactionIcons[reactionType];
+                const { Icon, _ } = reactionIcons[reactionType];
                 return (
                   <div key={reactionType} className="relative">
                     <Icon className="w-4 h-4" />
@@ -95,13 +91,13 @@ const ActivitiesHolder = ({
       </span>
       <button
         className="text-sm font-semibold text-textLightActivity px-1 rounded-md hover:bg-buttonIconHover transition-all duration-200"
-        onClick={() => setShowReplies(true)}
+        onClick={setShowReplies}
       >
         Reply
       </button>
 
       {/* Reply Button */}
-      {replies > 0 && (
+      {!isReply && replies > 0 && (
         <>
           <span className="text-textLightActivity pr-1 text-xs font-light">
             •

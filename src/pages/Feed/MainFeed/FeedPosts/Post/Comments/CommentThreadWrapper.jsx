@@ -6,16 +6,28 @@ const CommentThreadWrapper = ({
   isLastReply = false,
 }) => {
   return (
-    <div className="relative px-4 flex">
+    <div className="relative px-4 flex w-full">
       {/* Thread line that connects comments */}
       {hasReplies ? (
-        <div className="px-[15px] min-w-1" />
+        <div className="mx-[15px] relative flex-shrink-0">
+          {isLastReply ? (
+            <div className="absolute top-0 left-0 h-1/2 flex items-end">
+              <div className="h-full w-0.5 bg-mainBackground" />
+              <div
+                className="h-0.5 w-4 bg-mainBackground rounded-bl-lg"
+                style={{ borderBottomLeftRadius: "4px" }}
+              />
+            </div>
+          ) : (
+            <div className="w-0.5 h-full bg-mainBackground" />
+          )}
+        </div>
       ) : (
         <div className="pl-8" />
       )}
 
-      {/* Comment content with proper margins */}
-      <div className="relative full-w">{children}</div>
+      {/* Fixed: Full-width children container */}
+      <div className="flex-1">{children}</div>
     </div>
   );
 };

@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { usePost } from "../PostContext";
 
 import BookmarkBorderIcon from "@mui/icons-material/BookmarkBorder";
 import BookmarkIcon from "@mui/icons-material/Bookmark";
@@ -18,16 +19,7 @@ import ReactionsModal from "../ReactionModal/ReactionsModal";
 import TextModal from "../../SharePost/TextModal";
 import DeletePostModal from "../DeleteModal/DeletePostModal";
 
-const PostCard = ({
-  post,
-  handleSavePost,
-  handleDeletePost,
-  handleReaction,
-  handleEditPost,
-  incrementCommentsNumber,
-  setShowPostModal,
-  setMediaIndex,
-}) => {
+const PostCard = ({ setShowPostModal, setMediaIndex }) => {
   // TODO: change this to redux states
   const currentAuthorId = "mohsobh";
   const currentAuthorName = "Mohamed Sobh";
@@ -36,11 +28,21 @@ const PostCard = ({
   const currentAuthorBio = "Computer Engineering Student at Cairo University";
   const currentAuthorType = "User";
 
+  // MODALS
   const [showLikes, setShowLikes] = useState(false);
   const [showComments, setShowComments] = useState(false);
   const [showReposts, setShowReposts] = useState(false);
   const [showEditModal, setShowEditModal] = useState(false);
   const [showDeleteModal, setShowDeleteModal] = useState(false);
+
+  const {
+    post,
+
+    handleSavePost,
+    handleCopyPost,
+    handleEditPost,
+    handleDeletePost,
+  } = usePost();
 
   let menuItems = [
     {
@@ -68,23 +70,16 @@ const PostCard = ({
   if (post.authorId === currentAuthorId) {
     menuItems.push({
       text: "Edit post",
-      onClick: () => {
-        setShowEditModal(true);
-      },
+      onClick: () => setShowEditModal(true),
       icon: EditIcon,
     });
+
     menuItems.push({
       text: "Delete post",
       onClick: () => setShowDeleteModal(true),
       icon: DeleteIcon,
     });
   }
-
-  const handleCopyPost = async () => {
-    await navigator.clipboard.writeText(
-      `http://localhost:5173/posts/${post.id}`,
-    );
-  };
 
   const handleEditPostInternal = (text, media, visibility, taggedUsers) => {
     try {
@@ -102,47 +97,22 @@ const PostCard = ({
 
   return (
     <div className="bg-cardBackground rounded-none sm:rounded-lg border border-cardBorder mb-4">
-      <PostCardHeader
-        authorId={post.authorId}
-        authorName={post.authorName}
-        authorBio={post.authorBio}
-        authorPicture={post.authorPicture}
-        timestamp={post.timestamp}
-        visibility={post.visibility}
-        menuItems={menuItems}
-        modal={false}
-      />
+      <PostCardHeader menuItems={menuItems} modal={false} />
 
       <PostContent
-        content={post.content}
-        taggedUsers={post.taggedUsers}
-        media={post.media}
         modal={false}
         handleOpenPostModal={(index) => handleOpenPostModal(index)}
       />
 
       <EngagementMetrics
-        reactions={post.reactions}
-        comments={post.comments}
-        reposts={post.reposts}
         setShowLikes={() => setShowLikes(true)}
         setShowComments={() => setShowComments(true)}
         setShowReposts={() => setShowReposts(true)}
       />
 
-      <ActivitiesHolder
-        initReactValue={post.reactType}
-        handleReaction={handleReaction}
-        setShowComments={() => setShowComments(true)}
-      />
+      <ActivitiesHolder setShowComments={() => setShowComments(true)} />
 
-      {showComments && (
-        <CommentsContainer
-          postId={post.id}
-          incrementCommentsNumber={incrementCommentsNumber}
-          commentsCount={post.comments}
-        />
-      )}
+      {showComments && <CommentsContainer />}
 
       {showLikes && (
         <ReactionsModal

@@ -1,14 +1,17 @@
 import { useMemo } from "react";
 import reactionIcons from "../../../../GenericComponents/reactionIcons";
+import { usePost } from "../../PostContext";
 
 const EngagementMetrics = ({
-  reactions,
-  comments,
-  reposts,
   setShowLikes,
   setShowComments,
   setShowReposts,
 }) => {
+  const { post } = usePost();
+  const reactions = post.reactions;
+  const comments = post.comments;
+  const reposts = post.reposts;
+
   const topReactions = useMemo(() => {
     return Object.entries(reactions)
       .filter(([_, count]) => count > 0)
@@ -28,7 +31,7 @@ const EngagementMetrics = ({
       >
         <div className="flex -space-x-2">
           {topReactions.map(([reactionType]) => {
-            const { Icon, color } = reactionIcons[reactionType];
+            const { Icon, _ } = reactionIcons[reactionType];
             return (
               <div key={reactionType} className="relative">
                 <Icon className="w-5 h-5" />

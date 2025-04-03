@@ -28,15 +28,17 @@ const PdfViewer = ({ url }) => {
       const containerHeight = containerRef.current.clientHeight;
       const containerWidth = containerRef.current.clientWidth;
       // Adjust the scale to fit the container height (with some padding)
-      setScale(Math.min((containerHeight - 20) / 842, (containerWidth - 20) / 595));
+      setScale(
+        Math.min((containerHeight - 20) / 842, (containerWidth - 20) / 595),
+      );
     }
   };
 
   // Re-adjust scale on container size changes or fullscreen toggle
   useEffect(() => {
     adjustScale();
-    window.addEventListener('resize', adjustScale);
-    return () => window.removeEventListener('resize', adjustScale);
+    window.addEventListener("resize", adjustScale);
+    return () => window.removeEventListener("resize", adjustScale);
   }, [isFullScreen]);
 
   function changePage(offset) {
@@ -117,8 +119,8 @@ const PdfViewer = ({ url }) => {
       </div>
 
       {numPages && (
-        <div 
-          className={`absolute bottom-0 left-0 right-0 bg-black/50 p-2 flex items-center justify-between transition-opacity duration-300 ${showControls ? 'opacity-100' : 'opacity-0'}`}
+        <div
+          className={`absolute bottom-0 left-0 right-0 bg-black/50 p-2 flex items-center justify-between transition-opacity duration-300 ${showControls ? "opacity-100" : "opacity-0"}`}
         >
           <div className="flex items-center space-x-2">
             <button onClick={toggleFullScreen} className="text-white pl-2">

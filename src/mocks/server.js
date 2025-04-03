@@ -449,6 +449,7 @@ server.post("/profile/:id/certifications", (req, res) => {
   user.assign({ certifications: [...items, newItem] }).write();
   return res.status(201).json(newItem);
 });
+
 server.post("/profile/:id/skills", (req, res) => {
   const userId = req.params.id;
   const newItem = { id: Date.now().toString(), ...req.body };
@@ -561,6 +562,7 @@ server.delete("/profile/:userId/certifications/:itemId", (req, res) => {
   user.assign({ certifications: filteredItems }).write();
   res.status(204).end();
 });
+
 server.delete("/profile/:userId/skills/:itemId", (req, res) => {
   const { userId, itemId } = req.params;
 
@@ -579,8 +581,7 @@ server.delete("/profile/:userId/skills/:itemId", (req, res) => {
 const currentUser = {
   id: "mohsobh",
   name: "Mohamed Sobh",
-  picture:
-    "https://media.licdn.com/dms/image/v2/D4D03AQH7Ais8BxRXzw/profile-displayphoto-shrink_100_100/profile-displayphoto-shrink_100_100/0/1721080103981?e=1747872000&v=beta&t=nDnZdgCqkI8v5B2ymXZzluMZVlF6h_o-dN1pA95Fzv4",
+  picture: "https://media.licdn.com/dms/image/v2/D4D03AQH7Ais8BxRXzw/profile-displayphoto-shrink_100_100/profile-displayphoto-shrink_100_100/0/1721080103981?e=1747872000&v=beta&t=nDnZdgCqkI8v5B2ymXZzluMZVlF6h_o-dN1pA95Fzv4",
   bio: "Computer Engineering Student at Cairo University",
   type: "User",
 };
@@ -687,12 +688,13 @@ server.post("/posts/react/:postId", (req, res) => {
   const { reactions, postType } = req.body;
 
   // Determine which database table to use
-  const entityType = postType === "Comment" ? "comments" : "posts";
+  const entityType = postType === "Post" ? "posts" : "comments";
   const entityTable = _router.db.get(entityType);
   const reactionsTable = _router.db.get("reactions");
 
   // Find the target entity (post or comment)
   const entity = entityTable.find({ id: postId }).value();
+  console.log(`Searching ${entity}`);
   if (!entity) {
     return res.status(404).json({ error: `${postType} not found` });
   }
@@ -818,10 +820,7 @@ server.get("/posts/comments/:postId", (req, res) => {
 
 server.post("/posts/comment/:postId", (req, res) => {
   const { postId } = req.params;
-  const { content, taggedUsers } = req.body;
-
-  console.log(`Adding comment to postId: ${postId}`);
-  console.log(`Comment content: ${content}`);
+  const { content, taggedUsers, isReply } = req.body;
 
   const commentId = Date.now().toString();
   const createdAt = new Date().toISOString();
@@ -850,18 +849,29 @@ server.post("/posts/comment/:postId", (req, res) => {
   // Add the comment to the database
   _router.db.get("comments").push(newComment).write();
 
-  // Update the comment count for the post
-  const post = _router.db.get("posts").find({ id: postId }).value();
-
-  if (post) {
+  if (!isReply) {
+    // Update the comment count for the post
+    const post = _router.db.get("posts").find({ id: postId }).value();
+    if (post) {
+      _router.db
+        .get("posts")
+        .find({ id: postId })
+        .assign({ comments: (post.comments || 0) + 1 })
+        .write();
+    }
+  } else {
+    // Find the parent comment
+    const parentComment = _router.db.get("comments").find({ id: postId }).value();
+    if (!parentComment) {
+      return res.status(404).jsonp({ error: "Parent comment not found" });
+    }
+    // Append the reply to the correct comment
     _router.db
-      .get("posts")
+      .get("comments")
       .find({ id: postId })
-      .assign({ comments: (post.comments || 0) + 1 })
+      .assign({ replies: [...parentComment.replies, "dummy reply"] })
       .write();
   }
-
-  // Return the newly created comment
   res.status(201).jsonp(newComment);
 });
 
@@ -895,6 +905,16 @@ server.delete("/posts/comments/:commentId", (req, res) => {
 
       comments.remove({ id: commentId }).write();
       return res.status(200).json({ message: "Comment deleted successfully" });
+    } else {
+      const wantedParentComment = comments.find({ id: wantedComment.postId }).value();
+      console.log(wantedParentComment);
+      if (wantedParentComment) {
+        comments.find({ id: wantedComment.postId })
+          .assign({ replies: wantedComment.replies.slice(0, -1) }) // Removes last element
+          .write();
+        comments.remove({ id: commentId }).write();
+        return res.status(200).json({ message: "Reply deleted successfully" });
+      }
     }
   }
 
@@ -936,6 +956,7 @@ server.patch("/companies/:companyId", (req, res) => {
     updatedCompany: company.value(),
   });
 });
+
 //  POST - Create a new company
 server.post("/companies", (req, res) => {
   console.log("Creating a new company...");
@@ -963,6 +984,7 @@ server.post("/companies", (req, res) => {
     company: newCompany,
   });
 });
+
 // POST - Follow a company
 server.post("/companies/:companyId/follow", (req, res) => {
   console.log("Following company...");

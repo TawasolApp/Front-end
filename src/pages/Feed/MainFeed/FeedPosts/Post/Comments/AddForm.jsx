@@ -10,12 +10,8 @@ const AddForm = ({
   type,
 }) => {
   // TODO: change this to redux states
-  const currentAuthorId = "mohsobh";
-  const currentAuthorName = "Mohamed Sobh";
   const currentAuthorPicture =
     "https://media.licdn.com/dms/image/v2/D4D03AQH7Ais8BxRXzw/profile-displayphoto-shrink_100_100/profile-displayphoto-shrink_100_100/0/1721080103981?e=1747872000&v=beta&t=nDnZdgCqkI8v5B2ymXZzluMZVlF6h_o-dN1pA95Fzv4";
-  const currentAuthorBio = "Computer Engineering Student at Cairo University";
-  const currentAuthorType = "User";
 
   const [commentText, setCommentText] = useState(initialText);
   const [taggedUsers, setTaggedUsers] = useState(initialTaggedUsers);
@@ -29,7 +25,7 @@ const AddForm = ({
       textareaRef.current.style.height = "auto";
 
       // Set the new height based on whether there's text or it's a Reply type
-      if (hasText || type !== "Comment") {
+      if (hasText || (type !== "Comment" && type !== "Reply")) {
         // Set the new height based on scrollHeight (with a min expanded height)
         const newHeight = Math.max(64, textareaRef.current.scrollHeight);
         textareaRef.current.style.height = `${newHeight}px`;
@@ -49,10 +45,10 @@ const AddForm = ({
   };
 
   // Determine whether to show expanded or collapsed view
-  const isExpanded = hasText || type !== "Comment";
+  const isExpanded = hasText || (type !== "Comment" && type !== "Reply");
 
   return (
-    <div className="flex items-start pt-1 pb-2 px-4">
+    <div className="flex items-start pt-1 pb-2">
       <div className="mr-2 h-9 w-8">
         <Avatar
           sx={{ width: 32, height: 32 }}
@@ -83,7 +79,7 @@ const AddForm = ({
         <div
           className={`absolute right-2 ${isExpanded ? "bottom-3.5" : "hidden"} flex space-x-2`}
         >
-          {type === "Reply" && (
+          {(type === "Edit Reply" || type === "Edit Comment") && (
             <button
               type="button"
               onClick={close}

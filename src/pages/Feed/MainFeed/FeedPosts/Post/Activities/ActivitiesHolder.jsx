@@ -3,17 +3,10 @@ import CommentButton from "./CommentButton";
 import RepostButton from "./RepostButton";
 import SendButton from "./SendButton";
 
-const ActivitiesHolder = ({
-  initReactValue,
-  handleReaction,
-  setShowComments,
-}) => {
+const ActivitiesHolder = ({ setShowComments }) => {
   return (
     <div className="grid grid-cols-4 gap-0 px-4 py-1 ">
-      <LikeButton
-        initReactValue={initReactValue}
-        handleReaction={handleReaction}
-      />
+      <LikeButton />
       <CommentButton setShowComments={setShowComments} />
       <RepostButton />
       <SendButton />
