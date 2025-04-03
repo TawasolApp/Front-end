@@ -7,6 +7,57 @@ const middlewares = defaults();
 server.use(middlewares);
 server.use(bodyParser);
 
+import express from "express";
+import multer from "multer";
+import path from "path";
+import fs from "fs";
+
+const uploadDir = "public";
+const subdirectories = ["images", "videos", "documents"];
+subdirectories.forEach((subdir) => {
+  const fullPath = path.join(uploadDir, subdir);
+  if (!fs.existsSync(fullPath)) {
+    fs.mkdirSync(fullPath, { recursive: true }); // Ensure full path is created
+  }
+});
+
+// Configure multer to store files
+const storage = multer.diskStorage({
+  destination: (req, file, cb) => {
+    let folder = "documents"; // Default folder
+    if (file.mimetype.startsWith("image/")) folder = "images";
+    if (file.mimetype.startsWith("video/")) folder = "videos";
+
+    cb(null, path.join(uploadDir, folder)); // Store in correct subdirectory
+  },
+  filename: (req, file, cb) => {
+    cb(null, Date.now() + path.extname(file.originalname)); // Unique filename
+  },
+});
+
+const upload = multer({ storage });
+
+// API to handle file uploads
+server.post("/api/uploadImage", upload.single("file"), (req, res) => {
+  if (!req.file) {
+    return res.status(400).json({ error: "No file uploaded" });
+  }
+
+  // Determine file type
+  const determineFileType = (mimetype) => {
+    if (mimetype.startsWith("image/")) return "image";
+    if (mimetype.startsWith("video/")) return "video";
+    if (mimetype === "application/pdf") return "document";
+    return "document"; // Default to document
+  };
+  const fileType = determineFileType(req.file.mimetype);
+  const fileUrl = `http://localhost:5000/public/${fileType}s/${req.file.filename}`;
+
+  return res.status(201).json(fileUrl);
+});
+
+server.use("/public", express.static(uploadDir));
+
 server.get("/connections/list", (req, res) => {
   try {
     let connections = _router.db.get("connections").value();
@@ -22,6 +73,15 @@ server.get("/connections/pending", (req, res) => {
     res.status(200).jsonp(pendingConnections);
   } catch (error) {
     res.status(500).jsonp({ error: "Failed to retrieve pending connections" });
+  }
+});
+
+server.get("/connections/sent", (req, res) => {
+  try {
+    const sentConnections = _router.db.get("sentConnections").value();
+    res.status(200).jsonp(sentConnections);
+  } catch (error) {
+    res.status(500).jsonp({ error: "Failed to retrieve sent connections" });
   }
 });
 
@@ -205,6 +265,7 @@ server.post("/auth/login", (req, res) => {
   }
 
   return res.status(200).json({
+    userId: "1",
     token: "mock_access_token",
     refreshToken: "mock_refresh_token",
   });
@@ -398,6 +459,7 @@ server.post("/profile/:id/certifications", (req, res) => {
   user.assign({ certifications: [...items, newItem] }).write();
   return res.status(201).json(newItem);
 });
+
 server.post("/profile/:id/skills", (req, res) => {
   const userId = req.params.id;
   const newItem = { id: Date.now().toString(), ...req.body };
@@ -510,6 +572,7 @@ server.delete("/profile/:userId/certifications/:itemId", (req, res) => {
   user.assign({ certifications: filteredItems }).write();
   res.status(204).end();
 });
+
 server.delete("/profile/:userId/skills/:itemId", (req, res) => {
   const { userId, itemId } = req.params;
 
@@ -528,8 +591,7 @@ server.delete("/profile/:userId/skills/:itemId", (req, res) => {
 const currentUser = {
   id: "mohsobh",
   name: "Mohamed Sobh",
-  picture:
-    "https://media.licdn.com/dms/image/v2/D4D03AQH7Ais8BxRXzw/profile-displayphoto-shrink_100_100/profile-displayphoto-shrink_100_100/0/1721080103981?e=1747872000&v=beta&t=nDnZdgCqkI8v5B2ymXZzluMZVlF6h_o-dN1pA95Fzv4",
+  picture: "https://media.licdn.com/dms/image/v2/D4D03AQH7Ais8BxRXzw/profile-displayphoto-shrink_100_100/profile-displayphoto-shrink_100_100/0/1721080103981?e=1747872000&v=beta&t=nDnZdgCqkI8v5B2ymXZzluMZVlF6h_o-dN1pA95Fzv4",
   bio: "Computer Engineering Student at Cairo University",
   type: "User",
 };
@@ -541,17 +603,20 @@ server.get("/posts", (req, res) => {
   const startIndex = (page - 1) * limit;
   const allPosts = _router.db.get("posts").orderBy("timestamp", "desc").value();
   const paginatedPosts = allPosts.slice(startIndex, startIndex + limit);
-  console.log(paginatedPosts);
   res.jsonp(paginatedPosts);
 });
 
 server.post("/posts", (req, res) => {
-  const { authorId, content, media, taggedUsers, visibility } = req.body;
+  // Get data from request body
+  const authorId = req.body.authorId;
+  const content = req.body.text || req.body.content; // Accept either name
+  const visibility = req.body.visibility;
+  const taggedUsers = req.body.taggedUsers || [];
+  const mediaItems = req.body.media || [];
 
   // Basic validation
-  if (!authorId || !content) {
+  if (!authorId || !content)
     return res.status(400).json({ error: "authorId and content are required" });
-  }
 
   const newPost = {
     id: Date.now().toString(),
@@ -561,7 +626,7 @@ server.post("/posts", (req, res) => {
     authorPicture: currentUser.picture,
     authorBio: currentUser.bio,
     content: content,
-    media: media,
+    media: mediaItems,
     reactions: {
       Love: 0,
       Celebrate: 0,
@@ -578,13 +643,8 @@ server.post("/posts", (req, res) => {
     reactType: null,
     timestamp: new Date().toISOString(),
   };
-
-  // Access the existing posts
   const posts = _router.db.get("posts");
-
-  // Add the new post and persist the change
   posts.push(newPost).write();
-
   res.status(201).json(newPost);
 });
 
@@ -622,18 +682,29 @@ server.patch("/posts/:postId", (req, res) => {
   res.status(200).json({ message: "Post updated successfully" });
 });
 
+server.get("/users/search", (req, res) => {
+  const { name } = req.query;
+  const users = _router.db
+    .get("users")
+    .filter((user) => user.firstName.toLowerCase().includes(name.toLowerCase()))
+    .value();
+  console.log(users);
+  res.jsonp(users);
+});
+
 /*********************************************************** REACTIONS ***********************************************************/
 server.post("/posts/react/:postId", (req, res) => {
   const { postId } = req.params;
   const { reactions, postType } = req.body;
 
   // Determine which database table to use
-  const entityType = postType === "Comment" ? "comments" : "posts";
+  const entityType = postType === "Post" ? "posts" : "comments";
   const entityTable = _router.db.get(entityType);
   const reactionsTable = _router.db.get("reactions");
 
   // Find the target entity (post or comment)
   const entity = entityTable.find({ id: postId }).value();
+  console.log(`Searching ${entity}`);
   if (!entity) {
     return res.status(404).json({ error: `${postType} not found` });
   }
@@ -759,10 +830,7 @@ server.get("/posts/comments/:postId", (req, res) => {
 
 server.post("/posts/comment/:postId", (req, res) => {
   const { postId } = req.params;
-  const { content, taggedUsers } = req.body;
-
-  console.log(`Adding comment to postId: ${postId}`);
-  console.log(`Comment content: ${content}`);
+  const { content, taggedUsers, isReply } = req.body;
 
   const commentId = Date.now().toString();
   const createdAt = new Date().toISOString();
@@ -791,28 +859,39 @@ server.post("/posts/comment/:postId", (req, res) => {
   // Add the comment to the database
   _router.db.get("comments").push(newComment).write();
 
-  // Update the comment count for the post
-  const post = _router.db.get("posts").find({ id: postId }).value();
-
-  if (post) {
+  if (!isReply) {
+    // Update the comment count for the post
+    const post = _router.db.get("posts").find({ id: postId }).value();
+    if (post) {
+      _router.db
+        .get("posts")
+        .find({ id: postId })
+        .assign({ comments: (post.comments || 0) + 1 })
+        .write();
+    }
+  } else {
+    // Find the parent comment
+    const parentComment = _router.db.get("comments").find({ id: postId }).value();
+    if (!parentComment) {
+      return res.status(404).jsonp({ error: "Parent comment not found" });
+    }
+    // Append the reply to the correct comment
     _router.db
-      .get("posts")
+      .get("comments")
       .find({ id: postId })
-      .assign({ comments: (post.comments || 0) + 1 })
+      .assign({ replies: [...parentComment.replies, "dummy reply"] })
       .write();
   }
-
-  // Return the newly created comment
   res.status(201).jsonp(newComment);
 });
 
 server.patch("/posts/comments/:commentId", (req, res) => {
   const { commentId } = req.params;
-  const { content, taggedUsers } = req.body;
+  const { content, tagged } = req.body;
 
   const data = _router.db.get("comments").find({ id: commentId });
   if (data) {
-    data.assign({ content: content }).write();
+    data.assign({ content: content, taggedUsers: tagged }).write();
     return res.status(200).json({ message: "Comment edited successfully" });
   }
   return res.status(404).json({ message: "Comment not found" });
@@ -836,6 +915,16 @@ server.delete("/posts/comments/:commentId", (req, res) => {
 
       comments.remove({ id: commentId }).write();
       return res.status(200).json({ message: "Comment deleted successfully" });
+    } else {
+      const wantedParentComment = comments.find({ id: wantedComment.postId }).value();
+      console.log(wantedParentComment);
+      if (wantedParentComment) {
+        comments.find({ id: wantedComment.postId })
+          .assign({ replies: wantedComment.replies.slice(0, -1) }) // Removes last element
+          .write();
+        comments.remove({ id: commentId }).write();
+        return res.status(200).json({ message: "Reply deleted successfully" });
+      }
     }
   }
 
@@ -857,6 +946,7 @@ server.get("/companies/:companyId", (req, res) => {
 
   res.json(company);
 });
+
 //  PATCH - Update company details
 server.patch("/companies/:companyId", (req, res) => {
   console.log("Updating company details...");
@@ -876,6 +966,7 @@ server.patch("/companies/:companyId", (req, res) => {
     updatedCompany: company.value(),
   });
 });
+
 //  POST - Create a new company
 server.post("/companies", (req, res) => {
   console.log("Creating a new company...");
@@ -903,6 +994,7 @@ server.post("/companies", (req, res) => {
     company: newCompany,
   });
 });
+
 // POST - Follow a company
 server.post("/companies/:companyId/follow", (req, res) => {
   console.log("Following company...");
