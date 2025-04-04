@@ -44,13 +44,37 @@ const MainFeed = () => {
   // Function to fetch posts with pagination
   const fetchPosts = async (pageNum, reset = false) => {
     if (isFetching.current) return;
+
     try {
+      // el bta3a de bt5lih ymn3 el refetching lama el user y3od yforce scroll
       setLoading(true);
       isFetching.current = true;
+
+      // fetch new posts
       const response = await axiosInstance.get("posts", {
         params: { page: pageNum },
       });
-      const newPosts = response.data;
+      const rawPosts = response.data;
+      const newPosts = rawPosts.map((post) => {
+        // Case 1: Normal post
+        if (!post.parentPost) return post;
+  
+        // Case 2: Silent Repost
+        if (post.isSilentRepost) {
+          return {
+            ...post.parentPost, // Take the parent post as the display
+            isSilentRepost: true,
+            headerData: {
+              authorId: post.authorId,
+              authorPicture: post.authorPicture,
+              authorName: post.authorName,
+            },
+          };
+        }
+        // Case 3: Quoted Repost – lesa 
+        return null;
+      }).filter(Boolean); // Remove nulls (from silent reposts)
+
       if (newPosts.length === 0) {
         setHasMore(false);
       } else {
@@ -88,7 +112,29 @@ const MainFeed = () => {
         parentPostId: parentPost,
         isSilentRepost: silentRepost
       });
-      setPosts((prevPosts) => [response.data, ...prevPosts]);
+
+      const newPost = response.data; // Process the post the same way as in fetchPosts
+      let formattedPost = newPost;
+      if (newPost.parentPost) {
+        if (newPost.isSilentRepost) {
+          formattedPost = {
+            ...newPost.parentPost,
+            isSilentRepost: true,
+            headerData: {
+              authorId: newPost.authorId,
+              authorPicture: newPost.authorPicture,
+              authorName: newPost.authorName,
+            },
+          };
+        } else {
+          // For quoted reposts (when you implement them)
+          formattedPost = newPost;
+        }
+      }
+      
+      const updatedPosts = [formattedPost, ...posts];
+      setPosts(updatedPosts);
+      
     } catch (err) {
       console.log(`Error: ${err.message}`);
     }

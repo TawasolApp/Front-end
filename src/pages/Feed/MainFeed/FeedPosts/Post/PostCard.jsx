@@ -18,6 +18,7 @@ import ReactionsModal from "../ReactionModal/ReactionsModal";
 
 import TextModal from "../../SharePost/TextModal";
 import DeletePostModal from "../DeleteModal/DeletePostModal";
+import SilentRepostHeader from "./Header/SilentRepostHeader";
 
 const PostCard = ({ setShowPostModal, setMediaIndex }) => {
   // TODO: change this to redux states
@@ -96,6 +97,15 @@ const PostCard = ({ setShowPostModal, setMediaIndex }) => {
 
   return (
     <div className="bg-cardBackground rounded-none sm:rounded-lg border border-cardBorder mb-4">
+
+      {post.headerData && (
+        <SilentRepostHeader
+          authorId={post.headerData.authorId}
+          authorPicture={post.headerData.authorPicture}
+          authorName={post.headerData.authorName}
+        />
+      )}
+
       <PostCardHeader menuItems={menuItems} modal={false} />
 
       <PostContent

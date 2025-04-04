@@ -2,13 +2,13 @@ import PostContainer from "./PostContainer";
 
 const FeedPosts = ({ posts, lastPostRef, handleSharePost, handleDeletePost }) => {
   return (
-    <div className="space-y-4 w-full">
+    <div className="w-full">
       {posts &&
         posts.length > 0 &&
         posts.map((post, index) => {
           if (index === posts.length - 1) {
             return (
-              <div ref={lastPostRef} key={post.id || index}>
+              <div ref={lastPostRef} key={index}>
                 <PostContainer
                   post={post}
                   handleSharePost={handleSharePost}
@@ -19,7 +19,7 @@ const FeedPosts = ({ posts, lastPostRef, handleSharePost, handleDeletePost }) =>
           }
           return (
             <PostContainer
-              key={post.id || index}
+              key={index}
               post={post}
               handleSharePost={handleSharePost}
               handleDeletePost={handleDeletePost}

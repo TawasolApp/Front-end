@@ -7,6 +7,7 @@ import ActivitiesHolder from "./Activities/ActivitiesHolder";
 import CommentsContainer from "./Comments/CommentsContainer";
 import ReactionsModal from "../ReactionModal/ReactionsModal";
 import MediaCarousel from "./MediaCarousel/MediaCarousel";
+import SilentRepostHeader from "./Header/SilentRepostHeader";
 import { usePost } from "../PostContext";
 
 const PostModal = ({ mediaIndex, handleClosePostModal }) => {
@@ -46,6 +47,15 @@ const PostModal = ({ mediaIndex, handleClosePostModal }) => {
 
         {/* Post card container */}
         <div className="w-full md:w-[500px] flex-shrink-0 border-t md:border-l md:border-t-0 border-cardBorder h-[40%] md:h-full bg-cardBackground overflow-y-auto">
+          
+          {post.headerData && (
+            <SilentRepostHeader
+              authorId={post.headerData.authorId}
+              authorPicture={post.headerData.authorPicture}
+              authorName={post.headerData.authorName}
+            />
+          )}
+
           <div className="bg-cardBackground rounded-none">
             <PostCardHeader
               modal={true}

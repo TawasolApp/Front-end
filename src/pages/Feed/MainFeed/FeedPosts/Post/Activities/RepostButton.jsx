@@ -3,6 +3,7 @@ import BorderColorIcon from '@mui/icons-material/BorderColor';
 import DropdownMenu from "../../../../GenericComponents/DropdownMenu";
 import { usePost } from "../../PostContext";
 import { useState } from "react";
+import TextModal from "../../../SharePost/TextModal";
 
 const RepostButton = () => {
 
@@ -49,7 +50,7 @@ const RepostButton = () => {
         <TextModal
           currentAuthorName={currentAuthorName}
           currentAuthorPicture={currentAuthorPicture}
-          setIsModalOpen={() => setShowEditModal(false)}
+          setIsModalOpen={() => setOpenShare(false)}
           handleSubmitFunction={(text, media, visibility, taggedUsers) => handleSharePost(text, media, visibility, taggedUsers, post.id, false)}
         />
       )}

@@ -30,7 +30,7 @@ const ActorHeader = ({
 
       <div className={`flex-1 min-w-0 max-w-${iconSize}`}>
         {enableLink ? (
-          <Link to={`/users/${authorId}`}>
+          <Link to={authorType === "User" ? `/users/${authorId}` : `/company/${authorId}`}>
             <h3 className="font-medium text-sm text-authorName hover:text-authorNameHover hover:underline leading-tight truncate text-left">
               {authorName}
             </h3>
