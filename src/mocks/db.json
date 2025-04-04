@@ -619,7 +619,7 @@
         "Love": 0,
         "Celebrate": 0,
         "Insightful": 0,
-        "Funny": 1,
+        "Funny": 0,
         "Support": 0,
         "Like": 0
       },
@@ -628,7 +628,7 @@
       "taggedUsers": [],
       "visibility": "Public",
       "authorType": "User",
-      "reactType": "Funny",
+      "reactType": null,
       "timestamp": "2025-03-17T23:15:11.484Z",
       "parentPost": null,
       "isSilentRepost": false
@@ -645,7 +645,7 @@
       "reactions": {
         "Love": 0,
         "Celebrate": 0,
-        "Insightful": 1,
+        "Insightful": 0,
         "Funny": 0,
         "Support": 0,
         "Like": 0
@@ -655,65 +655,10 @@
       "taggedUsers": [],
       "visibility": "Public",
       "authorType": "User",
-      "reactType": "Insightful",
+      "reactType": null,
       "timestamp": "2025-03-23T07:08:27.860Z",
       "parentPost": null,
       "isSilentRepost": false
-    },
-    {
-      "id": "1743754611843",
-      "isSaved": false,
-      "authorId": "mohsobh",
-      "authorName": "Mohamed Sobh",
-      "authorPicture": "https://media.licdn.com/dms/image/v2/D4D03AQH7Ais8BxRXzw/profile-displayphoto-shrink_100_100/profile-displayphoto-shrink_100_100/0/1721080103981?e=1747872000&v=beta&t=nDnZdgCqkI8v5B2ymXZzluMZVlF6h_o-dN1pA95Fzv4",
-      "authorBio": "Computer Engineering Student at Cairo University",
-      "content": "dummy data",
-      "media": [],
-      "reactions": {
-        "Love": 0,
-        "Celebrate": 0,
-        "Insightful": 0,
-        "Funny": 0,
-        "Support": 0,
-        "Like": 0
-      },
-      "comments": 0,
-      "shares": 0,
-      "taggedUsers": [],
-      "visibility": "",
-      "authorType": "User",
-      "reactType": null,
-      "timestamp": "2025-04-04T08:16:51.843Z",
-      "parentPost": {
-        "id": "1",
-        "isSaved": true,
-        "authorId": "mohsobh",
-        "authorName": "Mohamed Sobh",
-        "authorPicture": "https://media.licdn.com/dms/image/v2/D4D03AQH7Ais8BxRXzw/profile-displayphoto-shrink_100_100/profile-displayphoto-shrink_100_100/0/1721080103981?e=1747872000&v=beta&t=nDnZdgCqkI8v5B2ymXZzluMZVlF6h_o-dN1pA95Fzv4",
-        "authorBio": "Computer Engineering Student at Cairo University",
-        "content": "FOR REAL! During my recent spring break trip to Spain 🇪🇸, I encountered an unexpected reminder of why robust coding practices matter — all thanks to a game of Mahjong Solitaire on the in-flight entertainment system (IFE). The system, still running Android 4.X, (apparent due to the Android Skin of the UI) crashed with an SDL Assertion Error.",
-        "media": [
-          "http://localhost:5000/public/images/1743658328495.jpeg"
-        ],
-        "reactions": {
-          "Love": 0,
-          "Celebrate": 0,
-          "Insightful": 1,
-          "Funny": 0,
-          "Support": 0,
-          "Like": 0
-        },
-        "comments": 1,
-        "shares": 0,
-        "taggedUsers": [],
-        "visibility": "Public",
-        "authorType": "User",
-        "reactType": "Insightful",
-        "timestamp": "2025-03-17T23:15:11.484Z",
-        "parentPost": null,
-        "isSilentRepost": false
-      },
-      "isSilentRepost": true
     }
   ],
   "comments": [
@@ -732,13 +677,13 @@
         "Love": 0,
         "Celebrate": 0,
         "Insightful": 0,
-        "Funny": 1,
+        "Funny": 0,
         "Support": 0,
         "like": 0
       },
       "taggedUsers": [],
       "timestamp": "2025-04-04T06:49:15.152Z",
-      "reactType": "Funny"
+      "reactType": null
     },
     {
       "id": "1743749385509",
@@ -762,36 +707,6 @@
     }
   ],
   "reactions": [
-    {
-      "likeId": "1743749355152-mohsobh-Funny",
-      "postId": "1743749355152",
-      "authorId": "mohsobh",
-      "authorType": "User",
-      "type": "Funny",
-      "authorName": "Mohamed Sobh",
-      "authorPicture": "https://media.licdn.com/dms/image/v2/D4D03AQH7Ais8BxRXzw/profile-displayphoto-shrink_100_100/profile-displayphoto-shrink_100_100/0/1721080103981?e=1747872000&v=beta&t=nDnZdgCqkI8v5B2ymXZzluMZVlF6h_o-dN1pA95Fzv4",
-      "authorBio": "Computer Engineering Student at Cairo University"
-    },
-    {
-      "likeId": "1743667792401-mohsobh-Insightful",
-      "postId": "1743667792401",
-      "authorId": "mohsobh",
-      "authorType": "User",
-      "type": "Insightful",
-      "authorName": "Mohamed Sobh",
-      "authorPicture": "https://media.licdn.com/dms/image/v2/D4D03AQH7Ais8BxRXzw/profile-displayphoto-shrink_100_100/profile-displayphoto-shrink_100_100/0/1721080103981?e=1747872000&v=beta&t=nDnZdgCqkI8v5B2ymXZzluMZVlF6h_o-dN1pA95Fzv4",
-      "authorBio": "Computer Engineering Student at Cairo University"
-    },
-    {
-      "likeId": "1-mohsobh-Funny",
-      "postId": "1",
-      "authorId": "mohsobh",
-      "authorType": "User",
-      "type": "Funny",
-      "authorName": "Mohamed Sobh",
-      "authorPicture": "https://media.licdn.com/dms/image/v2/D4D03AQH7Ais8BxRXzw/profile-displayphoto-shrink_100_100/profile-displayphoto-shrink_100_100/0/1721080103981?e=1747872000&v=beta&t=nDnZdgCqkI8v5B2ymXZzluMZVlF6h_o-dN1pA95Fzv4",
-      "authorBio": "Computer Engineering Student at Cairo University"
-    }
   ],
   "jobs": [
     {

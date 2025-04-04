@@ -113,6 +113,17 @@ const PostCard = ({ setShowPostModal, setMediaIndex }) => {
         handleOpenPostModal={(index) => handleOpenPostModal(index)}
       />
 
+      {post.repostedComponents && (
+        <div className="mx-4 mb-2 border rounded-md border-cardBorder">
+          <PostCardHeader noRightItems={true} />
+          <PostContent
+            modal={false}
+            handleOpenPostModal={(index) => handleOpenPostModal(index)}
+            reposted={true}
+          />
+        </div>
+      )}
+
       <EngagementMetrics
         setShowLikes={() => setShowLikes(true)}
         setShowComments={() => setShowComments(true)}

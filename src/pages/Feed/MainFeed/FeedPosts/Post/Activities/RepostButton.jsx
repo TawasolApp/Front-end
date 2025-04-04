@@ -51,7 +51,8 @@ const RepostButton = () => {
           currentAuthorName={currentAuthorName}
           currentAuthorPicture={currentAuthorPicture}
           setIsModalOpen={() => setOpenShare(false)}
-          handleSubmitFunction={(text, media, visibility, taggedUsers) => handleSharePost(text, media, visibility, taggedUsers, post.id, false)}
+          handleSubmitFunction={(text, media, visibility, taggedUsers) => handleSharePost(text, media, visibility, taggedUsers, post.repostedComponents ? post.repostedComponents.postId : post.id, false)}
+          preventMedia={true}
         />
       )}
     </>

@@ -39,7 +39,7 @@ const PostModal = ({ mediaIndex, handleClosePostModal }) => {
         {/* Media container with black space */}
         <div className="md:flex-1 w-full h-[70vh] md:h-full bg-black flex items-center justify-center relative">
           <MediaCarousel
-            media={post.media}
+            media={post.repostedComponents ? post.repostedComponents.media : post.media}
             mediaIndex={mediaIndex}
             onClick={(e) => e.stopPropagation()}
           />
@@ -63,6 +63,16 @@ const PostModal = ({ mediaIndex, handleClosePostModal }) => {
             />
 
             <PostContent modal={true} />
+
+            {post.repostedComponents && (
+              <div className="mx-4 mb-2 border rounded-md border-cardBorder">
+                <PostCardHeader noRightItems={true} />
+                <PostContent
+                  modal={true}
+                  reposted={true}
+                />
+              </div>
+            )}
 
             <EngagementMetrics
               setShowLikes={() => setShowLikes(true)}

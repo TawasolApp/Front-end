@@ -71,8 +71,23 @@ const MainFeed = () => {
             },
           };
         }
-        // Case 3: Quoted Repost – lesa 
-        return null;
+        
+        // Case 3: Quoted Repost
+        return {
+          ...post,
+          repostedComponents: {
+            authorId: post.parentPost.authorId,
+            authorPicture: post.parentPost.authorPicture,
+            authorName: post.parentPost.authorName,
+            authorBio: post.parentPost.authorBio,
+            authorType: post.parentPost.authorType,
+            timestamp: post.parentPost.timestamp,
+            visibility: post.parentPost.visibility,
+            content: post.parentPost.content,
+            media: post.parentPost.media,
+            taggedUsers: post.parentPost.taggedUsers,
+          }
+        }
       }).filter(Boolean); // Remove nulls (from silent reposts)
 
       if (newPosts.length === 0) {
@@ -104,6 +119,7 @@ const MainFeed = () => {
 
   const handleSharePost = async (text, media, visibility, taggedUsers, parentPost = null, silentRepost = false) => {
     try {
+      console.log(parentPost)
       const response = await axiosInstance.post("posts", {
         content: text,
         media: media,
@@ -128,13 +144,28 @@ const MainFeed = () => {
           };
         } else {
           // For quoted reposts (when you implement them)
-          formattedPost = newPost;
+          formattedPost = formattedPost = {
+            ...newPost,
+            repostedComponents: {
+              postId: newPost.parentPost.id,
+              authorId: newPost.parentPost.authorId,
+              authorPicture: newPost.parentPost.authorPicture,
+              authorName: newPost.parentPost.authorName,
+              authorBio: newPost.parentPost.authorBio,
+              authorType: newPost.parentPost.authorType,
+              timestamp: newPost.parentPost.timestamp,
+              visibility: newPost.parentPost.visibility,
+              content: newPost.parentPost.content,
+              media: newPost.parentPost.media,
+              taggedUsers: newPost.parentPost.taggedUsers,
+            }
+          };
         }
       }
       
       const updatedPosts = [formattedPost, ...posts];
       setPosts(updatedPosts);
-      
+
     } catch (err) {
       console.log(`Error: ${err.message}`);
     }
