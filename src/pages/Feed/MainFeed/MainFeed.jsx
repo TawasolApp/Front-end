@@ -78,14 +78,15 @@ const MainFeed = () => {
     fetchPosts(nextPage);
   };
 
-  const handleSharePost = async (text, media, visibility, taggedUsers) => {
+  const handleSharePost = async (text, media, visibility, taggedUsers, parentPost = null, silentRepost = false) => {
     try {
       const response = await axiosInstance.post("posts", {
-        authorId: currentAuthorId,
         content: text,
         media: media,
         taggedUsers: taggedUsers,
         visibility: visibility,
+        parentPostId: parentPost,
+        isSilentRepost: silentRepost
       });
       setPosts((prevPosts) => [response.data, ...prevPosts]);
     } catch (err) {
@@ -109,6 +110,7 @@ const MainFeed = () => {
         <FeedPosts
           posts={posts}
           lastPostRef={lastPostElementRef}
+          handleSharePost={handleSharePost}
           handleDeletePost={handleDeletePost}
         />
 

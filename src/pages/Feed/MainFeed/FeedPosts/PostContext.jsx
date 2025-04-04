@@ -14,7 +14,12 @@ export const usePost = () => {
   return context;
 };
 
-export const PostProvider = ({ children, initialPost, handleDeletePost }) => {
+export const PostProvider = ({
+  children,
+  initialPost,
+  handleSharePost,
+  handleDeletePost
+}) => {
   const [post, setPost] = useState(initialPost);
   const [comments, setComments] = useState([]);
   const [commentPage, setCommentPage] = useState(1);
@@ -386,6 +391,7 @@ export const PostProvider = ({ children, initialPost, handleDeletePost }) => {
 
     /************************************************************** API **************************************************************/
     handleDeletePost,
+    handleSharePost,
     handleEditPost,
     handleSavePost,
     handleReactOnPost,

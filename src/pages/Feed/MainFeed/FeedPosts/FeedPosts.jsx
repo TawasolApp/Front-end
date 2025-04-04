@@ -1,6 +1,6 @@
 import PostContainer from "./PostContainer";
 
-const FeedPosts = ({ posts, lastPostRef, handleDeletePost }) => {
+const FeedPosts = ({ posts, lastPostRef, handleSharePost, handleDeletePost }) => {
   return (
     <div className="space-y-4 w-full">
       {posts &&
@@ -11,6 +11,7 @@ const FeedPosts = ({ posts, lastPostRef, handleDeletePost }) => {
               <div ref={lastPostRef} key={post.id || index}>
                 <PostContainer
                   post={post}
+                  handleSharePost={handleSharePost}
                   handleDeletePost={handleDeletePost}
                 />
               </div>
@@ -20,6 +21,7 @@ const FeedPosts = ({ posts, lastPostRef, handleDeletePost }) => {
             <PostContainer
               key={post.id || index}
               post={post}
+              handleSharePost={handleSharePost}
               handleDeletePost={handleDeletePost}
             />
           );

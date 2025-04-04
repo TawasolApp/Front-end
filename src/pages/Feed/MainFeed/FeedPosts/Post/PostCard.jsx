@@ -37,7 +37,6 @@ const PostCard = ({ setShowPostModal, setMediaIndex }) => {
 
   const {
     post,
-
     handleSavePost,
     handleCopyPost,
     handleEditPost,

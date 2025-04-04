@@ -608,15 +608,18 @@ server.get("/posts", (req, res) => {
 
 server.post("/posts", (req, res) => {
   // Get data from request body
-  const authorId = req.body.authorId;
   const content = req.body.text || req.body.content; // Accept either name
   const visibility = req.body.visibility;
   const taggedUsers = req.body.taggedUsers || [];
   const mediaItems = req.body.media || [];
+  const parentPostId = req.body.parentPostId || null;
+  const isSilentRepost = req.body.isSilentRepost || false;
 
   // Basic validation
-  if (!authorId || !content)
-    return res.status(400).json({ error: "authorId and content are required" });
+  if (!isSilentRepost && !content) return res.status(400).json({ error: "content is required when it is not a silent repost" });
+
+  const posts = _router.db.get("posts");
+  const parentPost = parentPostId ? posts.find({ id: parentPostId }).value() : null;
 
   const newPost = {
     id: Date.now().toString(),
@@ -642,8 +645,10 @@ server.post("/posts", (req, res) => {
     authorType: currentUser.type,
     reactType: null,
     timestamp: new Date().toISOString(),
+    parentPost: parentPost ? { ...parentPost } : null,
+    isSilentRepost: isSilentRepost
   };
-  const posts = _router.db.get("posts");
+  
   posts.push(newPost).write();
   res.status(201).json(newPost);
 });
@@ -930,6 +935,7 @@ server.delete("/posts/comments/:commentId", (req, res) => {
 
   res.status(404).json({ error: "Comment not found" });
 });
+
 /*********************************************************** COMPANY PAGE ***********************************************************/
 server.get("/companies/:companyId", (req, res) => {
   console.log("Fetching company details...");
@@ -1070,6 +1076,7 @@ server.delete("/companies/:companyId/unfollow", (req, res) => {
     company: company.value(),
   });
 });
+
 // add new job opening
 server.post("/companies/:companyId/jobs", (req, res) => {
   const { companyId } = req.params;
@@ -1107,6 +1114,7 @@ server.post("/companies/:companyId/jobs", (req, res) => {
 
   res.status(201).json(newJob);
 });
+
 // get job openings of a company
 server.get("/companies/:companyId/jobs", (req, res) => {
   const { companyId } = req.params;
@@ -1118,6 +1126,7 @@ server.get("/companies/:companyId/jobs", (req, res) => {
 
   res.status(200).json(jobs);
 });
+
 //GET- get applicants of job
 server.get("/companies/jobs/:jobId/applicants", (req, res) => {
   const { jobId } = req.params;
@@ -1148,6 +1157,7 @@ server.get("/companies/jobs/:jobId/applicants", (req, res) => {
     res.status(500).json({ message: "Failed to retrieve applicants list." });
   }
 });
+
 // GET - Get followers of a company
 server.get("/companies/:companyId/followers", (req, res) => {
   const { companyId } = req.params;
@@ -1176,6 +1186,7 @@ server.get("/companies/:companyId/followers", (req, res) => {
     res.status(500).json({ message: "Failed to retrieve company followers." });
   }
 });
+
 server.post("/companies/:companyId/managers", (req, res) => {
   const { companyId } = req.params;
   const { userId } = req.body;
