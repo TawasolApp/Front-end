@@ -21,7 +21,6 @@ const TextContent = ({ reposted }) => {
           taggedUsers={post.taggedUsers}
         />
       )}
-      
     </div>
   );
 };

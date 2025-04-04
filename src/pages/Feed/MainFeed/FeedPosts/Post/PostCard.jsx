@@ -97,7 +97,6 @@ const PostCard = ({ setShowPostModal, setMediaIndex }) => {
 
   return (
     <div className="bg-cardBackground rounded-none sm:rounded-lg border border-cardBorder mb-4">
-
       {post.headerData && (
         <SilentRepostHeader
           authorId={post.headerData.authorId}

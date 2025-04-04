@@ -55,40 +55,42 @@ const MainFeed = () => {
         params: { page: pageNum },
       });
       const rawPosts = response.data;
-      const newPosts = rawPosts.map((post) => {
-        // Case 1: Normal post
-        if (!post.parentPost) return post;
-  
-        // Case 2: Silent Repost
-        if (post.isSilentRepost) {
+      const newPosts = rawPosts
+        .map((post) => {
+          // Case 1: Normal post
+          if (!post.parentPost) return post;
+
+          // Case 2: Silent Repost
+          if (post.isSilentRepost) {
+            return {
+              ...post.parentPost, // Take the parent post as the display
+              isSilentRepost: true,
+              headerData: {
+                authorId: post.authorId,
+                authorPicture: post.authorPicture,
+                authorName: post.authorName,
+              },
+            };
+          }
+
+          // Case 3: Quoted Repost
           return {
-            ...post.parentPost, // Take the parent post as the display
-            isSilentRepost: true,
-            headerData: {
-              authorId: post.authorId,
-              authorPicture: post.authorPicture,
-              authorName: post.authorName,
+            ...post,
+            repostedComponents: {
+              authorId: post.parentPost.authorId,
+              authorPicture: post.parentPost.authorPicture,
+              authorName: post.parentPost.authorName,
+              authorBio: post.parentPost.authorBio,
+              authorType: post.parentPost.authorType,
+              timestamp: post.parentPost.timestamp,
+              visibility: post.parentPost.visibility,
+              content: post.parentPost.content,
+              media: post.parentPost.media,
+              taggedUsers: post.parentPost.taggedUsers,
             },
           };
-        }
-        
-        // Case 3: Quoted Repost
-        return {
-          ...post,
-          repostedComponents: {
-            authorId: post.parentPost.authorId,
-            authorPicture: post.parentPost.authorPicture,
-            authorName: post.parentPost.authorName,
-            authorBio: post.parentPost.authorBio,
-            authorType: post.parentPost.authorType,
-            timestamp: post.parentPost.timestamp,
-            visibility: post.parentPost.visibility,
-            content: post.parentPost.content,
-            media: post.parentPost.media,
-            taggedUsers: post.parentPost.taggedUsers,
-          }
-        }
-      }).filter(Boolean); // Remove nulls (from silent reposts)
+        })
+        .filter(Boolean); // Remove nulls (from silent reposts)
 
       if (newPosts.length === 0) {
         setHasMore(false);
@@ -117,16 +119,23 @@ const MainFeed = () => {
     fetchPosts(nextPage);
   };
 
-  const handleSharePost = async (text, media, visibility, taggedUsers, parentPost = null, silentRepost = false) => {
+  const handleSharePost = async (
+    text,
+    media,
+    visibility,
+    taggedUsers,
+    parentPost = null,
+    silentRepost = false,
+  ) => {
     try {
-      console.log(parentPost)
+      console.log(parentPost);
       const response = await axiosInstance.post("posts", {
         content: text,
         media: media,
         taggedUsers: taggedUsers,
         visibility: visibility,
         parentPostId: parentPost,
-        isSilentRepost: silentRepost
+        isSilentRepost: silentRepost,
       });
 
       const newPost = response.data; // Process the post the same way as in fetchPosts
@@ -158,14 +167,13 @@ const MainFeed = () => {
               content: newPost.parentPost.content,
               media: newPost.parentPost.media,
               taggedUsers: newPost.parentPost.taggedUsers,
-            }
+            },
           };
         }
       }
-      
+
       const updatedPosts = [formattedPost, ...posts];
       setPosts(updatedPosts);
-
     } catch (err) {
       console.log(`Error: ${err.message}`);
     }

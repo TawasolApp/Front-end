@@ -18,7 +18,7 @@ export const PostProvider = ({
   children,
   initialPost,
   handleSharePost,
-  handleDeletePost
+  handleDeletePost,
 }) => {
   const [post, setPost] = useState(initialPost);
   const [comments, setComments] = useState([]);

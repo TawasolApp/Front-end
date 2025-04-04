@@ -8,7 +8,7 @@ const PostCardHeader = ({
   menuItems,
   modal,
   handleClosePostModal,
-  noRightItems = false
+  noRightItems = false,
 }) => {
   const { post } = usePost();
 
@@ -36,7 +36,6 @@ const PostCardHeader = ({
             visibility={post.visibility}
           />
         )}
-        
       </div>
       {!noRightItems && (
         <div className="absolute right-3 top-1">

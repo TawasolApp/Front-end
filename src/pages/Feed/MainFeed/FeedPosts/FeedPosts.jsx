@@ -1,6 +1,11 @@
 import PostContainer from "./PostContainer";
 
-const FeedPosts = ({ posts, lastPostRef, handleSharePost, handleDeletePost }) => {
+const FeedPosts = ({
+  posts,
+  lastPostRef,
+  handleSharePost,
+  handleDeletePost,
+}) => {
   return (
     <div className="w-full">
       {posts &&
