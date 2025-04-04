@@ -44,13 +44,54 @@ const MainFeed = () => {
   // Function to fetch posts with pagination
   const fetchPosts = async (pageNum, reset = false) => {
     if (isFetching.current) return;
+
     try {
+      // el bta3a de bt5lih ymn3 el refetching lama el user y3od yforce scroll
       setLoading(true);
       isFetching.current = true;
+
+      // fetch new posts
       const response = await axiosInstance.get("posts", {
         params: { page: pageNum },
       });
-      const newPosts = response.data;
+      const rawPosts = response.data;
+      const newPosts = rawPosts
+        .map((post) => {
+          // Case 1: Normal post
+          if (!post.parentPost) return post;
+
+          // Case 2: Silent Repost
+          if (post.isSilentRepost) {
+            return {
+              ...post.parentPost, // Take the parent post as the display
+              isSilentRepost: true,
+              headerData: {
+                authorId: post.authorId,
+                authorPicture: post.authorPicture,
+                authorName: post.authorName,
+              },
+            };
+          }
+
+          // Case 3: Quoted Repost
+          return {
+            ...post,
+            repostedComponents: {
+              authorId: post.parentPost.authorId,
+              authorPicture: post.parentPost.authorPicture,
+              authorName: post.parentPost.authorName,
+              authorBio: post.parentPost.authorBio,
+              authorType: post.parentPost.authorType,
+              timestamp: post.parentPost.timestamp,
+              visibility: post.parentPost.visibility,
+              content: post.parentPost.content,
+              media: post.parentPost.media,
+              taggedUsers: post.parentPost.taggedUsers,
+            },
+          };
+        })
+        .filter(Boolean); // Remove nulls (from silent reposts)
+
       if (newPosts.length === 0) {
         setHasMore(false);
       } else {
@@ -78,16 +119,61 @@ const MainFeed = () => {
     fetchPosts(nextPage);
   };
 
-  const handleSharePost = async (text, media, visibility, taggedUsers) => {
+  const handleSharePost = async (
+    text,
+    media,
+    visibility,
+    taggedUsers,
+    parentPost = null,
+    silentRepost = false,
+  ) => {
     try {
+      console.log(parentPost);
       const response = await axiosInstance.post("posts", {
-        authorId: currentAuthorId,
         content: text,
         media: media,
         taggedUsers: taggedUsers,
         visibility: visibility,
+        parentPostId: parentPost,
+        isSilentRepost: silentRepost,
       });
-      setPosts((prevPosts) => [response.data, ...prevPosts]);
+
+      const newPost = response.data; // Process the post the same way as in fetchPosts
+      let formattedPost = newPost;
+      if (newPost.parentPost) {
+        if (newPost.isSilentRepost) {
+          formattedPost = {
+            ...newPost.parentPost,
+            isSilentRepost: true,
+            headerData: {
+              authorId: newPost.authorId,
+              authorPicture: newPost.authorPicture,
+              authorName: newPost.authorName,
+            },
+          };
+        } else {
+          // For quoted reposts (when you implement them)
+          formattedPost = formattedPost = {
+            ...newPost,
+            repostedComponents: {
+              postId: newPost.parentPost.id,
+              authorId: newPost.parentPost.authorId,
+              authorPicture: newPost.parentPost.authorPicture,
+              authorName: newPost.parentPost.authorName,
+              authorBio: newPost.parentPost.authorBio,
+              authorType: newPost.parentPost.authorType,
+              timestamp: newPost.parentPost.timestamp,
+              visibility: newPost.parentPost.visibility,
+              content: newPost.parentPost.content,
+              media: newPost.parentPost.media,
+              taggedUsers: newPost.parentPost.taggedUsers,
+            },
+          };
+        }
+      }
+
+      const updatedPosts = [formattedPost, ...posts];
+      setPosts(updatedPosts);
     } catch (err) {
       console.log(`Error: ${err.message}`);
     }
@@ -109,6 +195,7 @@ const MainFeed = () => {
         <FeedPosts
           posts={posts}
           lastPostRef={lastPostElementRef}
+          handleSharePost={handleSharePost}
           handleDeletePost={handleDeletePost}
         />
 

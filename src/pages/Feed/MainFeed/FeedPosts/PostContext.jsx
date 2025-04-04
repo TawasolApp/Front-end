@@ -1,4 +1,4 @@
-import { createContext, useContext, useState, useRef } from "react";
+import { createContext, useContext, useState, useRef, useEffect } from "react";
 import { axiosInstance } from "../../../../apis/axios";
 
 // TODO: change this to redux states
@@ -14,13 +14,22 @@ export const usePost = () => {
   return context;
 };
 
-export const PostProvider = ({ children, initialPost, handleDeletePost }) => {
+export const PostProvider = ({
+  children,
+  initialPost,
+  handleSharePost,
+  handleDeletePost,
+}) => {
   const [post, setPost] = useState(initialPost);
   const [comments, setComments] = useState([]);
   const [commentPage, setCommentPage] = useState(1);
   const [hasMoreComments, setHasMoreComments] = useState(true);
   const [replies, setReplies] = useState({});
   const abortControllerRef = useRef(null);
+
+  useEffect(() => {
+    setPost(initialPost);
+  }, [initialPost]);
 
   const handleEditPost = async (text, media, visibility, taggedUsers) => {
     await axiosInstance.patch(`/posts/${post.id}`, {
@@ -386,6 +395,7 @@ export const PostProvider = ({ children, initialPost, handleDeletePost }) => {
 
     /************************************************************** API **************************************************************/
     handleDeletePost,
+    handleSharePost,
     handleEditPost,
     handleSavePost,
     handleReactOnPost,

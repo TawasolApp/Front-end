@@ -21,6 +21,7 @@ const TextModal = ({
   initialTaggedUsers = [],
   initialVisiblity = "Public",
   initialMedia = [],
+  preventMedia = false,
 }) => {
   const [text, setText] = useState(initialText);
   const [visibilityType, setVisibilityType] = useState(initialVisiblity);
@@ -225,7 +226,9 @@ const TextModal = ({
               type="button"
               className="p-2 rounded-md hover:bg-buttonIconHover flex items-center gap-1 font-semibold text-textActivity hover:text-textActivityHover disabled:cursor-not-allowed"
               onClick={() => fileInputRef.current.click()}
-              disabled={media.some((url) => url.includes("/documents/"))}
+              disabled={
+                preventMedia || media.some((url) => url.includes("/documents/"))
+              }
             >
               <PermMediaIcon className="w-5 h-5" />
               <span className="text-sm">Add Media</span>

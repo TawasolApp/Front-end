@@ -1,9 +1,9 @@
 import { usePost } from "../../../PostContext";
 import MediaItem from "./MediaItem";
 
-const MediaDisplay = ({ handleOpenPostModal }) => {
+const MediaDisplay = ({ handleOpenPostModal, reposted }) => {
   const { post } = usePost();
-  const media = post.media;
+  const media = reposted ? post.repostedComponents.media : post.media;
 
   if (!media || media.length === 0) return null;
 

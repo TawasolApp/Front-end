@@ -3,7 +3,7 @@ import { PostProvider } from "./PostContext";
 import PostCard from "./Post/PostCard";
 import PostModal from "./Post/PostModal";
 
-const PostContainer = ({ post, handleDeletePost }) => {
+const PostContainer = ({ post, handleSharePost, handleDeletePost }) => {
   // TODO: change this to redux states
   const currentAuthorId = "mohsobh";
   const currentAuthorName = "Mohamed Sobh";
@@ -16,7 +16,11 @@ const PostContainer = ({ post, handleDeletePost }) => {
   const [mediaIndex, setMediaIndex] = useState(0);
 
   return (
-    <PostProvider initialPost={post} handleDeletePost={handleDeletePost}>
+    <PostProvider
+      initialPost={post}
+      handleSharePost={handleSharePost}
+      handleDeletePost={handleDeletePost}
+    >
       <PostCard
         setShowPostModal={() => setShowPostModal(true)}
         setMediaIndex={setMediaIndex}

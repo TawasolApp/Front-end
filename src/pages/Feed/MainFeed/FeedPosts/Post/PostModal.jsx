@@ -7,6 +7,7 @@ import ActivitiesHolder from "./Activities/ActivitiesHolder";
 import CommentsContainer from "./Comments/CommentsContainer";
 import ReactionsModal from "../ReactionModal/ReactionsModal";
 import MediaCarousel from "./MediaCarousel/MediaCarousel";
+import SilentRepostHeader from "./Header/SilentRepostHeader";
 import { usePost } from "../PostContext";
 
 const PostModal = ({ mediaIndex, handleClosePostModal }) => {
@@ -38,7 +39,11 @@ const PostModal = ({ mediaIndex, handleClosePostModal }) => {
         {/* Media container with black space */}
         <div className="md:flex-1 w-full h-[70vh] md:h-full bg-black flex items-center justify-center relative">
           <MediaCarousel
-            media={post.media}
+            media={
+              post.repostedComponents
+                ? post.repostedComponents.media
+                : post.media
+            }
             mediaIndex={mediaIndex}
             onClick={(e) => e.stopPropagation()}
           />
@@ -46,6 +51,14 @@ const PostModal = ({ mediaIndex, handleClosePostModal }) => {
 
         {/* Post card container */}
         <div className="w-full md:w-[500px] flex-shrink-0 border-t md:border-l md:border-t-0 border-cardBorder h-[40%] md:h-full bg-cardBackground overflow-y-auto">
+          {post.headerData && (
+            <SilentRepostHeader
+              authorId={post.headerData.authorId}
+              authorPicture={post.headerData.authorPicture}
+              authorName={post.headerData.authorName}
+            />
+          )}
+
           <div className="bg-cardBackground rounded-none">
             <PostCardHeader
               modal={true}
@@ -53,6 +66,13 @@ const PostModal = ({ mediaIndex, handleClosePostModal }) => {
             />
 
             <PostContent modal={true} />
+
+            {post.repostedComponents && (
+              <div className="mx-4 mb-2 border rounded-md border-cardBorder">
+                <PostCardHeader noRightItems={true} />
+                <PostContent modal={true} reposted={true} />
+              </div>
+            )}
 
             <EngagementMetrics
               setShowLikes={() => setShowLikes(true)}
