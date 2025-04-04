@@ -32,19 +32,27 @@ npm install
 
 ## ▶️ Running the Project
 
-Start the development server:
+#### Start the development server:
+
+1. First you need to update the base URL with backend URL:
+
+```bash
+VITE_APP_BASE_URL=https://tawasolapp.me/api/
+```
+
+2. Then you can normally run vite project:
 
 ```bash
 npm run dev
 ```
 
-or to run with a mock server:
+#### Or to run with a mock server:
 
 ```bash
 npm run mock
 ```
 
-Open your browser and navigate to http://localhost:5173.
+Then Open your browser and navigate to http://localhost:5173.
 
 ## 🧪 Testing
 
@@ -141,13 +149,11 @@ FRONT-END/
 2. Any API calls are only done through the axios instance created inside of `apis` directory.
 3. Try to use context instead of redux if the rendering tree is small.
 
-### Routes and API routes rules
-
-1. TBD, for now make sure it is clean as much as possible to be changed later.
 
 ## 🎯 Code Formatting
 
 We will be using prettier for this project
 
-1. Install prettier extension on vscode
-2. Upon finishing, right click and click format with, choose prettier
+```bash
+npx prettier --write <RELATIVE_PATH_TO_THE_FILE>
+```
