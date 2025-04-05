@@ -13,7 +13,7 @@ import VerificationPendingPage from "../pages/Authentication/VerificationPending
 import NewPasswordPage from "../pages/Authentication/NewPasswordPage";
 import WelcomePage from "../pages/Authentication/WelcomePage";
 import ChangeEmailPage from "../pages/Authentication/ChangeEmailPage";
-import EmailTokenVerificationPage from "../pages/Authentication/EmailTokenVerifocationPage";
+import VerifyChangeEmailPage from "../pages/Authentication/VerifyChangeEmailPage.jsx";
 
 import ProfilePage from "../pages/UserProfile/Components/ProfilePage";
 import ProfileConnections from "../pages/UserProfile/Components/Connections";
@@ -39,6 +39,7 @@ import ManageConnections from "../pages/MyNetwork/ManageConnections";
 import FeedContainer from "../pages/Feed/FeedContainer";
 import SavedPostsContainer from "../pages/SavedPosts/SavedPostsContainer";
 import VerifySignUpPage from "../pages/Authentication/VerifySignUpPage.jsx";
+import VerifyResetPasswordPage from "../pages/Authentication/VerifyresetPasswordPage.jsx";
 
 const App = () => {
   const isOwner = true;
@@ -61,10 +62,11 @@ const App = () => {
           element={<VerificationPendingPage />}
         />
         <Route
-          path="/auth/email-token-verification"
-          element={<EmailTokenVerificationPage />}
+          path="/auth/verify-change-email"
+          element={<VerifyChangeEmailPage />}
         />
         <Route path="/auth/verify-signup" element={<VerifySignUpPage />} />
+        <Route path="/auth/verify-reset-password" element={<VerifyResetPasswordPage />} />
         <Route path="/auth/new-password" element={<NewPasswordPage />} />
         <Route path="/auth/update-email" element={<ChangeEmailPage />} />
 
