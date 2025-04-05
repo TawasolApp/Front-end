@@ -23,7 +23,7 @@ const ForgotPasswordForm = () => {
 
     try {
       await axiosInstance.post("/auth/forgot-password", { email });
-      navigate("/auth/email-verification");
+      navigate("/auth/verification-pending");
     } catch (error) {
       if (error.response) {
         console.error("Forgot password error:", error.response.data);

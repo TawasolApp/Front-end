@@ -1,7 +1,7 @@
 import React from "react";
 import ExperienceForm from "./Forms/ExperienceForm";
 import AuthenticationHeader from "./GenericComponents/AuthenticationHeader";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { axiosInstance } from "../../apis/axios";
 import {
   setBio,
@@ -17,6 +17,7 @@ const ExperienceAuthPage = () => {
   const { email, password, firstName, lastName, location, isNewGoogleUser } =
     useSelector((state) => state.authentication);
   const navigate = useNavigate();
+  const dispatch = useDispatch();
 
   const handleSubmit = async (experienceData) => {
     let profileData = {
@@ -44,17 +45,17 @@ const ExperienceAuthPage = () => {
       ];
     }
 
-    try {
-      await axiosInstance.post("/profile", profileData);
-    } catch (error) {
-      console.error("Error submitting data:", error);
-      return;
-    }
-
     dispatch(setType("User"));
 
     // New Google user, already logged in, no profile to get
     if (isNewGoogleUser) {
+      try {
+        await axiosInstance.post("/profile", profileData);
+      } catch (error) {
+        console.error("Error submitting data:", error);
+        return;
+      }
+
       navigate("/feed");
 
       return;
@@ -66,12 +67,20 @@ const ExperienceAuthPage = () => {
         password,
       });
 
-      if (userResponse.status === 200) {
+      if (userResponse.status === 201) {
         const { userId, token, refreshToken } = userResponse.data;
 
         dispatch(setUserId(userId));
         dispatch(setToken(token));
         dispatch(setRefreshToken(refreshToken));
+
+        try {
+          await axiosInstance.post("/profile", profileData);
+        } catch (error) {
+          console.error("Error submitting data:", error);
+          console.log(profileData);
+          return;
+        }
 
         const profileResponse = await axiosInstance.get(`/profile/${userId}`);
 
