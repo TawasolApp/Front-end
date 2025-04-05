@@ -37,6 +37,7 @@ import FollowPage from "../pages/MyNetwork/FollowPage";
 import ManageConnections from "../pages/MyNetwork/ManageConnections";
 
 import FeedContainer from "../pages/Feed/FeedContainer";
+import SinglePost from "../pages/SinglePost/SinglePost";
 import SavedPostsContainer from "../pages/SavedPosts/SavedPostsContainer";
 import VerifySignUpPage from "../pages/Authentication/VerifySignUpPage.jsx";
 
@@ -83,7 +84,9 @@ const App = () => {
         <Route path="/follow" element={<FollowPage />} />
         <Route path="/manage-connections" element={<ManageConnections />} />
 
+        <Route path="/feed/:id" element={<SinglePost />} />
         <Route path="/feed" element={<FeedContainer />} />
+        
         <Route path="/my-items/saved-posts" element={<SavedPostsContainer />} />
 
         <Route path="/company/:companyId/*" element={<CompanyLayout />}>

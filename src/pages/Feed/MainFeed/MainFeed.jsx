@@ -44,7 +44,7 @@ const MainFeed = ({ API_ROUTE = "posts", showShare = true }) => {
       isFetching.current = true;
 
       // fetch new posts
-      const response = await axiosInstance.get("posts", {
+      const response = await axiosInstance.get(API_ROUTE, {
         params: { page: pageNum },
       });
       const rawPosts = response.data;
@@ -121,7 +121,7 @@ const MainFeed = ({ API_ROUTE = "posts", showShare = true }) => {
     silentRepost = false,
   ) => {
     try {
-      const response = await axiosInstance.post(API_ROUTE, {
+      const response = await axiosInstance.post("posts", {
         content: text,
         media: media,
         taggedUsers: taggedUsers,

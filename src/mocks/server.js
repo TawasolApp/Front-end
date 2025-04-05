@@ -597,6 +597,14 @@ const currentUser = {
 };
 
 /*********************************************************** POSTS ***********************************************************/
+
+server.get("/posts/:postId", (req, res) => {
+  const { postId } = req.params;
+  const post = _router.db.get("posts").find({ id: postId }).value();
+  if (!post) return res.status(404).json({ error: "Post not found" });
+  res.jsonp(post);
+});
+
 server.get("/posts", (req, res) => {
   const page = parseInt(req.query.page) || 1;
   const limit = parseInt(req.query.limit) || 10;
