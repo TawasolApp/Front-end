@@ -39,15 +39,25 @@ const SignInPage = () => {
         const profileResponse = await axiosInstance.get(`/profile/${userId}`);
 
         if (profileResponse.status === 200) {
-          const { firstName, lastName, location, bio, type, picture } =
+          const { firstName, lastName, location, bio, picture } =
             profileResponse.data;
 
-          dispatch(setFirstName(firstName));
-          dispatch(setLastName(lastName));
-          dispatch(setLocation(location));
-          dispatch(setBio(bio));
-          dispatch(setType(type));
-          dispatch(setPicture(picture));
+          dispatch(setType("User"));
+          if (firstName) {
+            dispatch(setFirstName(firstName));
+          }
+          if (lastName) {
+            dispatch(setLastName(lastName));
+          }
+          if (location) {
+            dispatch(setLocation(location));
+          }
+          if (bio) {
+            dispatch(setBio(bio));
+          }
+          if (picture) {
+            dispatch(setPicture(picture));
+          }
 
           navigate("/feed");
         }

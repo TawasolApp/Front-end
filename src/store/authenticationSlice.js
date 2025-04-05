@@ -10,7 +10,8 @@ const initialState = {
   userId: localStorage.getItem("userId") || null,
   bio: localStorage.getItem("bio") || "",
   type: localStorage.getItem("type") || "",
-  picture: localStorage.getItem("picture") || "",
+  picture: localStorage.getItem("picture") || null,
+  isNewGoogleUser: false,
 };
 
 export const authenticationSlice = createSlice({
@@ -60,6 +61,9 @@ export const authenticationSlice = createSlice({
       state.picture = action.payload;
       localStorage.setItem("picture", action.payload);
     },
+    setIsNewGoogleUser: (state, action) => {
+      state.isNewGoogleUser = action.payload;
+    },
     logout: (state) => {
       state.email = "";
       state.password = "";
@@ -72,6 +76,7 @@ export const authenticationSlice = createSlice({
       state.bio = "";
       state.type = "";
       state.picture = "";
+      state.isNewGoogleUser = false;
       localStorage.removeItem("email");
       localStorage.removeItem("firstName");
       localStorage.removeItem("lastName");
@@ -98,6 +103,7 @@ export const {
   setBio,
   setType,
   setPicture,
+  setIsNewGoogleUser,
   logout,
 } = authenticationSlice.actions;
 

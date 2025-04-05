@@ -13,6 +13,7 @@ import {
   setBio,
   setType,
   setPicture,
+  setIsNewGoogleUser,
 } from "../../../store/authenticationSlice";
 import { axiosInstance } from "../../../apis/axios";
 
@@ -39,27 +40,44 @@ const SignWithGoogle = () => {
               );
 
               if (response.status === 200) {
-                const { userId, token, refreshToken } = response.data;
+                const { userId, token, refreshToken, isNewUser } =
+                  response.data;
 
                 dispatch(setUserId(userId));
                 dispatch(setToken(token));
                 dispatch(setRefreshToken(refreshToken));
+                dispatch(setIsNewGoogleUser(isNewUser));
+
+                // New user, set-up account instead of logging in
+                if (isNewUser) {
+                  navigate("/auth/signup/name");
+                  return;
+                }
 
                 const profileResponse = await axiosInstance.get(
                   `/profile/${userId}`
                 );
 
                 if (profileResponse.status === 200) {
-                  const { email, firstName, lastName, location, bio, type, picture } =
+                  const { firstName, lastName, location, bio, picture } =
                     profileResponse.data;
 
-                  dispatch(setEmail(email));
-                  dispatch(setFirstName(firstName));
-                  dispatch(setLastName(lastName));
-                  dispatch(setLocation(location));
-                  dispatch(setBio(bio));
-                  dispatch(setType(type));
-                  dispatch(setPicture(picture));
+                  dispatch(setType("User"));
+                  if (firstName) {
+                    dispatch(setFirstName(firstName));
+                  }
+                  if (lastName) {
+                    dispatch(setLastName(lastName));
+                  }
+                  if (location) {
+                    dispatch(setLocation(location));
+                  }
+                  if (bio) {
+                    dispatch(setBio(bio));
+                  }
+                  if (picture) {
+                    dispatch(setPicture(picture));
+                  }
 
                   navigate("/feed");
                 }

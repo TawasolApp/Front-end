@@ -8,11 +8,13 @@ import AuthenticationHeader from "./GenericComponents/AuthenticationHeader";
 
 const NamePage = () => {
   const dispatch = useDispatch();
-  const { email, password } = useSelector((state) => state.authentication);
+  const { email, password, isNewGoogleUser } = useSelector(
+    (state) => state.authentication
+  );
   const navigate = useNavigate();
 
   const handleName = async (formData, captchaToken) => {
-    if (!email || !password) {
+    if ((!email || !password) && !isNewGoogleUser) {
       console.error("Error: Missing email or password. Please sign up again.");
       return;
     }
@@ -20,9 +22,15 @@ const NamePage = () => {
     dispatch(setFirstName(formData.firstName));
     dispatch(setLastName(formData.lastName));
 
+    // New Google user, account already exists, just navigate to next page
+    if (isNewGoogleUser) {
+      navigate("/auth/signup/location");
+
+      return;
+    }
+
     try {
-      console.log(email, password);
-      const response = await axiosInstance.post("/auth/register", {
+      await axiosInstance.post("/auth/register", {
         email,
         password,
         firstName: formData.firstName,
@@ -33,14 +41,14 @@ const NamePage = () => {
       navigate("/auth/signup/location");
     } catch (error) {
       console.error(
-        `Registration Failed: ${error.response?.data?.message || error.message}`,
+        `Registration Failed: ${error.response?.data?.message || error.message}`
       );
     }
   };
 
   return (
     <div className="min-h-screen flex flex-col items-center justify-center bg-mainBackground px-4 sm:px-8 md:px-12 lg:px-24 overflow-x-hidden">
-      <AuthenticationHeader hideButtons={true}/>
+      <AuthenticationHeader hideButtons={true} />
 
       <h1 className="text-4xl md:text-5xl font-normal mb-8 text-textHeavyTitle text-center max-w-screen-lg">
         Make the most of your professional life
