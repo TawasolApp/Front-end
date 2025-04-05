@@ -26,8 +26,6 @@ const PostCard = ({ setShowPostModal, setMediaIndex }) => {
   const currentAuthorName = "Mohamed Sobh";
   const currentAuthorPicture =
     "https://media.licdn.com/dms/image/v2/D4D03AQH7Ais8BxRXzw/profile-displayphoto-shrink_100_100/profile-displayphoto-shrink_100_100/0/1721080103981?e=1747872000&v=beta&t=nDnZdgCqkI8v5B2ymXZzluMZVlF6h_o-dN1pA95Fzv4";
-  const currentAuthorBio = "Computer Engineering Student at Cairo University";
-  const currentAuthorType = "User";
 
   // MODALS
   const [showLikes, setShowLikes] = useState(false);
@@ -67,7 +65,7 @@ const PostCard = ({ setShowPostModal, setMediaIndex }) => {
     },
   ];
 
-  if (post.authorId === currentAuthorId) {
+  if (post.authorId === currentAuthorId) {  // TODO: if post.authorType === "Company" ? isAdmin : post.authorId === currentAuthor
     menuItems.push({
       text: "Edit post",
       onClick: () => setShowEditModal(true),

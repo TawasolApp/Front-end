@@ -3,14 +3,7 @@ import SharePost from "./SharePost/SharePost";
 import FeedPosts from "./FeedPosts/FeedPosts";
 import { axiosInstance } from "../../../apis/axios";
 
-const MainFeed = () => {
-  // TODO: change this to redux states
-  const currentAuthorId = "mohsobh";
-  const currentAuthorName = "Mohamed Sobh";
-  const currentAuthorPicture =
-    "https://media.licdn.com/dms/image/v2/D4D03AQH7Ais8BxRXzw/profile-displayphoto-shrink_100_100/profile-displayphoto-shrink_100_100/0/1721080103981?e=1747872000&v=beta&t=nDnZdgCqkI8v5B2ymXZzluMZVlF6h_o-dN1pA95Fzv4";
-  const currentAuthorBio = "Computer Engineering Student at Cairo University";
-  const currentAuthorType = "User";
+const MainFeed = ({ API_ROUTE = "posts", showShare = true }) => {
 
   const [posts, setPosts] = useState([]);
   const [page, setPage] = useState(1);
@@ -128,8 +121,7 @@ const MainFeed = () => {
     silentRepost = false,
   ) => {
     try {
-      console.log(parentPost);
-      const response = await axiosInstance.post("posts", {
+      const response = await axiosInstance.post(API_ROUTE, {
         content: text,
         media: media,
         taggedUsers: taggedUsers,
@@ -190,7 +182,9 @@ const MainFeed = () => {
 
   return (
     <>
-      <SharePost handleSharePost={handleSharePost} />
+      {showShare && (
+        <SharePost handleSharePost={handleSharePost} />
+      )}
       <div className="sm:rounded-lg rounded-none">
         <FeedPosts
           posts={posts}
