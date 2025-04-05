@@ -28,7 +28,7 @@ const SignInPage = () => {
         password: formData.password,
       });
 
-      if (userResponse.status === 200) {
+      if (userResponse.status === 201) {
         const { userId, token, refreshToken } = userResponse.data;
 
         dispatch(setEmail(formData.email));
@@ -64,11 +64,11 @@ const SignInPage = () => {
       }
     } catch (error) {
       if (error.response && error.response.status === 400) {
-        setCredentialsError("Email not verified.");
-      } else if (error.response && error.response.status === 401) {
+        setCredentialsError("Invalid input.");
+      } else if (error.response && (error.response.status === 401 || error.response.status === 404)) {
         setCredentialsError("Invalid email or password.");
-      } else if (error.response && error.response.status === 404) {
-        setCredentialsError("User not found.");
+      } else if (error.response && error.response.status === 403) {
+        setCredentialsError("Email not verified.");
       } else {
         console.error("Login failed", error);
       }

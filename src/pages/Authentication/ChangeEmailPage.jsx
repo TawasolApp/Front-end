@@ -17,7 +17,7 @@ const ChangeEmailPage = () => {
     setCurrentPasswordError,
   ) => {
     try {
-      const response = await axiosInstance.patch(
+      await axiosInstance.patch(
         "/users/request-email-update",
         {
           newEmail,
@@ -26,6 +26,7 @@ const ChangeEmailPage = () => {
       );
 
       dispatch(setEmail(newEmail));
+      console.log("requested update email");
 
       navigate("/auth/verification-pending");
     } catch (error) {
