@@ -14,9 +14,8 @@ import {
 import { useNavigate } from "react-router-dom";
 
 const ExperienceAuthPage = () => {
-  const { email, password, firstName, lastName, location } = useSelector(
-    (state) => state.authentication
-  );
+  const { email, password, firstName, lastName, location, isNewGoogleUser } =
+    useSelector((state) => state.authentication);
   const navigate = useNavigate();
 
   const handleSubmit = async (experienceData) => {
@@ -52,6 +51,15 @@ const ExperienceAuthPage = () => {
       return;
     }
 
+    dispatch(setType("User"));
+
+    // New Google user, already logged in, no profile to get
+    if (isNewGoogleUser) {
+      navigate("/feed");
+
+      return;
+    }
+
     try {
       const userResponse = await axiosInstance.post("/auth/login", {
         email,
@@ -68,11 +76,14 @@ const ExperienceAuthPage = () => {
         const profileResponse = await axiosInstance.get(`/profile/${userId}`);
 
         if (profileResponse.status === 200) {
-          const { bio, type, picture } = profileResponse.data;
+          const { bio, picture } = profileResponse.data;
 
-          dispatch(setBio(bio));
-          dispatch(setType(type));
-          dispatch(setPicture(picture));
+          if (bio) {
+            dispatch(setBio(bio));
+          }
+          if (picture) {
+            dispatch(setPicture(picture));
+          }
 
           navigate("/feed");
         }
