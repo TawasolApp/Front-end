@@ -25,3 +25,7 @@ coverage
 *.njsproj
 *.sln
 *.sw?
+
+# Cypress test results
+cypress/screenshots/
+cypress/videos/

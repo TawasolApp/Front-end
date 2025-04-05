@@ -54,7 +54,7 @@ npm run mock
 
 Then Open your browser and navigate to http://localhost:5173.
 
-## 🧪 Testing
+## 🧪 Unit Testing
 
 Run tests with Vitest:
 
@@ -66,6 +66,22 @@ You can also get coverage after running the tests:
 
 ```bash
 npm run coverage
+```
+
+## 🧪 E2E Testing
+
+First, you have to start the development server (by following the instructions listed earlier).
+
+Run tests with Cypress in GUI mode:
+
+```bash
+npm run test:e2e
+```
+
+Run tests with Cypress in CLI (batch) mode:
+
+```bash
+npm run test:e2e:headless
 ```
 
 ## 📝 Commit Format
@@ -97,6 +113,7 @@ Use the following to name your created branch
 | develop | Latest development branch with all merged features. |
 | feature/{feature-name} | New feature implementation. |
 | bugfix/{bug-name} | Fix bug before merging into develop. |
+| test/{feature-name} | New E2E tests for feature. | 
 
 ➡️ **Pull Requests** must be created in the `develop` branch for review and testing before merging into main
 
@@ -116,6 +133,10 @@ FRONT-END/
 │   ├── tests/             # Test files for the application
 │   ├── utils/             # Utility functions and helpers
 │   └── setup-tests.js     # Configuration for test environment
+├── cypress/               # Cypress E2E testing directory
+│   ├── e2e/               # Cypress test files
+│   ├── fixtures/          # Test data for Cypress
+│   └── support/           # Setup and custom commands
 ├── .gitignore             # Specifies files ignored by git
 ├── eslint.config.js       # ESLint configuration for code linting
 ├── package.json           # Defines project dependencies and scripts
