@@ -27,7 +27,7 @@ const ChangeEmailPage = () => {
 
       dispatch(setEmail(newEmail));
 
-      navigate("/auth/email-verification");
+      navigate("/auth/verification-pending");
     } catch (error) {
       if (error.response && error.response.status === 400) {
         setCurrentPasswordError("Incorrect password.");

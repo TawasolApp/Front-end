@@ -2,6 +2,7 @@ import { createSlice } from "@reduxjs/toolkit";
 
 const initialState = {
   email: localStorage.getItem("email") || "",
+  password: localStorage.getItem("password") || "",
   firstName: localStorage.getItem("firstName") || "",
   lastName: localStorage.getItem("lastName") || "",
   location: localStorage.getItem("location") || "",
@@ -11,7 +12,7 @@ const initialState = {
   bio: localStorage.getItem("bio") || "",
   type: localStorage.getItem("type") || "",
   picture: localStorage.getItem("picture") || null,
-  isNewGoogleUser: false,
+  isNewGoogleUser: localStorage.getItem("isNewGoogleUser") || false,
 };
 
 export const authenticationSlice = createSlice({
@@ -36,6 +37,7 @@ export const authenticationSlice = createSlice({
     },
     setPassword: (state, action) => {
       state.password = action.payload;
+      localStorage.setItem("password", action.payload);
     },
     setToken: (state, action) => {
       state.token = action.payload;
@@ -63,6 +65,7 @@ export const authenticationSlice = createSlice({
     },
     setIsNewGoogleUser: (state, action) => {
       state.isNewGoogleUser = action.payload;
+      localStorage.setItem("isNewGoogleUser", action.payload);
     },
     logout: (state) => {
       state.email = "";
@@ -87,6 +90,7 @@ export const authenticationSlice = createSlice({
       localStorage.removeItem("bio");
       localStorage.removeItem("type");
       localStorage.removeItem("picture");
+      localStorage.removeItem("isNewGoogleUser");
     },
   },
 });

@@ -1,8 +1,10 @@
 import React, { useState } from "react";
 import { useSelector } from "react-redux";
 
-const EmailVerificationForm = () => {
+const VerificationPendingForm = () => {
   const { email } = useSelector((state) => state.authentication);
+
+  // TODO: handle resend code
 
   const serializeEmail = (email) => {
     return email[0] + "*****@" + email.split("@")[1];
@@ -39,4 +41,4 @@ const EmailVerificationForm = () => {
   );
 };
 
-export default EmailVerificationForm;
+export default VerificationPendingForm;

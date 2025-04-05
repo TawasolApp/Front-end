@@ -16,7 +16,7 @@ const SignUpPage = () => {
         email: formData.email,
       });
 
-      if (response.status === 200) {
+      if (response.status === 201) {
         setEmailError("");
         dispatch(setEmail(formData.email));
         dispatch(setPassword(formData.password));
@@ -28,10 +28,10 @@ const SignUpPage = () => {
         if (error.response.status === 409) {
           setEmailError("Email already in use.");
         } else {
-          console.log("Unexpected error:", error.response.status);
+          console.error("Unexpected error:", error.response.status);
         }
       } else {
-        console.log("Network error or server is down");
+        console.error("Network error or server is down");
       }
     }
   };
