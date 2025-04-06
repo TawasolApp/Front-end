@@ -9,7 +9,6 @@ import ReactInsightful from "../assets/icons/react-insightful.svg?react";
 import ReactFunny from "../assets/icons/react-funny.svg?react";
 import ReactLove from "../assets/icons/react-love.svg?react";
 import ReactSupport from "../assets/icons/react-support.svg?react";
-import TawasolApp from "../assets/icons/tawasol-app.svg?react";
 
 const ICONS_MAP = {
   "in-black": InBlack,
@@ -20,7 +19,6 @@ const ICONS_MAP = {
   "react-funny": ReactFunny,
   "react-love": ReactLove,
   "react-support": ReactSupport,
-  "tawasol-app": TawasolApp,
 };
 
 export const getIconComponent = (iconName) => {
