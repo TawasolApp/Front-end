@@ -37,6 +37,7 @@ const SignWithGoogle = () => {
                 "/auth/social-login/google",
                 {
                   accessToken: tokenResponse.access_token,
+                  isAndroid: false,
                 }
               );
               console.log(response);
