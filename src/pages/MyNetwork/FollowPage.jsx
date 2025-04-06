@@ -7,24 +7,45 @@ const FollowPage = () => {
   const [userToUnfollow, setUserToUnfollow] = useState(null);
   const [following, setFollowing] = useState([]);
   const [followers, setFollowers] = useState([]);
+  const [pagination, setPagination] = useState({
+    page: 1,
+    limit: 10
+  });
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState(null);
 
-  // Fetch data when component mounts and when tab changes
+  // Fetch data when component mounts and when tab or pagination changes
   useEffect(() => {
     const fetchData = async () => {
+      setLoading(true);
+      setError(null);
       try {
         if (activeTab === "following") {
-          const response = await axiosInstance.get("/connections/following");
+          const response = await axiosInstance.get("/connections/following", {
+            params: {
+              page: pagination.page,
+              limit: pagination.limit
+            }
+          });
           setFollowing(response.data);
         } else {
-          const response = await axiosInstance.get("/connections/followers");
+          const response = await axiosInstance.get("/connections/followers", {
+            params: {
+              page: pagination.page,
+              limit: pagination.limit
+            }
+          });
           setFollowers(response.data);
         }
       } catch (error) {
+        setError(`Failed to load ${activeTab} list.`);
         console.error("Error fetching data:", error);
+      } finally {
+        setLoading(false);
       }
     };
     fetchData();
-  }, [activeTab]);
+  }, [activeTab, pagination.page, pagination.limit]);
 
   const handleUnfollow = async (userId) => {
     try {
@@ -32,6 +53,7 @@ const FollowPage = () => {
       setFollowing(following.filter((user) => user.userId !== userId));
       setShowUnfollowModal(false);
     } catch (error) {
+      setError("Failed to unfollow user.");
       console.error("Error unfollowing user:", error);
     }
   };
@@ -54,12 +76,8 @@ const FollowPage = () => {
         setFollowing([...following, response.data]);
       }
     } catch (error) {
-      console.error("Detailed follow error:", {
-        message: error.message,
-        response: error.response?.data,
-        status: error.response?.status,
-        config: error.config,
-      });
+      setError("Failed to follow user.");
+      console.error("Detailed follow error:", error);
     }
   };
 
@@ -74,6 +92,10 @@ const FollowPage = () => {
 
   const isFollowing = (userId) => {
     return following.some((user) => user.userId === userId);
+  };
+
+  const handlePageChange = (newPage) => {
+    setPagination(prev => ({...prev, page: newPage}));
   };
 
   return (
@@ -106,7 +128,7 @@ const FollowPage = () => {
               Unfollow
             </h3>
             <p className="text-textContent py-3 border-b border-cardBorder">
-              You are about to unfollow {userToUnfollow.username}
+              You are about to unfollow {userToUnfollow.firstName} {userToUnfollow.lastName}
             </p>
             <div className="flex justify-end space-x-3 pt-3">
               <button
@@ -141,10 +163,13 @@ const FollowPage = () => {
                 ? "text-listSelected border-b-2 border-listSelected"
                 : "text-textPlaceholder"
             }`}
-            onClick={() => setActiveTab("following")}
+            onClick={() => {
+              setActiveTab("following");
+              setPagination(prev => ({...prev, page: 1}));
+            }}
             data-testid="followingButton"
           >
-            Following
+            Following 
           </button>
           <button
             className={`px-3 py-1 sm:px-4 sm:py-2 font-semibold text-sm sm:text-base ${
@@ -152,16 +177,23 @@ const FollowPage = () => {
                 ? "text-listSelected border-b-2 border-listSelected"
                 : "text-textPlaceholder"
             }`}
-            onClick={() => setActiveTab("followers")}
+            onClick={() => {
+              setActiveTab("followers");
+              setPagination(prev => ({...prev, page: 1}));
+            }}
           >
-            Followers
+            Followers 
           </button>
         </div>
 
-        {activeTab === "following" ? (
+        {loading ? (
+          <p className="text-center text-textPlaceholder mt-4">Loading...</p>
+        ) : error ? (
+          <p className="text-center text-error mt-4">{error}</p>
+        ) : activeTab === "following" ? (
           <div>
             <p className="text-sm text-textPlaceholder mb-4">
-              You are following {following.length} people out of your network
+              You are following {following.length} people
             </p>
 
             <div className="pt-2">
@@ -172,13 +204,20 @@ const FollowPage = () => {
                     className="mb-4 pb-4 border-b border-cardBorder"
                   >
                     <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-2">
-                      <div className="w-full sm:w-3/4 overflow-hidden">
-                        <h3 className="font-bold text-textHeavyTitle">
-                          {user.username}
-                        </h3>
-                        <p className="text-sm text-textActivity truncate">
-                          {user.headline}
-                        </p>
+                      <div className="flex items-center gap-3 w-full sm:w-3/4 overflow-hidden">
+                        <img
+                          src={user.profilePicture}
+                          alt={`${user.firstName} ${user.lastName}`}
+                          className="w-10 h-10 rounded-full object-cover"
+                        />
+                        <div>
+                          <h3 className="font-bold text-textHeavyTitle">
+                            {user.firstName} {user.lastName}
+                          </h3>
+                          <p className="text-sm text-textActivity truncate">
+                            {user.headline}
+                          </p>
+                        </div>
                       </div>
                       <button
                         onClick={() => promptUnfollow(user)}
@@ -191,7 +230,7 @@ const FollowPage = () => {
                   </div>
                 ))
               ) : (
-                <p className="text-textPlaceholder">
+                <p className="text-textPlaceholder p-4 text-center">
                   You're not following anyone yet.
                 </p>
               )}
@@ -210,13 +249,20 @@ const FollowPage = () => {
                   className="mb-4 pb-4 border-b border-cardBorder"
                 >
                   <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-2">
-                    <div className="w-full sm:w-3/4 overflow-hidden">
-                      <h3 className="font-bold text-textHeavyTitle">
-                        {user.username}
-                      </h3>
-                      <p className="text-sm text-textActivity truncate">
-                        {user.headline}
-                      </p>
+                    <div className="flex items-center gap-3 w-full sm:w-3/4 overflow-hidden">
+                      <img
+                        src={user.profilePicture}
+                        alt={`${user.firstName} ${user.lastName}`}
+                        className="w-10 h-10 rounded-full object-cover"
+                      />
+                      <div>
+                        <h3 className="font-bold text-textHeavyTitle">
+                          {user.firstName} {user.lastName}
+                        </h3>
+                        <p className="text-sm text-textActivity truncate">
+                          {user.headline}
+                        </p>
+                      </div>
                     </div>
                     {isFollowing(user.userId) ? (
                       <button
@@ -237,12 +283,33 @@ const FollowPage = () => {
                 </div>
               ))
             ) : (
-              <p className="text-textPlaceholder">
+              <p className="text-textPlaceholder p-4 text-center">
                 You don't have any followers yet.
               </p>
             )}
           </div>
         )}
+
+        {/* Pagination Controls */}
+        <div className="flex justify-center mt-4">
+          <button
+            onClick={() => handlePageChange(pagination.page - 1)}
+            disabled={pagination.page === 1}
+            className="px-4 py-2 mx-1 border rounded disabled:opacity-50"
+          >
+            Previous
+          </button>
+          <span className="px-4 py-2">
+            Page {pagination.page}
+          </span>
+          <button
+            onClick={() => handlePageChange(pagination.page + 1)}
+            disabled={(activeTab === "following" ? following : followers).length < pagination.limit}
+            className="px-4 py-2 mx-1 border rounded disabled:opacity-50"
+          >
+            Next
+          </button>
+        </div>
       </div>
     </div>
   );

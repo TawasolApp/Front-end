@@ -4,27 +4,47 @@ import { axiosInstance } from "../../apis/axios";
 import PeopleIcon from "@mui/icons-material/People";
 import BlockIcon from "@mui/icons-material/Block";
 import SwitchAccountIcon from "@mui/icons-material/SwitchAccount";
+import RecommendedUsers from "./RecommendedUsers";
 
 const NetworkBox = () => {
   const navigate = useNavigate();
   const [pendingRequests, setPendingRequests] = useState([]);
+  const [sentRequests, setSentRequests] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [pagination, setPagination] = useState({
+    page: 1,
+    limit: 10
+  });
 
   useEffect(() => {
     const fetchPendingRequests = async () => {
       try {
-        const response = await axiosInstance.get("/connections/pending");
-        setPendingRequests(response.data);
+        const [pendingRes, sentRes] = await Promise.all([
+          axiosInstance.get("/connections/pending", {
+            params: {
+              page: pagination.page,
+              limit: pagination.limit
+            }
+          }),
+          axiosInstance.get("/connections/sent", {
+            params: {
+              page: pagination.page,
+              limit: pagination.limit
+            }
+          })
+        ]);
+        setPendingRequests(pendingRes.data);
+        setSentRequests(sentRes.data);
       } catch (err) {
-        setError("Failed to load pending requests.");
+        setError("Failed to load connection requests.");
       } finally {
         setLoading(false);
       }
     };
 
     fetchPendingRequests();
-  }, []);
+  }, [pagination.page, pagination.limit]);
 
   const handleAccept = async (userId) => {
     try {
@@ -51,6 +71,29 @@ const NetworkBox = () => {
     } catch (error) {
       console.error(
         "Failed to ignore connection:",
+        error.response?.data?.message || error.message,
+      );
+    }
+  };
+
+  const handleConnect = async (userId) => {
+    try {
+      // Check if request already sent
+      const isAlreadySent = sentRequests.some(request => request.userId === userId);
+      
+      if (isAlreadySent) {
+        // Remove pending request
+        await axiosInstance.delete(`/connections/${userId}/pending`);
+        setSentRequests(prev => prev.filter(request => request.userId !== userId));
+      } else {
+        // Send new connection request
+        await axiosInstance.post("/connections", { userId });
+        const response = await axiosInstance.get(`/users/${userId}`);
+        setSentRequests(prev => [...prev, response.data]);
+      }
+    } catch (error) {
+      console.error(
+        "Failed to handle connection:",
         error.response?.data?.message || error.message,
       );
     }
@@ -120,23 +163,27 @@ const NetworkBox = () => {
               </Link>
             </div>
 
-            {pendingRequests.length > 0 ? (
+            {loading ? (
+              <div className="p-6 text-center text-textPlaceholder">Loading...</div>
+            ) : error ? (
+              <div className="p-6 text-center text-error">{error}</div>
+            ) : pendingRequests.length > 0 ? (
               <div className="divide-y divide-cardBorder">
                 {pendingRequests.map((request) => (
-                  <div key={request.id} className="p-6">
+                  <div key={request.userId} className="p-6">
                     <div className="flex items-center justify-between">
                       <div className="flex items-center space-x-4">
                         <img
-                          src={request.imageUrl}
-                          alt={request.username}
+                          src={request.profilePicture}
+                          alt={`${request.firstName} ${request.lastName}`}
                           className="w-12 h-12 rounded-full object-cover"
                         />
                         <div>
                           <h3 className="font-semibold text-textHeavyTitle">
-                            {request.username}
+                            {request.firstName} {request.lastName}
                           </h3>
                           <p className="text-sm text-textPlaceholder">
-                            {request.experience}
+                            {request.headline}
                           </p>
                         </div>
                       </div>
@@ -163,7 +210,36 @@ const NetworkBox = () => {
                 No pending invitations
               </div>
             )}
+
+            {/* Pagination Controls */}
+            {pendingRequests.length > 0 && (
+              <div className="flex justify-center p-4 border-t border-cardBorder">
+                <button
+                  onClick={() => setPagination(prev => ({...prev, page: prev.page - 1}))}
+                  disabled={pagination.page === 1}
+                  className="px-4 py-2 mx-1 border rounded disabled:opacity-50"
+                >
+                  Previous
+                </button>
+                <span className="px-4 py-2">
+                  Page {pagination.page}
+                </span>
+                <button
+                  onClick={() => setPagination(prev => ({...prev, page: prev.page + 1}))}
+                  disabled={pendingRequests.length < pagination.limit}
+                  className="px-4 py-2 mx-1 border rounded disabled:opacity-50"
+                >
+                  Next
+                </button>
+              </div>
+            )}
           </div>
+
+          {/* Recommended Users Box */}
+          <RecommendedUsers 
+            onConnect={handleConnect} 
+            sentRequests={sentRequests} 
+          />
 
           {/* Career Growth Box */}
           <div className="bg-cardBackground rounded-lg shadow-md border border-cardBorder p-6">
