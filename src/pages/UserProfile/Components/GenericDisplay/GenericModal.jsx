@@ -165,7 +165,24 @@ function GenericModal({
       //   delete formData.skill;
 
       // }
-      onSave({ ...formData });
+
+      const monthIndex = (month) => months.indexOf(month);
+      const formatDate = (month, year, type) => {
+        if (!month || !year) return "";
+        const monthNum = String(monthIndex(month) + 1).padStart(2, "0");
+        return `${year}-${monthNum}-${type === "start" ? "01" : "30"}`;
+      };
+
+      const updatedFormData = {
+        ...formData,
+        startDate: formatDate(formData.startMonth, formData.startYear, "start"),
+        endDate:
+          formData.endMonth && formData.endYear
+            ? formatDate(formData.endMonth, formData.endYear, "end")
+            : "",
+      };
+
+      onSave(updatedFormData);
     }
   };
 
@@ -200,6 +217,7 @@ function GenericModal({
           {type === "experience" && (
             <ExperienceFields
               formData={formData}
+              setFormData={setFormData} //  add this!
               handleChange={handleChange}
               errors={errors}
             />
@@ -215,6 +233,7 @@ function GenericModal({
           {type === "certifications" && (
             <CertificationsFields
               formData={formData}
+              setFormData={setFormData}
               handleChange={handleChange}
               errors={errors}
             />
@@ -392,3 +411,12 @@ function GenericModal({
   );
 }
 export default GenericModal;
+
+//  Helper function to display formatted date like 'Feb 2024'
+export function displayDate(date) {
+  if (!date) return "";
+  return new Date(date).toLocaleDateString("en-US", {
+    year: "numeric",
+    month: "short",
+  });
+}

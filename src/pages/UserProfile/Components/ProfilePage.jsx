@@ -14,7 +14,7 @@ function ProfilePage() {
   const experienceRef = useRef(null);
 
   return (
-    <div className="bg-background pt-4 pb-4">
+    <div className="bg-mainBackground pt-4 pb-4">
       <ProfileHeader
         user={user}
         isOwner={isOwner}

@@ -6,13 +6,19 @@ function ProfilePicture({
   onImageClick,
   onUpload,
 }) {
+  const isDefault = profilePictureSrc?.includes("defaultProfilePicture");
+
   return (
     <div className="relative w-28 h-28 sm:w-32 sm:h-32 rounded-full  border-4 border-white shadow-lg bg-white">
       <img
         src={profilePictureSrc}
         alt="Profile"
         className="w-full h-full object-cover cursor-pointer rounded-full "
-        onClick={() => onImageClick(profilePictureSrc)}
+        onClick={() => {
+          if (!isDefault) {
+            onImageClick(profilePictureSrc);
+          }
+        }}
       />
       {isOwner && (
         <button

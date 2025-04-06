@@ -2,122 +2,120 @@
   "users": [
     {
       "id": "1",
-      "firstName": "Jana",
-      "lastName": "Samy",
+      "firstName": "fatma",
+      "lastName": "Gamal",
       "profilePicture": null,
       "coverPhoto": null,
       "resume": "https://linkedin.com/in/fatma-gamal",
-      "headline": "Student at Cairo University faculty of Engineering",
-      "bio": "I am a motivated student ",
+      "headline": "Software Engineering Student at Cairo University",
+      "bio": "I'm a motivated and detail-oriented engineering student passionate about AI, web development, and building real-world software systems.",
       "country": "Egypt",
       "city": "Giza",
-      "industry": "Computer ",
-      "connectionCount": 50,
+      "industry": "Software Engineering",
+      "connectionCount": 120,
       "email": "fatma@example.com",
       "visibility": "Public",
       "experience": [
         {
-          "id": "6d70b97c-65bb-4173-af67-f16cf61a0c9b",
-          "title": "Software Engineer",
+          "id": "ea8d9d1e-2c04-4ce0-99f3-68e0e28a6a42",
+          "title": "Software Engineer Intern",
           "company": "Google",
+          "companyLogo": "https://logo.clearbit.com/google.com",
           "location": "San Francisco, CA",
-          "startMonth": "July",
-          "startYear": "2015",
-          "description": "Studied software engineering and AI."
+          "startDate": "2023-07-01",
+          "endDate": "2023-09-30",
+          "description": "Worked on backend microservices and API development using Go and Kubernetes."
         },
         {
-          "id": "exp-1",
-          "title": "UI/UX Intern",
+          "id": "6d220b10-e48c-4398-b4aa-85da48d4a04a",
+          "title": "Frontend Developer Intern",
           "company": "Microsoft",
-          "location": "Remote",
-          "startMonth": "March",
-          "startYear": "2021",
-          "endMonth": "September",
-          "endYear": "2021",
-          "description": "Designed UI components and improved user flows.",
-          "currentlyWorking": true,
-          "employmentType": "Internship"
+          "companyLogo": "https://logo.clearbit.com/microsoft.com",
+          "location": "Cairo, Egypt",
+          "startMonth": "June",
+          "startYear": "2022",
+          "endMonth": "August",
+          "endYear": "2022",
+          "startDate": "2022-06-01",
+          "endDate": "2022-08-30",
+          "description": "Contributed to internal dashboard development using React, TypeScript and Fluent UI."
         },
         {
-          "id": "1743464891510",
+          "id": "1743960821501",
+          "title": "ff",
           "company": "elsewedy electric",
-          "startMonth": "November",
-          "startYear": "2008",
-          "title": "zgd"
+          "companyLogo": "https://media.licdn.com/dms/image/v2/C560BAQF2a3ilv6hXXw/company-logo_200_200/company-logo_200_200/0/1631303609923?e=1747872000&v=beta&t=M9wVeJt_Zk6nNOEnz5X6PQVoUzb8wzaSFYK9JeRNA60",
+          "startMonth": "December",
+          "startYear": "2009",
+          "startDate": "2009-12-01",
+          "endDate": ""
         }
       ],
       "education": [
         {
-          "id": "959a50e8-2c55-4d85-84a0-ab1c414aa7e3",
-          "institution": "Stanford Uni",
-          "degree": "Master's",
-          "grade": "4.0 GPA",
-          "startMonth": "November",
-          "startYear": "2008",
-          "endMonth": "December",
-          "endYear": "2015"
+          "id": "6543dfa3-aa91-49c3-8331-cc7463d33e42",
+          "institution": "Cairo University",
+          "degree": "Bachelor's",
+          "fieldOfStudy": "Computer Engineering",
+          "grade": "3.9 GPA",
+          "startDate": "2020-09-01",
+          "endDate": "2025-06-30"
         },
         {
-          "id": "1742918830957",
-          "institution": "Harvard University",
-          "degree": "Bachelor's",
-          "grade": "4.0 GPA",
-          "startMonth": "November",
-          "startYear": "2008"
+          "id": "75109d84-3f9e-4a96-afd1-15b2f40b3a9a",
+          "institution": "Stanford University",
+          "degree": "Summer Program",
+          "fieldOfStudy": "AI and Machine Learning",
+          "grade": "",
+          "startDate": "2023-06-01",
+          "endDate": "2023-08-31"
         }
       ],
       "certifications": [
         {
+          "id": "1377c452-3258-4067-812a-4bcb2ab78289",
+          "name": "AWS Certified Solutions Architect – Associate",
+          "issuingOrganization": "Amazon Web Services (AWS)",
+          "companyLogo": "https://logo.clearbit.com/aws.amazon.com",
+          "startDate": "2024-03-01",
+          "endDate": "2027-03-01"
+        },
+        {
+          "id": "65ffb60f-ff54-4be1-82df-67afdad7c31c",
           "name": "Google Cloud Professional Data Engineer",
-          "company": "Google Cloud",
-          "issueDate": "2022-11-15",
-          "expirationDate": "2025-11-15",
-          "id": "14a15be0-c040-4421-b7ec-ce6303888c8d",
-          "startMonth": "November",
-          "startYear": "2008",
-          "issuingOrganization": "Amazon"
-        },
-        {
-          "id": "cert-2",
-          "name": "AWS Certified Solutions Architect",
-          "issuingOrganization": "Amazon Web Services",
-          "startMonth": "January",
-          "startYear": "2023"
+          "issuingOrganization": "Google Cloud",
+          "companyLogo": "https://logo.clearbit.com/cloud.google.com",
+          "startDate": "2023-01-01",
+          "endDate": "2026-01-01",
+          "credentialId": "GCP123456789",
+          "credentialUrl": "https://www.credential.net/google-cloud-data-engineer"
         }
       ],
-      "planDetails": [
-        {
-          "planType": "",
-          "startDate": "",
-          "expiryDate": "",
-          "autoRenewal": "",
-          "cancelDate": ""
-        },
-        {
-          "planType": "",
-          "startDate": "",
-          "expiryDate": "",
-          "autoRenewal": "",
-          "cancelDate": ""
-        }
-      ],
-      "planStatistics": {
-        "messageCount": "",
-        "applicationCount": ""
-      },
-      "selectedExperienceIndex": 0,
-      "selectedEducationIndex": 0,
       "skills": [
         {
-          "skill": "Kotlin "
+          "skill": "JavaScript",
+          "endorsements": 5
         },
         {
-          "skill": "dggsxx"
+          "skill": "React",
+          "endorsements": 7
         },
         {
-          "skill": "gedzf"
+          "skill": "Python",
+          "endorsements": 9
+        },
+        {
+          "skill": "Git & GitHub",
+          "endorsements": 4
         }
-      ]
+      ],
+      "planDetails": [],
+      "planStatistics": {
+        "messageCount": "12",
+        "applicationCount": "5"
+      },
+      "selectedExperienceIndex": 0,
+      "selectedEducationIndex": 0
     },
     {
       "id": "2",

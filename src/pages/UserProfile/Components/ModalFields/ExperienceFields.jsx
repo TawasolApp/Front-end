@@ -1,12 +1,13 @@
 import React, { useEffect, useState } from "react";
 import { axiosInstance as axios } from "../../../../apis/axios";
-
+import defaultExperienceImage from "../../../../assets/images/defaultExperienceImage.png";
 function ExperienceFields({ formData, setFormData, handleChange, errors }) {
   const [companies, setCompanies] = useState([]);
   const [inputValue, setInputValue] = useState(formData.company || "");
   const [showDropdown, setShowDropdown] = useState(false);
   const [highlightedIndex, setHighlightedIndex] = useState(-1);
 
+  // Fetch companies from server
   useEffect(() => {
     axios
       .get("/companies")
@@ -14,10 +15,15 @@ function ExperienceFields({ formData, setFormData, handleChange, errors }) {
       .catch((err) => console.error("Error fetching companies:", err));
   }, []);
 
+  // Sync input with formData (for edit mode)
+  useEffect(() => {
+    setInputValue(formData.company || "");
+  }, [formData.company]);
+
   const companyOptions = companies.map((company) => ({
     label: company.name,
     value: company.name,
-    logo: company.logo || "https://via.placeholder.com/20",
+    logo: company.logo || defaultExperienceImage,
   }));
 
   const filteredOptions = inputValue
@@ -42,7 +48,6 @@ function ExperienceFields({ formData, setFormData, handleChange, errors }) {
         value={formData.title || ""}
         onChange={handleChange}
         className="border p-2 w-full rounded-md mb-2 bg-boxbackground text-companyheader2"
-        required
       />
       {errors.title && (
         <p className="text-red-600 text-sm mb-2">{errors.title}</p>
@@ -88,7 +93,6 @@ function ExperienceFields({ formData, setFormData, handleChange, errors }) {
             setShowDropdown(true);
             setHighlightedIndex(-1);
           }}
-          //  add those to act like a drop down menu for now
           onKeyDown={(e) => {
             if (e.key === "ArrowDown") {
               e.preventDefault();
@@ -105,7 +109,11 @@ function ExperienceFields({ formData, setFormData, handleChange, errors }) {
               if (highlightedIndex >= 0) {
                 const selected = filteredOptions[highlightedIndex];
                 setInputValue(selected.label);
-                setFormData((prev) => ({ ...prev, company: selected.label }));
+                setFormData((prev) => ({
+                  ...prev,
+                  company: selected.label,
+                  companyLogo: selected.logo,
+                }));
                 setShowDropdown(false);
               }
             } else if (e.key === "Escape") {
@@ -117,6 +125,9 @@ function ExperienceFields({ formData, setFormData, handleChange, errors }) {
           className="border p-2 w-full rounded-md mb-2 bg-boxbackground text-companyheader2"
           autoComplete="off"
         />
+        {errors.company && (
+          <p className="text-red-600 text-sm mb-2">{errors.company}</p>
+        )}
 
         {showDropdown && filteredOptions.length > 0 && (
           <ul className="absolute z-10 w-full bg-white border border-gray-300 rounded shadow-md max-h-48 overflow-y-auto">
@@ -125,7 +136,11 @@ function ExperienceFields({ formData, setFormData, handleChange, errors }) {
                 key={index}
                 onMouseDown={() => {
                   setInputValue(option.label);
-                  setFormData((prev) => ({ ...prev, company: option.label }));
+                  setFormData((prev) => ({
+                    ...prev,
+                    company: option.label,
+                    companyLogo: option.logo,
+                  }));
                   setShowDropdown(false);
                 }}
                 className={`flex items-center p-2 cursor-pointer ${
@@ -144,7 +159,7 @@ function ExperienceFields({ formData, setFormData, handleChange, errors }) {
         )}
       </div>
 
-      {/* Currently Working Checkbox */}
+      {/* Currently Working */}
       <div className="flex items-center mb-3 gap-2">
         <input
           id="currentlyWorking"

@@ -1,6 +1,5 @@
 import { Outlet, useParams, useNavigate } from "react-router-dom";
 import { useState, useEffect } from "react";
-import Footer from "./Footer.jsx";
 import { axiosInstance as axios } from "../../../apis/axios.js";
 
 function ProfileLayout() {
@@ -8,7 +7,7 @@ function ProfileLayout() {
   const navigate = useNavigate();
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
-  const isOwner = false; // Replace with real auth logic
+  const isOwner = true; // Replace with real auth logic
 
   // Extract the ID from the URL slug: "fatma-gamal-1" → "1"
   const id = profileSlug?.split("-").pop();
@@ -57,11 +56,10 @@ function ProfileLayout() {
   if (!user) return null;
 
   return (
-    <div className="bg-background pt-4 pb-4">
+    <div className="bg-mainBackground pt-4 pb-4">
       <div className="max-w-6xl mx-auto mt-4" data-testid="layout-wrapper">
         <Outlet context={{ user, isOwner }} />
       </div>
-      <Footer />
     </div>
   );
 }

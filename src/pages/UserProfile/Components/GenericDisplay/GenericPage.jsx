@@ -16,12 +16,13 @@ function GenericPage({ title, type }) {
   // const [saveError, setSaveError] = useState(null); // if error in saving to show user a msg
 
   // Load data on mount
+
   useEffect(() => {
     if (user && user[type]) {
       setData(user[type]);
     }
-  }, [user, type]);
-
+  }, [user?.[type]]);
+  // to auto update if is updated in redux
   const handleAdd = () => {
     setEditIndex(null);
     setEditData(null);

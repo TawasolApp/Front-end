@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import GenericCard from "./GenericCard";
 import GenericModal from "./GenericModal";
 import { useNavigate } from "react-router-dom";
@@ -14,7 +14,11 @@ const singularMap = {
 
 function GenericSection({ title, type, items, isOwner, user }) {
   const navigate = useNavigate();
-  const [data, setData] = useState(items || []);
+  const [data, setData] = useState([]);
+  useEffect(() => {
+    setData(items || []);
+  }, [items]);
+
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [editIndex, setEditIndex] = useState(null);
   const [editData, setEditData] = useState(null);
