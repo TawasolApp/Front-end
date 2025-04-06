@@ -488,12 +488,8 @@
       "location": "https://maps.app.goo.gl/fEh4pBYt6LvTFxQE8",
       "email": "elsewedyelectric@yahoo.com",
       "contactNumber": "19019",
-      "banner": "https://media.licdn.com/dms/image/v2/D563DAQE4HioUznS0qQ/image-scale_191_1128/B56ZVMz7QJGoAg-/0/1740750438895/elsewedyelectric_cover?e=1744239600&v=beta&t=fe4Yc08ksyoXUa8DuSOljgRE7RyYbf8dSo3pamB9cWk",
-      "Managers": [
-        "1",
-        "2",
-        "3"
-      ]
+      "banner": "https://media.licdn.com/dms/image/v2/D563DAQE4HioUznS0qQ/image-scale_191_1128/B56ZVMz7QJGoAg-/0/1740750438895/elsewedyelectric_cover?e=1744574400&v=beta&t=p2BmjQRmAdJb304MnK-9cP2mqlqqZuUiMkUzQI4kvBU",
+      "Managers": ["1", "2", "3"]
     },
     {
       "companyId": "google",
@@ -601,6 +597,24 @@
       "location": "",
       "email": "xxxx@gmail.com",
       "contactNumber": "233"
+    },
+    {
+      "companyId": "testpp",
+      "isManager": true,
+      "name": "testpp",
+      "logo": "http://localhost:5000/public/images/1743967345418.png",
+      "banner": "",
+      "description": "",
+      "companySize": "1-50 employees",
+      "companyType": "Public company",
+      "industry": "pptest",
+      "overview": "",
+      "founded": null,
+      "website": "www.testcompany.com",
+      "address": "",
+      "location": "",
+      "email": "testpp@gmail.com",
+      "contactNumber": "011"
     }
   ],
   "posts": [
@@ -612,9 +626,7 @@
       "authorPicture": "https://media.licdn.com/dms/image/v2/D4D03AQH7Ais8BxRXzw/profile-displayphoto-shrink_100_100/profile-displayphoto-shrink_100_100/0/1721080103981?e=1747872000&v=beta&t=nDnZdgCqkI8v5B2ymXZzluMZVlF6h_o-dN1pA95Fzv4",
       "authorBio": "Computer Engineering Student at Cairo University",
       "content": "FOR REAL! During my recent spring break trip to Spain 🇪🇸, I encountered an unexpected reminder of why robust coding practices matter — all thanks to a game of Mahjong Solitaire on the in-flight entertainment system (IFE). The system, still running Android 4.X, (apparent due to the Android Skin of the UI) crashed with an SDL Assertion Error.",
-      "media": [
-        "http://localhost:5000/public/images/1743658328495.jpeg"
-      ],
+      "media": ["http://localhost:5000/public/images/1743658328495.jpeg"],
       "reactions": {
         "Love": 0,
         "Celebrate": 0,
@@ -659,6 +671,60 @@
       "timestamp": "2025-03-23T07:08:27.860Z",
       "parentPost": null,
       "isSilentRepost": false
+    },
+    {
+      "id": "1743966478367",
+      "isSaved": false,
+      "authorId": "mohsobh",
+      "authorName": "Mohamed Sobh",
+      "authorPicture": "https://media.licdn.com/dms/image/v2/D4D03AQH7Ais8BxRXzw/profile-displayphoto-shrink_100_100/profile-displayphoto-shrink_100_100/0/1721080103981?e=1747872000&v=beta&t=nDnZdgCqkI8v5B2ymXZzluMZVlF6h_o-dN1pA95Fzv4",
+      "authorBio": "Computer Engineering Student at Cairo University",
+      "content": "test company",
+      "media": [],
+      "reactions": {
+        "Love": 0,
+        "Celebrate": 0,
+        "Insightful": 0,
+        "Funny": 0,
+        "Support": 0,
+        "Like": 0
+      },
+      "comments": 0,
+      "shares": 0,
+      "taggedUsers": [],
+      "visibility": "Public",
+      "authorType": "User",
+      "reactType": null,
+      "timestamp": "2025-04-06T19:07:58.367Z",
+      "parentPost": null,
+      "isSilentRepost": false
+    },
+    {
+      "id": "1743966535738",
+      "isSaved": false,
+      "authorId": "elsewedy-electric",
+      "authorName": "elsewedy electric",
+      "authorPicture": "https://media.licdn.com/dms/image/v2/C560BAQF2a3ilv6hXXw/company-logo_200_200/company-logo_200_200/0/1631303609923?e=1747872000&v=beta&t=M9wVeJt_Zk6nNOEnz5X6PQVoUzb8wzaSFYK9JeRNA60",
+      "authorBio": "",
+      "content": "test company",
+      "media": [],
+      "reactions": {
+        "Love": 0,
+        "Celebrate": 0,
+        "Insightful": 0,
+        "Funny": 0,
+        "Support": 0,
+        "Like": 0
+      },
+      "comments": 0,
+      "shares": 0,
+      "taggedUsers": [],
+      "visibility": "Public",
+      "authorType": "Company",
+      "reactType": null,
+      "timestamp": "2025-04-06T19:08:55.738Z",
+      "parentPost": null,
+      "isSilentRepost": false
     }
   ],
   "comments": [
@@ -670,9 +736,7 @@
       "authorPicture": "https://media.licdn.com/dms/image/v2/D4D03AQH7Ais8BxRXzw/profile-displayphoto-shrink_100_100/profile-displayphoto-shrink_100_100/0/1721080103981?e=1747872000&v=beta&t=nDnZdgCqkI8v5B2ymXZzluMZVlF6h_o-dN1pA95Fzv4",
       "authorBio": "Computer Engineering Student at Cairo University",
       "content": "hello ali abdelghani",
-      "replies": [
-        "dummy reply"
-      ],
+      "replies": ["dummy reply"],
       "reactions": {
         "Love": 0,
         "Celebrate": 0,
@@ -706,8 +770,7 @@
       "timestamp": "2025-04-04T06:49:45.509Z"
     }
   ],
-  "reactions": [
-  ],
+  "reactions": [],
   "jobs": [
     {
       "id": "1743454820455",

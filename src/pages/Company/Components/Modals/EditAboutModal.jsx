@@ -1,7 +1,10 @@
 import React, { useEffect, useState } from "react";
 import { axiosInstance as axios } from "../../../../apis/axios";
+import { FiUpload } from "react-icons/fi";
 
 function EditAboutModal({ show, companyData, onClose }) {
+  const [logoFile, setLogoFile] = useState(null);
+  const [bannerFile, setBannerFile] = useState(null);
   const [errorMessage, setErrorMessage] = useState("");
   const [formData, setFormData] = useState({
     name: "",
@@ -54,7 +57,7 @@ function EditAboutModal({ show, companyData, onClose }) {
     try {
       const response = await axios.patch(
         `/companies/${companyData.companyId}`,
-        formData,
+        formData
       );
       console.log(" Company updated:", response.data);
 
@@ -63,6 +66,36 @@ function EditAboutModal({ show, companyData, onClose }) {
     } catch (error) {
       console.error("Error updating company:", error);
       setErrorMessage("Failed to update company profile.");
+    }
+  };
+  const handleFileUpload = async (e, type) => {
+    const file = e.target.files[0];
+    if (!file) return;
+
+    const formDataUpload = new FormData();
+    formDataUpload.append("file", file);
+
+    try {
+      const uploadResponse = await axios.post(
+        "/api/uploadImage",
+        formDataUpload,
+        {
+          headers: { "Content-Type": "multipart/form-data" },
+        }
+      );
+
+      const fileUrl = uploadResponse.data;
+
+      setFormData((prev) => ({
+        ...prev,
+        [type]: fileUrl,
+      }));
+
+      if (type === "logo") setLogoFile(file);
+      if (type === "banner") setBannerFile(file);
+    } catch (error) {
+      console.error("Upload failed:", error);
+      setErrorMessage(`Failed to upload ${type}. Please try again.`);
     }
   };
 
@@ -96,42 +129,64 @@ function EditAboutModal({ show, companyData, onClose }) {
           </button>
         </div>
         <div className="overflow-y-auto px-6 py-4 flex-1">
-          {/* Company Banner */}
+          {/* Company Banner Upload*/}
           <div className="mb-6">
-            <label className="block font-medium text-normaltext">Banner</label>
-            <div className="w-full h-32 border border-gray-300 overflow-hidden">
+            <label className="block font-medium text-normaltext mb-1">
+              Banner
+            </label>
+
+            {/* Preview */}
+            <div className="w-full h-32 border border-gray-300 overflow-hidden mb-2">
               <img
                 src={formData.banner || "https://via.placeholder.com/600x200"}
                 alt="Company Banner"
                 className="w-full h-full object-cover"
               />
             </div>
-            <input
-              type="text"
-              name="banner"
-              className="mt-2 p-2 border rounded-md w-full bg-boxbackground text-normaltext"
-              value={formData.banner}
-              onChange={handleChange}
-              placeholder="Enter new banner URL"
-            />
-          </div>
-          {/* Company Logo */}
-          <div className="flex flex-col items-center mb-6">
-            <div className="w-24 h-24 rounded-full border border-gray-300 overflow-hidden">
-              <img
-                src={formData.logo || "https://via.placeholder.com/100"}
-                alt="Company Logo"
-                className="w-full h-full object-cover"
+
+            {/* Upload box */}
+            <div className="w-[300px] min-h-[80px] border border-gray-400 rounded-md bg-uploadimage relative flex flex-col items-center justify-center px-4 py-3 text-center mx-auto">
+              <div className="flex flex-col items-center justify-center gap-1 text-gray-600">
+                <FiUpload className="text-xl text-normaltext" />
+                <p className="text-sm text-normaltext font-medium">
+                  Upload Banner
+                </p>
+              </div>
+              <input
+                type="file"
+                accept="image/*"
+                className="absolute inset-0 opacity-0 cursor-pointer"
+                onChange={(e) => handleFileUpload(e, "banner")}
               />
             </div>
-            <input
-              type="text"
-              name="logo"
-              className="mt-2 p-2 border rounded-md w-full bg-boxbackground text-normaltext"
-              value={formData.logo}
-              onChange={handleChange}
-              placeholder="Enter new logo URL"
-            />
+          </div>
+
+          {/* Company Logo Upload */}
+          <div className="mb-6 flex flex-col items-center">
+            {/* Preview image */}
+            <div className="w-24 h-24 rounded-full border border-gray-300 overflow-hidden mb-2">
+              <img
+                src={formData.logo || "https://via.placeholder.com/100"}
+                alt="Logo Preview"
+                className="w-full h-full object-contain"
+              />
+            </div>
+
+            {/* Upload Box (smaller width) */}
+            <div className="w-[200px] min-h-[80px] border border-gray-400 rounded-md bg-uploadimage relative flex flex-col items-center justify-center px-4 py-3 text-center">
+              <div className="flex flex-col items-center justify-center gap-1 text-gray-600">
+                <FiUpload className="text-xl text-normaltext" />
+                <p className="text-sm text-normaltext font-medium">
+                  Upload Logo
+                </p>
+              </div>
+              <input
+                type="file"
+                accept="image/*"
+                className="absolute inset-0 opacity-0 cursor-pointer"
+                onChange={(e) => handleFileUpload(e, "logo")}
+              />
+            </div>
           </div>
           {/* Overview */}
           <div className="mb-4">

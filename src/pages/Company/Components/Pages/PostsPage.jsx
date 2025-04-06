@@ -102,25 +102,27 @@ function PostsPage() {
       )}
 
       {/* Filters Box */}
-      <div className="bg-boxbackground p-6 shadow-md rounded-md">
-        <div className="overflow-x-auto">
-          <div className="flex flex-wrap gap-2 border-b pb-2">
-            {filters.map((filter) => (
-              <button
-                key={filter}
-                onClick={() => setActiveFilter(filter)}
-                className={`px-3 py-1 sm:px-4 sm:py-2 rounded-full font-semibold transition border border-white text-navbuttons shadow-md ${
-                  activeFilter === filter
-                    ? "bg-green-700 text-white"
-                    : "bg-postsbuttoncolor text-gray-700 hover:border-2"
-                }`}
-              >
-                {filter}
-              </button>
-            ))}
+      {posts.length > 0 && (
+        <div className="bg-boxbackground p-6 shadow-md rounded-md">
+          <div className="overflow-x-auto">
+            <div className="flex flex-wrap gap-2 border-b pb-2">
+              {filters.map((filter) => (
+                <button
+                  key={filter}
+                  onClick={() => setActiveFilter(filter)}
+                  className={`px-3 py-1 sm:px-4 sm:py-2 rounded-full font-semibold transition border border-white text-navbuttons shadow-md ${
+                    activeFilter === filter
+                      ? "bg-green-700 text-white"
+                      : "bg-postsbuttoncolor text-gray-700 hover:border-2"
+                  }`}
+                >
+                  {filter}
+                </button>
+              ))}
+            </div>
           </div>
         </div>
-      </div>
+      )}
 
       {/* Posts List */}
       <div className="space-y-6">

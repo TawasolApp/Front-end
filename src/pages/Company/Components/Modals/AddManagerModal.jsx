@@ -41,9 +41,9 @@ function AddManagerModal({ show, onClose, companyId }) {
   if (!show) return null;
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-30">
-      <div className="bg-white p-6 rounded-md shadow-md w-full max-w-md">
-        <h2 className="text-lg font-semibold mb-4 text-gray-800">
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-modalbackground">
+      <div className="bg-boxbackground p-6 rounded-md shadow-md w-full max-w-md">
+        <h2 className="text-lg font-semibold mb-4 text-companysubheader">
           Add Manager
         </h2>
 
@@ -52,7 +52,7 @@ function AddManagerModal({ show, onClose, companyId }) {
           placeholder="Enter user ID"
           value={userId}
           onChange={(e) => setUserId(e.target.value)}
-          className="w-full border border-gray-300 rounded-md px-4 py-2 mb-4 focus:outline-none"
+          className="w-full border bg-boxbackground border-gray-300 rounded-md px-4 py-2 mb-4 focus:outline-none"
         />
 
         {message && (

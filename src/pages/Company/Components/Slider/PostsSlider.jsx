@@ -10,14 +10,26 @@ function PostsSlider() {
   const navigate = useNavigate();
   const { companyId } = useParams();
   const [posts, setPosts] = useState([]);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    if (companyId) {
-      axiosInstance
-        .get(`/companies/${companyId}/posts`)
-        .then((res) => setPosts(res.data))
-        .catch((err) => console.error("Error fetching posts:", err));
-    }
+    if (!companyId) return;
+
+    setLoading(true);
+    axiosInstance
+      .get("/posts")
+      .then((response) => {
+        const filteredPosts = response.data.filter(
+          (post) => post.authorId?.toString() === companyId
+        );
+        setPosts(filteredPosts.slice(0, 4)); // limit to first 4 posts
+      })
+      .catch((error) => {
+        console.error("Error fetching posts:", error);
+      })
+      .finally(() => {
+        setLoading(false);
+      });
   }, [companyId]);
 
   const handleScrollLeft = () => {
