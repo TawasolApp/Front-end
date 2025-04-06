@@ -10,7 +10,7 @@ const EngagementMetrics = ({
   const { post } = usePost();
   const reactions = post.reactions;
   const comments = post.comments;
-  const reposts = post.reposts;
+  const shares = post.shares;
 
   const topReactions = useMemo(() => {
     return Object.entries(reactions)
@@ -54,13 +54,13 @@ const EngagementMetrics = ({
             {comments} {comments === 1 ? "comment" : "comments"}
           </button>
         )}
-        {comments > 0 && reposts > 0 && <span className="mx-1">•</span>}
-        {reposts > 0 && (
+        {comments > 0 && shares > 0 && <span className="mx-1">•</span>}
+        {shares > 0 && (
           <button
             className="text-xs mx-1 hover:underline hover:text-textPlaceholderHover"
             onClick={setShowReposts}
           >
-            {reposts} {reposts === 1 ? "repost" : "reposts"}
+            {shares} {shares === 1 ? "repost" : "reposts"}
           </button>
         )}
       </div>

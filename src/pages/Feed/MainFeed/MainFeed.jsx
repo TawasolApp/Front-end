@@ -129,43 +129,7 @@ const MainFeed = ({ API_ROUTE = "posts", showShare = true }) => {
         parentPostId: parentPost,
         isSilentRepost: silentRepost,
       });
-
-      const newPost = response.data; // Process the post the same way as in fetchPosts
-      let formattedPost = newPost;
-      if (newPost.parentPost) {
-        if (newPost.isSilentRepost) {
-          formattedPost = {
-            ...newPost.parentPost,
-            isSilentRepost: true,
-            headerData: {
-              authorId: newPost.authorId,
-              authorPicture: newPost.authorPicture,
-              authorName: newPost.authorName,
-            },
-          };
-        } else {
-          // For quoted reposts (when you implement them)
-          formattedPost = formattedPost = {
-            ...newPost,
-            repostedComponents: {
-              postId: newPost.parentPost.id,
-              authorId: newPost.parentPost.authorId,
-              authorPicture: newPost.parentPost.authorPicture,
-              authorName: newPost.parentPost.authorName,
-              authorBio: newPost.parentPost.authorBio,
-              authorType: newPost.parentPost.authorType,
-              timestamp: newPost.parentPost.timestamp,
-              visibility: newPost.parentPost.visibility,
-              content: newPost.parentPost.content,
-              media: newPost.parentPost.media,
-              taggedUsers: newPost.parentPost.taggedUsers,
-            },
-          };
-        }
-      }
-
-      const updatedPosts = [formattedPost, ...posts];
-      setPosts(updatedPosts);
+      fetchPosts(1, true);
     } catch (err) {
       console.log(`Error: ${err.message}`);
     }

@@ -615,51 +615,66 @@ server.get("/posts", (req, res) => {
 });
 
 server.post("/posts", (req, res) => {
-  // Get data from request body
-  const content = req.body.text || req.body.content; // Accept either name
-  const visibility = req.body.visibility;
-  const taggedUsers = req.body.taggedUsers || [];
-  const mediaItems = req.body.media || [];
-  const parentPostId = req.body.parentPostId || null;
-  const isSilentRepost = req.body.isSilentRepost || false;
-
-  // Basic validation
-  if (!isSilentRepost && !content) return res.status(400).json({ error: "content is required when it is not a silent repost" });
-
-  const posts = _router.db.get("posts");
-  const parentPost = parentPostId ? posts.find({ id: parentPostId }).value() : null;
-
-  const newPost = {
-    id: Date.now().toString(),
-    isSaved: false,
-    authorId: currentUser.id,
-    authorName: currentUser.name,
-    authorPicture: currentUser.picture,
-    authorBio: currentUser.bio,
-    content: content,
-    media: mediaItems,
-    reactions: {
-      Love: 0,
-      Celebrate: 0,
-      Insightful: 0,
-      Funny: 0,
-      Support: 0,
-      Like: 0,
-    },
-    comments: 0,
-    shares: 0,
-    taggedUsers: taggedUsers,
-    visibility: visibility,
-    authorType: currentUser.type,
-    reactType: null,
-    timestamp: new Date().toISOString(),
-    parentPost: parentPost ? { ...parentPost } : null,
-    isSilentRepost: isSilentRepost
-  };
+    // Get data from request body
+    const content = req.body.text || req.body.content; // Accept either name
+    const visibility = req.body.visibility;
+    const taggedUsers = req.body.taggedUsers || [];
+    const mediaItems = req.body.media || [];
+    const parentPostId = req.body.parentPostId || null;
+    const isSilentRepost = req.body.isSilentRepost || false;
   
-  posts.push(newPost).write();
-  res.status(201).json(newPost);
+    // Basic validation
+    if (!isSilentRepost && !content) {
+      return res.status(400).json({ error: "content is required when it is not a silent repost" });
+    }
+  
+    const posts = _router.db.get("posts");
+  
+    let parentPost = null;
+    if (parentPostId) {
+      parentPost = posts.find({ id: parentPostId }).value();
+  
+      // Increment the share count if parentPost exists
+      if (parentPost) {
+        posts
+          .find({ id: parentPostId })
+          .assign({ shares: parentPost.shares + 1 })
+          .write();
+      }
+    }
+  
+    const newPost = {
+      id: Date.now().toString(),
+      isSaved: false,
+      authorId: currentUser.id,
+      authorName: currentUser.name,
+      authorPicture: currentUser.picture,
+      authorBio: currentUser.bio,
+      content: content,
+      media: mediaItems,
+      reactions: {
+        Love: 0,
+        Celebrate: 0,
+        Insightful: 0,
+        Funny: 0,
+        Support: 0,
+        Like: 0,
+      },
+      comments: 0,
+      shares: 0,
+      taggedUsers: taggedUsers,
+      visibility: visibility,
+      authorType: currentUser.type,
+      reactType: null,
+      timestamp: new Date().toISOString(),
+      parentPost: parentPost ? { ...parentPost } : null,
+      isSilentRepost: isSilentRepost
+    };
+  
+    posts.push(newPost).write();
+    res.status(201).json(newPost);
 });
+  
 
 server.delete("/delete/:postId", (req, res) => {
   const { postId } = req.params;
