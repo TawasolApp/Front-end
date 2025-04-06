@@ -2,7 +2,8 @@ import React, { useState, useEffect, useRef } from "react";
 
 const ConnectionCard = ({
   imageUrl,
-  username,
+  firstName,
+  lastName,
   experience,
   connectionDate,
   onRemove,
@@ -38,6 +39,8 @@ const ConnectionCard = ({
     };
   }, [isMenuOpen]);
 
+  const fullName = `${firstName} ${lastName}`;
+
   return (
     <>
       {/* Connection Card */}
@@ -46,12 +49,12 @@ const ConnectionCard = ({
         <div className="flex items-center flex-1">
           <img
             src={imageUrl}
-            alt={username}
+            alt={fullName}
             className="w-12 h-12 rounded-full object-cover"
           />
           <div className="ml-3 flex-1">
             <h3 className="text-lg font-semibold hover:underline cursor-pointer text-textHeavyTitle">
-              {username}
+              {firstName} {lastName}
             </h3>
             <p className="text-sm text-textActivity">
               {experience}
@@ -146,8 +149,8 @@ const ConnectionCard = ({
             <div className="border-t border-cardBorder mb-4"></div>
 
             <p className="text-textContent mb-4">
-              Are you sure you want to remove {username} as a connection? Don't
-              worry, {username} won't be notified by LinkedIn.
+              Are you sure you want to remove {fullName} as a connection? Don't
+              worry, {fullName} won't be notified by LinkedIn.
             </p>
 
             <div className="flex justify-end space-x-4">

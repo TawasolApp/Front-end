@@ -8,6 +8,10 @@ const ManageConnections = () => {
   const [sentRequests, setSentRequests] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [pagination, setPagination] = useState({
+    page: 1,
+    limit: 10
+  });
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -16,10 +20,20 @@ const ManageConnections = () => {
       setError(null);
       try {
         if (activeTab === "received") {
-          const response = await axiosInstance.get("/connections/pending");
+          const response = await axiosInstance.get("/connections/pending", {
+            params: {
+              page: pagination.page,
+              limit: pagination.limit
+            }
+          });
           setPendingRequests(response.data);
         } else {
-          const response = await axiosInstance.get("/connections/sent");
+          const response = await axiosInstance.get("/connections/sent", {
+            params: {
+              page: pagination.page,
+              limit: pagination.limit
+            }
+          });
           setSentRequests(response.data);
         }
       } catch (err) {
@@ -31,7 +45,7 @@ const ManageConnections = () => {
     };
 
     fetchData();
-  }, [activeTab]);
+  }, [activeTab, pagination.page, pagination.limit]);
 
   const handleAccept = async (userId) => {
     try {
@@ -55,15 +69,15 @@ const ManageConnections = () => {
 
   const handleWithdraw = async (userId) => {
     
-      console.error("Failed to withdraw request:", error);
-     
+      setError("Failed to withdraw request. Please try again.");
+    
   };
 
   return (
     <div className="min-h-screen bg-mainBackground p-4 sm:p-6">
       <div className="bg-cardBackground p-4 sm:p-6 rounded-lg shadow-md w-full mx-auto max-w-full sm:max-w-[900px] border border-cardBorder">
         <div className="border-b border-cardBorder pb-4 mb-4">
-          <div className="flex items-center justify-start"> {/* Changed this line */}
+          <div className="flex items-center justify-start">
             <h1 className="text-lg font-semibold text-textHeavyTitle">
               Manage Invitations
             </h1>
@@ -77,7 +91,10 @@ const ManageConnections = () => {
                 ? "text-listSelected border-b-2 border-listSelected"
                 : "text-textPlaceholder"
             }`}
-            onClick={() => setActiveTab("received")}
+            onClick={() => {
+              setActiveTab("received");
+              setPagination(prev => ({...prev, page: 1}));
+            }}
           >
             Received 
           </button>
@@ -87,7 +104,10 @@ const ManageConnections = () => {
                 ? "text-listSelected border-b-2 border-listSelected"
                 : "text-textPlaceholder"
             }`}
-            onClick={() => setActiveTab("sent")}
+            onClick={() => {
+              setActiveTab("sent");
+              setPagination(prev => ({...prev, page: 1}));
+            }}
           >
             Sent 
           </button>
@@ -108,12 +128,12 @@ const ManageConnections = () => {
                         <div className="flex items-center space-x-4">
                           <img
                             src={request.profilePicture}
-                            alt={request.username}
+                            alt={`${request.firstName} ${request.lastName}`}
                             className="w-12 h-12 rounded-full object-cover"
                           />
                           <div>
                             <h3 className="font-semibold text-textHeavyTitle">
-                              {request.username}
+                              {request.firstName} {request.lastName}
                             </h3>
                             <p className="text-sm text-textPlaceholder">
                               {request.headline}
@@ -159,12 +179,12 @@ const ManageConnections = () => {
                         <div className="flex items-center space-x-4">
                           <img
                             src={request.profilePicture}
-                            alt={request.username}
+                            alt={`${request.firstName} ${request.lastName}`}
                             className="w-12 h-12 rounded-full object-cover"
                           />
                           <div>
                             <h3 className="font-semibold text-textHeavyTitle">
-                              {request.username}
+                              {request.firstName} {request.lastName}
                             </h3>
                             <p className="text-sm text-textPlaceholder">
                               {request.headline}
@@ -192,6 +212,27 @@ const ManageConnections = () => {
             )}
           </div>
         )}
+
+        {/* Pagination Controls */}
+        <div className="flex justify-center mt-4">
+          <button
+            onClick={() => setPagination(prev => ({...prev, page: prev.page - 1}))}
+            disabled={pagination.page === 1}
+            className="px-4 py-2 mx-1 border rounded disabled:opacity-50"
+          >
+            Previous
+          </button>
+          <span className="px-4 py-2">
+            Page {pagination.page}
+          </span>
+          <button
+            onClick={() => setPagination(prev => ({...prev, page: prev.page + 1}))}
+            disabled={(activeTab === "received" ? pendingRequests : sentRequests).length < pagination.limit}
+            className="px-4 py-2 mx-1 border rounded disabled:opacity-50"
+          >
+            Next
+          </button>
+        </div>
       </div>
     </div>
   );
