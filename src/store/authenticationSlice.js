@@ -12,7 +12,6 @@ const initialState = {
   bio: localStorage.getItem("bio") || "",
   type: localStorage.getItem("type") || "",
   picture: localStorage.getItem("picture") || null,
-  isNewGoogleUser: localStorage.getItem("isNewGoogleUser") || false,
 };
 
 export const authenticationSlice = createSlice({
@@ -65,7 +64,6 @@ export const authenticationSlice = createSlice({
     },
     setIsNewGoogleUser: (state, action) => {
       state.isNewGoogleUser = action.payload;
-      localStorage.setItem("isNewGoogleUser", action.payload);
     },
     logout: (state) => {
       state.email = "";
@@ -90,7 +88,6 @@ export const authenticationSlice = createSlice({
       localStorage.removeItem("bio");
       localStorage.removeItem("type");
       localStorage.removeItem("picture");
-      localStorage.removeItem("isNewGoogleUser");
     },
   },
 });

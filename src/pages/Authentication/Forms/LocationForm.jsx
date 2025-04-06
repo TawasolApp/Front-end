@@ -35,7 +35,7 @@ const LocationForm = ({ onSubmit }) => {
   return (
     <form onSubmit={handleSubmit}>
       <h1 className="text-3xl font-semibold mb-4 text-textContent text-center">
-        Welcome, {firstName}! What's your location?
+        Welcome{firstName ? `, ${firstName}` : ""}! What's your location?
       </h1>
       <p className="text-xl text-textContent text-center mb-10">
         See people, jobs, and news in your area.
