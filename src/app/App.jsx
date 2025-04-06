@@ -66,7 +66,10 @@ const App = () => {
           element={<VerifyChangeEmailPage />}
         />
         <Route path="/auth/verify-signup" element={<VerifySignUpPage />} />
-        <Route path="/auth/verify-reset-password" element={<VerifyResetPasswordPage />} />
+        <Route
+          path="/auth/verify-reset-password"
+          element={<VerifyResetPasswordPage />}
+        />
         <Route path="/auth/new-password" element={<NewPasswordPage />} />
         <Route path="/auth/update-email" element={<ChangeEmailPage />} />
 
@@ -88,6 +91,7 @@ const App = () => {
         <Route path="/feed" element={<FeedContainer />} />
         <Route path="/my-items/saved-posts" element={<SavedPostsContainer />} />
 
+        <Route path="/company" element={<CompanyLayout />} />
         <Route path="/company/:companyId/*" element={<CompanyLayout />}>
           <Route index element={<HomePage />} />
           <Route path="home" element={<HomePage />} />

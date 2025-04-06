@@ -30,12 +30,12 @@ function CompanyLayout() {
     } else {
       // If no companyId in the URL, fetch the list of all companies and set the first one as default
       axiosInstance
-        .get("/companies")
+        .get("/companies?page=1&limit=10")
         .then((response) => {
           if (response.data.length > 0) {
             const firstCompany = response.data[0];
             setDefaultCompanyId(firstCompany.companyId);
-            setCompanyData(firstCompany); // Set the default company data
+            setCompanyData(firstCompany);
             navigate(`/company/${firstCompany.companyId}/home`, {
               replace: true,
             });
@@ -43,7 +43,7 @@ function CompanyLayout() {
         })
         .catch((error) => {
           console.error("❌ Error fetching companies:", error);
-          navigate("/404"); // Redirect to a 404 page if there are no companies
+          navigate("/404");
         })
         .finally(() => setLoading(false));
     }

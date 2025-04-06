@@ -3,6 +3,8 @@ import { axiosInstance } from "../../../../apis/axios";
 import LoadingPage from "../../../LoadingScreen/LoadingPage";
 
 function FollowersModal({ show, onClose, companyId }) {
+  const [page] = useState(1);
+  const limit = 10;
   const [followers, setFollowers] = useState([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
@@ -17,8 +19,10 @@ function FollowersModal({ show, onClose, companyId }) {
 
         try {
           const response = await axiosInstance.get(
-            `/companies/${companyId}/followers`
+            `/companies/${companyId}/followers`,
+            { params: { page, limit } }
           );
+
           setFollowers(response.data);
         } catch (err) {
           setError("Failed to load followers.");
@@ -72,7 +76,7 @@ function FollowersModal({ show, onClose, companyId }) {
                 />
                 <div className="flex flex-col">
                   <span className="text-text font-medium text-sm sm:text-base">
-                    {follower.username}
+                    {follower.firstName} {follower.lastName}
                   </span>
                   <span className="text-sm text-companysubheader">
                     {follower.headline}
