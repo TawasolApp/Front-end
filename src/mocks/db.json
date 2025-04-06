@@ -489,7 +489,10 @@
       "email": "elsewedyelectric@yahoo.com",
       "contactNumber": "19019",
       "banner": "https://media.licdn.com/dms/image/v2/D563DAQE4HioUznS0qQ/image-scale_191_1128/B56ZVMz7QJGoAg-/0/1740750438895/elsewedyelectric_cover?e=1744574400&v=beta&t=p2BmjQRmAdJb304MnK-9cP2mqlqqZuUiMkUzQI4kvBU",
-      "Managers": ["1", "2", "3"]
+      "Managers": [
+        "1",
+        "2"
+      ]
     },
     {
       "companyId": "google",
@@ -626,7 +629,9 @@
       "authorPicture": "https://media.licdn.com/dms/image/v2/D4D03AQH7Ais8BxRXzw/profile-displayphoto-shrink_100_100/profile-displayphoto-shrink_100_100/0/1721080103981?e=1747872000&v=beta&t=nDnZdgCqkI8v5B2ymXZzluMZVlF6h_o-dN1pA95Fzv4",
       "authorBio": "Computer Engineering Student at Cairo University",
       "content": "FOR REAL! During my recent spring break trip to Spain 🇪🇸, I encountered an unexpected reminder of why robust coding practices matter — all thanks to a game of Mahjong Solitaire on the in-flight entertainment system (IFE). The system, still running Android 4.X, (apparent due to the Android Skin of the UI) crashed with an SDL Assertion Error.",
-      "media": ["http://localhost:5000/public/images/1743658328495.jpeg"],
+      "media": [
+        "http://localhost:5000/public/images/1743658328495.jpeg"
+      ],
       "reactions": {
         "Love": 0,
         "Celebrate": 0,
@@ -736,7 +741,9 @@
       "authorPicture": "https://media.licdn.com/dms/image/v2/D4D03AQH7Ais8BxRXzw/profile-displayphoto-shrink_100_100/profile-displayphoto-shrink_100_100/0/1721080103981?e=1747872000&v=beta&t=nDnZdgCqkI8v5B2ymXZzluMZVlF6h_o-dN1pA95Fzv4",
       "authorBio": "Computer Engineering Student at Cairo University",
       "content": "hello ali abdelghani",
-      "replies": ["dummy reply"],
+      "replies": [
+        "dummy reply"
+      ],
       "reactions": {
         "Love": 0,
         "Celebrate": 0,
@@ -773,93 +780,102 @@
   "reactions": [],
   "jobs": [
     {
-      "id": "1743454820455",
-      "company": "elsewedy-electric",
+      "jobId": "1743454820455",
+      "companyId": "elsewedy-electric",
       "isOpen": true,
       "position": "FrontEnd Developer",
-      "industry": "Computer",
       "description": "We're hiring a frontend engineer to build UI with React.",
       "location": "Cairo,egypt",
       "salary": "2000",
       "experienceLevel": "Internship",
       "locationType": "On-site",
       "employmentType": "Full-time",
-      "postDate": "2025-03-31T21:00:20.455Z",
-      "applicantCount": 7
+      "postedAt": "2025-03-31T21:00:20.455Z",
+      "applicants": 7
     },
     {
-      "id": "1743454919168",
-      "company": "elsewedy-electric",
+      "jobId": "1743454919168",
+      "companyId": "elsewedy-electric",
       "isOpen": true,
       "position": "Backend Engineer",
-      "industry": "Computer",
       "description": "Build scalable APIs using Node.js and MongoDB.",
       "location": "october",
       "salary": "50000",
       "experienceLevel": "Entry-level",
       "locationType": "On-site",
       "employmentType": "Part-time",
-      "postDate": "2025-03-31T21:01:59.168Z",
-      "applicantCount": 1
+      "postedAt": "2025-03-31T21:01:59.168Z",
+      "applicants": 1
     },
     {
-      "id": "1743454820458",
-      "company": "google",
+      "jobId": "1743454820458",
+      "companyId": "google",
       "isOpen": true,
       "position": "FrontEnd Developer",
-      "industry": "Computer",
       "description": "We're hiring a frontend engineer to build UI with React.",
       "location": "Cairo,egypt",
       "salary": "2000",
       "experienceLevel": "Internship",
       "locationType": "On-site",
       "employmentType": "Full-time",
-      "postDate": "2025-03-31T21:00:20.455Z",
-      "applicantCount": 0
+      "postedAt": "2025-03-31T21:00:20.455Z",
+      "applicants": 0
     },
     {
-      "id": "1743457897007",
-      "company": "elsewedy-electric",
+      "jobId": "1743457897007",
+      "companyId": "elsewedy-electric",
       "isOpen": true,
       "position": "web developer",
-      "industry": "computer",
       "description": "company website implemintation",
       "location": "cairo",
       "salary": "60000",
       "experienceLevel": "Internship",
       "locationType": "On-site",
       "employmentType": "Full-time",
-      "postDate": "2025-03-31T21:51:37.007Z",
-      "applicantCount": 4
+      "postedAt": "2025-03-31T21:51:37.007Z",
+      "applicants": 4
     },
     {
-      "id": "1743500575995",
-      "company": "elsewedy-electric",
+      "jobId": "1743500575995",
+      "companyId": "elsewedy-electric",
       "isOpen": true,
       "position": "computer engineer",
-      "industry": "Computer",
       "description": "xx",
       "location": "october",
       "salary": "10000",
       "experienceLevel": "Internship",
       "locationType": "On-site",
       "employmentType": "Full-time",
-      "postDate": "2025-04-01T09:42:55.995Z",
-      "applicantCount": 0
+      "postedAt": "2025-04-01T09:42:55.995Z",
+      "applicants": 0
     },
     {
-      "id": "1743536810411",
-      "company": "elsewedy-electric",
+      "jobId": "1743536810411",
+      "companyId": "elsewedy-electric",
       "isOpen": true,
       "position": "test",
-      "industry": "",
       "description": "",
       "location": "test",
       "salary": "",
       "experienceLevel": "Internship",
       "locationType": "On-site",
       "employmentType": "Full-time",
-      "postDate": "2025-04-01T19:46:50.411Z",
+      "postedAt": "2025-04-01T19:46:50.411Z",
+      "applicants": 0
+    },
+    {
+      "id": "1743970991136",
+      "company": "elsewedy-electric",
+      "isOpen": true,
+      "position": "testjob",
+      "industry": "",
+      "description": "",
+      "location": "october",
+      "salary": "",
+      "experienceLevel": "Internship",
+      "locationType": "On-site",
+      "employmentType": "Full-time",
+      "postDate": "2025-04-06T20:23:11.136Z",
       "applicantCount": 0
     }
   ],

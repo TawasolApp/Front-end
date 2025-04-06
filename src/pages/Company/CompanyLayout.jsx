@@ -58,6 +58,7 @@ function CompanyLayout() {
     <div className="bg-mainBackground pt-4 pb-4">
       <CompanyHeader
         company={companyData}
+        setCompanyData={setCompanyData}
         showAdminIcons={showAdminIcons}
         setShowAdminIcons={setShowAdminIcons}
         isAdmin={isAdmin}
@@ -65,7 +66,12 @@ function CompanyLayout() {
       <div className="max-w-6xl mx-auto mt-4">
         {/* Pass companyData to the Outlet as context */}
         <Outlet
-          context={{ company: companyData, showAdminIcons, setShowAdminIcons }}
+          context={{
+            company: companyData,
+            setCompanyData,
+            showAdminIcons,
+            setShowAdminIcons,
+          }}
         />
       </div>
       <Footer company={companyData} />
