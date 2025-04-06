@@ -1,13 +1,14 @@
 import { useMemo } from "react";
 import reactionIcons from "../../../../GenericComponents/reactionIcons";
 import { usePost } from "../../PostContext";
+import { useNavigate } from "react-router-dom";
 
 const EngagementMetrics = ({
   setShowLikes,
   setShowComments,
-  setShowReposts,
 }) => {
   const { post } = usePost();
+  const navigate = useNavigate();
   const reactions = post.reactions;
   const comments = post.comments;
   const shares = post.shares;
@@ -58,7 +59,7 @@ const EngagementMetrics = ({
         {shares > 0 && (
           <button
             className="text-xs mx-1 hover:underline hover:text-textPlaceholderHover"
-            onClick={setShowReposts}
+            onClick={() => navigate(`/posts/${post.id}/reposts`)}
           >
             {shares} {shares === 1 ? "repost" : "reposts"}
           </button>

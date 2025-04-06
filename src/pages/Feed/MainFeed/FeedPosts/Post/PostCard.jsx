@@ -30,7 +30,6 @@ const PostCard = ({ setShowPostModal, setMediaIndex }) => {
   // MODALS
   const [showLikes, setShowLikes] = useState(false);
   const [showComments, setShowComments] = useState(false);
-  const [showReposts, setShowReposts] = useState(false);
   const [showEditModal, setShowEditModal] = useState(false);
   const [showDeleteModal, setShowDeleteModal] = useState(false);
 
@@ -124,7 +123,6 @@ const PostCard = ({ setShowPostModal, setMediaIndex }) => {
       <EngagementMetrics
         setShowLikes={() => setShowLikes(true)}
         setShowComments={() => setShowComments(true)}
-        setShowReposts={() => setShowReposts(true)}
       />
 
       <ActivitiesHolder setShowComments={() => setShowComments(true)} />
