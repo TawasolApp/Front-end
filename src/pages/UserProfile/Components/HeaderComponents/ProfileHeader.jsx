@@ -144,13 +144,13 @@ function ProfileHeader({ user, isOwner, onSave, experienceRef, educationRef }) {
           className="text-companyheader2 cursor-pointer hover:text-blue-500 hover:underline"
           onClick={() => scrollToSection(experienceRef)}
         >
-          {editedUser.experience?.[experienceIndex]?.title}
+          {editedUser.workExperience?.[experienceIndex]?.title}
         </p>
         <p
           className="text-companyheader2 cursor-pointer hover:text-blue-500 hover:underline"
           onClick={() => scrollToSection(educationRef)}
         >
-          {editedUser.education?.[educationIndex]?.institution}
+          {editedUser.education?.[educationIndex]?.school}
         </p>
       </div>
 

@@ -71,8 +71,27 @@ function GenericModal({
   }, [isOpen]);
 
   useEffect(() => {
-    if (isOpen) {
-      setFormData(initialData || {});
+    if (isOpen && initialData) {
+      const parseDate = (dateStr) => {
+        if (!dateStr) return { month: "", year: "" };
+        const date = new Date(dateStr);
+        const month = date.toLocaleString("default", { month: "long" });
+        const year = String(date.getFullYear());
+        return { month, year };
+      };
+
+      const { month: startMonth, year: startYear } = parseDate(
+        initialData.startDate
+      );
+      const { month: endMonth, year: endYear } = parseDate(initialData.endDate);
+
+      setFormData({
+        ...initialData,
+        startMonth,
+        startYear,
+        endMonth,
+        endYear,
+      });
     }
   }, [isOpen, initialData]);
 
@@ -134,10 +153,9 @@ function GenericModal({
         newErrors.endMonth = "End month can't be before the start month";
       }
       if (type === "education") {
-        if (!formData.institution)
-          newErrors.institution = "Please provide an institution";
+        if (!formData.school) newErrors.school = "Please provide a school";
       }
-      if (type === "experience") {
+      if (type === "workExperience") {
         if (!formData.company)
           newErrors.company = "Please provide a company name";
         if (!formData.title) newErrors.title = "Please provide a title";
@@ -145,13 +163,12 @@ function GenericModal({
       if (type === "certifications") {
         if (!formData.name)
           newErrors.name = "Please provide a certificate name";
-        if (!formData.issuingOrganization)
-          newErrors.issuingOrganization =
-            "Please provide an issuing organization";
+        if (!formData.company)
+          newErrors.company = "Please provide an issuing organization";
       }
     }
     if (type === "skills") {
-      if (!formData.skill) newErrors.skill = "Please provide a skill";
+      if (!formData.skillName) newErrors.skillName = "Please provide a skill";
     }
 
     setErrors(newErrors);
@@ -160,12 +177,6 @@ function GenericModal({
 
   const handleSubmit = () => {
     if (validateForm()) {
-      // if (type === "skills" && formData.skill) {
-      //   formData.skillName = formData.skill;
-      //   delete formData.skill;
-
-      // }
-
       const monthIndex = (month) => months.indexOf(month);
       const formatDate = (month, year, type) => {
         if (!month || !year) return "";
@@ -173,13 +184,26 @@ function GenericModal({
         return `${year}-${monthNum}-${type === "start" ? "01" : "30"}`;
       };
 
+      const { startMonth, startYear, endMonth, endYear, ...cleanedFormData } =
+        formData;
+
       const updatedFormData = {
-        ...formData,
-        startDate: formatDate(formData.startMonth, formData.startYear, "start"),
-        endDate:
-          formData.endMonth && formData.endYear
-            ? formatDate(formData.endMonth, formData.endYear, "end")
-            : "",
+        ...cleanedFormData,
+        ...(type === "certifications"
+          ? {
+              issueDate: formatDate(startMonth, startYear, "start"),
+              expireDate:
+                endMonth && endYear ? formatDate(endMonth, endYear, "end") : "",
+            }
+          : type !== "skills"
+            ? {
+                startDate: formatDate(startMonth, startYear, "start"),
+                endDate:
+                  endMonth && endYear
+                    ? formatDate(endMonth, endYear, "end")
+                    : "",
+              }
+            : {}),
       };
 
       onSave(updatedFormData);
@@ -214,7 +238,7 @@ function GenericModal({
               errors={errors}
             />
           )}
-          {type === "experience" && (
+          {type === "workExperience" && (
             <ExperienceFields
               formData={formData}
               setFormData={setFormData} //  add this!

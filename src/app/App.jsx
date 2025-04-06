@@ -25,6 +25,7 @@ const App = () => {
     <Router>
       <Routes>
         {/*  Top-level layout with slug param */}
+        {/* for Default user */}
         <Route path="/users" element={<ProfileLayout />} />
 
         <Route path="/users/:profileSlug" element={<ProfileLayout />}>
@@ -32,7 +33,7 @@ const App = () => {
           <Route index element={<ProfilePage />} />
           {/*  Sub-pages */}
           <Route path="education" element={<EducationPage />} />
-          <Route path="experience" element={<ExperiencePage />} />
+          <Route path="workExperience" element={<ExperiencePage />} />
           <Route path="certifications" element={<CertificationsPage />} />
           <Route path="skills" element={<SkillsPage />} />
           {/* user Connnections */}

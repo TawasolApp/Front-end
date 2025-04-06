@@ -1,13 +1,13 @@
 import { Outlet, useParams, useNavigate } from "react-router-dom";
 import { useState, useEffect } from "react";
 import { axiosInstance as axios } from "../../../apis/axios.js";
-
+import LoadingPage from "../../LoadingPage/LoadingPage.jsx";
 function ProfileLayout() {
   const { profileSlug } = useParams();
   const navigate = useNavigate();
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
-  const isOwner = true; // Replace with real auth logic
+  const isOwner = false; // Replace with real auth logic
 
   // Extract the ID from the URL slug: "fatma-gamal-1" → "1"
   const id = profileSlug?.split("-").pop();
@@ -52,7 +52,7 @@ function ProfileLayout() {
     fetchUser();
   }, [profileSlug, id, navigate]);
 
-  if (loading) return <p data-testid="loading">Loading...</p>; // Simple fallback
+  if (loading) return <LoadingPage />; // Simple fallback
   if (!user) return null;
 
   return (

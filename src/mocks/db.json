@@ -6,25 +6,27 @@
       "lastName": "Gamal",
       "profilePicture": null,
       "coverPhoto": null,
-      "resume": "https://linkedin.com/in/fatma-gamal",
+      "resume": "",
       "headline": "Software Engineering Student at Cairo University",
-      "bio": "I'm a motivated and detail-oriented engineering student passionate about AI, web development, and building real-world software systems.",
+      "bio": "J",
       "country": "Egypt",
       "city": "Giza",
       "industry": "Software Engineering",
       "connectionCount": 120,
       "email": "fatma@example.com",
       "visibility": "Public",
-      "experience": [
+      "workExperience": [
         {
           "id": "ea8d9d1e-2c04-4ce0-99f3-68e0e28a6a42",
-          "title": "Software Engineer Intern",
+          "title": "Software Engineer ",
           "company": "Google",
           "companyLogo": "https://logo.clearbit.com/google.com",
           "location": "San Francisco, CA",
-          "startDate": "2023-07-01",
-          "endDate": "2023-09-30",
-          "description": "Worked on backend microservices and API development using Go and Kubernetes."
+          "startDate": "2009-12-01",
+          "endDate": "",
+          "description": "Worked on backend microservices and API development using Go and Kubernetes.",
+          "startMonth": "December",
+          "startYear": "2009"
         },
         {
           "id": "6d220b10-e48c-4398-b4aa-85da48d4a04a",
@@ -32,29 +34,31 @@
           "company": "Microsoft",
           "companyLogo": "https://logo.clearbit.com/microsoft.com",
           "location": "Cairo, Egypt",
-          "startMonth": "June",
-          "startYear": "2022",
-          "endMonth": "August",
-          "endYear": "2022",
           "startDate": "2022-06-01",
           "endDate": "2022-08-30",
           "description": "Contributed to internal dashboard development using React, TypeScript and Fluent UI."
         },
         {
-          "id": "1743960821501",
-          "title": "ff",
+          "id": "1743980160576",
+          "title": "TRIAL",
           "company": "elsewedy electric",
           "companyLogo": "https://media.licdn.com/dms/image/v2/C560BAQF2a3ilv6hXXw/company-logo_200_200/company-logo_200_200/0/1631303609923?e=1747872000&v=beta&t=M9wVeJt_Zk6nNOEnz5X6PQVoUzb8wzaSFYK9JeRNA60",
-          "startMonth": "December",
-          "startYear": "2009",
-          "startDate": "2009-12-01",
-          "endDate": ""
+          "startDate": "2008-06-01",
+          "endDate": "2015-10-30"
+        },
+        {
+          "id": "1743980892325",
+          "title": "Frontend Developer",
+          "company": "google",
+          "companyLogo": "https://media.licdn.com/dms/image/v2/C560BAQF2a3ilv6hXXw/company-logo_200_200/company-logo_200_200/0/1631303609923?e=1747872000&v=beta&t=M9wVeJt_Zk6nNOEnz5X6PQVoUzb8wzaSFYK9JeRNA60",
+          "startDate": "2014-11-01",
+          "endDate": "2017-11-30"
         }
       ],
       "education": [
         {
           "id": "6543dfa3-aa91-49c3-8331-cc7463d33e42",
-          "institution": "Cairo University",
+          "school": "Cairo University",
           "degree": "Bachelor's",
           "fieldOfStudy": "Computer Engineering",
           "grade": "3.9 GPA",
@@ -63,12 +67,22 @@
         },
         {
           "id": "75109d84-3f9e-4a96-afd1-15b2f40b3a9a",
-          "institution": "Stanford University",
+          "school": "Stanford University",
           "degree": "Summer Program",
           "fieldOfStudy": "AI and Machine Learning",
           "grade": "",
           "startDate": "2023-06-01",
           "endDate": "2023-08-31"
+        },
+        {
+          "id": "1743979293501",
+          "school": "vhjcg",
+          "degree": "ghc",
+          "description": "frd",
+          "startMonth": "October",
+          "startYear": "2008",
+          "startDate": "2008-10-01",
+          "endDate": ""
         }
       ],
       "certifications": [
@@ -93,20 +107,16 @@
       ],
       "skills": [
         {
-          "skill": "JavaScript",
+          "skillName": "JavaScript",
           "endorsements": 5
         },
         {
-          "skill": "React",
+          "skillName": "React",
           "endorsements": 7
         },
         {
-          "skill": "Python",
+          "skillName": "Python",
           "endorsements": 9
-        },
-        {
-          "skill": "Git & GitHub",
-          "endorsements": 4
         }
       ],
       "planDetails": [],
@@ -114,8 +124,9 @@
         "messageCount": "12",
         "applicationCount": "5"
       },
-      "selectedExperienceIndex": 0,
-      "selectedEducationIndex": 0
+      "selectedworkExperienceIndex": 0,
+      "selectedEducationIndex": 0,
+      "selectedExperienceIndex": 0
     },
     {
       "id": "2",
@@ -134,7 +145,7 @@
       "email": "mohamed@example.com",
       "isOwner": false,
       "visibility": "Public",
-      "experience": [],
+      "workExperience": [],
       "education": [],
       "certifications": [],
       "skills": [
@@ -189,7 +200,7 @@
       "resume": "https://linkedin.com/in/salma-ahmed",
       "isOwner": false,
       "visibility": "Public",
-      "experience": [
+      "workExperience": [
         {
           "title": "Software Engineer",
           "company": "Google",
@@ -211,21 +222,19 @@
       ],
       "education": [
         {
-          "institution": "Harvard University",
+          "school": "Harvard University",
           "degree": "Bachelor's",
           "field": "Computer Science",
           "description": "Studied software engineering and AI.",
           "grade": "3.9 GPA",
-          "activities": "tt",
           "id": "b60160fc-b728-4413-8e6c-b2520f1c26c7"
         },
         {
-          "institution": "Stanford University",
+          "school": "Stanford University",
           "degree": "Master's",
           "field": "Artificial Intelligence",
           "description": "Focused on deep learning and data science.",
           "grade": "4.0 GPA",
-          "activities": "tt",
           "id": "aeac791c-15db-4b49-9c3b-f7a3647fdf83"
         }
       ],
@@ -372,7 +381,7 @@
       "authorId": "khalid_dev",
       "authorName": "Khalid Ahmed",
       "authorPicture": "https://example.com/khalid.jpg",
-      "authorBio": "Full Stack Developer | Building Digital Experiences",
+      "authorBio": "Full Stack Developer | Building Digital workExperiences",
       "content": "Just finished implementing a real-time chat feature using WebSockets! 🚀 Excited to see how it improves communication in our platform.",
       "media": [],
       "reactions": {
@@ -472,7 +481,7 @@
       "authorId": "ali_design",
       "authorName": "Ali Mahmoud",
       "authorPicture": "https://example.com/ali.jpg",
-      "authorBio": "UI/UX Designer | Crafting User-Centric Experiences",
+      "authorBio": "UI/UX Designer | Crafting User-Centric workExperiences",
       "content": "Redesigned the onboarding flow for our app. Hoping it improves user retention and satisfaction! 🎨✨",
       "media": [],
       "reactions": {

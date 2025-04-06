@@ -7,11 +7,11 @@ import defaultEducationImage from "../../../../assets/images/defaultEducationIma
 const isCardEmpty = (item, type) => {
   switch (type) {
     case "education":
-      return !item?.institution;
-    case "experience":
+      return !item?.school;
+    case "workExperience":
       return !item?.company && !item?.title;
     case "skills":
-      return !item?.skill;
+      return !item?.skillName;
     case "certifications":
       return !item?.name;
     default:
@@ -71,14 +71,11 @@ function GenericCard({ item, isOwner, type, onEdit, showEditIcons = false }) {
         className="w-10 h-10 rounded-full object-cover"
       />
       <div>
-        <h3
-          className="text-lg font-semibold text-text"
-          data-testid="institution"
-        >
-          {item.institution}
+        <h3 className="text-lg font-semibold text-text" data-testid="school">
+          {item.school}
         </h3>
         {item.degree && <p className="text-text2">{item.degree}</p>}
-        {item.fieldOfStudy && <p className="text-text2">{item.fieldOfStudy}</p>}
+        {item.field && <p className="text-text2">{item.field}</p>}
         {item.grade && (
           <p className="text-companyheader2 text-sm" data-testid="grade">
             Grade: {item.grade}
@@ -99,7 +96,7 @@ function GenericCard({ item, isOwner, type, onEdit, showEditIcons = false }) {
 
   const renderSkills = () => (
     <div>
-      <h3 className="text-lg font-semibold text-text">{item.skill}</h3>
+      <h3 className="text-lg font-semibold text-text">{item.skillName}</h3>
       <p
         className="text-companyheader2 flex items-center mt-1"
         data-testid="endorsement-count"
@@ -126,20 +123,20 @@ function GenericCard({ item, isOwner, type, onEdit, showEditIcons = false }) {
     <div className="flex items-start gap-3 w-full">
       <img
         src={item.companyLogo || defaultExperienceImage}
-        alt={item.issuingOrganization || "Certification Logo"}
+        alt={item.company || "Certification Logo"}
         className="w-10 h-10 rounded-full object-cover"
       />
       <div>
         <h3 className="text-lg font-semibold text-text">{item.name}</h3>
-        {item.issuingOrganization && (
+        {item.company && (
           <p className="text-sm text-companyheader2 font-medium">
-            {item.issuingOrganization}
+            {item.company}
           </p>
         )}
         {item.credentialId && (
           <p className="text-text2 text-sm">ID: {item.credentialId}</p>
         )}
-        {item.credentialUrl && (
+        {/* {item.credentialUrl && (
           <a
             href={item.credentialUrl}
             className="text-blue-500 underline text-sm"
@@ -148,7 +145,7 @@ function GenericCard({ item, isOwner, type, onEdit, showEditIcons = false }) {
           >
             View Credential
           </a>
-        )}
+        )} */}
         {item.startDate && (
           <p className="text-text2 text-sm mt-1">
             {displayDate(item.startDate)}
@@ -174,7 +171,7 @@ function GenericCard({ item, isOwner, type, onEdit, showEditIcons = false }) {
         </button>
       )}
 
-      {type === "experience" && renderExperience()}
+      {type === "workExperience" && renderExperience()}
       {type === "education" && renderEducation()}
       {type === "skills" && renderSkills()}
       {type === "certifications" && renderCertifications()}

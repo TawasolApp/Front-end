@@ -179,16 +179,6 @@ function EditProfileModal({ user, isOpen, onClose, onSave }) {
             {errors.lastName}
           </p>
         )}
-        <label htmlFor="bio" className="block text-sm font-medium text-text2">
-          Bio
-        </label>
-        <textarea
-          id="bio"
-          name="bio"
-          value={editedUser.bio || ""}
-          onChange={handleChange}
-          className="border p-2 w-full mb-2 h-20 bg-boxbackground text-companyheader2"
-        />
         <label
           htmlFor="country"
           className="block text-sm font-medium text-text2"
@@ -243,19 +233,19 @@ function EditProfileModal({ user, isOpen, onClose, onSave }) {
           </p>
         )}
         <label
-          htmlFor="experience"
+          htmlFor="workExperience"
           className="block text-sm font-medium text-text2"
         >
           Work Experience
         </label>
         <select
-          id="experience"
+          id="workExperience"
           name="experience"
           className="border p-2 w-full mb-2 bg-boxbackground text-companyheader2"
           value={selectedExperienceIndex}
           onChange={(e) => setSelectedExperienceIndex(Number(e.target.value))}
         >
-          {editedUser.experience?.map((exp, index) => (
+          {editedUser.workExperience?.map((exp, index) => (
             <option key={index} value={index}>
               {exp.title} at {exp.company}
             </option>
@@ -279,25 +269,6 @@ function EditProfileModal({ user, isOpen, onClose, onSave }) {
               {edu.institution} - {edu.degree}
             </option>
           ))}
-        </select>
-        <label
-          htmlFor="skills"
-          className="block text-sm font-medium text-text2 "
-        >
-          Skills
-        </label>
-        <select
-          id="skills"
-          name="skills"
-          className="border p-2 w-full mb-2 bg-boxbackground text-companyheader2"
-        >
-          {Array.isArray(editedUser.skills) && editedUser.skills.length > 0 ? (
-            editedUser.skills.map((skill, index) => (
-              <option key={index}>{skill.skillName}</option>
-            ))
-          ) : (
-            <option>No Skill added</option>
-          )}
         </select>
         <div className="flex justify-end mt-4">
           <button

@@ -7,20 +7,20 @@ function EducationFields({ formData, handleChange, errors }) {
         Education Details
       </h2>
 
-      <label htmlFor="institution" className="block font-medium mb-1 text-text">
+      <label htmlFor="school" className="block font-medium mb-1 text-text">
         School *
       </label>
       <input
-        id="institution"
+        id="school"
         type="text"
-        name="institution"
-        value={formData.institution || ""}
+        name="school"
+        value={formData.school || ""}
         onChange={handleChange}
         className="border p-2 w-full mb-2 rounded-md bg-boxbackground text-companyheader2"
         placeholder="Ex: Harvard University"
       />
-      {errors.institution && (
-        <p className="text-red-600 text-sm mb-3">{errors.institution}</p>
+      {errors.school && (
+        <p className="text-red-600 text-sm mb-3">{errors.school}</p>
       )}
 
       <label
@@ -39,17 +39,14 @@ function EducationFields({ formData, handleChange, errors }) {
         placeholder="Ex: Bachelor's"
       />
 
-      <label
-        htmlFor="fieldOfStudy"
-        className="block font-medium mb-1 text-text"
-      >
+      <label htmlFor="field" className="block font-medium mb-1 text-text">
         Field of Study
       </label>
       <input
-        id="fieldOfStudy"
+        id="field"
         type="text"
-        name="fieldOfStudy"
-        value={formData.fieldOfStudy || ""}
+        name="field"
+        value={formData.field || ""}
         onChange={handleChange}
         className="border p-2 w-full mb-2 rounded-md  bg-boxbackground"
         placeholder="Ex: Computer Science"
@@ -68,7 +65,7 @@ function EducationFields({ formData, handleChange, errors }) {
         placeholder="Ex: 3.9 GPA"
       />
 
-      <label htmlFor="activities" className="block font-medium mb-1 text-text">
+      {/* <label htmlFor="activities" className="block font-medium mb-1 text-text">
         Activities and Societies
       </label>
       <textarea
@@ -82,7 +79,7 @@ function EducationFields({ formData, handleChange, errors }) {
       />
       <p className="text-right text-gray-500 text-sm">
         {formData.activities?.length || 0}/500
-      </p>
+      </p> */}
 
       <label htmlFor="description" className="block font-medium mb-1 text-text">
         Description

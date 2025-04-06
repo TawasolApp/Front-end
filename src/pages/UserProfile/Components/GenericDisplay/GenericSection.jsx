@@ -9,7 +9,7 @@ const singularMap = {
   skills: "skill",
   certifications: "certification",
   education: "education",
-  experience: "experience",
+  workExperience: "experience",
 };
 
 function GenericSection({ title, type, items, isOwner, user }) {
@@ -50,9 +50,9 @@ function GenericSection({ title, type, items, isOwner, user }) {
 
       if (response?.data) {
         const newKey =
-          type === "skills" ? response.data.skill : response.data.id;
+          type === "skills" ? response.data.skillName : response.data.id;
         const exists = data.some((item) =>
-          type === "skills" ? item.skill === newKey : item.id === newKey
+          type === "skills" ? item.skillName === newKey : item.id === newKey
         );
         if (!exists) {
           setData((prev) => [...prev, response.data]);
@@ -126,7 +126,7 @@ function GenericSection({ title, type, items, isOwner, user }) {
       {/* Cards */}
       <div className="flex flex-col gap-4">
         {data.slice(0, 2).map((item, index) => (
-          <div key={type === "skills" ? item.skill : (item.id ?? index)}>
+          <div key={type === "skills" ? item.skillName : (item.id ?? index)}>
             <GenericCard
               item={item}
               type={type}

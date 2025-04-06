@@ -4,9 +4,7 @@ import defaultExperienceImage from "../../../../assets/images/defaultExperienceI
 
 function CertificationsFields({ formData, setFormData, handleChange, errors }) {
   const [companies, setCompanies] = useState([]);
-  const [inputValue, setInputValue] = useState(
-    formData.issuingOrganization || ""
-  );
+  const [inputValue, setInputValue] = useState(formData.company || "");
   const [showDropdown, setShowDropdown] = useState(false);
   const [highlightedIndex, setHighlightedIndex] = useState(-1);
 
@@ -18,8 +16,8 @@ function CertificationsFields({ formData, setFormData, handleChange, errors }) {
   }, []);
 
   useEffect(() => {
-    setInputValue(formData.issuingOrganization || "");
-  }, [formData.issuingOrganization]);
+    setInputValue(formData.company || "");
+  }, [formData.company]);
 
   const companyOptions = companies.map((company) => ({
     label: company.name,
@@ -57,17 +55,14 @@ function CertificationsFields({ formData, setFormData, handleChange, errors }) {
         <p className="text-red-600 text-sm mb-2">{errors.name}</p>
       )}
 
-      <label
-        htmlFor="issuingOrganization"
-        className="block font-medium mb-1 text-text"
-      >
+      <label htmlFor="company" className="block font-medium mb-1 text-text">
         Issuing organization*
       </label>
       <div className="relative">
         <input
           type="text"
-          id="issuingOrganization"
-          name="issuingOrganization"
+          id="company"
+          name="company"
           placeholder="Ex: Microsoft"
           value={inputValue}
           onChange={(e) => {
@@ -78,7 +73,7 @@ function CertificationsFields({ formData, setFormData, handleChange, errors }) {
             );
             setFormData((prev) => ({
               ...prev,
-              issuingOrganization: value,
+              company: value,
               companyLogo: match ? match.logo : "",
             }));
             setShowDropdown(true);
@@ -102,7 +97,7 @@ function CertificationsFields({ formData, setFormData, handleChange, errors }) {
                 setInputValue(selected.label);
                 setFormData((prev) => ({
                   ...prev,
-                  issuingOrganization: selected.label,
+                  company: selected.label,
                   companyLogo: selected.logo,
                 }));
                 setShowDropdown(false);
@@ -116,10 +111,8 @@ function CertificationsFields({ formData, setFormData, handleChange, errors }) {
           className="border p-2 w-full rounded-md mb-2 bg-boxbackground text-companyheader2"
           autoComplete="off"
         />
-        {errors.issuingOrganization && (
-          <p className="text-red-600 text-sm mb-2">
-            {errors.issuingOrganization}
-          </p>
+        {errors.company && (
+          <p className="text-red-600 text-sm mb-2">{errors.company}</p>
         )}
 
         {showDropdown && filteredOptions.length > 0 && (
@@ -131,7 +124,7 @@ function CertificationsFields({ formData, setFormData, handleChange, errors }) {
                   setInputValue(option.label);
                   setFormData((prev) => ({
                     ...prev,
-                    issuingOrganization: option.label,
+                    company: option.label,
                     companyLogo: option.logo,
                   }));
                   setShowDropdown(false);
@@ -152,7 +145,7 @@ function CertificationsFields({ formData, setFormData, handleChange, errors }) {
         )}
       </div>
 
-      <label
+      {/* <label
         htmlFor="credentialId"
         className="block font-medium mb-1  text-text"
       >
@@ -166,9 +159,9 @@ function CertificationsFields({ formData, setFormData, handleChange, errors }) {
         onChange={handleChange}
         className="border p-2 w-full rounded-md mb-2 bg-boxbackground text-companyheader2"
         placeholder="Optional"
-      />
+      /> */}
 
-      <label
+      {/* <label
         htmlFor="credentialUrl"
         className="block font-medium mb-1  text-text"
       >
@@ -182,7 +175,7 @@ function CertificationsFields({ formData, setFormData, handleChange, errors }) {
         onChange={handleChange}
         className="border p-2 w-full rounded-md mb-2 bg-boxbackground text-companyheader2"
         placeholder="Optional"
-      />
+      /> */}
     </>
   );
 }

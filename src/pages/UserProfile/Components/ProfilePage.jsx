@@ -6,7 +6,8 @@ import EducationSection from "./Sections/EducationSection";
 import ExperienceSection from "./Sections/ExperienceSection";
 import SkillsSection from "./Sections/SkillsSection";
 import CertificationsSection from "./Sections/CertificationsSection";
-
+import AboutSection from "./Sections/AboutSection";
+import ResumeSection from "./Sections/ResumeSection";
 function ProfilePage() {
   const { user, isOwner } = useOutletContext();
 
@@ -21,6 +22,8 @@ function ProfilePage() {
         educationRef={educationRef}
         experienceRef={experienceRef}
       />
+      <AboutSection user={user} isOwner={isOwner} />
+      <ResumeSection user={user} isOwner={isOwner} />
       <EducationSection
         isOwner={isOwner}
         sectionRef={educationRef}

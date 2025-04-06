@@ -48,8 +48,8 @@ function GenericPage({ title, type }) {
       if (editMode && editIndex !== null && data[editIndex]) {
         let originalKey;
         if (type === "skills") {
-          originalKey = data[editIndex].skill; // always use the original skill name
-          updatedItem.skill = originalKey; // prevent renaming the skill
+          originalKey = data[editIndex].skillName; // always use the original skill name
+          updatedItem.skillName = originalKey; // prevent renaming the skill
         } else {
           originalKey = data[editIndex].id;
         }
@@ -66,7 +66,7 @@ function GenericPage({ title, type }) {
         // safer as replace only the updated item
         setData((prev) =>
           prev.map((item) => {
-            const itemKey = type === "skills" ? item.skill : item.id;
+            const itemKey = type === "skills" ? item.skillName : item.id;
             return itemKey === originalKey ? response.data : item;
           })
         );
@@ -81,9 +81,9 @@ function GenericPage({ title, type }) {
         }
 
         const newKey =
-          type === "skills" ? response.data.skill : response.data.id;
+          type === "skills" ? response.data.skillName : response.data.id;
         const exists = data.some((item) =>
-          type === "skills" ? item.skill === newKey : item.id === newKey
+          type === "skills" ? item.skillName === newKey : item.id === newKey
         );
 
         if (!exists) {
@@ -103,7 +103,7 @@ function GenericPage({ title, type }) {
     if (!user?.id || editIndex === null || !data[editIndex]) return;
 
     const itemId =
-      type === "skills" ? data[editIndex].skill : data[editIndex].id;
+      type === "skills" ? data[editIndex].skillName : data[editIndex].id;
 
     try {
       await axios.delete(`/profile/${user.id}/${type}/${itemId}`);
@@ -168,7 +168,7 @@ function GenericPage({ title, type }) {
           <div
             key={
               type === "skills"
-                ? (item.skill ?? `skill-${index}`)
+                ? (item.skillName ?? `skillName-${index}`)
                 : (item.id ?? index)
             }
             className="relative group"
