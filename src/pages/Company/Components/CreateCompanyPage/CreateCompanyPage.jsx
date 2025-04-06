@@ -53,14 +53,32 @@ function CreateCompanyPage() {
 
     setLoading(true);
 
-    let base64Logo = "";
+    let logoUrl = "";
     if (logoFile) {
-      base64Logo = await getBase64(logoFile);
+      const formData = new FormData();
+      formData.append("file", logoFile);
+
+      try {
+        const uploadResponse = await axios.post("/api/uploadImage", formData, {
+          headers: {
+            "Content-Type": "multipart/form-data",
+          },
+        });
+
+        logoUrl = uploadResponse.data; // The file URL from server
+      } catch (uploadError) {
+        setErrors((prev) => ({
+          ...prev,
+          apiError: "Failed to upload logo. Please try again.",
+        }));
+        setLoading(false);
+        return;
+      }
     }
 
     const newCompany = {
       name: companyName,
-      logo: base64Logo,
+      logo: logoUrl,
       banner: null,
       description: tagline,
       companySize: orgSize,
@@ -100,6 +118,7 @@ function CreateCompanyPage() {
       setLoading(false);
     }
   }
+
   if (loading) {
     return <LoadingPage />;
   }
