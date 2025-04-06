@@ -12,10 +12,13 @@ function JobApplications({ job }) {
     const fetchApplicants = async () => {
       setLoading(true);
       try {
-        const response = await axiosInstance.get(
-          `/companies/jobs/${job.id}/applicants`
+        const response = await axiosInstance.get("/applicants");
+        const filtered = response.data.filter(
+          (applicant) =>
+            applicant.jobId === job.jobId &&
+            applicant.companyId === job.companyId
         );
-        setApplicants(response.data);
+        setApplicants(filtered);
       } catch (error) {
         console.error("Failed to fetch applicants:", error);
         setApplicants([]);

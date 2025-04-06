@@ -14,6 +14,7 @@ import { axiosInstance } from "../../../../apis/axios.js";
 import AddManagerModal from "../Modals/AddManagerModal.jsx";
 function CompanyHeader({
   company,
+  setCompanyData,
   showAdminIcons,
   setShowAdminIcons,
   isAdmin,
@@ -242,6 +243,13 @@ function CompanyHeader({
         show={showAddManagerModal}
         onClose={() => setShowAddManagerModal(false)}
         companyId={company.companyId}
+        Managers={company.Managers}
+        onManagerAdded={(newManagerId) => {
+          setCompanyData((prev) => ({
+            ...prev,
+            Managers: [...prev.Managers, newManagerId],
+          }));
+        }}
       />
     </div>
   );

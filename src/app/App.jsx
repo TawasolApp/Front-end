@@ -89,6 +89,7 @@ const App = () => {
         <Route path="/feed" element={<FeedContainer />} />
         <Route path="/my-items/saved-posts" element={<SavedPostsContainer />} />
 
+        <Route path="/company" element={<CompanyLayout />} />
         <Route path="/company/:companyId/*" element={<CompanyLayout />}>
           <Route index element={<HomePage />} />
           <Route path="home" element={<HomePage />} />

@@ -591,7 +591,8 @@ server.delete("/profile/:userId/skills/:itemId", (req, res) => {
 const currentUser = {
   id: "mohsobh",
   name: "Mohamed Sobh",
-  picture: "https://media.licdn.com/dms/image/v2/D4D03AQH7Ais8BxRXzw/profile-displayphoto-shrink_100_100/profile-displayphoto-shrink_100_100/0/1721080103981?e=1747872000&v=beta&t=nDnZdgCqkI8v5B2ymXZzluMZVlF6h_o-dN1pA95Fzv4",
+  picture:
+    "https://media.licdn.com/dms/image/v2/D4D03AQH7Ais8BxRXzw/profile-displayphoto-shrink_100_100/profile-displayphoto-shrink_100_100/0/1721080103981?e=1747872000&v=beta&t=nDnZdgCqkI8v5B2ymXZzluMZVlF6h_o-dN1pA95Fzv4",
   bio: "Computer Engineering Student at Cairo University",
   type: "User",
 };
@@ -616,10 +617,15 @@ server.post("/posts", (req, res) => {
   const isSilentRepost = req.body.isSilentRepost || false;
 
   // Basic validation
-  if (!isSilentRepost && !content) return res.status(400).json({ error: "content is required when it is not a silent repost" });
+  if (!isSilentRepost && !content)
+    return res
+      .status(400)
+      .json({ error: "content is required when it is not a silent repost" });
 
   const posts = _router.db.get("posts");
-  const parentPost = parentPostId ? posts.find({ id: parentPostId }).value() : null;
+  const parentPost = parentPostId
+    ? posts.find({ id: parentPostId }).value()
+    : null;
 
   const newPost = {
     id: Date.now().toString(),
@@ -646,9 +652,9 @@ server.post("/posts", (req, res) => {
     reactType: null,
     timestamp: new Date().toISOString(),
     parentPost: parentPost ? { ...parentPost } : null,
-    isSilentRepost: isSilentRepost
+    isSilentRepost: isSilentRepost,
   };
-  
+
   posts.push(newPost).write();
   res.status(201).json(newPost);
 });
@@ -876,7 +882,10 @@ server.post("/posts/comment/:postId", (req, res) => {
     }
   } else {
     // Find the parent comment
-    const parentComment = _router.db.get("comments").find({ id: postId }).value();
+    const parentComment = _router.db
+      .get("comments")
+      .find({ id: postId })
+      .value();
     if (!parentComment) {
       return res.status(404).jsonp({ error: "Parent comment not found" });
     }
@@ -921,10 +930,13 @@ server.delete("/posts/comments/:commentId", (req, res) => {
       comments.remove({ id: commentId }).write();
       return res.status(200).json({ message: "Comment deleted successfully" });
     } else {
-      const wantedParentComment = comments.find({ id: wantedComment.postId }).value();
+      const wantedParentComment = comments
+        .find({ id: wantedComment.postId })
+        .value();
       console.log(wantedParentComment);
       if (wantedParentComment) {
-        comments.find({ id: wantedComment.postId })
+        comments
+          .find({ id: wantedComment.postId })
           .assign({ replies: wantedComment.replies.slice(0, -1) }) // Removes last element
           .write();
         comments.remove({ id: commentId }).write();
