@@ -30,7 +30,6 @@ import HomePage from "../pages/Company/Components/Pages/HomePage.jsx";
 import JobsPage from "../pages/Company/Components/Pages/JobsPage.jsx";
 import CreateCompanyPage from "../pages/Company/Components/CreateCompanyPage/CreateCompanyPage.jsx";
 
-import NetworkBox from "../pages/MyNetwork/NetworkBox";
 import ConnectionPage from "../pages/MyNetwork/Connections/ConnectionPage";
 import BlockedPage from "../pages/MyNetwork/BlockedPage";
 import FollowPage from "../pages/MyNetwork/FollowPage";
@@ -40,6 +39,7 @@ import FeedContainer from "../pages/Feed/FeedContainer";
 import SavedPostsContainer from "../pages/SavedPosts/SavedPostsContainer";
 import VerifySignUpPage from "../pages/Authentication/VerifySignUpPage.jsx";
 import VerifyResetPasswordPage from "../pages/Authentication/VerifyresetPasswordPage.jsx";
+import NetworkBox from "../pages/MyNetwork/NetworkBox.jsx";
 
 const App = () => {
   const isOwner = true;
@@ -62,11 +62,11 @@ const App = () => {
           element={<VerificationPendingPage />}
         />
         <Route
-          path="/auth/verify-change-email"
+          path="/users/confirm-email-change"
           element={<VerifyChangeEmailPage />}
         />
-        <Route path="/auth/verify-signup" element={<VerifySignUpPage />} />
-        <Route path="/auth/verify-reset-password" element={<VerifyResetPasswordPage />} />
+        <Route path="/auth/verify-email" element={<VerifySignUpPage />} />
+        <Route path="/auth/reset-password" element={<VerifyResetPasswordPage />} />
         <Route path="/auth/new-password" element={<NewPasswordPage />} />
         <Route path="/auth/update-email" element={<ChangeEmailPage />} />
 
@@ -84,6 +84,7 @@ const App = () => {
         <Route path="/blocked" element={<BlockedPage />} />
         <Route path="/follow" element={<FollowPage />} />
         <Route path="/manage-connections" element={<ManageConnections />} />
+        <Route path="/network-box" element={<NetworkBox />} />
 
         <Route path="/feed" element={<FeedContainer />} />
         <Route path="/my-items/saved-posts" element={<SavedPostsContainer />} />

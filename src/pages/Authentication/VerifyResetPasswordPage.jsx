@@ -16,22 +16,20 @@ const VerifyResetPasswordPage = () => {
       return;
     }
 
-    // Here you will make the API call to reset the password with the token
     axiosInstance
-      .post(`/auth/reset-password`, {
-        token: token,
-        newPassword: "newpassword123", // Assuming the new password is set here
-      })
+      .post(`/auth/reset-password`, { token })
       .then((res) => {
-        setStatus("Password reset successfully! Redirecting...");
+        setStatus("Token verified! Redirecting to reset password page...");
         setTimeout(() => {
-          navigate("/feed"); // Navigate to /feed after successful password reset
+          navigate("/auth/new-password");
         }, 1500);
       })
       .catch((err) => {
         console.error(err);
         if (err.response?.status === 400) {
-          setStatus("Invalid or expired token. Please request a new reset email.");
+          setStatus(
+            "Invalid or expired token. Please request a new reset email."
+          );
         } else {
           setStatus("Something went wrong. Please try again later.");
         }
@@ -47,9 +45,7 @@ const VerifyResetPasswordPage = () => {
           Reset Password
         </h1>
 
-        <p className="text-base md:text-lg text-textHomeTitle">
-          {status}
-        </p>
+        <p className="text-base md:text-lg text-textHomeTitle">{status}</p>
       </div>
     </div>
   );

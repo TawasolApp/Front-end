@@ -28,18 +28,20 @@ const SignWithGoogle = () => {
     if (window.google) {
       googleClient.current = window.google.accounts.oauth2.initTokenClient({
         client_id: googleClientId,
-        scope: "email profile openid",
+        scope:
+          "email profile openid https://www.googleapis.com/auth/userinfo.profile",
         callback: async (tokenResponse) => {
           if (tokenResponse?.access_token) {
             try {
               const response = await axiosInstance.post(
                 "/auth/social-login/google",
                 {
-                  idToken: tokenResponse.access_token,
+                  accessToken: tokenResponse.access_token,
                 }
               );
+              console.log(response);
 
-              if (response.status === 200) {
+              if (response.status === 201) {
                 const { userId, token, refreshToken, isNewUser } =
                   response.data;
 
@@ -50,7 +52,8 @@ const SignWithGoogle = () => {
 
                 // New user, set-up account instead of logging in
                 if (isNewUser) {
-                  navigate("/auth/signup/name");
+                  console.log(token);
+                  navigate("/auth/signup/location");
                   return;
                 }
 
