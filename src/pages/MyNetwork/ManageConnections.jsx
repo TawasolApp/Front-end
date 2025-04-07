@@ -10,7 +10,7 @@ const ManageConnections = () => {
   const [error, setError] = useState(null);
   const [pagination, setPagination] = useState({
     page: 1,
-    limit: 10
+    limit: 5
   });
   const navigate = useNavigate();
 
@@ -69,8 +69,7 @@ const ManageConnections = () => {
 
   const handleWithdraw = async (userId) => {
     
-      setError("Failed to withdraw request. Please try again.");
-    
+  
   };
 
   return (

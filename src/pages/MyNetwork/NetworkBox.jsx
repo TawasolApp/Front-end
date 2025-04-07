@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef, useCallback } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import { axiosInstance } from "../../apis/axios";
 import PeopleIcon from "@mui/icons-material/People";
@@ -14,11 +14,30 @@ const NetworkBox = () => {
   const [error, setError] = useState(null);
   const [pagination, setPagination] = useState({
     page: 1,
-    limit: 10
+    limit: 5
   });
+  const [hasMore, setHasMore] = useState(true);
+  const observer = useRef();
+
+  const lastElementRef = useCallback(node => {
+    if (loading) return;
+    if (observer.current) observer.current.disconnect();
+
+    observer.current = new IntersectionObserver(entries => {
+      if (entries[0].isIntersecting && hasMore) {
+        setPagination(prev => ({
+          ...prev,
+          page: prev.page + 1
+        }));
+      }
+    });
+
+    if (node) observer.current.observe(node);
+  }, [loading, hasMore]);
 
   useEffect(() => {
     const fetchPendingRequests = async () => {
+      setLoading(true);
       try {
         const [pendingRes, sentRes] = await Promise.all([
           axiosInstance.get("/connections/pending", {
@@ -34,8 +53,10 @@ const NetworkBox = () => {
             }
           })
         ]);
-        setPendingRequests(pendingRes.data);
+
+        setPendingRequests(prev => [...prev, ...pendingRes.data]);
         setSentRequests(sentRes.data);
+        setHasMore(pendingRes.data.length === pagination.limit);
       } catch (err) {
         setError("Failed to load connection requests.");
       } finally {
@@ -82,19 +103,43 @@ const NetworkBox = () => {
       const isAlreadySent = sentRequests.some(request => request.userId === userId);
       
       if (isAlreadySent) {
-        // Remove pending request
-        await axiosInstance.delete(`/connections/${userId}/pending`);
+        // Immediately remove from UI
         setSentRequests(prev => prev.filter(request => request.userId !== userId));
+        await axiosInstance.delete(`/connections/${userId}/pending`);
       } else {
-        // Send new connection request
+        // Immediately add to sent requests in UI (with minimal data)
+        setSentRequests(prev => [...prev, { userId }]);
         await axiosInstance.post("/connections", { userId });
-        const response = await axiosInstance.get(`/users/${userId}`);
-        setSentRequests(prev => [...prev, response.data]);
       }
+  
+      // Refresh both pending and sent connections
+      const [pendingRes, sentRes] = await Promise.all([
+        axiosInstance.get("/connections/pending", {
+          params: {
+            page: 1,
+            limit: pagination.limit * pagination.page
+          }
+        }),
+        axiosInstance.get("/connections/sent", {
+          params: {
+            page: 1,
+            limit: pagination.limit * pagination.page
+          }
+        })
+      ]);
+  
+      setPendingRequests(pendingRes.data);
+      setSentRequests(sentRes.data);
+  
     } catch (error) {
       console.error(
         "Failed to handle connection:",
         error.response?.data?.message || error.message,
+      );
+      // Revert UI changes if request fails
+      setSentRequests(prev => isAlreadySent 
+        ? [...prev, { userId }] 
+        : prev.filter(request => request.userId !== userId)
       );
     }
   };
@@ -102,14 +147,12 @@ const NetworkBox = () => {
   return (
     <div className="min-h-screen bg-mainBackground p-8 flex justify-center">
       <div className="flex flex-col md:flex-row gap-6 w-full max-w-6xl">
-        {/* Left Sidebar: Manage My Network */}
         <div className="bg-cardBackground p-6 rounded-lg shadow-md border border-cardBorder w-full sm:w-[360px] h-fit">
           <h2 className="text-xl font-bold mb-6 text-textHeavyTitle">
             Manage my network
           </h2>
 
           <div className="space-y-2">
-            {/* Connections */}
             <div
               onClick={() => navigate("/connections")}
               className="flex items-center p-4 hover:bg-cardBackgroundHover rounded-lg cursor-pointer transition-colors"
@@ -120,7 +163,6 @@ const NetworkBox = () => {
               </span>
             </div>
 
-            {/* Following & Followers */}
             <div
               onClick={() => navigate("/follow")}
               className="flex items-center p-4 hover:bg-cardBackgroundHover rounded-lg cursor-pointer transition-colors"
@@ -131,7 +173,6 @@ const NetworkBox = () => {
               </span>
             </div>
 
-            {/* Blocked */}
             <div
               onClick={() => navigate("/blocked")}
               className="flex items-center p-4 hover:bg-cardBackgroundHover rounded-lg cursor-pointer transition-colors"
@@ -144,9 +185,7 @@ const NetworkBox = () => {
           </div>
         </div>
 
-        {/* Right Column: Main Content */}
         <div className="flex-1 space-y-6">
-          {/* Invitations Box */}
           <div className="bg-cardBackground rounded-lg shadow-md border border-cardBorder overflow-hidden">
             <div className="p-6 border-b border-cardBorder flex justify-between items-center">
               <h2 className="text-xl font-semibold text-textHeavyTitle">
@@ -163,85 +202,70 @@ const NetworkBox = () => {
               </Link>
             </div>
 
-            {loading ? (
+            {loading && pagination.page === 1 ? (
               <div className="p-6 text-center text-textPlaceholder">Loading...</div>
             ) : error ? (
               <div className="p-6 text-center text-error">{error}</div>
             ) : pendingRequests.length > 0 ? (
               <div className="divide-y divide-cardBorder">
-                {pendingRequests.map((request) => (
-                  <div key={request.userId} className="p-6">
-                    <div className="flex items-center justify-between">
-                      <div className="flex items-center space-x-4">
-                        <img
-                          src={request.profilePicture}
-                          alt={`${request.firstName} ${request.lastName}`}
-                          className="w-12 h-12 rounded-full object-cover"
-                        />
-                        <div>
-                          <h3 className="font-semibold text-textHeavyTitle">
-                            {request.firstName} {request.lastName}
-                          </h3>
-                          <p className="text-sm text-textPlaceholder">
-                            {request.headline}
-                          </p>
+                {pendingRequests.map((request, index) => {
+                  const isLast = index === pendingRequests.length - 1;
+                  return (
+                    <div
+                      key={request.userId}
+                      className="p-6"
+                      ref={isLast ? lastElementRef : null}
+                    >
+                      <div className="flex items-center justify-between">
+                        <div className="flex items-center space-x-4">
+                          <img
+                            src={request.profilePicture}
+                            alt={`${request.firstName} ${request.lastName}`}
+                            className="w-12 h-12 rounded-full object-cover"
+                          />
+                          <div>
+                            <h3 className="font-semibold text-textHeavyTitle">
+                              {request.firstName} {request.lastName}
+                            </h3>
+                            <p className="text-sm text-textPlaceholder">
+                              {request.headline}
+                            </p>
+                          </div>
+                        </div>
+                        <div className="flex space-x-3">
+                          <button
+                            onClick={() => handleIgnore(request.userId)}
+                            className="px-4 py-2 text-sm font-medium text-textActivity hover:bg-buttonIconHover rounded-3xl transition-colors"
+                          >
+                            Ignore
+                          </button>
+                          <button
+                            onClick={() => handleAccept(request.userId)}
+                            className="px-4 py-2 text-sm font-medium text-buttonSubmitEnable bg-cardBackground border-2 border-buttonSubmitEnable hover:bg-buttonSubmitEnableHover rounded-3xl transition-colors"
+                          >
+                            Accept
+                          </button>
                         </div>
                       </div>
-                      <div className="flex space-x-3">
-                        <button
-                          onClick={() => handleIgnore(request.userId)}
-                          className="px-4 py-2 text-sm font-medium text-textActivity hover:bg-buttonIconHover rounded-3xl transition-colors"
-                        >
-                          Ignore
-                        </button>
-                        <button
-                          onClick={() => handleAccept(request.userId)}
-                          className="px-4 py-2 text-sm font-medium text-buttonSubmitEnable bg-cardBackground border-2 border-buttonSubmitEnable hover:bg-buttonSubmitEnableHover rounded-3xl transition-colors"
-                        >
-                          Accept
-                        </button>
-                      </div>
                     </div>
-                  </div>
-                ))}
+                  );
+                })}
+                {loading && (
+                  <div className="p-6 text-center text-textPlaceholder">Loading more...</div>
+                )}
               </div>
             ) : (
               <div className="p-6 text-center text-textPlaceholder">
                 No pending invitations
               </div>
             )}
-
-            {/* Pagination Controls */}
-            {pendingRequests.length > 0 && (
-              <div className="flex justify-center p-4 border-t border-cardBorder">
-                <button
-                  onClick={() => setPagination(prev => ({...prev, page: prev.page - 1}))}
-                  disabled={pagination.page === 1}
-                  className="px-4 py-2 mx-1 border rounded disabled:opacity-50"
-                >
-                  Previous
-                </button>
-                <span className="px-4 py-2">
-                  Page {pagination.page}
-                </span>
-                <button
-                  onClick={() => setPagination(prev => ({...prev, page: prev.page + 1}))}
-                  disabled={pendingRequests.length < pagination.limit}
-                  className="px-4 py-2 mx-1 border rounded disabled:opacity-50"
-                >
-                  Next
-                </button>
-              </div>
-            )}
           </div>
 
-          {/* Recommended Users Box */}
           <RecommendedUsers 
             onConnect={handleConnect} 
             sentRequests={sentRequests} 
           />
 
-          {/* Career Growth Box */}
           <div className="bg-cardBackground rounded-lg shadow-md border border-cardBorder p-6">
             <h2 className="text-xl font-bold mb-3 text-textHeavyTitle">
               Grow your career faster

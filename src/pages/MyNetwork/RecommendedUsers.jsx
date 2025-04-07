@@ -8,7 +8,7 @@ const RecommendedUsers = ({ onConnect, sentRequests }) => {
   const [error, setError] = useState(null);
   const [pagination, setPagination] = useState({
     page: 1,
-    limit: 10
+    limit: 5
   });
 
   useEffect(() => {
@@ -38,7 +38,7 @@ const RecommendedUsers = ({ onConnect, sentRequests }) => {
   return (
     <div className="bg-cardBackground rounded-lg shadow-md border border-cardBorder overflow-hidden">
       <div className="p-6 border-b border-cardBorder">
-        <h2 className="text-xl font-semibold text-textHeavyTitle">
+        <h2 className="text-m font-semibold text-textHeavyTitle">
           People you may know based on your recent activity
         </h2>
       </div>

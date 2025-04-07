@@ -9,7 +9,7 @@ const FollowPage = () => {
   const [followers, setFollowers] = useState([]);
   const [pagination, setPagination] = useState({
     page: 1,
-    limit: 10
+    limit: 5
   });
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
@@ -60,27 +60,36 @@ const FollowPage = () => {
 
   const handleFollow = async (user) => {
     try {
+      // Immediately update UI to show "Following"
+      setFollowing(prev => [...prev, user]);
+      
+      // Send follow request
       const response = await axiosInstance.post(
         "/connections/follow",
-        {
-          userId: user.userId,
-        },
-        {
-          headers: {
-            "Content-Type": "application/json",
-          },
-        },
+        { userId: user.userId },
+        { headers: { "Content-Type": "application/json" } }
       );
-
-      if (response.status === 201) {
-        setFollowing([...following, response.data]);
-      }
+  
+      // Refresh both following and followers lists
+      const [followingRes, followersRes] = await Promise.all([
+        axiosInstance.get("/connections/following", {
+          params: { page: 1, limit: pagination.limit * pagination.page }
+        }),
+        axiosInstance.get("/connections/followers", {
+          params: { page: 1, limit: pagination.limit * pagination.page }
+        })
+      ]);
+  
+      setFollowing(followingRes.data);
+      setFollowers(followersRes.data);
+  
     } catch (error) {
+      console.error("Failed to follow user:", error);
+      // Revert UI change if request fails
+      setFollowing(prev => prev.filter(u => u.userId !== user.userId));
       setError("Failed to follow user.");
-      console.error("Detailed follow error:", error);
     }
   };
-
   const promptUnfollow = (user) => {
     setUserToUnfollow(user);
     setShowUnfollowModal(true);
