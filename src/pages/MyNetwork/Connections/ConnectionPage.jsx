@@ -8,11 +8,21 @@ const ConnectionPage = () => {
   const [error, setError] = useState(null);
   const [sortBy, setSortBy] = useState("recentlyAdded");
   const [searchQuery, setSearchQuery] = useState("");
+  const [pagination, setPagination] = useState({
+    page: 1,
+    limit: 5
+  });
 
   useEffect(() => {
     const fetchConnections = async () => {
       try {
-        const response = await axiosInstance.get("/connections/list");
+        setLoading(true);
+        const response = await axiosInstance.get("/connections/list", {
+          params: {
+            page: pagination.page,
+            limit: pagination.limit
+          }
+        });
         setConnections(response.data);
       } catch (err) {
         setError("Failed to load connections.");
@@ -22,7 +32,7 @@ const ConnectionPage = () => {
     };
 
     fetchConnections();
-  }, []);
+  }, [pagination.page, pagination.limit]);
 
   const handleRemoveConnection = async (userId) => {
     try {
@@ -43,24 +53,27 @@ const ConnectionPage = () => {
     setSearchQuery(event.target.value.toLowerCase());
   };
 
+  const handlePageChange = (newPage) => {
+    setPagination(prev => ({...prev, page: newPage}));
+  };
+
   // Sort connections
   const sortedConnections = [...connections].sort((a, b) => {
     if (sortBy === "recentlyAdded") {
       return new Date(b.createdAt) - new Date(a.createdAt);
     } else if (sortBy === "firstName") {
-      return a.username.split(" ")[0].localeCompare(b.username.split(" ")[0]);
+      return a.firstName.localeCompare(b.firstName);
     } else if (sortBy === "lastName") {
-      const lastNameA = a.username.split(" ")[1] || a.username;
-      const lastNameB = b.username.split(" ")[1] || b.username;
-      return lastNameA.localeCompare(lastNameB);
+      return a.lastName.localeCompare(b.lastName);
     }
     return 0;
   });
 
   // Filter connections
-  const filteredConnections = sortedConnections.filter((connection) =>
-    connection.username.toLowerCase().includes(searchQuery),
-  );
+  const filteredConnections = sortedConnections.filter((connection) => {
+    const fullName = `${connection.firstName} ${connection.lastName}`.toLowerCase();
+    return fullName.includes(searchQuery);
+  });
 
   return (
     <div className="p-4 bg-mainBackground min-h-screen flex justify-center">
@@ -167,22 +180,46 @@ const ConnectionPage = () => {
 
         {/* Connections List */}
         {!loading && !error && (
-          <div className="space-y-0">
-            {filteredConnections.map((connection, index) => (
-              <div key={connection.userId}>
-                <ConnectionCard
-                  imageUrl={connection.profilePicture}
-                  username={connection.username}
-                  experience={connection.headline}
-                  connectionDate={`Connected on ${new Date(connection.createdAt).toLocaleDateString()}`}
-                  onRemove={() => handleRemoveConnection(connection.userId)}
-                />
-                {index !== filteredConnections.length - 1 && (
-                  <div className="border-t border-cardBorder"></div>
-                )}
-              </div>
-            ))}
-          </div>
+          <>
+            <div className="space-y-0">
+              {filteredConnections.map((connection, index) => (
+                <div key={connection.userId}>
+                  <ConnectionCard
+                    imageUrl={connection.profilePicture}
+                    firstName={connection.firstName}
+                    lastName={connection.lastName}
+                    experience={connection.headline}
+                    connectionDate={`Connected on ${new Date(connection.createdAt).toLocaleDateString()}`}
+                    onRemove={() => handleRemoveConnection(connection.userId)}
+                  />
+                  {index !== filteredConnections.length - 1 && (
+                    <div className="border-t border-cardBorder"></div>
+                  )}
+                </div>
+              ))}
+            </div>
+
+            {/* Pagination Controls */}
+            <div className="flex justify-center p-4 border-t border-cardBorder">
+              <button
+                onClick={() => handlePageChange(pagination.page - 1)}
+                disabled={pagination.page === 1}
+                className="px-4 py-2 mx-1 border rounded disabled:opacity-50"
+              >
+                Previous
+              </button>
+              <span className="px-4 py-2">
+                Page {pagination.page}
+              </span>
+              <button
+                onClick={() => handlePageChange(pagination.page + 1)}
+                disabled={filteredConnections.length < pagination.limit}
+                className="px-4 py-2 mx-1 border rounded disabled:opacity-50"
+              >
+                Next
+              </button>
+            </div>
+          </>
         )}
       </div>
     </div>

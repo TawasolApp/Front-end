@@ -31,14 +31,14 @@ function JobDetails({ job, logo, name }) {
 
       <p className="text-sm text-companysubheader mt-1">
         {job.location}
-        {job.postDate && (
+        {job.postedAt && (
           <>
             {" • "}
-            {formatDistanceToNow(new Date(job.postDate), { addSuffix: true })}
+            {formatDistanceToNow(new Date(job.postedAt), { addSuffix: true })}
           </>
         )}
-        {typeof job.applicantCount === "number" && job.applicantCount > 0 && (
-          <> • {job.applicantCount} people clicked apply</>
+        {typeof job.applicants === "number" && job.applicants > 0 && (
+          <> • {job.applicants} people clicked apply</>
         )}
       </p>
 

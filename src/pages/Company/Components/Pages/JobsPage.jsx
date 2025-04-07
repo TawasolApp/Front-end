@@ -18,10 +18,10 @@ function JobsPage() {
 
   // Fetch jobs
   useEffect(() => {
-    if (companyId) {
+    if (companyId && company) {
       setLoading(true);
       axiosInstance
-        .get(`/companies/${companyId}/jobs`)
+        .get(`/companies/${companyId}/jobs?page=1&limit=10`)
         .then((res) => {
           setJobs(res.data);
           setSelectedJob(res.data[0] || null);
@@ -29,12 +29,12 @@ function JobsPage() {
         .catch((err) => console.error("Failed to fetch jobs", err))
         .finally(() => setLoading(false));
     }
-  }, [companyId]);
+  }, [companyId, company]);
 
   const handleJobAdded = () => {
     setLoading(true);
     axiosInstance
-      .get(`/companies/${companyId}/jobs`)
+      .get(`/companies/${companyId}/jobs?page=1&limit=10`)
       .then((res) => {
         setJobs(res.data);
         setSelectedJob(res.data[0] || null);
@@ -71,30 +71,31 @@ function JobsPage() {
           onJobAdded={handleJobAdded}
         />
       )}
-
-      <div className="bg-boxbackground p-4 shadow-md rounded-md w-full">
-        <div className="flex flex-col md:flex-row h-auto md:h-[600px] gap-4">
-          {/* Left: Fixed Job List */}
-          <JobsList
-            jobs={jobs}
-            onSelectJob={setSelectedJob}
-            selectedJob={selectedJob}
-            logo={company.logo}
-            name={company.name}
-          />
-
-          {/* Right: Conditional Panel */}
-          {showAdminIcons ? (
-            <JobApplications job={selectedJob} />
-          ) : (
-            <JobDetails
-              job={selectedJob}
+      {jobs.length > 0 && (
+        <div className="bg-boxbackground p-4 shadow-md rounded-md w-full">
+          <div className="flex flex-col md:flex-row h-auto md:h-[600px] gap-4">
+            {/* Left: Fixed Job List */}
+            <JobsList
+              jobs={jobs}
+              onSelectJob={setSelectedJob}
+              selectedJob={selectedJob}
               logo={company.logo}
               name={company.name}
             />
-          )}
+
+            {/* Right: Conditional Panel */}
+            {showAdminIcons ? (
+              <JobApplications job={selectedJob} />
+            ) : (
+              <JobDetails
+                job={selectedJob}
+                logo={company.logo}
+                name={company.name}
+              />
+            )}
+          </div>
         </div>
-      </div>
+      )}
       {showAdminIcons && <Analytics jobs={jobs} />}
     </div>
   );

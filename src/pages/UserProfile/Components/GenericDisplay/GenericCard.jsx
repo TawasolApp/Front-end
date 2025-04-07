@@ -1,122 +1,214 @@
 import React, { useState } from "react";
-import GenericModal from "./GenericModal";
+import GenericModal, { displayDate } from "./GenericModal";
+import defaultExperienceImage from "../../../../assets/images/defaultExperienceImage.png";
+import defaultEducationImage from "../../../../assets/images/defaultEducationImage.png";
+//I AM PASSING VIEWER ID ALSOOO HERE FOR ENDORSEMENTS
+// Helper to skip rendering invalid entries
+const isCardEmpty = (item, type) => {
+  switch (type) {
+    case "education":
+      return !item?.school;
+    case "workExperience":
+      return !item?.company && !item?.title;
+    case "skills":
+      return !item?.skillName;
+    case "certifications":
+      return !item?.name;
+    default:
+      return false;
+  }
+};
 
-function GenericCard({ item, isOwner, type, onEdit, showEditIcons = false }) {
+function GenericCard({
+  item,
+  isOwner,
+  type,
+  onEdit,
+  showEditIcons = false,
+  viewerId,
+}) {
   const [isEndorsed, setIsEndorsed] = useState(false);
   const [endorsementCount, setEndorsementCount] = useState(
     item.endorsements || 0,
   );
   const [isModalOpen, setIsModalOpen] = useState(false);
 
-  const handleEndorse = () => {
-    setEndorsementCount((prev) => (isEndorsed ? prev - 1 : prev + 1));
-    setIsEndorsed(!isEndorsed);
+  if (isCardEmpty(item, type)) return null;
+
+  // const handleEndorse = () => {
+  //   setEndorsementCount((prev) => (isEndorsed ? prev - 1 : prev + 1));
+  //   setIsEndorsed(!isEndorsed);
+  // };
+  const handleEndorse = async () => {
+    try {
+      const userId = item.userId || item._id || item.ownerId; // ← adjust based on your schema
+      const skillName = item.skillName;
+
+      await axios.post(`/connections/${userId}/endorse-skill`, {
+        skillName,
+      });
+
+      setEndorsementCount((prev) => prev + 1);
+      setIsEndorsed(true);
+    } catch (err) {
+      console.error("Endorse error:", err.response?.data || err.message);
+    }
   };
 
-  const handleSave = (updatedData) => {
-    // Placeholder — if you need to update item here you can pass onUpdate
+  const handleSave = () => {
     setIsModalOpen(false);
   };
 
+  const renderExperience = () => (
+    <div className="flex items-start gap-3 w-full">
+      <img
+        src={item.workExperiencePicture || defaultExperienceImage}
+        alt={item.company || "Company Logo"}
+        className="w-10 h-10 rounded-full object-cover"
+      />
+      <div>
+        <h3 className="text-lg font-semibold text-text">{item.title}</h3>
+        <p className="text-sm text-companyheader2 font-medium">
+          {item.company}
+        </p>
+        {item.location && <p className="text-text2 text-sm">{item.location}</p>}
+        {item.description && (
+          <p className="text-text2 text-sm">{item.description}</p>
+        )}
+        {item.startDate && (
+          <p className="text-text2 text-sm mt-1">
+            {displayDate(item.startDate)}
+            {item.endDate ? ` - ${displayDate(item.endDate)}` : ""}
+          </p>
+        )}
+      </div>
+    </div>
+  );
+
+  const renderEducation = () => (
+    <div className="flex items-start gap-3 w-full">
+      <img
+        src={defaultEducationImage}
+        alt="Education"
+        className="w-10 h-10 rounded-full object-cover"
+      />
+      <div>
+        <h3 className="text-lg font-semibold text-text" data-testid="school">
+          {item.school}
+        </h3>
+        {item.degree && <p className="text-text2">{item.degree}</p>}
+        {item.field && <p className="text-text2">{item.field}</p>}
+        {item.grade && (
+          <p className="text-companyheader2 text-sm" data-testid="grade">
+            Grade: {item.grade}
+          </p>
+        )}
+        {item.description && (
+          <p className="text-text2 text-sm">{item.description}</p>
+        )}
+        {item.startDate && (
+          <p className="text-text2 text-sm mt-1">
+            {displayDate(item.startDate)}
+            {item.endDate ? ` - ${displayDate(item.endDate)}` : ""}
+          </p>
+        )}
+      </div>
+    </div>
+  );
+
+  const renderSkills = () => (
+    <div>
+      <h3 className="text-lg font-semibold text-text">{item.skillName}</h3>
+      <p
+        className="text-companyheader2 flex items-center mt-1"
+        data-testid="endorsement-count"
+      >
+        <span className="mr-2">👥</span> {endorsementCount} endorsement
+        {endorsementCount !== 1 ? "s" : ""}
+      </p>
+      {/* {!isOwner && (
+        <button
+          onClick={handleEndorse}
+          className={`mt-2 px-4 py-2 border rounded-full flex items-center justify-center gap-2 w-fit ${
+            isEndorsed
+              ? "bg-gray-200 text-text2 border-companyheader2"
+              : "bg-white text-text-text2 border-companyheader2"
+          } hover:bg-gray-300 transition`}
+        >
+          {isEndorsed ? "✔ Endorsed" : "Endorse"}
+        </button>
+      )} */}
+      {isOwner && (
+        <button
+          onClick={handleEndorse}
+          disabled={isEndorsed}
+          className={`mt-2 px-4 py-2 border rounded-full flex items-center justify-center gap-2 w-fit
+    ${isEndorsed ? "bg-gray-200 text-text2" : "bg-white text-text-text2"} 
+    border-companyheader2 hover:bg-gray-300 transition`}
+        >
+          {isEndorsed ? "✔ Endorsed" : "Endorse"}
+        </button>
+      )}
+    </div>
+  );
+
+  const renderCertifications = () => (
+    <div className="flex items-start gap-3 w-full">
+      <img
+        src={item.certificationPicture || defaultExperienceImage}
+        alt={item.company || "Certification Logo"}
+        className="w-10 h-10 rounded-full object-cover"
+      />
+      <div>
+        <h3 className="text-lg font-semibold text-text">{item.name}</h3>
+        {item.company && (
+          <p className="text-sm text-companyheader2 font-medium">
+            {item.company}
+          </p>
+        )}
+        {item.credentialId && (
+          <p className="text-text2 text-sm">ID: {item.credentialId}</p>
+        )}
+        {/* {item.credentialUrl && (
+          <a
+            href={item.credentialUrl}
+            className="text-blue-500 underline text-sm"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            View Credential
+          </a>
+        )} */}
+        {item.startDate && (
+          <p className="text-text2 text-sm mt-1">
+            {displayDate(item.startDate)}
+            {item.endDate ? ` - ${displayDate(item.endDate)}` : ""}
+          </p>
+        )}
+      </div>
+    </div>
+  );
+
   return (
     <div className="bg-boxbackground p-4 rounded-lg shadow-sm w-full flex flex-col space-y-0 relative">
-      {/* ✎ Only in section (showEditIcons = true) */}
       {isOwner && showEditIcons && (
         <button
           className="absolute top-2 right-2 text-companyheader2 hover:text-blue-700"
           onClick={(e) => {
             e.stopPropagation();
-            if (onEdit) {
-              onEdit();
-            } // Trigger the modal in parent
-            else {
-              setIsModalOpen(true); // ✅ fallback to open modal internally/////////////////
-            }
+            if (onEdit) onEdit();
+            else setIsModalOpen(true);
           }}
         >
           ✎
         </button>
       )}
 
-      {/* Content Layout */}
-      {item.institution && (
-        <h3
-          className="text-lg font-semibold text-text"
-          data-testid="institution"
-        >
-          {item.institution}
-        </h3>
-      )}
-      {item.title && (
-        <h3 className="text-lg font-semibold text-text">{item.title}</h3>
-      )}
-      {item.name && (
-        <h3 className="text-lg font-semibold text-text">{item.name}</h3>
-      )}
-      {item.skill && (
-        <h3 className="text-lg font-semibold text-text">{item.skill}</h3>
-      )}
-      <p className="text-text2">
-        {item.degree ||
-          item.position ||
-          item.company ||
-          item.issuingOrganization}
-      </p>
+      {type === "workExperience" && renderExperience()}
+      {type === "education" && renderEducation()}
+      {type === "skills" && renderSkills()}
+      {type === "certifications" && renderCertifications()}
 
-      <p className="text-text2">
-        {item.location || item.field || item.fieldOfStudy}
-      </p>
-
-      <p className="text-text2">
-        {item.startMonth && item.startYear
-          ? `${item.startMonth} ${item.startYear}`
-          : ""}
-        {item.endMonth && item.endYear
-          ? ` - ${item.endMonth} ${item.endYear}`
-          : ""}
-      </p>
-
-      {item.description && (
-        <p className="text-text2 text-sm">{item.description}</p>
-      )}
-      {item.grade && (
-        <p className="text-companyheader2 text-sm" data-testid="grade">
-          Grade: {item.grade}
-        </p>
-      )}
-
-      {/* Skills endorsement */}
-      {type === "skills" && item.skill && (
-        <>
-          {/* {item.recentEndorsement && (
-            <p className="text-gray-500 text-sm flex items-center mt-1">
-              {item.recentEndorsement}
-            </p>
-          )} */}
-          <p
-            className="text-companyheader2 flex items-center mt-1"
-            data-testid="endorsement-count"
-          >
-            <span className="mr-2">👥</span> {endorsementCount} endorsement
-            {endorsementCount !== 1 ? "s" : ""}
-          </p>
-
-          {!isOwner && (
-            <button
-              onClick={handleEndorse}
-              className={`mt-2 px-4 py-2 border rounded-full flex items-center justify-center gap-2 w-fit ${
-                isEndorsed
-                  ? "bg-gray-200 text-text2 border-companyheader2"
-                  : "bg-white text-text-text2 border-companyheader2"
-              } hover:bg-gray-300 transition`}
-            >
-              {isEndorsed ? "✔ Endorsed" : "Endorse"}
-            </button>
-          )}
-        </>
-      )}
-
-      {/* Hidden modal in page, shown only in section */}
       {isModalOpen && (
         <GenericModal
           isOpen={isModalOpen}

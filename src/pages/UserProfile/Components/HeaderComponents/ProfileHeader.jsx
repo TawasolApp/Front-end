@@ -5,10 +5,12 @@ import ProfilePicture from "./ProfilePicture";
 import defaultProfilePicture from "../../../../assets/images/defaultProfilePicture.png";
 import defaultCoverPhoto from "../../../../assets/images/defaultCoverPhoto.png";
 import EditProfileModal from "./EditProfileModal";
-import ImageUploadModal from "../ImageUploadModal";
+import ImageUploadModal from "./ImageUploadModal";
 import ImageEnlarge from "./ImageEnlarge";
-import ViewerView from "../ViewerView";
-
+import ViewerView from "./ViewerView";
+import ContactInfoModal from "./ContactInfoModal";
+import { axiosInstance as axios } from "../../../../apis/axios";
+///////NEED VIEWER ID (CURRENT USER ID) TO PASS IT TO VIEWER VIEW COMPONENT
 function ProfileHeader({ user, isOwner, onSave, experienceRef, educationRef }) {
   const [editedUser, setEditedUser] = useState(user);
   const [isEditing, setIsEditing] = useState(false);
@@ -17,26 +19,52 @@ function ProfileHeader({ user, isOwner, onSave, experienceRef, educationRef }) {
   const [uploadType, setUploadType] = useState(null);
   const navigate = useNavigate();
   const { profileSlug } = useParams();
+  const [isContactOpen, setIsContactOpen] = useState(false);
   if (!editedUser) return null;
-
   const experienceIndex = editedUser.selectedExperienceIndex ?? 0;
   const educationIndex = editedUser.selectedEducationIndex ?? 0;
 
   useEffect(() => {
     setEditedUser(user);
   }, [user]);
-
+  //  to open upload modal
   function openUploadModal(type) {
     setUploadType(type);
     setIsUploadOpen(true);
   }
+  // handling the upload media fn
+  async function handleUpload(fileOrNull) {
+    const field = uploadType === "profile" ? "profilePicture" : "coverPhoto";
 
-  function handleUpload(imageUrl) {
-    setEditedUser((prev) => ({
-      ...prev,
-      [uploadType === "profile" ? "profilePicture" : "coverPhoto"]: imageUrl,
-    }));
-    setIsUploadOpen(false);
+    if (fileOrNull === null) {
+      // Handle image deletion
+      try {
+        await axios.patch(`/profile/${user.id}`, { [field]: null });
+        setEditedUser((prev) => ({ ...prev, [field]: null }));
+      } catch (err) {
+        console.error("Failed to delete image:", err);
+      }
+      return;
+    }
+
+    try {
+      const formData = new FormData();
+      formData.append("file", fileOrNull); // changed from "image"
+      formData.append("userId", user.id);
+
+      const uploadRes = await axios.post("/api/uploadImage", formData, {
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
+      });
+
+      const imageUrl = uploadRes.data; // changed from `uploadRes.data.url`
+
+      await axios.patch(`/profile/${user.id}`, { [field]: imageUrl });
+      setEditedUser((prev) => ({ ...prev, [field]: imageUrl }));
+    } catch (err) {
+      console.error("Image upload failed:", err);
+    }
   }
 
   function handleImageClick(imageUrl) {
@@ -56,7 +84,7 @@ function ProfileHeader({ user, isOwner, onSave, experienceRef, educationRef }) {
   }
 
   return (
-    <div className="w-full bg-boxbackground rounded-md shadow max-w-3xl mx-auto mb-8 relative">
+    <div className="w-full bg-boxbackground rounded-md shadow max-w-3xl mx-auto mb-2 relative">
       {/* Cover Photo */}
       <div className="relative">
         <CoverPhoto
@@ -95,7 +123,12 @@ function ProfileHeader({ user, isOwner, onSave, experienceRef, educationRef }) {
         <p className="text-sm text-gray-600">Student at Cairo University</p>
         <p className="text-sm text-gray-600">
           {editedUser.city}, {editedUser.country} ·{" "}
-          <span className="text-gray-600 cursor-pointer">Contact info</span>
+          <span
+            className="text-blue-700 font-semibold cursor-pointer hover:underline"
+            onClick={() => setIsContactOpen(true)}
+          >
+            Contact info
+          </span>
         </p>
         <p
           className="text-blue-600 text-sm cursor-pointer hover:underline mt-1"
@@ -111,21 +144,23 @@ function ProfileHeader({ user, isOwner, onSave, experienceRef, educationRef }) {
           className="text-companyheader2 cursor-pointer hover:text-blue-500 hover:underline"
           onClick={() => scrollToSection(experienceRef)}
         >
-          {editedUser.experience?.[experienceIndex]?.title}
+          {editedUser.workExperience?.[experienceIndex]?.title}
         </p>
         <p
           className="text-companyheader2 cursor-pointer hover:text-blue-500 hover:underline"
           onClick={() => scrollToSection(educationRef)}
         >
-          {editedUser.education?.[educationIndex]?.institution}
+          {editedUser.education?.[educationIndex]?.school}
         </p>
       </div>
 
       {/* Viewer View */}
       {!isOwner && (
         <div className="px-6 pb-4 pt-2">
-          <ViewerView user={editedUser} />
+          {/* UNCOMMENTT THIS AFTER GETTING VIEWERID  */}
+          {/* <ViewerView user={editedUser} viewerId={viewerId} /> */}
         </div>
+        // I am the ViewerId, the person I am viewing is editeduser
       )}
 
       {/* Modals */}
@@ -140,12 +175,35 @@ function ProfileHeader({ user, isOwner, onSave, experienceRef, educationRef }) {
         isOpen={isUploadOpen}
         onClose={() => setIsUploadOpen(false)}
         onUpload={handleUpload}
+        currentImage={
+          uploadType === "profile"
+            ? editedUser.profilePicture
+            : editedUser.coverPhoto
+        }
+        defaultImage={
+          uploadType === "profile" ? defaultProfilePicture : defaultCoverPhoto
+        }
+        uploadType={uploadType}
+        userId={user.id}
       />
       <EditProfileModal
         user={editedUser}
         isOpen={isEditing}
         onClose={() => setIsEditing(false)}
         onSave={handleSave}
+      />
+      <ContactInfoModal
+        user={editedUser}
+        isOpen={isContactOpen}
+        onClose={() => setIsContactOpen(false)}
+        isOwner={isOwner}
+        onSave={(updatedFields) => {
+          const updatedUser = { ...editedUser, ...updatedFields };
+          setEditedUser(updatedUser);
+          onSave?.(updatedUser);
+          // Optionally PATCH to backend:
+          axios.patch(`/profile/${user.id}`, updatedFields);
+        }}
       />
     </div>
   );

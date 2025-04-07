@@ -5,8 +5,6 @@ import { useNavigate } from "react-router-dom";
 import {
   setToken,
   setRefreshToken,
-  setUserId,
-  setEmail,
   setFirstName,
   setLastName,
   setLocation,
@@ -28,7 +26,8 @@ const SignWithGoogle = () => {
     if (window.google) {
       googleClient.current = window.google.accounts.oauth2.initTokenClient({
         client_id: googleClientId,
-        scope: "email profile openid",
+        scope:
+          "email profile openid https://www.googleapis.com/auth/userinfo.profile",
         callback: async (tokenResponse) => {
           if (tokenResponse?.access_token) {
             try {
@@ -36,26 +35,27 @@ const SignWithGoogle = () => {
                 "/auth/social-login/google",
                 {
                   idToken: tokenResponse.access_token,
+                  isAndroid: false,
                 }
               );
 
-              if (response.status === 200) {
-                const { userId, token, refreshToken, isNewUser } =
+              if (response.status === 201) {
+                const { token, refreshToken, isNewUser } =
                   response.data;
 
-                dispatch(setUserId(userId));
                 dispatch(setToken(token));
                 dispatch(setRefreshToken(refreshToken));
                 dispatch(setIsNewGoogleUser(isNewUser));
 
                 // New user, set-up account instead of logging in
                 if (isNewUser) {
-                  navigate("/auth/signup/name");
+                  console.log(token);
+                  navigate("/auth/signup/location");
                   return;
                 }
 
                 const profileResponse = await axiosInstance.get(
-                  `/profile/${userId}`
+                  "/profile"
                 );
 
                 if (profileResponse.status === 200) {

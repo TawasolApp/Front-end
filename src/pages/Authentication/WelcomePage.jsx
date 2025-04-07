@@ -1,9 +1,17 @@
-import React from "react";
+import React, { useEffect } from "react";
 import WelcomeForm from "./Forms/WelcomeForm";
 import WelcomeImage from "../../assets/images/WelcomeImage.jpeg";
 import AuthenticationHeader from "./GenericComponents/AuthenticationHeader";
+import { useDispatch } from "react-redux";
+import { logout } from "../../store/authenticationSlice";
 
 const WelcomePage = () => {
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    dispatch(logout());
+  }, [dispatch]);
+
   return (
     <div className="min-h-screen bg-mainBackground overflow-x-hidden">
       <AuthenticationHeader />

@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { axiosInstance } from "../../../../apis/axios";
 
 function AddManagerModal({ show, onClose, companyId }) {
@@ -6,6 +6,32 @@ function AddManagerModal({ show, onClose, companyId }) {
   const [loading, setLoading] = useState(false);
   const [message, setMessage] = useState("");
   const [isError, setIsError] = useState(false);
+  const [managers, setManagers] = useState([]);
+
+  // Fetch current company managers
+  const fetchManagers = async () => {
+    if (!show || !companyId) return;
+
+    try {
+      const { data } = await axiosInstance.get(
+        `/companies/${companyId}/managers?page=1&limit=10`
+      );
+
+      const managerProfiles = data.map((user) => ({
+        id: user.id,
+        name: `${user.firstName} ${user.lastName}`,
+      }));
+
+      setManagers(managerProfiles);
+    } catch (err) {
+      console.error("Error fetching manager profiles:", err);
+      setManagers([]);
+    }
+  };
+
+  useEffect(() => {
+    fetchManagers();
+  }, [show, companyId]);
 
   const handleModalClose = () => {
     setUserId("");
@@ -19,16 +45,21 @@ function AddManagerModal({ show, onClose, companyId }) {
 
     try {
       setLoading(true);
-      const res = await axiosInstance.post(`/companies/${companyId}/managers`, {
-        userId: userId.trim(),
+
+      await axiosInstance.post(`/companies/${companyId}/managers`, {
+        newUserId: userId.trim(),
       });
+
       setMessage("Manager added successfully.");
       setIsError(false);
+
+      await fetchManagers();
+
       setTimeout(() => {
         onClose();
         setUserId("");
         setMessage("");
-      }, 1000); // 1 second delay
+      }, 1000);
     } catch (err) {
       setIsError(true);
       const backendMsg = err.response?.data?.message;
@@ -41,22 +72,53 @@ function AddManagerModal({ show, onClose, companyId }) {
   if (!show) return null;
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-30">
-      <div className="bg-white p-6 rounded-md shadow-md w-full max-w-md">
-        <h2 className="text-lg font-semibold mb-4 text-gray-800">
-          Add Manager
-        </h2>
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-modalbackground">
+      <div className="bg-boxbackground p-6 rounded-md shadow-md w-full max-w-md">
+        <h2 className="text-lg font-semibold mb-4 text-text">Add Manager</h2>
 
+        {managers.length > 0 && (
+          <div className="mb-4">
+            <p className="text-sm font-semibold text-text mb-2">
+              Current Managers
+            </p>
+            <div className="space-y-2">
+              {managers.map((m) => (
+                <div
+                  key={m.id}
+                  className="flex items-center gap-3 bg-boxbackground p-2 rounded-md border border-gray-700"
+                >
+                  {/* Avatar initials */}
+                  <div className="w-8 h-8 rounded-full bg-blue-600 flex items-center justify-center text-white font-medium text-sm uppercase">
+                    {m.name
+                      .split(" ")
+                      .map((n) => n[0])
+                      .join("")
+                      .slice(0, 2)}
+                  </div>
+
+                  {/* Name */}
+                  <p className="text-sm text-normaltext">{m.name}</p>
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
+
+        <h2 className="text-text mb-2">Add new manager</h2>
         <input
           type="text"
           placeholder="Enter user ID"
           value={userId}
           onChange={(e) => setUserId(e.target.value)}
-          className="w-full border border-gray-300 rounded-md px-4 py-2 mb-4 focus:outline-none"
+          className="w-full border bg-boxbackground border-gray-300 rounded-md text-text px-4 py-2 mb-4 focus:outline-none"
         />
 
         {message && (
-          <div className="text-sm mb-2 text-center text-green-600">
+          <div
+            className={`text-sm mb-2 text-center ${
+              isError ? "text-red-500" : "text-green-600"
+            }`}
+          >
             {message}
           </div>
         )}

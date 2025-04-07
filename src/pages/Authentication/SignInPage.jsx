@@ -1,8 +1,9 @@
-import React from "react";
+import React, { useEffect } from "react";
 import SignInForm from "./Forms/SignInForm";
 import { axiosInstance } from "../../apis/axios";
 import { useDispatch } from "react-redux";
 import {
+  logout,
   setBio,
   setEmail,
   setFirstName,
@@ -12,7 +13,6 @@ import {
   setRefreshToken,
   setToken,
   setType,
-  setUserId,
 } from "../../store/authenticationSlice";
 import { Link, useNavigate } from "react-router-dom";
 import AuthenticationHeader from "./GenericComponents/AuthenticationHeader";
@@ -21,6 +21,10 @@ const SignInPage = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
+  useEffect(() => {
+    dispatch(logout());
+  }, [dispatch]);
+
   const handleSignIn = async (formData, setCredentialsError) => {
     try {
       const userResponse = await axiosInstance.post("/auth/login", {
@@ -28,15 +32,14 @@ const SignInPage = () => {
         password: formData.password,
       });
 
-      if (userResponse.status === 200) {
-        const { userId, token, refreshToken } = userResponse.data;
+      if (userResponse.status === 201) {
+        const { token, refreshToken } = userResponse.data;
 
         dispatch(setEmail(formData.email));
-        dispatch(setUserId(userId));
         dispatch(setToken(token));
         dispatch(setRefreshToken(refreshToken));
 
-        const profileResponse = await axiosInstance.get(`/profile/${userId}`);
+        const profileResponse = await axiosInstance.get("/profile");
 
         if (profileResponse.status === 200) {
           const { firstName, lastName, location, bio, picture } =
@@ -63,12 +66,13 @@ const SignInPage = () => {
         }
       }
     } catch (error) {
-      if (error.response && error.response.status === 400) {
-        setCredentialsError("Email not verified.");
-      } else if (error.response && error.response.status === 401) {
+      if (
+        error.response &&
+        (error.response.status === 400 || error.response.status === 401 || error.response.status === 404)
+      ) {
         setCredentialsError("Invalid email or password.");
-      } else if (error.response && error.response.status === 404) {
-        setCredentialsError("User not found.");
+      } else if (error.response && error.response.status === 403) {
+        setCredentialsError("Email not verified.");
       } else {
         console.error("Login failed", error);
       }

@@ -1,7 +1,7 @@
-import React from "react";
+import React, { useEffect } from "react";
 import SignUpForm from "./Forms/SignUpForm";
 import { useDispatch } from "react-redux";
-import { setEmail, setPassword } from "../../store/authenticationSlice";
+import { logout, setEmail, setPassword } from "../../store/authenticationSlice";
 import { axiosInstance } from "../../apis/axios";
 import { useNavigate } from "react-router-dom";
 import AuthenticationHeader from "./GenericComponents/AuthenticationHeader";
@@ -9,6 +9,10 @@ import AuthenticationHeader from "./GenericComponents/AuthenticationHeader";
 const SignUpPage = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
+
+  useEffect(() => {
+    dispatch(logout());
+  }, [dispatch]);
 
   const handleSignUp = async (formData, setEmailError) => {
     try {

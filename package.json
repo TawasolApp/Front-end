@@ -24,7 +24,7 @@
     "axios": "^1.8.3",
     "date-fns": "^4.1.0",
     "dayjs": "^1.11.13",
-    "multer": "^1.4.5-lts.2",
+    "express": "^5.1.0",
     "pdfjs-dist": "^4.8.69",
     "prettier": "^3.5.3",
     "react": "^19.0.0",
@@ -33,8 +33,8 @@
     "react-icons": "^5.5.0",
     "react-pdf": "^9.2.1",
     "react-redux": "^9.2.0",
+    "react-select": "^5.10.1",
     "react-router-dom": "^7.4.0",
-    "recharts": "^2.15.1",
     "swiper": "^11.2.5",
     "uuid": "^11.1.0"
   },

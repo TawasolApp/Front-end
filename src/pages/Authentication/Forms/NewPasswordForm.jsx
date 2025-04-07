@@ -1,6 +1,9 @@
 import React, { useState } from "react";
-import InputField from "../GenericComponents//InputField";
-import BlueSubmitButton from "../GenericComponents//BlueSubmitButton";
+import {  useSelector } from "react-redux";
+import InputField from "../GenericComponents/InputField";
+import BlueSubmitButton from "../GenericComponents/BlueSubmitButton";
+import { useNavigate } from "react-router-dom";
+import { axiosInstance } from "../../../apis/axios";
 
 const NewPasswordForm = () => {
   const [newPassword, setNewPassword] = useState("");
@@ -8,8 +11,12 @@ const NewPasswordForm = () => {
   const [showNewPassword, setShowNewPassword] = useState(false);
   const [newPasswordError, setNewPasswordError] = useState("");
   const [confirmNewPasswordError, setConfirmNewPasswordError] = useState("");
+  const [status, setStatus] = useState("");
 
-  const handleSubmit = (e) => {
+  const email = useSelector((state) => state.authentication.email); // Access email from Redux state
+  const navigate = useNavigate();
+
+  const handleSubmit = async (e) => {
     e.preventDefault();
 
     // Basic validation
@@ -18,7 +25,7 @@ const NewPasswordForm = () => {
       return;
     }
     if (newPassword.length < 8) {
-      setNewPasswordError("Too short");
+      setNewPasswordError("Password is too short.");
       return;
     }
     if (newPassword !== confirmNewPassword) {
@@ -26,8 +33,24 @@ const NewPasswordForm = () => {
       return;
     }
 
-    // Submit logic
-    console.log("New password submitted");
+    try {
+      setStatus("Submitting...");
+
+      const response = await axiosInstance.patch("/auth/set-new-password", {
+        email: email,
+        newPassword: newPassword,
+      });
+
+      if (response.status === 200) {
+        setStatus("Password reset successful! Redirecting...");
+        setTimeout(() => {
+          navigate("/auth/signin");
+        }, 1500);
+      }
+    } catch (error) {
+      console.error("Error resetting password:", error);
+      setStatus("Something went wrong. Please try again.");
+    }
   };
 
   const toggleNewPasswordVisibility = () => {
@@ -76,6 +99,8 @@ const NewPasswordForm = () => {
         placeholder=""
         error={confirmNewPasswordError}
       />
+
+      <p className="text-base text-center text-textHomeTitle">{status}</p>
 
       <BlueSubmitButton text="Submit" />
     </form>

@@ -15,7 +15,7 @@ import VerificationPendingPage from "../pages/Authentication/VerificationPending
 import NewPasswordPage from "../pages/Authentication/NewPasswordPage";
 import WelcomePage from "../pages/Authentication/WelcomePage";
 import ChangeEmailPage from "../pages/Authentication/ChangeEmailPage";
-import EmailTokenVerificationPage from "../pages/Authentication/EmailTokenVerifocationPage";
+import VerifyChangeEmailPage from "../pages/Authentication/VerifyChangeEmailPage.jsx";
 
 import ProfilePage from "../pages/UserProfile/Components/ProfilePage";
 import ProfileConnections from "../pages/UserProfile/Components/Connections";
@@ -32,7 +32,6 @@ import HomePage from "../pages/Company/Components/Pages/HomePage.jsx";
 import JobsPage from "../pages/Company/Components/Pages/JobsPage.jsx";
 import CreateCompanyPage from "../pages/Company/Components/CreateCompanyPage/CreateCompanyPage.jsx";
 
-import NetworkBox from "../pages/MyNetwork/NetworkBox";
 import ConnectionPage from "../pages/MyNetwork/Connections/ConnectionPage";
 import BlockedPage from "../pages/MyNetwork/BlockedPage";
 import FollowPage from "../pages/MyNetwork/FollowPage";
@@ -45,6 +44,8 @@ import RepostsContainer from "../pages/Reposts/RepostsContainer";
 import SearchPosts from "../pages/Search/SearchPosts";
 
 import VerifySignUpPage from "../pages/Authentication/VerifySignUpPage.jsx";
+import VerifyResetPasswordPage from "../pages/Authentication/VerifyresetPasswordPage.jsx";
+import NetworkBox from "../pages/MyNetwork/NetworkBox.jsx";
 
 const RenderWithNavbar = (component) => {
   return (
@@ -76,10 +77,11 @@ const App = () => {
           element={<VerificationPendingPage />}
         />
         <Route
-          path="/auth/email-token-verification"
-          element={<EmailTokenVerificationPage />}
+          path="/users/confirm-email-change"
+          element={<VerifyChangeEmailPage />}
         />
-        <Route path="/auth/verify-signup" element={<VerifySignUpPage />} />
+        <Route path="/auth/verify-email" element={<VerifySignUpPage />} />
+        <Route path="/auth/reset-password" element={<VerifyResetPasswordPage />} />
         <Route path="/auth/new-password" element={<NewPasswordPage />} />
         <Route path="/auth/update-email" element={<ChangeEmailPage />} />
 
@@ -89,7 +91,7 @@ const App = () => {
         <Route path="/users/:profileSlug" element={<ProfileLayout />}>
           <Route index element={<ProfilePage />} />
           <Route path="education" element={<EducationPage />} />
-          <Route path="experience" element={<ExperiencePage />} />
+          <Route path="workExperience" element={<ExperiencePage />} />
           <Route path="certifications" element={<CertificationsPage />} />
           <Route path="skills" element={<SkillsPage />} />
           <Route path="connections" element={<ProfileConnections />} />
@@ -99,12 +101,14 @@ const App = () => {
         <Route path="/blocked" element={<BlockedPage />} />
         <Route path="/follow" element={<FollowPage />} />
         <Route path="/manage-connections" element={<ManageConnections />} />
+        <Route path="/network-box" element={<NetworkBox />} />
 
         <Route path="/feed/:id" element={<SinglePost />} />
         <Route path="/feed" element={RenderWithNavbar(<FeedContainer />)} />
         <Route path="/feed/reposts/:id" element={RenderWithNavbar(<RepostsContainer />)} /> 
         <Route path="/my-items/saved-posts" element={<SavedPostsContainer />} />
 
+        <Route path="/company" element={<CompanyLayout />} />
         <Route path="/company/:companyId/*" element={<CompanyLayout />}>
           <Route index element={<HomePage />} />
           <Route path="home" element={<HomePage />} />

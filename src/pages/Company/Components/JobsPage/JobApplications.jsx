@@ -5,6 +5,9 @@ import LoadingPage from "../../../LoadingScreen/LoadingPage";
 function JobApplications({ job }) {
   const [applicants, setApplicants] = useState([]);
   const [loading, setLoading] = useState(false);
+  const [searchName, setSearchName] = useState("");
+  const [page, setPage] = useState(1);
+  const limit = 10;
 
   useEffect(() => {
     if (!job) return;
@@ -12,10 +15,17 @@ function JobApplications({ job }) {
     const fetchApplicants = async () => {
       setLoading(true);
       try {
-        const response = await axiosInstance.get(
-          `/companies/jobs/${job.id}/applicants`
+        const res = await axiosInstance.get(
+          `/companies/jobs/${job.jobId}/applicants`,
+          {
+            params: {
+              page,
+              limit,
+              ...(searchName.trim() && { name: searchName.trim() }),
+            },
+          }
         );
-        setApplicants(response.data);
+        setApplicants(res.data);
       } catch (error) {
         console.error("Failed to fetch applicants:", error);
         setApplicants([]);
@@ -25,7 +35,7 @@ function JobApplications({ job }) {
     };
 
     fetchApplicants();
-  }, [job]);
+  }, [job, page, searchName]);
 
   if (!job) {
     return (

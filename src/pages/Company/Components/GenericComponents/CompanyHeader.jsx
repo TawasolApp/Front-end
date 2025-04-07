@@ -14,6 +14,7 @@ import { axiosInstance } from "../../../../apis/axios.js";
 import AddManagerModal from "../Modals/AddManagerModal.jsx";
 function CompanyHeader({
   company,
+  setCompanyData,
   showAdminIcons,
   setShowAdminIcons,
   isAdmin,

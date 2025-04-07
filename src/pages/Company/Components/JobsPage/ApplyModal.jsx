@@ -26,7 +26,7 @@ function ApplyModal({ onClose, job, company }) {
 
         {/* Job Info */}
         <div className="mb-6">
-          <p className="font-medium text-text">{job?.title}</p>
+          <p className="font-medium text-text">{job?.position}</p>
           <p className="text-sm text-gray-400">{job?.location}</p>
         </div>
 
