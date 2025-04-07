@@ -1,10 +1,12 @@
 import React, { useRef, useState } from "react";
 import { axiosInstance as axios } from "../../../../apis/axios";
 import { FaEye, FaDownload, FaTrash } from "react-icons/fa";
+import ConfirmModal from "../GenericDisplay/ConfirmModal"; // Import the ConfirmModal
 
 function ResumeSection({ user, isOwner }) {
   const [resumeUrl, setResumeUrl] = useState(user.resume || "");
   const [isUploading, setIsUploading] = useState(false);
+  const [showDeleteModal, setShowDeleteModal] = useState(false); // New state to manage the modal visibility
   const fileInputRef = useRef();
 
   const handleFileUpload = async (e) => {
@@ -30,16 +32,16 @@ function ResumeSection({ user, isOwner }) {
     try {
       setIsUploading(true);
       const formData = new FormData();
-      formData.append("file", file); // the backend expects "file" key
+      formData.append("file", file);
 
-      const uploadRes = await axios.post("/api/upload", formData, {
+      const uploadRes = await axios.post("/api/uploadImage", formData, {
         headers: { "Content-Type": "multipart/form-data" },
       });
 
       const fileUrl = uploadRes.data;
 
       const patchRes = await axios.patch(`/profile/${user.id}`, {
-        resume: fileUrl, // ✅ fix: resume is a string, not an object
+        resume: fileUrl,
       });
 
       if (patchRes.status === 200) {
@@ -58,7 +60,6 @@ function ResumeSection({ user, isOwner }) {
       const res = await axios.patch(`/profile/${user.id}`, {
         resume: null,
       });
-
       if (res.status === 200) {
         setResumeUrl("");
       }
@@ -68,14 +69,26 @@ function ResumeSection({ user, isOwner }) {
   };
 
   return (
-    <div className="bg-boxbackground p-6 shadow-md rounded-md w-full max-w-3xl mx-auto mb-4">
+    <div className="bg-boxbackground p-6 shadow-md rounded-md w-full max-w-3xl mx-auto mb-4 relative group">
       <h2 className="text-2xl font-semibold text-text mb-3">Resume</h2>
+
+      {/* ✎ Edit Icon (only shown if resume exists) */}
+      {isOwner && resumeUrl && (
+        <button
+          onClick={() => fileInputRef.current.click()}
+          title="Edit Resume"
+          className="absolute rounded-full w-8 h-8 top-5 right-5 text-black text-sm hover:bg-gray-200 transition text-text"
+        >
+          ✎
+        </button>
+      )}
 
       {resumeUrl ? (
         <div className="flex items-center justify-between bg-white border border-gray-200 p-3 rounded-md">
           <div className="text-sm font-medium text-companyheader2 truncate max-w-[60%]">
             {resumeUrl.split("/").pop()}
           </div>
+
           <div className="flex items-center gap-4 text-gray-600 text-lg">
             <a
               href={resumeUrl}
@@ -89,7 +102,10 @@ function ResumeSection({ user, isOwner }) {
               <FaDownload />
             </a>
             {isOwner && (
-              <button onClick={handleDeleteResume} title="Delete">
+              <button
+                onClick={() => setShowDeleteModal(true)} // Open the modal when delete is clicked
+                title="Delete"
+              >
                 <FaTrash />
               </button>
             )}
@@ -105,16 +121,6 @@ function ResumeSection({ user, isOwner }) {
             <p className="text-gray-400 text-sm mb-4">
               PDF, DOC, DOCX files up to 10MB
             </p>
-
-            <input
-              ref={fileInputRef}
-              type="file"
-              accept=".pdf,.doc,.docx"
-              className="hidden"
-              onChange={handleFileUpload}
-              disabled={isUploading}
-            />
-
             <button
               type="button"
               onClick={() => fileInputRef.current.click()}
@@ -125,6 +131,31 @@ function ResumeSection({ user, isOwner }) {
             </button>
           </div>
         )
+      )}
+
+      {/* Hidden File Input */}
+      <input
+        ref={fileInputRef}
+        type="file"
+        accept=".pdf,.doc,.docx"
+        className="hidden"
+        onChange={handleFileUpload}
+        disabled={isUploading}
+      />
+
+      {/* Confirm Delete Modal */}
+      {showDeleteModal && (
+        <ConfirmModal
+          title="Confirm delete"
+          message="Are you sure you want to delete this resume? This action cannot be undone."
+          onCancel={() => setShowDeleteModal(false)} // Close the modal
+          onConfirm={() => {
+            handleDeleteResume(); // Delete the resume
+            setShowDeleteModal(false); // Close the modal
+          }}
+          confirmLabel="Delete"
+          cancelLabel="Cancel"
+        />
       )}
     </div>
   );

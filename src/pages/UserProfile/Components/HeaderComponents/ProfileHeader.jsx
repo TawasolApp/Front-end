@@ -32,7 +32,7 @@ function ProfileHeader({ user, isOwner, onSave, experienceRef, educationRef }) {
     setUploadType(type);
     setIsUploadOpen(true);
   }
-  // handling the upload moda fn
+  // handling the upload media fn
   async function handleUpload(fileOrNull) {
     const field = uploadType === "profile" ? "profilePicture" : "coverPhoto";
 
@@ -49,16 +49,16 @@ function ProfileHeader({ user, isOwner, onSave, experienceRef, educationRef }) {
 
     try {
       const formData = new FormData();
-      formData.append("image", fileOrNull);
+      formData.append("file", fileOrNull); // changed from "image"
       formData.append("userId", user.id);
 
-      const uploadRes = await axios.post("/api/upload", formData, {
+      const uploadRes = await axios.post("/api/uploadImage", formData, {
         headers: {
           "Content-Type": "multipart/form-data",
         },
       });
 
-      const imageUrl = uploadRes.data.url;
+      const imageUrl = uploadRes.data; // changed from `uploadRes.data.url`
 
       await axios.patch(`/profile/${user.id}`, { [field]: imageUrl });
       setEditedUser((prev) => ({ ...prev, [field]: imageUrl }));

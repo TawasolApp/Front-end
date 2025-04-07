@@ -6,7 +6,7 @@
       "lastName": "Gamal",
       "profilePicture": null,
       "coverPhoto": null,
-      "resume": "",
+      "resume": "http://localhost:5000/public/documents/1743987439512-iutrx3.pdf",
       "headline": "Software Engineering Student at Cairo University",
       "bio": "J",
       "country": "Egypt",
@@ -73,16 +73,6 @@
           "grade": "",
           "startDate": "2023-06-01",
           "endDate": "2023-08-31"
-        },
-        {
-          "id": "1743979293501",
-          "school": "vhjcg",
-          "degree": "ghc",
-          "description": "frd",
-          "startMonth": "October",
-          "startYear": "2008",
-          "startDate": "2008-10-01",
-          "endDate": ""
         }
       ],
       "certifications": [
@@ -105,20 +95,7 @@
           "credentialUrl": "https://www.credential.net/google-cloud-data-engineer"
         }
       ],
-      "skills": [
-        {
-          "skillName": "JavaScript",
-          "endorsements": 5
-        },
-        {
-          "skillName": "React",
-          "endorsements": 7
-        },
-        {
-          "skillName": "Python",
-          "endorsements": 9
-        }
-      ],
+      "skills": [],
       "planDetails": [],
       "planStatistics": {
         "messageCount": "12",

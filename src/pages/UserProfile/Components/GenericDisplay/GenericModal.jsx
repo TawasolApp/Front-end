@@ -3,29 +3,7 @@ import EducationFields from "../ModalFields/EducationFields";
 import ExperienceFields from "../ModalFields/ExperienceFields";
 import SkillsFields from "../ModalFields/SkillsFields";
 import CertificationsFields from "../ModalFields/CertificationsFields";
-
-// Local confirmation modals
-const ConfirmModal = ({ title, message, onConfirm, onCancel }) => (
-  <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-    <div className="bg-boxbackground rounded-lg p-6 w-[90%] sm:w-[400px] shadow-lg">
-      <h2 className="text-lg font-semibold mb-2 text-text">{title}</h2>
-      <p className="text-gray-700 mb-4 text-companyheader2">{message}</p>
-      <div className="flex justify-end gap-3">
-        <button className="px-4 py-2 bg-gray-300 rounded" onClick={onCancel}>
-          Cancel
-        </button>
-        <button
-          className="px-4 py-2 bg-red-500 text-white rounded"
-          onClick={onConfirm}
-          data-testid="confirm-delete"
-        >
-          Confirm
-        </button>
-      </div>
-    </div>
-  </div>
-);
-
+import ConfirmModal from "./ConfirmModal";
 // Shared date utilities
 const getAllMonths = () =>
   [...Array(12)].map((_, i) =>
@@ -58,6 +36,7 @@ function GenericModal({
   const [errors, setErrors] = useState({});
   const [showDiscardModal, setShowDiscardModal] = useState(false);
   const [showDeleteModal, setShowDeleteModal] = useState(false);
+  const [initialFormData, setInitialFormData] = useState({});
 
   useEffect(() => {
     if (isOpen) {
@@ -85,13 +64,16 @@ function GenericModal({
       );
       const { month: endMonth, year: endYear } = parseDate(initialData.endDate);
 
-      setFormData({
+      const updatedForm = {
         ...initialData,
         startMonth,
         startYear,
         endMonth,
         endYear,
-      });
+      };
+
+      setFormData(updatedForm);
+      setInitialFormData(updatedForm); // ✅ Set initialFormData after parsing
     }
   }, [isOpen, initialData]);
 
@@ -102,7 +84,7 @@ function GenericModal({
   };
 
   const hasUnsavedChanges =
-    JSON.stringify(formData) !== JSON.stringify(initialData);
+    JSON.stringify(formData) !== JSON.stringify(initialFormData);
 
   const handleClose = () => {
     if (hasUnsavedChanges) {
@@ -418,16 +400,21 @@ function GenericModal({
           <ConfirmModal
             title="Discard changes?"
             message="You have unsaved changes. Are you sure you want to close?"
-            onConfirm={handleDiscardConfirm}
             onCancel={() => setShowDiscardModal(false)}
+            onConfirm={handleDiscardConfirm}
+            confirmLabel="Discard"
+            cancelLabel="Cancel"
           />
         )}
+
         {showDeleteModal && (
           <ConfirmModal
             title="Confirm delete"
             message="Are you sure you want to delete this entry? This action cannot be undone."
-            onConfirm={handleDeleteConfirm}
             onCancel={() => setShowDeleteModal(false)}
+            onConfirm={handleDeleteConfirm}
+            confirmLabel="Delete"
+            cancelLabel="Cancel"
           />
         )}
       </div>

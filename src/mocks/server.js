@@ -12,34 +12,50 @@ server.use(middlewares);
 server.use(bodyParser);
 
 //  Image upload setup
-const uploadDir = "./public/uploads";
-if (!fs.existsSync(uploadDir)) {
-  fs.mkdirSync(uploadDir, { recursive: true });
-}
 
+// Set up public folder structure like your friend's server
+const uploadDir = "public";
+const subdirectories = ["images", "videos", "documents"];
+subdirectories.forEach((subdir) => {
+  const fullPath = path.join(uploadDir, subdir);
+  if (!fs.existsSync(fullPath)) {
+    fs.mkdirSync(fullPath, { recursive: true });
+  }
+});
+
+// Configure multer for categorizing uploads
 const storage = multer.diskStorage({
-  destination: (req, file, cb) => cb(null, uploadDir),
+  destination: (req, file, cb) => {
+    let folder = "documents";
+    if (file.mimetype.startsWith("image/")) folder = "images";
+    else if (file.mimetype.startsWith("video/")) folder = "videos";
+    cb(null, path.join(uploadDir, folder));
+  },
   filename: (req, file, cb) => {
-    const ext = path.extname(file.originalname);
-    const filename = `${Date.now()}-${Math.random().toString(36).substring(7)}${ext}`;
-    cb(null, filename);
+    const uniqueName = `${Date.now()}-${Math.random().toString(36).substring(7)}${path.extname(file.originalname)}`;
+    cb(null, uniqueName);
   },
 });
 const upload = multer({ storage });
 
-//  Mock image upload endpoint
-server.post("/api/upload", upload.single("image"), (req, res) => {
+// Replace old /api/upload with new structure
+server.post("/api/uploadImage", upload.single("file"), (req, res) => {
   if (!req.file) {
     return res.status(400).json({ error: "No file uploaded" });
   }
-  const fileUrl = `http://localhost:5000/uploads/${req.file.filename}`;
-  return res.status(200).json({ url: fileUrl });
+  const fileType = req.file.mimetype.startsWith("image/")
+    ? "images"
+    : req.file.mimetype.startsWith("video/")
+      ? "videos"
+      : "documents";
+
+  const fileUrl = `http://localhost:5000/public/${fileType}/${req.file.filename}`;
+  return res.status(201).json(fileUrl);
 });
 
-//  Serve uploaded images statically
-server.use("/uploads", express.static(uploadDir));
+server.use("/public", express.static(uploadDir));
 
-//  PATCH user profile with uploaded image URL
+// Retain your existing PATCH /profile/:id endpoint
 server.patch("/profile/:id", (req, res) => {
   const { id } = req.params;
   const updates = req.body;

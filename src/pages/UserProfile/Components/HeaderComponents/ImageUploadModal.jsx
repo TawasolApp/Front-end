@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { FiUpload, FiTrash2 } from "react-icons/fi";
-
+import ConfirmModal from "../GenericDisplay/ConfirmModal";
 function ImageUploadModal({
   isOpen,
   onClose,
@@ -12,6 +12,7 @@ function ImageUploadModal({
   const [selectedFile, setSelectedFile] = useState(null); // holds actual File object
   const [previewImage, setPreviewImage] = useState(null); // base64 for preview
   const [isSaving, setIsSaving] = useState(false);
+  const [showDeleteConfirm, setShowDeleteConfirm] = useState(false); // State for delete confirmation modal
 
   useEffect(() => {
     if (isOpen) {
@@ -47,12 +48,21 @@ function ImageUploadModal({
   };
 
   const handleDelete = () => {
+    setShowDeleteConfirm(true); // Show confirmation modal before delete
+  };
+
+  const handleDeleteConfirm = () => {
     setIsSaving(true);
     onUpload(null); // tells parent to remove image
     setSelectedFile(null);
     setPreviewImage(null);
     setIsSaving(false);
+    setShowDeleteConfirm(false); // Close the delete confirmation modal
     onClose();
+  };
+
+  const handleDeleteCancel = () => {
+    setShowDeleteConfirm(false); // Close the delete confirmation modal without deleting
   };
 
   if (!isOpen) return null;
@@ -122,6 +132,17 @@ function ImageUploadModal({
           )}
         </div>
       </div>
+      {/* Confirm Delete Modal */}
+      {showDeleteConfirm && (
+        <ConfirmModal
+          title="Confirm Delete"
+          message="Are you sure you want to delete this image? This action cannot be undone."
+          onCancel={handleDeleteCancel}
+          onConfirm={handleDeleteConfirm}
+          confirmLabel="Delete"
+          cancelLabel="Cancel"
+        />
+      )}
     </div>
   );
 }
