@@ -13,7 +13,6 @@ import {
   setRefreshToken,
   setToken,
   setType,
-  setUserId,
 } from "../../store/authenticationSlice";
 import { Link, useNavigate } from "react-router-dom";
 import AuthenticationHeader from "./GenericComponents/AuthenticationHeader";
@@ -34,14 +33,13 @@ const SignInPage = () => {
       });
 
       if (userResponse.status === 201) {
-        const { userId, token, refreshToken } = userResponse.data;
+        const { token, refreshToken } = userResponse.data;
 
         dispatch(setEmail(formData.email));
-        dispatch(setUserId(userId));
         dispatch(setToken(token));
         dispatch(setRefreshToken(refreshToken));
 
-        const profileResponse = await axiosInstance.get(`/profile/${userId}`);
+        const profileResponse = await axiosInstance.get("/profile");
 
         if (profileResponse.status === 200) {
           const { firstName, lastName, location, bio, picture } =
