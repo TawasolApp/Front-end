@@ -23,7 +23,7 @@ const Comment = ({ comment }) => {
     handleReactOnComment,
   } = usePost();
 
-  const currentAuthorId = useSelector((state) => state.authentication.id);
+  const currentAuthorId = useSelector((state) => state.authentication.userId);
   const [showReactions, setShowReactions] = useState(false);
   const [editorMode, setEditorMode] = useState(false);
   const [showReplies, setShowReplies] = useState(false);

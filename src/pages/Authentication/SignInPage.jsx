@@ -4,7 +4,6 @@ import { axiosInstance } from "../../apis/axios";
 import { useDispatch } from "react-redux";
 import {
   logout,
-  setId,
   setBio,
   setEmail,
   setFirstName,
@@ -43,7 +42,7 @@ const SignInPage = () => {
         const profileResponse = await axiosInstance.get("/profile");
 
         if (profileResponse.status === 200) {
-          const { _id, firstName, lastName, location, bio, picture } =
+          const { firstName, lastName, location, bio, picture } =
             profileResponse.data;
 
           dispatch(setType("User"));
@@ -62,9 +61,7 @@ const SignInPage = () => {
           if (picture) {
             dispatch(setPicture(picture));
           }
-          if (_id) {
-            dispatch(setId(_id));
-          }
+
           navigate("/feed");
         }
       }
