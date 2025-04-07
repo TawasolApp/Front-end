@@ -7,7 +7,7 @@ import ConfirmModal from "./ConfirmModal";
 // Shared date utilities
 const getAllMonths = () =>
   [...Array(12)].map((_, i) =>
-    new Date(2000, i).toLocaleString("default", { month: "long" }),
+    new Date(2000, i).toLocaleString("default", { month: "long" })
   );
 
 const currentYear = new Date().getFullYear();
@@ -171,10 +171,13 @@ function GenericModal({
 
       const updatedFormData = {
         ...cleanedFormData,
+        workExperiencePicture: formData.workExperiencePicture, //  ensure it's included
+        certificationPicture: formData.certificationPicture,
+
         ...(type === "certifications"
           ? {
               issueDate: formatDate(startMonth, startYear, "start"),
-              expireDate:
+              expiryDate:
                 endMonth && endYear ? formatDate(endMonth, endYear, "end") : "",
             }
           : type !== "skills"
