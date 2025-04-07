@@ -70,7 +70,9 @@ function JobApplications({ job }) {
                 className="w-10 h-10 rounded-full object-cover shrink-0"
               />
               <div className="min-w-0">
-                <p className="font-medium truncate">{applicant.username}</p>
+                <p className="font-medium truncate">
+                  {applicant.firstName} {applicant.lastName}
+                </p>
                 <p className="text-sm text-companysubheader truncate">
                   {applicant.headline}
                 </p>
