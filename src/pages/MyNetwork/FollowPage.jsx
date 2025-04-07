@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef, useCallback } from "react";
 import { axiosInstance } from "../../apis/axios";
 
 const FollowPage = () => {
@@ -7,45 +7,81 @@ const FollowPage = () => {
   const [userToUnfollow, setUserToUnfollow] = useState(null);
   const [following, setFollowing] = useState([]);
   const [followers, setFollowers] = useState([]);
-  const [pagination, setPagination] = useState({
-    page: 1,
-    limit: 5
-  });
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
+  const [hasMore, setHasMore] = useState(true);
+  const [page, setPage] = useState(1);
+  const limit = 5;
 
-  // Fetch data when component mounts and when tab or pagination changes
+  const observer = useRef();
+  const isFetching = useRef(false);
+
+  const lastElementRef = useCallback(
+    (node) => {
+      if (loading) return;
+      if (observer.current) observer.current.disconnect();
+
+      observer.current = new IntersectionObserver((entries) => {
+        if (entries[0].isIntersecting && hasMore && !isFetching.current) {
+          setPage((prevPage) => prevPage + 1);
+        }
+      });
+
+      if (node) observer.current.observe(node);
+    },
+    [loading, hasMore]
+  );
+
   useEffect(() => {
     const fetchData = async () => {
+      if (isFetching.current) return;
+      
       setLoading(true);
       setError(null);
+      isFetching.current = true;
+
       try {
-        if (activeTab === "following") {
-          const response = await axiosInstance.get("/connections/following", {
-            params: {
-              page: pagination.page,
-              limit: pagination.limit
-            }
-          });
-          setFollowing(response.data);
+        const endpoint = activeTab === "following" 
+          ? "/connections/following" 
+          : "/connections/followers";
+        
+        const response = await axiosInstance.get(endpoint, {
+          params: { page, limit }
+        });
+
+        const newData = response.data;
+        
+        if (newData.length === 0) {
+          setHasMore(false);
         } else {
-          const response = await axiosInstance.get("/connections/followers", {
-            params: {
-              page: pagination.page,
-              limit: pagination.limit
-            }
-          });
-          setFollowers(response.data);
+          if (page === 1) {
+            activeTab === "following" 
+              ? setFollowing(newData) 
+              : setFollowers(newData);
+          } else {
+            activeTab === "following" 
+              ? setFollowing(prev => [...prev, ...newData]) 
+              : setFollowers(prev => [...prev, ...newData]);
+          }
         }
       } catch (error) {
         setError(`Failed to load ${activeTab} list.`);
         console.error("Error fetching data:", error);
       } finally {
         setLoading(false);
+        isFetching.current = false;
       }
     };
+
     fetchData();
-  }, [activeTab, pagination.page, pagination.limit]);
+  }, [activeTab, page]);
+
+  useEffect(() => {
+    setPage(1);
+    setHasMore(true);
+    setFollowing([]);
+    setFollowers([]);
+  }, [activeTab]);
 
   const handleUnfollow = async (userId) => {
     try {
@@ -60,23 +96,19 @@ const FollowPage = () => {
 
   const handleFollow = async (user) => {
     try {
-      // Immediately update UI to show "Following"
       setFollowing(prev => [...prev, user]);
-      
-      // Send follow request
       const response = await axiosInstance.post(
         "/connections/follow",
         { userId: user.userId },
         { headers: { "Content-Type": "application/json" } }
       );
   
-      // Refresh both following and followers lists
       const [followingRes, followersRes] = await Promise.all([
         axiosInstance.get("/connections/following", {
-          params: { page: 1, limit: pagination.limit * pagination.page }
+          params: { page: 1, limit: limit * page }
         }),
         axiosInstance.get("/connections/followers", {
-          params: { page: 1, limit: pagination.limit * pagination.page }
+          params: { page: 1, limit: limit * page }
         })
       ]);
   
@@ -84,12 +116,11 @@ const FollowPage = () => {
       setFollowers(followersRes.data);
   
     } catch (error) {
-      console.error("Failed to follow user:", error);
-      // Revert UI change if request fails
       setFollowing(prev => prev.filter(u => u.userId !== user.userId));
       setError("Failed to follow user.");
     }
   };
+
   const promptUnfollow = (user) => {
     setUserToUnfollow(user);
     setShowUnfollowModal(true);
@@ -103,13 +134,8 @@ const FollowPage = () => {
     return following.some((user) => user.userId === userId);
   };
 
-  const handlePageChange = (newPage) => {
-    setPagination(prev => ({...prev, page: newPage}));
-  };
-
   return (
     <div className="min-h-screen bg-mainBackground p-4 sm:p-6">
-      {/* Unfollow Confirmation Modal */}
       {showUnfollowModal && userToUnfollow && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
           <div className="bg-cardBackground p-4 rounded-lg shadow-lg w-full mx-4 sm:w-80 sm:mx-0 relative border border-cardBorder">
@@ -172,10 +198,7 @@ const FollowPage = () => {
                 ? "text-listSelected border-b-2 border-listSelected"
                 : "text-textPlaceholder"
             }`}
-            onClick={() => {
-              setActiveTab("following");
-              setPagination(prev => ({...prev, page: 1}));
-            }}
+            onClick={() => setActiveTab("following")}
             data-testid="followingButton"
           >
             Following 
@@ -186,16 +209,13 @@ const FollowPage = () => {
                 ? "text-listSelected border-b-2 border-listSelected"
                 : "text-textPlaceholder"
             }`}
-            onClick={() => {
-              setActiveTab("followers");
-              setPagination(prev => ({...prev, page: 1}));
-            }}
+            onClick={() => setActiveTab("followers")}
           >
             Followers 
           </button>
         </div>
 
-        {loading ? (
+        {loading && page === 1 ? (
           <p className="text-center text-textPlaceholder mt-4">Loading...</p>
         ) : error ? (
           <p className="text-center text-error mt-4">{error}</p>
@@ -207,9 +227,10 @@ const FollowPage = () => {
 
             <div className="pt-2">
               {following.length > 0 ? (
-                following.map((user) => (
+                following.map((user, index) => (
                   <div
-                    key={user.userId}
+                    key={`${user.userId}-${index}`}
+                    ref={index === following.length - 1 ? lastElementRef : null}
                     className="mb-4 pb-4 border-b border-cardBorder"
                   >
                     <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-2">
@@ -252,9 +273,10 @@ const FollowPage = () => {
             </p>
 
             {followers.length > 0 ? (
-              followers.map((user) => (
+              followers.map((user, index) => (
                 <div
-                  key={user.userId}
+                  key={`${user.userId}-${index}`}
+                  ref={index === followers.length - 1 ? lastElementRef : null}
                   className="mb-4 pb-4 border-b border-cardBorder"
                 >
                   <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-2">
@@ -299,26 +321,17 @@ const FollowPage = () => {
           </div>
         )}
 
-        {/* Pagination Controls */}
-        <div className="flex justify-center mt-4">
-          <button
-            onClick={() => handlePageChange(pagination.page - 1)}
-            disabled={pagination.page === 1}
-            className="px-4 py-2 mx-1 border rounded disabled:opacity-50"
-          >
-            Previous
-          </button>
-          <span className="px-4 py-2">
-            Page {pagination.page}
-          </span>
-          <button
-            onClick={() => handlePageChange(pagination.page + 1)}
-            disabled={(activeTab === "following" ? following : followers).length < pagination.limit}
-            className="px-4 py-2 mx-1 border rounded disabled:opacity-50"
-          >
-            Next
-          </button>
-        </div>
+        {loading && page > 1 && (
+          <div className="flex justify-center p-4">
+            <div className="loader">Loading more...</div>
+          </div>
+        )}
+
+        {!hasMore && (following.length > 0 || followers.length > 0) && (
+          <div className="text-center p-4 text-header">
+            You've reached the end of your {activeTab} list
+          </div>
+        )}
       </div>
     </div>
   );

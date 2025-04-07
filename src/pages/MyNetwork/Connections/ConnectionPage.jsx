@@ -1,76 +1,97 @@
-import React, { useEffect, useState } from "react";
+import React, { useState, useEffect, useRef, useCallback } from "react";
 import ConnectionCard from "./ConnectionCard";
 import { axiosInstance } from "../../../apis/axios";
 
 const ConnectionPage = () => {
   const [connections, setConnections] = useState([]);
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
-  const [sortBy, setSortBy] = useState("recentlyAdded");
+  const [sortBy, setSortBy] = useState(1); // 1: recentlyAdded, 2: firstName, 3: lastName
+  const [sortDirection, setSortDirection] = useState(1); // 1: ascending, -1: descending
   const [searchQuery, setSearchQuery] = useState("");
-  const [pagination, setPagination] = useState({
-    page: 1,
-    limit: 5
-  });
+  const [hasMore, setHasMore] = useState(true);
+  const [page, setPage] = useState(1);
+  const limit = 5;
 
+  const observer = useRef();
+  const isFetching = useRef(false);
+
+  const lastElementRef = useCallback(
+    (node) => {
+      if (loading) return;
+      if (observer.current) observer.current.disconnect();
+
+      observer.current = new IntersectionObserver((entries) => {
+        if (entries[0].isIntersecting && hasMore && !isFetching.current) {
+          setPage((prevPage) => prevPage + 1);
+        }
+      });
+
+      if (node) observer.current.observe(node);
+    },
+    [loading, hasMore]
+  );
+
+  // Fetch connections when sortBy, sortDirection, or page changes
   useEffect(() => {
     const fetchConnections = async () => {
+      if (isFetching.current) return;
+
+      setLoading(true);
+      setError(null);
+      isFetching.current = true;
+
       try {
-        setLoading(true);
         const response = await axiosInstance.get("/connections/list", {
-          params: {
-            page: pagination.page,
-            limit: pagination.limit
-          }
+          params: { page, limit, by: sortBy, direction: sortDirection },
         });
-        setConnections(response.data);
+
+        const newData = response.data;
+
+        if (newData.length === 0) {
+          setHasMore(false);
+        } else {
+          if (page === 1) {
+            setConnections(newData);
+          } else {
+            setConnections((prev) => [...prev, ...newData]);
+          }
+        }
       } catch (err) {
         setError("Failed to load connections.");
       } finally {
         setLoading(false);
+        isFetching.current = false;
       }
     };
 
     fetchConnections();
-  }, [pagination.page, pagination.limit]);
+  }, [page, sortBy, sortDirection]); // Fetch new connections when sort or direction changes
 
   const handleRemoveConnection = async (userId) => {
     try {
       await axiosInstance.delete(`/connections/${userId}`);
-      setConnections((prevConnections) =>
-        prevConnections.filter((connection) => connection.userId !== userId),
-      );
+      setConnections((prev) => prev.filter((connection) => connection.userId !== userId));
     } catch (error) {
       setError("Unable to remove connection.");
     }
   };
 
   const handleSortChange = (event) => {
-    setSortBy(event.target.value);
+    setSortBy(Number(event.target.value));
+    setPage(1); // Reset page when sorting changes
+  };
+
+  const handleDirectionChange = (event) => {
+    setSortDirection(Number(event.target.value));
+    setPage(1); // Reset page when direction changes
   };
 
   const handleSearchChange = (event) => {
     setSearchQuery(event.target.value.toLowerCase());
   };
 
-  const handlePageChange = (newPage) => {
-    setPagination(prev => ({...prev, page: newPage}));
-  };
-
-  // Sort connections
-  const sortedConnections = [...connections].sort((a, b) => {
-    if (sortBy === "recentlyAdded") {
-      return new Date(b.createdAt) - new Date(a.createdAt);
-    } else if (sortBy === "firstName") {
-      return a.firstName.localeCompare(b.firstName);
-    } else if (sortBy === "lastName") {
-      return a.lastName.localeCompare(b.lastName);
-    }
-    return 0;
-  });
-
-  // Filter connections
-  const filteredConnections = sortedConnections.filter((connection) => {
+  const filteredConnections = connections.filter((connection) => {
     const fullName = `${connection.firstName} ${connection.lastName}`.toLowerCase();
     return fullName.includes(searchQuery);
   });
@@ -78,21 +99,15 @@ const ConnectionPage = () => {
   return (
     <div className="p-4 bg-mainBackground min-h-screen flex justify-center">
       <div className="w-full max-w-4xl">
-        {/* Header Section */}
         <div className="bg-cardBackground border border-cardBorder rounded-t-lg shadow-sm p-4 border-b-0">
           <h1 className="text-xl text-textHeavyTitle">
             {filteredConnections.length} Connection
             {filteredConnections.length !== 1 ? "s" : ""}
           </h1>
 
-          {/* Sort and Search Controls */}
           <div className="mt-2 flex items-center justify-between">
-            {/* Sort Dropdown */}
             <div className="flex items-center relative">
-              <label
-                htmlFor="sortBy"
-                className="text-sm text-textPlaceholder"
-              >
+              <label htmlFor="sortBy" className="text-sm text-textPlaceholder">
                 Sort by:
               </label>
               <div className="ml-2 relative">
@@ -102,24 +117,9 @@ const ConnectionPage = () => {
                   onChange={handleSortChange}
                   className="pl-2 pr-7 py-1 text-sm text-textPlaceholder bg-cardBackground border border-cardBorder rounded focus:outline-none focus:ring-1 focus:ring-buttonSubmitEnable appearance-none cursor-pointer"
                 >
-                  <option
-                    value="recentlyAdded"
-                    className="bg-cardBackground text-textPlaceholder"
-                  >
-                    Recently added
-                  </option>
-                  <option
-                    value="firstName"
-                    className="bg-cardBackground text-textPlaceholder"
-                  >
-                    First name
-                  </option>
-                  <option
-                    value="lastName"
-                    className="bg-cardBackground text-textPlaceholder"
-                  >
-                    Last name
-                  </option>
+                  <option value={1}>Recently added</option>
+                  <option value={2}>First name</option>
+                  <option value={3}>Last name</option>
                 </select>
                 <div className="absolute right-2 top-1/2 transform -translate-y-1/2 pointer-events-none">
                   <svg
@@ -139,7 +139,38 @@ const ConnectionPage = () => {
               </div>
             </div>
 
-            {/* Search Input */}
+            <div className="flex items-center relative">
+              <label htmlFor="sortDirection" className="text-sm text-textPlaceholder">
+                Direction:
+              </label>
+              <div className="ml-2 relative">
+                <select
+                  id="sortDirection"
+                  value={sortDirection}
+                  onChange={handleDirectionChange}
+                  className="pl-2 pr-7 py-1 text-sm text-textPlaceholder bg-cardBackground border border-cardBorder rounded focus:outline-none focus:ring-1 focus:ring-buttonSubmitEnable appearance-none cursor-pointer"
+                >
+                  <option value={1}>Ascending</option>
+                  <option value={-1}>Descending</option>
+                </select>
+                <div className="absolute right-2 top-1/2 transform -translate-y-1/2 pointer-events-none">
+                  <svg
+                    className="w-4 h-4 text-textPlaceholder"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={2}
+                      d="M19 9l-7 7-7-7"
+                    />
+                  </svg>
+                </div>
+              </div>
+            </div>
+
             <div className="relative">
               <input
                 type="text"
@@ -166,24 +197,18 @@ const ConnectionPage = () => {
           </div>
         </div>
 
-        {/* Loading and Error States */}
-        {loading && (
-          <p className="text-center text-textPlaceholder mt-4">
-            Loading...
-          </p>
-        )}
-        {error && (
-          <p className="text-center text-error mt-4">
-            {error}
-          </p>
-        )}
-
-        {/* Connections List */}
-        {!loading && !error && (
+        {loading && page === 1 ? (
+          <p className="text-center text-textPlaceholder mt-4">Loading...</p>
+        ) : error ? (
+          <p className="text-center text-error mt-4">{error}</p>
+        ) : (
           <>
             <div className="space-y-0">
               {filteredConnections.map((connection, index) => (
-                <div key={connection.userId}>
+                <div
+                  key={`${connection.userId}-${index}`}
+                  ref={index === filteredConnections.length - 1 ? lastElementRef : null}
+                >
                   <ConnectionCard
                     imageUrl={connection.profilePicture}
                     firstName={connection.firstName}
@@ -199,26 +224,17 @@ const ConnectionPage = () => {
               ))}
             </div>
 
-            {/* Pagination Controls */}
-            <div className="flex justify-center p-4 border-t border-cardBorder">
-              <button
-                onClick={() => handlePageChange(pagination.page - 1)}
-                disabled={pagination.page === 1}
-                className="px-4 py-2 mx-1 border rounded disabled:opacity-50"
-              >
-                Previous
-              </button>
-              <span className="px-4 py-2">
-                Page {pagination.page}
-              </span>
-              <button
-                onClick={() => handlePageChange(pagination.page + 1)}
-                disabled={filteredConnections.length < pagination.limit}
-                className="px-4 py-2 mx-1 border rounded disabled:opacity-50"
-              >
-                Next
-              </button>
-            </div>
+            {loading && page > 1 && (
+              <div className="flex justify-center p-4">
+                <div className="loader">Loading more connections...</div>
+              </div>
+            )}
+
+            {!hasMore && filteredConnections.length > 0 && (
+              <div className="text-center p-4 border-t border-cardBorder">
+                You've reached the end of your connections
+              </div>
+            )}
           </>
         )}
       </div>
