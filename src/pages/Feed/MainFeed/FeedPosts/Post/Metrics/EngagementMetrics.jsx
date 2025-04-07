@@ -59,7 +59,7 @@ const EngagementMetrics = ({
         {shares > 0 && (
           <button
             className="text-xs mx-1 hover:underline hover:text-textPlaceholderHover"
-            onClick={() => navigate(`/posts/${post.id}/reposts`)}
+            onClick={() => navigate(`/feed/reposts/${post.id}`)}
           >
             {shares} {shares === 1 ? "repost" : "reposts"}
           </button>

@@ -66,12 +66,12 @@ export const PostProvider = ({
     });
 
     setPost((prev) => {
-      const newReactions = { ...prev.reactions };
+      const newReactions = { ...prev.reactCounts };
       if (reactionTypeAdd) newReactions[reactionTypeAdd] += 1;
       if (reactionTypeRemove) newReactions[reactionTypeRemove] -= 1;
       return {
         ...prev,
-        reactsCount: newReactions,
+        reactCounts: newReactions,
         reactType: reactionTypeAdd || null,
       };
     });
@@ -188,14 +188,14 @@ export const PostProvider = ({
         c.id === commentId
           ? {
               ...c,
-              reactsCount: {
-                ...c.reactsCount, // Ensure we copy the existing reactions properly
+              reactCounts: {
+                ...c.reactCounts, // Ensure we copy the existing reactions properly
                 [reactionTypeAdd]: reactionTypeAdd
-                  ? (c.reactsCount[reactionTypeAdd] || 0) + 1
-                  : c.reactsCount[reactionTypeAdd], // Increment safely
+                  ? (c.reactCounts[reactionTypeAdd] || 0) + 1
+                  : c.reactCounts[reactionTypeAdd], // Increment safely
                 [reactionTypeRemove]: reactionTypeRemove
-                  ? Math.max((c.reactsCount[reactionTypeRemove] || 1) - 1, 0)
-                  : c.reactsCount[reactionTypeRemove], // Decrement safely, ensuring no negative values
+                  ? Math.max((c.reactCounts[reactionTypeRemove] || 1) - 1, 0)
+                  : c.reactCounts[reactionTypeRemove], // Decrement safely, ensuring no negative values
               },
               reactType: reactionTypeAdd || null,
             }
@@ -225,7 +225,7 @@ export const PostProvider = ({
       const newReplies = response.data;
       setReplies((prevReplies) => {
         const existingReplies = prevReplies[commentId]?.data || [];
-
+        console.log(newReplies)
         // Remove duplicate replies
         const mergedReplies = [...existingReplies, ...newReplies];
         const uniqueReplies = Array.from(
@@ -239,8 +239,8 @@ export const PostProvider = ({
           [commentId]: {
             data: uniqueReplies,
             hasMore:
-              wantedComment.replies.length >
-              existingReplies.length + newReplies.length,
+              wantedComment.repliesCount >
+              existingReplies + newReplies,
             replyPage: currentPage + 1,
           },
         };
@@ -332,7 +332,7 @@ export const PostProvider = ({
         comment.id === commentId
           ? {
               ...comment,
-              replies: comment.replies.slice(0, comment.replies.length - 1), // Remove the last dummy reply
+              replies: comment.replies.slice(0, comment.replies - 1), // Remove the last dummy reply
             }
           : comment,
       ),
@@ -352,6 +352,7 @@ export const PostProvider = ({
       reactions: reacts,
       postType: "Reply",
     });
+
     setReplies((prevReplies) => ({
       ...prevReplies,
       [commentId]: {
@@ -360,17 +361,17 @@ export const PostProvider = ({
           reply.id === replyId
             ? {
                 ...reply,
-                reactsCount: {
-                  ...reply.reactsCount,
+                reactCounts: {
+                  ...reply.reactCounts,
                   [reactionTypeAdd]: reactionTypeAdd
-                    ? (reply.reactsCount[reactionTypeAdd] || 0) + 1
-                    : reply.reactsCount[reactionTypeAdd],
+                    ? (reply.reactCounts[reactionTypeAdd] || 0) + 1
+                    : reply.reactCounts[reactionTypeAdd],
                   [reactionTypeRemove]: reactionTypeRemove
                     ? Math.max(
-                        (reply.reactsCount[reactionTypeRemove] || 1) - 1,
+                        (reply.reactCounts[reactionTypeRemove] || 1) - 1,
                         0,
                       )
-                    : reply.reactsCount[reactionTypeRemove],
+                    : reply.reactCounts[reactionTypeRemove],
                 },
                 reactType: reactionTypeAdd || null,
               }

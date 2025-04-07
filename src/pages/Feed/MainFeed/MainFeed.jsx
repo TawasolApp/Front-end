@@ -52,7 +52,7 @@ const MainFeed = ({
       if (q != null) {
         params.q = q;
       }
-
+      
       const response = await axiosInstance.get(API_ROUTE, {
         params: params,
       });

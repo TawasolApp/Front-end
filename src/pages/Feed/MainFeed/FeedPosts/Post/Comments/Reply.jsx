@@ -28,8 +28,8 @@ const Reply = ({ commentId, reply }) => {
 
   const menuItems = [
     {
-      text: "Report post",
-      onClick: () => console.log("Reported post"),
+      text: "Report reply",
+      onClick: () => console.log("Reported reply"),
       icon: FlagIcon,
     },
   ];
@@ -97,15 +97,19 @@ const Reply = ({ commentId, reply }) => {
             <div className="pl-9 pt-1">
               <ActivitiesHolder
                 currentReaction={reply.reactType}
-                reactions={reply.reactsCount}
-                handleReaction={(reactionTypeAdd, reactionTypeRemove) =>
-                  handleReactOnReplyToComment(
-                    commentId,
-                    reply.id,
-                    reactionTypeAdd,
-                    reactionTypeRemove,
-                  )
-                }
+                reactions={reply.reactCounts}
+                handleReaction={(reactionTypeAdd, reactionTypeRemove) => {
+                  try {
+                    handleReactOnReplyToComment(
+                      commentId,
+                      reply.id,
+                      reactionTypeAdd,
+                      reactionTypeRemove,
+                    );
+                  } catch (e) {
+                    console.log(e);
+                  }
+                }}
                 setShowReactions={() => setShowReactions(true)}
                 isReply={true}
               />

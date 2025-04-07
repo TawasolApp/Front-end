@@ -20,12 +20,10 @@ const Comment = ({ comment }) => {
     handleDeleteComment,
     handleEditComment,
     handleReactOnComment,
-    handleAddReplyToComment,
   } = usePost();
 
   // TODO: change this to redux states
   const currentAuthorId = "mohsobh";
-
   const [showReactions, setShowReactions] = useState(false);
   const [editorMode, setEditorMode] = useState(false);
   const [showReplies, setShowReplies] = useState(false);
@@ -105,7 +103,7 @@ const Comment = ({ comment }) => {
             <div className="pl-1 pt-1">
               <ActivitiesHolder
                 currentReaction={comment.reactType}
-                reactions={comment.reactsCount}
+                reactions={comment.reactCounts}
                 handleReaction={(reactionTypeAdd, reactionTypeRemove) =>
                   handleReactOnComment(
                     comment.id,
@@ -114,7 +112,7 @@ const Comment = ({ comment }) => {
                   )
                 }
                 setShowReactions={() => setShowReactions(true)}
-                replies={comment.replies.length}
+                replies={comment.repliesCount}
                 setShowReplies={() => setShowReplies(true)}
               />
             </div>
