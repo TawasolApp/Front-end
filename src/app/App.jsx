@@ -2,6 +2,8 @@ import "./App.css";
 
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 
+import TawasolNavbar from "../layouts/TawasolNavbar";
+
 import SignUpPage from "../pages/Authentication/SignUpPage";
 import SignInPage from "../pages/Authentication/SignInPage";
 import NamePage from "../pages/Authentication/NamePage";
@@ -42,8 +44,17 @@ import SavedPostsContainer from "../pages/SavedPosts/SavedPostsContainer";
 import RepostsContainer from "../pages/Reposts/RepostsContainer";
 import VerifySignUpPage from "../pages/Authentication/VerifySignUpPage.jsx";
 
+const RenderWithNavbar = (component) => {
+  return (
+    <>
+      <TawasolNavbar />
+      {component}
+    </>
+  );
+}
+
 const App = () => {
-  const isOwner = true;
+
   return (
     <Router>
       <Routes>
@@ -80,15 +91,14 @@ const App = () => {
           <Route path="connections" element={<ProfileConnections />} />
         </Route>
 
-        <Route path="/connections" element={<ConnectionPage />} />
+        <Route path="/connections" element={RenderWithNavbar(<ConnectionPage />)} />
         <Route path="/blocked" element={<BlockedPage />} />
         <Route path="/follow" element={<FollowPage />} />
         <Route path="/manage-connections" element={<ManageConnections />} />
 
         <Route path="/feed/:id" element={<SinglePost />} />
-        <Route path="/feed" element={<FeedContainer />} />
-        <Route path="/feed/reposts/:id" element={<RepostsContainer />} /> 
-        
+        <Route path="/feed" element={RenderWithNavbar(<FeedContainer />)} />
+        <Route path="/feed/reposts/:id" element={RenderWithNavbar(<RepostsContainer />)} /> 
         <Route path="/my-items/saved-posts" element={<SavedPostsContainer />} />
 
         <Route path="/company/:companyId/*" element={<CompanyLayout />}>
