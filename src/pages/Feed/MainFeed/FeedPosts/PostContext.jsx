@@ -263,6 +263,8 @@ export const PostProvider = ({
   };
 
   const handleAddReplyToComment = async (commentId, text, taggedUsers) => {
+
+    console.log(comments)
     const response = await axiosInstance.post(`/posts/comment/${commentId}`, {
       content: text,
       tagged: taggedUsers,
@@ -282,7 +284,7 @@ export const PostProvider = ({
         comment.id === commentId
           ? {
               ...comment,
-              replies: [...comment.replies, "Dummy reply"], // Add dummy string
+              repliesCount: comment.repliesCount + 1, // Add dummy string
             }
           : comment,
       ),

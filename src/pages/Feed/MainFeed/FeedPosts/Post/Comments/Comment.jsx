@@ -14,6 +14,7 @@ import { formatDate } from "../../../../../../utils";
 import TextViewer from "../../../../GenericComponents/TextViewer";
 import { usePost } from "../../PostContext";
 import ReplyContainer from "./ReplyContainer";
+import { useSelector } from "react-redux";
 
 const Comment = ({ comment }) => {
   const {
@@ -22,8 +23,7 @@ const Comment = ({ comment }) => {
     handleReactOnComment,
   } = usePost();
 
-  // TODO: change this to redux states
-  const currentAuthorId = "mohsobh";
+  const currentAuthorId = useSelector((state) => state.authentication.id);
   const [showReactions, setShowReactions] = useState(false);
   const [editorMode, setEditorMode] = useState(false);
   const [showReplies, setShowReplies] = useState(false);

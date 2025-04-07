@@ -23,8 +23,7 @@ import { useSelector } from "react-redux";
 
 const PostCard = ({ setShowPostModal, setMediaIndex }) => {
 
-  // TODO: Change to redux
-  const currentAuthorId = "hlelo"
+  const currentAuthorId = useSelector((state) => state.authentication.id);
   const currentAuthorName = `${useSelector((state) => state.authentication.firstName)} ${useSelector((state) => state.authentication.lastName)}`;
   const currentAuthorPicture = useSelector((state) => state.authentication.picture);
 
