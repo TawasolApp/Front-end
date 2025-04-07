@@ -48,19 +48,18 @@ const ConnectionPage = () => {
     if (sortBy === "recentlyAdded") {
       return new Date(b.createdAt) - new Date(a.createdAt);
     } else if (sortBy === "firstName") {
-      return a.username.split(" ")[0].localeCompare(b.username.split(" ")[0]);
+      return a.firstName.localeCompare(b.firstName);
     } else if (sortBy === "lastName") {
-      const lastNameA = a.username.split(" ")[1] || a.username;
-      const lastNameB = b.username.split(" ")[1] || b.username;
-      return lastNameA.localeCompare(lastNameB);
+      return a.lastName.localeCompare(b.lastName);
     }
     return 0;
   });
 
   // Filter connections
-  const filteredConnections = sortedConnections.filter((connection) =>
-    connection.username.toLowerCase().includes(searchQuery),
-  );
+  const filteredConnections = sortedConnections.filter((connection) => {
+    const fullName = `${connection.firstName} ${connection.lastName}`.toLowerCase();
+    return fullName.includes(searchQuery);
+  });
 
   return (
     <div className="p-4 bg-mainBackground min-h-screen flex justify-center">
@@ -172,7 +171,8 @@ const ConnectionPage = () => {
               <div key={connection.userId}>
                 <ConnectionCard
                   imageUrl={connection.profilePicture}
-                  username={connection.username}
+                  firstName={connection.firstName}
+                  lastName={connection.lastName}
                   experience={connection.headline}
                   connectionDate={`Connected on ${new Date(connection.createdAt).toLocaleDateString()}`}
                   onRemove={() => handleRemoveConnection(connection.userId)}
