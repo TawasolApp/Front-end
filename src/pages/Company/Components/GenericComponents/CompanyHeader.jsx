@@ -243,13 +243,6 @@ function CompanyHeader({
         show={showAddManagerModal}
         onClose={() => setShowAddManagerModal(false)}
         companyId={company.companyId}
-        Managers={company.Managers}
-        onManagerAdded={(newManagerId) => {
-          setCompanyData((prev) => ({
-            ...prev,
-            Managers: [...prev.Managers, newManagerId],
-          }));
-        }}
       />
     </div>
   );

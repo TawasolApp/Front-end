@@ -1,43 +1,38 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { axiosInstance } from "../../../../apis/axios";
-import { useEffect } from "react";
 
-function AddManagerModal({
-  show,
-  onClose,
-  companyId,
-  Managers,
-  onManagerAdded,
-}) {
+function AddManagerModal({ show, onClose, companyId }) {
   const [userId, setUserId] = useState("");
   const [loading, setLoading] = useState(false);
   const [message, setMessage] = useState("");
   const [isError, setIsError] = useState(false);
   const [managers, setManagers] = useState([]);
-  // Fetch manager names
+
+  // Fetch current company managers
+  const fetchManagers = async () => {
+    if (!show || !companyId) return;
+
+    try {
+      const { data } = await axiosInstance.get(
+        `/companies/${companyId}/managers?page=1&limit=10`
+      );
+
+      const managerProfiles = data.map((user) => ({
+        id: user.id,
+        name: `${user.firstName} ${user.lastName}`,
+      }));
+
+      setManagers(managerProfiles);
+    } catch (err) {
+      console.error("Error fetching manager profiles:", err);
+      setManagers([]);
+    }
+  };
+
   useEffect(() => {
-    const fetchManagers = async () => {
-      if (!show || Managers.length === 0) {
-        setManagers([]);
-        return;
-      }
-
-      try {
-        const managerProfiles = await Promise.all(
-          Managers.map(async (id) => {
-            const res = await axiosInstance.get(`/profile/${id}`);
-            return { id, name: `${res.data.firstName} ${res.data.lastName}` };
-          })
-        );
-        setManagers(managerProfiles);
-      } catch (err) {
-        console.error("Error fetching manager profiles:", err);
-        setManagers([]);
-      }
-    };
-
     fetchManagers();
-  }, [show, Managers]);
+  }, [show, companyId]);
+
   const handleModalClose = () => {
     setUserId("");
     setMessage("");
@@ -50,19 +45,21 @@ function AddManagerModal({
 
     try {
       setLoading(true);
-      const res = await axiosInstance.post(`/companies/${companyId}/managers`, {
-        userId: userId.trim(),
+
+      await axiosInstance.post(`/companies/${companyId}/managers`, {
+        newUserId: userId.trim(),
       });
+
       setMessage("Manager added successfully.");
       setIsError(false);
-      if (onManagerAdded) {
-        onManagerAdded(userId.trim());
-      }
+
+      await fetchManagers();
+
       setTimeout(() => {
         onClose();
         setUserId("");
         setMessage("");
-      }, 1000); // 1 second delay
+      }, 1000);
     } catch (err) {
       setIsError(true);
       const backendMsg = err.response?.data?.message;
@@ -78,6 +75,7 @@ function AddManagerModal({
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-modalbackground">
       <div className="bg-boxbackground p-6 rounded-md shadow-md w-full max-w-md">
         <h2 className="text-lg font-semibold mb-4 text-text">Add Manager</h2>
+
         {managers.length > 0 && (
           <div className="mb-4">
             <p className="text-sm font-semibold text-text mb-2">
@@ -105,6 +103,7 @@ function AddManagerModal({
             </div>
           </div>
         )}
+
         <h2 className="text-text mb-2">Add new manager</h2>
         <input
           type="text"
@@ -115,7 +114,11 @@ function AddManagerModal({
         />
 
         {message && (
-          <div className="text-sm mb-2 text-center text-green-600">
+          <div
+            className={`text-sm mb-2 text-center ${
+              isError ? "text-red-500" : "text-green-600"
+            }`}
+          >
             {message}
           </div>
         )}

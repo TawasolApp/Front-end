@@ -55,19 +55,80 @@ function EditAboutModal({ show, companyData, onClose }) {
 
   const handleSave = async () => {
     try {
+      const payload = {};
+
+      // Compare each field and only add it to payload if it's changed and valid
+      for (const key in formData) {
+        const originalValue = companyData[key] ?? "";
+        const currentValue = formData[key];
+
+        if (key === "founded") {
+          const parsed = parseInt(currentValue);
+          if (
+            currentValue &&
+            parsed !== companyData.founded &&
+            !isNaN(parsed) &&
+            parsed >= 1800 &&
+            parsed <= new Date().getFullYear()
+          ) {
+            payload.founded = parsed;
+          }
+          continue;
+        }
+
+        if (key === "location") {
+          const isValidLocation =
+            currentValue?.trim() && /^https?:\/\/.+/.test(currentValue.trim());
+          if (
+            isValidLocation &&
+            currentValue.trim() !== (originalValue?.trim() || "")
+          ) {
+            payload.location = currentValue.trim();
+          }
+          continue;
+        }
+
+        // Skip unchanged values (including booleans like isVerified)
+        if (key === "isVerified") {
+          if (!!currentValue !== !!originalValue) {
+            payload.isVerified = !!currentValue;
+          }
+          continue;
+        }
+
+        // Default string fields
+        if (
+          typeof currentValue === "string" &&
+          currentValue.trim() !== (originalValue?.trim() || "")
+        ) {
+          payload[key] = currentValue.trim();
+        }
+      }
+
+      if (Object.keys(payload).length === 0) {
+        setErrorMessage("No changes to save.");
+        return;
+      }
+
       const response = await axios.patch(
         `/companies/${companyData.companyId}`,
-        formData
+        payload
       );
-      console.log(" Company updated:", response.data);
 
+      console.log("Company updated:", response.data);
       onClose();
       window.location.reload();
     } catch (error) {
+      const backendMessage = error.response?.data?.message;
       console.error("Error updating company:", error);
-      setErrorMessage("Failed to update company profile.");
+      setErrorMessage(
+        Array.isArray(backendMessage)
+          ? backendMessage.join(", ")
+          : backendMessage || "Failed to update company profile."
+      );
     }
   };
+
   const handleFileUpload = async (e, type) => {
     const file = e.target.files[0];
     if (!file) return;
@@ -229,9 +290,7 @@ function EditAboutModal({ show, companyData, onClose }) {
 
           {/* Location */}
           <div className="mb-4">
-            <label className="block font-medium text-normaltext">
-              Location
-            </label>
+            <label className="block font-medium text-normaltext">Address</label>
             <input
               type="text"
               name="address"
@@ -302,26 +361,41 @@ function EditAboutModal({ show, companyData, onClose }) {
             <label className="block font-medium text-normaltext">
               Company Size
             </label>
-            <input
-              type="text"
+            <select
               name="companySize"
               className="w-full p-2 border rounded-md bg-boxbackground text-normaltext"
               value={formData.companySize}
               onChange={handleChange}
-            />
+            >
+              <option value="">Select size</option>
+              <option value="1-50 Employees">1-50 Employees</option>
+              <option value="51-400 Employees">51-400 Employees</option>
+              <option value="401-1000 Employees">401-1000 Employees</option>
+              <option value="1001-10000 Employees">1001-10000 Employees</option>
+              <option value="10000 Employees">10000+ Employees</option>
+            </select>
           </div>
+
           {/* companyType */}
           <div className="mb-4">
             <label className="block font-medium text-normaltext">
               Company Type
             </label>
-            <input
-              type="text"
+            <select
               name="companyType"
               className="w-full p-2 border rounded-md bg-boxbackground text-normaltext"
               value={formData.companyType}
               onChange={handleChange}
-            />
+            >
+              <option value="">Select type</option>
+              <option value="Public Company">Public Company</option>
+              <option value="Self Employed">Self Employed</option>
+              <option value="Government Agency">Government Agency</option>
+              <option value="Non Profit">Non Profit</option>
+              <option value="Sole Proprietorship">Sole Proprietorship</option>
+              <option value="Privately Held">Privately Held</option>
+              <option value="Partnership">Partnership</option>
+            </select>
           </div>
 
           {/* Maps Location */}

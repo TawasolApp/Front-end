@@ -15,7 +15,9 @@ function JobOpenings() {
     const fetchJobs = async () => {
       setLoading(true);
       try {
-        const res = await axiosInstance.get(`/companies/${companyId}/jobs`);
+        const res = await axiosInstance.get(
+          `/companies/${companyId}/jobs?page=1&limit=10`
+        );
         setJobs(res.data.slice(0, 6));
       } catch (err) {
         console.error("Failed to fetch job openings:", err);
@@ -90,7 +92,7 @@ function JobOpenings() {
           <div className="flex gap-4 no-scrollbar">
             {jobs.map((job) => (
               <div
-                key={job.id}
+                key={job.jobId}
                 className="flex-shrink-0 w-[260px] min-h-[260px] bg-boxbackground border border-gray-700 rounded-xl shadow-sm p-4"
               >
                 <img

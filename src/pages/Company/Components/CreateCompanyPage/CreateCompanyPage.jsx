@@ -53,56 +53,76 @@ function CreateCompanyPage() {
 
     setLoading(true);
 
-    let logoUrl = "";
-    if (logoFile) {
-      const formData = new FormData();
-      formData.append("file", logoFile);
+    // let logoUrl = "";
+    // if (logoFile) {
+    //   const formData = new FormData();
+    //   formData.append("file", logoFile);
 
-      try {
-        const uploadResponse = await axios.post("/api/uploadImage", formData, {
-          headers: {
-            "Content-Type": "multipart/form-data",
-          },
-        });
+    //   try {
+    //     const uploadResponse = await axios.post("/api/uploadImage", formData, {
+    //       headers: {
+    //         "Content-Type": "multipart/form-data",
+    //       },
+    //     });
 
-        logoUrl = uploadResponse.data; // The file URL from server
-      } catch (uploadError) {
-        setErrors((prev) => ({
-          ...prev,
-          apiError: "Failed to upload logo. Please try again.",
-        }));
-        setLoading(false);
-        return;
-      }
-    }
+    //     logoUrl = uploadResponse.data; // The file URL from server
+    //   } catch (uploadError) {
+    //     setErrors((prev) => ({
+    //       ...prev,
+    //       apiError: "Failed to upload logo. Please try again.",
+    //     }));
+    //     setLoading(false);
+    //     return;
+    //   }
+    // }
 
     const newCompany = {
       name: companyName,
-      logo: logoUrl,
-      banner: null,
-      description: tagline,
       companySize: orgSize,
       companyType: orgType,
       industry,
-      overview,
-      founded: parseInt(founded),
       website,
-      address,
-      location,
       email,
       contactNumber,
     };
+    if (overview.trim()) newCompany.overview = overview.trim();
+    if (tagline.trim()) newCompany.description = tagline.trim();
+    if (address.trim()) newCompany.address = address.trim();
 
+    // Valid founded year (number + reasonable range)
+    const parsedFounded = parseInt(founded);
+    if (
+      !isNaN(parsedFounded) &&
+      parsedFounded >= 1800 &&
+      parsedFounded <= new Date().getFullYear()
+    ) {
+      newCompany.founded = parsedFounded;
+    }
+
+    // Valid URL for location
+    if (location.trim() && /^https?:\/\/.+/.test(location.trim())) {
+      newCompany.location = location.trim();
+    }
+    newCompany.logo =
+      "https://media.licdn.com/dms/image/v2/C560BAQF2a3ilv6hXXw/company-logo_200_200/company-logo_200_200/0/1631303609923?e=1749686400&v=beta&t=YKXDiLL6BwV6XFxhuxI2X1KmeCtgazb4xiUd5-l_s0c";
+    newCompany.banner =
+      "https://media.licdn.com/dms/image/v2/C560BAQF2a3ilv6hXXw/company-logo_200_200/company-logo_200_200/0/1631303609923?e=1749686400&v=beta&t=YKXDiLL6BwV6XFxhuxI2X1KmeCtgazb4xiUd5-l_s0c";
+    console.log("Request Body:", newCompany);
     try {
       const response = await axios.post("/companies", newCompany);
+      console.log("Response Body:", response.data);
       if (response.status === 201) {
         setSuccessMessage("Company page created successfully!");
-        const createdCompany = response.data.company;
+        const createdCompany = response.data;
         setTimeout(() => {
           navigate(`/company/${createdCompany.companyId}/home`);
         }, 2000);
       }
     } catch (error) {
+      console.error(
+        "Full error response:",
+        error.response?.data || error.message
+      );
       if (error.response) {
         setErrors((prev) => ({
           ...prev,
@@ -186,11 +206,11 @@ function CreateCompanyPage() {
                 }`}
               >
                 <option value="">Select size</option>
-                <option>1-50 employees</option>
-                <option>51-400 employees</option>
-                <option>401-1000 employees</option>
-                <option>1001-10000 employees</option>
-                <option>10K+ employees</option>
+                <option>1-50 Employees</option>
+                <option>51-400 Employees</option>
+                <option>401-1000 Employees</option>
+                <option>1001-10000 Employees</option>
+                <option>10000+ Employees</option>
               </select>
               {errors.orgSize && (
                 <p className="text-red-500 text-xs mt-1">{errors.orgSize}</p>
@@ -212,12 +232,12 @@ function CreateCompanyPage() {
                 }`}
               >
                 <option value="">Select type</option>
-                <option>Public company</option>
-                <option>Self-employed</option>
-                <option>Government agency</option>
-                <option>Nonprofit</option>
-                <option>Sole proprietorship</option>
-                <option>Privately held</option>
+                <option>Public Company</option>
+                <option>Self Employed</option>
+                <option>Government Agency</option>
+                <option>Non Profit</option>
+                <option>Sole Proprietorship</option>
+                <option>Privately Held</option>
                 <option>Partnership</option>
               </select>
               {errors.orgType && (
@@ -315,7 +335,7 @@ function CreateCompanyPage() {
                 value={location}
                 onChange={(e) => setLocation(e.target.value)}
                 className="w-full p-1 border text-sm rounded-md bg-boxbackground text-normaltext"
-                placeholder="City, Country"
+                placeholder="Google maps location"
               />
             </div>
 
