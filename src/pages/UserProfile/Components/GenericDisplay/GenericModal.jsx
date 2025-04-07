@@ -3,29 +3,7 @@ import EducationFields from "../ModalFields/EducationFields";
 import ExperienceFields from "../ModalFields/ExperienceFields";
 import SkillsFields from "../ModalFields/SkillsFields";
 import CertificationsFields from "../ModalFields/CertificationsFields";
-
-// Local confirmation modals
-const ConfirmModal = ({ title, message, onConfirm, onCancel }) => (
-  <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-    <div className="bg-boxbackground rounded-lg p-6 w-[90%] sm:w-[400px] shadow-lg">
-      <h2 className="text-lg font-semibold mb-2 text-text">{title}</h2>
-      <p className="text-gray-700 mb-4 text-companyheader2">{message}</p>
-      <div className="flex justify-end gap-3">
-        <button className="px-4 py-2 bg-gray-300 rounded" onClick={onCancel}>
-          Cancel
-        </button>
-        <button
-          className="px-4 py-2 bg-red-500 text-white rounded"
-          onClick={onConfirm}
-          data-testid="confirm-delete"
-        >
-          Confirm
-        </button>
-      </div>
-    </div>
-  </div>
-);
-
+import ConfirmModal from "./ConfirmModal";
 // Shared date utilities
 const getAllMonths = () =>
   [...Array(12)].map((_, i) =>
@@ -58,6 +36,7 @@ function GenericModal({
   const [errors, setErrors] = useState({});
   const [showDiscardModal, setShowDiscardModal] = useState(false);
   const [showDeleteModal, setShowDeleteModal] = useState(false);
+  const [initialFormData, setInitialFormData] = useState({});
 
   useEffect(() => {
     if (isOpen) {
@@ -71,8 +50,30 @@ function GenericModal({
   }, [isOpen]);
 
   useEffect(() => {
-    if (isOpen) {
-      setFormData(initialData || {});
+    if (isOpen && initialData) {
+      const parseDate = (dateStr) => {
+        if (!dateStr) return { month: "", year: "" };
+        const date = new Date(dateStr);
+        const month = date.toLocaleString("default", { month: "long" });
+        const year = String(date.getFullYear());
+        return { month, year };
+      };
+
+      const { month: startMonth, year: startYear } = parseDate(
+        initialData.startDate
+      );
+      const { month: endMonth, year: endYear } = parseDate(initialData.endDate);
+
+      const updatedForm = {
+        ...initialData,
+        startMonth,
+        startYear,
+        endMonth,
+        endYear,
+      };
+
+      setFormData(updatedForm);
+      setInitialFormData(updatedForm); // ✅ Set initialFormData after parsing
     }
   }, [isOpen, initialData]);
 
@@ -83,7 +84,7 @@ function GenericModal({
   };
 
   const hasUnsavedChanges =
-    JSON.stringify(formData) !== JSON.stringify(initialData);
+    JSON.stringify(formData) !== JSON.stringify(initialFormData);
 
   const handleClose = () => {
     if (hasUnsavedChanges) {
@@ -134,10 +135,9 @@ function GenericModal({
         newErrors.endMonth = "End month can't be before the start month";
       }
       if (type === "education") {
-        if (!formData.institution)
-          newErrors.institution = "Please provide an institution";
+        if (!formData.school) newErrors.school = "Please provide a school";
       }
-      if (type === "experience") {
+      if (type === "workExperience") {
         if (!formData.company)
           newErrors.company = "Please provide a company name";
         if (!formData.title) newErrors.title = "Please provide a title";
@@ -145,26 +145,50 @@ function GenericModal({
       if (type === "certifications") {
         if (!formData.name)
           newErrors.name = "Please provide a certificate name";
-        if (!formData.issuingOrganization)
-          newErrors.issuingOrganization =
-            "Please provide an issuing organization";
+        if (!formData.company)
+          newErrors.company = "Please provide an issuing organization";
       }
     }
     if (type === "skills") {
-      if (!formData.skill) newErrors.skill = "Please provide a skill";
+      if (!formData.skillName) newErrors.skillName = "Please provide a skill";
     }
+
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
   };
 
   const handleSubmit = () => {
     if (validateForm()) {
-      // if (type === "skills" && formData.skill) {
-      //   formData.skillName = formData.skill;
-      //   delete formData.skill;
+      const monthIndex = (month) => months.indexOf(month);
+      const formatDate = (month, year, type) => {
+        if (!month || !year) return "";
+        const monthNum = String(monthIndex(month) + 1).padStart(2, "0");
+        return `${year}-${monthNum}-${type === "start" ? "01" : "30"}`;
+      };
 
-      // }
-      onSave({ ...formData });
+      const { startMonth, startYear, endMonth, endYear, ...cleanedFormData } =
+        formData;
+
+      const updatedFormData = {
+        ...cleanedFormData,
+        ...(type === "certifications"
+          ? {
+              issueDate: formatDate(startMonth, startYear, "start"),
+              expireDate:
+                endMonth && endYear ? formatDate(endMonth, endYear, "end") : "",
+            }
+          : type !== "skills"
+            ? {
+                startDate: formatDate(startMonth, startYear, "start"),
+                endDate:
+                  endMonth && endYear
+                    ? formatDate(endMonth, endYear, "end")
+                    : "",
+              }
+            : {}),
+      };
+
+      onSave(updatedFormData);
     }
   };
 
@@ -173,7 +197,7 @@ function GenericModal({
   return (
     isOpen && (
       <div
-        className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-40"
+        className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50"
         data-testid="generic-modal"
       >
         <div
@@ -196,9 +220,10 @@ function GenericModal({
               errors={errors}
             />
           )}
-          {type === "experience" && (
+          {type === "workExperience" && (
             <ExperienceFields
               formData={formData}
+              setFormData={setFormData} //  add this!
               handleChange={handleChange}
               errors={errors}
             />
@@ -208,11 +233,13 @@ function GenericModal({
               formData={formData}
               handleChange={handleChange}
               errors={errors}
+              editMode={editMode} // wont show skillname if edit
             />
           )}
           {type === "certifications" && (
             <CertificationsFields
               formData={formData}
+              setFormData={setFormData}
               handleChange={handleChange}
               errors={errors}
             />
@@ -373,16 +400,21 @@ function GenericModal({
           <ConfirmModal
             title="Discard changes?"
             message="You have unsaved changes. Are you sure you want to close?"
-            onConfirm={handleDiscardConfirm}
             onCancel={() => setShowDiscardModal(false)}
+            onConfirm={handleDiscardConfirm}
+            confirmLabel="Discard"
+            cancelLabel="Cancel"
           />
         )}
+
         {showDeleteModal && (
           <ConfirmModal
             title="Confirm delete"
             message="Are you sure you want to delete this entry? This action cannot be undone."
-            onConfirm={handleDeleteConfirm}
             onCancel={() => setShowDeleteModal(false)}
+            onConfirm={handleDeleteConfirm}
+            confirmLabel="Delete"
+            cancelLabel="Cancel"
           />
         )}
       </div>
@@ -390,3 +422,12 @@ function GenericModal({
   );
 }
 export default GenericModal;
+
+//  Helper function to display formatted date like 'Feb 2024'
+export function displayDate(date) {
+  if (!date) return "";
+  return new Date(date).toLocaleDateString("en-US", {
+    year: "numeric",
+    month: "short",
+  });
+}

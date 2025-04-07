@@ -1,57 +1,79 @@
 import React, { useState } from "react";
-import OwnerActions from "../OwnerActions";
+import { axiosInstance as axios } from "../../../../apis/axios.js";
+import AboutModal from "../AboutComponents/AboutEditingModal.jsx";
 
-function AboutSection({ user, isOwner, onAddAbout, onEditAbout }) {
-  if (!user) return null;
-  const [expanded, setExpanded] = useState(false);
-  const isClamped = user.about.length > 100;
-  const hasAbout = user.about && user.about.trim().length > 0; // Check if About exists
+function AboutSection({ user, isOwner }) {
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [bio, setBio] = useState(user.bio ?? ""); // don't fallback to default msg
+  const [isExpanded, setIsExpanded] = useState(false);
 
-  const handleAddAbout = () => {
-    // alert("add About button clicked!");
+  const handleOpenModal = () => setIsModalOpen(true);
+  const handleCloseModal = () => setIsModalOpen(false);
 
-    if (onAddAbout) onAddAbout();
+  const handleSave = async (newBio) => {
+    try {
+      const response = await axios.patch(`/profile/${user.id}`, {
+        bio: newBio,
+      });
+
+      if (response.status === 200) {
+        setBio(response.data.bio ?? "");
+        setIsModalOpen(false);
+        setIsExpanded(false);
+      }
+    } catch (err) {
+      console.error("Failed to update bio:", err);
+    }
   };
 
-  const handleEditAbout = () => {
-    // alert("Edit About button clicked!");
-    if (onEditAbout) onEditAbout();
-  };
+  const shouldShowToggle = bio?.length > 300;
+
+  // 👇 THIS is the visibility control you need
+  const shouldHide = !isOwner && (!bio || bio.trim() === "");
+  if (shouldHide) return null;
 
   return (
-    <div className="bg-white p-6 shadow-md rounded-md w-full max-w-3xl mx-auto pb-0 mb-4">
-      <div className="flex justify-between items-center mb-2">
-        <h2 className="text-2xl font-semibold mb-2">About</h2>
-
-        {/* Show Add Button only if there's NO about content */}
-        {isOwner && !hasAbout && <OwnerActions onAdd={handleAddAbout} />}
-
-        {/* Show Edit Button only if there IS about content */}
-        {isOwner && hasAbout && <OwnerActions onEdit={handleEditAbout} />}
+    <div className="bg-boxbackground p-6 shadow-md rounded-md w-full max-w-3xl mx-auto mb-2">
+      <div className="flex justify-between items-center mb-3">
+        <h2 className="text-2xl font-semibold text-text">About</h2>
+        {isOwner && (
+          <button
+            onClick={handleOpenModal}
+            className="w-8 h-8 rounded-full flex items-center justify-center hover:bg-gray-200 transition text-text "
+          >
+            {bio ? "✎" : "+"}
+          </button>
+        )}
       </div>
 
-      {/* Display About Content if it exists */}
-      {hasAbout ? (
-        <>
-          <p
-            className={`font-sans text-lg text-gray-600 tracking-tight ${
-              expanded ? "" : "line-clamp-3"
-            }`}
-          >
-            {user.about}
-          </p>
-          {isClamped && (
-            <button
-              onClick={() => setExpanded(!expanded)}
-              className="text-gray-600 font-medium hover:text-blue-400"
-            >
-              {!expanded ? "see more" : null}
-            </button>
-          )}
-        </>
-      ) : (
-        // If No About Content, Show a Placeholder
-        <p className="text-gray-400 italic">No about information added yet.</p>
+      <div
+        className={`text-companyheader2 whitespace-pre-wrap text-sm ${
+          isExpanded ? "" : "line-clamp-3"
+        }`}
+      >
+        {bio.trim()
+          ? bio
+          : isOwner
+            ? "Let others know more about you by adding a short bio."
+            : ""}
+      </div>
+
+      {shouldShowToggle && (
+        <button
+          onClick={() => setIsExpanded((prev) => !prev)}
+          className="mt-2 text-sm text-blue-600 hover:underline"
+        >
+          {isExpanded ? "See less" : "See more"}
+        </button>
+      )}
+
+      {isModalOpen && (
+        <AboutModal
+          initialBio={bio}
+          userId={user.id}
+          onClose={handleCloseModal}
+          onSave={handleSave}
+        />
       )}
     </div>
   );

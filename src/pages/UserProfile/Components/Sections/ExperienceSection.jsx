@@ -6,8 +6,8 @@ function ExperienceSection({ isOwner, sectionRef, user }) {
     <div ref={sectionRef}>
       <GenericSection
         title="Experience"
-        type="experience"
-        items={user.experience || {}}
+        type="workExperience"
+        items={user.workExperience || {}}
         isOwner={isOwner}
         user={user} // needed for PATCH
       />

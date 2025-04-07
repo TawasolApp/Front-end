@@ -1,4 +1,8 @@
 import pkg from "json-server";
+import express from "express";
+import multer from "multer";
+import path from "path";
+import fs from "fs";
 const { create, router, defaults, bodyParser } = pkg;
 const server = create();
 const _router = router("./src/mocks/db.json");
@@ -17,9 +21,26 @@ const subdirectories = ["images", "videos", "documents"];
 subdirectories.forEach((subdir) => {
   const fullPath = path.join(uploadDir, subdir);
   if (!fs.existsSync(fullPath)) {
-    fs.mkdirSync(fullPath, { recursive: true }); // Ensure full path is created
+    fs.mkdirSync(fullPath, { recursive: true });
   }
 });
+
+// Configure multer to store files
+const storage = multer.diskStorage({
+  destination: (req, file, cb) => {
+    let folder = "documents"; // Default folder
+    if (file.mimetype.startsWith("image/")) folder = "images";
+    if (file.mimetype.startsWith("video/")) folder = "videos";
+
+    cb(null, path.join(uploadDir, folder)); // Store in correct subdirectory
+  },
+  filename: (req, file, cb) => {
+    cb(null, Date.now() + path.extname(file.originalname)); // Unique filename
+  },
+});
+
+const upload = multer({ storage });
+
 
 // Configure multer to store files
 const storage = multer.diskStorage({
@@ -57,6 +78,27 @@ server.post("/api/uploadImage", upload.single("file"), (req, res) => {
 });
 
 server.use("/public", express.static(uploadDir));
+
+// Retain your existing PATCH /profile/:id endpoint
+server.patch("/profile/:id", (req, res) => {
+  const { id } = req.params;
+  const updates = req.body;
+  const db = _router.db;
+  const user = db
+    .get("users")
+    .find({ id: String(id) })
+    .value();
+
+  if (!user) return res.status(404).json({ error: "User not found" });
+
+  const updatedUser = { ...user, ...updates };
+  db.get("users")
+    .find({ id: String(id) })
+    .assign(updatedUser)
+    .write();
+
+  return res.status(200).json(updatedUser);
+});
 
 server.get("/connections/list", (req, res) => {
   try {
@@ -471,7 +513,6 @@ server.patch("/users/request-email-update", (req, res) => {
   });
 });
 
-const supportedTypes = ["education", "experience", "skills", "certifications"];
 // GET all users
 server.get("/profile", (req, res) => {
   const users = _router.db.get("users").value();
@@ -487,6 +528,7 @@ server.get("/profile/:id", (req, res) => {
 
   if (user) {
     res.jsonp(user);
+    // console.log("hi from the server", res);
   } else {
     res.status(404).jsonp({ error: "User not found" });
   }
@@ -524,13 +566,13 @@ server.post("/profile/:id/education", (req, res) => {
   return res.status(201).json(newItem);
 });
 
-server.post("/profile/:id/experience", (req, res) => {
+server.post("/profile/:id/workExperience", (req, res) => {
   const userId = req.params.id;
   const newItem = { id: Date.now().toString(), ...req.body };
   const user = _router.db.get("users").find({ id: String(userId) });
   if (!user.value()) return res.status(404).json({ error: "User not found" });
-  const items = user.get("experience").value() || [];
-  user.assign({ experience: [...items, newItem] }).write();
+  const items = user.get("workExperience").value() || [];
+  user.assign({ workExperience: [...items, newItem] }).write();
   return res.status(201).json(newItem);
 });
 
@@ -546,14 +588,24 @@ server.post("/profile/:id/certifications", (req, res) => {
 
 server.post("/profile/:id/skills", (req, res) => {
   const userId = req.params.id;
-  const newItem = { id: Date.now().toString(), ...req.body };
+  const newItem = { ...req.body }; //  no  id generation
+
+  if (!newItem.skillName) {
+    return res.status(400).json({ error: "Missing skill name" });
+  }
 
   const user = _router.db.get("users").find({ id: String(userId) });
   if (!user.value()) return res.status(404).json({ error: "User not found" });
 
   const items = user.get("skills").value() || [];
-  user.assign({ skills: [...items, newItem] }).write();
+  const alreadyExists = items.some(
+    (item) => item.skillName?.toLowerCase() === newItem.skillName?.toLowerCase()
+  );
+  if (alreadyExists) {
+    return res.status(409).json({ error: "Skill already exists" });
+  }
 
+  user.assign({ skills: [...items, newItem] }).write();
   return res.status(201).json(newItem);
 });
 
@@ -572,17 +624,17 @@ server.patch("/profile/:userId/education/:itemId", (req, res) => {
   res.status(200).json(updatedItem);
 });
 
-server.patch("/profile/:userId/experience/:itemId", (req, res) => {
+server.patch("/profile/:userId/workExperience/:itemId", (req, res) => {
   const { userId, itemId } = req.params;
   const user = _router.db.get("users").find({ id: String(userId) });
   if (!user.value()) return res.status(404).json({ error: "User not found" });
   const updatedItems = user
-    .get("experience")
+    .get("workExperience")
     .map((item) =>
       String(item.id) === itemId ? { ...item, ...req.body } : item
     )
     .value();
-  user.assign({ experience: updatedItems }).write();
+  user.assign({ workExperience: updatedItems }).write();
   const updatedItem = updatedItems.find((item) => String(item.id) === itemId);
   res.status(200).json(updatedItem);
 });
@@ -611,13 +663,15 @@ server.patch("/profile/:userId/skills/:itemId", (req, res) => {
   const updatedItems = user
     .get("skills")
     .map((item) =>
-      String(item.id) === itemId ? { ...item, ...req.body } : item
+      String(item.skillName) === itemId ? { ...item, ...req.body } : item
     )
     .value();
 
   user.assign({ skills: updatedItems }).write();
 
-  const updatedItem = updatedItems.find((item) => String(item.id) === itemId);
+  const updatedItem = updatedItems.find(
+    (item) => String(item.skillName) === itemId
+  );
   res.status(200).json(updatedItem);
 });
 
@@ -633,15 +687,15 @@ server.delete("/profile/:userId/education/:itemId", (req, res) => {
   res.status(204).end();
 });
 
-server.delete("/profile/:userId/experience/:itemId", (req, res) => {
+server.delete("/profile/:userId/workExperience/:itemId", (req, res) => {
   const { userId, itemId } = req.params;
   const user = _router.db.get("users").find({ id: String(userId) });
   if (!user.value()) return res.status(404).json({ error: "User not found" });
   const filteredItems = user
-    .get("experience")
+    .get("workExperience")
     .filter((item) => String(item.id) !== itemId)
     .value();
-  user.assign({ experience: filteredItems }).write();
+  user.assign({ workExperience: filteredItems }).write();
   res.status(204).end();
 });
 
@@ -665,7 +719,7 @@ server.delete("/profile/:userId/skills/:itemId", (req, res) => {
 
   const filteredItems = user
     .get("skills")
-    .filter((item) => String(item.id) !== itemId)
+    .filter((item) => String(item.skillName) !== itemId)
     .value();
 
   user.assign({ skills: filteredItems }).write();
@@ -692,6 +746,7 @@ server.get("/posts", (req, res) => {
 });
 
 server.post("/posts", (req, res) => {
+
   // Get data from request body
   const content = req.body.text || req.body.content; // Accept either name
   const visibility = req.body.visibility;

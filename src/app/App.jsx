@@ -42,7 +42,6 @@ import VerifyResetPasswordPage from "../pages/Authentication/VerifyresetPassword
 import NetworkBox from "../pages/MyNetwork/NetworkBox.jsx";
 
 const App = () => {
-  const isOwner = true;
   return (
     <Router>
       <Routes>
@@ -74,10 +73,10 @@ const App = () => {
         <Route path="/users/:profileSlug" element={<ProfileLayout />}>
           <Route index element={<ProfilePage />} />
           <Route path="education" element={<EducationPage />} />
-          <Route path="experience" element={<ExperiencePage />} />
+          <Route path="workExperience" element={<ExperiencePage />} />
           <Route path="certifications" element={<CertificationsPage />} />
           <Route path="skills" element={<SkillsPage />} />
-          <Route path="connections" element={<ProfileConnections />} />
+          <Route path="connections" element={<Connections />} />
         </Route>
 
         <Route path="/connections" element={<ConnectionPage />} />
