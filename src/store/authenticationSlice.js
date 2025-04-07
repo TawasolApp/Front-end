@@ -19,7 +19,7 @@ export const authenticationSlice = createSlice({
   initialState,
   reducers: {
     setUserId: (state, action) => {
-      state.userid = action.payload;
+      state.userId = action.payload;
       localStorage.setItem("userId", action.payload);
     },
     setEmail: (state, action) => {
