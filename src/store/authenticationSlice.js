@@ -8,7 +8,6 @@ const initialState = {
   location: localStorage.getItem("location") || "",
   token: localStorage.getItem("token") || null,
   refreshToken: localStorage.getItem("refreshToken") || null,
-  userId: localStorage.getItem("userId") || null,
   bio: localStorage.getItem("bio") || "",
   type: localStorage.getItem("type") || "",
   picture: localStorage.getItem("picture") || null,
@@ -46,10 +45,6 @@ export const authenticationSlice = createSlice({
       state.refreshToken = action.payload;
       localStorage.setItem("refreshToken", action.payload);
     },
-    setUserId: (state, action) => {
-      state.userId = action.payload;
-      localStorage.setItem("userId", action.payload);
-    },
     setBio: (state, action) => {
       state.bio = action.payload;
       localStorage.setItem("bio", action.payload);
@@ -73,7 +68,6 @@ export const authenticationSlice = createSlice({
       state.location = "";
       state.token = null;
       state.refreshToken = null;
-      state.userId = null;
       state.bio = "";
       state.type = "";
       state.picture = "";
@@ -84,7 +78,6 @@ export const authenticationSlice = createSlice({
       localStorage.removeItem("location");
       localStorage.removeItem("token");
       localStorage.removeItem("refreshToken");
-      localStorage.removeItem("userId");
       localStorage.removeItem("bio");
       localStorage.removeItem("type");
       localStorage.removeItem("picture");
@@ -100,7 +93,6 @@ export const {
   setLocation,
   setToken,
   setRefreshToken,
-  setUserId,
   setBio,
   setType,
   setPicture,

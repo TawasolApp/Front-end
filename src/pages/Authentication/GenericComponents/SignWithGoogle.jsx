@@ -5,8 +5,6 @@ import { useNavigate } from "react-router-dom";
 import {
   setToken,
   setRefreshToken,
-  setUserId,
-  setEmail,
   setFirstName,
   setLastName,
   setLocation,
@@ -43,10 +41,9 @@ const SignWithGoogle = () => {
               console.log(response);
 
               if (response.status === 201) {
-                const { userId, token, refreshToken, isNewUser } =
+                const { token, refreshToken, isNewUser } =
                   response.data;
 
-                dispatch(setUserId(userId));
                 dispatch(setToken(token));
                 dispatch(setRefreshToken(refreshToken));
                 dispatch(setIsNewGoogleUser(isNewUser));
@@ -59,7 +56,7 @@ const SignWithGoogle = () => {
                 }
 
                 const profileResponse = await axiosInstance.get(
-                  `/profile/${userId}`
+                  "/profile"
                 );
 
                 if (profileResponse.status === 200) {

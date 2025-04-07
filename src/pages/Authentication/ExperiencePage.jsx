@@ -9,12 +9,11 @@ import {
   setRefreshToken,
   setToken,
   setType,
-  setUserId,
 } from "../../store/authenticationSlice";
 import { useNavigate } from "react-router-dom";
 
 const ExperienceAuthPage = () => {
-  const { userId, email, password, location, isNewGoogleUser } = useSelector(
+  const { email, password, location, isNewGoogleUser } = useSelector(
     (state) => state.authentication
   );
   const navigate = useNavigate();
@@ -56,7 +55,7 @@ const ExperienceAuthPage = () => {
       }
 
       try {
-        const profileResponse = await axiosInstance.get(`/profile/${userId}`);
+        const profileResponse = await axiosInstance.get("/profile");
 
         if (profileResponse.status === 200) {
           const { firstName, lastName } = profileResponse.data;
@@ -81,9 +80,8 @@ const ExperienceAuthPage = () => {
       });
 
       if (userResponse.status === 201) {
-        const { userId, token, refreshToken } = userResponse.data;
+        const { token, refreshToken } = userResponse.data;
 
-        dispatch(setUserId(userId));
         dispatch(setToken(token));
         dispatch(setRefreshToken(refreshToken));
 
