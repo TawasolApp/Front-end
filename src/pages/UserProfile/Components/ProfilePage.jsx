@@ -9,8 +9,8 @@ import CertificationsSection from "./Sections/CertificationsSection";
 import AboutSection from "./Sections/AboutSection";
 import ResumeSection from "./Sections/ResumeSection";
 function ProfilePage() {
-  const { user, isOwner } = useOutletContext();
-
+  const { user, isOwner, onUserUpdate } = useOutletContext();
+  // console.log("user in profile page", user);
   const educationRef = useRef(null);
   const experienceRef = useRef(null);
 
@@ -28,14 +28,24 @@ function ProfilePage() {
         isOwner={isOwner}
         sectionRef={educationRef}
         user={user}
+        onUserUpdate={onUserUpdate}
       />
       <ExperienceSection
         isOwner={isOwner}
         sectionRef={experienceRef}
         user={user}
+        onUserUpdate={onUserUpdate}
       />
-      <SkillsSection isOwner={isOwner} user={user} />
-      <CertificationsSection isOwner={isOwner} user={user} />
+      <SkillsSection
+        isOwner={isOwner}
+        user={user}
+        onUserUpdate={onUserUpdate}
+      />
+      <CertificationsSection
+        isOwner={isOwner}
+        user={user}
+        onUserUpdate={onUserUpdate}
+      />
     </div>
   );
 }

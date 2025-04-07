@@ -29,7 +29,7 @@ function GenericCard({
 }) {
   const [isEndorsed, setIsEndorsed] = useState(false);
   const [endorsementCount, setEndorsementCount] = useState(
-    item.endorsements || 0,
+    item.endorsements || 0
   );
   const [isModalOpen, setIsModalOpen] = useState(false);
 
@@ -66,15 +66,29 @@ function GenericCard({
         alt={item.company || "Company Logo"}
         className="w-10 h-10 rounded-full object-cover"
       />
-      <div>
+      <div className="break-all whitespace-pre-wrap w-full">
         <h3 className="text-lg font-semibold text-text">{item.title}</h3>
         <p className="text-sm text-companyheader2 font-medium">
           {item.company}
         </p>
-        {item.location && <p className="text-text2 text-sm">{item.location}</p>}
+
+        {/* Location and Location Type */}
+        {(item.location || item.locationType) && (
+          <p className="text-text2 text-sm">
+            {item.location}
+            {item.location && item.locationType ? " • " : ""}
+            {item.locationType === "on_site" && "On-site"}
+            {item.locationType === "remote" && "Remote"}
+            {item.locationType === "hybrid" && "Hybrid"}
+          </p>
+        )}
+
+        {/* Description */}
         {item.description && (
           <p className="text-text2 text-sm">{item.description}</p>
         )}
+
+        {/* Dates */}
         {item.startDate && (
           <p className="text-text2 text-sm mt-1">
             {displayDate(item.startDate)}
@@ -86,13 +100,13 @@ function GenericCard({
   );
 
   const renderEducation = () => (
-    <div className="flex items-start gap-3 w-full">
+    <div className="flex items-start gap-3 w-full ">
       <img
         src={defaultEducationImage}
         alt="Education"
         className="w-10 h-10 rounded-full object-cover"
       />
-      <div>
+      <div className="break-all whitespace-pre-wrap w-full">
         <h3 className="text-lg font-semibold text-text" data-testid="school">
           {item.school}
         </h3>
@@ -104,7 +118,9 @@ function GenericCard({
           </p>
         )}
         {item.description && (
-          <p className="text-text2 text-sm">{item.description}</p>
+          <p className="text-text2 text-sm  whitespace-pre-wrap">
+            {item.description}
+          </p>
         )}
         {item.startDate && (
           <p className="text-text2 text-sm mt-1">
@@ -117,7 +133,7 @@ function GenericCard({
   );
 
   const renderSkills = () => (
-    <div>
+    <div className="break-all whitespace-pre-wrap w-full">
       <h3 className="text-lg font-semibold text-text">{item.skillName}</h3>
       <p
         className="text-companyheader2 flex items-center mt-1"
@@ -138,7 +154,7 @@ function GenericCard({
           {isEndorsed ? "✔ Endorsed" : "Endorse"}
         </button>
       )} */}
-      {isOwner && (
+      {/* {!isOwner && (
         <button
           onClick={handleEndorse}
           disabled={isEndorsed}
@@ -148,7 +164,7 @@ function GenericCard({
         >
           {isEndorsed ? "✔ Endorsed" : "Endorse"}
         </button>
-      )}
+      )} */}
     </div>
   );
 
@@ -159,30 +175,20 @@ function GenericCard({
         alt={item.company || "Certification Logo"}
         className="w-10 h-10 rounded-full object-cover"
       />
-      <div>
+      <div className="break-all whitespace-pre-wrap w-full">
         <h3 className="text-lg font-semibold text-text">{item.name}</h3>
         {item.company && (
           <p className="text-sm text-companyheader2 font-medium">
             {item.company}
           </p>
         )}
-        {item.credentialId && (
+        {/* {item.credentialId && (
           <p className="text-text2 text-sm">ID: {item.credentialId}</p>
-        )}
-        {/* {item.credentialUrl && (
-          <a
-            href={item.credentialUrl}
-            className="text-blue-500 underline text-sm"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            View Credential
-          </a>
         )} */}
-        {item.startDate && (
+        {item.issueDate && (
           <p className="text-text2 text-sm mt-1">
-            {displayDate(item.startDate)}
-            {item.endDate ? ` - ${displayDate(item.endDate)}` : ""}
+            {displayDate(item.issueDate)}
+            {item.expiryDate ? ` - ${displayDate(item.expiryDate)}` : ""}
           </p>
         )}
       </div>

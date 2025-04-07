@@ -12,7 +12,7 @@ function AboutSection({ user, isOwner }) {
 
   const handleSave = async (newBio) => {
     try {
-      const response = await axios.patch(`/profile/${user.id}`, {
+      const response = await axios.patch(`/profile/${user._id}`, {
         bio: newBio,
       });
 

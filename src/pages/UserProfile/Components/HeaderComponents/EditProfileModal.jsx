@@ -39,8 +39,8 @@ function EditProfileModal({ user, isOpen, onClose, onSave }) {
           validationErrors.firstName = "First Name is required.";
         if (!editedUser.lastName?.trim())
           validationErrors.lastName = "Last Name is required.";
-        if (!editedUser.country?.trim())
-          validationErrors.country = "Country/Region is required.";
+        if (!editedUser.location?.trim())
+          validationErrors.location = "Country/Region is required.";
         if (!editedUser.industry?.trim())
           validationErrors.industry = "Industry is required.";
 
@@ -58,25 +58,23 @@ function EditProfileModal({ user, isOpen, onClose, onSave }) {
         }
 
         try {
-          // PATCH request to update the profile
-          const response = await axios.patch("/profile", {
-            id: user.id, // Send the user ID in the body
+          const response = await axios.patch(`/profile`, {
+            id: user._id,
             ...updates,
             selectedExperienceIndex,
             selectedEducationIndex,
           });
 
-          // Call onSave with updated data after successful save
           onSave({
             ...response.data,
             selectedExperienceIndex,
             selectedEducationIndex,
           });
-          onClose(); // Close the modal after successful save
+          onClose();
         } catch (err) {
           console.error(
             "Failed to update profile:",
-            err.response?.data || err.message,
+            err.response?.data || err.message
           );
         }
 
@@ -95,8 +93,26 @@ function EditProfileModal({ user, isOpen, onClose, onSave }) {
     onSave,
   ]);
 
+  // function handleSave() {
+  //   setIsSaving(true); // Set isSaving to true, triggering the useEffect above
+  // }
   function handleSave() {
-    setIsSaving(true); // Set isSaving to true, triggering the useEffect above
+    let validationErrors = {};
+    if (!editedUser.firstName?.trim())
+      validationErrors.firstName = "First Name is required.";
+    if (!editedUser.lastName?.trim())
+      validationErrors.lastName = "Last Name is required.";
+    if (!editedUser.location?.trim())
+      validationErrors.location = "Country/Region is required.";
+    if (!editedUser.industry?.trim())
+      validationErrors.industry = "Industry is required.";
+
+    if (Object.keys(validationErrors).length > 0) {
+      setErrors(validationErrors);
+      return; //  Prevent saving if errors exist
+    }
+
+    setIsSaving(true); //  Trigger save only if form is valid
   }
 
   function handleChange(event) {
@@ -180,37 +196,27 @@ function EditProfileModal({ user, isOpen, onClose, onSave }) {
           </p>
         )}
         <label
-          htmlFor="country"
+          htmlFor="location"
           className="block text-sm font-medium text-text2"
         >
-          Country/Region *
+          Location *
         </label>
         <input
-          id="country"
+          id="location"
           type="text"
-          name="country"
-          value={editedUser.country || ""}
+          name="location"
+          value={editedUser.location || ""}
           onChange={handleChange}
-          className={`border p-2 w-full mb-2 bg-boxbackground text-companyheader2  ${
-            errors.country ? "border-red-500" : ""
+          className={`border p-2 w-full mb-2 bg-boxbackground text-companyheader2 ${
+            errors.location ? "border-red-500" : ""
           }`}
         />
-        {errors.country && (
-          <p className="text-red-500 text-sm" data-testid="country-error">
-            {errors.country}
+        {errors.location && (
+          <p className="text-red-500 text-sm" data-testid="location-error">
+            {errors.location}
           </p>
         )}
-        <label htmlFor="city" className="block text-sm font-medium text-text2">
-          City (Optional)
-        </label>
-        <input
-          id="city"
-          type="text"
-          name="city"
-          value={editedUser.city || ""}
-          onChange={handleChange}
-          className="border p-2 w-full mb-2 bg-boxbackground text-companyheader2"
-        />
+
         <label
           htmlFor="industry"
           className="block text-sm font-medium text-text2"

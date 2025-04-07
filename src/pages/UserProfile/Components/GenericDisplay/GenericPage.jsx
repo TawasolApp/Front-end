@@ -3,20 +3,23 @@ import { useNavigate, useOutletContext } from "react-router-dom";
 import GenericCard from "./GenericCard";
 import GenericModal from "./GenericModal";
 import { axiosInstance as axios } from "../../../../apis/axios.js";
-
+// Map for endpoint base path
+const endpointMap = {
+  skills: "skills",
+  education: "education",
+  certifications: "certification",
+  workExperience: "work-experience",
+};
 function GenericPage({ title, type }) {
   const navigate = useNavigate();
-  const { user, isOwner } = useOutletContext();
+  const { user, isOwner, onUserUpdate } = useOutletContext();
   const [data, setData] = useState([]);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [editIndex, setEditIndex] = useState(null);
   const [editData, setEditData] = useState(null);
   const [editMode, setEditMode] = useState(false);
   const [isSaving, setIsSaving] = useState(false); // Track saving status
-  // const [saveError, setSaveError] = useState(null); // if error in saving to show user a msg
-
-  // Load data on mount
-
+  console.log("user in generic page", user);
   useEffect(() => {
     if (user && user[type]) {
       setData(user[type]);
@@ -38,7 +41,7 @@ function GenericPage({ title, type }) {
   };
 
   const handleSave = async (updatedItem) => {
-    if (isSaving || !user?.id) return;
+    if (isSaving || !user?._id) return;
     setIsSaving(true);
 
     try {
@@ -46,16 +49,15 @@ function GenericPage({ title, type }) {
 
       //  PATCH — Edit existing item (uses id)
       if (editMode && editIndex !== null && data[editIndex]) {
-        let originalKey;
+        let originalKey =
+          type === "skills" ? data[editIndex].skillName : data[editIndex]._id;
+
         if (type === "skills") {
-          originalKey = data[editIndex].skillName; // always use the original skill name
-          updatedItem.skillName = originalKey; // prevent renaming the skill
-        } else {
-          originalKey = data[editIndex].id;
+          updatedItem.skillName = originalKey; // prevent renaming
         }
 
         response = await axios.patch(
-          `/profile/${user.id}/${type}/${originalKey}`,
+          `/profile/${endpointMap[type]}/${originalKey}`,
           updatedItem
         );
         //  faster
@@ -66,62 +68,72 @@ function GenericPage({ title, type }) {
         // safer as replace only the updated item
         setData((prev) =>
           prev.map((item) => {
-            const itemKey = type === "skills" ? item.skillName : item.id;
+            const itemKey = type === "skills" ? item.skillName : item._id;
             return itemKey === originalKey ? response.data : item;
           })
         );
       }
 
-      // POST — Add new item without sending id
+      // POST (Add)
       else {
-        response = await axios.post(`/profile/${user.id}/${type}`, updatedItem);
+        response = await axios.post(
+          `/profile/${endpointMap[type]}`,
+          updatedItem
+        );
+        console.log("🧾 response.data after POST:", response.data);
 
-        if (!response?.data) {
-          throw new Error(" No data returned from backend");
-        }
+        if (!response?.data) throw new Error("No data from backend");
 
         const newKey =
-          type === "skills" ? response.data.skillName : response.data.id;
+          type === "skills" ? response.data.skillName : response.data._id;
         const exists = data.some((item) =>
-          type === "skills" ? item.skillName === newKey : item.id === newKey
+          type === "skills" ? item.skillName === newKey : item._id === newKey
         );
 
         if (!exists) {
           setData((prev) => [...prev, response.data]);
         }
       }
+      closeModal();
+
+      //  Refresh the global user
+      const refreshed = await axios.get(`/profile/${user._id}`);
+      onUserUpdate?.(refreshed.data);
     } catch (err) {
       console.error("Failed to save item:", err);
     } finally {
       //finally happen no matter what: even if: The API fails PATCH/POST throws an error or return early
       setIsSaving(false);
-      closeModal();
     }
   };
-
   const handleDelete = async () => {
-    if (!user?.id || editIndex === null || !data[editIndex]) return;
+    if (editIndex === null || !data[editIndex]) return;
 
     const itemId =
-      type === "skills" ? data[editIndex].skillName : data[editIndex].id;
+      type === "skills" ? data[editIndex].skillName : data[editIndex]._id;
 
     try {
-      await axios.delete(`/profile/${user.id}/${type}/${itemId}`);
+      await axios.delete(`/profile/${endpointMap[type]}/${itemId}`);
+      setData((prev) => prev.filter((_, i) => i !== editIndex));
 
-      const updatedData = data.filter((_, i) => i !== editIndex);
-      setData(updatedData);
+      closeModal();
+
+      //  Refresh the global user
+      const refreshed = await axios.get(`/profile/${user._id}`);
+      onUserUpdate?.(refreshed.data);
     } catch (err) {
       console.error("Failed to delete item:", err);
     }
-
-    closeModal();
   };
 
   const closeModal = () => {
     setIsModalOpen(false);
-    setEditData(null);
     setEditIndex(null);
     setEditMode(false);
+    // Delay clearing editData so modal doesn't flicker empty
+    setTimeout(() => {
+      setEditData(null);
+    }, 300); // delay matches the modal transition (adjust if needed)
   };
 
   const renderModal = () => {
@@ -169,7 +181,7 @@ function GenericPage({ title, type }) {
             key={
               type === "skills"
                 ? (item.skillName ?? `skillName-${index}`)
-                : (item.id ?? index)
+                : (item._id ?? index)
             }
             className="relative group"
           >

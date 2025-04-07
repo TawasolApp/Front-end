@@ -1,36 +1,52 @@
-import React, { useEffect, useState } from "react";
+import React, { useState, useEffect } from "react";
 import { axiosInstance as axios } from "../../../../apis/axios";
 import defaultExperienceImage from "../../../../assets/images/defaultExperienceImage.png";
+
+const employmentOptions = [
+  { value: "full_time", label: "Full-time" },
+  { value: "part_time", label: "Part-time" },
+  { value: "internship", label: "Internship" },
+  { value: "freelance", label: "Freelance" },
+];
+
+const locationOptions = [
+  { value: "on_site", label: "On-site" },
+  { value: "remote", label: "Remote" },
+  { value: "hybrid", label: "Hybrid" },
+];
+
 function ExperienceFields({ formData, setFormData, handleChange, errors }) {
   const [companies, setCompanies] = useState([]);
   const [inputValue, setInputValue] = useState(formData.company || "");
   const [showDropdown, setShowDropdown] = useState(false);
   const [highlightedIndex, setHighlightedIndex] = useState(-1);
 
-  // Fetch companies from server
   useEffect(() => {
     axios
-      .get("/companies")
+      .get("/companies?page=1&limit=1000&name=a")
       .then((res) => setCompanies(res.data))
       .catch((err) => console.error("Error fetching companies:", err));
   }, []);
 
-  // Sync input with formData (for edit mode)
   useEffect(() => {
     setInputValue(formData.company || "");
   }, [formData.company]);
 
-  const companyOptions = companies.map((company) => ({
-    label: company.name,
-    value: company.name,
-    logo: company.logo || defaultExperienceImage,
-  }));
-
   const filteredOptions = inputValue
-    ? companyOptions.filter((option) =>
-        option.label.toLowerCase().includes(inputValue.toLowerCase())
+    ? companies.filter((company) =>
+        company.name.toLowerCase().includes(inputValue.toLowerCase())
       )
     : [];
+
+  const handleCompanySelect = (company) => {
+    setInputValue(company.name);
+    setFormData((prev) => ({
+      ...prev,
+      company: company.name,
+      workExperiencePicture: company.logo || defaultExperienceImage,
+    }));
+    setShowDropdown(false);
+  };
 
   return (
     <>
@@ -68,11 +84,11 @@ function ExperienceFields({ formData, setFormData, handleChange, errors }) {
         className="border p-2 w-full rounded-md mb-2 bg-boxbackground text-companyheader2"
       >
         <option value="">Please select</option>
-        <option value="Full-time">Full-time</option>
-        <option value="Part-time">Part-time</option>
-        <option value="Internship">Internship</option>
-        <option value="Freelance">Freelance</option>
-        <option value="Temporary">Temporary</option>
+        {employmentOptions.map((opt) => (
+          <option key={opt.value} value={opt.value}>
+            {opt.label}
+          </option>
+        ))}
       </select>
 
       {/* Company or Organization */}
@@ -104,18 +120,9 @@ function ExperienceFields({ formData, setFormData, handleChange, errors }) {
               setHighlightedIndex((prev) =>
                 prev > 0 ? prev - 1 : filteredOptions.length - 1
               );
-            } else if (e.key === "Enter") {
+            } else if (e.key === "Enter" && highlightedIndex >= 0) {
               e.preventDefault();
-              if (highlightedIndex >= 0) {
-                const selected = filteredOptions[highlightedIndex];
-                setInputValue(selected.label);
-                setFormData((prev) => ({
-                  ...prev,
-                  company: selected.label,
-                  workExperiencePicture: selected.logo,
-                }));
-                setShowDropdown(false);
-              }
+              handleCompanySelect(filteredOptions[highlightedIndex]);
             } else if (e.key === "Escape") {
               setShowDropdown(false);
             }
@@ -134,25 +141,17 @@ function ExperienceFields({ formData, setFormData, handleChange, errors }) {
             {filteredOptions.map((option, index) => (
               <li
                 key={index}
-                onMouseDown={() => {
-                  setInputValue(option.label);
-                  setFormData((prev) => ({
-                    ...prev,
-                    company: option.label,
-                    workExperiencePicture: option.logo,
-                  }));
-                  setShowDropdown(false);
-                }}
+                onMouseDown={() => handleCompanySelect(option)}
                 className={`flex items-center p-2 cursor-pointer ${
                   index === highlightedIndex ? "bg-gray-100" : ""
                 }`}
               >
                 <img
-                  src={option.logo}
-                  alt={option.label}
+                  src={option.logo || defaultExperienceImage}
+                  alt={option.name}
                   className="w-5 h-5 rounded-full mr-2"
                 />
-                {option.label}
+                {option.name}
               </li>
             ))}
           </ul>
@@ -160,7 +159,8 @@ function ExperienceFields({ formData, setFormData, handleChange, errors }) {
       </div>
 
       {/* Currently Working */}
-      <div className="flex items-center mb-3 gap-2">
+      {/* ADD CURRENTLY WORKING ON AFTER CHECKING END DATE  */}
+      {/* <div className="flex items-center mb-3 gap-2">
         <input
           id="currentlyWorking"
           type="checkbox"
@@ -171,7 +171,7 @@ function ExperienceFields({ formData, setFormData, handleChange, errors }) {
         <label htmlFor="currentlyWorking" className="text-text">
           I am currently working in this role
         </label>
-      </div>
+      </div> */}
 
       {/* Location */}
       <label htmlFor="location" className="block font-medium mb-1 text-text">
@@ -202,30 +202,12 @@ function ExperienceFields({ formData, setFormData, handleChange, errors }) {
         className="border p-2 w-full rounded-md mb-2 bg-boxbackground text-companyheader2"
       >
         <option value="">Please select</option>
-        <option value="On-site">On-site</option>
-        <option value="Hybrid">Hybrid</option>
-        <option value="Remote">Remote</option>
+        {locationOptions.map((opt) => (
+          <option key={opt.value} value={opt.value}>
+            {opt.label}
+          </option>
+        ))}
       </select>
-      <p className="text-sm text-gray-500 mb-2">
-        Pick a location type (ex: remote)
-      </p>
-
-      {/* Description */}
-      <label htmlFor="description" className="block font-medium mb-1 text-text">
-        Description
-      </label>
-      <textarea
-        id="description"
-        name="description"
-        placeholder="List your major duties and successes, highlighting specific projects"
-        value={formData.description || ""}
-        onChange={handleChange}
-        className="border p-2 w-full rounded-md resize-none bg-boxbackground text-companyheader2"
-        maxLength={1000}
-      />
-      <p className="text-right text-gray-500 text-sm mb-2">
-        {formData.description?.length || 0}/1000
-      </p>
     </>
   );
 }

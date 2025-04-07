@@ -1,7 +1,9 @@
 import React, { useEffect } from "react";
-import { axiosInstance as axios } from "../../../../apis/axios";
+import { useSelector } from "react-redux";
 
 function ContactInfoModal({ user, isOpen, onClose, isOwner }) {
+  // Get email from Redux state
+  const { email } = useSelector((state) => state.authentication);
   useEffect(() => {
     if (isOpen) {
       document.body.style.overflow = "hidden";
@@ -15,8 +17,7 @@ function ContactInfoModal({ user, isOpen, onClose, isOwner }) {
 
   if (!isOpen) return null;
 
-  const profileSlug = `${user.firstName?.toLowerCase()}-${user.lastName?.toLowerCase()}-${user.id}`;
-  const profileLink = `${window.location.origin}/users/${profileSlug}`;
+  const profileLink = `${window.location.origin}/users/${user._id}`;
 
   return (
     <div className="fixed inset-0 bg-black/40 z-50 flex justify-center items-start pt-24 px-4">
@@ -71,10 +72,10 @@ function ContactInfoModal({ user, isOpen, onClose, isOwner }) {
             <div className="flex flex-col">
               <span className="text-gray-500">Email</span>
               <a
-                href={`mailto:${user.email}`}
+                href={`mailto:${email}`}
                 className="text-blue-600 hover:underline break-all"
               >
-                {user.email}
+                {email}
               </a>
             </div>
           </div>

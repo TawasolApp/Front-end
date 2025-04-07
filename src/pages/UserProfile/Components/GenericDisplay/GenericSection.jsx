@@ -11,19 +11,26 @@ const singularMap = {
   education: "education",
   workExperience: "experience",
 };
+// API endpoints by type
+const endpointMap = {
+  skills: "skills",
+  certifications: "certification",
+  education: "education",
+  workExperience: "work-experience",
+};
 
-function GenericSection({ title, type, items, isOwner, user }) {
+function GenericSection({ title, type, items, isOwner, user, onUserUpdate }) {
   const navigate = useNavigate();
   const [data, setData] = useState([]);
-  useEffect(() => {
-    setData(items || []);
-  }, [items]);
 
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [editIndex, setEditIndex] = useState(null);
   const [editData, setEditData] = useState(null);
   const [editMode, setEditMode] = useState(false);
   const [isSaving, setIsSaving] = useState(false); // Track saving status
+  useEffect(() => {
+    setData(items || []);
+  }, [items]);
 
   // Skip rendering for viewers if section is empty
   if (!isOwner && (!items || items.length === 0)) return null;
@@ -42,24 +49,42 @@ function GenericSection({ title, type, items, isOwner, user }) {
   };
 
   const handleSave = async (newItem) => {
-    if (isSaving || !user?.id) return; // Prevent multiple saves
+    if (isSaving || !user?._id) return; // Prevent multiple saves
     setIsSaving(true);
 
     try {
-      const response = await axios.post(`/profile/${user.id}/${type}`, newItem);
+      const endpoint = `/profile/${endpointMap[type]}`;
+
+      const response = await axios.post(endpoint, newItem);
 
       if (response?.data) {
         const newKey =
-          type === "skills" ? response.data.skillName : response.data.id;
+          type === "skills" ? response.data.skillName : response.data._id;
         const exists = data.some((item) =>
-          type === "skills" ? item.skillName === newKey : item.id === newKey
+          type === "skills" ? item.skillName === newKey : item._id === newKey
         );
         if (!exists) {
           setData((prev) => [...prev, response.data]);
         }
+
+        //  Refresh full user data from backend
+        const updatedUser = await axios.get(`/profile/${user._id}`);
+        onUserUpdate?.(updatedUser.data);
       }
     } catch (err) {
-      console.error("Failed to save item:", err);
+      console.error("❌ Failed to save item:", err);
+
+      if (err.response) {
+        console.log(
+          "🧨 Real error message:",
+          err.response.data.message?.join(", ")
+        );
+        console.log("🧾 Full error response object:", err.response);
+      } else {
+        console.log("❌ No response from server, maybe a network error.");
+      }
+
+      console.log("📦 Data that caused the error:", newItem);
     } finally {
       setIsSaving(false);
 
@@ -69,9 +94,12 @@ function GenericSection({ title, type, items, isOwner, user }) {
 
   const closeModal = () => {
     setIsModalOpen(false);
-    setEditData(null);
     setEditIndex(null);
     setEditMode(false);
+    //  Delay clearing editData so modal doesn't flicker empty
+    setTimeout(() => {
+      setEditData(null);
+    }, 300); // delay matches the modal transition (adjust if needed)
   };
   const renderModal = () => {
     return (
@@ -126,7 +154,7 @@ function GenericSection({ title, type, items, isOwner, user }) {
       {/* Cards */}
       <div className="flex flex-col gap-4">
         {data.slice(0, 2).map((item, index) => (
-          <div key={type === "skills" ? item.skillName : (item.id ?? index)}>
+          <div key={type === "skills" ? item.skillName : (item._id ?? index)}>
             <GenericCard
               item={item}
               type={type}
