@@ -52,7 +52,7 @@ const MainFeed = ({
       if (q != null) {
         params.q = q;
       }
-
+      
       const response = await axiosInstance.get(API_ROUTE, {
         params: params,
       });
@@ -147,7 +147,7 @@ const MainFeed = ({
 
   const handleDeletePost = async (postId) => {
     try {
-      await axiosInstance.delete(`/delete/${postId}`);
+      await axiosInstance.delete(`/posts/${postId}`);
       setPosts((prevPosts) => prevPosts.filter((post) => post.id !== postId));
     } catch (e) {
       console.log(e.message);

@@ -12,6 +12,7 @@ import TextViewer from "../../../../GenericComponents/TextViewer";
 import AddForm from "./AddForm";
 import ReactionsModal from "../../ReactionModal/ReactionsModal";
 import { usePost } from "../../PostContext";
+import { useSelector } from "react-redux";
 
 const Reply = ({ commentId, reply }) => {
   const {
@@ -20,16 +21,14 @@ const Reply = ({ commentId, reply }) => {
     handleReactOnReplyToComment,
   } = usePost();
 
-  // TODO: change this to redux states
-  const currentAuthorId = "mohsobh";
-
+  const currentAuthorId = useSelector((state) => state.authentication.userId);
   const [showReactions, setShowReactions] = useState(false);
   const [editorMode, setEditorMode] = useState(false);
 
   const menuItems = [
     {
-      text: "Report post",
-      onClick: () => console.log("Reported post"),
+      text: "Report reply",
+      onClick: () => console.log("Reported reply"),
       icon: FlagIcon,
     },
   ];
@@ -97,15 +96,19 @@ const Reply = ({ commentId, reply }) => {
             <div className="pl-9 pt-1">
               <ActivitiesHolder
                 currentReaction={reply.reactType}
-                reactions={reply.reactions}
-                handleReaction={(reactionTypeAdd, reactionTypeRemove) =>
-                  handleReactOnReplyToComment(
-                    commentId,
-                    reply.id,
-                    reactionTypeAdd,
-                    reactionTypeRemove,
-                  )
-                }
+                reactions={reply.reactCounts}
+                handleReaction={(reactionTypeAdd, reactionTypeRemove) => {
+                  try {
+                    handleReactOnReplyToComment(
+                      commentId,
+                      reply.id,
+                      reactionTypeAdd,
+                      reactionTypeRemove,
+                    );
+                  } catch (e) {
+                    console.log(e);
+                  }
+                }}
                 setShowReactions={() => setShowReactions(true)}
                 isReply={true}
               />

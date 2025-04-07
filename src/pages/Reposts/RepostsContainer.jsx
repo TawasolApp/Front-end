@@ -1,3 +1,4 @@
+import { useParams } from "react-router-dom";
 import MainFeed from "../Feed/MainFeed/MainFeed";
 
 const RepostsContainer = () => {

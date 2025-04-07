@@ -1,9 +1,6 @@
 import { createContext, useContext, useState, useRef, useEffect } from "react";
 import { axiosInstance } from "../../../../apis/axios";
 
-// TODO: change this to redux states
-const currentAuthorId = "mohsobh";
-
 const PostContext = createContext();
 
 export const usePost = () => {
@@ -33,7 +30,6 @@ export const PostProvider = ({
 
   const handleEditPost = async (text, media, visibility, taggedUsers) => {
     await axiosInstance.patch(`/posts/${post.id}`, {
-      authorId: currentAuthorId,
       content: text,
       media: media,
       taggedUsers: taggedUsers,
@@ -70,12 +66,12 @@ export const PostProvider = ({
     });
 
     setPost((prev) => {
-      const newReactions = { ...prev.reactions };
+      const newReactions = { ...prev.reactCounts };
       if (reactionTypeAdd) newReactions[reactionTypeAdd] += 1;
       if (reactionTypeRemove) newReactions[reactionTypeRemove] -= 1;
       return {
         ...prev,
-        reactions: newReactions,
+        reactCounts: newReactions,
         reactType: reactionTypeAdd || null,
       };
     });
@@ -192,14 +188,14 @@ export const PostProvider = ({
         c.id === commentId
           ? {
               ...c,
-              reactions: {
-                ...c.reactions, // Ensure we copy the existing reactions properly
+              reactCounts: {
+                ...c.reactCounts, // Ensure we copy the existing reactions properly
                 [reactionTypeAdd]: reactionTypeAdd
-                  ? (c.reactions[reactionTypeAdd] || 0) + 1
-                  : c.reactions[reactionTypeAdd], // Increment safely
+                  ? (c.reactCounts[reactionTypeAdd] || 0) + 1
+                  : c.reactCounts[reactionTypeAdd], // Increment safely
                 [reactionTypeRemove]: reactionTypeRemove
-                  ? Math.max((c.reactions[reactionTypeRemove] || 1) - 1, 0)
-                  : c.reactions[reactionTypeRemove], // Decrement safely, ensuring no negative values
+                  ? Math.max((c.reactCounts[reactionTypeRemove] || 1) - 1, 0)
+                  : c.reactCounts[reactionTypeRemove], // Decrement safely, ensuring no negative values
               },
               reactType: reactionTypeAdd || null,
             }
@@ -229,7 +225,7 @@ export const PostProvider = ({
       const newReplies = response.data;
       setReplies((prevReplies) => {
         const existingReplies = prevReplies[commentId]?.data || [];
-
+        console.log(newReplies)
         // Remove duplicate replies
         const mergedReplies = [...existingReplies, ...newReplies];
         const uniqueReplies = Array.from(
@@ -243,8 +239,8 @@ export const PostProvider = ({
           [commentId]: {
             data: uniqueReplies,
             hasMore:
-              wantedComment.replies.length >
-              existingReplies.length + newReplies.length,
+              wantedComment.repliesCount >
+              existingReplies + newReplies,
             replyPage: currentPage + 1,
           },
         };
@@ -267,6 +263,8 @@ export const PostProvider = ({
   };
 
   const handleAddReplyToComment = async (commentId, text, taggedUsers) => {
+
+    console.log(comments)
     const response = await axiosInstance.post(`/posts/comment/${commentId}`, {
       content: text,
       tagged: taggedUsers,
@@ -286,7 +284,7 @@ export const PostProvider = ({
         comment.id === commentId
           ? {
               ...comment,
-              replies: [...comment.replies, "Dummy reply"], // Add dummy string
+              repliesCount: comment.repliesCount + 1, // Add dummy string
             }
           : comment,
       ),
@@ -336,7 +334,7 @@ export const PostProvider = ({
         comment.id === commentId
           ? {
               ...comment,
-              replies: comment.replies.slice(0, comment.replies.length - 1), // Remove the last dummy reply
+              replies: comment.replies.slice(0, comment.replies - 1), // Remove the last dummy reply
             }
           : comment,
       ),
@@ -356,6 +354,7 @@ export const PostProvider = ({
       reactions: reacts,
       postType: "Reply",
     });
+
     setReplies((prevReplies) => ({
       ...prevReplies,
       [commentId]: {
@@ -364,17 +363,17 @@ export const PostProvider = ({
           reply.id === replyId
             ? {
                 ...reply,
-                reactions: {
-                  ...reply.reactions,
+                reactCounts: {
+                  ...reply.reactCounts,
                   [reactionTypeAdd]: reactionTypeAdd
-                    ? (reply.reactions[reactionTypeAdd] || 0) + 1
-                    : reply.reactions[reactionTypeAdd],
+                    ? (reply.reactCounts[reactionTypeAdd] || 0) + 1
+                    : reply.reactCounts[reactionTypeAdd],
                   [reactionTypeRemove]: reactionTypeRemove
                     ? Math.max(
-                        (reply.reactions[reactionTypeRemove] || 1) - 1,
+                        (reply.reactCounts[reactionTypeRemove] || 1) - 1,
                         0,
                       )
-                    : reply.reactions[reactionTypeRemove],
+                    : reply.reactCounts[reactionTypeRemove],
                 },
                 reactType: reactionTypeAdd || null,
               }

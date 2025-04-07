@@ -54,14 +54,14 @@ const TextModal = ({
       formData.append("file", file);
       try {
         const response = await axiosInstance.post(
-          "/api/uploadImage",
+          "/media",
           formData,
           {
             headers: { "Content-Type": "multipart/form-data" },
           },
         );
         console.log("Upload successful:", response.data);
-        return response.data;
+        return response.data.url;
       } catch (error) {
         console.error("Upload failed:", error);
         return null;
@@ -80,8 +80,8 @@ const TextModal = ({
   };
 
   const getMediaType = (url) => {
-    if (url.includes("/images/")) return "image";
-    if (url.includes("/videos/")) return "video";
+    if (url.includes("/image/")) return "image";
+    if (url.includes("/video/")) return "video";
     return "document";
   };
 

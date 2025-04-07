@@ -1,7 +1,6 @@
 import { useState, useEffect, useMemo, useCallback, memo } from "react";
 import CloseIcon from "@mui/icons-material/Close";
 import ArrowDropDownIcon from "@mui/icons-material/ArrowDropDown";
-import { mockReactionsData } from "./mockReactions";
 import reactionIcons from "../../../GenericComponents/reactionIcons";
 import DropdownMenu from "../../../GenericComponents/DropdownMenu";
 import { Link } from "react-router-dom";
