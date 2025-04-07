@@ -15,7 +15,7 @@ function CompanyLayout() {
   const [showAdminIcons, setShowAdminIcons] = useState(false);
   useEffect(() => {
     if (companyId) {
-      // If companyId is present in the URL, fetch the company data for that companyId
+      // Fetch specific company by ID
       axiosInstance
         .get(`/companies/${companyId}`)
         .then((response) => {
@@ -28,9 +28,9 @@ function CompanyLayout() {
         })
         .finally(() => setLoading(false));
     } else {
-      // If no companyId in the URL, fetch the list of all companies and set the first one as default
+      // Fetch first available company
       axiosInstance
-        .get("/companies?page=1&limit=10")
+        .get("/companies?page=1&limit=1&name=a")
         .then((response) => {
           if (response.data.length > 0) {
             const firstCompany = response.data[0];
