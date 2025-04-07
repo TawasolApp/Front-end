@@ -2,65 +2,26 @@ import "./App.css";
 
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 
-import TawasolNavbar from "../layouts/TawasolNavbar";
-
 import SignUpPage from "../pages/Authentication/SignUpPage";
 import SignInPage from "../pages/Authentication/SignInPage";
 import NamePage from "../pages/Authentication/NamePage";
 import LocationPage from "../pages/Authentication/LocationPage";
 import ExperienceAuthPage from "../pages/Authentication/ExperiencePage";
-import ChangePasswordPage from "../pages/Authentication/ChangePasswordPage";
-import ForgotPasswordPage from "../pages/Authentication/ForgotPasswordPage";
-import VerificationPendingPage from "../pages/Authentication/VerificationPendingPage.jsx";
-import NewPasswordPage from "../pages/Authentication/NewPasswordPage";
 import WelcomePage from "../pages/Authentication/WelcomePage";
-import ChangeEmailPage from "../pages/Authentication/ChangeEmailPage";
+import ForgotPasswordPage from "../pages/Authentication/ForgotPasswordPage.jsx";
 import VerifyChangeEmailPage from "../pages/Authentication/VerifyChangeEmailPage.jsx";
-
-import ProfilePage from "../pages/UserProfile/Components/ProfilePage";
-import ProfileConnections from "../pages/UserProfile/Components/Connections";
-import ProfileLayout from "../pages/UserProfile/Components/profileLayout";
-import EducationPage from "../pages/UserProfile/Components/Pages/EducationPage";
-import ExperiencePage from "../pages/UserProfile/Components/Pages/ExperiencePage";
-import CertificationsPage from "../pages/UserProfile/Components/Pages/CertificationsPage";
-import SkillsPage from "../pages/UserProfile/Components/Pages/SkillsPage";
-
-import CompanyLayout from "../pages/Company/CompanyLayout.jsx";
-import PostsPage from "../pages/Company/Components/Pages/PostsPage.jsx";
-import AboutPage from "../pages/Company/Components/Pages/AboutPage.jsx";
-import HomePage from "../pages/Company/Components/Pages/HomePage.jsx";
-import JobsPage from "../pages/Company/Components/Pages/JobsPage.jsx";
-import CreateCompanyPage from "../pages/Company/Components/CreateCompanyPage/CreateCompanyPage.jsx";
-
-import ConnectionPage from "../pages/MyNetwork/Connections/ConnectionPage";
-import BlockedPage from "../pages/MyNetwork/BlockedPage";
-import FollowPage from "../pages/MyNetwork/FollowPage";
-import ManageConnections from "../pages/MyNetwork/ManageConnections";
-
-import FeedContainer from "../pages/Feed/FeedContainer";
-import SinglePost from "../pages/SinglePost/SinglePost";
-import SavedPostsContainer from "../pages/SavedPosts/SavedPostsContainer";
-import RepostsContainer from "../pages/Reposts/RepostsContainer";
-import SearchPosts from "../pages/Search/SearchPosts";
-
 import VerifySignUpPage from "../pages/Authentication/VerifySignUpPage.jsx";
 import VerifyResetPasswordPage from "../pages/Authentication/VerifyresetPasswordPage.jsx";
-import NetworkBox from "../pages/MyNetwork/NetworkBox.jsx";
-
-const RenderWithNavbar = (component) => {
-  return (
-    <>
-      <TawasolNavbar />
-      {component}
-    </>
-  );
-}
+import ProtectedRoute from "../apis/ProtectedRoute.jsx";
+import ProtectedRoutes from "./ProtectedRoutes.jsx";
+import VerificationPendingPage from "../pages/Authentication/VerificationPendingPage.jsx";
+import NewPasswordPage from "../pages/Authentication/NewPasswordPage.jsx";
 
 const App = () => {
-
   return (
     <Router>
       <Routes>
+        {/* Public Routes */}
         <Route path="/" element={<WelcomePage />} />
         <Route path="/auth/signin" element={<SignInPage />} />
         <Route path="/auth/signup" element={<SignUpPage />} />
@@ -70,53 +31,31 @@ const App = () => {
           path="/auth/signup/experience"
           element={<ExperienceAuthPage />}
         />
-        <Route path="/auth/update-password" element={<ChangePasswordPage />} />
         <Route path="/auth/forgot-password" element={<ForgotPasswordPage />} />
-        <Route
-          path="/auth/verification-pending"
-          element={<VerificationPendingPage />}
-        />
         <Route
           path="/users/confirm-email-change"
           element={<VerifyChangeEmailPage />}
         />
         <Route path="/auth/verify-email" element={<VerifySignUpPage />} />
-        <Route path="/auth/reset-password" element={<VerifyResetPasswordPage />} />
+        <Route
+          path="/auth/reset-password"
+          element={<VerifyResetPasswordPage />}
+        />
+        <Route
+          path="/auth/verification-pending"
+          element={<VerificationPendingPage />}
+        />
         <Route path="/auth/new-password" element={<NewPasswordPage />} />
-        <Route path="/auth/update-email" element={<ChangeEmailPage />} />
 
-        <Route path="/search/:searchText" element={RenderWithNavbar(<SearchPosts />)} />
-
-        <Route path="/users" element={<ProfileLayout />} />
-        <Route path="/users/:profileSlug" element={<ProfileLayout />}>
-          <Route index element={<ProfilePage />} />
-          <Route path="education" element={<EducationPage />} />
-          <Route path="workExperience" element={<ExperiencePage />} />
-          <Route path="certifications" element={<CertificationsPage />} />
-          <Route path="skills" element={<SkillsPage />} />
-          <Route path="connections" element={<ProfileConnections />} />
-        </Route>
-
-        <Route path="/connections" element={RenderWithNavbar(<ConnectionPage />)} />
-        <Route path="/blocked" element={<BlockedPage />} />
-        <Route path="/follow" element={<FollowPage />} />
-        <Route path="/manage-connections" element={<ManageConnections />} />
-        <Route path="/network-box" element={<NetworkBox />} />
-
-        <Route path="/feed/:id" element={RenderWithNavbar(<SinglePost />)} />
-        <Route path="/feed" element={RenderWithNavbar(<FeedContainer />)} />
-        <Route path="/feed/reposts/:id" element={RenderWithNavbar(<RepostsContainer />)} /> 
-        <Route path="/my-items/saved-posts" element={RenderWithNavbar(<SavedPostsContainer />)} />
-
-        <Route path="/company" element={<CompanyLayout />} />
-        <Route path="/company/:companyId/*" element={<CompanyLayout />}>
-          <Route index element={<HomePage />} />
-          <Route path="home" element={<HomePage />} />
-          <Route path="about" element={<AboutPage />} />
-          <Route path="posts" element={<PostsPage />} />
-          <Route path="jobs" element={<JobsPage />} />
-        </Route>
-        <Route path="/company/setup/new" element={<CreateCompanyPage />} />
+        {/* Protected Routes */}
+        <Route
+          path="/*"
+          element={
+            <ProtectedRoute>
+              <ProtectedRoutes />
+            </ProtectedRoute>
+          }
+        />
       </Routes>
     </Router>
   );

@@ -93,20 +93,6 @@ const SignUpForm = ({ onSubmit }) => {
         showPassword={showPassword}
         error={passwordError}
       />
-      <div className="mb-4 md:mb-6 flex items-center">
-        <input
-          type="checkbox"
-          id="rememberMe"
-          className="w-4 h-4 sm:w-5 sm:h-5 mr-2 accent-buttonSubmitEnable"
-          defaultChecked
-        />
-        <label
-          htmlFor="rememberMe"
-          className="text-textContent text-base sm:text-lg md:text-xl"
-        >
-          Remember me
-        </label>
-      </div>
       <BlueSubmitButton text="Join" />
       <Divider />
       <SignWithGoogle />
