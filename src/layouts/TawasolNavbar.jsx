@@ -1,5 +1,3 @@
-"use client"
-
 import { useState, useRef, useEffect } from "react"
 import HomeIcon from "@mui/icons-material/Home"
 import CottageIcon from "@mui/icons-material/Cottage"
@@ -15,6 +13,8 @@ import Avatar from "@mui/material/Avatar"
 import SearchIcon from "@mui/icons-material/Search"
 import { getIconComponent } from "../utils"
 import { useNavigate } from "react-router-dom"
+import { useSelector } from "react-redux";
+
 
 const TawasolNavbar = () => {
   const currentPath = window.location.pathname
@@ -29,10 +29,9 @@ const TawasolNavbar = () => {
   const navbarRef = useRef(null)
   const navigate = useNavigate()
 
-  const currentAuthorName = "Mohamed Sobh"
-  const currentAuthorPicture =
-    "https://media.licdn.com/dms/image/v2/D4D03AQH7Ais8BxRXzw/profile-displayphoto-shrink_100_100/profile-displayphoto-shrink_100_100/0/1721080103981?e=1747872000&v=beta&t=nDnZdgCqkI8v5B2ymXZzluMZVlF6h_o-dN1pA95Fzv4"
-  const currentAuthorBio = "Computer Engineering Student at Cairo University"
+  const currentAuthorName = `${useSelector((state) => state.authentication.firstName)} ${useSelector((state) => state.authentication.lastName)}`;
+  const currentAuthorPicture = useSelector((state) => state.authentication.picture);
+  const currentAuthorBio = useSelector((state) => state.authentication.bio);
 
   const navItems = [
     {

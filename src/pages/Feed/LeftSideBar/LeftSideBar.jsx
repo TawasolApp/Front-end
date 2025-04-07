@@ -4,21 +4,20 @@ import WorkIcon from "@mui/icons-material/Work";
 import { Link } from "react-router-dom";
 import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
 import KeyboardArrowUpIcon from "@mui/icons-material/KeyboardArrowUp";
+import { useSelector } from "react-redux";
+import { Avatar } from "@mui/material";
 
 const LeftSideBar = () => {
+
   // State to track if the sidebar is in top position (mobile/tablet view)
   const [isTopPosition, setIsTopPosition] = useState(false);
   // State to track if the additional items are shown (when in top position)
   const [showMore, setShowMore] = useState(false);
 
-  // TODO: change this to redux states
-  const currentAuthorId = "mohsobh";
-  const currentAuthorName = "Mohamed Sobh";
-  const currentAuthorPicture =
-    "https://media.licdn.com/dms/image/v2/D4D03AQH7Ais8BxRXzw/profile-displayphoto-shrink_100_100/profile-displayphoto-shrink_100_100/0/1721080103981?e=1747872000&v=beta&t=nDnZdgCqkI8v5B2ymXZzluMZVlF6h_o-dN1pA95Fzv4";
-  const currentAuthorbackgroundImage =
-    "https://media.licdn.com/dms/image/v2/C5616AQEpIPNIk_32eg/profile-displaybackgroundimage-shrink_350_1400/profile-displaybackgroundimage-shrink_350_1400/0/1516588679082?e=1748476800&v=beta&t=M8P7LxX0kIyegMFh9MslkxAotJMAhJIhogi6U9DJZcE";
-  const currentAuthorBio = "Computer Engineering Student at Cairo University";
+  const currentAuthorName = `${useSelector((state) => state.authentication.firstName)} ${useSelector((state) => state.authentication.lastName)}`;
+  const currentAuthorPicture = useSelector((state) => state.authentication.picture);
+  const currentAuthorBio = useSelector((state) => state.authentication.bio);
+  const currentAuthorbackgroundImage = "";
 
   // Effect to check if we're in top position (mobile/tablet) based on screen width
   useEffect(() => {
@@ -49,15 +48,16 @@ const LeftSideBar = () => {
           style={{ backgroundImage: `url(${currentAuthorbackgroundImage})` }}
         />
         <div className="absolute top-10 left-1/2 transform -translate-x-1/2">
-          <img
+          <Avatar
             src={currentAuthorPicture}
             alt={currentAuthorName}
-            className="w-16 h-16 rounded-full border-2 border-white"
+            sx={{ width: 64, height: 64 }}
+            className="border-2 border-white"
           />
         </div>
       </div>
 
-      <Link to={`/users/${currentAuthorId}`}>
+      <Link to={`/users/`}>
         <div className="pt-10 pb-4 text-center px-2">
           <h2 className="font-semibold text-base text-authorName">
             {currentAuthorName}

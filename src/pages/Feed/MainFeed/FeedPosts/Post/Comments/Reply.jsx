@@ -97,7 +97,7 @@ const Reply = ({ commentId, reply }) => {
             <div className="pl-9 pt-1">
               <ActivitiesHolder
                 currentReaction={reply.reactType}
-                reactions={reply.reactions}
+                reactions={reply.reactsCount}
                 handleReaction={(reactionTypeAdd, reactionTypeRemove) =>
                   handleReactOnReplyToComment(
                     commentId,

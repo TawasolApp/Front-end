@@ -9,7 +9,7 @@ const EngagementMetrics = ({
 }) => {
   const { post } = usePost();
   const navigate = useNavigate();
-  const reactions = post.reactions;
+  const reactions = post.reactCounts;
   const comments = post.comments;
   const shares = post.shares;
 
