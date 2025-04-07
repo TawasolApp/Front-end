@@ -13,7 +13,7 @@ const MediaCarousel = ({ media, mediaIndex }) => {
 
   // Determine media type from URL
   const getMediaType = (url) => {
-    return url.includes("/videos/") ? "video" : "image";
+    return url.includes(".mp4") ? "video" : "image";
   };
 
   return (
