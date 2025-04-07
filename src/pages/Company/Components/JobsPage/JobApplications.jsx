@@ -7,36 +7,58 @@ function JobApplications({ job }) {
   const [loading, setLoading] = useState(false);
   const [searchName, setSearchName] = useState("");
   const [page, setPage] = useState(1);
-  const limit = 10;
+  const [hasMore, setHasMore] = useState(true);
+  const limit = 2;
+
+  const fetchApplicants = async (reset = false) => {
+    if (loading || (!reset && !hasMore)) return;
+
+    setLoading(true);
+
+    try {
+      const currentPage = reset ? 1 : page;
+      const res = await axiosInstance.get(
+        `/companies/jobs/${job.jobId}/applicants`,
+        {
+          params: {
+            page: currentPage,
+            limit,
+            ...(searchName.trim() && { name: searchName.trim() }),
+          },
+        }
+      );
+      const fetchedApplicants = res.data;
+
+      if (reset) {
+        setApplicants(fetchedApplicants);
+      } else {
+        setApplicants((prev) => [...prev, ...fetchedApplicants]);
+      }
+
+      if (fetchedApplicants.length < limit) {
+        setHasMore(false); // No more applicants
+      } else {
+        setPage((prev) => prev + 1);
+      }
+    } catch (error) {
+      console.error("Failed to fetch applicants:", error);
+      setApplicants([]);
+    } finally {
+      setLoading(false);
+    }
+  };
 
   useEffect(() => {
     if (!job) return;
 
-    const fetchApplicants = async () => {
-      setLoading(true);
-      try {
-        const res = await axiosInstance.get(
-          `/companies/jobs/${job.jobId}/applicants`,
-          {
-            params: {
-              page,
-              limit,
-              ...(searchName.trim() && { name: searchName.trim() }),
-            },
-          }
-        );
-        setApplicants(res.data);
-      } catch (error) {
-        console.error("Failed to fetch applicants:", error);
-        setApplicants([]);
-      } finally {
-        setLoading(false);
-      }
-    };
+    setPage(1); // Reset page when job changes
+    fetchApplicants(true);
+    setHasMore(true);
+  }, [job, searchName]);
 
+  const handleLoadMore = () => {
     fetchApplicants();
-  }, [job, page, searchName]);
-
+  };
   if (!job) {
     return (
       <div className="w-full md:w-1/2 p-4 md:p-6 text-center text-companysubheader">
@@ -80,6 +102,17 @@ function JobApplications({ job }) {
             </li>
           ))}
         </ul>
+      )}
+      {hasMore && (
+        <div className="mt-2 text-center">
+          <button
+            onClick={handleLoadMore}
+            className="text-sm text-blue-600 hover:underline"
+            disabled={loading}
+          >
+            {loading ? "Loading..." : "Load more"}
+          </button>
+        </div>
       )}
     </div>
   );

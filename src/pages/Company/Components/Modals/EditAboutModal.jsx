@@ -5,6 +5,11 @@ import { FiUpload } from "react-icons/fi";
 function EditAboutModal({ show, companyData, onClose, setCompanyData }) {
   const [logoFile, setLogoFile] = useState(null);
   const [bannerFile, setBannerFile] = useState(null);
+  const [uploading, setUploading] = useState(false);
+
+  const [logoChanged, setLogoChanged] = useState(false);
+  const [bannerChanged, setBannerChanged] = useState(false);
+
   const [errorMessage, setErrorMessage] = useState("");
   const [formData, setFormData] = useState({
     name: "",
@@ -87,6 +92,16 @@ function EditAboutModal({ show, companyData, onClose, setCompanyData }) {
           }
           continue;
         }
+        if (key === "logo" || key === "banner") {
+          if (
+            (key === "logo" && logoChanged) ||
+            (key === "banner" && bannerChanged) ||
+            currentValue !== originalValue
+          ) {
+            payload[key] = currentValue;
+          }
+          continue;
+        }
 
         // Skip unchanged values (including booleans like isVerified)
         if (key === "isVerified") {
@@ -121,6 +136,8 @@ function EditAboutModal({ show, companyData, onClose, setCompanyData }) {
         ...prev,
         ...response.data,
       }));
+      setLogoChanged(false);
+      setBannerChanged(false);
       onClose();
     } catch (error) {
       const backendMessage = error.response?.data?.message;
@@ -139,28 +156,35 @@ function EditAboutModal({ show, companyData, onClose, setCompanyData }) {
 
     const formDataUpload = new FormData();
     formDataUpload.append("file", file);
-
+    setUploading(true);
     try {
-      const uploadResponse = await axios.post(
-        "/api/uploadImage",
-        formDataUpload,
-        {
-          headers: { "Content-Type": "multipart/form-data" },
-        }
-      );
+      const uploadResponse = await axios.post("/media", formDataUpload, {
+        headers: { "Content-Type": "multipart/form-data" },
+      });
 
-      const fileUrl = uploadResponse.data;
+      const fileUrl = uploadResponse.data.url;
 
       setFormData((prev) => ({
         ...prev,
         [type]: fileUrl,
       }));
 
-      if (type === "logo") setLogoFile(file);
-      if (type === "banner") setBannerFile(file);
+      // Track if image was uploaded
+      if (type === "logo") {
+        setLogoFile(file);
+        setLogoChanged(true);
+      }
+      if (type === "banner") {
+        setBannerFile(file);
+        setBannerChanged(true);
+      }
+
+      setErrorMessage(""); // Clear error on success
     } catch (error) {
       console.error("Upload failed:", error);
       setErrorMessage(`Failed to upload ${type}. Please try again.`);
+    } finally {
+      setUploading(false); // Upload done
     }
   };
 
@@ -430,8 +454,9 @@ function EditAboutModal({ show, companyData, onClose, setCompanyData }) {
           <button
             className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-800 transition"
             onClick={handleSave}
+            disabled={uploading}
           >
-            Save Changes
+            {uploading ? "Uploading..." : "Save Changes"}
           </button>
         </div>
       </div>

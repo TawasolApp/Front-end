@@ -47,34 +47,35 @@ function CreateCompanyPage() {
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
   }
+  async function handleLogoUpload(e) {
+    const file = e.target.files[0];
+    if (!file) return;
+
+    const formData = new FormData();
+    formData.append("file", file);
+
+    try {
+      const uploadResponse = await axios.post("/media", formData, {
+        headers: { "Content-Type": "multipart/form-data" },
+      });
+
+      const fileUrl = uploadResponse.data.url;
+
+      setLogoPreview(fileUrl);
+      setLogoFile(file);
+    } catch (error) {
+      console.error("Upload failed:", error);
+      setErrors((prev) => ({
+        ...prev,
+        apiError: "Failed to upload logo. Please try again.",
+      }));
+    }
+  }
 
   async function handleSubmit() {
     if (!validateForm()) return;
 
     setLoading(true);
-
-    // let logoUrl = "";
-    // if (logoFile) {
-    //   const formData = new FormData();
-    //   formData.append("file", logoFile);
-
-    //   try {
-    //     const uploadResponse = await axios.post("/api/uploadImage", formData, {
-    //       headers: {
-    //         "Content-Type": "multipart/form-data",
-    //       },
-    //     });
-
-    //     logoUrl = uploadResponse.data; // The file URL from server
-    //   } catch (uploadError) {
-    //     setErrors((prev) => ({
-    //       ...prev,
-    //       apiError: "Failed to upload logo. Please try again.",
-    //     }));
-    //     setLoading(false);
-    //     return;
-    //   }
-    // }
 
     const newCompany = {
       name: companyName,
@@ -103,10 +104,17 @@ function CreateCompanyPage() {
     if (location.trim() && /^https?:\/\/.+/.test(location.trim())) {
       newCompany.location = location.trim();
     }
-    newCompany.logo =
-      "https://media.licdn.com/dms/image/v2/C560BAQF2a3ilv6hXXw/company-logo_200_200/company-logo_200_200/0/1631303609923?e=1749686400&v=beta&t=YKXDiLL6BwV6XFxhuxI2X1KmeCtgazb4xiUd5-l_s0c";
-    newCompany.banner =
-      "https://media.licdn.com/dms/image/v2/C560BAQF2a3ilv6hXXw/company-logo_200_200/company-logo_200_200/0/1631303609923?e=1749686400&v=beta&t=YKXDiLL6BwV6XFxhuxI2X1KmeCtgazb4xiUd5-l_s0c";
+    if (logoPreview && /^https?:\/\/.+/.test(logoPreview)) {
+      newCompany.logo = logoPreview;
+    } else if (logoFile) {
+      setErrors((prev) => ({
+        ...prev,
+        logo: "Please wait for the logo to finish uploading.",
+      }));
+      setLoading(false);
+      return;
+    }
+
     console.log("Request Body:", newCompany);
     try {
       const response = await axios.post("/companies", newCompany);
@@ -398,19 +406,16 @@ function CreateCompanyPage() {
                   id="company-logo"
                   accept="image/*"
                   className="absolute inset-0 opacity-0 cursor-pointer"
-                  onChange={(e) => {
-                    const file = e.target.files[0];
-                    if (file) {
-                      setLogoFile(file);
-                      setLogoPreview(URL.createObjectURL(file));
-                    }
-                  }}
+                  onChange={handleLogoUpload}
                 />
               </div>
 
               <p className="text-xs text-gray-500 mt-1">
                 300 x 300px recommended. JPGs, JPEGs, and PNGs supported.
               </p>
+              {errors.logo && (
+                <p className="text-red-500 text-xs mt-1">{errors.logo}</p>
+              )}
             </div>
 
             {/* Verification Checkbox */}
