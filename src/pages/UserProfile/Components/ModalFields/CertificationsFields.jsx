@@ -74,7 +74,7 @@ function CertificationsFields({ formData, setFormData, handleChange, errors }) {
             setFormData((prev) => ({
               ...prev,
               company: value,
-              companyLogo: match ? match.logo : "",
+              certificationPicture: match ? match.logo : "",
             }));
             setShowDropdown(true);
             setHighlightedIndex(-1);
@@ -98,7 +98,7 @@ function CertificationsFields({ formData, setFormData, handleChange, errors }) {
                 setFormData((prev) => ({
                   ...prev,
                   company: selected.label,
-                  companyLogo: selected.logo,
+                  certificationPicture: selected.logo,
                 }));
                 setShowDropdown(false);
               }
@@ -125,7 +125,7 @@ function CertificationsFields({ formData, setFormData, handleChange, errors }) {
                   setFormData((prev) => ({
                     ...prev,
                     company: option.label,
-                    companyLogo: option.logo,
+                    certificationPicture: option.logo,
                   }));
                   setShowDropdown(false);
                 }}

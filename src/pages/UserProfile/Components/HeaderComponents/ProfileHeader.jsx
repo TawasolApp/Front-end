@@ -10,7 +10,7 @@ import ImageEnlarge from "./ImageEnlarge";
 import ViewerView from "./ViewerView";
 import ContactInfoModal from "./ContactInfoModal";
 import { axiosInstance as axios } from "../../../../apis/axios";
-
+///////NEED VIEWER ID (CURRENT USER ID) TO PASS IT TO VIEWER VIEW COMPONENT
 function ProfileHeader({ user, isOwner, onSave, experienceRef, educationRef }) {
   const [editedUser, setEditedUser] = useState(user);
   const [isEditing, setIsEditing] = useState(false);
@@ -157,8 +157,10 @@ function ProfileHeader({ user, isOwner, onSave, experienceRef, educationRef }) {
       {/* Viewer View */}
       {!isOwner && (
         <div className="px-6 pb-4 pt-2">
-          <ViewerView user={editedUser} />
+          {/* UNCOMMENTT THIS AFTER GETTING VIEWERID  */}
+          {/* <ViewerView user={editedUser} viewerId={viewerId} /> */}
         </div>
+        // I am the ViewerId, the person I am viewing is editeduser
       )}
 
       {/* Modals */}

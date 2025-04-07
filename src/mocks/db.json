@@ -20,7 +20,7 @@
           "id": "ea8d9d1e-2c04-4ce0-99f3-68e0e28a6a42",
           "title": "Software Engineer ",
           "company": "Google",
-          "companyLogo": "https://logo.clearbit.com/google.com",
+          "workExperiencePicture": "https://logo.clearbit.com/google.com",
           "location": "San Francisco, CA",
           "startDate": "2009-12-01",
           "endDate": "",
@@ -32,7 +32,7 @@
           "id": "6d220b10-e48c-4398-b4aa-85da48d4a04a",
           "title": "Frontend Developer Intern",
           "company": "Microsoft",
-          "companyLogo": "https://logo.clearbit.com/microsoft.com",
+          "workExperiencePicture": "https://logo.clearbit.com/microsoft.com",
           "location": "Cairo, Egypt",
           "startDate": "2022-06-01",
           "endDate": "2022-08-30",
@@ -42,17 +42,28 @@
           "id": "1743980160576",
           "title": "TRIAL",
           "company": "elsewedy electric",
-          "companyLogo": "https://media.licdn.com/dms/image/v2/C560BAQF2a3ilv6hXXw/company-logo_200_200/company-logo_200_200/0/1631303609923?e=1747872000&v=beta&t=M9wVeJt_Zk6nNOEnz5X6PQVoUzb8wzaSFYK9JeRNA60",
+          "workExperiencePicture": "https://media.licdn.com/dms/image/v2/C560BAQF2a3ilv6hXXw/company-logo_200_200/company-logo_200_200/0/1631303609923?e=1747872000&v=beta&t=M9wVeJt_Zk6nNOEnz5X6PQVoUzb8wzaSFYK9JeRNA60",
           "startDate": "2008-06-01",
-          "endDate": "2015-10-30"
+          "endDate": "2015-10-30",
+          "currentlyWorking": true
         },
         {
           "id": "1743980892325",
           "title": "Frontend Developer",
           "company": "google",
-          "companyLogo": "https://media.licdn.com/dms/image/v2/C560BAQF2a3ilv6hXXw/company-logo_200_200/company-logo_200_200/0/1631303609923?e=1747872000&v=beta&t=M9wVeJt_Zk6nNOEnz5X6PQVoUzb8wzaSFYK9JeRNA60",
+          "workExperiencePicture": "https://media.licdn.com/dms/image/v2/C560BAQF2a3ilv6hXXw/company-logo_200_200/company-logo_200_200/0/1631303609923?e=1747872000&v=beta&t=M9wVeJt_Zk6nNOEnz5X6PQVoUzb8wzaSFYK9JeRNA60",
           "startDate": "2014-11-01",
           "endDate": "2017-11-30"
+        },
+        {
+          "id": "1743990736996",
+          "company": "elsewedy electric",
+          "workExperiencePicture": "https://media.licdn.com/dms/image/v2/C560BAQF2a3ilv6hXXw/company-logo_200_200/company-logo_200_200/0/1631303609923?e=1747872000&v=beta&t=M9wVeJt_Zk6nNOEnz5X6PQVoUzb8wzaSFYK9JeRNA60",
+          "title": "Software Engineer ",
+          "location": "San Francisco, CA",
+          "description": "BFHS",
+          "startDate": "2008-12-01",
+          "endDate": ""
         }
       ],
       "education": [
@@ -93,6 +104,14 @@
           "endDate": "2026-01-01",
           "credentialId": "GCP123456789",
           "credentialUrl": "https://www.credential.net/google-cloud-data-engineer"
+        },
+        {
+          "id": "1743991715923",
+          "name": "AWS Certified Solutions Architect",
+          "company": "elsewedy electric",
+          "certificationPicture": "https://media.licdn.com/dms/image/v2/C560BAQF2a3ilv6hXXw/company-logo_200_200/company-logo_200_200/0/1631303609923?e=1747872000&v=beta&t=M9wVeJt_Zk6nNOEnz5X6PQVoUzb8wzaSFYK9JeRNA60",
+          "issueDate": "2010-11-01",
+          "expireDate": ""
         }
       ],
       "skills": [],

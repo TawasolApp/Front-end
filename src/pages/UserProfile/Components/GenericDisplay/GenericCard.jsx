@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import GenericModal, { displayDate } from "./GenericModal";
 import defaultExperienceImage from "../../../../assets/images/defaultExperienceImage.png";
 import defaultEducationImage from "../../../../assets/images/defaultEducationImage.png";
-
+//I AM PASSING VIEWER ID ALSOOO HERE FOR ENDORSEMENTS
 // Helper to skip rendering invalid entries
 const isCardEmpty = (item, type) => {
   switch (type) {
@@ -19,7 +19,14 @@ const isCardEmpty = (item, type) => {
   }
 };
 
-function GenericCard({ item, isOwner, type, onEdit, showEditIcons = false }) {
+function GenericCard({
+  item,
+  isOwner,
+  type,
+  onEdit,
+  showEditIcons = false,
+  viewerId,
+}) {
   const [isEndorsed, setIsEndorsed] = useState(false);
   const [endorsementCount, setEndorsementCount] = useState(
     item.endorsements || 0
@@ -28,9 +35,24 @@ function GenericCard({ item, isOwner, type, onEdit, showEditIcons = false }) {
 
   if (isCardEmpty(item, type)) return null;
 
-  const handleEndorse = () => {
-    setEndorsementCount((prev) => (isEndorsed ? prev - 1 : prev + 1));
-    setIsEndorsed(!isEndorsed);
+  // const handleEndorse = () => {
+  //   setEndorsementCount((prev) => (isEndorsed ? prev - 1 : prev + 1));
+  //   setIsEndorsed(!isEndorsed);
+  // };
+  const handleEndorse = async () => {
+    try {
+      const userId = item.userId || item._id || item.ownerId; // ← adjust based on your schema
+      const skillName = item.skillName;
+
+      await axios.post(`/connections/${userId}/endorse-skill`, {
+        skillName,
+      });
+
+      setEndorsementCount((prev) => prev + 1);
+      setIsEndorsed(true);
+    } catch (err) {
+      console.error("Endorse error:", err.response?.data || err.message);
+    }
   };
 
   const handleSave = () => {
@@ -40,7 +62,7 @@ function GenericCard({ item, isOwner, type, onEdit, showEditIcons = false }) {
   const renderExperience = () => (
     <div className="flex items-start gap-3 w-full">
       <img
-        src={item.companyLogo || defaultExperienceImage}
+        src={item.workExperiencePicture || defaultExperienceImage}
         alt={item.company || "Company Logo"}
         className="w-10 h-10 rounded-full object-cover"
       />
@@ -104,7 +126,7 @@ function GenericCard({ item, isOwner, type, onEdit, showEditIcons = false }) {
         <span className="mr-2">👥</span> {endorsementCount} endorsement
         {endorsementCount !== 1 ? "s" : ""}
       </p>
-      {!isOwner && (
+      {/* {!isOwner && (
         <button
           onClick={handleEndorse}
           className={`mt-2 px-4 py-2 border rounded-full flex items-center justify-center gap-2 w-fit ${
@@ -115,6 +137,17 @@ function GenericCard({ item, isOwner, type, onEdit, showEditIcons = false }) {
         >
           {isEndorsed ? "✔ Endorsed" : "Endorse"}
         </button>
+      )} */}
+      {isOwner && (
+        <button
+          onClick={handleEndorse}
+          disabled={isEndorsed}
+          className={`mt-2 px-4 py-2 border rounded-full flex items-center justify-center gap-2 w-fit
+    ${isEndorsed ? "bg-gray-200 text-text2" : "bg-white text-text-text2"} 
+    border-companyheader2 hover:bg-gray-300 transition`}
+        >
+          {isEndorsed ? "✔ Endorsed" : "Endorse"}
+        </button>
       )}
     </div>
   );
@@ -122,7 +155,7 @@ function GenericCard({ item, isOwner, type, onEdit, showEditIcons = false }) {
   const renderCertifications = () => (
     <div className="flex items-start gap-3 w-full">
       <img
-        src={item.companyLogo || defaultExperienceImage}
+        src={item.certificationPicture || defaultExperienceImage}
         alt={item.company || "Certification Logo"}
         className="w-10 h-10 rounded-full object-cover"
       />

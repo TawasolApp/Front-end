@@ -112,7 +112,7 @@ function ExperienceFields({ formData, setFormData, handleChange, errors }) {
                 setFormData((prev) => ({
                   ...prev,
                   company: selected.label,
-                  companyLogo: selected.logo,
+                  workExperiencePicture: selected.logo,
                 }));
                 setShowDropdown(false);
               }
@@ -139,7 +139,7 @@ function ExperienceFields({ formData, setFormData, handleChange, errors }) {
                   setFormData((prev) => ({
                     ...prev,
                     company: option.label,
-                    companyLogo: option.logo,
+                    workExperiencePicture: option.logo,
                   }));
                   setShowDropdown(false);
                 }}
