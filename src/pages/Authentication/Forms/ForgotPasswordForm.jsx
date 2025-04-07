@@ -25,7 +25,10 @@ const ForgotPasswordForm = () => {
     }
 
     try {
-      await axiosInstance.post("/auth/forgot-password", { email });
+      await axiosInstance.post("/auth/forgot-password", {
+        email,
+        isAndroid: false,
+      });
       dispatch(setEmail(email));
       navigate("/auth/verification-pending");
     } catch (error) {
@@ -33,7 +36,7 @@ const ForgotPasswordForm = () => {
         console.error("Forgot password error:", error.response.data);
         setError(
           error.response.data.message ||
-            "Failed to send reset email. Please try again.",
+            "Failed to send reset email. Please try again."
         );
       } else if (error.request) {
         console.error("No response received:", error.request);
