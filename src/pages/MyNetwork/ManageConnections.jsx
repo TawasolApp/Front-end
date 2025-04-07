@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef, useCallback } from "react";
 import { useNavigate } from "react-router-dom";
 import { axiosInstance } from "../../apis/axios";
 
@@ -6,53 +6,88 @@ const ManageConnections = () => {
   const [activeTab, setActiveTab] = useState("received");
   const [pendingRequests, setPendingRequests] = useState([]);
   const [sentRequests, setSentRequests] = useState([]);
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
-  const [pagination, setPagination] = useState({
-    page: 1,
-    limit: 5
-  });
+  const [hasMore, setHasMore] = useState(true);
+  const [page, setPage] = useState(1);
+  const limit = 5;
+
+  const observer = useRef();
+  const isFetching = useRef(false);
   const navigate = useNavigate();
+
+  const lastElementRef = useCallback(
+    (node) => {
+      if (loading) return;
+      if (observer.current) observer.current.disconnect();
+
+      observer.current = new IntersectionObserver((entries) => {
+        if (entries[0].isIntersecting && hasMore && !isFetching.current) {
+          setPage((prevPage) => prevPage + 1);
+        }
+      });
+
+      if (node) observer.current.observe(node);
+    },
+    [loading, hasMore]
+  );
 
   useEffect(() => {
     const fetchData = async () => {
+      if (isFetching.current) return;
+      
       setLoading(true);
       setError(null);
+      isFetching.current = true;
+
       try {
-        if (activeTab === "received") {
-          const response = await axiosInstance.get("/connections/pending", {
-            params: {
-              page: pagination.page,
-              limit: pagination.limit
-            }
-          });
-          setPendingRequests(response.data);
+        const endpoint = activeTab === "received" 
+          ? "/connections/pending" 
+          : "/connections/sent";
+        
+        const response = await axiosInstance.get(endpoint, {
+          params: { page, limit }
+        });
+
+        const newData = response.data;
+        
+        if (newData.length === 0) {
+          setHasMore(false);
         } else {
-          const response = await axiosInstance.get("/connections/sent", {
-            params: {
-              page: pagination.page,
-              limit: pagination.limit
-            }
-          });
-          setSentRequests(response.data);
+          if (page === 1) {
+            activeTab === "received" 
+              ? setPendingRequests(newData) 
+              : setSentRequests(newData);
+          } else {
+            activeTab === "received" 
+              ? setPendingRequests(prev => [...prev, ...newData]) 
+              : setSentRequests(prev => [...prev, ...newData]);
+          }
         }
       } catch (err) {
         setError(`Failed to load ${activeTab} requests.`);
         console.error(err);
       } finally {
         setLoading(false);
+        isFetching.current = false;
       }
     };
 
     fetchData();
-  }, [activeTab, pagination.page, pagination.limit]);
+  }, [activeTab, page]);
+
+  useEffect(() => {
+    setPage(1);
+    setHasMore(true);
+    setPendingRequests([]);
+    setSentRequests([]);
+  }, [activeTab]);
 
   const handleAccept = async (userId) => {
     try {
       await axiosInstance.patch(`/connections/${userId}`, { isAccept: true });
       setPendingRequests(prev => prev.filter(request => request.userId !== userId));
     } catch (error) {
-      console.error("Failed to accept connection:", error);
       setError("Failed to accept connection. Please try again.");
     }
   };
@@ -62,14 +97,17 @@ const ManageConnections = () => {
       await axiosInstance.patch(`/connections/${userId}`, { isAccept: false });
       setPendingRequests(prev => prev.filter(request => request.userId !== userId));
     } catch (error) {
-      console.error("Failed to ignore connection:", error);
       setError("Failed to ignore connection. Please try again.");
     }
   };
 
   const handleWithdraw = async (userId) => {
-    
-  
+    try {
+      await axiosInstance.delete(`/connections/${userId}/pending`);
+      setSentRequests(prev => prev.filter(request => request.userId !== userId));
+    } catch (error) {
+      setError("Failed to withdraw connection request. Please try again.");
+    }
   };
 
   return (
@@ -90,10 +128,7 @@ const ManageConnections = () => {
                 ? "text-listSelected border-b-2 border-listSelected"
                 : "text-textPlaceholder"
             }`}
-            onClick={() => {
-              setActiveTab("received");
-              setPagination(prev => ({...prev, page: 1}));
-            }}
+            onClick={() => setActiveTab("received")}
           >
             Received 
           </button>
@@ -103,16 +138,13 @@ const ManageConnections = () => {
                 ? "text-listSelected border-b-2 border-listSelected"
                 : "text-textPlaceholder"
             }`}
-            onClick={() => {
-              setActiveTab("sent");
-              setPagination(prev => ({...prev, page: 1}));
-            }}
+            onClick={() => setActiveTab("sent")}
           >
             Sent 
           </button>
         </div>
 
-        {loading ? (
+        {loading && page === 1 ? (
           <p className="text-center text-textPlaceholder mt-4">Loading...</p>
         ) : error ? (
           <p className="text-center text-error mt-4">{error}</p>
@@ -121,7 +153,7 @@ const ManageConnections = () => {
             {pendingRequests.length > 0 ? (
               <div className="space-y-0">
                 {pendingRequests.map((request, index) => (
-                  <div key={request.userId}>
+                  <div key={`${request.userId}-${index}`} ref={index === pendingRequests.length - 1 ? lastElementRef : null}>
                     <div className="p-6">
                       <div className="flex items-center justify-between">
                         <div className="flex items-center space-x-4">
@@ -172,7 +204,7 @@ const ManageConnections = () => {
             {sentRequests.length > 0 ? (
               <div className="space-y-0">
                 {sentRequests.map((request, index) => (
-                  <div key={request.userId}>
+                  <div key={`${request.userId}-${index}`} ref={index === sentRequests.length - 1 ? lastElementRef : null}>
                     <div className="p-6">
                       <div className="flex items-center justify-between">
                         <div className="flex items-center space-x-4">
@@ -212,26 +244,17 @@ const ManageConnections = () => {
           </div>
         )}
 
-        {/* Pagination Controls */}
-        <div className="flex justify-center mt-4">
-          <button
-            onClick={() => setPagination(prev => ({...prev, page: prev.page - 1}))}
-            disabled={pagination.page === 1}
-            className="px-4 py-2 mx-1 border rounded disabled:opacity-50"
-          >
-            Previous
-          </button>
-          <span className="px-4 py-2">
-            Page {pagination.page}
-          </span>
-          <button
-            onClick={() => setPagination(prev => ({...prev, page: prev.page + 1}))}
-            disabled={(activeTab === "received" ? pendingRequests : sentRequests).length < pagination.limit}
-            className="px-4 py-2 mx-1 border rounded disabled:opacity-50"
-          >
-            Next
-          </button>
-        </div>
+        {loading && page > 1 && (
+          <div className="flex justify-center p-4">
+            <div className="loader">Loading more...</div>
+          </div>
+        )}
+
+        {!hasMore && (pendingRequests.length > 0 || sentRequests.length > 0) && (
+          <div className="text-center p-4 text-header">
+            You've reached the end of your {activeTab} requests
+          </div>
+        )}
       </div>
     </div>
   );
