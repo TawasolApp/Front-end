@@ -1,55 +1,100 @@
 import "./App.css";
-import {
-  BrowserRouter as Router,
-  Routes,
-  Route,
-  Navigate,
-} from "react-router-dom";
+
+import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+
+import SignUpPage from "../pages/Authentication/SignUpPage";
+import SignInPage from "../pages/Authentication/SignInPage";
+import NamePage from "../pages/Authentication/NamePage";
+import LocationPage from "../pages/Authentication/LocationPage";
+import ExperienceAuthPage from "../pages/Authentication/ExperiencePage";
+import ChangePasswordPage from "../pages/Authentication/ChangePasswordPage";
+import ForgotPasswordPage from "../pages/Authentication/ForgotPasswordPage";
+import VerificationPendingPage from "../pages/Authentication/VerificationPendingPage.jsx";
+import NewPasswordPage from "../pages/Authentication/NewPasswordPage";
+import WelcomePage from "../pages/Authentication/WelcomePage";
+import ChangeEmailPage from "../pages/Authentication/ChangeEmailPage";
+import VerifyChangeEmailPage from "../pages/Authentication/VerifyChangeEmailPage.jsx";
+
 import ProfilePage from "../pages/UserProfile/Components/ProfilePage";
-import Connections from "../pages/UserProfile/Components/Connections";
+import ProfileConnections from "../pages/UserProfile/Components/Connections";
 import ProfileLayout from "../pages/UserProfile/Components/profileLayout";
 import EducationPage from "../pages/UserProfile/Components/Pages/EducationPage";
 import ExperiencePage from "../pages/UserProfile/Components/Pages/ExperiencePage";
 import CertificationsPage from "../pages/UserProfile/Components/Pages/CertificationsPage";
 import SkillsPage from "../pages/UserProfile/Components/Pages/SkillsPage";
-import CompanyLayout from "../pages/CompanyPage/Components/CompanyLayout";
-import PostsPage from "../pages/CompanyPage/Components/PostsPage";
-import Aboutpage from "../pages/CompanyPage/Components/AboutPage";
-import Homepage from "../pages/CompanyPage/Components/HomePage";
-import CreateCompanyPage from "../pages/CompanyPage/Components/CreateCompanyPage";
+
+import CompanyLayout from "../pages/Company/CompanyLayout.jsx";
+import PostsPage from "../pages/Company/Components/Pages/PostsPage.jsx";
+import AboutPage from "../pages/Company/Components/Pages/AboutPage.jsx";
+import HomePage from "../pages/Company/Components/Pages/HomePage.jsx";
+import JobsPage from "../pages/Company/Components/Pages/JobsPage.jsx";
+import CreateCompanyPage from "../pages/Company/Components/CreateCompanyPage/CreateCompanyPage.jsx";
+
+import ConnectionPage from "../pages/MyNetwork/Connections/ConnectionPage";
+import BlockedPage from "../pages/MyNetwork/BlockedPage";
+import FollowPage from "../pages/MyNetwork/FollowPage";
+import ManageConnections from "../pages/MyNetwork/ManageConnections";
+
 import FeedContainer from "../pages/Feed/FeedContainer";
 import SavedPostsContainer from "../pages/SavedPosts/SavedPostsContainer";
+import VerifySignUpPage from "../pages/Authentication/VerifySignUpPage.jsx";
+import VerifyResetPasswordPage from "../pages/Authentication/VerifyresetPasswordPage.jsx";
+import NetworkBox from "../pages/MyNetwork/NetworkBox.jsx";
 
 const App = () => {
   return (
     <Router>
       <Routes>
-        {/*  Top-level layout with slug param */}
-        {/* for Default user */}
-        <Route path="/users" element={<ProfileLayout />} />
+        <Route path="/" element={<WelcomePage />} />
+        <Route path="/auth/signin" element={<SignInPage />} />
+        <Route path="/auth/signup" element={<SignUpPage />} />
+        <Route path="/auth/signup/name" element={<NamePage />} />
+        <Route path="/auth/signup/location" element={<LocationPage />} />
+        <Route
+          path="/auth/signup/experience"
+          element={<ExperienceAuthPage />}
+        />
+        <Route path="/auth/update-password" element={<ChangePasswordPage />} />
+        <Route path="/auth/forgot-password" element={<ForgotPasswordPage />} />
+        <Route
+          path="/auth/verification-pending"
+          element={<VerificationPendingPage />}
+        />
+        <Route
+          path="/users/confirm-email-change"
+          element={<VerifyChangeEmailPage />}
+        />
+        <Route path="/auth/verify-email" element={<VerifySignUpPage />} />
+        <Route path="/auth/reset-password" element={<VerifyResetPasswordPage />} />
+        <Route path="/auth/new-password" element={<NewPasswordPage />} />
+        <Route path="/auth/update-email" element={<ChangeEmailPage />} />
 
+        <Route path="/users" element={<ProfileLayout />} />
         <Route path="/users/:profileSlug" element={<ProfileLayout />}>
-          {/*  The main profile page (inside layout) */}
           <Route index element={<ProfilePage />} />
-          {/*  Sub-pages */}
           <Route path="education" element={<EducationPage />} />
           <Route path="workExperience" element={<ExperiencePage />} />
           <Route path="certifications" element={<CertificationsPage />} />
           <Route path="skills" element={<SkillsPage />} />
-          {/* user Connnections */}
           <Route path="connections" element={<Connections />} />
-          {/* add here navigation to edit email page  */}
         </Route>
-        <Route path="/" element={<FeedContainer />} />
-        <Route path="/feed/" element={<FeedContainer />} />
+
+        <Route path="/connections" element={<ConnectionPage />} />
+        <Route path="/blocked" element={<BlockedPage />} />
+        <Route path="/follow" element={<FollowPage />} />
+        <Route path="/manage-connections" element={<ManageConnections />} />
+        <Route path="/network-box" element={<NetworkBox />} />
+
+        <Route path="/feed" element={<FeedContainer />} />
         <Route path="/my-items/saved-posts" element={<SavedPostsContainer />} />
-        <Route path="/in/:usedId/" element={<h1>HelloWorld</h1>} />
-        {/* Ensure companyId is part of the URL */}
+
+        <Route path="/company" element={<CompanyLayout />} />
         <Route path="/company/:companyId/*" element={<CompanyLayout />}>
-          <Route index element={<Homepage />} />
-          <Route path="home" element={<Homepage />} />
-          <Route path="about" element={<Aboutpage />} />
+          <Route index element={<HomePage />} />
+          <Route path="home" element={<HomePage />} />
+          <Route path="about" element={<AboutPage />} />
           <Route path="posts" element={<PostsPage />} />
+          <Route path="jobs" element={<JobsPage />} />
         </Route>
         <Route path="/company/setup/new" element={<CreateCompanyPage />} />
       </Routes>

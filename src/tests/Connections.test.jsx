@@ -18,12 +18,12 @@ describe("Connections Component", () => {
     render(
       <MemoryRouter>
         <Connections />
-      </MemoryRouter>
+      </MemoryRouter>,
     );
 
     expect(screen.getByRole("button", { name: /← back/i })).toBeInTheDocument();
     expect(
-      screen.getByRole("heading", { name: /here we'll add the connections/i })
+      screen.getByRole("heading", { name: /here we'll add the connections/i }),
     ).toBeInTheDocument();
   });
 
@@ -31,7 +31,7 @@ describe("Connections Component", () => {
     render(
       <MemoryRouter>
         <Connections />
-      </MemoryRouter>
+      </MemoryRouter>,
     );
 
     const backButton = screen.getByRole("button", { name: /← back/i });

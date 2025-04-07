@@ -1,6 +1,6 @@
 import React from "react";
 import { render } from "@testing-library/react";
-import LoadingPage from "../pages/LoadingPage/LoadingPage";
+import LoadingPage from "../pages/LoadingScreen/LoadingPage";
 import { axiosInstance } from "../apis/axios";
 
 vi.mock("../apis/axios");

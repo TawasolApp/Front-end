@@ -26,7 +26,7 @@ describe("EducationFields Component", () => {
     expect(screen.getByLabelText(/field of study/i)).toBeInTheDocument();
     expect(screen.getByLabelText(/grade/i)).toBeInTheDocument();
     expect(
-      screen.getByLabelText(/activities and societies/i)
+      screen.getByLabelText(/activities and societies/i),
     ).toBeInTheDocument();
     expect(screen.getByLabelText(/^description$/i)).toBeInTheDocument();
   });
@@ -55,11 +55,11 @@ describe("EducationFields Component", () => {
     render(<EducationFields {...defaultProps} />);
 
     expect(
-      screen.getByText((_, el) => el?.textContent === "10/500")
+      screen.getByText((_, el) => el?.textContent === "10/500"),
     ).toBeInTheDocument(); // "Chess Team"
 
     expect(
-      screen.getByText((_, el) => el?.textContent === "27/1000")
+      screen.getByText((_, el) => el?.textContent === "27/1000"),
     ).toBeInTheDocument(); // "Studied advanced algorithms"
   });
 
@@ -68,11 +68,11 @@ describe("EducationFields Component", () => {
       <EducationFields
         {...defaultProps}
         formData={{ ...defaultProps.formData, description: "" }}
-      />
+      />,
     );
 
     expect(
-      screen.getByText((_, el) => el?.textContent === "0/1000")
+      screen.getByText((_, el) => el?.textContent === "0/1000"),
     ).toBeInTheDocument();
   });
 
@@ -81,11 +81,11 @@ describe("EducationFields Component", () => {
       <EducationFields
         {...defaultProps}
         formData={{ ...defaultProps.formData, activities: "" }}
-      />
+      />,
     );
 
     expect(
-      screen.getByText((_, el) => el?.textContent === "0/500")
+      screen.getByText((_, el) => el?.textContent === "0/500"),
     ).toBeInTheDocument();
   });
 });

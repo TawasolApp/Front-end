@@ -19,7 +19,7 @@ vi.mock(
         </ul>
       </div>
     ),
-  })
+  }),
 );
 
 describe("EducationSection Component", () => {

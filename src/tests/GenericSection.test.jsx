@@ -38,7 +38,7 @@ describe("GenericSection Component", () => {
         items={items}
         isOwner={false}
         user={{ id: "1" }}
-      />
+      />,
     );
 
     expect(screen.getByText("Experience")).toBeInTheDocument();
@@ -56,7 +56,7 @@ describe("GenericSection Component", () => {
         items={items}
         isOwner={true}
         user={{ id: "1" }}
-      />
+      />,
     );
 
     expect(screen.getByText("+")).toBeInTheDocument();
@@ -73,7 +73,7 @@ describe("GenericSection Component", () => {
         items={items}
         isOwner={true}
         user={{ id: "1" }}
-      />
+      />,
     );
 
     fireEvent.click(screen.getByText("✎"));
@@ -90,7 +90,7 @@ describe("GenericSection Component", () => {
         items={items}
         isOwner={true}
         user={{ id: "1" }}
-      />
+      />,
     );
 
     fireEvent.click(screen.getByText("+"));
@@ -113,7 +113,7 @@ describe("GenericSection Component", () => {
         items={items}
         isOwner={true}
         user={{ id: "1" }}
-      />
+      />,
     );
 
     fireEvent.click(screen.getByText("+"));
@@ -134,7 +134,7 @@ describe("GenericSection Component", () => {
     fireEvent.click(screen.getByTestId("save-button"));
 
     await waitFor(() =>
-      expect(axiosModule.axiosInstance.post).toHaveBeenCalled()
+      expect(axiosModule.axiosInstance.post).toHaveBeenCalled(),
     );
   });
 
@@ -153,7 +153,7 @@ describe("GenericSection Component", () => {
         items={items}
         isOwner={true}
         user={{ id: "1" }}
-      />
+      />,
     );
 
     const showAllBtn = screen.getByText(/Show all 3 experience records/i);
@@ -174,7 +174,7 @@ describe("GenericSection Component", () => {
         items={[]}
         isOwner={true}
         user={{ id: "1" }}
-      />
+      />,
     );
 
     fireEvent.click(screen.getByText("+"));
@@ -197,8 +197,8 @@ describe("GenericSection Component", () => {
     await waitFor(() =>
       expect(consoleSpy).toHaveBeenCalledWith(
         "Failed to save item:",
-        expect.any(Error)
-      )
+        expect.any(Error),
+      ),
     );
 
     consoleSpy.mockRestore();

@@ -80,13 +80,13 @@ vi.mock(
       <div data-testid="activities-holder">
         <button
           data-testid="add-reaction-btn"
-          onClick={() => props.onChange("like", null)}
+          onClick={() => props.handleReaction("Like", null)}
         >
           Add Reaction
         </button>
         <button
           data-testid="change-reaction-btn"
-          onClick={() => props.onChange("celebrate", "like")}
+          onClick={() => props.handleReaction("Celebrate", "Like")}
         >
           Change Reaction
         </button>
@@ -341,7 +341,7 @@ describe("PostCard Component", () => {
   });
 
   it("shows delete modal when delete post is clicked", () => {
-    render(<PostCard post={mockPost} deletePost={mockDeletePost} />);
+    render(<PostCard post={mockPost} handleDeletePost={mockDeletePost} />);
 
     // Initially delete modal should not be visible
     expect(screen.queryByTestId("delete-modal")).not.toBeInTheDocument();
@@ -413,7 +413,7 @@ describe("PostCard Component", () => {
   });
 
   it("adds reaction correctly", () => {
-    render(<PostCard post={mockPost} deletePost={mockDeletePost} />);
+    render(<PostCard post={mockPost} handleDeletePost={mockDeletePost} />);
 
     // Click add reaction button
     fireEvent.click(screen.getByTestId("add-reaction-btn"));
@@ -422,14 +422,14 @@ describe("PostCard Component", () => {
     expect(axiosInstance.post).toHaveBeenCalledWith(
       `posts/react/${mockPost.id}`,
       {
-        reactions: { like: 1 },
+        reactions: { Like: 1 },
         postType: "Post",
       },
     );
   });
 
   it("changes reaction correctly", () => {
-    render(<PostCard post={mockPost} deletePost={mockDeletePost} />);
+    render(<PostCard post={mockPost} handleDeletePost={mockDeletePost} />);
 
     // Click change reaction button
     fireEvent.click(screen.getByTestId("change-reaction-btn"));
@@ -438,7 +438,7 @@ describe("PostCard Component", () => {
     expect(axiosInstance.post).toHaveBeenCalledWith(
       `posts/react/${mockPost.id}`,
       {
-        reactions: { celebrate: 1, like: 0 },
+        reactions: { Celebrate: 1, Like: 0 },
         postType: "Post",
       },
     );

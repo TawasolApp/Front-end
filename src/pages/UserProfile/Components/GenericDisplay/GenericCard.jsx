@@ -29,7 +29,7 @@ function GenericCard({
 }) {
   const [isEndorsed, setIsEndorsed] = useState(false);
   const [endorsementCount, setEndorsementCount] = useState(
-    item.endorsements || 0
+    item.endorsements || 0,
   );
   const [isModalOpen, setIsModalOpen] = useState(false);
 

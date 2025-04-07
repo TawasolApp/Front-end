@@ -37,7 +37,7 @@ describe("GenericCard Component", () => {
     expect(screen.getByText("Remote")).toBeInTheDocument();
     expect(screen.getByText("Jan 2022 - Dec 2023")).toBeInTheDocument();
     expect(
-      screen.getByText("Worked on frontend and backend.")
+      screen.getByText("Worked on frontend and backend."),
     ).toBeInTheDocument();
   });
 
@@ -48,7 +48,7 @@ describe("GenericCard Component", () => {
     };
     render(<GenericCard item={eduItem} isOwner={true} type="education" />);
     expect(screen.getByTestId("institution")).toHaveTextContent(
-      "Cairo University"
+      "Cairo University",
     );
     expect(screen.getByTestId("grade")).toHaveTextContent("Grade: 3.9 GPA");
   });
@@ -58,7 +58,7 @@ describe("GenericCard Component", () => {
     render(<GenericCard item={skillItem} isOwner={false} type="skills" />);
     expect(screen.getByText("React")).toBeInTheDocument();
     expect(screen.getByTestId("endorsement-count")).toHaveTextContent(
-      "2 endorsements"
+      "2 endorsements",
     );
 
     const endorseBtn = screen.getByRole("button", { name: /endorse/i });
@@ -67,7 +67,7 @@ describe("GenericCard Component", () => {
 
     fireEvent.click(screen.getByText("✔ Endorsed"));
     expect(screen.getByTestId("endorsement-count")).toHaveTextContent(
-      "2 endorsements"
+      "2 endorsements",
     );
   });
 
@@ -75,7 +75,7 @@ describe("GenericCard Component", () => {
     const skillItem = { skill: "JS", endorsements: 5 };
     render(<GenericCard item={skillItem} isOwner={true} type="skills" />);
     expect(
-      screen.queryByRole("button", { name: /endorse/i })
+      screen.queryByRole("button", { name: /endorse/i }),
     ).not.toBeInTheDocument();
   });
 
@@ -88,7 +88,7 @@ describe("GenericCard Component", () => {
         showEditIcons={true}
         onEdit={onEdit}
         type="experience"
-      />
+      />,
     );
     fireEvent.click(screen.getByRole("button", { name: /✎/i }));
     expect(onEdit).toHaveBeenCalled();
@@ -101,10 +101,10 @@ describe("GenericCard Component", () => {
         isOwner={false}
         showEditIcons={true}
         type="experience"
-      />
+      />,
     );
     expect(
-      screen.queryByRole("button", { name: /✎/i })
+      screen.queryByRole("button", { name: /✎/i }),
     ).not.toBeInTheDocument();
   });
 
@@ -120,7 +120,7 @@ describe("GenericCard Component", () => {
 
   it("displays name or title and company when available", () => {
     render(
-      <GenericCard item={{ name: "HTML5" }} isOwner={true} type="skills" />
+      <GenericCard item={{ name: "HTML5" }} isOwner={true} type="skills" />,
     );
     expect(screen.getByText("HTML5")).toBeInTheDocument();
 
@@ -129,7 +129,7 @@ describe("GenericCard Component", () => {
         item={{ title: "Dev", company: "Test Inc." }}
         isOwner={true}
         type="experience"
-      />
+      />,
     );
     expect(screen.getByText("Dev")).toBeInTheDocument();
     expect(screen.getByText("Test Inc.")).toBeInTheDocument();
@@ -170,7 +170,7 @@ describe("GenericCard Component", () => {
         isOwner={true}
         showEditIcons={true}
         type="experience"
-      />
+      />,
     );
 
     fireEvent.click(screen.getByRole("button", { name: /✎/i }));

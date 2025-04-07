@@ -50,7 +50,7 @@ describe("GenericPage Component", () => {
     render(
       <MemoryRouter>
         <GenericPage title="Experience" type="experience" />
-      </MemoryRouter>
+      </MemoryRouter>,
     );
 
     expect(screen.getByText("All Experience")).toBeInTheDocument();
@@ -62,7 +62,7 @@ describe("GenericPage Component", () => {
     render(
       <MemoryRouter>
         <GenericPage title="Experience" type="experience" />
-      </MemoryRouter>
+      </MemoryRouter>,
     );
 
     expect(screen.getByText("+")).toBeInTheDocument();
@@ -72,7 +72,7 @@ describe("GenericPage Component", () => {
     render(
       <MemoryRouter>
         <GenericPage title="Experience" type="experience" />
-      </MemoryRouter>
+      </MemoryRouter>,
     );
 
     fireEvent.click(screen.getAllByText("✎")[0]);
@@ -93,7 +93,7 @@ describe("GenericPage Component", () => {
     render(
       <MemoryRouter>
         <GenericPage title="Experience" type="experience" />
-      </MemoryRouter>
+      </MemoryRouter>,
     );
 
     fireEvent.click(screen.getByText("+"));
@@ -121,7 +121,7 @@ describe("GenericPage Component", () => {
     fireEvent.click(screen.getByTestId("save-button"));
 
     await waitFor(() =>
-      expect(axiosModule.axiosInstance.post).toHaveBeenCalled()
+      expect(axiosModule.axiosInstance.post).toHaveBeenCalled(),
     );
   });
 
@@ -136,7 +136,7 @@ describe("GenericPage Component", () => {
     render(
       <MemoryRouter>
         <GenericPage title="Experience" type="experience" />
-      </MemoryRouter>
+      </MemoryRouter>,
     );
 
     fireEvent.click(screen.getAllByText("✎")[0]);
@@ -148,7 +148,7 @@ describe("GenericPage Component", () => {
     fireEvent.click(screen.getByTestId("save-button"));
 
     await waitFor(() =>
-      expect(axiosModule.axiosInstance.patch).toHaveBeenCalled()
+      expect(axiosModule.axiosInstance.patch).toHaveBeenCalled(),
     );
   });
 
@@ -158,7 +158,7 @@ describe("GenericPage Component", () => {
     render(
       <MemoryRouter>
         <GenericPage title="Experience" type="experience" />
-      </MemoryRouter>
+      </MemoryRouter>,
     );
 
     fireEvent.click(screen.getAllByText("✎")[0]);
@@ -171,14 +171,14 @@ describe("GenericPage Component", () => {
 
     await waitFor(() => {
       expect(
-        screen.getByText(/Are you sure you want to delete/i)
+        screen.getByText(/Are you sure you want to delete/i),
       ).toBeInTheDocument();
     });
 
     fireEvent.click(screen.getByTestId("confirm-delete"));
 
     await waitFor(() =>
-      expect(axiosModule.axiosInstance.delete).toHaveBeenCalled()
+      expect(axiosModule.axiosInstance.delete).toHaveBeenCalled(),
     );
   });
 
@@ -191,7 +191,7 @@ describe("GenericPage Component", () => {
     render(
       <MemoryRouter>
         <GenericPage title="Experience" type="experience" />
-      </MemoryRouter>
+      </MemoryRouter>,
     );
 
     fireEvent.click(screen.getByText("+"));
@@ -203,7 +203,7 @@ describe("GenericPage Component", () => {
     fireEvent.click(screen.getByTestId("save-button"));
 
     await waitFor(() =>
-      expect(axiosModule.axiosInstance.post).not.toHaveBeenCalled()
+      expect(axiosModule.axiosInstance.post).not.toHaveBeenCalled(),
     );
   });
 
@@ -213,20 +213,20 @@ describe("GenericPage Component", () => {
     axiosModule.axiosInstance.post.mockImplementation(
       () =>
         new Promise((resolve) =>
-          setTimeout(() => resolve({ data: newData }), 100)
-        )
+          setTimeout(() => resolve({ data: newData }), 100),
+        ),
     );
 
     render(
       <MemoryRouter>
         <GenericPage title="Experience" type="experience" />
-      </MemoryRouter>
+      </MemoryRouter>,
     );
 
     fireEvent.click(screen.getByText("+"));
 
     await waitFor(() =>
-      expect(screen.getByTestId("generic-modal")).toBeInTheDocument()
+      expect(screen.getByTestId("generic-modal")).toBeInTheDocument(),
     );
 
     fireEvent.change(screen.getByLabelText(/Title/i), {
@@ -249,7 +249,7 @@ describe("GenericPage Component", () => {
     fireEvent.click(screen.getByTestId("save-button")); // second click
 
     await waitFor(() =>
-      expect(axiosModule.axiosInstance.post).toHaveBeenCalledTimes(1)
+      expect(axiosModule.axiosInstance.post).toHaveBeenCalledTimes(1),
     );
   });
 
@@ -260,7 +260,7 @@ describe("GenericPage Component", () => {
     render(
       <MemoryRouter>
         <GenericPage title="Experience" type="experience" />
-      </MemoryRouter>
+      </MemoryRouter>,
     );
 
     fireEvent.click(screen.getByText("+"));
@@ -290,8 +290,8 @@ describe("GenericPage Component", () => {
     await waitFor(() =>
       expect(consoleSpy).toHaveBeenCalledWith(
         "Failed to save item:",
-        expect.any(Error)
-      )
+        expect.any(Error),
+      ),
     );
 
     consoleSpy.mockRestore();
@@ -309,27 +309,27 @@ describe("GenericPage Component", () => {
     render(
       <MemoryRouter>
         <GenericPage title="Experience" type="experience" />
-      </MemoryRouter>
+      </MemoryRouter>,
     );
 
     fireEvent.click(screen.getAllByText("✎")[0]);
 
     await waitFor(() =>
-      expect(screen.getByTestId("generic-modal")).toBeInTheDocument()
+      expect(screen.getByTestId("generic-modal")).toBeInTheDocument(),
     );
 
     fireEvent.click(screen.getByTestId("delete-button"));
 
     await waitFor(() =>
       expect(
-        screen.getByText(/Are you sure you want to delete/i)
-      ).toBeInTheDocument()
+        screen.getByText(/Are you sure you want to delete/i),
+      ).toBeInTheDocument(),
     );
 
     fireEvent.click(screen.getByTestId("confirm-delete"));
 
     await waitFor(() =>
-      expect(axiosModule.axiosInstance.delete).not.toHaveBeenCalled()
+      expect(axiosModule.axiosInstance.delete).not.toHaveBeenCalled(),
     );
   });
 
@@ -344,25 +344,25 @@ describe("GenericPage Component", () => {
     render(
       <MemoryRouter>
         <GenericPage title="Experience" type="experience" />
-      </MemoryRouter>
+      </MemoryRouter>,
     );
 
     fireEvent.click(screen.getAllByText("✎")[0]);
 
     await waitFor(() =>
-      expect(screen.getByTestId("generic-modal")).toBeInTheDocument()
+      expect(screen.getByTestId("generic-modal")).toBeInTheDocument(),
     );
 
     fireEvent.click(screen.getByTestId("delete-button"));
 
     await waitFor(() =>
-      expect(screen.getByTestId("confirm-delete")).toBeInTheDocument()
+      expect(screen.getByTestId("confirm-delete")).toBeInTheDocument(),
     );
 
     fireEvent.click(screen.getByTestId("confirm-delete"));
 
     await waitFor(() =>
-      expect(axiosModule.axiosInstance.delete).not.toHaveBeenCalled()
+      expect(axiosModule.axiosInstance.delete).not.toHaveBeenCalled(),
     );
   });
 
@@ -378,13 +378,13 @@ describe("GenericPage Component", () => {
     render(
       <MemoryRouter>
         <GenericPage title="Experience" type="experience" />
-      </MemoryRouter>
+      </MemoryRouter>,
     );
 
     fireEvent.click(screen.getByText("+")); // opens modal in add mode
 
     await waitFor(() =>
-      expect(screen.getByTestId("generic-modal")).toBeInTheDocument()
+      expect(screen.getByTestId("generic-modal")).toBeInTheDocument(),
     );
 
     // Expect no delete button in add mode

@@ -25,10 +25,10 @@ describe("ExperienceFields Component", () => {
     expect(screen.getByLabelText(/title\*/i)).toBeInTheDocument();
     expect(screen.getByLabelText(/employment type/i)).toBeInTheDocument();
     expect(
-      screen.getByLabelText(/company or organization\*/i)
+      screen.getByLabelText(/company or organization\*/i),
     ).toBeInTheDocument();
     expect(
-      screen.getByLabelText(/i am currently working in this role/i)
+      screen.getByLabelText(/i am currently working in this role/i),
     ).toBeInTheDocument();
     expect(screen.getByLabelText(/^location$/i)).toBeInTheDocument();
     expect(screen.getByLabelText(/location type/i)).toBeInTheDocument();
@@ -52,7 +52,7 @@ describe("ExperienceFields Component", () => {
       <ExperienceFields
         {...defaultProps}
         formData={{ ...defaultProps.formData, currentlyWorking: true }}
-      />
+      />,
     );
 
     const checkbox = screen.getByLabelText(/currently working/i);
@@ -77,8 +77,8 @@ describe("ExperienceFields Component", () => {
         (text) =>
           typeof text === "string" &&
           text.includes(`${expectedLength}`) &&
-          text.includes("/1000")
-      )
+          text.includes("/1000"),
+      ),
     ).toBeInTheDocument();
   });
 
@@ -87,13 +87,13 @@ describe("ExperienceFields Component", () => {
       <ExperienceFields
         {...defaultProps}
         formData={{ ...defaultProps.formData, description: "" }}
-      />
+      />,
     );
 
     expect(
       screen.getByText(
-        (text) => typeof text === "string" && text.includes("0/1000")
-      )
+        (text) => typeof text === "string" && text.includes("0/1000"),
+      ),
     ).toBeInTheDocument();
   });
 });

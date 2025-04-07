@@ -40,7 +40,7 @@ describe("GenericModal", () => {
     });
     fireEvent.click(screen.getByTestId("save-button"));
     expect(defaultProps.onSave).toHaveBeenCalledWith(
-      expect.objectContaining({ skill: "React" })
+      expect.objectContaining({ skill: "React" }),
     );
   });
 
@@ -74,11 +74,11 @@ describe("GenericModal", () => {
         {...defaultProps}
         type="education"
         initialData={{ startYear: "2022", endYear: "2020" }}
-      />
+      />,
     );
     fireEvent.click(screen.getByTestId("save-button"));
     expect(
-      screen.getByText(/end year can't be before the start year/i)
+      screen.getByText(/end year can't be before the start year/i),
     ).toBeInTheDocument();
   });
 
@@ -93,45 +93,45 @@ describe("GenericModal", () => {
           endYear: "2024",
           endMonth: "January",
         }}
-      />
+      />,
     );
     fireEvent.click(screen.getByTestId("save-button"));
     expect(
-      screen.getByText(/end month can't be before the start month/i)
+      screen.getByText(/end month can't be before the start month/i),
     ).toBeInTheDocument();
   });
 
   it("validates required fields for experience", () => {
     render(
-      <GenericModal {...defaultProps} type="experience" initialData={{}} />
+      <GenericModal {...defaultProps} type="experience" initialData={{}} />,
     );
     fireEvent.click(screen.getByTestId("save-button"));
     expect(
-      screen.getByText(/please provide a company name/i)
+      screen.getByText(/please provide a company name/i),
     ).toBeInTheDocument();
     expect(screen.getByText(/please provide a title/i)).toBeInTheDocument();
   });
 
   it("validates required fields for education", () => {
     render(
-      <GenericModal {...defaultProps} type="education" initialData={{}} />
+      <GenericModal {...defaultProps} type="education" initialData={{}} />,
     );
     fireEvent.click(screen.getByTestId("save-button"));
     expect(
-      screen.getByText(/please provide an institution/i)
+      screen.getByText(/please provide an institution/i),
     ).toBeInTheDocument();
   });
 
   it("validates required fields for certifications", () => {
     render(
-      <GenericModal {...defaultProps} type="certifications" initialData={{}} />
+      <GenericModal {...defaultProps} type="certifications" initialData={{}} />,
     );
     fireEvent.click(screen.getByTestId("save-button"));
     expect(
-      screen.getByText(/please provide a certificate name/i)
+      screen.getByText(/please provide a certificate name/i),
     ).toBeInTheDocument();
     expect(
-      screen.getByText(/please provide an issuing organization/i)
+      screen.getByText(/please provide an issuing organization/i),
     ).toBeInTheDocument();
   });
 

@@ -19,7 +19,7 @@ vi.mock(
         </ul>
       </div>
     ),
-  })
+  }),
 );
 
 describe("CertificationsSection Component", () => {
@@ -42,7 +42,7 @@ describe("CertificationsSection Component", () => {
 
   it("renders an empty section if no certifications provided", () => {
     render(
-      <CertificationsSection isOwner={false} user={{ certifications: [] }} />
+      <CertificationsSection isOwner={false} user={{ certifications: [] }} />,
     );
     expect(screen.queryByTestId("cert-item")).not.toBeInTheDocument();
   });

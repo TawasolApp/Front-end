@@ -7,11 +7,11 @@ import ActivitiesHolder from "../pages/Feed/MainFeed/FeedPosts/PostCard/Activiti
 vi.mock(
   "../pages/Feed/MainFeed/FeedPosts/PostCard/Activities/LikeButton",
   () => ({
-    default: ({ initReactValue, onChange }) => (
+    default: ({ initReactValue, handleReaction }) => (
       <div
         data-testid="like-button"
         data-init-react-value={initReactValue}
-        data-on-change={!!onChange}
+        data-handle-reaction={!!handleReaction}
       >
         Like Button
       </div>
@@ -72,14 +72,14 @@ describe("ActivitiesHolder Component", () => {
     render(
       <ActivitiesHolder
         initReactValue={mockInitReactValue}
-        onChange={mockOnChange}
+        handleReaction={mockOnChange}
         setShowComments={mockSetShowComments}
       />,
     );
 
     const likeButton = screen.getByTestId("like-button");
     expect(likeButton.dataset.initReactValue).toBe(mockInitReactValue);
-    expect(likeButton.dataset.onChange).toBe("true");
+    expect(likeButton.dataset.handleReaction).toBe("true");
   });
 
   it("passes correct props to CommentButton", () => {

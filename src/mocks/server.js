@@ -11,9 +11,11 @@ const middlewares = defaults();
 server.use(middlewares);
 server.use(bodyParser);
 
-//  Image upload setup
+import express from "express";
+import multer from "multer";
+import path from "path";
+import fs from "fs";
 
-// Set up public folder structure like your friend's server
 const uploadDir = "public";
 const subdirectories = ["images", "videos", "documents"];
 subdirectories.forEach((subdir) => {
@@ -23,33 +25,55 @@ subdirectories.forEach((subdir) => {
   }
 });
 
-// Configure multer for categorizing uploads
+// Configure multer to store files
 const storage = multer.diskStorage({
   destination: (req, file, cb) => {
-    let folder = "documents";
+    let folder = "documents"; // Default folder
     if (file.mimetype.startsWith("image/")) folder = "images";
-    else if (file.mimetype.startsWith("video/")) folder = "videos";
-    cb(null, path.join(uploadDir, folder));
+    if (file.mimetype.startsWith("video/")) folder = "videos";
+
+    cb(null, path.join(uploadDir, folder)); // Store in correct subdirectory
   },
   filename: (req, file, cb) => {
-    const uniqueName = `${Date.now()}-${Math.random().toString(36).substring(7)}${path.extname(file.originalname)}`;
-    cb(null, uniqueName);
+    cb(null, Date.now() + path.extname(file.originalname)); // Unique filename
   },
 });
+
 const upload = multer({ storage });
 
-// Replace old /api/upload with new structure
+
+// Configure multer to store files
+const storage = multer.diskStorage({
+  destination: (req, file, cb) => {
+    let folder = "documents"; // Default folder
+    if (file.mimetype.startsWith("image/")) folder = "images";
+    if (file.mimetype.startsWith("video/")) folder = "videos";
+
+    cb(null, path.join(uploadDir, folder)); // Store in correct subdirectory
+  },
+  filename: (req, file, cb) => {
+    cb(null, Date.now() + path.extname(file.originalname)); // Unique filename
+  },
+});
+
+const upload = multer({ storage });
+
+// API to handle file uploads
 server.post("/api/uploadImage", upload.single("file"), (req, res) => {
   if (!req.file) {
     return res.status(400).json({ error: "No file uploaded" });
   }
-  const fileType = req.file.mimetype.startsWith("image/")
-    ? "images"
-    : req.file.mimetype.startsWith("video/")
-      ? "videos"
-      : "documents";
 
-  const fileUrl = `http://localhost:5000/public/${fileType}/${req.file.filename}`;
+  // Determine file type
+  const determineFileType = (mimetype) => {
+    if (mimetype.startsWith("image/")) return "image";
+    if (mimetype.startsWith("video/")) return "video";
+    if (mimetype === "application/pdf") return "document";
+    return "document"; // Default to document
+  };
+  const fileType = determineFileType(req.file.mimetype);
+  const fileUrl = `http://localhost:5000/public/${fileType}s/${req.file.filename}`;
+
   return res.status(201).json(fileUrl);
 });
 
@@ -74,6 +98,419 @@ server.patch("/profile/:id", (req, res) => {
     .write();
 
   return res.status(200).json(updatedUser);
+});
+
+server.get("/connections/list", (req, res) => {
+  try {
+    let connections = _router.db.get("connections").value();
+    res.status(200).json(connections);
+  } catch (error) {
+    res.status(500).json({ message: "Failed to retrieve list of connections" });
+  }
+});
+
+server.get("/connections/pending", (req, res) => {
+  try {
+    const pendingConnections = _router.db.get("pendingConnections").value();
+    res.status(200).jsonp(pendingConnections);
+  } catch (error) {
+    res.status(500).jsonp({ error: "Failed to retrieve pending connections" });
+  }
+});
+
+server.get("/connections/sent", (req, res) => {
+  try {
+    const sentConnections = _router.db.get("sentConnections").value();
+    res.status(200).jsonp(sentConnections);
+  } catch (error) {
+    res.status(500).jsonp({ error: "Failed to retrieve sent connections" });
+  }
+});
+
+server.patch("/connections/:userId", (req, res) => {
+  try {
+    const { userId } = req.params;
+    const { isAccept } = req.body; // Extract isAccept flag
+    const db = _router.db;
+
+    // Find user in pendingConnections
+    const pendingConnections = db.get("pendingConnections").value();
+    const user = pendingConnections.find((u) => u.userId === userId);
+
+    if (!user) {
+      return res.status(404).json({ message: "User ID does not exist" });
+    }
+
+    // If accepted, move to connections
+    if (isAccept) {
+      db.get("connections").push(user).write();
+    }
+
+    // Remove from pendingConnections regardless
+    db.get("pendingConnections").remove({ userId }).write();
+
+    res.status(200).json({
+      message: isAccept
+        ? "Connection request accepted"
+        : "Connection request ignored",
+      user,
+    });
+  } catch (error) {
+    res
+      .status(500)
+      .json({ message: "Failed to update connection request status" });
+  }
+});
+
+server.delete("/connections/:userId", (req, res) => {
+  try {
+    const { userId } = req.params;
+    const db = _router.db;
+
+    // Check if the user exists in connections
+    const connections = db.get("connections").value();
+    const user = connections.find((u) => u.userId === userId);
+
+    if (!user) {
+      return res.status(404).json({ message: "User ID does not exist" });
+    }
+
+    // Remove user from connections
+    db.get("connections").remove({ userId }).write();
+
+    res.status(204).send(); // No Content (success)
+  } catch (error) {
+    res.status(500).json({ message: "Failed to remove connection" });
+  }
+});
+
+server.get("/connections/following", (req, res) => {
+  try {
+    const following = _router.db.get("following").value();
+    res.status(200).json(following);
+  } catch (error) {
+    res.status(500).json({ message: "Failed to retrieve list of followings" });
+  }
+});
+
+server.get("/connections/followers", (req, res) => {
+  try {
+    const followers = _router.db.get("followers").value();
+    res.status(200).json(followers);
+  } catch (error) {
+    res.status(500).json({ message: "Failed to retrieve list of followers" });
+  }
+});
+
+server.post("/connections/follow", (req, res) => {
+  try {
+    const { userId } = req.body;
+    const db = _router.db;
+
+    console.log("Looking for follower with userId:", userId); // Debug log
+
+    // 1. Find user in followers list
+    const followers = db.get("followers").value();
+    const follower = followers.find((f) => f.userId == userId); // Note: using == for type coercion
+
+    if (!follower) {
+      console.log("Follower not found in:", followers); // Debug log
+      return res.status(404).json({ message: "User not found in followers" });
+    }
+
+    // 2. Add to following list
+    db.get("following").push(follower).write();
+
+    console.log("Added to following:", follower); // Debug log
+    return res.status(201).json(follower);
+  } catch (error) {
+    console.error("Follow error:", error);
+    return res.status(500).json({ message: "Failed to follow user" });
+  }
+});
+
+server.delete("/connections/unfollow/:userId", (req, res) => {
+  try {
+    const { userId } = req.params;
+    const db = _router.db;
+
+    // Check if the user exists in following
+    const followingList = db.get("following").value();
+    const user = followingList.find((u) => u.userId === userId);
+
+    if (!user) {
+      return res.status(404).json({ message: "User ID does not exist" });
+    }
+
+    // Remove user from following
+    db.get("following").remove({ userId }).write();
+
+    res.status(204).send(); // No Content (success)
+  } catch (error) {
+    res.status(500).json({ message: "Failed to unfollow user" });
+  }
+});
+
+server.post("/auth/check-email", (req, res) => {
+  const { email } = req.body;
+
+  if (!email) {
+    return res.status(400).json({ message: "Email is required" });
+  }
+
+  const users = _router.db.get("auth").value();
+  const userExists = users.some((u) => u.email === email);
+  if (userExists) {
+    return res.status(409).json({ message: "Email is already in use" });
+  }
+
+  return res.status(200).json({ message: "Email is available" });
+});
+
+server.get("/connections/recommended", (req, res) => {
+  try {
+    // Get query parameters for pagination
+    const page = parseInt(req.query.page) || 1;
+    const limit = parseInt(req.query.limit) || 10;
+    
+    // Get all recommended users from the database
+    const allRecommended = _router.db.get("recommendedUsers").value();
+    
+    // Calculate pagination
+    const startIndex = (page - 1) * limit;
+    const endIndex = page * limit;
+    const paginatedRecommended = allRecommended.slice(startIndex, endIndex);
+    
+    res.status(200).json(paginatedRecommended);
+  } catch (error) {
+    res.status(500).json({ message: "Failed to retrieve list of recommended users" });
+  }
+});
+
+server.post("/connections", (req, res) => {
+  try {
+    const { userId } = req.body;
+    const db = _router.db;
+
+    // Check if user exists in recommended
+    const recommendedUsers = db.get("recommendedUsers").value();
+    const userToConnect = recommendedUsers.find(u => u.userId === userId);
+
+    if (!userToConnect) {
+      return res.status(404).json({ message: "User ID does not exist in recommended users" });
+    }
+
+    // Check if connection already exists or is pending
+    const connections = db.get("connections").value();
+    const sentConnections = db.get("sentConnections").value();
+    
+    if (connections.some(u => u.userId === userId)) {
+      return res.status(409).json({ message: "Connection already exists" });
+    }
+
+    if (sentConnections.some(u => u.userId === userId)) {
+      return res.status(409).json({ message: "Connection request already sent" });
+    }
+
+    // Add to sent connections
+    db.get("sentConnections").push(userToConnect).write();
+
+    res.status(201).json({
+      message: "Connection request sent successfully",
+      user: userToConnect
+    });
+  } catch (error) {
+    res.status(500).json({ message: "Failed to send connection request" });
+  }
+});
+
+server.delete("/connections/:userId/pending", (req, res) => {
+  try {
+    const { userId } = req.params;
+    const db = _router.db;
+
+    // Check if request exists in sent connections
+    const sentConnections = db.get("sentConnections").value();
+    const pendingRequest = sentConnections.find(u => u.userId === userId);
+
+    if (!pendingRequest) {
+      return res.status(404).json({ 
+        message: "User ID does not exist in sent connections or request does not exist" 
+      });
+    }
+
+    // Remove from sent connections
+    db.get("sentConnections").remove({ userId }).write();
+
+    res.status(200).json({
+      message: "Connection request removed",
+      user: pendingRequest
+    });
+  } catch (error) {
+    res.status(500).json({ message: "Failed to remove pending request" });
+  }
+});
+
+server.post("/auth/register", (req, res) => {
+  const { email, password, firstName, lastName } = req.body;
+
+  if (!email || !password) {
+    return res.status(400).send();
+  }
+
+  const users = _router.db.get("auth").value();
+  const existingUser = users.find((user) => user.email === email);
+
+  if (existingUser) {
+    return res.status(409).send();
+  }
+
+  const newUser = {
+    id: users.length + 1,
+    email,
+    password,
+    firstName: firstName || "",
+    lastName: lastName || "",
+  };
+
+  _router.db.get("auth").push(newUser).write();
+
+  return res.status(201).send();
+});
+
+server.post("/auth/login", (req, res) => {
+  const { email, password } = req.body;
+
+  const users = _router.db.get("auth").value();
+  const user = users.find(
+    (user) => user.email === email && user.password === password
+  );
+
+  if (!user) {
+    return res.status(401).send();
+  }
+
+  return res.status(200).json({
+    userId: "1",
+    token: "mock_access_token",
+    refreshToken: "mock_refresh_token",
+  });
+});
+
+server.patch("/user/update-password", (req, res) => {
+  const { currentPassword, newPassword } = req.body;
+  const users = _router.db.get("auth").value();
+
+  const userId = "1"; // Mock user ID with 1 for simplicity
+  const user = users.find((u) => u.id === userId);
+
+  if (!user) {
+    return res.status(404).json({ message: "User not found" });
+  }
+
+  if (user.password !== currentPassword) {
+    return res.status(400).json({ message: "Incorrect current password" });
+  }
+
+  user.password = newPassword;
+  _router.db
+    .get("auth")
+    .find({ id: userId })
+    .assign({ password: newPassword })
+    .write();
+
+  return res.status(200).json({ message: "Password changed successfully" });
+});
+
+server.post("/auth/forgot-password", (req, res) => {
+  return res.status(200).json({
+    message: "If this email exists, a password reset link has been sent",
+  });
+});
+
+// Add these endpoints to your existing server.js
+server.get("/users/confirm-email-change", (req, res) => {
+  const { token } = req.query;
+
+  if (!token) {
+    return res.status(400).json({ message: "Token is required" });
+  }
+
+  // Mock token verification - in real app this would check your database
+  const users = _router.db.get("auth").value();
+  const pendingChanges = _router.db.get("pendingEmailChanges").value() || [];
+
+  const changeRequest = pendingChanges.find((req) => req.token === token);
+
+  if (!changeRequest) {
+    return res.status(400).json({ message: "Invalid or expired token" });
+  }
+
+  // Update user's email
+  const user = users.find((u) => u.id === changeRequest.userId);
+  if (!user) {
+    return res.status(404).json({ message: "User not found" });
+  }
+
+  user.email = changeRequest.newEmail;
+  _router.db
+    .get("auth")
+    .find({ id: changeRequest.userId })
+    .assign(user)
+    .write();
+
+  // Remove the pending change
+  _router.db
+    .set(
+      "pendingEmailChanges",
+      pendingChanges.filter((req) => req.token !== token)
+    )
+    .write();
+
+  return res.status(200).json({ message: "Email updated successfully" });
+});
+
+server.patch("/users/request-email-update", (req, res) => {
+  const { newEmail, password } = req.body;
+  const users = _router.db.get("auth").value();
+
+  const userId = "1"; // For simplicity
+  const user = users.find((u) => u.id === userId);
+
+  if (!user) {
+    return res.status(404).json({ message: "User not found" });
+  }
+
+  if (user.password !== password) {
+    return res.status(400).json({ message: "Incorrect password" });
+  }
+
+  if (users.some((u) => u.email === newEmail)) {
+    return res.status(409).json({ message: "Email already exists" });
+  }
+
+  const token = `mock_token_${Math.random().toString(36).substring(2, 9)}`;
+  const pendingChanges = _router.db.get("pendingEmailChanges").value() || [];
+
+  _router.db
+    .set("pendingEmailChanges", [
+      ...pendingChanges,
+      {
+        userId,
+        newEmail,
+        token,
+        createdAt: new Date().toISOString(),
+      },
+    ])
+    .write();
+
+  const verificationLink = `http://localhost:5173/auth/email-token-verification?token=${token}`;
+  console.log(`Mock verification email sent with link: ${verificationLink}`);
+
+  return res.status(200).json({
+    message: "Verification email sent",
+    mockVerificationLink: verificationLink, // For testing
+  });
 });
 
 // GET all users
@@ -148,6 +585,7 @@ server.post("/profile/:id/certifications", (req, res) => {
   user.assign({ certifications: [...items, newItem] }).write();
   return res.status(201).json(newItem);
 });
+
 server.post("/profile/:id/skills", (req, res) => {
   const userId = req.params.id;
   const newItem = { ...req.body }; //  no  id generation
@@ -272,6 +710,7 @@ server.delete("/profile/:userId/certifications/:itemId", (req, res) => {
   user.assign({ certifications: filteredItems }).write();
   res.status(204).end();
 });
+
 server.delete("/profile/:userId/skills/:itemId", (req, res) => {
   const { userId, itemId } = req.params;
 
@@ -303,17 +742,29 @@ server.get("/posts", (req, res) => {
   const startIndex = (page - 1) * limit;
   const allPosts = _router.db.get("posts").orderBy("timestamp", "desc").value();
   const paginatedPosts = allPosts.slice(startIndex, startIndex + limit);
-  console.log(paginatedPosts);
   res.jsonp(paginatedPosts);
 });
 
 server.post("/posts", (req, res) => {
-  const { authorId, content, media, taggedUsers, visibility } = req.body;
+
+  // Get data from request body
+  const content = req.body.text || req.body.content; // Accept either name
+  const visibility = req.body.visibility;
+  const taggedUsers = req.body.taggedUsers || [];
+  const mediaItems = req.body.media || [];
+  const parentPostId = req.body.parentPostId || null;
+  const isSilentRepost = req.body.isSilentRepost || false;
 
   // Basic validation
-  if (!authorId || !content) {
-    return res.status(400).json({ error: "authorId and content are required" });
-  }
+  if (!isSilentRepost && !content)
+    return res
+      .status(400)
+      .json({ error: "content is required when it is not a silent repost" });
+
+  const posts = _router.db.get("posts");
+  const parentPost = parentPostId
+    ? posts.find({ id: parentPostId }).value()
+    : null;
 
   const newPost = {
     id: Date.now().toString(),
@@ -323,7 +774,7 @@ server.post("/posts", (req, res) => {
     authorPicture: currentUser.picture,
     authorBio: currentUser.bio,
     content: content,
-    media: media,
+    media: mediaItems,
     reactions: {
       Love: 0,
       Celebrate: 0,
@@ -339,14 +790,11 @@ server.post("/posts", (req, res) => {
     authorType: currentUser.type,
     reactType: null,
     timestamp: new Date().toISOString(),
+    parentPost: parentPost ? { ...parentPost } : null,
+    isSilentRepost: isSilentRepost,
   };
 
-  // Access the existing posts
-  const posts = _router.db.get("posts");
-
-  // Add the new post and persist the change
   posts.push(newPost).write();
-
   res.status(201).json(newPost);
 });
 
@@ -384,18 +832,29 @@ server.patch("/posts/:postId", (req, res) => {
   res.status(200).json({ message: "Post updated successfully" });
 });
 
+server.get("/users/search", (req, res) => {
+  const { name } = req.query;
+  const users = _router.db
+    .get("users")
+    .filter((user) => user.firstName.toLowerCase().includes(name.toLowerCase()))
+    .value();
+  console.log(users);
+  res.jsonp(users);
+});
+
 /*********************************************************** REACTIONS ***********************************************************/
 server.post("/posts/react/:postId", (req, res) => {
   const { postId } = req.params;
   const { reactions, postType } = req.body;
 
   // Determine which database table to use
-  const entityType = postType === "Comment" ? "comments" : "posts";
+  const entityType = postType === "Post" ? "posts" : "comments";
   const entityTable = _router.db.get(entityType);
   const reactionsTable = _router.db.get("reactions");
 
   // Find the target entity (post or comment)
   const entity = entityTable.find({ id: postId }).value();
+  console.log(`Searching ${entity}`);
   if (!entity) {
     return res.status(404).json({ error: `${postType} not found` });
   }
@@ -521,10 +980,7 @@ server.get("/posts/comments/:postId", (req, res) => {
 
 server.post("/posts/comment/:postId", (req, res) => {
   const { postId } = req.params;
-  const { content, taggedUsers } = req.body;
-
-  console.log(`Adding comment to postId: ${postId}`);
-  console.log(`Comment content: ${content}`);
+  const { content, taggedUsers, isReply } = req.body;
 
   const commentId = Date.now().toString();
   const createdAt = new Date().toISOString();
@@ -553,28 +1009,42 @@ server.post("/posts/comment/:postId", (req, res) => {
   // Add the comment to the database
   _router.db.get("comments").push(newComment).write();
 
-  // Update the comment count for the post
-  const post = _router.db.get("posts").find({ id: postId }).value();
-
-  if (post) {
-    _router.db
-      .get("posts")
+  if (!isReply) {
+    // Update the comment count for the post
+    const post = _router.db.get("posts").find({ id: postId }).value();
+    if (post) {
+      _router.db
+        .get("posts")
+        .find({ id: postId })
+        .assign({ comments: (post.comments || 0) + 1 })
+        .write();
+    }
+  } else {
+    // Find the parent comment
+    const parentComment = _router.db
+      .get("comments")
       .find({ id: postId })
-      .assign({ comments: (post.comments || 0) + 1 })
+      .value();
+    if (!parentComment) {
+      return res.status(404).jsonp({ error: "Parent comment not found" });
+    }
+    // Append the reply to the correct comment
+    _router.db
+      .get("comments")
+      .find({ id: postId })
+      .assign({ replies: [...parentComment.replies, "dummy reply"] })
       .write();
   }
-
-  // Return the newly created comment
   res.status(201).jsonp(newComment);
 });
 
 server.patch("/posts/comments/:commentId", (req, res) => {
   const { commentId } = req.params;
-  const { content, taggedUsers } = req.body;
+  const { content, tagged } = req.body;
 
   const data = _router.db.get("comments").find({ id: commentId });
   if (data) {
-    data.assign({ content: content }).write();
+    data.assign({ content: content, taggedUsers: tagged }).write();
     return res.status(200).json({ message: "Comment edited successfully" });
   }
   return res.status(404).json({ message: "Comment not found" });
@@ -598,12 +1068,26 @@ server.delete("/posts/comments/:commentId", (req, res) => {
 
       comments.remove({ id: commentId }).write();
       return res.status(200).json({ message: "Comment deleted successfully" });
+    } else {
+      const wantedParentComment = comments
+        .find({ id: wantedComment.postId })
+        .value();
+      console.log(wantedParentComment);
+      if (wantedParentComment) {
+        comments
+          .find({ id: wantedComment.postId })
+          .assign({ replies: wantedComment.replies.slice(0, -1) }) // Removes last element
+          .write();
+        comments.remove({ id: commentId }).write();
+        return res.status(200).json({ message: "Reply deleted successfully" });
+      }
     }
   }
 
   res.status(404).json({ error: "Comment not found" });
 });
 
+/*********************************************************** COMPANY PAGE ***********************************************************/
 server.get("/companies/:companyId", (req, res) => {
   console.log("Fetching company details...");
 
@@ -619,6 +1103,7 @@ server.get("/companies/:companyId", (req, res) => {
 
   res.json(company);
 });
+
 //  PATCH - Update company details
 server.patch("/companies/:companyId", (req, res) => {
   console.log("Updating company details...");
@@ -638,33 +1123,73 @@ server.patch("/companies/:companyId", (req, res) => {
     updatedCompany: company.value(),
   });
 });
+
 //  POST - Create a new company
 server.post("/companies", (req, res) => {
   console.log("Creating a new company...");
 
   const newCompany = req.body; // Get request body (new company data)
-  if (!newCompany.companyId || !newCompany.name || !newCompany.description) {
+
+  // Check required fields (companyId, name, and companySize)
+  if (
+    !newCompany.name ||
+    !newCompany.companySize ||
+    !newCompany.companyType ||
+    !newCompany.industry ||
+    !newCompany.email ||
+    !newCompany.website ||
+    !newCompany.contactNumber
+  ) {
     return res.status(400).json({ error: "Missing required fields" });
   }
 
-  // Check if company already exists
+  // Generate companyId based on company name (slug format: lowercase, spaces replaced with hyphens)
+  const companyId = newCompany.name.toLowerCase().replace(/\s+/g, "-");
+
+  // Check if company already exists (based on companyId)
   const existingCompany = _router.db
     .get("companies")
-    .find({ companyId: newCompany.companyId })
+    .find({ companyId })
     .value();
+
   if (existingCompany) {
     return res
       .status(409)
       .json({ error: "Company with this ID already exists" });
   }
 
-  _router.db.get("companies").push(newCompany).write(); // Add to database
+  // Add the new company to the database
+  _router.db
+    .get("companies")
+    .push({
+      companyId,
+      isManager: true,
+      name: newCompany.name,
+      logo: newCompany.logo || "",
+      banner: newCompany.banner || "",
+      description: newCompany.description || "",
+      companySize: newCompany.companySize,
+      companyType: newCompany.companyType,
+      industry: newCompany.industry,
+      overview: newCompany.overview || "",
+      founded: newCompany.founded || null,
+      website: newCompany.website,
+      address: newCompany.address || "",
+      location: newCompany.location || "",
+      email: newCompany.email,
+      contactNumber: newCompany.contactNumber,
+    })
+    .write(); // Add to database
 
   res.status(201).json({
     message: "Company page created successfully",
-    company: newCompany,
+    company: {
+      companyId,
+      ...newCompany,
+    },
   });
 });
+
 // POST - Follow a company
 server.post("/companies/:companyId/follow", (req, res) => {
   console.log("Following company...");
@@ -702,6 +1227,160 @@ server.delete("/companies/:companyId/unfollow", (req, res) => {
     company: company.value(),
   });
 });
+
+// add new job opening
+server.post("/companies/:companyId/jobs", (req, res) => {
+  const { companyId } = req.params;
+  const {
+    position,
+    industry,
+    description,
+    location,
+    salary,
+    experienceLevel,
+    locationType,
+    employmentType,
+  } = req.body;
+
+  const newJob = {
+    id: Date.now().toString(), // unique string ID
+    company: companyId, // matches schema
+    isOpen: true, // new job is open by default
+    position,
+    industry,
+    description,
+    location,
+    salary,
+    experienceLevel,
+    locationType,
+    employmentType,
+    postDate: new Date().toISOString(),
+    applicantCount: 0,
+  };
+
+  const db = _router.db;
+  const jobs = db.get("jobs").value() || [];
+
+  db.set("jobs", [...jobs, newJob]).write();
+
+  res.status(201).json(newJob);
+});
+
+// get job openings of a company
+server.get("/companies/:companyId/jobs", (req, res) => {
+  const { companyId } = req.params;
+
+  const jobs = _router.db
+    .get("jobs")
+    .filter((job) => job.companyId === companyId || job.company === companyId)
+    .value();
+
+  res.status(200).json(jobs);
+});
+
+//GET- get applicants of job
+server.get("/companies/jobs/:jobId/applicants", (req, res) => {
+  const { jobId } = req.params;
+  const { name } = req.query;
+
+  try {
+    const db = _router.db;
+
+    // Get all applicants from the DB
+    const applicants = db.get("applicants").value();
+
+    // Filter applicants by jobId and optionally by name
+    const filteredApplicants = applicants.filter((applicant) => {
+      const matchesJob = String(applicant.jobId) === String(jobId);
+      const matchesName =
+        !name || applicant.name?.toLowerCase().includes(name.toLowerCase());
+      return matchesJob && matchesName;
+    });
+
+    // Simulate job existence check (optional but aligns with 404 case)
+    const jobExists = db.get("jobs").find({ id: jobId }).value();
+    if (!jobExists) {
+      return res.status(404).json({ message: "Job not found." });
+    }
+
+    res.status(200).json(filteredApplicants);
+  } catch (error) {
+    res.status(500).json({ message: "Failed to retrieve applicants list." });
+  }
+});
+
+// GET - Get followers of a company
+server.get("/companies/:companyId/followers", (req, res) => {
+  const { companyId } = req.params;
+  const { name } = req.query;
+
+  try {
+    const db = _router.db;
+
+    // Get all connections
+    const allConnections = db.get("companyConnections").value();
+
+    // Filter by companyId and optionally by name
+    const followers = allConnections.filter((connection) => {
+      const matchesCompany = connection.companyId === companyId;
+      const matchesName =
+        !name ||
+        connection.username?.toLowerCase().includes(name.toLowerCase());
+      return matchesCompany && matchesName;
+    });
+
+    // Optional cleanup: remove companyId from each entry
+    const cleanedFollowers = followers.map(({ companyId, ...user }) => user);
+
+    res.status(200).json(cleanedFollowers);
+  } catch (error) {
+    res.status(500).json({ message: "Failed to retrieve company followers." });
+  }
+});
+
+server.post("/companies/:companyId/managers", (req, res) => {
+  const { companyId } = req.params;
+  const { userId } = req.body;
+
+  if (!companyId || !userId) {
+    return res.status(400).json({ message: "Invalid company ID/user ID." });
+  }
+
+  const db = _router.db;
+
+  const company = db
+    .get("companies")
+    .find((c) => c.companyId.toString() === companyId.toString())
+    .value();
+
+  const user = db.get("users").find({ id: userId.toString() }).value();
+
+  if (!company) {
+    return res.status(404).json({ message: "Company not found." });
+  }
+
+  if (!user) {
+    return res.status(404).json({ message: "User not found." });
+  }
+
+  if (!company.Managers) {
+    company.Managers = [];
+  }
+
+  if (company.Managers.includes(userId)) {
+    return res.status(409).json({ message: "User already a manager" });
+  }
+
+  company.Managers.push(userId);
+
+  db.get("companies")
+    .find((c) => c.companyId.toString() === companyId.toString())
+    .assign({ Managers: company.Managers })
+    .write();
+
+  return res.status(201).json({ message: "Manager added successfully." });
+});
+
 server.use(_router);
 
 server.listen(5000, () => {

@@ -14,7 +14,7 @@ describe("AboutSection Component", () => {
   it("renders placeholder if about is empty", () => {
     render(<AboutSection user={{ about: "" }} isOwner={true} />);
     expect(
-      screen.getByText(/no about information added yet/i)
+      screen.getByText(/no about information added yet/i),
     ).toBeInTheDocument();
   });
 
@@ -31,10 +31,10 @@ describe("AboutSection Component", () => {
   it("does not show action buttons if not owner", () => {
     render(<AboutSection user={{ about: "Sample About" }} isOwner={false} />);
     expect(
-      screen.queryByRole("button", { name: /add/i })
+      screen.queryByRole("button", { name: /add/i }),
     ).not.toBeInTheDocument();
     expect(
-      screen.queryByRole("button", { name: /edit/i })
+      screen.queryByRole("button", { name: /edit/i }),
     ).not.toBeInTheDocument();
   });
 
@@ -43,7 +43,7 @@ describe("AboutSection Component", () => {
       <AboutSection
         user={{ about: "This is the about content." }}
         isOwner={false}
-      />
+      />,
     );
     expect(screen.getByText(/this is the about content/i)).toBeInTheDocument();
   });
@@ -61,7 +61,7 @@ describe("AboutSection Component", () => {
   it("calls onAddAbout when add button is clicked", () => {
     const mockAdd = vi.fn();
     render(
-      <AboutSection user={{ about: "" }} isOwner={true} onAddAbout={mockAdd} />
+      <AboutSection user={{ about: "" }} isOwner={true} onAddAbout={mockAdd} />,
     );
     fireEvent.click(screen.getByRole("button", { name: /add/i }));
     expect(mockAdd).toHaveBeenCalled();
@@ -74,7 +74,7 @@ describe("AboutSection Component", () => {
         user={{ about: "Sample content" }}
         isOwner={true}
         onEditAbout={mockEdit}
-      />
+      />,
     );
     fireEvent.click(screen.getByRole("button", { name: /edit/i }));
     expect(mockEdit).toHaveBeenCalled();
