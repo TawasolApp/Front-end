@@ -64,15 +64,19 @@ const Reply = ({ commentId, reply }) => {
       ) : (
         <>
           <div className="items-start pt-4">
-            <div className="flex">
-              <ActorHeader
-                authorId={reply.authorId}
-                authorName={reply.authorName}
-                authorBio={reply.authorBio}
-                authorPicture={reply.authorPicture}
-                iconSize={32}
-              />
-              <div className="ml-auto flex items-center gap-2">
+            <div className="flex items-start justify-between">
+              <div className="flex-1 min-w-0">
+                <ActorHeader
+                  authorId={reply.authorId}
+                  authorName={reply.authorName}
+                  authorBio={reply.authorBio}
+                  authorPicture={reply.authorPicture}
+                  iconSize={32}
+                  enableLink={false}
+                />
+              </div>
+              
+              <div className="flex items-center gap-2 flex-shrink-0">
                 <span className="text-xs text-gray-500">
                   {formatDate(reply.timestamp)}
                 </span>
@@ -116,8 +120,9 @@ const Reply = ({ commentId, reply }) => {
           </div>
           {showReactions && (
             <ReactionsModal
-              APIURL={`/posts/reactions/${reply.id}`}
+              API_URL={`/posts/reactions/${reply.id}`}
               setShowLikes={() => setShowReactions(false)}
+              reactCounts={reply.reactCounts}
             />
           )}
         </>

@@ -10,8 +10,12 @@ const DropdownUsers = ({ name, onSelect }) => {
     const fetchUsers = async () => {
       try {
         setLoading(true);
-        const response = await axiosInstance.get("/users/search", {
-          params: { name: name },
+        const response = await axiosInstance.get("/connections/users", {
+          params: {
+            name: name,
+            page: 1,
+            limit: 3
+          },
         });
         setUsers(response.data);
       } catch (error) {

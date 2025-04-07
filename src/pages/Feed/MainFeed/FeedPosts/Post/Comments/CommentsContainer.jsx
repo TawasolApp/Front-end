@@ -29,7 +29,7 @@ const CommentsContainer = () => {
         ))}
 
       {hasMoreComments && (
-        <div className="ml-4 my-3 flex items-center">
+        <div className="ml-4 py-2 flex items-center">
           <button
             onClick={fetchComments}
             className="flex items-center px-1 py-1 space-x-1 rounded-xl hover:bg-buttonIconHover transition-colors"

@@ -104,6 +104,7 @@ const MainFeed = ({
           setPosts((prevPosts) => [...prevPosts, ...newPosts]);
         }
       }
+      console.log(posts)
     } catch (e) {
       console.log(e.message);
       if (reset) setPosts([]);
@@ -141,7 +142,7 @@ const MainFeed = ({
       });
       fetchPosts(1, true);
     } catch (err) {
-      console.log(`Error: ${err.message}`);
+      console.log(`Error: ${err}`);
     }
   };
 

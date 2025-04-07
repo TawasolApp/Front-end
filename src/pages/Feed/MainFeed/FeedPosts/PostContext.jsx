@@ -79,7 +79,7 @@ export const PostProvider = ({
 
   const handleCopyPost = async () => {
     await navigator.clipboard.writeText(
-      `${window.location.origin}/posts/${post.id}`,
+      `${window.location.origin}/feed/${post.id}`,
     );
   };
 
@@ -135,15 +135,17 @@ export const PostProvider = ({
       taggedUsers: taggedUsers,
       isReply: false,
     });
+
     setPost((prev) => ({
       ...prev,
       comments: prev.comments + 1,
     }));
+
     setComments((prevComments) => [response.data, ...prevComments]);
   };
 
   const handleEditComment = async (commentId, text, taggedUsers) => {
-    await axiosInstance.patch(`/posts/comments/${commentId}`, {
+    await axiosInstance.patch(`/posts/comment/${commentId}`, {
       content: text,
       tagged: taggedUsers,
       isReply: false,
@@ -158,7 +160,7 @@ export const PostProvider = ({
   };
 
   const handleDeleteComment = async (commentId) => {
-    await axiosInstance.delete(`/posts/comments/${commentId}`);
+    await axiosInstance.delete(`/posts/comment/${commentId}`);
 
     setPost((prev) => ({
       ...prev,
@@ -264,10 +266,9 @@ export const PostProvider = ({
 
   const handleAddReplyToComment = async (commentId, text, taggedUsers) => {
 
-    console.log(comments)
     const response = await axiosInstance.post(`/posts/comment/${commentId}`, {
       content: text,
-      tagged: taggedUsers,
+      taggedUsers: taggedUsers,
       isReply: true,
     });
 
@@ -284,7 +285,7 @@ export const PostProvider = ({
         comment.id === commentId
           ? {
               ...comment,
-              repliesCount: comment.repliesCount + 1, // Add dummy string
+              repliesCount: comment.repliesCount + 1,
             }
           : comment,
       ),
@@ -297,9 +298,10 @@ export const PostProvider = ({
     text,
     taggedUsers,
   ) => {
-    await axiosInstance.patch(`/posts/comments/${replyId}`, {
+    console.log(replyId);
+    await axiosInstance.patch(`/posts/comment/${replyId}`, {
       content: text,
-      taggedUsers,
+      taggedUsers: taggedUsers,
       isReply: true,
     });
 
@@ -317,7 +319,8 @@ export const PostProvider = ({
   };
 
   const handleDeleteReplyToComment = async (commentId, replyId) => {
-    await axiosInstance.delete(`/posts/comments/${replyId}`);
+    console.log(replyId);
+    await axiosInstance.delete(`/posts/comment/${replyId}`);
 
     setReplies((prevReplies) => ({
       ...prevReplies,
@@ -334,7 +337,7 @@ export const PostProvider = ({
         comment.id === commentId
           ? {
               ...comment,
-              replies: comment.replies.slice(0, comment.replies - 1), // Remove the last dummy reply
+              repliesCount: comment.repliesCount - 1, // Remove the last dummy reply
             }
           : comment,
       ),
@@ -352,7 +355,7 @@ export const PostProvider = ({
     if (reactionTypeRemove) reacts[reactionTypeRemove] = 0;
     await axiosInstance.post(`posts/react/${replyId}`, {
       reactions: reacts,
-      postType: "Reply",
+      postType: "Comment",
     });
 
     setReplies((prevReplies) => ({

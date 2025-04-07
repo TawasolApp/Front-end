@@ -122,8 +122,9 @@ const Comment = ({ comment }) => {
 
           {showReactions && (
             <ReactionsModal
-              APIURL={`/posts/reactions/${comment.id}`}
+              API_URL={`/posts/reactions/${comment.id}`}
               setShowLikes={() => setShowReactions(false)}
+              reactCounts={comment.reactCounts}
             />
           )}
         </article>

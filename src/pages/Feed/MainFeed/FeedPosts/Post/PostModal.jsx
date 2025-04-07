@@ -84,8 +84,9 @@ const PostModal = ({ mediaIndex, handleClosePostModal }) => {
 
             {showLikes && (
               <ReactionsModal
-                APIURL={`/posts/reactions/${post.id}`}
+                API_URL={`/posts/reactions/${post.id}`}
                 setShowLikes={() => setShowLikes(false)}
+                reactCounts={post.reactCounts}
               />
             )}
           </div>

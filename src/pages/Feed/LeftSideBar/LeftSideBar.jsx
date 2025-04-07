@@ -17,7 +17,7 @@ const LeftSideBar = () => {
   const currentAuthorName = `${useSelector((state) => state.authentication.firstName)} ${useSelector((state) => state.authentication.lastName)}`;
   const currentAuthorPicture = useSelector((state) => state.authentication.picture);
   const currentAuthorBio = useSelector((state) => state.authentication.bio);
-  const currentAuthorbackgroundImage = "";
+  const currentAuthorbackgroundImage = useSelector((state) => state.authentication.coverPhoto);
 
   // Effect to check if we're in top position (mobile/tablet) based on screen width
   useEffect(() => {
