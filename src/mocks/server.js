@@ -225,6 +225,90 @@ server.post("/auth/check-email", (req, res) => {
   return res.status(200).json({ message: "Email is available" });
 });
 
+server.get("/connections/recommended", (req, res) => {
+  try {
+    // Get query parameters for pagination
+    const page = parseInt(req.query.page) || 1;
+    const limit = parseInt(req.query.limit) || 10;
+    
+    // Get all recommended users from the database
+    const allRecommended = _router.db.get("recommendedUsers").value();
+    
+    // Calculate pagination
+    const startIndex = (page - 1) * limit;
+    const endIndex = page * limit;
+    const paginatedRecommended = allRecommended.slice(startIndex, endIndex);
+    
+    res.status(200).json(paginatedRecommended);
+  } catch (error) {
+    res.status(500).json({ message: "Failed to retrieve list of recommended users" });
+  }
+});
+
+server.post("/connections", (req, res) => {
+  try {
+    const { userId } = req.body;
+    const db = _router.db;
+
+    // Check if user exists in recommended
+    const recommendedUsers = db.get("recommendedUsers").value();
+    const userToConnect = recommendedUsers.find(u => u.userId === userId);
+
+    if (!userToConnect) {
+      return res.status(404).json({ message: "User ID does not exist in recommended users" });
+    }
+
+    // Check if connection already exists or is pending
+    const connections = db.get("connections").value();
+    const sentConnections = db.get("sentConnections").value();
+    
+    if (connections.some(u => u.userId === userId)) {
+      return res.status(409).json({ message: "Connection already exists" });
+    }
+
+    if (sentConnections.some(u => u.userId === userId)) {
+      return res.status(409).json({ message: "Connection request already sent" });
+    }
+
+    // Add to sent connections
+    db.get("sentConnections").push(userToConnect).write();
+
+    res.status(201).json({
+      message: "Connection request sent successfully",
+      user: userToConnect
+    });
+  } catch (error) {
+    res.status(500).json({ message: "Failed to send connection request" });
+  }
+});
+
+server.delete("/connections/:userId/pending", (req, res) => {
+  try {
+    const { userId } = req.params;
+    const db = _router.db;
+
+    // Check if request exists in sent connections
+    const sentConnections = db.get("sentConnections").value();
+    const pendingRequest = sentConnections.find(u => u.userId === userId);
+
+    if (!pendingRequest) {
+      return res.status(404).json({ 
+        message: "User ID does not exist in sent connections or request does not exist" 
+      });
+    }
+
+    // Remove from sent connections
+    db.get("sentConnections").remove({ userId }).write();
+
+    res.status(200).json({
+      message: "Connection request removed",
+      user: pendingRequest
+    });
+  } catch (error) {
+    res.status(500).json({ message: "Failed to remove pending request" });
+  }
+});
+
 server.post("/auth/register", (req, res) => {
   const { email, password, firstName, lastName } = req.body;
 
