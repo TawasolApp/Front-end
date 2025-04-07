@@ -1,7 +1,8 @@
 import { Outlet, useParams, useNavigate } from "react-router-dom";
 import { useState, useEffect } from "react";
 import { axiosInstance as axios } from "../../../apis/axios.js";
-import LoadingPage from "../../LoadingPage/LoadingPage.jsx";
+import LoadingPage from "../../LoadingScreen/LoadingPage";
+
 function ProfileLayout() {
   const { profileSlug } = useParams();
   const navigate = useNavigate();

@@ -1,8 +1,5 @@
 import pkg from "json-server";
-import express from "express";
-import multer from "multer";
-import path from "path";
-import fs from "fs";
+
 const { create, router, defaults, bodyParser } = pkg;
 const server = create();
 const _router = router("./src/mocks/db.json");
@@ -41,22 +38,6 @@ const storage = multer.diskStorage({
 
 const upload = multer({ storage });
 
-
-// Configure multer to store files
-const storage = multer.diskStorage({
-  destination: (req, file, cb) => {
-    let folder = "documents"; // Default folder
-    if (file.mimetype.startsWith("image/")) folder = "images";
-    if (file.mimetype.startsWith("video/")) folder = "videos";
-
-    cb(null, path.join(uploadDir, folder)); // Store in correct subdirectory
-  },
-  filename: (req, file, cb) => {
-    cb(null, Date.now() + path.extname(file.originalname)); // Unique filename
-  },
-});
-
-const upload = multer({ storage });
 
 // API to handle file uploads
 server.post("/api/uploadImage", upload.single("file"), (req, res) => {
