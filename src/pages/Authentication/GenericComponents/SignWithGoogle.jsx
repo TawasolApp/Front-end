@@ -12,6 +12,7 @@ import {
   setType,
   setPicture,
   setIsNewGoogleUser,
+  setUserId,
 } from "../../../store/authenticationSlice";
 import { axiosInstance } from "../../../apis/axios";
 
@@ -40,8 +41,7 @@ const SignWithGoogle = () => {
               );
 
               if (response.status === 201) {
-                const { token, refreshToken, isNewUser } =
-                  response.data;
+                const { token, refreshToken, isNewUser } = response.data;
 
                 dispatch(setToken(token));
                 dispatch(setRefreshToken(refreshToken));
@@ -54,15 +54,22 @@ const SignWithGoogle = () => {
                   return;
                 }
 
-                const profileResponse = await axiosInstance.get(
-                  "/profile"
-                );
+                const profileResponse = await axiosInstance.get("/profile");
 
                 if (profileResponse.status === 200) {
-                  const { firstName, lastName, location, bio, picture } =
-                    profileResponse.data;
+                  const {
+                    _id,
+                    firstName,
+                    lastName,
+                    location,
+                    bio,
+                    picture,
+                  } = profileResponse.data;
 
                   dispatch(setType("User"));
+                  if (_id) {
+                    dispatch(setUserId(_id));
+                  }
                   if (firstName) {
                     dispatch(setFirstName(firstName));
                   }
