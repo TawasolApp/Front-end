@@ -9,6 +9,31 @@ function AddManagerModal({ show, onClose, companyId }) {
   const [managers, setManagers] = useState([]);
   const [page, setPage] = useState(1);
   const [hasMore, setHasMore] = useState(true);
+  const [searchName, setSearchName] = useState("");
+  const [searchResults, setSearchResults] = useState([]);
+  const [selectedUser, setSelectedUser] = useState(null);
+
+  useEffect(() => {
+    const fetchUsers = async () => {
+      if (!searchName.trim()) return;
+
+      try {
+        const { data } = await axiosInstance.get(
+          `/connections/users?name=${searchName}&page=1&limit=5`
+        );
+
+        console.log("Search API response:", data);
+        setSearchResults(data);
+      } catch (err) {
+        console.error("Failed to search users:", err);
+        setSearchResults([]);
+      }
+    };
+
+    const delayDebounce = setTimeout(fetchUsers, 300);
+
+    return () => clearTimeout(delayDebounce);
+  }, [searchName]);
 
   // Fetch current company managers
   const fetchManagers = async (reset = false) => {
@@ -63,13 +88,13 @@ function AddManagerModal({ show, onClose, companyId }) {
   };
 
   const handleAddManager = async () => {
-    if (!userId.trim()) return;
+    if (!selectedUser) return;
 
     try {
       setLoading(true);
 
       await axiosInstance.post(`/companies/${companyId}/managers`, {
-        newUserId: userId.trim(),
+        newUserId: selectedUser.userId,
       });
 
       setMessage("Manager added successfully.");
@@ -79,7 +104,8 @@ function AddManagerModal({ show, onClose, companyId }) {
 
       setTimeout(() => {
         onClose();
-        setUserId("");
+        setSearchName("");
+        setSelectedUser(null);
         setMessage("");
       }, 1000);
     } catch (err) {
@@ -89,6 +115,19 @@ function AddManagerModal({ show, onClose, companyId }) {
     } finally {
       setLoading(false);
     }
+  };
+  // Handle user search
+  const handleSearchChange = (e) => {
+    const value = e.target.value;
+    setSearchName(value);
+    setSelectedUser(null); // Reset selected user on typing
+  };
+
+  // Handle user selection from search results
+  const handleSelectUser = (user) => {
+    setSearchName(`${user.firstName} ${user.lastName}`);
+    setSelectedUser(user);
+    setSearchResults([]); // Clear search results after selection
   };
 
   if (!show) return null;
@@ -140,11 +179,34 @@ function AddManagerModal({ show, onClose, companyId }) {
         <h2 className="text-text mb-2">Add new manager</h2>
         <input
           type="text"
-          placeholder="Enter user ID"
-          value={userId}
-          onChange={(e) => setUserId(e.target.value)}
-          className="w-full border bg-boxbackground border-gray-300 rounded-md text-text px-4 py-2 mb-4 focus:outline-none"
+          placeholder="Enter name"
+          value={searchName}
+          onChange={(e) => {
+            setSearchName(e.target.value);
+            setSelectedUser(null);
+          }}
+          className="w-full border bg-boxbackground border-gray-300 rounded-md text-text px-4 py-2 mb-2 focus:outline-none"
         />
+        {searchResults.length > 0 && !selectedUser && (
+          <>
+            {console.log("Rendering dropdown with:", searchResults)}{" "}
+            <ul className="bg-boxbackground border border-gray-300 rounded-md max-h-40 overflow-y-auto mb-2">
+              {searchResults.map((user) => (
+                <li
+                  key={user.userId}
+                  className="px-4 py-2 cursor-pointer text-text hover:bg-buttonHover"
+                  onClick={() => {
+                    setSelectedUser(user);
+                    setSearchName(`${user.firstName} ${user.lastName}`);
+                    setSearchResults([]);
+                  }}
+                >
+                  {user.firstName} {user.lastName}
+                </li>
+              ))}
+            </ul>
+          </>
+        )}
 
         {message && (
           <div
