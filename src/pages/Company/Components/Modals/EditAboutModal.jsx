@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { axiosInstance as axios } from "../../../../apis/axios";
 import { FiUpload } from "react-icons/fi";
 
-function EditAboutModal({ show, companyData, onClose }) {
+function EditAboutModal({ show, companyData, onClose, setCompanyData }) {
   const [logoFile, setLogoFile] = useState(null);
   const [bannerFile, setBannerFile] = useState(null);
   const [errorMessage, setErrorMessage] = useState("");
@@ -117,7 +117,11 @@ function EditAboutModal({ show, companyData, onClose }) {
 
       console.log("Company updated:", response.data);
       onClose();
-      window.location.reload();
+      setCompanyData((prev) => ({
+        ...prev,
+        ...response.data,
+      }));
+      onClose();
     } catch (error) {
       const backendMessage = error.response?.data?.message;
       console.error("Error updating company:", error);

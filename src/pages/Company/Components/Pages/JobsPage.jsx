@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import { useParams, useOutletContext } from "react-router-dom";
 import { axiosInstance } from "../../../../apis/axios.js";
 import LoadingPage from "../../../LoadingScreen/LoadingPage.jsx";
@@ -16,9 +16,11 @@ function JobsPage() {
   const [selectedJob, setSelectedJob] = useState(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
 
-  // Fetch jobs
+  const hasFetched = useRef(false);
+
   useEffect(() => {
-    if (companyId && company) {
+    if (companyId && company && !hasFetched.current) {
+      hasFetched.current = true;
       setLoading(true);
       axiosInstance
         .get(`/companies/${companyId}/jobs?page=1&limit=10`)

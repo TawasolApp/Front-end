@@ -18,7 +18,7 @@ function AddManagerModal({ show, onClose, companyId }) {
       );
 
       const managerProfiles = data.map((user) => ({
-        id: user.id,
+        id: user.userId,
         name: `${user.firstName} ${user.lastName}`,
       }));
 
