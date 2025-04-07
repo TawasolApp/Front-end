@@ -34,11 +34,10 @@ const SignWithGoogle = () => {
               const response = await axiosInstance.post(
                 "/auth/social-login/google",
                 {
-                  accessToken: tokenResponse.access_token,
+                  idToken: tokenResponse.access_token,
                   isAndroid: false,
                 }
               );
-              console.log(response);
 
               if (response.status === 201) {
                 const { token, refreshToken, isNewUser } =
