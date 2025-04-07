@@ -4,6 +4,10 @@ export default {
   theme: {
     extend: {
       colors: {
+        navbarIconsNormal: "rgb(var(--navbar-icons-normal))",
+        navbarIconsSelected: "rgb(var(--navbar-icons-selected))",
+        navbarSearch: "rgb(var(--navbar-search))",
+        navbarSearchBorder: "rgb(var(--navbar-search-border))",
         mainBackground: "rgb(var(--main-background))",
         cardBackground: "rgb(var(--card-background))",
         cardBackgroundHover: "rgb(var(--card-background-hover))",

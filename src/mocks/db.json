@@ -559,7 +559,7 @@
         "Celebrate": 0,
         "Insightful": 0,
         "Funny": 0,
-        "Support": 0,
+        "Support": 1,
         "Like": 0
       },
       "comments": 1,
@@ -567,7 +567,7 @@
       "taggedUsers": [],
       "visibility": "Public",
       "authorType": "User",
-      "reactType": null,
+      "reactType": "Support",
       "timestamp": "2025-03-17T23:15:11.484Z",
       "parentPost": null,
       "isSilentRepost": false
@@ -699,7 +699,18 @@
       "timestamp": "2025-04-04T06:49:45.509Z"
     }
   ],
-  "reactions": [],
+  "reactions": [
+    {
+      "likeId": "1-mohsobh-Support",
+      "postId": "1",
+      "authorId": "mohsobh",
+      "authorType": "User",
+      "type": "Support",
+      "authorName": "Mohamed Sobh",
+      "authorPicture": "https://media.licdn.com/dms/image/v2/D4D03AQH7Ais8BxRXzw/profile-displayphoto-shrink_100_100/profile-displayphoto-shrink_100_100/0/1721080103981?e=1747872000&v=beta&t=nDnZdgCqkI8v5B2ymXZzluMZVlF6h_o-dN1pA95Fzv4",
+      "authorBio": "Computer Engineering Student at Cairo University"
+    }
+  ],
   "jobs": [
     {
       "jobId": "1743454820455",
