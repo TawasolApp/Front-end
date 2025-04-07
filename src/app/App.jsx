@@ -42,6 +42,8 @@ import FeedContainer from "../pages/Feed/FeedContainer";
 import SinglePost from "../pages/SinglePost/SinglePost";
 import SavedPostsContainer from "../pages/SavedPosts/SavedPostsContainer";
 import RepostsContainer from "../pages/Reposts/RepostsContainer";
+import SearchPosts from "../pages/Search/SearchPosts";
+
 import VerifySignUpPage from "../pages/Authentication/VerifySignUpPage.jsx";
 
 const RenderWithNavbar = (component) => {
@@ -80,6 +82,8 @@ const App = () => {
         <Route path="/auth/verify-signup" element={<VerifySignUpPage />} />
         <Route path="/auth/new-password" element={<NewPasswordPage />} />
         <Route path="/auth/update-email" element={<ChangeEmailPage />} />
+
+        <Route path="/search/:searchText" element={<SearchPosts />} />
 
         <Route path="/users" element={<ProfileLayout />} />
         <Route path="/users/:profileSlug" element={<ProfileLayout />}>

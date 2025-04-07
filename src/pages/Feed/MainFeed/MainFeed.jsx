@@ -3,7 +3,11 @@ import SharePost from "./SharePost/SharePost";
 import FeedPosts from "./FeedPosts/FeedPosts";
 import { axiosInstance } from "../../../apis/axios";
 
-const MainFeed = ({ API_ROUTE = "posts", showShare = true }) => {
+const MainFeed = ({
+  API_ROUTE = "posts",
+  q = null,
+  showShare = true
+}) => {
 
   const [posts, setPosts] = useState([]);
   const [page, setPage] = useState(1);
@@ -44,9 +48,15 @@ const MainFeed = ({ API_ROUTE = "posts", showShare = true }) => {
       isFetching.current = true;
 
       // fetch new posts
+      const params = { page: pageNum };
+      if (q != null) {
+        params.q = q;
+      }
+
       const response = await axiosInstance.get(API_ROUTE, {
-        params: { page: pageNum },
+        params: params,
       });
+
       const rawPosts = response.data;
       const newPosts = rawPosts
         .map((post) => {

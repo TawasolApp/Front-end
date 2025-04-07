@@ -20,6 +20,7 @@ const TawasolNavbar = () => {
   const currentPath = window.location.pathname
   const [isMeOpen, setIsMeOpen] = useState(false)
   const [isSearchFocused, setIsSearchFocused] = useState(false)
+  const [searchText, setSearchText] = useState("")
   const [windowWidth, setWindowWidth] = useState(window.innerWidth)
   const searchRef = useRef(null)
   const searchContainerRef = useRef(null)
@@ -111,6 +112,26 @@ const TawasolNavbar = () => {
     setIsSearchFocused(false)
   }
 
+  const handleSearchChange = (e) => {
+    setSearchText(e.target.value)
+  }
+
+  const handleSearchKeyDown = (e) => {
+    if (e.key === "Enter" && searchText.trim()) {
+      navigate(`/search/${encodeURIComponent(searchText.trim())}`)
+      setIsSearchFocused(false)
+      setSearchText("")
+    }
+  }
+
+  const handleSearchSubmit = () => {
+    if (searchText.trim()) {
+      navigate(`/search/${encodeURIComponent(searchText.trim())}`)
+      setIsSearchFocused(false)
+      setSearchText("")
+    }
+  }
+
   return (
     <nav ref={navbarRef} className="sticky top-0 z-50 bg-cardBackground border-b border-cardBorder shadow-sm h-[52px]">
       <div className="max-w-7xl mx-auto px-4 flex items-center justify-between h-full lg:justify-evenly">
@@ -133,12 +154,23 @@ const TawasolNavbar = () => {
                 type="text"
                 placeholder="Search"
                 ref={searchRef}
+                value={searchText}
+                onChange={handleSearchChange}
+                onKeyDown={handleSearchKeyDown}
                 onFocus={handleSearchFocus}
                 onBlur={handleSearchBlur}
                 className={`pl-10 pr-4 py-1 h-10 bg-navbarSearch rounded-md w-full text-sm text-text outline-none transition-all duration-300 ease-in-out ${
                   isSearchFocused ? "border border-navbarSearchBorder" : ""
                 }`}
               />
+              {isSearchFocused && searchText && (
+                <button
+                  onClick={handleSearchSubmit}
+                  className="absolute inset-y-0 right-0 flex items-center pr-3 text-navbarIconsNormal hover:text-navbarIconsSelected"
+                >
+                  <span className="text-xs font-medium">Search</span>
+                </button>
+              )}
             </div>
           )}
         </div>
@@ -153,10 +185,21 @@ const TawasolNavbar = () => {
                 type="text"
                 placeholder="Search"
                 ref={searchRef}
+                value={searchText}
+                onChange={handleSearchChange}
+                onKeyDown={handleSearchKeyDown}
                 autoFocus
                 onBlur={handleSearchBlur}
                 className="pl-10 pr-4 py-1 h-10 bg-navbarSearch rounded-md w-full text-sm text-text outline-none border border-navbarSearchBorder transition-all duration-300 ease-in-out"
               />
+              {searchText && (
+                <button
+                  onClick={handleSearchSubmit}
+                  className="absolute inset-y-0 right-0 flex items-center pr-3 text-navbarIconsNormal hover:text-navbarIconsSelected"
+                >
+                  <span className="text-xs font-medium">Search</span>
+                </button>
+              )}
             </div>
           </div>
         )}
