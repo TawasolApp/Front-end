@@ -9,7 +9,7 @@ import {
   setFirstName,
   setLastName,
   setLocation,
-  setPicture,
+  setProfilePicture,
   setRefreshToken,
   setToken,
   setType,
@@ -64,7 +64,7 @@ const SignInPage = () => {
             dispatch(setBio(bio));
           }
           if (profilePicture) {
-            dispatch(setPicture(profilePicture));
+            dispatch(setProfilePicture(profilePicture));
           }
           if (coverPhoto) {
             dispatch(setCoverPhoto(coverPhoto));

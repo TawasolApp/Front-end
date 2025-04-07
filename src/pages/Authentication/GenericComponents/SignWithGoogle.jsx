@@ -10,9 +10,10 @@ import {
   setLocation,
   setBio,
   setType,
-  setPicture,
+  setProfilePicture,
   setIsNewGoogleUser,
   setUserId,
+  setCoverPhoto,
 } from "../../../store/authenticationSlice";
 import { axiosInstance } from "../../../apis/axios";
 
@@ -49,7 +50,6 @@ const SignWithGoogle = () => {
 
                 // New user, set-up account instead of logging in
                 if (isNewUser) {
-                  console.log(token);
                   navigate("/auth/signup/location");
                   return;
                 }
@@ -63,7 +63,8 @@ const SignWithGoogle = () => {
                     lastName,
                     location,
                     bio,
-                    picture,
+                    profilePicture,
+                    coverPhoto,
                   } = profileResponse.data;
 
                   dispatch(setType("User"));
@@ -82,8 +83,11 @@ const SignWithGoogle = () => {
                   if (bio) {
                     dispatch(setBio(bio));
                   }
-                  if (picture) {
-                    dispatch(setPicture(picture));
+                  if (profilePicture) {
+                    dispatch(setProfilePicture(profilePicture));
+                  }
+                  if (coverPhoto) {
+                    dispatch(setCoverPhoto(coverPhoto));
                   }
 
                   navigate("/feed");

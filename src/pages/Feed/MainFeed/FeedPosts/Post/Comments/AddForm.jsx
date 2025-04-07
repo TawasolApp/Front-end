@@ -11,7 +11,7 @@ const AddForm = ({
   type,
 }) => {
   
-  const currentAuthorPicture = useSelector((state) => state.authentication.picture);
+  const currentAuthorPicture = useSelector((state) => state.authentication.profilePicture);
 
   const [commentText, setCommentText] = useState(initialText);
   const [taggedUsers, setTaggedUsers] = useState(initialTaggedUsers);

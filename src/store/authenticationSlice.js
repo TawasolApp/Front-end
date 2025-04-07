@@ -11,7 +11,7 @@ const initialState = {
   refreshToken: localStorage.getItem("refreshToken") || null,
   bio: localStorage.getItem("bio") || "",
   type: localStorage.getItem("type") || "",
-  picture: localStorage.getItem("picture") || null,
+  profilePicture: localStorage.getItem("profilePicture") || null,
   coverPhoto: localStorage.getItem("cover") || null
 };
 
@@ -59,9 +59,9 @@ export const authenticationSlice = createSlice({
       state.type = action.payload;
       localStorage.setItem("type", action.payload);
     },
-    setPicture: (state, action) => {
-      state.picture = action.payload;
-      localStorage.setItem("picture", action.payload);
+    setProfilePicture: (state, action) => {
+      state.profilePicture = action.payload;
+      localStorage.setItem("profilePicture", action.payload);
     },
     setCoverPhoto: (state, action) => {
       state.coverPhoto = action.payload;
@@ -81,7 +81,8 @@ export const authenticationSlice = createSlice({
       state.refreshToken = null;
       state.bio = "";
       state.type = "";
-      state.picture = "";
+      state.profilePicture = "";
+      state.coverPhoto = "";
       state.isNewGoogleUser = false;
       localStorage.removeItem("userId");
       localStorage.removeItem("email");
@@ -92,7 +93,8 @@ export const authenticationSlice = createSlice({
       localStorage.removeItem("refreshToken");
       localStorage.removeItem("bio");
       localStorage.removeItem("type");
-      localStorage.removeItem("picture");
+      localStorage.removeItem("profilePicture");
+      localStorage.removeItem("coverPhoto");
     },
   },
 });
@@ -108,7 +110,7 @@ export const {
   setRefreshToken,
   setBio,
   setType,
-  setPicture,
+  setProfilePicture,
   setCoverPhoto,
   setIsNewGoogleUser,
   logout,
