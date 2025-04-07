@@ -16,73 +16,76 @@ const ActorHeader = ({
   enableLink = true,
 }) => {
   return (
-    <div className={`flex items-start gap-2 w-full`}>
-      <Link
-        to={
-          authorType === "User" ? `/users/${authorId}` : `/company/${authorId}`
-        }
-      >
-        <Avatar
-          src={authorPicture}
-          sx={{
-            width: iconSize,
-            height: iconSize,
-            borderRadius: "50%",
-          }}
-        />
-      </Link>
+    <div className="flex items-start gap-2 max-w-full">
+      {/* Avatar */}
+      <div className="flex-shrink-0">
+        <Link
+          to={authorType === "User" ? `/users/${authorId}` : `/company/${authorId}`}
+        >
+          <Avatar
+            src={authorPicture}
+            sx={{
+              width: iconSize,
+              height: iconSize,
+              borderRadius: "50%",
+            }}
+          />
+        </Link>
+      </div>
 
-      <div className={`flex-1 min-w-0 max-w-${iconSize}`}>
-        {enableLink ? (
-          <Link
-            to={
-              authorType === "User"
-                ? `/users/${authorId}`
-                : `/company/${authorId}`
-            }
-          >
-            <h3 className="font-medium text-sm text-authorName hover:text-authorNameHover hover:underline leading-tight truncate text-left">
-              {authorName}
-            </h3>
-            <p className="text-xs font-semibold text-authorBio mt-px truncate text-left">
-              {authorBio}
-            </p>
-          </Link>
-        ) : (
-          <>
-            <h3 className="font-medium text-sm text-authorName hover:text-authorNameHover hover:underline leading-tight truncate text-left">
-              {authorName}
-            </h3>
-            <p className="text-xs font-semibold text-authorBio mt-px truncate text-left">
-              {authorBio}
-            </p>
-          </>
-        )}
+      {/* Text Content */}
+      <div className="flex-1 min-w-0 max-w-[calc(100%-56px)]"> {/* Adjusted calculation */}
+        <div className="flex flex-col max-w-full">
+          {/* Name and Bio */}
+          {enableLink ? (
+            <Link
+              to={authorType === "User" ? `/users/${authorId}` : `/company/${authorId}`}
+              className="block max-w-full"
+            >
+              <h3 className="font-medium text-sm text-authorName hover:text-authorNameHover hover:underline truncate">
+                {authorName}
+              </h3>
+              <p className="text-xs font-semibold text-authorBio mt-px truncate max-w-full">
+                {authorBio}
+              </p>
+            </Link>
+          ) : (
+            <div className="max-w-full">
+              <h3 className="font-medium text-sm text-authorName truncate">
+                {authorName}
+              </h3>
+              <p className="text-xs font-semibold text-authorBio mt-px truncate max-w-full">
+                {authorBio}
+              </p>
+            </div>
+          )}
 
-        {timestamp && (
-          <div className="flex items-center gap-1 mt-0.5">
-            <span className="text-xs font-semibold text-textDate">
-              {formatDate(timestamp)} •
-            </span>
-            {visibility === "Public" ? (
-              <PublicIcon
-                sx={{
-                  fontSize: "14px",
-                  verticalAlign: "text-top",
-                }}
-                className="text-textDate"
-              />
-            ) : (
-              <PeopleIcon
-                sx={{
-                  fontSize: "14px",
-                  verticalAlign: "text-top",
-                }}
-                className="text-textDate"
-              />
-            )}
-          </div>
-        )}
+          {/* Timestamp and Visibility */}
+          {timestamp && (
+            <div className="flex items-center gap-1 mt-0.5 max-w-full">
+              <span className="text-xs font-semibold text-textDate shrink-0">
+                {formatDate(timestamp)} •
+              </span>
+              {visibility === "Public" ? (
+                <PublicIcon
+                  sx={{
+                    fontSize: "14px",
+                    verticalAlign: "text-top",
+                  }}
+                  className="text-textDate shrink-0"
+                />
+              ) : (
+                <PeopleIcon
+                  sx={{
+                    fontSize: "14px",
+                    verticalAlign: "text-top",
+                  }}
+                  className="text-textDate shrink-0"
+                />
+              )}
+            </div>
+          )}
+        </div>
       </div>
     </div>
   );

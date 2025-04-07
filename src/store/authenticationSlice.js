@@ -12,6 +12,7 @@ const initialState = {
   bio: localStorage.getItem("bio") || "",
   type: localStorage.getItem("type") || "",
   picture: localStorage.getItem("picture") || null,
+  coverPhoto: localStorage.getItem("cover") || null
 };
 
 export const authenticationSlice = createSlice({
@@ -19,7 +20,7 @@ export const authenticationSlice = createSlice({
   initialState,
   reducers: {
     setUserId: (state, action) => {
-      state.userid = action.payload;
+      state.userId = action.payload;
       localStorage.setItem("userId", action.payload);
     },
     setEmail: (state, action) => {
@@ -61,6 +62,10 @@ export const authenticationSlice = createSlice({
     setPicture: (state, action) => {
       state.picture = action.payload;
       localStorage.setItem("picture", action.payload);
+    },
+    setCoverPhoto: (state, action) => {
+      state.coverPhoto = action.payload;
+      localStorage.setItem("cover", action.payload);
     },
     setIsNewGoogleUser: (state, action) => {
       state.isNewGoogleUser = action.payload;
@@ -104,6 +109,7 @@ export const {
   setBio,
   setType,
   setPicture,
+  setCoverPhoto,
   setIsNewGoogleUser,
   logout,
 } = authenticationSlice.actions;

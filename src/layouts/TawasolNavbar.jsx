@@ -137,7 +137,10 @@ const TawasolNavbar = () => {
         {/* Left Section */}
         <div className="flex items-center gap-2 md:gap-3">
           <div className="flex-shrink-0 h-10">
-            <Icon className="w-10 h-10" />
+            <Icon 
+              className="w-10 h-10 cursor-pointer"
+              onClick={() => navigate("/feed")}
+            />
           </div>
 
           {!isMobile && (
@@ -248,7 +251,7 @@ const TawasolNavbar = () => {
                         <Avatar src={currentAuthorPicture} sx={{ width: 56, height: 56 }} />
                         <div>
                           <h3 className="font-semibold text-authorName">{currentAuthorName}</h3>
-                          <p className="text-sm text-authorBio">{currentAuthorBio}</p>
+                          <p className="text-sm text-authorBio">{currentAuthorBio.length > 50 ? currentAuthorBio.slice(0, 48) + ".." : currentAuthorBio}</p>
                         </div>
                       </div>
                       <div className="px-4 pb-2">
@@ -265,7 +268,10 @@ const TawasolNavbar = () => {
                       <button className="w-full py-2 px-4 text-left text-sm hover:bg-buttonIconHover transition-colors duration-150">
                         Settings & Privacy
                       </button>
-                      <button className="w-full py-2 px-4 text-left text-sm hover:bg-buttonIconHover transition-colors duration-150">
+                      <button
+                        className="w-full py-2 px-4 text-left text-sm hover:bg-buttonIconHover transition-colors duration-150"
+                        onClick={() => navigate("/auth/signin")}  
+                      >
                         Sign Out
                       </button>
                     </div>

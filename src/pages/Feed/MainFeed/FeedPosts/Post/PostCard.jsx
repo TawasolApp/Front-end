@@ -131,8 +131,9 @@ const PostCard = ({ setShowPostModal, setMediaIndex }) => {
 
       {showLikes && (
         <ReactionsModal
-          APIURL={`/posts/reactions/${post.id}`}
+          API_URL={`/posts/reactions/${post.id}`}
           setShowLikes={() => setShowLikes(false)}
+          reactCounts={post.reactCounts}
         />
       )}
 

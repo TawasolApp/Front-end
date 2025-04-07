@@ -21,7 +21,7 @@ const RepostButton = () => {
     },
     {
       text: "Repost",
-      onClick: () => handleSharePost("dummy data", [], "", [], post.id, true),
+      onClick: () => handleSharePost("dummy data", [], post.visibility, [], post.id, true),
       icon: RepeatIcon,
     },
   ];
@@ -53,9 +53,7 @@ const RepostButton = () => {
               media,
               visibility,
               taggedUsers,
-              post.repostedComponents
-                ? post.repostedComponents.postId
-                : post.id,
+              post.id,
               false,
             )
           }

@@ -14,6 +14,7 @@ import {
   setToken,
   setType,
   setUserId,
+  setCoverPhoto
 } from "../../store/authenticationSlice";
 import { Link, useNavigate } from "react-router-dom";
 import AuthenticationHeader from "./GenericComponents/AuthenticationHeader";
@@ -43,7 +44,7 @@ const SignInPage = () => {
         const profileResponse = await axiosInstance.get("/profile");
 
         if (profileResponse.status === 200) {
-          const { _id, firstName, lastName, location, bio, picture } =
+          const { _id, firstName, lastName, location, bio, profilePicture, coverPhoto } =
             profileResponse.data;
 
           dispatch(setType("User"));
@@ -62,8 +63,11 @@ const SignInPage = () => {
           if (bio) {
             dispatch(setBio(bio));
           }
-          if (picture) {
-            dispatch(setPicture(picture));
+          if (profilePicture) {
+            dispatch(setPicture(profilePicture));
+          }
+          if (coverPhoto) {
+            dispatch(setCoverPhoto(coverPhoto));
           }
 
           navigate("/feed");

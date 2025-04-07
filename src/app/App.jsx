@@ -85,7 +85,7 @@ const App = () => {
         <Route path="/auth/new-password" element={<NewPasswordPage />} />
         <Route path="/auth/update-email" element={<ChangeEmailPage />} />
 
-        <Route path="/search/:searchText" element={<SearchPosts />} />
+        <Route path="/search/:searchText" element={RenderWithNavbar(<SearchPosts />)} />
 
         <Route path="/users" element={<ProfileLayout />} />
         <Route path="/users/:profileSlug" element={<ProfileLayout />}>
@@ -103,10 +103,10 @@ const App = () => {
         <Route path="/manage-connections" element={<ManageConnections />} />
         <Route path="/network-box" element={<NetworkBox />} />
 
-        <Route path="/feed/:id" element={<SinglePost />} />
+        <Route path="/feed/:id" element={RenderWithNavbar(<SinglePost />)} />
         <Route path="/feed" element={RenderWithNavbar(<FeedContainer />)} />
         <Route path="/feed/reposts/:id" element={RenderWithNavbar(<RepostsContainer />)} /> 
-        <Route path="/my-items/saved-posts" element={<SavedPostsContainer />} />
+        <Route path="/my-items/saved-posts" element={RenderWithNavbar(<SavedPostsContainer />)} />
 
         <Route path="/company" element={<CompanyLayout />} />
         <Route path="/company/:companyId/*" element={<CompanyLayout />}>
