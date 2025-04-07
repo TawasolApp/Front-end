@@ -4,8 +4,10 @@ import AuthenticationHeader from "./GenericComponents/AuthenticationHeader";
 import { useDispatch, useSelector } from "react-redux";
 import { axiosInstance } from "../../apis/axios";
 import {
+  setCoverPhoto,
   setFirstName,
   setLastName,
+  setProfilePicture,
   setRefreshToken,
   setToken,
   setType,
@@ -83,7 +85,7 @@ const ExperienceAuthPage = () => {
       const profileResponse = await axiosInstance.get("/profile");
 
       if (profileResponse.status === 200) {
-        const { _id, firstName, lastName } = profileResponse.data;
+        const { _id, firstName, lastName, profilePicture, coverPhoto } = profileResponse.data;
 
         if (_id) {
           dispatch(setUserId(_id));
@@ -94,6 +96,12 @@ const ExperienceAuthPage = () => {
         if (lastName) {
           dispatch(setLastName(lastName));
         }
+        if (profilePicture) {
+          dispatch(setProfilePicture(profilePicture));
+        }
+        if (coverPhoto) {
+          dispatch(setCoverPhoto(coverPhoto));
+        }
 
         navigate("/feed");
       }
@@ -102,82 +110,6 @@ const ExperienceAuthPage = () => {
     } catch {
       console.error("Error retreiving profile:", error);
       return;
-    }
-
-    
-
-
-
-
-
-
-    // New Google user, already logged in, but needs to get name
-    if (isNewGoogleUser) {
-      try {
-        await axiosInstance.post("/profile", profileData);
-      } catch (error) {
-        console.error("Error submitting data:", error);
-        return;
-      }
-
-      try {
-        const profileResponse = await axiosInstance.get("/profile");
-
-        if (profileResponse.status === 200) {
-          const { _id, firstName, lastName } = profileResponse.data;
-
-          if (_id) {
-            dispatch(setUserId(_id));
-          }
-          if (firstName) {
-            dispatch(setFirstName(firstName));
-          }
-          if (lastName) {
-            dispatch(setLastName(lastName));
-          }
-
-          navigate("/feed");
-        }
-
-        return;
-      } catch {
-        console.error("Error retreiving profile:", error);
-        return;
-      }
-    }
-
-    try {
-      const userResponse = await axiosInstance.post("/auth/login", {
-        email,
-        password,
-      });
-
-      if (userResponse.status === 201) {
-        const { token, refreshToken } = userResponse.data;
-
-        dispatch(setToken(token));
-        dispatch(setRefreshToken(refreshToken));
-
-        try {
-          await axiosInstance.post("/profile", profileData);
-        } catch (error) {
-          console.error("Error submitting data:", error);
-          console.log(profileData);
-          return;
-        }
-
-        navigate("/feed");
-      }
-    } catch (error) {
-      if (error.response && error.response.status === 400) {
-        console.error("Email not verified.");
-      } else if (error.response && error.response.status === 401) {
-        console.error("Invalid email or password.");
-      } else if (error.response && error.response.status === 404) {
-        console.error("User not found.");
-      } else {
-        console.error("Login failed", error);
-      }
     }
   };
 

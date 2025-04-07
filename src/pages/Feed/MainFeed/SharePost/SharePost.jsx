@@ -6,7 +6,7 @@ import { useSelector } from "react-redux";
 const SharePost = ({ handleSharePost }) => {
   
   const currentAuthorName = `${useSelector((state) => state.authentication.firstName)} ${useSelector((state) => state.authentication.lastName)}`;
-  const currentAuthorPicture = useSelector((state) => state.authentication.picture);
+  const currentAuthorPicture = useSelector((state) => state.authentication.profilePicture);
 
   const [isModalOpen, setIsModalOpen] = useState(false);
 

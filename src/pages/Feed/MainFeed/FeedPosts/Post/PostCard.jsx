@@ -25,7 +25,7 @@ const PostCard = ({ setShowPostModal, setMediaIndex }) => {
 
   const currentAuthorId = useSelector((state) => state.authentication.userId);
   const currentAuthorName = `${useSelector((state) => state.authentication.firstName)} ${useSelector((state) => state.authentication.lastName)}`;
-  const currentAuthorPicture = useSelector((state) => state.authentication.picture);
+  const currentAuthorPicture = useSelector((state) => state.authentication.profilePicture);
 
   // MODALS
   const [showLikes, setShowLikes] = useState(false);
