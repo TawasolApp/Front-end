@@ -9,6 +9,7 @@ import {
   setRefreshToken,
   setToken,
   setType,
+  setUserId,
 } from "../../store/authenticationSlice";
 import { useNavigate } from "react-router-dom";
 
@@ -45,6 +46,71 @@ const ExperienceAuthPage = () => {
 
     dispatch(setType("User"));
 
+    if (!isNewGoogleUser) {
+      try {
+        const userResponse = await axiosInstance.post("/auth/login", {
+          email,
+          password,
+        });
+  
+        if (userResponse.status === 201) {
+          const { token, refreshToken } = userResponse.data;
+  
+          dispatch(setToken(token));
+          dispatch(setRefreshToken(refreshToken));
+        }
+      } catch (error) {
+        if (error.response && error.response.status === 400) {
+          console.error("Email not verified.");
+        } else if (error.response && error.response.status === 401) {
+          console.error("Invalid email or password.");
+        } else if (error.response && error.response.status === 404) {
+          console.error("User not found.");
+        } else {
+          console.error("Login failed", error);
+        }
+      }
+    }
+
+    try {
+      await axiosInstance.post("/profile", profileData);
+    } catch (error) {
+      console.error("Error submitting data:", error);
+      return;
+    }
+
+    try {
+      const profileResponse = await axiosInstance.get("/profile");
+
+      if (profileResponse.status === 200) {
+        const { _id, firstName, lastName } = profileResponse.data;
+
+        if (_id) {
+          dispatch(setUserId(_id));
+        }
+        if (firstName) {
+          dispatch(setFirstName(firstName));
+        }
+        if (lastName) {
+          dispatch(setLastName(lastName));
+        }
+
+        navigate("/feed");
+      }
+
+      return;
+    } catch {
+      console.error("Error retreiving profile:", error);
+      return;
+    }
+
+    
+
+
+
+
+
+
     // New Google user, already logged in, but needs to get name
     if (isNewGoogleUser) {
       try {
@@ -58,10 +124,17 @@ const ExperienceAuthPage = () => {
         const profileResponse = await axiosInstance.get("/profile");
 
         if (profileResponse.status === 200) {
-          const { firstName, lastName } = profileResponse.data;
+          const { _id, firstName, lastName } = profileResponse.data;
 
-          dispatch(setFirstName(firstName));
-          dispatch(setLastName(lastName));
+          if (_id) {
+            dispatch(setUserId(_id));
+          }
+          if (firstName) {
+            dispatch(setFirstName(firstName));
+          }
+          if (lastName) {
+            dispatch(setLastName(lastName));
+          }
 
           navigate("/feed");
         }
@@ -86,7 +159,6 @@ const ExperienceAuthPage = () => {
         dispatch(setRefreshToken(refreshToken));
 
         try {
-          console.log(profileData);
           await axiosInstance.post("/profile", profileData);
         } catch (error) {
           console.error("Error submitting data:", error);
