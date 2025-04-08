@@ -1,18 +1,19 @@
 import { render, screen, fireEvent, waitFor } from "@testing-library/react";
-import { describe, test, vi, beforeEach, afterEach, expect } from "vitest";
+import { describe, test, expect, vi, beforeEach, afterEach } from "vitest";
 import EditAboutModal from "../../pages/Company/Components/Modals/EditAboutModal";
 import { axiosInstance as axios } from "../../apis/axios";
 
 vi.mock("../../apis/axios", () => ({
   axiosInstance: {
     patch: vi.fn(),
+    post: vi.fn(),
   },
 }));
-const mockedAxios = axios;
 
 describe("EditAboutModal", () => {
-  const mockCompanyData = {
+  const defaultCompany = {
     companyId: 1,
+    name: "Company Name",
     logo: "logo-url",
     banner: "banner-url",
     description: "Old Description",
@@ -22,146 +23,149 @@ describe("EditAboutModal", () => {
     website: "https://company.com",
     contactNumber: "1234567890",
     isVerified: true,
-    verification_date: "2023-01-01",
     founded: "2000",
-    specialities: "IT Services",
-    location: "Map URL",
+    email: "email@company.com",
+    location: "https://map.com",
+    companySize: "51-400 Employees",
+    companyType: "Public Company",
   };
 
   const onClose = vi.fn();
+  const setCompanyData = vi.fn();
 
   beforeEach(() => {
+    vi.clearAllMocks();
     document.body.classList.remove("overflow-hidden");
   });
 
   afterEach(() => {
-    vi.clearAllMocks();
+    document.body.classList.remove("overflow-hidden");
   });
 
-  test("does not render if show is false", () => {
+  test("does not render when show is false", () => {
     const { container } = render(
       <EditAboutModal
         show={false}
-        companyData={mockCompanyData}
+        companyData={defaultCompany}
         onClose={onClose}
+        setCompanyData={setCompanyData}
       />
     );
     expect(container.firstChild).toBeNull();
   });
 
-  test("renders modal with data when show is true", () => {
+  test("renders all form fields when show is true", () => {
     render(
       <EditAboutModal
         show={true}
-        companyData={mockCompanyData}
+        companyData={defaultCompany}
         onClose={onClose}
+        setCompanyData={setCompanyData}
       />
     );
 
     expect(screen.getByDisplayValue("Old Description")).toBeInTheDocument();
     expect(screen.getByDisplayValue("Old Overview")).toBeInTheDocument();
     expect(screen.getByDisplayValue("Tech")).toBeInTheDocument();
+    expect(screen.getByDisplayValue("123 Street")).toBeInTheDocument();
+    expect(screen.getByDisplayValue("https://company.com")).toBeInTheDocument();
+    expect(screen.getByDisplayValue("email@company.com")).toBeInTheDocument();
   });
 
-  test("allows editing fields", () => {
+  test("allows editing description", () => {
     render(
       <EditAboutModal
         show={true}
-        companyData={mockCompanyData}
+        companyData={defaultCompany}
         onClose={onClose}
+        setCompanyData={setCompanyData}
       />
     );
 
-    const descriptionInput = screen.getByDisplayValue("Old Description");
-    fireEvent.change(descriptionInput, {
-      target: { value: "New Description" },
-    });
+    const input = screen.getByDisplayValue("Old Description");
+    fireEvent.change(input, { target: { value: "New Description" } });
 
-    expect(descriptionInput.value).toBe("New Description");
+    expect(input.value).toBe("New Description");
   });
 
-  test("submits form and closes modal", async () => {
-    mockedAxios.patch.mockResolvedValueOnce({ data: { success: true } });
-    delete window.location;
-    window.location = { reload: vi.fn() };
+  test("submits changes and closes modal", async () => {
+    axios.patch.mockResolvedValueOnce({
+      data: { description: "New Description" },
+    });
 
     render(
       <EditAboutModal
         show={true}
-        companyData={mockCompanyData}
+        companyData={defaultCompany}
         onClose={onClose}
+        setCompanyData={setCompanyData}
       />
     );
 
-    fireEvent.change(screen.getByDisplayValue("Old Description"), {
-      target: { value: "Updated Description" },
-    });
+    const input = screen.getByDisplayValue("Old Description");
+    fireEvent.change(input, { target: { value: "New Description" } });
 
     fireEvent.click(screen.getByText("Save Changes"));
 
     await waitFor(() => {
-      expect(mockedAxios.patch).toHaveBeenCalledWith(
+      expect(axios.patch).toHaveBeenCalledWith(
         "/companies/1",
-        expect.objectContaining({ description: "Updated Description" })
+        expect.objectContaining({ description: "New Description" })
       );
+      expect(setCompanyData).toHaveBeenCalled();
       expect(onClose).toHaveBeenCalled();
-      expect(window.location.reload).toHaveBeenCalled();
     });
   });
 
-  test("toggles body overflow-hidden when modal is shown/hidden", () => {
-    const { rerender } = render(
-      <EditAboutModal
-        show={true}
-        companyData={mockCompanyData}
-        onClose={onClose}
-      />
-    );
-    expect(document.body.classList.contains("overflow-hidden")).toBe(true);
-
-    rerender(
-      <EditAboutModal
-        show={false}
-        companyData={mockCompanyData}
-        onClose={onClose}
-      />
-    );
-    expect(document.body.classList.contains("overflow-hidden")).toBe(false);
-  });
   test("shows error message if update fails", async () => {
-    axios.patch.mockRejectedValueOnce(new Error("Request failed"));
+    axios.patch.mockRejectedValueOnce({
+      response: { data: { message: "Update failed." } },
+    });
 
     render(
       <EditAboutModal
         show={true}
-        companyData={{ companyId: 1 }}
-        onClose={vi.fn()}
+        companyData={defaultCompany}
+        onClose={onClose}
+        setCompanyData={setCompanyData}
       />
     );
 
     fireEvent.click(screen.getByText("Save Changes"));
 
-    expect(await screen.findByTestId("error-message")).toHaveTextContent(
-      "Failed to update company profile."
-    );
-  });
-  test("renders default values for missing company data", () => {
-    render(<EditAboutModal show={true} companyData={{}} onClose={onClose} />);
-
-    expect(screen.getByPlaceholderText("Enter new banner URL")).toHaveValue("");
-    expect(screen.getByPlaceholderText("Enter new logo URL")).toHaveValue("");
+    await waitFor(() => {
+      expect(screen.getByTestId("error-message")).toHaveTextContent(
+        "Update failed."
+      );
+    });
   });
 
-  test("checks and unchecks verified checkbox", () => {
+  test("closes modal on ✖ click", () => {
     render(
       <EditAboutModal
         show={true}
-        companyData={{ isVerified: false }}
+        companyData={defaultCompany}
         onClose={onClose}
+        setCompanyData={setCompanyData}
       />
     );
 
-    const checkbox = screen.getByRole("checkbox", { name: "Verified Page" });
+    fireEvent.click(screen.getByText("✖"));
+    expect(onClose).toHaveBeenCalled();
+  });
+
+  test("toggles verified checkbox", () => {
+    render(
+      <EditAboutModal
+        show={true}
+        companyData={{ ...defaultCompany, isVerified: false }}
+        onClose={onClose}
+        setCompanyData={setCompanyData}
+      />
+    );
+
+    const checkbox = screen.getByRole("checkbox", { name: /Verified Page/i });
+    expect(checkbox.checked).toBe(false);
 
     fireEvent.click(checkbox);
     expect(checkbox.checked).toBe(true);
@@ -170,52 +174,115 @@ describe("EditAboutModal", () => {
     expect(checkbox.checked).toBe(false);
   });
 
-  test("closes modal when close button is clicked", () => {
+  test("sets body overflow-hidden when modal is open", () => {
     render(
       <EditAboutModal
         show={true}
-        companyData={mockCompanyData}
+        companyData={defaultCompany}
         onClose={onClose}
+        setCompanyData={setCompanyData}
       />
     );
-
-    fireEvent.click(screen.getByText("✖"));
-    expect(onClose).toHaveBeenCalled();
+    expect(document.body.classList.contains("overflow-hidden")).toBe(true);
   });
 
-  test("renders company logo and banner", () => {
+  // Additional Tests for File Upload
+
+  test("uploads banner file successfully", async () => {
+    const file = new File(["banner-image"], "banner.jpg", {
+      type: "image/jpeg",
+    });
+    axios.post.mockResolvedValueOnce({ data: { url: "banner-url" } });
+
     render(
       <EditAboutModal
         show={true}
-        companyData={mockCompanyData}
+        companyData={defaultCompany}
         onClose={onClose}
+        setCompanyData={setCompanyData}
       />
     );
 
-    const logo = screen.getByAltText("Company Logo");
-    const banner = screen.getByAltText("Company Banner");
+    const fileInput = screen.getByTestId("banner-upload-input");
+    fireEvent.change(fileInput, { target: { files: [file] } });
 
-    expect(logo).toHaveAttribute("src", "logo-url");
-    expect(banner).toHaveAttribute("src", "banner-url");
+    await waitFor(() => {
+      const bannerImage = screen.getByTestId("banner-image"); // Use the test ID for the image
+      expect(bannerImage).toHaveAttribute("src", "banner-url"); // Check if the src attribute has been updated
+    });
   });
 
-  test("renders all input fields", () => {
+  test("shows error message on banner upload failure", async () => {
+    const file = new File(["banner-image"], "banner.jpg", {
+      type: "image/jpeg",
+    });
+    axios.post.mockRejectedValueOnce(new Error("Upload failed"));
+
     render(
       <EditAboutModal
         show={true}
-        companyData={mockCompanyData}
+        companyData={defaultCompany}
         onClose={onClose}
+        setCompanyData={setCompanyData}
       />
     );
 
-    expect(
-      screen.getByPlaceholderText("Enter new banner URL")
-    ).toBeInTheDocument();
-    expect(
-      screen.getByPlaceholderText("Enter new logo URL")
-    ).toBeInTheDocument();
-    expect(screen.getByDisplayValue("1234567890")).toBeInTheDocument();
-    expect(screen.getByDisplayValue("Tech")).toBeInTheDocument();
-    expect(screen.getByDisplayValue("https://company.com")).toBeInTheDocument();
+    const fileInput = screen.getByTestId("banner-upload-input");
+    fireEvent.change(fileInput, { target: { files: [file] } });
+
+    await waitFor(() => {
+      expect(screen.getByTestId("error-message")).toHaveTextContent(
+        "Failed to upload banner. Please try again."
+      );
+    });
+  });
+
+  test("uploads logo file successfully", async () => {
+    const file = new File(["logo-image"], "logo.jpg", {
+      type: "image/jpeg",
+    });
+    axios.post.mockResolvedValueOnce({ data: { url: "logo-url" } });
+
+    render(
+      <EditAboutModal
+        show={true}
+        companyData={defaultCompany}
+        onClose={onClose}
+        setCompanyData={setCompanyData}
+      />
+    );
+
+    const fileInput = screen.getByTestId("logo-upload-input");
+    fireEvent.change(fileInput, { target: { files: [file] } });
+
+    await waitFor(() => {
+      const logoImage = screen.getByTestId("logo-image");
+      expect(logoImage).toHaveAttribute("src", "logo-url");
+    });
+  });
+
+  test("shows error message on logo upload failure", async () => {
+    const file = new File(["logo-image"], "logo.jpg", {
+      type: "image/jpeg",
+    });
+    axios.post.mockRejectedValueOnce(new Error("Upload failed"));
+
+    render(
+      <EditAboutModal
+        show={true}
+        companyData={defaultCompany}
+        onClose={onClose}
+        setCompanyData={setCompanyData}
+      />
+    );
+
+    const fileInput = screen.getByTestId("logo-upload-input");
+    fireEvent.change(fileInput, { target: { files: [file] } });
+
+    await waitFor(() => {
+      expect(screen.getByTestId("error-message")).toHaveTextContent(
+        "Failed to upload logo. Please try again."
+      );
+    });
   });
 });

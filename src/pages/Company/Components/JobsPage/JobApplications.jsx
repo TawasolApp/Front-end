@@ -106,6 +106,7 @@ function JobApplications({ job }) {
       {hasMore && (
         <div className="mt-2 text-center">
           <button
+            data-testid="load-more-button"
             onClick={handleLoadMore}
             className="text-sm text-blue-600 hover:underline"
             disabled={loading}

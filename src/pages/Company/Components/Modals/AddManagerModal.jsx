@@ -185,12 +185,12 @@ function AddManagerModal({ show, onClose, companyId }) {
             setSearchName(e.target.value);
             setSelectedUser(null);
           }}
-          className="w-full border bg-boxbackground border-gray-300 rounded-md text-text px-4 py-2 mb-2 focus:outline-none"
+          className="w-full border bg-boxbackground border-gray-300 rounded-md text-text px-4 py-2 mb-0 focus:outline-none"
         />
         {searchResults.length > 0 && !selectedUser && (
           <>
             {console.log("Rendering dropdown with:", searchResults)}{" "}
-            <ul className="bg-boxbackground border border-gray-300 rounded-md max-h-40 overflow-y-auto mb-2">
+            <ul className="bg-boxbackground border border-gray-300 rounded-md max-h-40 overflow-y-auto mb-2 mt-0">
               {searchResults.map((user) => (
                 <li
                   key={user.userId}
@@ -218,7 +218,7 @@ function AddManagerModal({ show, onClose, companyId }) {
           </div>
         )}
 
-        <div className="flex justify-end gap-2">
+        <div className="flex justify-end gap-2 mt-2">
           <button
             onClick={handleModalClose}
             className="px-4 py-2 bg-gray-200 rounded-md hover:bg-gray-300"
@@ -226,6 +226,7 @@ function AddManagerModal({ show, onClose, companyId }) {
             Cancel
           </button>
           <button
+            data-testid="add-button"
             onClick={handleAddManager}
             className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700"
             disabled={loading}

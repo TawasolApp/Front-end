@@ -278,7 +278,9 @@ function CreateCompanyPage() {
                 Overview
               </label>
               <textarea
+                id="company-overview"
                 value={overview}
+                data-testid="company-overview"
                 onChange={(e) => setOverview(e.target.value)}
                 className="w-full p-2 border rounded-md bg-boxbackground text-normaltext"
                 placeholder="Brief description of your company"
@@ -291,8 +293,10 @@ function CreateCompanyPage() {
                 Founded Year
               </label>
               <input
+                id="company-founded"
                 type="number"
                 value={founded}
+                data-testid="company-founded"
                 onChange={(e) => setFounded(e.target.value)}
                 className="w-full p-1 border text-sm rounded-md bg-boxbackground text-normaltext"
                 placeholder="e.g., 1999"
@@ -327,6 +331,8 @@ function CreateCompanyPage() {
               <input
                 type="text"
                 value={address}
+                id="company-address"
+                data-testid="company-address"
                 onChange={(e) => setAddress(e.target.value)}
                 className="w-full p-1 border text-sm rounded-md bg-boxbackground text-normaltext"
                 placeholder="123 Example Street"
@@ -341,6 +347,8 @@ function CreateCompanyPage() {
               <input
                 type="text"
                 value={location}
+                id="company-location"
+                data-testid="company-location"
                 onChange={(e) => setLocation(e.target.value)}
                 className="w-full p-1 border text-sm rounded-md bg-boxbackground text-normaltext"
                 placeholder="Google maps location"
@@ -355,6 +363,8 @@ function CreateCompanyPage() {
               <input
                 type="email"
                 value={email}
+                id="company-email"
+                data-testid="company-email"
                 onChange={(e) => setEmail(e.target.value)}
                 className={`w-full p-1 border text-sm rounded-md bg-boxbackground text-normaltext ${
                   errors.email ? "border-red-500" : "border-gray-400"
@@ -374,6 +384,8 @@ function CreateCompanyPage() {
               <input
                 type="tel"
                 value={contactNumber}
+                id="company-contactNumber"
+                data-testid="company-contactNumber"
                 onChange={(e) => setContactNumber(e.target.value)}
                 className={`w-full p-1 border text-sm rounded-md bg-boxbackground text-normaltext ${
                   errors.contactNumber ? "border-red-500" : "border-gray-400"
@@ -493,10 +505,14 @@ function CreateCompanyPage() {
           </button>
           {/* Success or Error Message */}
           {successMessage && (
-            <p className="text-green-600 mt-2">{successMessage}</p>
+            <p className="text-green-600 mt-2" data-testid="success-message">
+              {successMessage}
+            </p>
           )}
           {errors.apiError && (
-            <p className="text-red-600 mt-2">{errors.apiError}</p>
+            <p className="text-red-600 mt-2" data-testid="api-error-message">
+              {errors.apiError}
+            </p>
           )}
         </div>
       </div>

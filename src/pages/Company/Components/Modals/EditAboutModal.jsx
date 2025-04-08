@@ -230,6 +230,7 @@ function EditAboutModal({ show, companyData, onClose, setCompanyData }) {
                 src={formData.banner || "https://via.placeholder.com/600x200"}
                 alt="Company Banner"
                 className="w-full h-full object-cover"
+                data-testid="banner-image"
               />
             </div>
 
@@ -246,6 +247,7 @@ function EditAboutModal({ show, companyData, onClose, setCompanyData }) {
                 accept="image/*"
                 className="absolute inset-0 opacity-0 cursor-pointer"
                 onChange={(e) => handleFileUpload(e, "banner")}
+                data-testid="banner-upload-input"
               />
             </div>
           </div>
@@ -258,6 +260,7 @@ function EditAboutModal({ show, companyData, onClose, setCompanyData }) {
                 src={formData.logo || "https://via.placeholder.com/100"}
                 alt="Logo Preview"
                 className="w-full h-full object-contain"
+                data-testid="logo-image"
               />
             </div>
 
@@ -274,6 +277,7 @@ function EditAboutModal({ show, companyData, onClose, setCompanyData }) {
                 accept="image/*"
                 className="absolute inset-0 opacity-0 cursor-pointer"
                 onChange={(e) => handleFileUpload(e, "logo")}
+                data-testid="logo-upload-input"
               />
             </div>
           </div>

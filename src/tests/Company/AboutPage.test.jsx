@@ -1,18 +1,26 @@
 import { render, screen, waitFor } from "@testing-library/react";
-import { MemoryRouter, Routes, Route } from "react-router-dom";
-import { vi } from "vitest";
-import { axiosInstance as axios } from "../../apis/axios";
+import { MemoryRouter, Routes, Route, Outlet } from "react-router-dom";
 import AboutPage from "../../pages/Company/Components/Pages/AboutPage";
 
-// Mock axios
-vi.mock("../../apis/axios", () => ({
-  axiosInstance: {
-    get: vi.fn(),
-  },
-}));
-const mockedAxios = axios;
+// Create a layout that provides `company` via Outlet context
+const MockLayout = ({ company }) => {
+  return <Outlet context={{ company }} />;
+};
+test("renders LoadingPage when company is not provided", () => {
+  render(
+    <MemoryRouter initialEntries={["/company/test-company/about"]}>
+      <Routes>
+        <Route element={<Outlet context={{ company: null }} />}>
+          <Route path="/company/:companyId/about" element={<AboutPage />} />
+        </Route>
+      </Routes>
+    </MemoryRouter>
+  );
 
-test("renders Aboutoverview and AboutLocations on Aboutpage", async () => {
+  expect(screen.getByTestId("loading-page")).toBeInTheDocument();
+});
+
+test("renders AboutOverview and AboutLocations on AboutPage", async () => {
   const mockCompany = {
     name: "Test Company",
     overview: "This is a sample overview.",
@@ -26,22 +34,22 @@ test("renders Aboutoverview and AboutLocations on Aboutpage", async () => {
     address: "123 Sample St.",
   };
 
-  mockedAxios.get.mockResolvedValueOnce({ data: mockCompany });
-
   render(
     <MemoryRouter initialEntries={["/company/test-company/about"]}>
       <Routes>
-        <Route path="/company/:companyId/about" element={<AboutPage />} />
+        <Route element={<MockLayout company={mockCompany} />}>
+          <Route path="/company/:companyId/about" element={<AboutPage />} />
+        </Route>
       </Routes>
     </MemoryRouter>
   );
 
-  // Wait for async loading
+  // Wait for content to load
   await waitFor(() =>
     expect(screen.getByTestId("about-overview")).toBeInTheDocument()
   );
 
-  // Assertions
+  // Check both components rendered
   expect(screen.getByTestId("about-overview")).toBeInTheDocument();
   expect(screen.getByTestId("about-locations")).toBeInTheDocument();
 });

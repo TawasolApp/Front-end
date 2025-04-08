@@ -3,6 +3,7 @@ import React from "react";
 function JobCard({ job, onClick, isSelected, logo, name }) {
   return (
     <div
+      data-testid={`job-card-${job.jobId}`}
       className={`p-3 sm:p-4 cursor-pointer flex items-start sm:items-center gap-3 sm:gap-4 rounded-md transition ${
         isSelected ? "bg-selectedjob" : "hover:bg-cardBackgroundHover"
       }`}

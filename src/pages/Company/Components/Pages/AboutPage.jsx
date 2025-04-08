@@ -12,7 +12,7 @@ function AboutPage() {
   return (
     <div>
       <AboutOverview />
-      <AboutLocations />
+      {company?.location && <AboutLocations />}
     </div>
   );
 }
