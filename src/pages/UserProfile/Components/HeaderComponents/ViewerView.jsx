@@ -1,9 +1,12 @@
 import React, { useState } from "react";
 import { axiosInstance as axios } from "../../../../apis/axios.js";
+import ConfirmModal from "../GenericDisplay/ConfirmModal";
 
 function ViewerView({ user, viewerId, initialStatus }) {
   const [isFollowing, setIsFollowing] = useState(initialStatus === "Following");
   const [status, setStatus] = useState(initialStatus); // "Connection", "Pending", etc.
+  const [showUnfollowModal, setShowUnfollowModal] = useState(false);
+
   const connectionStatusLabel = {
     Connection: "Connected",
     Pending: "Pending",
@@ -12,23 +15,30 @@ function ViewerView({ user, viewerId, initialStatus }) {
   };
 
   const handleFollow = async () => {
-    try {
-      if (!isFollowing && status !== "Connection") {
+    if (!isFollowing && status !== "Connection") {
+      try {
         const res = await axios.post("/connections/follow", {
           userId: user._id,
         });
         console.log("Followed successfully:", res.data);
         setIsFollowing(true);
-        return;
+      } catch (err) {
+        console.error("Follow error:", err.response?.data || err.message);
       }
+    } else {
+      setShowUnfollowModal(true);
+    }
+  };
 
-      if (isFollowing && status !== "Connection") {
-        const res = await axios.delete(`/connections/unfollow/${user._id}`);
-        console.log("Unfollowed successfully:", res.status);
-        setIsFollowing(false);
-      }
+  const confirmUnfollow = async () => {
+    try {
+      const res = await axios.delete(`/connections/unfollow/${user._id}`);
+      console.log("Unfollowed successfully:", res.status);
+      setIsFollowing(false);
     } catch (err) {
-      console.error("Follow error:", err.response?.data || err.message);
+      console.error("Unfollow error:", err.response?.data || err.message);
+    } finally {
+      setShowUnfollowModal(false);
     }
   };
 
@@ -55,7 +65,7 @@ function ViewerView({ user, viewerId, initialStatus }) {
   };
 
   return (
-    <div className="flex gap-2">
+    <div className="flex gap-2 flex-wrap sm:flex-nowrap">
       <button
         className="px-4 py-2 bg-blue-600 text-white rounded-full text-sm"
         onClick={handleMessage}
@@ -63,7 +73,6 @@ function ViewerView({ user, viewerId, initialStatus }) {
         Message
       </button>
 
-      {/* ✅ Connect Button - style based on status */}
       <button
         className={`px-4 py-2 border rounded-full text-sm capitalize transition-all duration-300 ease-in-out
           ${
@@ -77,7 +86,6 @@ function ViewerView({ user, viewerId, initialStatus }) {
         {connectionStatusLabel[status] || "Connect"}
       </button>
 
-      {/* ✅ Follow Button */}
       <button
         className={`px-4 py-2 border rounded-full text-sm transition-all duration-300 ease-in-out
           ${isFollowing ? "bg-blue-600 text-white" : "text-blue-600 border-blue-600"}
@@ -86,6 +94,18 @@ function ViewerView({ user, viewerId, initialStatus }) {
       >
         {isFollowing ? "Unfollow" : "Follow"}
       </button>
+
+      {showUnfollowModal && (
+        <ConfirmModal
+          title={`Unfollow ${user.firstName} ${user.lastName}`}
+          message={`Stop seeing posts from ${user.firstName} on your feed. They won’t be notified that you’ve unfollowed.`}
+          isOpen={showUnfollowModal}
+          onCancel={() => setShowUnfollowModal(false)}
+          onConfirm={confirmUnfollow}
+          confirmLabel="Unfollow"
+          cancelLabel="Cancel"
+        />
+      )}
     </div>
   );
 }

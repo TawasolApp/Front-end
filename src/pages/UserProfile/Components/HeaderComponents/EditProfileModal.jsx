@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { axiosInstance as axios } from "../../../../apis/axios.js";
-
+import ConfirmModal from "../GenericDisplay/ConfirmModal.jsx";
 function EditProfileModal({ user, isOpen, onClose, onSave }) {
   const [editedUser, setEditedUser] = useState({ ...user });
   const [errors, setErrors] = useState({});
@@ -93,9 +93,6 @@ function EditProfileModal({ user, isOpen, onClose, onSave }) {
     onSave,
   ]);
 
-  // function handleSave() {
-  //   setIsSaving(true); // Set isSaving to true, triggering the useEffect above
-  // }
   function handleSave() {
     let validationErrors = {};
     if (!editedUser.firstName?.trim())
@@ -136,6 +133,7 @@ function EditProfileModal({ user, isOpen, onClose, onSave }) {
     setShowDiscardModal(false);
     onClose();
   }
+
   return (
     <div
       className={`fixed inset-0 z-50 ${
@@ -286,35 +284,14 @@ function EditProfileModal({ user, isOpen, onClose, onSave }) {
         </div>
       </div>
       {showDiscardModal && (
-        <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
-          <div className="bg-boxbackground p-6 rounded-lg shadow-lg w-[350px] relative">
-            <button
-              onClick={() => setShowDiscardModal(false)}
-              className="absolute top-2 right-2 text-gray-500 hover:text-gray-700 p-2 text-2xl p-3"
-            >
-              &times;
-            </button>
-            <h3 className="text-lg font-semibold text-text">Discard changes</h3>
-            <p className="text-companyheader2 mt-2 ">
-              Are you sure you want to discard the changes you made?
-            </p>
-
-            <div className="flex justify-end mt-4 space-x-2">
-              <button
-                onClick={() => setShowDiscardModal(false)}
-                className="px-4 py-2 border border-blue-500 text-blue-500 rounded-full hover:bg-blue-50 transition duration-200"
-              >
-                No thanks
-              </button>
-              <button
-                onClick={confirmDiscard}
-                className="px-4 py-2 bg-blue-600 text-white rounded-full hover:bg-blue-700 transition duration-200"
-              >
-                Discard
-              </button>
-            </div>
-          </div>
-        </div>
+        <ConfirmModal
+          title="Discard changes"
+          message="Are you sure you want to discard the changes you made?"
+          onConfirm={confirmDiscard}
+          onCancel={() => setShowDiscardModal(false)}
+          confirmLabel="Discard"
+          cancelLabel="No thanks"
+        />
       )}
     </div>
   );

@@ -40,26 +40,6 @@ function GenericCard({
 
   if (isCardEmpty(item, type)) return null;
 
-  // const handleEndorse = () => {
-  //   setEndorsementCount((prev) => (isEndorsed ? prev - 1 : prev + 1));
-  //   setIsEndorsed(!isEndorsed);
-  // };
-  // const handleEndorse = async () => {
-  //   try {
-  //     const userId = item.userId || item._id || item.ownerId; // ← adjust based on your schema
-  //     const skillName = item.skillName;
-
-  //     await axios.post(`/connections/${userId}/endorse-skill`, {
-  //       skillName,
-  //     });
-
-  //     setEndorsementCount((prev) => prev + 1);
-  //     setIsEndorsed(true);
-  //   } catch (err) {
-  //     console.error("Endorse error:", err.response?.data || err.message);
-  //   }
-  // };
-
   const handleSave = () => {
     setIsModalOpen(false);
   };

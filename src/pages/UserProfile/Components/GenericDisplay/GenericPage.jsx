@@ -2,7 +2,9 @@ import React, { useState, useEffect } from "react";
 import { useNavigate, useOutletContext } from "react-router-dom";
 import GenericCard from "./GenericCard";
 import GenericModal from "./GenericModal";
+// import LoadingPage from "../../../LoadingScreen/LoadingPage.jsx";
 import { axiosInstance as axios } from "../../../../apis/axios.js";
+
 // Map for endpoint base path
 const endpointMap = {
   skills: "skills",
@@ -149,6 +151,7 @@ function GenericPage({ title, type }) {
       />
     );
   };
+  // if (isSaving) return <LoadingPage />;
 
   return (
     <div className="bg-boxbackground p-6 shadow-md rounded-md w-full max-w-3xl mx-auto">

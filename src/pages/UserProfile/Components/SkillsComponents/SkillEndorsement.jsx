@@ -5,7 +5,7 @@ function SkillEndorsement({ userId, skillName, endorsements = [], viewerId }) {
   const alreadyEndorsed = endorsements.includes(viewerId);
   const [isEndorsed, setIsEndorsed] = useState(alreadyEndorsed);
   const [endorsementCount, setEndorsementCount] = useState(endorsements.length);
-  // const viewerId = "67f417a8262957c2de3609bc"; // Assuming viewerId is passed as a prop
+  // const viewerId = "67f4d0637688af2ed794d19c"; // Assuming viewerId is passed as a prop
   const handleEndorse = async () => {
     try {
       await axios.post(`/connections/${userId}/endorse-skill`, {

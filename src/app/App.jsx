@@ -17,9 +17,9 @@ import WelcomePage from "../pages/Authentication/WelcomePage";
 import ChangeEmailPage from "../pages/Authentication/ChangeEmailPage";
 import VerifyChangeEmailPage from "../pages/Authentication/VerifyChangeEmailPage.jsx";
 
-import ProfilePage from "../pages/UserProfile/Components/ProfilePage";
+import ProfilePage from "../pages/UserProfile/Components/ProfilePage.jsx";
 import ProfileConnections from "../pages/UserProfile/Components/Connections";
-import ProfileLayout from "../pages/UserProfile/Components/profileLayout";
+import ProfileLayout from "../pages/UserProfile/profileLayout.jsx";
 import EducationPage from "../pages/UserProfile/Components/Pages/EducationPage";
 import ExperiencePage from "../pages/UserProfile/Components/Pages/ExperiencePage";
 import CertificationsPage from "../pages/UserProfile/Components/Pages/CertificationsPage";

@@ -3,7 +3,7 @@ import GenericCard from "./GenericCard";
 import GenericModal from "./GenericModal";
 import { useNavigate } from "react-router-dom";
 import { axiosInstance as axios } from "../../../../apis/axios.js";
-
+// import LoadingPage from "../../../LoadingScreen/LoadingPage.jsx";
 const singularMap = {
   skills: "skill",
   certification: "certification",
@@ -94,6 +94,7 @@ function GenericSection({ title, type, items, isOwner, user, onUserUpdate }) {
       editMode={editIndex !== null}
     />
   );
+  // if (isSaving) return <LoadingPage />;
 
   return (
     <div className="bg-boxbackground p-6 shadow-md rounded-md w-full max-w-3xl mx-auto pb-0 mb-2">

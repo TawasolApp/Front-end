@@ -69,7 +69,7 @@ function ResumeSection({ user, isOwner }) {
   };
 
   return (
-    <div className="bg-boxbackground p-6 shadow-md rounded-md w-full max-w-3xl mx-auto mb-4 relative group">
+    <div className="bg-boxbackground p-6 shadow-md rounded-md w-full max-w-3xl mx-auto mb-2 relative group">
       <h2 className="text-2xl font-semibold text-text mb-3">Resume</h2>
 
       {/* ✎ Edit Icon (only shown if resume exists) */}
