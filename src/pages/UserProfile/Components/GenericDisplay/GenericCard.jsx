@@ -3,6 +3,7 @@ import GenericModal, { displayDate } from "./GenericModal";
 import defaultExperienceImage from "../../../../assets/images/defaultExperienceImage.png";
 import defaultEducationImage from "../../../../assets/images/defaultEducationImage.png";
 import SkillEndorsement from "../SkillsComponents/SkillEndorsement";
+import ExpandableText from "../AboutComponents/ExpandableText";
 import { useSelector } from "react-redux";
 
 // Helper to skip rendering invalid entries
@@ -70,7 +71,9 @@ function GenericCard({
 
         {/* Description */}
         {item.description && (
-          <p className="text-text2 text-sm">{item.description}</p>
+          <div className="mt-1">
+            <ExpandableText text={item.description} maxLines={3} />
+          </div>
         )}
 
         {/* Dates */}
@@ -103,10 +106,11 @@ function GenericCard({
           </p>
         )}
         {item.description && (
-          <p className="text-text2 text-sm  whitespace-pre-wrap">
-            {item.description}
-          </p>
+          <div className="mt-1">
+            <ExpandableText text={item.description} maxLines={3} />
+          </div>
         )}
+
         {item.startDate && (
           <p className="text-text2 text-sm mt-1">
             {displayDate(item.startDate)}
@@ -131,29 +135,6 @@ function GenericCard({
           viewerId={viewerId} // logged-in user
         />
       )}
-      {/* {!isOwner && (
-        <button
-          onClick={handleEndorse}
-          className={`mt-2 px-4 py-2 border rounded-full flex items-center justify-center gap-2 w-fit ${
-            isEndorsed
-              ? "bg-gray-200 text-text2 border-companyheader2"
-              : "bg-white text-text-text2 border-companyheader2"
-          } hover:bg-gray-300 transition`}
-        >
-          {isEndorsed ? "✔ Endorsed" : "Endorse"}
-        </button>
-      )} */}
-      {/* {!isOwner && (
-        <button
-          onClick={handleEndorse}
-          disabled={isEndorsed}
-          className={`mt-2 px-4 py-2 border rounded-full flex items-center justify-center gap-2 w-fit
-    ${isEndorsed ? "bg-gray-200 text-text2" : "bg-white text-text-text2"} 
-    border-companyheader2 hover:bg-gray-300 transition`}
-        >
-          {isEndorsed ? "✔ Endorsed" : "Endorse"}
-        </button>
-      )} */}
     </div>
   );
 

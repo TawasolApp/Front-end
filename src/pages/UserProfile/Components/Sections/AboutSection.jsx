@@ -1,7 +1,8 @@
+// AboutSection.jsx
 import React, { useState } from "react";
 import { axiosInstance as axios } from "../../../../apis/axios.js";
 import AboutModal from "../AboutComponents/AboutEditingModal.jsx";
-import ExpandableText from "../AboutComponents/ExpandableText.jsx";
+import ExpandableText from "../AboutComponents/ExpandableText.jsx"; // ✅ Import
 
 function AboutSection({ user, isOwner }) {
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -19,7 +20,6 @@ function AboutSection({ user, isOwner }) {
         const response = await axios.patch("/profile", { bio: newBio });
         setBio(response.data.bio || "");
       }
-
       setIsModalOpen(false);
     } catch (err) {
       console.error("Failed to update bio:", err);

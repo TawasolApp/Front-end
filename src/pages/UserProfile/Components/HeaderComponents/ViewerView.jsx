@@ -1,10 +1,10 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { axiosInstance as axios } from "../../../../apis/axios.js";
 import ConfirmModal from "../GenericDisplay/ConfirmModal";
 
 function ViewerView({ user, viewerId, initialStatus }) {
   const [isFollowing, setIsFollowing] = useState(initialStatus === "Following");
-  const [status, setStatus] = useState(initialStatus); // "Connection", "Pending", etc.
+  const [status, setStatus] = useState(initialStatus);
   const [showUnfollowModal, setShowUnfollowModal] = useState(false);
 
   const connectionStatusLabel = {
@@ -14,8 +14,14 @@ function ViewerView({ user, viewerId, initialStatus }) {
     "No Connection": "Connect",
   };
 
+  useEffect(() => {
+    if (status === "Connection") {
+      setIsFollowing(true);
+    }
+  }, [status]);
+
   const handleFollow = async () => {
-    if (!isFollowing && status !== "Connection") {
+    if (!isFollowing) {
       try {
         const res = await axios.post("/connections/follow", {
           userId: user._id,
@@ -74,25 +80,25 @@ function ViewerView({ user, viewerId, initialStatus }) {
       </button>
 
       <button
-        className={`px-4 py-2 border rounded-full text-sm capitalize transition-all duration-300 ease-in-out
-          ${
-            ["Connection", "Pending", "Request"].includes(status)
-              ? "bg-blue-600 text-white"
-              : "text-blue-600 border-blue-600"
-          }
-          hover:bg-blue-100 hover:text-blue-700`}
+        className={`px-4 py-2 border rounded-full text-sm capitalize transition-all duration-300 ease-in-out ${
+          ["Connection", "Pending", "Request"].includes(status)
+            ? "bg-blue-600 text-white"
+            : "text-blue-600 border-blue-600"
+        } hover:bg-blue-100 hover:text-blue-700`}
         onClick={handleConnect}
       >
         {connectionStatusLabel[status] || "Connect"}
       </button>
 
       <button
-        className={`px-4 py-2 border rounded-full text-sm transition-all duration-300 ease-in-out
-          ${isFollowing ? "bg-blue-600 text-white" : "text-blue-600 border-blue-600"}
-          hover:bg-blue-100 hover:text-blue-700`}
+        className={`px-4 py-2 border rounded-full text-sm transition-all duration-300 ease-in-out ${
+          isFollowing
+            ? "bg-blue-600 text-white"
+            : "text-blue-600 border-blue-600"
+        } hover:bg-blue-100 hover:text-blue-700`}
         onClick={handleFollow}
       >
-        {isFollowing ? "Unfollow" : "Follow"}
+        {isFollowing ? "✓ Following" : "+ Follow"}
       </button>
 
       {showUnfollowModal && (

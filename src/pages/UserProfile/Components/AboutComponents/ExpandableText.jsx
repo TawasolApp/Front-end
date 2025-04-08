@@ -1,3 +1,4 @@
+// ExpandableText.jsx
 import React, { useState, useRef, useEffect } from "react";
 
 const ExpandableText = ({ text = "", maxLines = 3, className = "" }) => {
@@ -13,11 +14,7 @@ const ExpandableText = ({ text = "", maxLines = 3, className = "" }) => {
       const fullHeight = textRef.current.scrollHeight;
       const maxHeight = lineHeight * maxLines;
 
-      if (fullHeight > maxHeight) {
-        setShouldShowToggle(true);
-      } else {
-        setShouldShowToggle(false);
-      }
+      setShouldShowToggle(fullHeight > maxHeight);
     }
   }, [text, maxLines]);
 
@@ -27,9 +24,19 @@ const ExpandableText = ({ text = "", maxLines = 3, className = "" }) => {
     <div className={`text-sm text-companyheader2 ${className}`}>
       <div
         ref={textRef}
-        className={`whitespace-normal transition-all duration-300 ease-in-out ${
+        className={`whitespace-pre-wrap break-words transition-all duration-300 ease-in-out ${
           isExpanded ? "" : `line-clamp-${maxLines}`
         }`}
+        style={
+          !isExpanded
+            ? {
+                display: "-webkit-box",
+                WebkitBoxOrient: "vertical",
+                WebkitLineClamp: maxLines,
+                overflow: "hidden",
+              }
+            : {}
+        }
       >
         {text}
       </div>

@@ -17,7 +17,7 @@ function ProfilePage() {
     user.visibility === "public" ||
     (user.visibility === "connections_only" && user.status === "Connection");
   return (
-    <div className="bg-mainBackground pt-0 pb-4">
+    <div className="bg-mainBackground pt-0 pb-4 ">
       <ProfileHeader
         user={user}
         isOwner={isOwner}

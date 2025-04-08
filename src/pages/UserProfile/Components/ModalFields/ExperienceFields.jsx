@@ -226,6 +226,21 @@ function ExperienceFields({ formData, setFormData, handleChange, errors }) {
           </option>
         ))}
       </select>
+      <label htmlFor="description" className="block font-medium mb-1 text-text">
+        Description
+      </label>
+      <textarea
+        id="description"
+        name="description"
+        value={formData.description || ""}
+        onChange={handleChange}
+        className="border p-2 w-full mb-2 rounded-md resize-none bg-boxbackground"
+        placeholder="Add more details..."
+        maxLength={1000}
+      />
+      <p className="text-right text-gray-500 text-sm">
+        {formData.description?.length || 0}/1000
+      </p>
     </>
   );
 }
