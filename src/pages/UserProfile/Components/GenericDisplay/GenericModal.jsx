@@ -31,6 +31,7 @@ function GenericModal({
   type,
   initialData = {},
   editMode = false,
+  existingItems = [], // 👈 Accept the prop here
 }) {
   const [formData, setFormData] = useState(initialData);
   const [errors, setErrors] = useState({});
@@ -141,8 +142,11 @@ function GenericModal({
         if (!formData.company)
           newErrors.company = "Please provide a company name";
         if (!formData.title) newErrors.title = "Please provide a title";
+        if (!formData.employmentType) {
+          newErrors.employmentType = "Employment type is required";
+        }
       }
-      if (type === "certifications") {
+      if (type === "certification") {
         if (!formData.name)
           newErrors.name = "Please provide a certificate name";
         if (!formData.company)
@@ -174,7 +178,7 @@ function GenericModal({
         workExperiencePicture: formData.workExperiencePicture, //  ensure it's included
         certificationPicture: formData.certificationPicture,
 
-        ...(type === "certifications"
+        ...(type === "certification"
           ? {
               issueDate: formatDate(startMonth, startYear, "start"),
               expiryDate:
@@ -237,9 +241,12 @@ function GenericModal({
               handleChange={handleChange}
               errors={errors}
               editMode={editMode} // wont show skillname if edit
+              existingSkills={existingItems.map((item) =>
+                item.skillName.toLowerCase()
+              )}
             />
           )}
-          {type === "certifications" && (
+          {type === "certification" && (
             <CertificationsFields
               formData={formData}
               setFormData={setFormData}

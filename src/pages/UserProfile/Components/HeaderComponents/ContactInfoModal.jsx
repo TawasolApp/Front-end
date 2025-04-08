@@ -67,18 +67,20 @@ function ContactInfoModal({ user, isOpen, onClose, isOwner }) {
           </div>
 
           {/* Email */}
-          <div className="flex items-start gap-2">
-            <span className="text-xl">✉️</span>
-            <div className="flex flex-col">
-              <span className="text-gray-500">Email</span>
-              <a
-                href={`mailto:${email}`}
-                className="text-blue-600 hover:underline break-all"
-              >
-                {email}
-              </a>
+          {isOwner && (
+            <div className="flex items-start gap-2">
+              <span className="text-xl">✉️</span>
+              <div className="flex flex-col">
+                <span className="text-gray-500">Email</span>
+                <a
+                  href={`mailto:${email}`}
+                  className="text-blue-600 hover:underline break-all"
+                >
+                  {email}
+                </a>
+              </div>
             </div>
-          </div>
+          )}
         </div>
       </div>
     </div>

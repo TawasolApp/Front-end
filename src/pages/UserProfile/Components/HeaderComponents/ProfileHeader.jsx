@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
+import { useSelector } from "react-redux";
 import CoverPhoto from "./CoverPhoto";
 import ProfilePicture from "./ProfilePicture";
 import defaultProfilePicture from "../../../../assets/images/defaultProfilePicture.png";
@@ -10,7 +11,6 @@ import ImageEnlarge from "./ImageEnlarge";
 import ViewerView from "./ViewerView";
 import ContactInfoModal from "./ContactInfoModal";
 import { axiosInstance as axios } from "../../../../apis/axios";
-
 function ProfileHeader({ user, isOwner, onSave, experienceRef, educationRef }) {
   const [editedUser, setEditedUser] = useState(user);
   const [isEditing, setIsEditing] = useState(false);
@@ -20,9 +20,10 @@ function ProfileHeader({ user, isOwner, onSave, experienceRef, educationRef }) {
   const navigate = useNavigate();
   const { profileSlug } = useParams();
   const [isContactOpen, setIsContactOpen] = useState(false);
-
+  const { userId } = useSelector((state) => state.authentication);
+  const viewerId = userId;
   if (!editedUser) return null;
-
+  console.log("editedUser", editedUser, "viewerId", viewerId);
   const experienceIndex = editedUser.selectedExperienceIndex ?? 0;
   const educationIndex = editedUser.selectedEducationIndex ?? 0;
 
@@ -154,7 +155,11 @@ function ProfileHeader({ user, isOwner, onSave, experienceRef, educationRef }) {
 
       {!isOwner && (
         <div className="px-6 pb-4 pt-2">
-          <ViewerView user={editedUser} viewerId={viewerId} />
+          <ViewerView
+            user={editedUser}
+            viewerId={viewerId}
+            initialStatus={editedUser.status}
+          />
         </div>
       )}
 

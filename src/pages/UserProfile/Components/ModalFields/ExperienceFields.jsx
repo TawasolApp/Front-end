@@ -5,14 +5,17 @@ import defaultExperienceImage from "../../../../assets/images/defaultExperienceI
 const employmentOptions = [
   { value: "full_time", label: "Full-time" },
   { value: "part_time", label: "Part-time" },
-  { value: "internship", label: "Internship" },
+  { value: "self_employed", label: "Self-employed" },
   { value: "freelance", label: "Freelance" },
+  { value: "contract", label: "Contract" },
+  { value: "internship", label: "Internship" },
+  { value: "apprenticeship", label: "Apprenticeship" },
 ];
 
 const locationOptions = [
   { value: "on_site", label: "On-site" },
-  { value: "remote", label: "Remote" },
   { value: "hybrid", label: "Hybrid" },
+  { value: "remote", label: "Remote" },
 ];
 
 function ExperienceFields({ formData, setFormData, handleChange, errors }) {
@@ -20,6 +23,7 @@ function ExperienceFields({ formData, setFormData, handleChange, errors }) {
   const [inputValue, setInputValue] = useState(formData.company || "");
   const [showDropdown, setShowDropdown] = useState(false);
   const [highlightedIndex, setHighlightedIndex] = useState(-1);
+  const [currentlyWorking, setCurrentlyWorking] = useState(!formData.endDate);
 
   useEffect(() => {
     axios
@@ -48,6 +52,16 @@ function ExperienceFields({ formData, setFormData, handleChange, errors }) {
     setShowDropdown(false);
   };
 
+  const handleCurrentlyWorkingChange = (e) => {
+    const checked = e.target.checked;
+    setCurrentlyWorking(checked);
+    if (checked) {
+      setFormData((prev) => ({
+        ...prev,
+        endDate: "", // remove endDate if user is currently working
+      }));
+    }
+  };
   return (
     <>
       <h2 className="text-lg font-semibold mb-4 text-text">Add experience</h2>
@@ -90,7 +104,9 @@ function ExperienceFields({ formData, setFormData, handleChange, errors }) {
           </option>
         ))}
       </select>
-
+      {errors.employmentType && (
+        <p className="text-red-600 text-sm mb-2">{errors.employmentType}</p>
+      )}
       {/* Company or Organization */}
       <label htmlFor="company" className="block font-medium mb-1 text-text">
         Company or organization*
@@ -160,18 +176,20 @@ function ExperienceFields({ formData, setFormData, handleChange, errors }) {
 
       {/* Currently Working */}
       {/* ADD CURRENTLY WORKING ON AFTER CHECKING END DATE  */}
-      {/* <div className="flex items-center mb-3 gap-2">
+      <div className="flex items-center mb-3 gap-2">
         <input
           id="currentlyWorking"
           type="checkbox"
           name="currentlyWorking"
-          checked={formData.currentlyWorking || false}
-          onChange={handleChange}
+          checked={currentlyWorking}
+          disabled={formData.endMonth || formData.endYear}
+          onChange={handleCurrentlyWorkingChange}
         />
+
         <label htmlFor="currentlyWorking" className="text-text">
           I am currently working in this role
         </label>
-      </div> */}
+      </div>
 
       {/* Location */}
       <label htmlFor="location" className="block font-medium mb-1 text-text">

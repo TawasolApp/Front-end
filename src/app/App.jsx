@@ -54,10 +54,9 @@ const RenderWithNavbar = (component) => {
       {component}
     </>
   );
-}
+};
 
 const App = () => {
-
   return (
     <Router>
       <Routes>
@@ -81,7 +80,10 @@ const App = () => {
           element={<VerifyChangeEmailPage />}
         />
         <Route path="/auth/verify-email" element={<VerifySignUpPage />} />
-        <Route path="/auth/reset-password" element={<VerifyResetPasswordPage />} />
+        <Route
+          path="/auth/reset-password"
+          element={<VerifyResetPasswordPage />}
+        />
         <Route path="/auth/new-password" element={<NewPasswordPage />} />
         <Route path="/auth/update-email" element={<ChangeEmailPage />} />
 
@@ -92,12 +94,15 @@ const App = () => {
           <Route index element={<ProfilePage />} />
           <Route path="education" element={<EducationPage />} />
           <Route path="workExperience" element={<ExperiencePage />} />
-          <Route path="certifications" element={<CertificationsPage />} />
+          <Route path="certification" element={<CertificationsPage />} />
           <Route path="skills" element={<SkillsPage />} />
           <Route path="connections" element={<ProfileConnections />} />
         </Route>
 
-        <Route path="/connections" element={RenderWithNavbar(<ConnectionPage />)} />
+        <Route
+          path="/connections"
+          element={RenderWithNavbar(<ConnectionPage />)}
+        />
         <Route path="/blocked" element={<BlockedPage />} />
         <Route path="/follow" element={<FollowPage />} />
         <Route path="/manage-connections" element={<ManageConnections />} />
@@ -105,7 +110,10 @@ const App = () => {
 
         <Route path="/feed/:id" element={<SinglePost />} />
         <Route path="/feed" element={RenderWithNavbar(<FeedContainer />)} />
-        <Route path="/feed/reposts/:id" element={RenderWithNavbar(<RepostsContainer />)} /> 
+        <Route
+          path="/feed/reposts/:id"
+          element={RenderWithNavbar(<RepostsContainer />)}
+        />
         <Route path="/my-items/saved-posts" element={<SavedPostsContainer />} />
 
         <Route path="/company" element={<CompanyLayout />} />

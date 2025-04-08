@@ -7,7 +7,7 @@ import { axiosInstance as axios } from "../../../../apis/axios.js";
 const endpointMap = {
   skills: "skills",
   education: "education",
-  certifications: "certification",
+  certification: "certification",
   workExperience: "work-experience",
 };
 function GenericPage({ title, type }) {
@@ -190,6 +190,8 @@ function GenericPage({ title, type }) {
               type={type}
               isOwner={isOwner}
               showEditIcons={false}
+              user={user}
+              connectionStatus={user.status}
             />
             {isOwner && (
               <button

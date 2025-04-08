@@ -2,7 +2,9 @@ import React, { useState } from "react";
 import GenericModal, { displayDate } from "./GenericModal";
 import defaultExperienceImage from "../../../../assets/images/defaultExperienceImage.png";
 import defaultEducationImage from "../../../../assets/images/defaultEducationImage.png";
-//I AM PASSING VIEWER ID ALSOOO HERE FOR ENDORSEMENTS
+import SkillEndorsement from "../SkillsComponents/SkillEndorsement";
+import { useSelector } from "react-redux";
+
 // Helper to skip rendering invalid entries
 const isCardEmpty = (item, type) => {
   switch (type) {
@@ -12,7 +14,7 @@ const isCardEmpty = (item, type) => {
       return !item?.company && !item?.title;
     case "skills":
       return !item?.skillName;
-    case "certifications":
+    case "certification":
       return !item?.name;
     default:
       return false;
@@ -25,12 +27,15 @@ function GenericCard({
   type,
   onEdit,
   showEditIcons = false,
-  viewerId,
+  user,
+  connectionStatus,
 }) {
-  const [isEndorsed, setIsEndorsed] = useState(false);
-  const [endorsementCount, setEndorsementCount] = useState(
-    item.endorsements || 0
-  );
+  const { userId } = useSelector((state) => state.authentication);
+  const viewerId = userId;
+  // const [isEndorsed, setIsEndorsed] = useState(false);
+  // const [endorsementCount, setEndorsementCount] = useState(
+  //   item.endorsements || 0
+  // );
   const [isModalOpen, setIsModalOpen] = useState(false);
 
   if (isCardEmpty(item, type)) return null;
@@ -39,21 +44,21 @@ function GenericCard({
   //   setEndorsementCount((prev) => (isEndorsed ? prev - 1 : prev + 1));
   //   setIsEndorsed(!isEndorsed);
   // };
-  const handleEndorse = async () => {
-    try {
-      const userId = item.userId || item._id || item.ownerId; // ← adjust based on your schema
-      const skillName = item.skillName;
+  // const handleEndorse = async () => {
+  //   try {
+  //     const userId = item.userId || item._id || item.ownerId; // ← adjust based on your schema
+  //     const skillName = item.skillName;
 
-      await axios.post(`/connections/${userId}/endorse-skill`, {
-        skillName,
-      });
+  //     await axios.post(`/connections/${userId}/endorse-skill`, {
+  //       skillName,
+  //     });
 
-      setEndorsementCount((prev) => prev + 1);
-      setIsEndorsed(true);
-    } catch (err) {
-      console.error("Endorse error:", err.response?.data || err.message);
-    }
-  };
+  //     setEndorsementCount((prev) => prev + 1);
+  //     setIsEndorsed(true);
+  //   } catch (err) {
+  //     console.error("Endorse error:", err.response?.data || err.message);
+  //   }
+  // };
 
   const handleSave = () => {
     setIsModalOpen(false);
@@ -135,13 +140,17 @@ function GenericCard({
   const renderSkills = () => (
     <div className="break-all whitespace-pre-wrap w-full">
       <h3 className="text-lg font-semibold text-text">{item.skillName}</h3>
-      <p
-        className="text-companyheader2 flex items-center mt-1"
-        data-testid="endorsement-count"
-      >
-        <span className="mr-2">👥</span> {endorsementCount} endorsement
-        {endorsementCount !== 1 ? "s" : ""}
-      </p>
+
+      {/* Position (optional) */}
+      {item.position && <p className="text-text2 text-sm">{item.position}</p>}
+      {!isOwner && connectionStatus === "Connection" && (
+        <SkillEndorsement
+          userId={user._id} // profile owner
+          skillName={item.skillName}
+          endorsements={item.endorsements || []}
+          viewerId={viewerId} // logged-in user
+        />
+      )}
       {/* {!isOwner && (
         <button
           onClick={handleEndorse}
@@ -213,7 +222,7 @@ function GenericCard({
       {type === "workExperience" && renderExperience()}
       {type === "education" && renderEducation()}
       {type === "skills" && renderSkills()}
-      {type === "certifications" && renderCertifications()}
+      {type === "certification" && renderCertifications()}
 
       {isModalOpen && (
         <GenericModal
