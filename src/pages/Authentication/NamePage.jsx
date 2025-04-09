@@ -38,7 +38,7 @@ const NamePage = () => {
         captchaToken,
       });
 
-      navigate("/auth/verification-pending");
+      navigate("/auth/verification-pending", { state: { showResend: true } });
     } catch (error) {
       console.error(
         `Registration Failed: ${error.response?.data?.message || error.message}`
