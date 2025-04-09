@@ -12,7 +12,8 @@ const initialState = {
   bio: localStorage.getItem("bio") || "",
   type: localStorage.getItem("type") || "",
   profilePicture: localStorage.getItem("profilePicture") || null,
-  coverPhoto: localStorage.getItem("cover") || null
+  coverPhoto: localStorage.getItem("cover") || null,
+  isSocialLogin: localStorage.getItem("isSocialLogin") || false,
 };
 
 export const authenticationSlice = createSlice({
@@ -70,6 +71,10 @@ export const authenticationSlice = createSlice({
     setIsNewGoogleUser: (state, action) => {
       state.isNewGoogleUser = action.payload;
     },
+    setIsSocialLogin: (state, action) => {
+      state.isSocialLogin = action.payload;
+      localStorage.setItem("isSocialLogin", action.payload);
+    },
     logout: (state) => {
       state.userId = "";
       state.email = "";
@@ -84,6 +89,7 @@ export const authenticationSlice = createSlice({
       state.profilePicture = "";
       state.coverPhoto = "";
       state.isNewGoogleUser = false;
+      state.isSocialLogin = false;
       localStorage.removeItem("userId");
       localStorage.removeItem("email");
       localStorage.removeItem("firstName");
@@ -95,6 +101,7 @@ export const authenticationSlice = createSlice({
       localStorage.removeItem("type");
       localStorage.removeItem("profilePicture");
       localStorage.removeItem("coverPhoto");
+      localStorage.removeItem("isSocialLogin");
     },
   },
 });
@@ -113,6 +120,7 @@ export const {
   setProfilePicture,
   setCoverPhoto,
   setIsNewGoogleUser,
+  setIsSocialLogin,
   logout,
 } = authenticationSlice.actions;
 
