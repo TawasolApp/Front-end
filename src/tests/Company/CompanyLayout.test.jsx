@@ -28,6 +28,12 @@ vi.mock("../../pages/Company/Components/GenericComponents/Footer", () => ({
   default: () => <div data-testid="footer" />,
 }));
 
+// Mock LoadingPage
+vi.mock("../../pages/LoadingScreen/LoadingPage", () => ({
+  default: () => <div data-testid="loading-page" />,
+}));
+
+// Mock react-router-dom Outlet
 vi.mock("react-router-dom", async () => {
   const actual = await vi.importActual("react-router-dom");
   return {
@@ -42,22 +48,31 @@ describe("CompanyLayout", () => {
   });
 
   test("renders layout when companyId is provided", async () => {
+    mockedAxios.get.mockResolvedValueOnce({
+      data: {
+        companyId: "test-company",
+        name: "Test Company",
+        isManager: true,
+      },
+    });
+
     render(
       <MemoryRouter initialEntries={["/company/test-company/home"]}>
         <Routes>
           <Route path="/company/:companyId/*" element={<CompanyLayout />} />
         </Routes>
-      </MemoryRouter>,
+      </MemoryRouter>
     );
 
-    // Wait for the layout to finish loading
+    // Should show loading first
+    expect(screen.getByTestId("loading-page")).toBeInTheDocument();
+
+    // Then render components
     await waitFor(() => {
       expect(screen.getByTestId("company-header")).toBeInTheDocument();
+      expect(screen.getByTestId("footer")).toBeInTheDocument();
+      expect(screen.getByTestId("outlet")).toBeInTheDocument();
     });
-
-    // Check other static layout components
-    expect(screen.getByTestId("footer")).toBeInTheDocument();
-    expect(screen.getByTestId("outlet")).toBeInTheDocument();
   });
 
   test("redirects to first company if no companyId is provided", async () => {
@@ -65,6 +80,8 @@ describe("CompanyLayout", () => {
       data: [
         {
           companyId: "first-company",
+          name: "First Co",
+          isManager: true,
         },
       ],
     });
@@ -78,11 +95,13 @@ describe("CompanyLayout", () => {
             element={<div data-testid="redirected-home" />}
           />
         </Routes>
-      </MemoryRouter>,
+      </MemoryRouter>
     );
 
     await waitFor(() => {
-      expect(mockedAxios.get).toHaveBeenCalledWith("/companies");
+      expect(mockedAxios.get).toHaveBeenCalledWith(
+        "/companies?page=1&limit=1&name=y"
+      );
     });
   });
 });

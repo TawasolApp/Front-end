@@ -2,9 +2,14 @@ import React, { useEffect, useState } from "react";
 import { axiosInstance as axios } from "../../../../apis/axios";
 import { FiUpload } from "react-icons/fi";
 
-function EditAboutModal({ show, companyData, onClose }) {
+function EditAboutModal({ show, companyData, onClose, setCompanyData }) {
   const [logoFile, setLogoFile] = useState(null);
   const [bannerFile, setBannerFile] = useState(null);
+  const [uploading, setUploading] = useState(false);
+
+  const [logoChanged, setLogoChanged] = useState(false);
+  const [bannerChanged, setBannerChanged] = useState(false);
+
   const [errorMessage, setErrorMessage] = useState("");
   const [formData, setFormData] = useState({
     name: "",
@@ -36,7 +41,7 @@ function EditAboutModal({ show, companyData, onClose }) {
         website: companyData.website || "",
         contactNumber: companyData.contactNumber || "",
         isVerified: companyData.isVerified || false,
-        founded: companyData.founded || "",
+        founded: companyData.founded ? String(companyData.founded) : "",
         location: companyData.location || "",
         email: companyData.email || "",
         companyType: companyData.companyType || "",
@@ -71,19 +76,36 @@ function EditAboutModal({ show, companyData, onClose }) {
             parsed >= 1800 &&
             parsed <= new Date().getFullYear()
           ) {
-            payload.founded = parsed;
+            payload.founded = parsed; // will be number
           }
+
           continue;
         }
 
         if (key === "location") {
+          const trimmed = currentValue.trim();
           const isValidLocation =
-            currentValue?.trim() && /^https?:\/\/.+/.test(currentValue.trim());
+            /^https:\/\/(www\.)?google\.com\/maps\?q=([-+]?[\d.]+),([-+]?[\d.]+)$/.test(
+              trimmed
+            );
+
+          if (trimmed !== (originalValue?.trim() || "")) {
+            if (!isValidLocation) {
+              setErrorMessage("Location must be a valid Google Maps link.");
+              return;
+            }
+            payload.location = trimmed;
+          }
+          continue;
+        }
+
+        if (key === "logo" || key === "banner") {
           if (
-            isValidLocation &&
-            currentValue.trim() !== (originalValue?.trim() || "")
+            (key === "logo" && logoChanged) ||
+            (key === "banner" && bannerChanged) ||
+            currentValue !== originalValue
           ) {
-            payload.location = currentValue.trim();
+            payload[key] = currentValue;
           }
           continue;
         }
@@ -117,7 +139,13 @@ function EditAboutModal({ show, companyData, onClose }) {
 
       console.log("Company updated:", response.data);
       onClose();
-      window.location.reload();
+      setCompanyData((prev) => ({
+        ...prev,
+        ...response.data,
+      }));
+      setLogoChanged(false);
+      setBannerChanged(false);
+      onClose();
     } catch (error) {
       const backendMessage = error.response?.data?.message;
       console.error("Error updating company:", error);
@@ -135,28 +163,35 @@ function EditAboutModal({ show, companyData, onClose }) {
 
     const formDataUpload = new FormData();
     formDataUpload.append("file", file);
-
+    setUploading(true);
     try {
-      const uploadResponse = await axios.post(
-        "/api/uploadImage",
-        formDataUpload,
-        {
-          headers: { "Content-Type": "multipart/form-data" },
-        }
-      );
+      const uploadResponse = await axios.post("/media", formDataUpload, {
+        headers: { "Content-Type": "multipart/form-data" },
+      });
 
-      const fileUrl = uploadResponse.data;
+      const fileUrl = uploadResponse.data.url;
 
       setFormData((prev) => ({
         ...prev,
         [type]: fileUrl,
       }));
 
-      if (type === "logo") setLogoFile(file);
-      if (type === "banner") setBannerFile(file);
+      // Track if image was uploaded
+      if (type === "logo") {
+        setLogoFile(file);
+        setLogoChanged(true);
+      }
+      if (type === "banner") {
+        setBannerFile(file);
+        setBannerChanged(true);
+      }
+
+      setErrorMessage(""); // Clear error on success
     } catch (error) {
       console.error("Upload failed:", error);
       setErrorMessage(`Failed to upload ${type}. Please try again.`);
+    } finally {
+      setUploading(false); // Upload done
     }
   };
 
@@ -184,6 +219,7 @@ function EditAboutModal({ show, companyData, onClose }) {
           </h2>
           <button
             className="text-gray-600 text-xl font-bold hover:text-gray-900 transition"
+            aria-label="Close Edit Modal"
             onClick={onClose}
           >
             ✖
@@ -202,6 +238,7 @@ function EditAboutModal({ show, companyData, onClose }) {
                 src={formData.banner || "https://via.placeholder.com/600x200"}
                 alt="Company Banner"
                 className="w-full h-full object-cover"
+                data-testid="banner-image"
               />
             </div>
 
@@ -218,6 +255,7 @@ function EditAboutModal({ show, companyData, onClose }) {
                 accept="image/*"
                 className="absolute inset-0 opacity-0 cursor-pointer"
                 onChange={(e) => handleFileUpload(e, "banner")}
+                data-testid="banner-upload-input"
               />
             </div>
           </div>
@@ -230,6 +268,7 @@ function EditAboutModal({ show, companyData, onClose }) {
                 src={formData.logo || "https://via.placeholder.com/100"}
                 alt="Logo Preview"
                 className="w-full h-full object-contain"
+                data-testid="logo-image"
               />
             </div>
 
@@ -246,6 +285,7 @@ function EditAboutModal({ show, companyData, onClose }) {
                 accept="image/*"
                 className="absolute inset-0 opacity-0 cursor-pointer"
                 onChange={(e) => handleFileUpload(e, "logo")}
+                data-testid="logo-upload-input"
               />
             </div>
           </div>
@@ -426,8 +466,9 @@ function EditAboutModal({ show, companyData, onClose }) {
           <button
             className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-800 transition"
             onClick={handleSave}
+            disabled={uploading}
           >
-            Save Changes
+            {uploading ? "Uploading..." : "Save Changes"}
           </button>
         </div>
       </div>

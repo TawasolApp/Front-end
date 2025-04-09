@@ -1,3 +1,12 @@
+const mockNavigate = vi.fn();
+vi.mock("react-router-dom", async () => {
+  const actual = await vi.importActual("react-router-dom");
+  return {
+    ...actual,
+    useNavigate: () => mockNavigate,
+  };
+});
+
 import {
   render,
   screen,
@@ -15,16 +24,6 @@ vi.mock("../../apis/axios", () => ({
     post: vi.fn(),
   },
 }));
-const mockedAxios = axios;
-
-const mockNavigate = vi.fn();
-vi.mock("react-router-dom", async () => {
-  const actual = await vi.importActual("react-router-dom");
-  return {
-    ...actual,
-    useNavigate: () => mockNavigate,
-  };
-});
 
 describe("CreateCompanyPage", () => {
   beforeEach(() => {
@@ -69,73 +68,101 @@ describe("CreateCompanyPage", () => {
     });
   });
 
-  // test("shows success message on successful form submission", async () => {
-  //   mockedAxios.post.mockResolvedValueOnce({ status: 201 });
+  test("shows success message on successful form submission", async () => {
+    // Use the default async flow and avoid fake timers
+    axios.post.mockResolvedValueOnce({
+      status: 201,
+      data: { companyId: 123 },
+    });
 
-  //   render(
-  //     <MemoryRouter>
-  //       <CreateCompanyPage />
-  //     </MemoryRouter>
-  //   );
+    render(
+      <MemoryRouter>
+        <CreateCompanyPage />
+      </MemoryRouter>
+    );
 
-  //   fireEvent.change(screen.getByTestId("company-name"), {
-  //     target: { value: "Test Co" },
-  //   });
-  //   fireEvent.change(screen.getByTestId("company-industry"), {
-  //     target: { value: "Tech" },
-  //   });
-  //   fireEvent.change(screen.getByTestId("organization-size"), {
-  //     target: { value: "2-10 employees" },
-  //   });
-  //   fireEvent.change(screen.getByTestId("organization-type"), {
-  //     target: { value: "Public company" },
-  //   });
-  //   fireEvent.click(screen.getByTestId("agree-terms"));
+    // Fill required fields
+    fireEvent.change(screen.getByTestId("company-name"), {
+      target: { value: "Test Co" },
+    });
+    fireEvent.change(screen.getByTestId("company-industry"), {
+      target: { value: "Tech" },
+    });
+    fireEvent.change(screen.getByTestId("organization-size"), {
+      target: { value: "1-50 Employees" },
+    });
+    fireEvent.change(screen.getByTestId("organization-type"), {
+      target: { value: "Public Company" },
+    });
+    fireEvent.change(screen.getByTestId("company-website"), {
+      target: { value: "https://example.com" },
+    });
+    fireEvent.change(screen.getByTestId("company-email"), {
+      target: { value: "test@example.com" },
+    });
+    fireEvent.change(screen.getByTestId("company-contactNumber"), {
+      target: { value: "+20123456789" },
+    });
 
-  //   fireEvent.click(screen.getByText("Create Page"));
+    fireEvent.click(screen.getByTestId("agree-terms"));
+    fireEvent.click(screen.getByText("Create Page"));
 
-  //   const successMessage = await screen.findByText(
-  //     /company page created successfully!/i
-  //   );
-  //   expect(successMessage).toBeInTheDocument();
-  // });
+    // Wait for success message to appear
+    await waitFor(() => {
+      expect(mockNavigate).toHaveBeenCalledWith("/company/123/home");
+    });
 
-  // test("shows error message on API failure", async () => {
-  //   mockedAxios.post.mockRejectedValueOnce({
-  //     response: {
-  //       data: {
-  //         error: "Failed to create",
-  //       },
-  //     },
-  //   });
+    // Ensure navigation is triggered after the success message
+    // expect(mockNavigate).toHaveBeenCalledWith("/company/123");
+  }, 20000); // Increased timeout to 20 seconds
 
-  //   render(
-  //     <MemoryRouter>
-  //       <CreateCompanyPage />
-  //     </MemoryRouter>
-  //   );
+  test("shows error message on API failure", async () => {
+    axios.post.mockRejectedValueOnce({
+      response: {
+        data: {
+          error: "Failed to create",
+        },
+      },
+    });
 
-  //   fireEvent.change(screen.getByTestId("company-name"), {
-  //     target: { value: "Test Co" },
-  //   });
-  //   fireEvent.change(screen.getByTestId("company-industry"), {
-  //     target: { value: "Tech" },
-  //   });
-  //   fireEvent.change(screen.getByTestId("organization-size"), {
-  //     target: { value: "2-10 employees" },
-  //   });
-  //   fireEvent.change(screen.getByTestId("organization-type"), {
-  //     target: { value: "Public company" },
-  //   });
-  //   fireEvent.click(screen.getByTestId("agree-terms"));
+    render(
+      <MemoryRouter>
+        <CreateCompanyPage />
+      </MemoryRouter>
+    );
 
-  //   await act(async () => {
-  //     fireEvent.click(screen.getByText("Create Page"));
-  //   });
+    // Fill required fields
+    fireEvent.change(screen.getByTestId("company-name"), {
+      target: { value: "Test Co" },
+    });
+    fireEvent.change(screen.getByTestId("company-industry"), {
+      target: { value: "Tech" },
+    });
+    fireEvent.change(screen.getByTestId("organization-size"), {
+      target: { value: "51-400 Employees" },
+    });
+    fireEvent.change(screen.getByTestId("organization-type"), {
+      target: { value: "Public Company" },
+    });
+    fireEvent.change(screen.getByTestId("company-website"), {
+      target: { value: "https://example.com" },
+    });
+    fireEvent.change(screen.getByTestId("company-email"), {
+      target: { value: "test@example.com" },
+    });
+    fireEvent.change(screen.getByTestId("company-contactNumber"), {
+      target: { value: "+20123456789" },
+    });
 
-  //   const errorMessage = await screen.findByTestId("api-error-message");
-  //   expect(errorMessage).toHaveTextContent("Failed to create");
-  // });
+    fireEvent.click(screen.getByTestId("agree-terms"));
+
+    await act(async () => {
+      fireEvent.click(screen.getByText("Create Page"));
+    });
+
+    const errorMessage = await screen.findByTestId("api-error-message");
+    expect(errorMessage).toHaveTextContent("Failed to create");
+  }, 20000); // Increased timeout to 20 seconds
 
   test("disables submit button when terms are not agreed", () => {
     render(

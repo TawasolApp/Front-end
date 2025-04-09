@@ -3,10 +3,16 @@ import { FiExternalLink } from "react-icons/fi";
 import { useOutletContext } from "react-router-dom";
 function AboutLocations() {
   const { company } = useOutletContext();
-  const mapUrl = company.mapsloc; // The exact location link from the backend
-  const embedUrl = `https://www.google.com/maps?q=${encodeURIComponent(
-    company.address,
-  )}&output=embed`;
+  const mapUrl = company.location; // The exact location link from the backend
+  const extractCoordinates = (url) => {
+    const queryMatch = url.match(/q=(-?\d+\.\d+),(-?\d+\.\d+)/);
+    if (queryMatch) return `${queryMatch[1]},${queryMatch[2]}`;
+    return "";
+  };
+  const coords = extractCoordinates(company.location);
+  const embedUrl = coords
+    ? `https://www.google.com/maps?q=${coords}&z=15&output=embed`
+    : `https://www.google.com/maps?q=${encodeURIComponent(company.address)}&z=15&output=embed`;
 
   return (
     <div
@@ -26,7 +32,7 @@ function AboutLocations() {
         <FiExternalLink className="w-4 h-4" />
       </a>
 
-      {/* Google Maps Embed (No API) */}
+      {/* Google Maps Embed */}
       <div className="w-full h-64 rounded-lg overflow-hidden shadow-lg mt-4">
         <iframe
           title="Google Map"

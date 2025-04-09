@@ -19,19 +19,19 @@ function CompanyHeader({
   setShowAdminIcons,
   isAdmin,
 }) {
+  if (!company) {
+    return <LoadingPage />;
+  }
   const navigate = useNavigate();
   const location = useLocation(); // Get current URL
-  const [isFollowing, setIsFollowing] = useState(false);
+  const [isFollowing, setIsFollowing] = useState(company.isFollowing);
   const [showModal, setShowModal] = useState(false);
   const [showMoreModal, setShowMoreModal] = useState(false);
   const [showEditModal, setShowEditModal] = useState(false);
   const [isPhotoClicked, setIsOpen] = useState(false);
   const [showFollowersModal, setShowFollowersModal] = useState(false);
   const [showAddManagerModal, setShowAddManagerModal] = useState(false);
-
-  if (!company) {
-    return <LoadingPage />;
-  }
+  const [loadingImages, setLoadingImages] = useState(true);
 
   const handleNavigation = (route) => {
     navigate(`/company/${company.companyId}/${route.toLowerCase()}`, {
@@ -42,8 +42,9 @@ function CompanyHeader({
   const pathParts = location.pathname.split("/");
   const activeButton = pathParts.length >= 3 ? pathParts[3] || "home" : "home";
 
-  //on click call togglefollow
   const handleFollowToggling = () => {
+    if (isAdmin) return; // prevent admin from clicking
+
     if (isFollowing) {
       setShowModal(true);
     } else {
@@ -52,7 +53,13 @@ function CompanyHeader({
         .then(() => {
           setIsFollowing(true);
         })
-        .catch((error) => console.error("Error following company:", error));
+        .catch((error) => {
+          if (error.response?.status === 409) {
+            console.warn("Already following this company.");
+          } else {
+            console.error("Error following company:", error);
+          }
+        });
     }
   };
 
@@ -123,20 +130,18 @@ function CompanyHeader({
             </button>{" "}
             · {company.companySize}
           </p>
-          <div className="mt-4 flex flex-nowrap gap-2 sm:gap-3 pb-4 items-center justify-start relative">
-            {/* Follow Button Users */}
-            {!showAdminIcons && !isAdmin && (
+          <div className="mt-4 flex flex-wrap gap-2 sm:gap-3 pb-4 items-center justify-start relative">
+            {!showAdminIcons && (
               <button
-                className="px-4 h-9 min-w-max rounded-full transition duration-300 border-2 border-blue-700 bg-boxbackground text-blue-700 font-medium text-sm flex items-center justify-center"
-                onClick={handleFollowToggling}
+                className={`px-4 h-9 min-w-max rounded-full transition duration-300 border-2 ${
+                  isAdmin
+                    ? "border-gray-400 text-gray-400 cursor-not-allowed"
+                    : "border-blue-700 text-blue-700 hover:bg-blue-50"
+                } bg-boxbackground font-medium text-sm flex items-center justify-center`}
+                onClick={!isAdmin ? handleFollowToggling : undefined}
+                disabled={isAdmin}
               >
                 {isFollowing ? "✓ Following" : "+ Follow"}
-              </button>
-            )}
-            {/* Follow Button Admin */}
-            {!showAdminIcons && isAdmin && (
-              <button className="px-4 h-9 min-w-max rounded-full transition duration-300 border-2 border-blue-700 bg-boxbackground text-blue-700 font-medium text-sm flex items-center justify-center">
-                + Follow
               </button>
             )}
             {/* Add manager button */}
@@ -181,7 +186,7 @@ function CompanyHeader({
             {/* Admin/User View Toggle Button */}
             {showAdminIcons && isAdmin && (
               <button
-                className="px-4 h-9 min-w-max rounded-full transition duration-300 border-2 border-blue-700 bg-blue-700 text-white font-medium text-sm flex items-center justify-center absolute right-0"
+                className="px-4 h-9 min-w-max rounded-full transition duration-300 border-2 border-blue-700 bg-blue-700 text-white font-medium text-sm flex items-center justify-center"
                 onClick={() => setShowAdminIcons(false)} // Toggle to user view
               >
                 Show User View
@@ -189,7 +194,7 @@ function CompanyHeader({
             )}
             {!showAdminIcons && isAdmin && (
               <button
-                className="px-4 h-9 min-w-max rounded-full transition duration-300 border-2 border-blue-700 bg-blue-700 text-white font-medium text-sm flex items-center justify-center absolute right-0"
+                className="px-4 h-9 min-w-max rounded-full transition duration-300 border-2 border-blue-700 bg-blue-700 text-white font-medium text-sm flex items-center justify-center"
                 onClick={() => setShowAdminIcons(true)} // Toggle to admin view
               >
                 Show Admin View
@@ -227,6 +232,7 @@ function CompanyHeader({
         companyData={company}
         onClose={() => setShowEditModal(false)}
         name={company.name}
+        setCompanyData={setCompanyData}
       />
 
       <ImageEnlarge
