@@ -14,7 +14,8 @@ import {
   setToken,
   setType,
   setUserId,
-  setCoverPhoto
+  setCoverPhoto,
+  setIsSocialLogin
 } from "../../store/authenticationSlice";
 import { Link, useNavigate } from "react-router-dom";
 import AuthenticationHeader from "./GenericComponents/AuthenticationHeader";
@@ -35,11 +36,12 @@ const SignInPage = () => {
       });
 
       if (userResponse.status === 201) {
-        const { token, refreshToken } = userResponse.data;
+        const { token, refreshToken, isSocialLogin } = userResponse.data;
 
         dispatch(setEmail(formData.email));
         dispatch(setToken(token));
         dispatch(setRefreshToken(refreshToken));
+        dispatch(setIsSocialLogin(isSocialLogin));
 
         const profileResponse = await axiosInstance.get("/profile");
 

@@ -6,6 +6,7 @@ import { axiosInstance } from "../../apis/axios";
 import {
   setCoverPhoto,
   setFirstName,
+  setIsSocialLogin,
   setLastName,
   setProfilePicture,
   setRefreshToken,
@@ -56,10 +57,11 @@ const ExperienceAuthPage = () => {
         });
   
         if (userResponse.status === 201) {
-          const { token, refreshToken } = userResponse.data;
+          const { token, refreshToken, isSocialLogin } = userResponse.data;
   
           dispatch(setToken(token));
           dispatch(setRefreshToken(refreshToken));
+          dispatch(setIsSocialLogin(isSocialLogin));
         }
       } catch (error) {
         if (error.response && error.response.status === 400) {

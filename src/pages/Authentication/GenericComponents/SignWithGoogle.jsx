@@ -14,6 +14,8 @@ import {
   setIsNewGoogleUser,
   setUserId,
   setCoverPhoto,
+  setEmail,
+  setIsSocialLogin,
 } from "../../../store/authenticationSlice";
 import { axiosInstance } from "../../../apis/axios";
 
@@ -42,11 +44,13 @@ const SignWithGoogle = () => {
               );
 
               if (response.status === 201) {
-                const { token, refreshToken, isNewUser } = response.data;
+                const { token, refreshToken, email, isNewUser, isSocialLogin } = response.data;
 
                 dispatch(setToken(token));
                 dispatch(setRefreshToken(refreshToken));
+                dispatch(setEmail(email));
                 dispatch(setIsNewGoogleUser(isNewUser));
+                dispatch(setIsSocialLogin(isSocialLogin));
 
                 // New user, set-up account instead of logging in
                 if (isNewUser) {
