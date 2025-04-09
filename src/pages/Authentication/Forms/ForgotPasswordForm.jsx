@@ -30,7 +30,7 @@ const ForgotPasswordForm = () => {
         isAndroid: false,
       });
       dispatch(setEmail(email));
-      navigate("/auth/verification-pending");
+      navigate("/auth/verification-pending", { state: { type: "forgotPassword" } });
     } catch (error) {
       if (error.response) {
         console.error("Forgot password error:", error.response.data);

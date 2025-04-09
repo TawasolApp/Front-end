@@ -2,10 +2,10 @@ import React, { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import { axiosInstance } from "../../../apis/axios";
 
-const VerificationPendingForm = ({ showResend = false }) => {
+const VerificationPendingForm = ({ type = null }) => {
   const { email } = useSelector((state) => state.authentication);
 
-  const [canResend, setCanResend] = useState(showResend);
+  const [canResend, setCanResend] = useState(true);
   const [timer, setTimer] = useState(0);
 
   useEffect(() => {
@@ -23,7 +23,7 @@ const VerificationPendingForm = ({ showResend = false }) => {
 
   const handleResend = async () => {
     try {
-      await axiosInstance.post(`/auth/resend-confirmation`, { email });
+      await axiosInstance.post(`/auth/resend-confirmation`, { email, type });
       setCanResend(false);
       setTimer(30); // 30-second cooldown
     } catch (err) {
@@ -53,7 +53,7 @@ const VerificationPendingForm = ({ showResend = false }) => {
         it’s not there, the email address may not be confirmed, or it may not
         match an existing Tawasol account.
       </p>
-      {showResend && (canResend ? (
+      {type && (canResend ? (
         <div>
           <button
             type="button"
