@@ -101,9 +101,22 @@ function CreateCompanyPage() {
     }
 
     // Valid URL for location
-    if (location.trim() && /^https?:\/\/.+/.test(location.trim())) {
-      newCompany.location = location.trim();
+    const locationPattern =
+      /^https:\/\/(www\.)?google\.com\/maps\?q=([-+]?[\d.]+),([-+]?[\d.]+)$/;
+    if (location.trim()) {
+      if (!locationPattern.test(location.trim())) {
+        setErrors((prev) => ({
+          ...prev,
+          location:
+            "Location must be a valid Google Maps link (e.g., https://www.google.com/maps?q=89.6833,27.6897).",
+        }));
+        setLoading(false);
+        return;
+      } else {
+        newCompany.location = location.trim();
+      }
     }
+
     if (logoPreview && /^https?:\/\/.+/.test(logoPreview)) {
       newCompany.logo = logoPreview;
     } else if (logoFile) {
@@ -353,6 +366,9 @@ function CreateCompanyPage() {
                 className="w-full p-1 border text-sm rounded-md bg-boxbackground text-normaltext"
                 placeholder="Google maps location"
               />
+              {errors.location && (
+                <p className="text-red-500 text-xs mt-1">{errors.location}</p>
+              )}
             </div>
 
             {/* Email */}

@@ -41,7 +41,7 @@ function EditAboutModal({ show, companyData, onClose, setCompanyData }) {
         website: companyData.website || "",
         contactNumber: companyData.contactNumber || "",
         isVerified: companyData.isVerified || false,
-        founded: companyData.founded || "",
+        founded: companyData.founded ? String(companyData.founded) : "",
         location: companyData.location || "",
         email: companyData.email || "",
         companyType: companyData.companyType || "",
@@ -76,22 +76,29 @@ function EditAboutModal({ show, companyData, onClose, setCompanyData }) {
             parsed >= 1800 &&
             parsed <= new Date().getFullYear()
           ) {
-            payload.founded = parsed;
+            payload.founded = parsed; // will be number
           }
+
           continue;
         }
 
         if (key === "location") {
+          const trimmed = currentValue.trim();
           const isValidLocation =
-            currentValue?.trim() && /^https?:\/\/.+/.test(currentValue.trim());
-          if (
-            isValidLocation &&
-            currentValue.trim() !== (originalValue?.trim() || "")
-          ) {
-            payload.location = currentValue.trim();
+            /^https:\/\/(www\.)?google\.com\/maps\?q=([-+]?[\d.]+),([-+]?[\d.]+)$/.test(
+              trimmed
+            );
+
+          if (trimmed !== (originalValue?.trim() || "")) {
+            if (!isValidLocation) {
+              setErrorMessage("Location must be a valid Google Maps link.");
+              return;
+            }
+            payload.location = trimmed;
           }
           continue;
         }
+
         if (key === "logo" || key === "banner") {
           if (
             (key === "logo" && logoChanged) ||

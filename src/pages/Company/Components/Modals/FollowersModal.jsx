@@ -28,6 +28,7 @@ function FollowersModal({ show, onClose, companyId }) {
       setPage((prev) => prev + 1);
     } catch (error) {
       console.error("Error fetching followers:", error);
+      setError("Failed to load followers. Please try again.");
     } finally {
       setLoading(false);
     }
