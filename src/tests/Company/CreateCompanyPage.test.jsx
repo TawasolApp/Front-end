@@ -108,7 +108,9 @@ describe("CreateCompanyPage", () => {
     fireEvent.click(screen.getByText("Create Page"));
 
     // Wait for success message to appear
-    await screen.findByTestId("success-message");
+    await waitFor(() => {
+      expect(mockNavigate).toHaveBeenCalledWith("/company/123/home");
+    });
 
     // Ensure navigation is triggered after the success message
     // expect(mockNavigate).toHaveBeenCalledWith("/company/123");
