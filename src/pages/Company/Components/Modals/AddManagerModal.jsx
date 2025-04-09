@@ -134,7 +134,14 @@ function AddManagerModal({ show, onClose, companyId }) {
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-modalbackground">
-      <div className="bg-boxbackground p-6 rounded-md shadow-md w-full max-w-md">
+      <div className="bg-boxbackground p-6 rounded-md shadow-md w-full max-w-md relative">
+        <button
+          aria-label="Close Add Manager Modal"
+          onClick={handleModalClose}
+          className="absolute top-4 right-4 text-xl text-gray-600 hover:text-gray-800"
+        >
+          ✖
+        </button>
         <h2 className="text-lg font-semibold mb-4 text-text">Add Manager</h2>
 
         {managers.length > 0 && (

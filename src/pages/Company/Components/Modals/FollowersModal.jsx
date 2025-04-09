@@ -57,7 +57,11 @@ function FollowersModal({ show, onClose, companyId }) {
           <h2 className="text-xl sm:text-2xl font-semibold text-text">
             Followers
           </h2>
-          <button onClick={onClose} className="text-text text-xl">
+          <button
+            onClick={onClose}
+            aria-label="Close Followers Modal"
+            className="text-text text-xl"
+          >
             ✖
           </button>
         </div>

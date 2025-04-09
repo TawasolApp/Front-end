@@ -19,6 +19,9 @@ function CompanyHeader({
   setShowAdminIcons,
   isAdmin,
 }) {
+  if (!company) {
+    return <LoadingPage />;
+  }
   const navigate = useNavigate();
   const location = useLocation(); // Get current URL
   const [isFollowing, setIsFollowing] = useState(company.isFollowing);
@@ -28,10 +31,7 @@ function CompanyHeader({
   const [isPhotoClicked, setIsOpen] = useState(false);
   const [showFollowersModal, setShowFollowersModal] = useState(false);
   const [showAddManagerModal, setShowAddManagerModal] = useState(false);
-
-  if (!company) {
-    return <LoadingPage />;
-  }
+  const [loadingImages, setLoadingImages] = useState(true);
 
   const handleNavigation = (route) => {
     navigate(`/company/${company.companyId}/${route.toLowerCase()}`, {

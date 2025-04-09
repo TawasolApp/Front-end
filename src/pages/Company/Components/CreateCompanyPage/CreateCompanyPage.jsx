@@ -6,6 +6,7 @@ import LoadingPage from "../../../LoadingScreen/LoadingPage";
 
 function CreateCompanyPage() {
   const [companyName, setName] = useState("");
+  const [redirecting, setRedirecting] = useState(false);
   const [tagline, setTagline] = useState("");
   const [industry, setIndustry] = useState("");
   const [orgSize, setOrgSize] = useState("");
@@ -133,11 +134,9 @@ function CreateCompanyPage() {
       const response = await axios.post("/companies", newCompany);
       console.log("Response Body:", response.data);
       if (response.status === 201) {
-        setSuccessMessage("Company page created successfully!");
         const createdCompany = response.data;
-        setTimeout(() => {
-          navigate(`/company/${createdCompany.companyId}/home`);
-        }, 2000);
+        setRedirecting(true); // prevent re-render
+        navigate(`/company/${createdCompany.companyId}/home`);
       }
     } catch (error) {
       console.error(
@@ -160,9 +159,10 @@ function CreateCompanyPage() {
     }
   }
 
-  if (loading) {
+  if (loading || redirecting) {
     return <LoadingPage />;
   }
+
   return (
     <div className="bg-background">
       <div className="max-w-7xl mx-auto p-6 bg-background">

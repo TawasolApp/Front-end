@@ -55,7 +55,7 @@ function CompanyLayout() {
     return <LoadingPage />;
   }
   return (
-    <div className="bg-mainBackground pt-4 pb-4 h-screen">
+    <div className="bg-mainBackground pt-4 pb-4">
       <CompanyHeader
         company={companyData}
         setCompanyData={setCompanyData}

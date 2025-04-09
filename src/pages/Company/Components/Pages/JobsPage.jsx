@@ -81,7 +81,10 @@ function JobsPage() {
               jobs={jobs}
               onSelectJob={setSelectedJob}
               selectedJob={selectedJob}
-              logo={company.logo}
+              logo={
+                company.logo ||
+                "https://media.licdn.com/dms/image/D4E12AQFuCmxN72C2yQ/article-cover_image-shrink_720_1280/0/1702503196049?e=2147483647&v=beta&t=9HHff4rJDnxuWrqfzPqX9j2dncDBKQeShXf2Wt5nrUc"
+              }
               name={company.name}
             />
 
@@ -91,7 +94,10 @@ function JobsPage() {
             ) : (
               <JobDetails
                 job={selectedJob}
-                logo={company.logo}
+                logo={
+                  company.logo ||
+                  "https://media.licdn.com/dms/image/D4E12AQFuCmxN72C2yQ/article-cover_image-shrink_720_1280/0/1702503196049?e=2147483647&v=beta&t=9HHff4rJDnxuWrqfzPqX9j2dncDBKQeShXf2Wt5nrUc"
+                }
                 name={company.name}
               />
             )}

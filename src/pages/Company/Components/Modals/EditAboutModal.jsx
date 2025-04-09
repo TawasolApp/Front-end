@@ -219,6 +219,7 @@ function EditAboutModal({ show, companyData, onClose, setCompanyData }) {
           </h2>
           <button
             className="text-gray-600 text-xl font-bold hover:text-gray-900 transition"
+            aria-label="Close Edit Modal"
             onClick={onClose}
           >
             ✖
