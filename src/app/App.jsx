@@ -18,7 +18,6 @@ import ChangeEmailPage from "../pages/Authentication/ChangeEmailPage";
 import VerifyChangeEmailPage from "../pages/Authentication/VerifyChangeEmailPage.jsx";
 
 import ProfilePage from "../pages/UserProfile/Components/ProfilePage.jsx";
-import ProfileConnections from "../pages/UserProfile/Components/Connections";
 import ProfileLayout from "../pages/UserProfile/profileLayout.jsx";
 import EducationPage from "../pages/UserProfile/Components/Pages/EducationPage";
 import ExperiencePage from "../pages/UserProfile/Components/Pages/ExperiencePage";
@@ -96,7 +95,6 @@ const App = () => {
           <Route path="workExperience" element={<ExperiencePage />} />
           <Route path="certification" element={<CertificationsPage />} />
           <Route path="skills" element={<SkillsPage />} />
-          {/* <Route path="/connections" element={<ProfileConnections />} /> */}
         </Route>
 
         <Route
