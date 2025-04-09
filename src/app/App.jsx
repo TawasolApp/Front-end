@@ -8,14 +8,14 @@ import NamePage from "../pages/Authentication/NamePage";
 import LocationPage from "../pages/Authentication/LocationPage";
 import ExperienceAuthPage from "../pages/Authentication/ExperiencePage";
 import WelcomePage from "../pages/Authentication/WelcomePage";
-import ForgotPasswordPage from "../pages/Authentication/ForgotPasswordPage.jsx";
-import VerifyChangeEmailPage from "../pages/Authentication/VerifyChangeEmailPage.jsx";
-import VerifySignUpPage from "../pages/Authentication/VerifySignUpPage.jsx";
-import VerifyResetPasswordPage from "../pages/Authentication/VerifyresetPasswordPage.jsx";
-import ProtectedRoute from "../apis/ProtectedRoute.jsx";
-import ProtectedRoutes from "./ProtectedRoutes.jsx";
-import VerificationPendingPage from "../pages/Authentication/VerificationPendingPage.jsx";
-import NewPasswordPage from "../pages/Authentication/NewPasswordPage.jsx";
+import ForgotPasswordPage from "../pages/Authentication/ForgotPasswordPage";
+import VerifyChangeEmailPage from "../pages/Authentication/VerifyChangeEmailPage";
+import VerifySignUpPage from "../pages/Authentication/VerifySignUpPage";
+import VerifyResetPasswordPage from "../pages/Authentication/VerifyResetPasswordPage";
+import ProtectedRoute from "../apis/ProtectedRoute";
+import ProtectedRoutes from "./ProtectedRoutes";
+import VerificationPendingPage from "../pages/Authentication/VerificationPendingPage";
+import NewPasswordPage from "../pages/Authentication/NewPasswordPage";
 
 const App = () => {
   return (

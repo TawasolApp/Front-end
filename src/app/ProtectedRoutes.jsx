@@ -11,12 +11,12 @@ import ExperiencePage from "../pages/UserProfile/Components/Pages/ExperiencePage
 import CertificationsPage from "../pages/UserProfile/Components/Pages/CertificationsPage";
 import SkillsPage from "../pages/UserProfile/Components/Pages/SkillsPage";
 
-import CompanyLayout from "../pages/Company/CompanyLayout.jsx";
-import PostsPage from "../pages/Company/Components/Pages/PostsPage.jsx";
-import AboutPage from "../pages/Company/Components/Pages/AboutPage.jsx";
-import HomePage from "../pages/Company/Components/Pages/HomePage.jsx";
-import JobsPage from "../pages/Company/Components/Pages/JobsPage.jsx";
-import CreateCompanyPage from "../pages/Company/Components/CreateCompanyPage/CreateCompanyPage.jsx";
+import CompanyLayout from "../pages/Company/CompanyLayout";
+import PostsPage from "../pages/Company/Components/Pages/PostsPage";
+import AboutPage from "../pages/Company/Components/Pages/AboutPage";
+import HomePage from "../pages/Company/Components/Pages/HomePage";
+import JobsPage from "../pages/Company/Components/Pages/JobsPage";
+import CreateCompanyPage from "../pages/Company/Components/CreateCompanyPage/CreateCompanyPage";
 
 import ConnectionPage from "../pages/MyNetwork/Connections/ConnectionPage";
 import BlockedPage from "../pages/MyNetwork/BlockedPage";
