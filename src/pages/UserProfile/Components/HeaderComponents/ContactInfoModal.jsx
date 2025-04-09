@@ -25,7 +25,7 @@ function ContactInfoModal({ user, isOpen, onClose, isOwner }) {
         {/* Close Button */}
         <button
           onClick={onClose}
-          className="absolute top-4 right-4 text-gray-500 hover:text-black text-xl"
+          className="absolute top-3 right-3 text-gray-500 hover:text-black text-2xl"
           title="Close"
         >
           &times;

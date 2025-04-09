@@ -5,7 +5,7 @@ import defaultEducationImage from "../../../../assets/images/defaultEducationIma
 import SkillEndorsement from "../SkillsComponents/SkillEndorsement";
 import ExpandableText from "../AboutComponents/ExpandableText";
 import { useSelector } from "react-redux";
-
+import { Link } from "react-router-dom";
 // Helper to skip rendering invalid entries
 const isCardEmpty = (item, type) => {
   switch (type) {
@@ -57,7 +57,18 @@ function GenericCard({
         <p className="text-sm text-companyheader2 font-medium">
           {item.company}
         </p>
-
+        {/*   <div className="text-companyheader2 font-medium">
+    {item.companyId ? (
+      <Link
+        to={`/company/${item.companyId}`}
+        className="text-blue-600 hover:underline"
+      >
+        {item.company}
+      </Link>
+    ) : (
+      item.company
+    )}
+  </div> */}
         {/* Location and Location Type */}
         {(item.location || item.locationType) && (
           <p className="text-text2 text-sm">

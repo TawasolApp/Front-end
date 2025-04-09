@@ -27,7 +27,15 @@ function GenericPage({ title, type }) {
       setData(user[type]);
     }
   }, [user?.[type]]);
-  // to auto update if is updated in redux
+  // if (isSaving) {
+  //   return (
+  //     <div className="flex justify-center items-center p-8">
+  //       <div className="w-6 h-6 border-4 border-gray-300 border-t-blue-500 rounded-full animate-spin"></div>
+  //       <span className="ml-3 text-sm text-text">Saving...</span>
+  //     </div>
+  //   );
+  // }
+
   const handleAdd = () => {
     setEditIndex(null);
     setEditData(null);
@@ -110,6 +118,7 @@ function GenericPage({ title, type }) {
   };
   const handleDelete = async () => {
     if (editIndex === null || !data[editIndex]) return;
+    setIsSaving(true); //  Start the loading spinner
 
     const itemId =
       type === "skills" ? data[editIndex].skillName : data[editIndex]._id;
@@ -125,6 +134,8 @@ function GenericPage({ title, type }) {
       onUserUpdate?.(refreshed.data);
     } catch (err) {
       console.error("Failed to delete item:", err);
+    } finally {
+      setIsSaving(false); // Stop the spinner
     }
   };
 
@@ -135,7 +146,7 @@ function GenericPage({ title, type }) {
     // Delay clearing editData so modal doesn't flicker empty
     setTimeout(() => {
       setEditData(null);
-    }, 300); // delay matches the modal transition (adjust if needed)
+    }, 50); // delay matches the modal transition (adjust if needed)
   };
 
   const renderModal = () => {
@@ -151,66 +162,73 @@ function GenericPage({ title, type }) {
       />
     );
   };
-  // if (isSaving) return <LoadingPage />;
 
   return (
-    <div className="bg-boxbackground p-6 shadow-md rounded-md w-full max-w-3xl mx-auto">
-      {/* Header */}
-      <div className="flex items-center justify-between mb-4">
-        <div className="flex items-center gap-2">
-          <button
-            onClick={() => navigate(-1)}
-            className="w-10 h-10 flex items-center justify-center text-xl rounded-full hover:bg-gray-200 transition text-text"
-          >
-            ←
-          </button>
-          <h2 className="text-2xl font-semibold text-text">All {title}</h2>
+    <>
+      {isSaving && (
+        <div className="fixed inset-0 z-50 bg-white bg-opacity-60 flex items-center justify-center">
+          <div className="w-8 h-8 border-4 border-gray-300 border-t-blue-500 rounded-full animate-spin"></div>
+          <span className="ml-3 text-text text-lg font-medium">Saving...</span>
+        </div>
+      )}
+      <div className="bg-boxbackground p-6 shadow-md rounded-md w-full max-w-3xl mx-auto">
+        {/* Header */}
+        <div className="flex items-center justify-between mb-4">
+          <div className="flex items-center gap-2">
+            <button
+              onClick={() => navigate(-1)}
+              className="w-10 h-10 flex items-center justify-center text-xl rounded-full hover:bg-gray-200 transition text-text"
+            >
+              ←
+            </button>
+            <h2 className="text-2xl font-semibold text-text">All {title}</h2>
+          </div>
+
+          {isOwner && (
+            <button
+              className="w-8 h-8 flex items-center justify-center rounded-full hover:bg-gray-200 transition text-text"
+              onClick={handleAdd}
+            >
+              +
+            </button>
+          )}
         </div>
 
-        {isOwner && (
-          <button
-            className="w-8 h-8 flex items-center justify-center rounded-full hover:bg-gray-200 transition text-text"
-            onClick={handleAdd}
-          >
-            +
-          </button>
-        )}
-      </div>
+        {/* Card List */}
+        <div className="space-y-4">
+          {data.map((item, index) => (
+            <div
+              key={
+                type === "skills"
+                  ? (item.skillName ?? `skillName-${index}`)
+                  : (item._id ?? index)
+              }
+              className="relative group"
+            >
+              <GenericCard
+                item={item}
+                type={type}
+                isOwner={isOwner}
+                showEditIcons={false}
+                user={user}
+                connectionStatus={user.status}
+              />
+              {isOwner && (
+                <button
+                  onClick={() => handleEdit(item, index)}
+                  className="absolute top-2 right-2 text-gray-500 hover:text-blue-700 p-1  group-hover:visible"
+                >
+                  ✎
+                </button>
+              )}
+            </div>
+          ))}
+        </div>
 
-      {/* Card List */}
-      <div className="space-y-4">
-        {data.map((item, index) => (
-          <div
-            key={
-              type === "skills"
-                ? (item.skillName ?? `skillName-${index}`)
-                : (item._id ?? index)
-            }
-            className="relative group"
-          >
-            <GenericCard
-              item={item}
-              type={type}
-              isOwner={isOwner}
-              showEditIcons={false}
-              user={user}
-              connectionStatus={user.status}
-            />
-            {isOwner && (
-              <button
-                onClick={() => handleEdit(item, index)}
-                className="absolute top-2 right-2 text-gray-500 hover:text-blue-700 p-1  group-hover:visible"
-              >
-                ✎
-              </button>
-            )}
-          </div>
-        ))}
+        {/* Modal */}
+        {renderModal()}
       </div>
-
-      {/* Modal */}
-      {renderModal()}
-    </div>
+    </>
   );
 }
 

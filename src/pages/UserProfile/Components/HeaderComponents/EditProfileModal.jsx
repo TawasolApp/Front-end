@@ -133,6 +133,7 @@ function EditProfileModal({ user, isOpen, onClose, onSave }) {
     setShowDiscardModal(false);
     onClose();
   }
+  const hasUnsavedChanges = JSON.stringify(editedUser) !== JSON.stringify(user);
 
   return (
     <div
@@ -147,11 +148,12 @@ function EditProfileModal({ user, isOpen, onClose, onSave }) {
       >
         <button
           onClick={handleCancel}
-          className="absolute top-4 right-4 text-l text-gray-600 hover:text-gray-900"
+          className="absolute top-2 right-2  text-gray-500 hover:text-gray-700 p-2 text-3xl"
           aria-label="Close modal"
         >
-          ✖
+          &times;{" "}
         </button>
+
         <h2 className="text-xl font-bold mb-4 text-text">Edit Profile</h2>
         <label
           htmlFor="firstName"
@@ -277,9 +279,14 @@ function EditProfileModal({ user, isOpen, onClose, onSave }) {
         <div className="flex justify-end mt-4">
           <button
             onClick={handleSave}
-            className="px-4 py-2 bg-blue-500 text-white rounded-md"
+            disabled={!hasUnsavedChanges || isSaving}
+            className={`px-4 py-2 rounded-full transition duration-200 text-white ${
+              !hasUnsavedChanges || isSaving
+                ? "bg-blue-400 cursor-not-allowed opacity-50"
+                : "bg-blue-600 hover:bg-blue-700"
+            }`}
           >
-            Save
+            {isSaving ? "Saving..." : "Save"}
           </button>
         </div>
       </div>
@@ -292,6 +299,12 @@ function EditProfileModal({ user, isOpen, onClose, onSave }) {
           confirmLabel="Discard"
           cancelLabel="No thanks"
         />
+      )}
+      {isSaving && (
+        <div className="fixed inset-0 z-50 bg-white bg-opacity-60 flex items-center justify-center">
+          <div className="w-8 h-8 border-4 border-gray-300 border-t-blue-500 rounded-full animate-spin"></div>
+          <span className="ml-3 text-text text-lg font-medium">Saving...</span>
+        </div>
       )}
     </div>
   );

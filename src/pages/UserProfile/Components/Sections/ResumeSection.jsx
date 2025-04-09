@@ -71,18 +71,16 @@ function ResumeSection({ user, isOwner }) {
   return (
     <div className="bg-boxbackground p-6 shadow-md rounded-md w-full max-w-3xl mx-auto mb-2 relative group">
       <h2 className="text-2xl font-semibold text-text mb-3">Resume</h2>
-
       {/* ✎ Edit Icon (only shown if resume exists) */}
       {isOwner && resumeUrl && (
         <button
           onClick={() => fileInputRef.current.click()}
           title="Edit Resume"
-          className="absolute rounded-full w-8 h-8 top-5 right-5 text-black text-sm hover:bg-gray-200 transition text-text"
+          className="absolute rounded-full w-8 h-8 top-5 right-5 text-black  hover:bg-gray-200 transition text-text"
         >
           ✎
         </button>
       )}
-
       {resumeUrl ? (
         <div className="flex items-center justify-between bg-white border border-gray-200 p-3 rounded-md">
           <div className="text-sm font-medium text-companyheader2 truncate max-w-[60%]">
@@ -132,7 +130,6 @@ function ResumeSection({ user, isOwner }) {
           </div>
         )
       )}
-
       {/* Hidden File Input */}
       <input
         ref={fileInputRef}
@@ -142,7 +139,6 @@ function ResumeSection({ user, isOwner }) {
         onChange={handleFileUpload}
         disabled={isUploading}
       />
-
       {/* Confirm Delete Modal */}
       {showDeleteModal && (
         <ConfirmModal

@@ -43,10 +43,13 @@ function ExperienceFields({ formData, setFormData, handleChange, errors }) {
     : [];
 
   const handleCompanySelect = (company) => {
+    console.log("📦 Selected company object:", company); // 👈 ADD THIS
+
     setInputValue(company.name);
     setFormData((prev) => ({
       ...prev,
       company: company.name,
+      // companyId: company.companyId, //  ADD THIS
       workExperiencePicture: company.logo || defaultExperienceImage,
     }));
     setShowDropdown(false);
@@ -88,7 +91,7 @@ function ExperienceFields({ formData, setFormData, handleChange, errors }) {
         htmlFor="employmentType"
         className="block font-medium mb-1 text-text"
       >
-        Employment type
+        Employment type*
       </label>
       <select
         id="employmentType"

@@ -9,18 +9,18 @@ function AboutEditingModal({ initialBio, onClose, onSave }) {
     setBio(initialBio || "");
   }, [initialBio]);
 
-  // 🚫 Prevent background scrolling when modal is open
+  //  Prevent background scrolling when modal is open
   useEffect(() => {
     document.body.style.overflow = "hidden";
     return () => {
       document.body.style.overflow = "";
     };
   }, []);
+  const hasUnsavedChanges = bio.trim() !== (initialBio ?? "").trim();
 
   const handleSubmit = (e) => {
     e.preventDefault();
     const cleaned = bio.trim();
-    console.log("Modal submitting:", cleaned);
     onSave(cleaned);
   };
 
@@ -55,14 +55,19 @@ function AboutEditingModal({ initialBio, onClose, onSave }) {
           </div>
           <div className="flex justify-end gap-2 mt-4">
             <button
-              className="px-4 py-2 bg-gray-300 text-text rounded-md"
               onClick={handleCancel}
+              className="px-4 py-2 border border-blue-500 text-blue-500 rounded-full hover:bg-blue-50 transition duration-200"
             >
               Cancel
             </button>
             <button
-              className="px-4 py-2 bg-blue-600 text-white rounded-md"
               onClick={handleSubmit}
+              disabled={!hasUnsavedChanges}
+              className={`px-4 py-2 rounded-full transition duration-200 ${
+                hasUnsavedChanges
+                  ? "bg-blue-600 text-white hover:bg-blue-700"
+                  : "bg-blue-400 text-white opacity-60 cursor-not-allowed"
+              }`}
             >
               Save
             </button>

@@ -32,6 +32,7 @@ function GenericModal({
   initialData = {},
   editMode = false,
   existingItems = [], // 👈 Accept the prop here
+  isSaving, // ✅ Add this
 }) {
   const [formData, setFormData] = useState(initialData);
   const [errors, setErrors] = useState({});
@@ -214,9 +215,10 @@ function GenericModal({
           {/* ✖ Close */}
           <button
             onClick={handleClose}
-            className="absolute top-4 right-4 text-l text-gray-600 hover:text-gray-900"
+            className="absolute top-4 right-4 text-3xl text-gray-600 hover:text-gray-900"
+            aria-label="Close modal"
           >
-            ✖
+            &times;
           </button>
 
           {/* Modal Fields */}
@@ -386,7 +388,7 @@ function GenericModal({
           <div className="flex justify-end items-center mt-6 gap-2">
             {onDelete && editMode && (
               <button
-                className="px-4 py-2 bg-red-500 text-white rounded"
+                className="px-4 py-2 border border-blue-500 text-blue-500 rounded-full hover:bg-blue-50 transition duration-200"
                 aria-label="Delete entry"
                 onClick={() => setShowDeleteModal(true)}
                 data-testid="delete-button"
@@ -395,12 +397,18 @@ function GenericModal({
               </button>
             )}
             <button
-              className="px-4 py-2 bg-blue-500 text-white rounded"
+              className={`px-4 py-2 rounded-full transition duration-200 text-white 
+    ${
+      isSaving || !hasUnsavedChanges
+        ? "bg-blue-400 cursor-not-allowed opacity-60"
+        : "bg-blue-600 hover:bg-blue-700"
+    }`}
               aria-label="Save changes"
               onClick={handleSubmit}
+              disabled={isSaving || !hasUnsavedChanges}
               data-testid="save-button"
             >
-              Save
+              {isSaving ? "Saving..." : "Save"}
             </button>
           </div>
         </div>

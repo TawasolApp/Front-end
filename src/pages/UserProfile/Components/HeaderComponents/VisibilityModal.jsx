@@ -25,6 +25,7 @@ const VisibilityModal = ({ isOpen, onClose, currentVisibility, onSave }) => {
   useEffect(() => {
     setSelectedVisibility(currentVisibility);
   }, [currentVisibility]);
+  const hasUnsavedChanges = selectedVisibility !== currentVisibility;
 
   //  Lock background scroll when modal is open
   useEffect(() => {
@@ -54,11 +55,10 @@ const VisibilityModal = ({ isOpen, onClose, currentVisibility, onSave }) => {
         {/* Close button */}
         <button
           onClick={onClose}
-          className="absolute top-3 right-3 text-gray-500 hover:text-gray-700 text-xl"
+          className="absolute top-3 right-3 text-gray-500 hover:text-gray-700 text-2xl"
         >
           &times;
         </button>
-
         {/* Title */}
         <h2 className="text-lg font-semibold mb-4">Edit Profile Visibility</h2>
 
@@ -95,16 +95,22 @@ const VisibilityModal = ({ isOpen, onClose, currentVisibility, onSave }) => {
         </div>
 
         {/* Action buttons */}
-        <div className="flex justify-end gap-2 mt-6">
+        <div className="flex justify-end space-x-2 mt-4">
           <button
             onClick={onClose}
-            className="px-4 py-2 rounded bg-gray-200 hover:bg-gray-300"
+            className="px-4 py-2 border border-blue-500 text-blue-500 rounded-full hover:bg-blue-50 transition duration-200"
           >
             Cancel
           </button>
           <button
             onClick={handleSubmit}
-            className="px-4 py-2 rounded bg-blue-600 text-white hover:bg-blue-700"
+            disabled={!hasUnsavedChanges}
+            className={`px-4 py-2 rounded-full transition duration-200 text-white 
+    ${
+      !hasUnsavedChanges
+        ? "bg-blue-400 cursor-not-allowed opacity-60"
+        : "bg-blue-600 hover:bg-blue-700"
+    }`}
           >
             Save
           </button>

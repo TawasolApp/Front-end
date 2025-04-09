@@ -31,13 +31,13 @@ function AboutSection({ user, isOwner }) {
   if (shouldHide) return null;
 
   return (
-    <div className="bg-boxbackground p-6 shadow-md rounded-md w-full max-w-3xl mx-auto mb-2">
+    <div className="bg-boxbackground p-6 shadow-md rounded-md w-full max-w-3xl mx-auto mb-2 relative ">
       <div className="flex justify-between items-center mb-3">
         <h2 className="text-2xl font-semibold text-text">About</h2>
         {isOwner && (
           <button
             onClick={handleOpenModal}
-            className="w-8 h-8 rounded-full flex items-center justify-center hover:bg-gray-200 transition text-text"
+            className="w-8 h-8 rounded-full flex items-center justify-center hover:bg-gray-200 transition text-text absolute top-5 right-5"
           >
             {bio ? "✎" : "+"}
           </button>
