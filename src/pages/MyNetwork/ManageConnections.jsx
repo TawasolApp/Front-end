@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useRef, useCallback } from "react";
 import { useNavigate } from "react-router-dom";
 import { axiosInstance } from "../../apis/axios";
+import defaultProfilePicture from "../../assets/images/defaultProfilePicture.png";
 
 const ManageConnections = () => {
   const [activeTab, setActiveTab] = useState("received");
@@ -158,7 +159,7 @@ const ManageConnections = () => {
                       <div className="flex items-center justify-between">
                         <div className="flex items-center space-x-4">
                           <img
-                            src={request.profilePicture}
+                            src={request.profilePicture || defaultProfilePicture}
                             alt={`${request.firstName} ${request.lastName}`}
                             className="w-12 h-12 rounded-full object-cover"
                           />
@@ -209,7 +210,7 @@ const ManageConnections = () => {
                       <div className="flex items-center justify-between">
                         <div className="flex items-center space-x-4">
                           <img
-                            src={request.profilePicture}
+                            src={request.profilePicture || defaultProfilePicture}
                             alt={`${request.firstName} ${request.lastName}`}
                             className="w-12 h-12 rounded-full object-cover"
                           />

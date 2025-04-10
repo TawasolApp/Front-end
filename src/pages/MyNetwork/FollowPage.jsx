@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useRef, useCallback } from "react";
 import { axiosInstance } from "../../apis/axios";
+import defaultProfilePicture from "../../assets/images/defaultProfilePicture.png";
 
 const FollowPage = () => {
   const [activeTab, setActiveTab] = useState("following");
@@ -236,7 +237,7 @@ const FollowPage = () => {
                     <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-2">
                       <div className="flex items-center gap-3 w-full sm:w-3/4 overflow-hidden">
                         <img
-                          src={user.profilePicture}
+                          src={user.profilePicture || defaultProfilePicture}
                           alt={`${user.firstName} ${user.lastName}`}
                           className="w-10 h-10 rounded-full object-cover"
                         />
@@ -282,7 +283,7 @@ const FollowPage = () => {
                   <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-2">
                     <div className="flex items-center gap-3 w-full sm:w-3/4 overflow-hidden">
                       <img
-                        src={user.profilePicture}
+                        src={request.profilePicture || defaultProfilePicture}
                         alt={`${user.firstName} ${user.lastName}`}
                         className="w-10 h-10 rounded-full object-cover"
                       />

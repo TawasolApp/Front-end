@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useRef, useCallback } from "react";
 import { axiosInstance } from "../../apis/axios";
+import defaultProfilePicture from "../../assets/images/defaultProfilePicture.png";
 
 const RecommendedUsers = ({ onConnect, sentRequests }) => {
   const [recommendedUsers, setRecommendedUsers] = useState([]);
@@ -123,7 +124,7 @@ const RecommendedUsers = ({ onConnect, sentRequests }) => {
               >
                 <div className="flex flex-col items-center text-center space-y-2">
                   <img
-                    src={user.profilePicture}
+                    src={user.profilePicture || defaultProfilePicture}
                     alt={`${user.firstName} ${user.lastName}`}
                     className="w-14 h-14 rounded-full object-cover"
                   />
@@ -182,7 +183,7 @@ const RecommendedUsers = ({ onConnect, sentRequests }) => {
                   >
                     <div className="flex flex-col items-center text-center space-y-1">
                       <img
-                        src={user.profilePicture}
+                        src={user.profilePicture || defaultProfilePicture}
                         alt={`${user.firstName} ${user.lastName}`}
                         className="w-10 h-10 rounded-full object-cover"
                       />

@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useRef } from "react";
+import defaultProfilePicture from "../../../assets/images/defaultProfilePicture.png";
 
 const ConnectionCard = ({
   imageUrl,
@@ -11,6 +12,8 @@ const ConnectionCard = ({
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isConfirmationOpen, setIsConfirmationOpen] = useState(false);
   const menuRef = useRef(null);
+
+  const profilePicture = imageUrl || defaultProfilePicture;
 
   const toggleMenu = () => setIsMenuOpen(!isMenuOpen);
   const openConfirmation = () => {
@@ -48,7 +51,7 @@ const ConnectionCard = ({
         {/* Left Section */}
         <div className="flex items-center flex-1">
           <img
-            src={imageUrl}
+            src={profilePicture}
             alt={fullName}
             className="w-12 h-12 rounded-full object-cover"
           />
