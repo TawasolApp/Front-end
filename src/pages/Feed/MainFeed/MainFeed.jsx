@@ -104,7 +104,7 @@ const MainFeed = ({
           setPosts((prevPosts) => [...prevPosts, ...newPosts]);
         }
       }
-      console.log(posts)
+      
     } catch (e) {
       console.log(e.message);
       if (reset) setPosts([]);
