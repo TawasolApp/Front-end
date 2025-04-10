@@ -93,6 +93,10 @@ const ManageConnections = () => {
     }
   };
 
+  const handleNameClick = (userId) => {
+    navigate(`/users/${userId}`);
+  };
+
   const handleIgnore = async (userId) => {
     try {
       await axiosInstance.patch(`/connections/${userId}`, { isAccept: false });
@@ -164,7 +168,8 @@ const ManageConnections = () => {
                             className="w-12 h-12 rounded-full object-cover"
                           />
                           <div>
-                            <h3 className="font-semibold text-textHeavyTitle">
+                            <h3 className="font-semibold text-textHeavyTitle hover:underline"
+                            onClick={() => handleNameClick(request.userId)}>
                               {request.firstName} {request.lastName}
                             </h3>
                             <p className="text-sm text-textPlaceholder">
@@ -215,7 +220,8 @@ const ManageConnections = () => {
                             className="w-12 h-12 rounded-full object-cover"
                           />
                           <div>
-                            <h3 className="font-semibold text-textHeavyTitle">
+                            <h3 className="font-semibold text-textHeavyTitle hover:underline"
+                            onClick={() => handleNameClick(request.userId)}>
                               {request.firstName} {request.lastName}
                             </h3>
                             <p className="text-sm text-textPlaceholder">

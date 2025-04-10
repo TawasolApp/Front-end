@@ -6,6 +6,7 @@ function ViewerView({ user, viewerId, initialStatus }) {
   const [isFollowing, setIsFollowing] = useState(initialStatus === "Following");
   const [status, setStatus] = useState(initialStatus);
   const [showUnfollowModal, setShowUnfollowModal] = useState(false);
+  const [showAcceptModal, setShowAcceptModal] = useState(false);
 
   const connectionStatusLabel = {
     Connection: "Connected",
@@ -137,6 +138,17 @@ function ViewerView({ user, viewerId, initialStatus }) {
           onCancel={() => setShowUnfollowModal(false)}
           onConfirm={confirmUnfollow}
           confirmLabel="Unfollow"
+          cancelLabel="Cancel"
+        />
+      )}
+      {showAcceptModal && (
+        <ConfirmModal
+          title={`Accept Connection Request from ${user.firstName} ${user.lastName}`}
+          message={`Would you like to connect with ${user.firstName} and see their posts in your feed?`}
+          isOpen={showAcceptModal}
+          onCancel={() => setShowAcceptModal(false)}
+          onConfirm={confirmAcceptConnection}
+          confirmLabel="Accept"
           cancelLabel="Cancel"
         />
       )}
