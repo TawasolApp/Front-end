@@ -81,8 +81,8 @@ const Reply = ({ commentId, reply }) => {
                   {formatDate(reply.timestamp)}
                 </span>
                 <DropdownMenu menuItems={menuItems} position="right-0">
-                  <button className="text-gray-500 hover:bg-gray-100 rounded-full p-1">
-                    <MoreHorizIcon className="w-5 h-5" />
+                  <button className="hover:bg-buttonIconHover rounded-full p-1">
+                    <MoreHorizIcon className="w-5 h-5 text-icon" />
                   </button>
                 </DropdownMenu>
               </div>
@@ -101,18 +101,14 @@ const Reply = ({ commentId, reply }) => {
               <ActivitiesHolder
                 currentReaction={reply.reactType}
                 reactions={reply.reactCounts}
-                handleReaction={(reactionTypeAdd, reactionTypeRemove) => {
-                  try {
+                handleReaction={(reactionTypeAdd, reactionTypeRemove) => 
                     handleReactOnReplyToComment(
                       commentId,
                       reply.id,
                       reactionTypeAdd,
                       reactionTypeRemove,
-                    );
-                  } catch (e) {
-                    console.log(e);
-                  }
-                }}
+                  )
+                }
                 setShowReactions={() => setShowReactions(true)}
                 isReply={true}
               />

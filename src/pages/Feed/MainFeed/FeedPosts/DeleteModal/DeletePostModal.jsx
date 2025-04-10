@@ -7,12 +7,12 @@ const DeletePostModal = ({ closeModal, deleteFunc, commentOrPost }) => {
   const handleDelete = async () => {
     setIsLoading(true);
     try {
-      await deleteFunc(); // Call the delete function passed as a prop
+      await deleteFunc();
     } catch (error) {
       console.error("Error deleting:", error);
     } finally {
       setIsLoading(false);
-      closeModal(); // Close modal after deletion
+      closeModal();
     }
   };
 

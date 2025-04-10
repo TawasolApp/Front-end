@@ -31,7 +31,7 @@ const ActivitiesHolder = ({
   }, [reactions]);
 
   const handleReactionInternal = async (reactionType) => {
-    setIsLoading(true); // Set loading state
+    setIsLoading(true);
     try {
       if (currentReaction === null) {
         await handleReaction(reactionType, null);
@@ -44,15 +44,15 @@ const ActivitiesHolder = ({
       setIsReacted(true);
       setTimeout(() => setIsReacted(false), 1000); // Reset the animation after 1 second
     } catch (e) {
-      console.log(e); // Error is logged but no visual change
+      console.log(e);
     }
-    setIsLoading(false); // Reset loading state
+    setIsLoading(false);
   };
 
   // Reaction display component
   const ReactionDisplay = () => {
     if (isLoading) {
-      return <CircularProgress size={20} className="text-gray-600" />; // Loading spinner
+      return <CircularProgress size={20} className="text-gray-600" />;
     }
 
     if (!currentReaction) {
@@ -79,7 +79,7 @@ const ActivitiesHolder = ({
           <button
             className="flex px-1 items-center rounded-md hover:bg-buttonIconHover transition-all duration-200"
             onClick={() => handleReactionInternal(currentReaction || "Like")}
-            disabled={isLoading} // Disable button during loading
+            disabled={isLoading}
           >
             <ReactionDisplay />
           </button>
@@ -102,7 +102,7 @@ const ActivitiesHolder = ({
                   </div>
                 );
               })}
-              <span className="text-xs pl-2.5 group-hover:text-textPlaceholderHover group-hover:underline">
+              <span className="text-xs pl-2.5 group-hover:text-textPlaceholderHover group-hover:underline pr-1">
                 {totalLikes}
               </span>
             </div>
@@ -110,7 +110,7 @@ const ActivitiesHolder = ({
         )}
       </div>
 
-      <span className="text-textLightActivity pl-1 text-xs font-semibold">|</span>
+      <span className="text-textLightActivity text-xs font-semibold">|</span>
       <button
         className="text-sm font-semibold text-textLightActivity px-1 rounded-md hover:bg-buttonIconHover transition-all duration-200"
         onClick={setShowReplies}
@@ -122,7 +122,7 @@ const ActivitiesHolder = ({
       {!isReply && replies > 0 && (
         <>
           <span className="text-textLightActivity pr-1 text-xs font-light">•</span>
-          <span className="text-xs font-normal text-textLightActivity py-1 rounded-md">
+          <span className="text-xs font-normal text-textLightActivity">
             {replies} {replies === 1 ? "reply" : "replies"}
           </span>
         </>
