@@ -132,7 +132,7 @@ const MainFeed = ({
     silentRepost = false,
   ) => {
     try {
-      const response = await axiosInstance.post("posts", {
+      await axiosInstance.post("posts", {
         content: text,
         media: media,
         taggedUsers: taggedUsers,
