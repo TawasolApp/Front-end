@@ -55,7 +55,7 @@ function CompanyLayout() {
     return <LoadingPage />;
   }
   return (
-    <div className="bg-mainBackground pt-4 pb-4">
+    <div className="min-h-screen bg-mainBackground pt-4 pb-4">
       <CompanyHeader
         company={companyData}
         setCompanyData={setCompanyData}
@@ -63,7 +63,7 @@ function CompanyLayout() {
         setShowAdminIcons={setShowAdminIcons}
         isAdmin={isAdmin}
       />
-      <div className="max-w-6xl mx-auto mt-4">
+      <div className="max-w-6xl mx-auto mt-4 ">
         {/* Pass companyData to the Outlet as context */}
         <Outlet
           context={{
@@ -71,6 +71,7 @@ function CompanyLayout() {
             setCompanyData,
             showAdminIcons,
             setShowAdminIcons,
+            isAdmin,
           }}
         />
       </div>

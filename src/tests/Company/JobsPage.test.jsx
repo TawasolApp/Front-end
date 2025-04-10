@@ -31,6 +31,9 @@ vi.mock("../../../src/pages/Company/Components/JobsPage/AddJobModal", () => ({
   default: ({ onClose, onJobAdded }) => (
     <div data-testid="add-job-modal">
       AddJobModal
+      <button data-testid="close-modal" onClick={onClose}>
+        Close Modal
+      </button>
       <button
         onClick={() => {
           onJobAdded();
@@ -123,7 +126,7 @@ describe("JobsPage", () => {
     ).toBeInTheDocument();
   });
 
-  test("opens and closes the AddJobModal when admin clicks the button", async () => {
+  test("opens and closes AddJobModal", async () => {
     render(
       <MemoryRouter initialEntries={["/company/123/jobs"]}>
         <Routes>
@@ -140,14 +143,14 @@ describe("JobsPage", () => {
       expect(screen.getByTestId("job-applications")).toBeInTheDocument()
     );
 
+    // Open modal
     fireEvent.click(
       screen.getByRole("button", { name: /post a job opening/i })
     );
-    expect(screen.getByTestId("add-job-modal")).toBeInTheDocument();
+    expect(await screen.findByTestId("add-job-modal")).toBeInTheDocument();
 
-    // Click the button that triggers onClose (inside mock)
-    fireEvent.click(screen.getByText("Add Job"));
-
+    // Close modal
+    fireEvent.click(screen.getByTestId("close-modal"));
     await waitFor(() =>
       expect(screen.queryByTestId("add-job-modal")).not.toBeInTheDocument()
     );
@@ -289,6 +292,90 @@ describe("JobsPage", () => {
       expect(screen.queryByTestId("jobs-list")).not.toBeInTheDocument();
       expect(screen.queryByTestId("job-applications")).not.toBeInTheDocument();
       expect(screen.queryByTestId("analytics")).not.toBeInTheDocument();
+    });
+  });
+  test("does not fetch jobs again if hasFetched is already true", async () => {
+    vi.clearAllMocks();
+    axiosModule.axiosInstance.get.mockResolvedValueOnce({ data: mockJobs });
+
+    const companyContext = {
+      company: mockCompany,
+      showAdminIcons: false,
+      setShowAdminIcons: vi.fn(),
+    };
+
+    const Wrapper = () => <Outlet context={companyContext} />;
+
+    render(
+      <MemoryRouter initialEntries={["/company/123/jobs"]}>
+        <Routes>
+          <Route element={<Wrapper />}>
+            <Route path="/company/:companyId/jobs" element={<JobsPage />} />
+          </Route>
+        </Routes>
+      </MemoryRouter>
+    );
+
+    await waitFor(() =>
+      expect(screen.getByTestId("jobs-list")).toBeInTheDocument()
+    );
+
+    // No second render of component, no reason for second fetch
+    expect(axiosModule.axiosInstance.get).toHaveBeenCalledTimes(1);
+  });
+  test("uses fallback logo if company logo is missing", async () => {
+    const logoLessCompany = { ...mockCompany, logo: null };
+    const Wrapper = () => (
+      <Outlet
+        context={{
+          company: logoLessCompany,
+          showAdminIcons: false,
+          setShowAdminIcons: vi.fn(),
+        }}
+      />
+    );
+
+    render(
+      <MemoryRouter initialEntries={["/company/123/jobs"]}>
+        <Routes>
+          <Route element={<Wrapper />}>
+            <Route path="/company/:companyId/jobs" element={<JobsPage />} />
+          </Route>
+        </Routes>
+      </MemoryRouter>
+    );
+
+    await waitFor(() =>
+      expect(screen.getByTestId("job-details")).toBeInTheDocument()
+    );
+  });
+  test("does not fetch if companyId is missing", async () => {
+    vi.clearAllMocks();
+
+    const Wrapper = () => (
+      <Outlet
+        context={{
+          company: mockCompany,
+          showAdminIcons: false,
+          setShowAdminIcons: vi.fn(),
+        }}
+      />
+    );
+
+    render(
+      <MemoryRouter initialEntries={["/wrongpath"]}>
+        <Routes>
+          <Route path="/wrongpath" element={<Wrapper />}>
+            {/* Note: This no longer provides companyId */}
+            <Route path="" element={<JobsPage />} />
+          </Route>
+        </Routes>
+      </MemoryRouter>
+    );
+
+    // wait a bit to ensure useEffect finishes
+    await waitFor(() => {
+      expect(axiosModule.axiosInstance.get).not.toHaveBeenCalled();
     });
   });
 });

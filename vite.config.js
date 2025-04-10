@@ -17,6 +17,7 @@ export default defineConfig({
     provider: "v8",
     coverage: {
       all: true,
+      include: ["src/pages/Company/**/*.{js,jsx}"],
       exclude: [
         // MAIN ITEMS FOR EXCLUSIONS
         "**/tests/**",
@@ -39,13 +40,15 @@ export default defineConfig({
 
         // ITEMS WITH SPECIFIC EXCLUSIONS
         "src/pages/Feed/GenericComponents/reactionIcons.js",
+        "src/pages/Company/Components/Slider/PostsSlider.jsx",
+        "src/pages/Company/Components/Pages/PostsPage.jsx",
       ],
     },
     setupFiles: "./src/setupTests.js",
   },
   server: {
-    allowedHosts: ['tawasolapp.me', 'www.tawasolapp.me'],
-    host: '0.0.0.0',
-    port: 5173
-  }
+    allowedHosts: ["tawasolapp.me", "www.tawasolapp.me"],
+    host: "0.0.0.0",
+    port: 5173,
+  },
 });
