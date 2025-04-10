@@ -10,7 +10,7 @@ function ViewerView({ user, viewerId, initialStatus }) {
   const connectionStatusLabel = {
     Connection: "Connected",
     Pending: "Pending",
-    Request: "Request",
+    Request: "Accept", // Changed from "Request" to "Accept" for better UX
     "No Connection": "Connect",
   };
 
@@ -47,22 +47,50 @@ function ViewerView({ user, viewerId, initialStatus }) {
       setShowUnfollowModal(false);
     }
   };
-
   const handleConnect = async () => {
     try {
       if (status === "Connection") {
-        const res = await axios.delete(`/connections/${user._id}`);
-        console.log("Disconnected successfully:", res.status);
-        setStatus("No Connection");
+        // Handle disconnection
+        await axios.delete(`/connections/${user._id}`);
+        setStatus("No Connection"); // Update state immediately
       } else if (status === "No Connection") {
+        // Send connection request
         const res = await axios.post("/connections", {
           userId: user._id,
         });
-        console.log("Connection request sent:", res.data);
-        setStatus("Pending");
+        if (res.status === 201) {
+          console.log("Connection request sent:", res.data);
+          setStatus("Pending"); // Update state immediately
+        }
+      } else if (status === "Request") {
+        // Show modal for accepting connection request
+        setShowAcceptModal(true);
+      } else if (status === "Pending") {
+        // Handle canceling a pending request
+        await axios.delete(`/connections/${user._id}/pending`);
+        setStatus("No Connection"); // Update state immediately after successful deletion
       }
     } catch (err) {
-      console.error("Connect error:", err.response?.data || err.message);
+      console.error("Connection error:", err.response?.data || err.message);
+      if (err.response?.status === 409) {
+        alert("Connection request already exists");
+      }
+    }
+  };
+
+  const confirmAcceptConnection = async () => {
+    try {
+      const res = await axios.patch(`/connections/${user._id}`, {
+        isAccept: true
+      });
+      if (res.status === 200) {
+        console.log("Connection accepted:", res.data);
+        setStatus("Connection");
+      }
+    } catch (err) {
+      console.error("Accept connection error:", err.response?.data || err.message);
+    } finally {
+      setShowAcceptModal(false);
     }
   };
 
@@ -104,7 +132,7 @@ function ViewerView({ user, viewerId, initialStatus }) {
       {showUnfollowModal && (
         <ConfirmModal
           title={`Unfollow ${user.firstName} ${user.lastName}`}
-          message={`Stop seeing posts from ${user.firstName} on your feed. They won’t be notified that you’ve unfollowed.`}
+          message={`Stop seeing posts from ${user.firstName} on your feed. They won't be notified that you've unfollowed.`}
           isOpen={showUnfollowModal}
           onCancel={() => setShowUnfollowModal(false)}
           onConfirm={confirmUnfollow}
