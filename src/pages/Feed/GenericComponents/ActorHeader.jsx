@@ -14,6 +14,7 @@ const ActorHeader = ({
   visibility,
   iconSize = 48,
   enableLink = true,
+  isEdited = false,
 }) => {
   return (
     <div className="flex gap-2 max-w-full items-center">
@@ -79,6 +80,9 @@ const ActorHeader = ({
                   className="text-textDate shrink-0"
                 />
               )}
+              {isEdited && (<span className="text-xs font-semibold text-textDate shrink-0">
+                {" "}• Edited
+              </span>)}
             </div>
           )}
         </div>

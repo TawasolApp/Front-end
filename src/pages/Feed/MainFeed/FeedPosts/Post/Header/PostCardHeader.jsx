@@ -34,6 +34,7 @@ const PostCardHeader = ({
             authorType={post.authorType}
             timestamp={post.timestamp}
             visibility={post.visibility}
+            isEdited={post.isEdited}
           />
         )}
       </div>

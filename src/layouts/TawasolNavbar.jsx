@@ -29,6 +29,7 @@ const TawasolNavbar = () => {
   const navbarRef = useRef(null)
   const navigate = useNavigate()
 
+  const currentAuthorId = useSelector((state) => state.authentication.userId);
   const currentAuthorName = `${useSelector((state) => state.authentication.firstName)} ${useSelector((state) => state.authentication.lastName)}`;
   const currentAuthorPicture = useSelector((state) => state.authentication.profilePicture);
   const currentAuthorBio = useSelector((state) => state.authentication.bio);
@@ -147,7 +148,7 @@ const TawasolNavbar = () => {
             <div
               ref={searchContainerRef}
               className="relative transition-all duration-300 ease-in-out"
-              style={{ width: isSearchFocused ? "24rem" : "17.5rem" }} // w-96 (24rem) and w-70 (17.5rem)
+              style={{ width: isSearchFocused ? "24rem" : "17.5rem" }}
             >
               <div className="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none z-10">
                 <SearchIcon className="text-navbarIconsNormal" fontSize="small" />
@@ -247,20 +248,15 @@ const TawasolNavbar = () => {
                     onClick={(e) => e.stopPropagation()}
                   >
                     <div className="border-b border-cardBorder">
-                      <div className="p-4 flex items-start gap-3">
+                      <div
+                        className="p-4 flex gap-3 items-center hover:bg-buttonIconHover"
+                        onClick={() => navigate(`/users/${currentAuthorId}`)}
+                      >
                         <Avatar src={currentAuthorPicture} sx={{ width: 56, height: 56 }} />
                         <div>
                           <h3 className="font-semibold text-authorName">{currentAuthorName}</h3>
                           <p className="text-sm text-authorBio">{currentAuthorBio.length > 50 ? currentAuthorBio.slice(0, 48) + ".." : currentAuthorBio}</p>
                         </div>
-                      </div>
-                      <div className="px-4 pb-2">
-                        <button
-                          className="w-full py-1 px-3 text-sm text-blue-600 border border-blue-600 hover:border-2 rounded font-medium text-center transition-all duration-150"
-                          onClick={() => navigate(`/users/`)}
-                        >
-                          View Profile
-                        </button>
                       </div>
                     </div>
 

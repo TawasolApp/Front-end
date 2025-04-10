@@ -42,6 +42,7 @@ export const PostProvider = ({
       taggedUsers: taggedUsers,
       media: media,
       visibility: visibility,
+      isEdited: true
     }));
   };
 
