@@ -33,12 +33,10 @@ const MainFeed = ({
     [loading, hasMore],
   );
 
-  // Initial fetch of posts
   useEffect(() => {
     fetchPosts(1, true);
   }, []);
 
-  // Function to fetch posts with pagination
   const fetchPosts = async (pageNum, reset = false) => {
     if (isFetching.current) return;
 
@@ -114,7 +112,6 @@ const MainFeed = ({
     }
   };
 
-  // Function to load more posts
   const loadMorePosts = () => {
     if (!hasMore || loading) return;
 

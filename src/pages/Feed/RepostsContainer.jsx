@@ -1,5 +1,5 @@
 import { useParams } from "react-router-dom";
-import MainFeed from "../Feed/MainFeed/MainFeed";
+import MainFeed from "./MainFeed/MainFeed";
 
 const RepostsContainer = () => {
   const { id } = useParams();
