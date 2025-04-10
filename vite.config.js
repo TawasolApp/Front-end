@@ -17,7 +17,7 @@ export default defineConfig({
     provider: "v8",
     coverage: {
       all: true,
-      include: ["src/pages/Company/**/*.{js,jsx}"],
+      include: ["src/pages/Feed/**/*.{js,jsx}"],
       exclude: [
         // MAIN ITEMS FOR EXCLUSIONS
         "**/tests/**",
@@ -39,12 +39,7 @@ export default defineConfig({
         "**/.gitignore",
 
         // ITEMS WITH SPECIFIC EXCLUSIONS
-        "src/pages/Feed/MainFeed/FeedPosts/PostCard/Content/MediaContent**",
-        "src/pages/Feed/MainFeed/FeedPosts/PostCard/Comments/Reply.jsx",
         "src/pages/Feed/GenericComponents/reactionIcons.js",
-
-        // CHECK WITH KHALED
-        "src/pages/AuthenticationPages/**",
       ],
     },
     setupFiles: "./src/setupTests.js",
