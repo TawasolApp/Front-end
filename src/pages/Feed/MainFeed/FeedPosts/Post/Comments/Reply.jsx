@@ -1,5 +1,4 @@
 import { useState } from "react";
-
 import FlagIcon from "@mui/icons-material/Flag";
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
@@ -12,7 +11,6 @@ import TextViewer from "../../../../GenericComponents/TextViewer";
 import AddForm from "./AddForm";
 import ReactionsModal from "../../ReactionModal/ReactionsModal";
 import { usePost } from "../../PostContext";
-import { useSelector } from "react-redux";
 
 const Reply = ({ commentId, reply }) => {
   const {
