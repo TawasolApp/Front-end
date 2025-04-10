@@ -4,6 +4,7 @@ import AuthenticationHeader from "./GenericComponents/AuthenticationHeader";
 import { useDispatch, useSelector } from "react-redux";
 import { axiosInstance } from "../../apis/axios";
 import {
+  setBio,
   setCoverPhoto,
   setFirstName,
   setIsSocialLogin,
@@ -87,7 +88,7 @@ const ExperienceAuthPage = () => {
       const profileResponse = await axiosInstance.get("/profile");
 
       if (profileResponse.status === 200) {
-        const { _id, firstName, lastName, profilePicture, coverPhoto } = profileResponse.data;
+        const { _id, firstName, lastName, headline, profilePicture, coverPhoto } = profileResponse.data;
 
         if (_id) {
           dispatch(setUserId(_id));
@@ -97,6 +98,9 @@ const ExperienceAuthPage = () => {
         }
         if (lastName) {
           dispatch(setLastName(lastName));
+        }
+        if (headline) {
+          dispatch(setBio(headline));
         }
         if (profilePicture) {
           dispatch(setProfilePicture(profilePicture));
