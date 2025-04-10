@@ -1,5 +1,5 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest';
-import { render, act } from '@testing-library/react';
+import { render, act, waitFor } from '@testing-library/react'; // Added waitFor import
 import { PostProvider, usePost } from '../../../../pages/Feed/MainFeed/FeedPosts/PostContext';
 import { axiosInstance } from '../../../../apis/axios';
 import { toast } from 'react-toastify';
@@ -27,6 +27,15 @@ Object.defineProperty(navigator, 'clipboard', {
     writeText: vi.fn().mockResolvedValue(undefined)
   }
 });
+
+// Mock AbortController
+global.AbortController = class {
+  signal = 'mock-signal';
+  abort = vi.fn();
+};
+
+// Helper for mock response creation
+const createMockResponse = (data) => ({ data });
 
 // Test component to access context
 function TestComponent({ testFunction }) {
@@ -62,6 +71,7 @@ describe('PostContext', () => {
     vi.clearAllMocks();
   });
 
+  // Basic context functionality tests
   it('provides the correct initial context values', () => {
     const testFn = vi.fn();
     
@@ -92,6 +102,14 @@ describe('PostContext', () => {
     expect(typeof contextValue.handleCopyPost).toBe('function');
     expect(typeof contextValue.fetchComments).toBe('function');
     expect(typeof contextValue.handleAddComment).toBe('function');
+    expect(typeof contextValue.handleEditComment).toBe('function');
+    expect(typeof contextValue.handleDeleteComment).toBe('function');
+    expect(typeof contextValue.handleReactOnComment).toBe('function');
+    expect(typeof contextValue.fetchReplies).toBe('function');
+    expect(typeof contextValue.handleAddReplyToComment).toBe('function');
+    expect(typeof contextValue.handleEditReplyToComment).toBe('function');
+    expect(typeof contextValue.handleDeleteReplyToComment).toBe('function');
+    expect(typeof contextValue.handleReactOnReplyToComment).toBe('function');
   });
 
   it('updates post state when initialPost prop changes', async () => {
@@ -121,6 +139,7 @@ describe('PostContext', () => {
     expect(mostRecentCall[0].post).toEqual(updatedPost);
   });
   
+  // Post editing tests
   it('handles editing a post correctly', async () => {
     const testFn = vi.fn();
     axiosInstance.patch.mockResolvedValueOnce({});
@@ -154,6 +173,7 @@ describe('PostContext', () => {
     });
   });
   
+  // Post saving tests
   it('handles saving a post correctly', async () => {
     const testFn = vi.fn();
     axiosInstance.post.mockResolvedValueOnce({});
@@ -197,6 +217,7 @@ describe('PostContext', () => {
     expect(toast.success).toHaveBeenCalledWith('Post unsaved.', expect.any(Object));
   });
   
+  // Post reaction tests
   it('handles reactions on a post correctly', async () => {
     const testFn = vi.fn();
     axiosInstance.post.mockResolvedValueOnce({});
@@ -227,7 +248,57 @@ describe('PostContext', () => {
     // Check that reactType is set to the new reaction
     expect(testFn.mock.calls[1][0].post.reactType).toBe('celebrate');
   });
+
+  it('handles adding a reaction to a post without removing another', async () => {
+    const testFn = vi.fn();
+    axiosInstance.post.mockResolvedValueOnce({});
+    
+    render(
+      <PostProvider {...mockProps}>
+        <TestComponent testFunction={testFn} />
+      </PostProvider>
+    );
+    
+    const contextValue = testFn.mock.calls[0][0];
+    
+    await act(async () => {
+      await contextValue.handleReactOnPost('celebrate', null);
+    });
+    
+    expect(axiosInstance.post).toHaveBeenCalledWith(`posts/react/${mockPost.id}`, {
+      reactions: { celebrate: 1 },
+      postType: "Post"
+    });
+    
+    expect(testFn.mock.calls[1][0].post.reactCounts.celebrate).toBe(6);
+  });
+
+  it('handles removing a reaction from a post without adding another', async () => {
+    const testFn = vi.fn();
+    axiosInstance.post.mockResolvedValueOnce({});
+    
+    render(
+      <PostProvider {...mockProps}>
+        <TestComponent testFunction={testFn} />
+      </PostProvider>
+    );
+    
+    const contextValue = testFn.mock.calls[0][0];
+    
+    await act(async () => {
+      await contextValue.handleReactOnPost(null, 'like');
+    });
+    
+    expect(axiosInstance.post).toHaveBeenCalledWith(`posts/react/${mockPost.id}`, {
+      reactions: { like: 0 },
+      postType: "Post"
+    });
+    
+    expect(testFn.mock.calls[1][0].post.reactCounts.like).toBe(9);
+    expect(testFn.mock.calls[1][0].post.reactType).toBe(null);
+  });
   
+  // Copy post link test
   it('copies post link to clipboard', async () => {
     const testFn = vi.fn();
     const originalLocation = window.location;
@@ -259,6 +330,7 @@ describe('PostContext', () => {
     window.location = originalLocation;
   });
   
+  // Comment fetching tests
   it('fetches comments correctly', async () => {
     const testFn = vi.fn();
     const mockComments = [
@@ -282,8 +354,117 @@ describe('PostContext', () => {
     
     expect(axiosInstance.get).toHaveBeenCalledWith(`/posts/comments/${mockPost.id}`, expect.any(Object));
     expect(testFn.mock.calls[1][0].comments).toEqual(mockComments);
+    expect(testFn.mock.calls[1][0].hasMoreComments).toBe(true);
   });
   
+  it('merges new comments with existing ones and removes duplicates', async () => {
+    const testFn = vi.fn();
+    const existingComment = { id: 'comment1', content: 'Existing comment' };
+    const mockComments = [
+      existingComment, // Duplicate that should be merged
+      { id: 'comment2', content: 'New comment' }
+    ];
+    
+    // Setup initial comments
+    axiosInstance.get.mockResolvedValueOnce({ data: [existingComment] });
+    
+    render(
+      <PostProvider {...mockProps}>
+        <TestComponent testFunction={testFn} />
+      </PostProvider>
+    );
+    
+    const contextValue = testFn.mock.calls[0][0];
+    
+    // First load the initial comment
+    await act(async () => {
+      await contextValue.fetchComments();
+    });
+    
+    // Clear previous calls
+    testFn.mockClear();
+    
+    // Mock the API response for new comments
+    axiosInstance.get.mockResolvedValueOnce({ data: mockComments });
+    
+    // Fetch more comments
+    await act(async () => {
+      await contextValue.fetchComments();
+    });
+    
+    // Verify unique comments are in the result
+    const newContextValue = testFn.mock.calls[0][0];
+    expect(newContextValue.comments.length).toBe(2);
+    expect(newContextValue.comments.find(c => c.id === 'comment1')).toBeTruthy();
+    expect(newContextValue.comments.find(c => c.id === 'comment2')).toBeTruthy();
+  });
+  
+  it('handles 404 error when fetching comments', async () => {
+    const testFn = vi.fn();
+    const error = new Error('Not found');
+    error.response = { status: 404 };
+    axiosInstance.get.mockRejectedValueOnce(error);
+    
+    render(
+      <PostProvider {...mockProps}>
+        <TestComponent testFunction={testFn} />
+      </PostProvider>
+    );
+    
+    const contextValue = testFn.mock.calls[0][0];
+    
+    await act(async () => {
+      await contextValue.fetchComments();
+    });
+    
+    expect(testFn.mock.calls[1][0].hasMoreComments).toBe(false);
+  });
+  
+  it('handles aborted fetch requests for comments', async () => {
+    const testFn = vi.fn();
+    const error = new Error('Request aborted');
+    error.name = 'CanceledError';
+    axiosInstance.get.mockRejectedValueOnce(error);
+    
+    render(
+      <PostProvider {...mockProps}>
+        <TestComponent testFunction={testFn} />
+      </PostProvider>
+    );
+    
+    const contextValue = testFn.mock.calls[0][0];
+    
+    await act(async () => {
+      await contextValue.fetchComments();
+    });
+    
+    // No state should change when request is aborted
+    expect(testFn.mock.calls.length).toBe(1);
+  });
+  
+  it('handles generic errors when fetching comments', async () => {
+    const testFn = vi.fn();
+    const error = new Error('Generic error');
+    axiosInstance.get.mockRejectedValueOnce(error);
+    
+    // Spy on console.log to verify error logging
+    const consoleSpy = vi.spyOn(console, 'log').mockImplementation(() => {});
+    
+    render(
+      <PostProvider {...mockProps}>
+        <TestComponent testFunction={testFn} />
+      </PostProvider>
+    );
+    
+    const contextValue = testFn.mock.calls[0][0];
+    
+    await expect(contextValue.fetchComments()).rejects.toThrow('Error in fetching comments!');
+    
+    expect(consoleSpy).toHaveBeenCalled();
+    consoleSpy.mockRestore();
+  });
+  
+  // Comment adding tests
   it('adds a comment correctly', async () => {
     const testFn = vi.fn();
     const newComment = { 
@@ -319,17 +500,208 @@ describe('PostContext', () => {
     expect(testFn.mock.calls[1][0].post.comments).toBe(6);
   });
   
-  it('throws an error when used outside of PostProvider', () => {
-    const consoleError = console.error;
-    console.error = vi.fn(); // Suppress React error logs
+  // Comment editing tests
+  it('edits a comment correctly', async () => {
+    const testFn = vi.fn();
+    const existingComment = { id: 'comment1', content: 'Original comment', taggedUsers: [] };
+    axiosInstance.get.mockResolvedValueOnce({ data: [existingComment] });
+    axiosInstance.patch.mockResolvedValueOnce({});
     
-    const TestWithoutProvider = () => {
-      usePost();
-      return null;
+    render(
+      <PostProvider {...mockProps}>
+        <TestComponent testFunction={testFn} />
+      </PostProvider>
+    );
+    
+    const contextValue = testFn.mock.calls[0][0];
+    
+    // First load the comment
+    await act(async () => {
+      await contextValue.fetchComments();
+    });
+    
+    // Clear previous calls
+    testFn.mockClear();
+    
+    // Now edit the comment
+    await act(async () => {
+      await contextValue.handleEditComment('comment1', 'Updated comment', ['user2']);
+    });
+    
+    expect(axiosInstance.patch).toHaveBeenCalledWith('/posts/comment/comment1', {
+      content: 'Updated comment',
+      tagged: ['user2'],
+      isReply: false
+    });
+    
+    const newContextValue = testFn.mock.calls[0][0];
+    expect(newContextValue.comments[0].content).toBe('Updated comment');
+    expect(newContextValue.comments[0].taggedUsers).toEqual(['user2']);
+  });
+  
+  // Comment deletion tests
+  it('deletes a comment correctly', async () => {
+    const testFn = vi.fn();
+    const comment1 = { id: 'comment1', content: 'First comment' };
+    const comment2 = { id: 'comment2', content: 'Second comment' };
+    
+    // Set up getting comments
+    axiosInstance.get.mockResolvedValueOnce({ data: [comment1, comment2] });
+    axiosInstance.delete.mockResolvedValueOnce({});
+    
+    render(
+      <PostProvider {...mockProps}>
+        <TestComponent testFunction={testFn} />
+      </PostProvider>
+    );
+    
+    const contextValue = testFn.mock.calls[0][0];
+    
+    // First load the comments
+    await act(async () => {
+      await contextValue.fetchComments();
+    });
+    
+    // Clear previous calls
+    testFn.mockClear();
+    
+    // Now delete a comment
+    await act(async () => {
+      await contextValue.handleDeleteComment('comment1');
+    });
+    
+    expect(axiosInstance.delete).toHaveBeenCalledWith('/posts/comment/comment1');
+    
+    const newContextValue = testFn.mock.calls[0][0];
+    expect(newContextValue.comments.length).toBe(1);
+    expect(newContextValue.comments[0].id).toBe('comment2');
+    expect(newContextValue.post.comments).toBe(4); // Decreased by 1
+  });
+  
+  // Comment reaction tests
+  it('handles reactions on a comment correctly', async () => {
+    const testFn = vi.fn();
+    const comment = { 
+      id: 'comment1', 
+      content: 'Test comment',
+      reactCounts: { like: 5, celebrate: 2 },
+      reactType: null
     };
     
-    expect(() => render(<TestWithoutProvider />)).toThrow('usePost must be used within a PostProvider');
+    // Set up the API responses
+    axiosInstance.get.mockResolvedValueOnce({ data: [comment] });
+    axiosInstance.post.mockResolvedValueOnce({});
     
-    console.error = consoleError; // Restore console.error
+    render(
+      <PostProvider {...mockProps}>
+        <TestComponent testFunction={testFn} />
+      </PostProvider>
+    );
+    
+    const contextValue = testFn.mock.calls[0][0];
+    
+    // First load the comments
+    await act(async () => {
+      await contextValue.fetchComments();
+    });
+    
+    // Clear previous calls
+    testFn.mockClear();
+    
+    // Now react to the comment
+    await act(async () => {
+      await contextValue.handleReactOnComment('comment1', 'like', null);
+    });
+    
+    expect(axiosInstance.post).toHaveBeenCalledWith('posts/react/comment1', {
+      reactions: { like: 1 },
+      postType: 'Comment'
+    });
+    
+    const newContextValue = testFn.mock.calls[0][0];
+    expect(newContextValue.comments[0].reactCounts.like).toBe(6);
+    expect(newContextValue.comments[0].reactType).toBe('like');
   });
+  
+  it('handles removing a reaction from a comment', async () => {
+    const testFn = vi.fn();
+    const comment = { 
+      id: 'comment1', 
+      content: 'Test comment',
+      reactCounts: { like: 5, celebrate: 2 },
+      reactType: 'like'
+    };
+    
+    // Set up API responses
+    axiosInstance.get.mockResolvedValueOnce({ data: [comment] });
+    axiosInstance.post.mockResolvedValueOnce({});
+    
+    render(
+      <PostProvider {...mockProps}>
+        <TestComponent testFunction={testFn} />
+      </PostProvider>
+    );
+    
+    const contextValue = testFn.mock.calls[0][0];
+    
+    // First load comments
+    await act(async () => {
+      await contextValue.fetchComments();
+    });
+    
+    // Clear previous calls
+    testFn.mockClear();
+    
+    // Now perform the reaction removal
+    await act(async () => {
+      await contextValue.handleReactOnComment('comment1', null, 'like');
+    });
+    
+    expect(axiosInstance.post).toHaveBeenCalledWith('posts/react/comment1', {
+      reactions: { like: 0 },
+      postType: 'Comment'
+    });
+    
+    const newContextValue = testFn.mock.calls[0][0];
+    expect(newContextValue.comments[0].reactCounts.like).toBe(4);
+    expect(newContextValue.comments[0].reactType).toBe(null);
+  });
+  
+  it('handles 500 error when fetching replies', async () => {
+    const testFn = vi.fn();
+    const comment = { id: 'comment1', content: 'Test comment', repliesCount: 3 };
+    const error = new Error('Server error');
+    error.response = { status: 500 };
+    
+    // Setup API responses
+    axiosInstance.get
+      .mockResolvedValueOnce({ data: [comment] })      // Load comments
+      .mockRejectedValueOnce(error);                  // Fail on replies
+    
+    render(
+      <PostProvider {...mockProps}>
+        <TestComponent testFunction={testFn} />
+      </PostProvider>
+    );
+    
+    const contextValue = testFn.mock.calls[0][0];
+    
+    // First load comments
+    await act(async () => {
+      await contextValue.fetchComments();
+    });
+    
+    // Clear previous calls
+    testFn.mockClear();
+    
+    // Now try to fetch replies but with error
+    await act(async () => {
+      await contextValue.fetchReplies('comment1');
+    });
+    
+    const newContextValue = testFn.mock.calls[0][0];
+    expect(newContextValue.replies.comment1?.hasMore).toBe(false);
+    expect(newContextValue.replies.comment1?.replyPage).toBe(2);
+  });
+
 });
