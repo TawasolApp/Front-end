@@ -261,12 +261,21 @@ const TawasolNavbar = () => {
                     </div>
 
                     <div className="border-t border-cardBorder">
-                      <button className="w-full py-2 px-4 text-left text-sm hover:bg-buttonIconHover transition-colors duration-150">
+                      <button
+                        className="w-full py-2 px-4 text-left text-sm hover:bg-buttonIconHover transition-colors duration-150"
+                        onClick={() => {
+                          setIsMeOpen(false);
+                          navigate("/settings")
+                        }}
+                      >
                         Settings & Privacy
                       </button>
                       <button
                         className="w-full py-2 px-4 text-left text-sm hover:bg-buttonIconHover transition-colors duration-150"
-                        onClick={() => navigate("/auth/signin")}  
+                        onClick={() => {
+                          setIsMeOpen(false);
+                          navigate("/auth/signin")
+                        }}  
                       >
                         Sign Out
                       </button>
