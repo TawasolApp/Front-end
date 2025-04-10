@@ -227,7 +227,6 @@ export const PostProvider = ({
       const newReplies = response.data;
       setReplies((prevReplies) => {
         const existingReplies = prevReplies[commentId]?.data || [];
-        console.log(newReplies)
         // Remove duplicate replies
         const mergedReplies = [...existingReplies, ...newReplies];
         const uniqueReplies = Array.from(
@@ -298,7 +297,6 @@ export const PostProvider = ({
     text,
     taggedUsers,
   ) => {
-    console.log(replyId);
     await axiosInstance.patch(`/posts/comment/${replyId}`, {
       content: text,
       taggedUsers: taggedUsers,
