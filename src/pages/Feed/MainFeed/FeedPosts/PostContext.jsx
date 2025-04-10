@@ -127,8 +127,6 @@ export const PostProvider = ({
       });
 
       const newComments = response.data;
-      console.log(commentPage);
-      console.log(response.data);
 
       setComments((prev) => {
         // Merge and remove duplicates based on comment ID
@@ -192,6 +190,8 @@ export const PostProvider = ({
       ...prev,
       comments: prev.comments - 1,
     }));
+
+    setCommentPage((prev) => prev - 1);
 
     setComments((prevComments) =>
       prevComments.filter((comment) => comment.id !== commentId),
@@ -343,25 +343,30 @@ export const PostProvider = ({
   };
 
   const handleDeleteReplyToComment = async (commentId, replyId) => {
-    console.log(replyId);
     await axiosInstance.delete(`/posts/comment/${replyId}`);
-
-    setReplies((prevReplies) => ({
-      ...prevReplies,
-      [commentId]: {
-        ...prevReplies[commentId],
-        data: prevReplies[commentId].data.filter(
-          (reply) => reply.id !== replyId,
-        ),
-      },
-    }));
-
+  
+    setReplies((prevReplies) => {
+      const existingReplies = prevReplies[commentId]?.data || [];
+      const updatedReplies = existingReplies.filter((reply) => reply.id !== replyId);
+  
+      const currentPage = prevReplies[commentId]?.replyPage || 1;
+  
+      return {
+        ...prevReplies,
+        [commentId]: {
+          ...prevReplies[commentId],
+          data: updatedReplies,
+          replyPage: Math.max(1, currentPage - 1),
+        },
+      };
+    });
+  
     setComments((prevComments) =>
       prevComments.map((comment) =>
         comment.id === commentId
           ? {
               ...comment,
-              repliesCount: comment.repliesCount - 1, // Remove the last dummy reply
+              repliesCount: comment.repliesCount - 1,
             }
           : comment,
       ),
