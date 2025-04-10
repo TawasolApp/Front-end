@@ -23,7 +23,11 @@ import NewPasswordPage from "../pages/Authentication/NewPasswordPage";
 const App = () => {
 
   useEffect(() => {
-    document.documentElement.classList.add('light');
+    const savedTheme = localStorage.getItem("theme");
+    const themeToSet = savedTheme || "light";
+    document.documentElement.classList.remove("light", "dark");
+    document.documentElement.classList.add(themeToSet);
+    if (!savedTheme) localStorage.setItem("theme", "light");
   }, []);
 
   const getCurrentTheme = () => {

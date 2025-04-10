@@ -31,6 +31,7 @@ import RepostsContainer from "../pages/Feed/RepostsContainer";
 import SearchPosts from "../pages/Search/SearchPosts";
 
 import TawasolNavbar from "../layouts/TawasolNavbar";
+import ThemeSettings from "../pages/Settings/ThemeSettings.jsx";
 
 const RenderWithNavbar = (component) => {
   return (
@@ -50,6 +51,11 @@ const ProtectedRoutes = () => {
       <Route
         path="/search/:searchText"
         element={RenderWithNavbar(<SearchPosts />)}
+      />
+
+      <Route
+        path="/settings"
+        element={RenderWithNavbar(<ThemeSettings />)}
       />
 
       <Route path="/users" element={<ProfileLayout />} />
