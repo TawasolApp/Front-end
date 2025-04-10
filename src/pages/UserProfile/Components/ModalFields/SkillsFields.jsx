@@ -4,7 +4,7 @@ function SkillsFields({ formData, handleChange, errors, editMode }) {
   return (
     <>
       <h2 className="text-lg font-semibold mb-4 text-text">Add skill</h2>
-      <p className="text-sm text-gray-600 mb-2">* Indicates required</p>
+      <p className="text-sm text-companysubheader mb-2">* Indicates required</p>
 
       <label htmlFor="skillName" className="block font-medium mb-1 text-text">
         Skill *
@@ -16,7 +16,7 @@ function SkillsFields({ formData, handleChange, errors, editMode }) {
         placeholder="Skill (ex: Project Management)"
         value={formData.skillName || ""}
         onChange={handleChange}
-        className="border p-2 w-full rounded-md mb-2 bg-boxbackground text-companyheader2"
+        className="border p-2 w-full rounded-md mb-2 bg-boxbackground text-companysubheader"
         required
         readOnly={editMode} //  prevent typing
       />
@@ -25,7 +25,7 @@ function SkillsFields({ formData, handleChange, errors, editMode }) {
       )}
 
       {editMode && (
-        <p className="text-sm italic text-gray-500 mb-2">
+        <p className="text-sm italic text-companysubheader mb-2">
           Skill name cannot be edited. To change it, delete and re-add the
           skill.
         </p>
@@ -40,7 +40,7 @@ function SkillsFields({ formData, handleChange, errors, editMode }) {
         placeholder="e.g. Frontend Developer"
         value={formData.position || ""}
         onChange={handleChange}
-        className="border p-2 w-full rounded-md mb-2 bg-boxbackground text-companyheader2"
+        className="border p-2 w-full rounded-md mb-2 bg-boxbackground text-companysubheader"
       />
     </>
   );

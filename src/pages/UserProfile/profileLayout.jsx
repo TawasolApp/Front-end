@@ -1,8 +1,8 @@
 import { Outlet, useParams, useNavigate } from "react-router-dom";
 import { useState, useEffect } from "react";
-import { axiosInstance as axios } from "../../../apis/axios.js";
-import LoadingPage from "../../LoadingScreen/LoadingPage";
-
+import { axiosInstance as axios } from "../../apis/axios.js";
+import LoadingPage from "../LoadingScreen/LoadingPage.jsx";
+import Footer from "../Company/Components/GenericComponents/Footer.jsx";
 function ProfileLayout() {
   const { profileSlug: userId } = useParams(); // ← This is now the actual user ID
   const navigate = useNavigate();
@@ -45,13 +45,13 @@ function ProfileLayout() {
 
   if (loading) return <LoadingPage />;
   if (!user) return null;
-  const isOwner = user?.status === "Owner"; // ✅ Dynamic ownership check
-
+  const isOwner = user?.status === "Owner";
   return (
-    <div className="bg-mainBackground pt-4 pb-4">
-      <div className="max-w-6xl mx-auto mt-4" data-testid="layout-wrapper">
+    <div className="bg-mainBackground pt-0 pb-4 h-screen ">
+      <div className="max-w-6xl mx-auto " data-testid="layout-wrapper">
         <Outlet context={{ user, isOwner, onUserUpdate: setUser }} />
       </div>
+      <Footer />
     </div>
   );
 }

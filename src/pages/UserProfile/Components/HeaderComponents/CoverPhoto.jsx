@@ -12,7 +12,7 @@ function CoverPhoto({ backgroundImage, isOwner, onImageClick, onUpload }) {
       />
       {isOwner && (
         <button
-          className="absolute top-2 right-2  p-2 rounded-full "
+          className="absolute top-2 right-0  p-2 rounded-full "
           onClick={onUpload}
         >
           {backgroundImage?.includes("defaultCoverPhoto") ? (

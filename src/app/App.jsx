@@ -19,7 +19,6 @@ import ProtectedRoutes from "./ProtectedRoutes";
 import VerificationPendingPage from "../pages/Authentication/VerificationPendingPage";
 import NewPasswordPage from "../pages/Authentication/NewPasswordPage";
 
-
 const App = () => {
 
   useEffect(() => {
@@ -76,7 +75,6 @@ const App = () => {
           }
         />
       </Routes>
-
       {/* Toast Container for the toasts */}
       <ToastContainer
         position="bottom-left"

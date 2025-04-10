@@ -1,7 +1,7 @@
 import React from "react";
 import GenericSection from "../GenericDisplay/GenericSection";
 
-function ExperienceSection({ isOwner, sectionRef, user }) {
+function ExperienceSection({ isOwner, sectionRef, user, onUserUpdate }) {
   return (
     <div ref={sectionRef}>
       <GenericSection
@@ -9,7 +9,8 @@ function ExperienceSection({ isOwner, sectionRef, user }) {
         type="workExperience"
         items={user.workExperience || {}}
         isOwner={isOwner}
-        user={user} // needed for PATCH
+        user={user}
+        onUserUpdate={onUserUpdate}
       />
     </div>
   );
