@@ -52,7 +52,7 @@ const ActorHeader = ({
                 {authorName}
               </h3>
               <p className="text-xs font-semibold text-authorBio mt-px truncate max-w-full">
-                {authorBio.length > 47
+                {authorBio && authorBio.length > 47
                   ? authorBio.slice(0, 47) + "..."
                   : authorBio}
               </p>
