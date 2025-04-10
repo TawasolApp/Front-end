@@ -2,6 +2,7 @@ import { useState, useRef, useEffect } from "react";
 import { Avatar } from "@mui/material";
 import TextEditor from "../../../../GenericComponents/TextEditor";
 import { useSelector } from "react-redux";
+import CircularProgress from "@mui/material/CircularProgress"; // For loading spinner
 
 const AddForm = ({
   handleAddFunction,
@@ -10,11 +11,11 @@ const AddForm = ({
   close = null,
   type,
 }) => {
-  
   const currentAuthorPicture = useSelector((state) => state.authentication.profilePicture);
 
   const [commentText, setCommentText] = useState(initialText);
   const [taggedUsers, setTaggedUsers] = useState(initialTaggedUsers);
+  const [loading, setLoading] = useState(false); // New loading state
   const hasText = commentText.trim().length > 0;
   const textareaRef = useRef(null);
 
@@ -36,11 +37,17 @@ const AddForm = ({
     }
   }, [commentText, hasText, type]);
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     if (commentText.trim()) {
-      handleAddFunction(commentText, taggedUsers);
-      setCommentText("");
+      setLoading(true);
+      try {
+        await handleAddFunction(commentText, taggedUsers);
+        setCommentText("");
+      } catch (error) {
+        console.error("Error adding comment:", error);
+      }
+      setLoading(false); // Set loading to false once done
     }
   };
 
@@ -83,7 +90,7 @@ const AddForm = ({
             <button
               type="button"
               onClick={close}
-              className="px-3 py-1 text-sm font-medium text-white bg-gray-500 rounded-lg hover:bg-gray-600"
+              className="px-3 py-1 text-sm font-medium text-buttonSubmitText bg-buttonSubmitEnable hover:bg-buttonSubmitEnableHover rounded-lg"
             >
               Cancel
             </button>
@@ -92,9 +99,14 @@ const AddForm = ({
           {(hasText || type === "Reply") && (
             <button
               type="submit"
-              className="px-3 py-1 text-sm font-medium text-buttonSubmitText bg-buttonSubmitEnable rounded-lg hover:bg-buttonSubmitEnableHover"
+              className="px-3 py-1 text-sm font-medium text-buttonSubmitText bg-buttonSubmitEnable hover:bg-buttonSubmitEnableHover rounded-lg"
+              disabled={loading}
             >
-              {type}
+              {loading ? (
+                <CircularProgress size={20} className="text-white" />
+              ) : (
+                type
+              )}
             </button>
           )}
         </div>

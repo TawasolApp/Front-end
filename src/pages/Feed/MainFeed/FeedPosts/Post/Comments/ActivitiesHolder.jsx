@@ -1,6 +1,8 @@
 import { useState, useMemo } from "react";
 import reactionIcons from "../../../../GenericComponents/reactionIcons";
 import ReactionPicker from "../../../../GenericComponents/ReactionPicker";
+import CircularProgress from "@mui/material/CircularProgress";
+import "./ActivitiesHolder.css";
 
 const ActivitiesHolder = ({
   currentReaction,
@@ -11,6 +13,11 @@ const ActivitiesHolder = ({
   replies,
   setShowReplies,
 }) => {
+  // State to manage loading state
+  const [isLoading, setIsLoading] = useState(false);
+  // State for the animation
+  const [isReacted, setIsReacted] = useState(false);
+
   // Memoized calculations
   const { topReactions, totalLikes } = useMemo(() => {
     const filtered = Object.entries(reactions)
@@ -23,24 +30,37 @@ const ActivitiesHolder = ({
     };
   }, [reactions]);
 
-  const handleReactionInternal = (reactionType) => {
-    if (currentReaction === null) {
-      handleReaction(reactionType, null);
-    } else if (currentReaction === reactionType) {
-      handleReaction(null, reactionType);
-    } else {
-      handleReaction(reactionType, currentReaction);
+  const handleReactionInternal = async (reactionType) => {
+    setIsLoading(true); // Set loading state
+    try {
+      if (currentReaction === null) {
+        await handleReaction(reactionType, null);
+      } else if (currentReaction === reactionType) {
+        await handleReaction(null, reactionType);
+      } else {
+        await handleReaction(reactionType, currentReaction);
+      }
+      // Trigger the pop-up animation
+      setIsReacted(true);
+      setTimeout(() => setIsReacted(false), 1000); // Reset the animation after 1 second
+    } catch (e) {
+      console.log(e); // Error is logged but no visual change
     }
+    setIsLoading(false); // Reset loading state
   };
 
   // Reaction display component
   const ReactionDisplay = () => {
-    if (!currentReaction)
+    if (isLoading) {
+      return <CircularProgress size={20} className="text-gray-600" />; // Loading spinner
+    }
+
+    if (!currentReaction) {
       return (
-        <span className="text-sm font-semibold text-textLightActivity">
-          Like
-        </span>
+        <span className="text-sm font-semibold text-textLightActivity">Like</span>
       );
+    }
+
     const { _, color, label } = reactionIcons[currentReaction];
     return (
       <div className="flex items-center">
@@ -59,6 +79,7 @@ const ActivitiesHolder = ({
           <button
             className="flex px-1 items-center rounded-md hover:bg-buttonIconHover transition-all duration-200"
             onClick={() => handleReactionInternal(currentReaction || "Like")}
+            disabled={isLoading} // Disable button during loading
           >
             <ReactionDisplay />
           </button>
@@ -73,7 +94,10 @@ const ActivitiesHolder = ({
               {topReactions.map(([reactionType]) => {
                 const { Icon, _ } = reactionIcons[reactionType];
                 return (
-                  <div key={reactionType} className="relative">
+                  <div
+                    key={reactionType}
+                    className={`relative ${isReacted ? "animate-pop" : ""}`}
+                  >
                     <Icon className="w-4 h-4" />
                   </div>
                 );
@@ -86,9 +110,7 @@ const ActivitiesHolder = ({
         )}
       </div>
 
-      <span className="text-textLightActivity pl-1 text-xs font-semibold">
-        |
-      </span>
+      <span className="text-textLightActivity pl-1 text-xs font-semibold">|</span>
       <button
         className="text-sm font-semibold text-textLightActivity px-1 rounded-md hover:bg-buttonIconHover transition-all duration-200"
         onClick={setShowReplies}
@@ -99,9 +121,7 @@ const ActivitiesHolder = ({
       {/* Reply Button */}
       {!isReply && replies > 0 && (
         <>
-          <span className="text-textLightActivity pr-1 text-xs font-light">
-            •
-          </span>
+          <span className="text-textLightActivity pr-1 text-xs font-light">•</span>
           <span className="text-xs font-normal text-textLightActivity py-1 rounded-md">
             {replies} {replies === 1 ? "reply" : "replies"}
           </span>

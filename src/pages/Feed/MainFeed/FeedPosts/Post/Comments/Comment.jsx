@@ -49,8 +49,8 @@ const Comment = ({ comment }) => {
     });
   }
 
-  const handleEditCommentInternal = (text, taggedUsers) => {
-    handleEditComment(comment.id, text, taggedUsers);
+  const handleEditCommentInternal = async (text, taggedUsers) => {
+    await handleEditComment(comment.id, text, taggedUsers);
     setEditorMode(false);
   };
 
