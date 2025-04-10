@@ -1,14 +1,21 @@
 import { useState, useEffect, useRef, useCallback } from "react";
+import { toast } from "react-toastify";
 import SharePost from "./SharePost/SharePost";
 import FeedPosts from "./FeedPosts/FeedPosts";
 import { axiosInstance } from "../../../apis/axios";
+import { useSelector } from "react-redux";
 
 const MainFeed = ({
   API_ROUTE = "posts",
   q = null,
-  showShare = true
+  showShare = true,
+  currentAuthorId = useSelector((state) => state.authentication.userId),
+  currentAuthorName = `${useSelector((state) => state.authentication.firstName)} ${useSelector((state) => state.authentication.lastName)}`,
+  currentAuthorPicture = useSelector(
+    (state) => state.authentication.profilePicture,
+  ),
+  isAdmin = false,
 }) => {
-
   const [posts, setPosts] = useState([]);
   const [page, setPage] = useState(1);
   const [loading, setLoading] = useState(false);
@@ -33,12 +40,10 @@ const MainFeed = ({
     [loading, hasMore],
   );
 
-  // Initial fetch of posts
   useEffect(() => {
     fetchPosts(1, true);
   }, []);
 
-  // Function to fetch posts with pagination
   const fetchPosts = async (pageNum, reset = false) => {
     if (isFetching.current) return;
 
@@ -49,10 +54,7 @@ const MainFeed = ({
 
       // fetch new posts
       const params = { page: pageNum };
-      if (q != null) {
-        params.q = q;
-      }
-      
+      if (q != null) params.q = q;
       const response = await axiosInstance.get(API_ROUTE, {
         params: params,
       });
@@ -104,7 +106,6 @@ const MainFeed = ({
           setPosts((prevPosts) => [...prevPosts, ...newPosts]);
         }
       }
-      console.log(posts)
     } catch (e) {
       console.log(e.message);
       if (reset) setPosts([]);
@@ -114,7 +115,6 @@ const MainFeed = ({
     }
   };
 
-  // Function to load more posts
   const loadMorePosts = () => {
     if (!hasMore || loading) return;
 
@@ -132,7 +132,7 @@ const MainFeed = ({
     silentRepost = false,
   ) => {
     try {
-      const response = await axiosInstance.post("posts", {
+      await axiosInstance.post("posts", {
         content: text,
         media: media,
         taggedUsers: taggedUsers,
@@ -141,6 +141,10 @@ const MainFeed = ({
         isSilentRepost: silentRepost,
       });
       fetchPosts(1, true);
+      toast.success("Post shared successfully.", {
+        position: "bottom-left",
+        autoClose: 3000,
+      });
     } catch (err) {
       console.log(`Error: ${err}`);
     }
@@ -150,6 +154,10 @@ const MainFeed = ({
     try {
       await axiosInstance.delete(`/posts/${postId}`);
       setPosts((prevPosts) => prevPosts.filter((post) => post.id !== postId));
+      toast.success("Post deleted successfully.", {
+        position: "bottom-left",
+        autoClose: 3000,
+      });
     } catch (e) {
       console.log(e.message);
     }
@@ -158,19 +166,46 @@ const MainFeed = ({
   return (
     <>
       {showShare && (
-        <SharePost handleSharePost={handleSharePost} />
+        <SharePost
+          handleSharePost={handleSharePost}
+          currentAuthorName={currentAuthorName}
+          currentAuthorPicture={currentAuthorPicture}
+        />
       )}
+
       <div className="sm:rounded-lg rounded-none">
         <FeedPosts
           posts={posts}
           lastPostRef={lastPostElementRef}
           handleSharePost={handleSharePost}
           handleDeletePost={handleDeletePost}
+          currentAuthorId={currentAuthorId}
+          currentAuthorName={currentAuthorName}
+          currentAuthorPicture={currentAuthorPicture}
+          isAdmin={isAdmin}
         />
 
         {loading && (
-          <div className="flex justify-center p-4">
-            <div className="loader">Loading...</div>
+          <div className="w-full bg-cardBackground rounded-none sm:rounded-lg border border-cardBorder mb-4 animate-pulse p-4 space-y-4">
+            <div className="flex items-center space-x-4">
+              <div className="w-10 h-10 bg-gray-300 dark:bg-gray-600 rounded-full" />
+              <div className="flex-1 space-y-2">
+                <div className="w-1/3 h-3 bg-gray-300 dark:bg-gray-600 rounded" />
+                <div className="w-1/4 h-2 bg-gray-300 dark:bg-gray-600 rounded" />
+              </div>
+            </div>
+
+            <div className="space-y-2">
+              <div className="w-full h-3 bg-gray-300 dark:bg-gray-600 rounded" />
+              <div className="w-5/6 h-3 bg-gray-300 dark:bg-gray-600 rounded" />
+              <div className="w-2/3 h-3 bg-gray-300 dark:bg-gray-600 rounded" />
+            </div>
+
+            <div className="flex space-x-4 pt-2">
+              <div className="w-16 h-3 bg-gray-300 dark:bg-gray-600 rounded" />
+              <div className="w-16 h-3 bg-gray-300 dark:bg-gray-600 rounded" />
+              <div className="w-16 h-3 bg-gray-300 dark:bg-gray-600 rounded" />
+            </div>
           </div>
         )}
 

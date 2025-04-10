@@ -34,6 +34,7 @@ const PostCardHeader = ({
             authorType={post.authorType}
             timestamp={post.timestamp}
             visibility={post.visibility}
+            isEdited={post.isEdited}
           />
         )}
       </div>
@@ -50,7 +51,7 @@ const PostCardHeader = ({
               />
             ) : (
               <DropdownMenu menuItems={menuItems} position="right-0">
-                <button className="text-iconBase hover:bg-buttonIconHover rounded-full p-1">
+                <button className="hover:bg-buttonIconHover rounded-full p-1">
                   <MoreHorizIcon className="w-5 h-5 text-icon" />
                 </button>
               </DropdownMenu>

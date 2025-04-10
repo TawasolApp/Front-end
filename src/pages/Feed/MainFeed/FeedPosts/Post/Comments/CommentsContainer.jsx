@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { useState, useEffect } from "react";
 import OpenInFullIcon from "@mui/icons-material/OpenInFull";
 import AddForm from "./AddForm";
 import Comment from "./Comment";
@@ -8,11 +8,24 @@ const CommentsContainer = () => {
   const { post, hasMoreComments, comments, fetchComments, handleAddComment } =
     usePost();
 
+  const [isLoading, setIsLoading] = useState(false);
+
   useEffect(() => {
-    if (post.id) {
-      fetchComments();
-    }
+    const loadInitialComments = async () => {
+      if (post.id) {
+        setIsLoading(true);
+        await fetchComments();
+        setIsLoading(false);
+      }
+    };
+    loadInitialComments();
   }, [post.id]);
+
+  const handleFetchComments = async () => {
+    setIsLoading(true);
+    await fetchComments();
+    setIsLoading(false);
+  };
 
   return (
     <>
@@ -28,10 +41,10 @@ const CommentsContainer = () => {
           </div>
         ))}
 
-      {hasMoreComments && (
+      {!isLoading && hasMoreComments && (
         <div className="ml-4 py-2 flex items-center">
           <button
-            onClick={fetchComments}
+            onClick={handleFetchComments}
             className="flex items-center px-1 py-1 space-x-1 rounded-xl hover:bg-buttonIconHover transition-colors"
           >
             <OpenInFullIcon className="text-icon" fontSize="small" />
@@ -39,6 +52,20 @@ const CommentsContainer = () => {
               Load more comments
             </span>
           </button>
+        </div>
+      )}
+
+      {isLoading && (
+        <div className="px-4 space-y-4 animate-pulse py-2">
+          {[...Array(1)].map((_, idx) => (
+            <div key={idx} className="flex gap-2">
+              <div className="w-9 h-9 bg-gray-300 dark:bg-gray-600 rounded-full" />
+              <div className="flex-1 space-y-2">
+                <div className="w-1/4 h-2 bg-gray-300 dark:bg-gray-600 rounded" />
+                <div className="w-5/6 h-3 bg-gray-300 dark:bg-gray-600 rounded" />
+              </div>
+            </div>
+          ))}
         </div>
       )}
     </>

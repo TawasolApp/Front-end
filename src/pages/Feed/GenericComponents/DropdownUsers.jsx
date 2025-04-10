@@ -14,7 +14,7 @@ const DropdownUsers = ({ name, onSelect }) => {
           params: {
             name: name,
             page: 1,
-            limit: 3
+            limit: 3,
           },
         });
         setUsers(response.data);
@@ -36,16 +36,22 @@ const DropdownUsers = ({ name, onSelect }) => {
     <>
       {users.length > 0 && (
         <div className="absolute z-50 bg-cardBackground rounded-lg shadow-lg border border-cardBorder mt-1 w-64 max-h-60 overflow-y-auto">
-          {users.map((user) => (
+          {users.map((user, index) => (
             <button
-              key={user.id}
+              key={index}
               className="hover:bg-buttonIconHover p-2 w-full"
-              onClick={() => onSelect(user.id, user.firstName, user.lastName)}
+              onClick={() =>
+                onSelect(user.userId, user.firstName, user.lastName)
+              }
             >
               <ActorHeader
                 authorId={user.id}
                 authorName={`${user.firstName} ${user.lastName}`}
-                authorBio={user.headline.slice(0, 25) + "..."}
+                authorBio={
+                  user.headline.length > 25
+                    ? user.headline.slice(0, 25) + "..."
+                    : user.headline
+                }
                 authorPicture={user.profilePicture}
                 iconSize={32}
                 enableLink={false}

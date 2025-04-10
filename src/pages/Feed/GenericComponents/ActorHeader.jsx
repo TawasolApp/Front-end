@@ -14,39 +14,47 @@ const ActorHeader = ({
   visibility,
   iconSize = 48,
   enableLink = true,
+  isEdited = false,
 }) => {
   return (
-    <div className="flex items-start gap-2 max-w-full">
-      {/* Avatar */}
-      <div className="flex-shrink-0">
+    <div className="flex gap-2 max-w-full items-center">
+      <div className="flex-shrink-0 items-center">
         <Link
-          to={authorType === "User" ? `/users/${authorId}` : `/company/${authorId}`}
+          to={
+            authorType === "User"
+              ? `/users/${authorId}`
+              : `/company/${authorId}`
+          }
         >
           <Avatar
             src={authorPicture}
             sx={{
               width: iconSize,
               height: iconSize,
-              borderRadius: "50%",
+              borderRadius: authorType === "Company" ? "0px" : "50%",
             }}
           />
         </Link>
       </div>
 
-      {/* Text Content */}
-      <div className="flex-1 min-w-0 max-w-[calc(100%-56px)]"> {/* Adjusted calculation */}
+      <div className="flex-1 min-w-0 max-w-[calc(100%-56px)]">
         <div className="flex flex-col max-w-full">
-          {/* Name and Bio */}
           {enableLink ? (
             <Link
-              to={authorType === "User" ? `/users/${authorId}` : `/company/${authorId}`}
+              to={
+                authorType === "User"
+                  ? `/users/${authorId}`
+                  : `/company/${authorId}`
+              }
               className="block max-w-full"
             >
               <h3 className="font-medium text-sm text-authorName hover:text-authorNameHover hover:underline truncate">
                 {authorName}
               </h3>
               <p className="text-xs font-semibold text-authorBio mt-px truncate max-w-full">
-                {authorBio}
+                {authorBio.length > 47
+                  ? authorBio.slice(0, 47) + "..."
+                  : authorBio}
               </p>
             </Link>
           ) : (
@@ -60,7 +68,6 @@ const ActorHeader = ({
             </div>
           )}
 
-          {/* Timestamp and Visibility */}
           {timestamp && (
             <div className="flex items-center gap-1 mt-0.5 max-w-full">
               <span className="text-xs font-semibold text-textDate shrink-0">
@@ -82,6 +89,12 @@ const ActorHeader = ({
                   }}
                   className="text-textDate shrink-0"
                 />
+              )}
+              {isEdited && (
+                <span className="text-xs font-semibold text-textDate shrink-0">
+                  {" "}
+                  • Edited
+                </span>
               )}
             </div>
           )}

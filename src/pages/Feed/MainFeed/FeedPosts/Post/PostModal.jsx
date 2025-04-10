@@ -24,7 +24,7 @@ const PostModal = ({ mediaIndex, handleClosePostModal }) => {
 
   const [showLikes, setShowLikes] = useState(false);
   const [showComments, setShowComments] = useState(false);
-  
+
   return (
     <div
       className="fixed inset-0 bg-black/75 flex items-center justify-center z-50 p-4"

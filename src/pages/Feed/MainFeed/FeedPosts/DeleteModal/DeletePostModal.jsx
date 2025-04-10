@@ -1,12 +1,27 @@
-import React from "react";
+import React, { useState } from "react";
+import CircularProgress from "@mui/material/CircularProgress"; // Import loading spinner
 
 const DeletePostModal = ({ closeModal, deleteFunc, commentOrPost }) => {
+  const [isLoading, setIsLoading] = useState(false);
+
+  const handleDelete = async () => {
+    setIsLoading(true);
+    try {
+      await deleteFunc();
+    } catch (error) {
+      console.error("Error deleting:", error);
+    } finally {
+      setIsLoading(false);
+      closeModal();
+    }
+  };
+
   return (
     <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
       <div className="bg-cardBackground rounded-lg shadow-xl w-full max-w-md mx-4 overflow-hidden">
         <div className="p-6">
           <h3 className="text-xl font-semibold text-header mb-4">
-            Delete Post
+            Delete {commentOrPost}
           </h3>
           <p className="text-textPlaceholder">
             Are you sure you want to delete this{" "}
@@ -22,10 +37,15 @@ const DeletePostModal = ({ closeModal, deleteFunc, commentOrPost }) => {
             Cancel
           </button>
           <button
-            onClick={deleteFunc}
-            className="px-4 py-2 rounded font-medium text-buttonSubmitText bg-buttonSubmitEnable hover:bg-buttonSubmitEnableHover"
+            onClick={handleDelete}
+            className="px-4 py-2 rounded font-medium text-buttonSubmitText bg-buttonSubmitEnable hover:bg-buttonSubmitEnableHover disabled:cursor-not-allowed"
+            disabled={isLoading}
           >
-            Delete
+            {isLoading ? (
+              <CircularProgress size={18} className="text-white" />
+            ) : (
+              "Delete"
+            )}
           </button>
         </div>
       </div>

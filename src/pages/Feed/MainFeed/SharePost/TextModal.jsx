@@ -1,15 +1,16 @@
-import { useState, useRef, useEffect } from "react";
+import { useState, useRef } from "react";
 import PublicIcon from "@mui/icons-material/Public";
 import PeopleIcon from "@mui/icons-material/People";
 import Avatar from "@mui/material/Avatar";
-import DropdownMenu from "../../GenericComponents/DropdownMenu";
-import TextEditor from "../../GenericComponents/TextEditor";
 import CloseIcon from "@mui/icons-material/Close";
 import PermMediaIcon from "@mui/icons-material/PermMedia";
 import ImageIcon from "@mui/icons-material/Image";
 import VideoLibraryIcon from "@mui/icons-material/VideoLibrary";
 import PictureAsPdfIcon from "@mui/icons-material/PictureAsPdf";
 import CancelIcon from "@mui/icons-material/Cancel";
+import CircularProgress from "@mui/material/CircularProgress";
+import DropdownMenu from "../../GenericComponents/DropdownMenu";
+import TextEditor from "../../GenericComponents/TextEditor";
 import { axiosInstance } from "../../../../apis/axios";
 
 const TextModal = ({
@@ -28,6 +29,8 @@ const TextModal = ({
   const [taggedUsers, setTaggedUsers] = useState(initialTaggedUsers);
   const [media, setMedia] = useState(initialMedia);
   const fileInputRef = useRef(null);
+  const [isLoading, setIsLoading] = useState(false);
+  const [isUploadingMedia, setIsUploadingMedia] = useState(false); // Track media upload state
 
   const menuItems = [
     {
@@ -43,40 +46,28 @@ const TextModal = ({
   ];
 
   const handleFileChange = async (e) => {
-    // Prevent adding files if PDF exists
-    if (media.some((url) => getMediaType(url) === "document")) return;
-
     const files = Array.from(e.target.files);
-    e.target.value = ""; // Clear input
-
+    e.target.value = "";
     const uploadPromises = files.map(async (file) => {
       const formData = new FormData();
       formData.append("file", file);
+      setIsUploadingMedia(true); // Set uploading state to true
       try {
-        const response = await axiosInstance.post(
-          "/media",
-          formData,
-          {
-            headers: { "Content-Type": "multipart/form-data" },
-          },
-        );
+        const response = await axiosInstance.post("/media", formData, {
+          headers: { "Content-Type": "multipart/form-data" },
+        });
         console.log("Upload successful:", response.data);
+        setIsUploadingMedia(false); // Set uploading state to false after upload
         return response.data.url;
       } catch (error) {
+        setIsUploadingMedia(false); // Set uploading state to false after error
         console.error("Upload failed:", error);
         return null;
       }
     });
 
     const newUrls = (await Promise.all(uploadPromises)).filter(Boolean);
-    const hasPDF = newUrls.some((url) => url.includes("/documents/"));
-    if (hasPDF) {
-      // Keep only the first PDF and clear others
-      const pdfUrl = newUrls.find((url) => url.includes("/documents/"));
-      setMedia([pdfUrl]);
-    } else {
-      setMedia((prev) => [...prev, ...newUrls]);
-    }
+    setMedia((prev) => [...prev, ...newUrls]);
   };
 
   const getMediaType = (url) => {
@@ -101,9 +92,7 @@ const TextModal = ({
         return (
           <div className="w-full h-32 flex items-center justify-center bg-gray-100 rounded-lg">
             <PictureAsPdfIcon className="w-10 h-10 text-red-500" />
-            <span className="text-xs mt-1 truncate">
-              {url.split("/").pop()}
-            </span>
+            <span className="text-xs mt-1 truncate">PDF</span>
           </div>
         );
     }
@@ -115,17 +104,18 @@ const TextModal = ({
 
   const isSubmitEnabled = text.trim() !== "" || media.length > 0;
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     if (!text.trim() && media.length === 0) return;
-    handleSubmitFunction(text, media, visibilityType, taggedUsers);
+    setIsLoading(true);
+    await handleSubmitFunction(text, media, visibilityType, taggedUsers);
+    setIsLoading(false);
     setIsModalOpen();
     setText("");
     setMedia([]);
     setTaggedUsers([]);
   };
 
-  // Helper to get media icon based on type
   const getMediaIcon = (type) => {
     switch (type) {
       case "image":
@@ -201,7 +191,6 @@ const TextModal = ({
                   >
                     {renderMediaPreview(item)}
 
-                    {/* Remove Media Button */}
                     <button
                       type="button"
                       onClick={() => removeMedia(index)}
@@ -210,7 +199,6 @@ const TextModal = ({
                       <CancelIcon className="text-white w-5 h-5" />
                     </button>
 
-                    {/* Media Type Icon */}
                     <div className="absolute bottom-1 left-1 bg-black bg-opacity-50 rounded-md p-0.5">
                       {getMediaIcon(item.type)}
                     </div>
@@ -226,15 +214,16 @@ const TextModal = ({
               type="button"
               className="p-2 rounded-md hover:bg-buttonIconHover flex items-center gap-1 font-semibold text-textActivity hover:text-textActivityHover disabled:cursor-not-allowed"
               onClick={() => fileInputRef.current.click()}
-              disabled={
-                preventMedia || media.some((url) => url.includes("/documents/"))
-              }
+              disabled={preventMedia || isUploadingMedia}
             >
-              <PermMediaIcon className="w-5 h-5" />
+              {isUploadingMedia ? (
+                <CircularProgress size={24} className="text-white" />
+              ) : (
+                <PermMediaIcon className="w-5 h-5" />
+              )}
               <span className="text-sm">Add Media</span>
             </button>
 
-            {/* Hidden file input */}
             <input
               type="file"
               multiple
@@ -251,11 +240,15 @@ const TextModal = ({
                   ? "bg-buttonSubmitEnable text-white hover:bg-buttonSubmitEnableHover"
                   : "bg-buttonSubmitDisable text-textDescriptor cursor-not-allowed"
               }`}
-              disabled={!isSubmitEnabled}
+              disabled={!isSubmitEnabled || isLoading}
             >
-              <span className="text-sm font-semibold text-buttonSubmitText">
-                Post
-              </span>
+              {isLoading ? (
+                <CircularProgress size={24} className="text-white" />
+              ) : (
+                <span className="text-sm font-semibold text-buttonSubmitText">
+                  Post
+                </span>
+              )}
             </button>
           </div>
         </form>
