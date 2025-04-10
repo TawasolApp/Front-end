@@ -44,35 +44,36 @@ function GenericCard({
   const renderExperience = () => (
     <div className="flex items-start gap-3 w-full">
       <img
-        src={item.workExperiencePicture || defaultExperienceImage}
+        src={item.companyLogo || defaultExperienceImage}
         alt={item.company || "Company Logo"}
         className="w-10 h-10 rounded-full object-cover"
       />
       <div className="break-all whitespace-pre-wrap w-full">
         <h3 className="text-lg font-semibold text-text">{item.title}</h3>
-        <p className="text-sm text-companyheader font-medium">
+        {/* <p className="text-sm text-companyheader font-medium">
           {item.company}
           {item.employmentType && (
             <span className="ml-1">• {item.employmentType}</span>
           )}
-        </p>
-        {/*   <div className="text-companysubheader font-medium">
-{item.companyId ? (
-  <Link
-    to={`/company/${item.companyId}`}
-    className="text-blue-600 hover:underline"
-  >
-    {item.company}
-    {item.employmentType && <span className="ml-1 text-companysubheader">· {item.employmentType}</span>}
-  </Link>
-) : (
-  <>
-    {item.company}
-    {item.employmentType && <span className="ml-1 text-companysubheader">· {item.employmentType}</span>}
-  </>
-)}
+        </p> */}
+        <div className="text-sm text-companyheader font-medium">
+          {item.companyId ? (
+            <Link
+              to={`/company/${item.companyId}`}
+              className="text-blue-600 hover:underline"
+            >
+              {item.company}
+            </Link>
+          ) : (
+            item.company
+          )}
+          {item.employmentType && (
+            <span className="ml-1 text-companysubheader">
+              · {item.employmentType}
+            </span>
+          )}
+        </div>
 
-  </div> */}
         {/* Location and Location Type */}
         {(item.location || item.locationType) && (
           <p className="text-normaltext text-sm">
@@ -110,35 +111,45 @@ function GenericCard({
   );
 
   const renderEducation = () => (
-    <div className="flex items-start gap-3 w-full ">
+    <div className="flex items-start gap-3 w-full">
       <img
-        src={defaultEducationImage}
-        alt="Education"
+        src={item.schoolLogo || defaultEducationImage}
+        alt={item.school || "School"}
         className="w-10 h-10 rounded-full object-cover text-text"
       />
       <div className="break-all whitespace-pre-wrap w-full">
         <h3 className="text-lg font-semibold text-text" data-testid="school">
-          {item.school}
+          {item.schoolId ? (
+            <Link
+              to={`/school/${item.schoolId}`}
+              className="text-blue-600 hover:underline"
+            >
+              {item.school}
+            </Link>
+          ) : (
+            item.school
+          )}
         </h3>
+
         {(item.degree || item.field) && (
           <p className="text-companyheader">
             {[item.degree, item.field].filter(Boolean).join(", ")}
           </p>
         )}
+
         {item.startDate && (
-          <p
-            className="text-companysubheader
-           text-sm mt-1"
-          >
+          <p className="text-companysubheader text-sm mt-1">
             {displayDate(item.startDate)}
             {item.endDate ? ` - ${displayDate(item.endDate)}` : ""}
           </p>
         )}
+
         {item.grade && (
           <p className="text-normaltext text-sm" data-testid="grade">
             Grade: {item.grade}
           </p>
         )}
+
         {item.description && (
           <div className="mt-1 text-normaltext">
             <ExpandableText text={item.description} maxLines={3} />
@@ -170,7 +181,7 @@ function GenericCard({
   const renderCertifications = () => (
     <div className="flex items-start gap-3 w-full">
       <img
-        src={item.certificationPicture || defaultExperienceImage}
+        src={item.companyLogo || defaultExperienceImage}
         alt={item.company || "Certification Logo"}
         className="w-10 h-10 rounded-full object-cover"
       />
@@ -178,13 +189,19 @@ function GenericCard({
         <h3 className="text-lg font-semibold text-text">{item.name}</h3>
         {item.company && (
           <p className="text-sm text-companyheader font-medium">
-            {item.company}
+            {item.companyId ? (
+              <Link
+                to={`/company/${item.companyId}`}
+                className="text-blue-600 hover:underline"
+              >
+                {item.company}
+              </Link>
+            ) : (
+              item.company
+            )}
           </p>
         )}
-        {/* {item.credentialId && (
-          <p className="text-normaltext
-           text-sm">ID: {item.credentialId}</p>
-        )} */}
+
         {item.issueDate && (
           <p
             className="text-companysubheader

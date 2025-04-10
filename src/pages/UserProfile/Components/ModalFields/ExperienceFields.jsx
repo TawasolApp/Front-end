@@ -49,8 +49,8 @@ function ExperienceFields({ formData, setFormData, handleChange, errors }) {
     setFormData((prev) => ({
       ...prev,
       company: company.name,
-      // companyId: company.companyId, //  ADD THIS
-      workExperiencePicture: company.logo || defaultExperienceImage,
+      companyId: company.companyId, //  ADD THIS
+      companyLogo: company.logo || defaultExperienceImage,
     }));
     setShowDropdown(false);
   };
@@ -125,7 +125,12 @@ function ExperienceFields({ formData, setFormData, handleChange, errors }) {
           onChange={(e) => {
             const value = e.target.value;
             setInputValue(value);
-            setFormData((prev) => ({ ...prev, company: value }));
+            setFormData((prev) => ({
+              ...prev,
+              company: value,
+              companyLogo: null, // 💥 Clear it if manually typing
+              companyId: null, // ✅ CLEAR this too!
+            }));
             setShowDropdown(true);
             setHighlightedIndex(-1);
           }}

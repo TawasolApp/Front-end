@@ -176,8 +176,9 @@ function GenericModal({
 
       const updatedFormData = {
         ...cleanedFormData,
-        workExperiencePicture: formData.workExperiencePicture, //  ensure it's included
-        certificationPicture: formData.certificationPicture,
+        // workExperiencePicture: formData.workExperiencePicture, //  ensure it's included
+        // certificationPicture: formData.certificationPicture,
+        companyLogo: formData.companyLogo, // ✅ used for all three types
 
         ...(type === "certification"
           ? {

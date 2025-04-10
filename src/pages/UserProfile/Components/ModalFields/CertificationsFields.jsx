@@ -30,7 +30,9 @@ function CertificationsFields({ formData, setFormData, handleChange, errors }) {
     setFormData((prev) => ({
       ...prev,
       company: company.name,
-      certificationPicture: company.logo || defaultExperienceImage,
+      companyId: company.companyId, // Set this!
+
+      companyLogo: company.logo || defaultExperienceImage,
     }));
     setShowDropdown(false);
   };
@@ -72,7 +74,12 @@ function CertificationsFields({ formData, setFormData, handleChange, errors }) {
           onChange={(e) => {
             const value = e.target.value;
             setInputValue(value);
-            setFormData((prev) => ({ ...prev, company: value }));
+            setFormData((prev) => ({
+              ...prev,
+              company: value,
+              companyLogo: null, //  set to null when typing
+              companyId: null, //  Clear ID
+            }));
             setShowDropdown(true);
             setHighlightedIndex(-1);
           }}
