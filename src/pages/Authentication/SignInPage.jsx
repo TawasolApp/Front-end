@@ -46,7 +46,7 @@ const SignInPage = () => {
         const profileResponse = await axiosInstance.get("/profile");
 
         if (profileResponse.status === 200) {
-          const { _id, firstName, lastName, location, bio, profilePicture, coverPhoto } =
+          const { _id, firstName, lastName, location, headline, profilePicture, coverPhoto } =
             profileResponse.data;
 
           dispatch(setType("User"));
@@ -62,8 +62,8 @@ const SignInPage = () => {
           if (location) {
             dispatch(setLocation(location));
           }
-          if (bio) {
-            dispatch(setBio(bio));
+          if (headline) {
+            dispatch(setBio(headline));
           }
           if (profilePicture) {
             dispatch(setProfilePicture(profilePicture));

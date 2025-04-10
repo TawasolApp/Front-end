@@ -65,7 +65,7 @@ const VerificationPendingForm = ({ type = null }) => {
         </div>
       ) : (
         <p className="text-textPlaceholder text-lg">
-          You can resend in {timer} second{timer !== 1 ? "s" : ""}
+          You can send again in {timer} second{timer !== 1 ? "s" : ""}
         </p>
       ))}
     </div>

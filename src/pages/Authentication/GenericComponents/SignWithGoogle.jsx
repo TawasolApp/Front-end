@@ -66,7 +66,7 @@ const SignWithGoogle = () => {
                     firstName,
                     lastName,
                     location,
-                    bio,
+                    headline,
                     profilePicture,
                     coverPhoto,
                   } = profileResponse.data;
@@ -84,8 +84,8 @@ const SignWithGoogle = () => {
                   if (location) {
                     dispatch(setLocation(location));
                   }
-                  if (bio) {
-                    dispatch(setBio(bio));
+                  if (headline) {
+                    dispatch(setBio(headline));
                   }
                   if (profilePicture) {
                     dispatch(setProfilePicture(profilePicture));
