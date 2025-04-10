@@ -7,7 +7,6 @@ const SharePost = ({
   currentAuthorName,
   currentAuthorPicture,
 }) => {
-
   const [isModalOpen, setIsModalOpen] = useState(false);
 
   return (

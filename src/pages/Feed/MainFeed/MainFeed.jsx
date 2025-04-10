@@ -11,10 +11,11 @@ const MainFeed = ({
   showShare = true,
   currentAuthorId = useSelector((state) => state.authentication.userId),
   currentAuthorName = `${useSelector((state) => state.authentication.firstName)} ${useSelector((state) => state.authentication.lastName)}`,
-  currentAuthorPicture = useSelector((state) => state.authentication.profilePicture),
+  currentAuthorPicture = useSelector(
+    (state) => state.authentication.profilePicture,
+  ),
   isAdmin = false,
 }) => {
-
   const [posts, setPosts] = useState([]);
   const [page, setPage] = useState(1);
   const [loading, setLoading] = useState(false);
@@ -105,7 +106,6 @@ const MainFeed = ({
           setPosts((prevPosts) => [...prevPosts, ...newPosts]);
         }
       }
-      
     } catch (e) {
       console.log(e.message);
       if (reset) setPosts([]);
@@ -143,7 +143,7 @@ const MainFeed = ({
       fetchPosts(1, true);
       toast.success("Post shared successfully.", {
         position: "bottom-left",
-        autoClose: 3000
+        autoClose: 3000,
       });
     } catch (err) {
       console.log(`Error: ${err}`);
@@ -156,7 +156,7 @@ const MainFeed = ({
       setPosts((prevPosts) => prevPosts.filter((post) => post.id !== postId));
       toast.success("Post deleted successfully.", {
         position: "bottom-left",
-        autoClose: 3000
+        autoClose: 3000,
       });
     } catch (e) {
       console.log(e.message);

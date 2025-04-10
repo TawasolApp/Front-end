@@ -19,11 +19,12 @@ const LikeButton = () => {
     setIsLoading(true);
     try {
       if (initReactValue === null) {
-        handleReactOnPost && await handleReactOnPost(reactionType, null);
+        handleReactOnPost && (await handleReactOnPost(reactionType, null));
       } else if (initReactValue === reactionType) {
-        handleReactOnPost && await handleReactOnPost(null, reactionType);
+        handleReactOnPost && (await handleReactOnPost(null, reactionType));
       } else {
-        handleReactOnPost && await handleReactOnPost(reactionType, initReactValue);
+        handleReactOnPost &&
+          (await handleReactOnPost(reactionType, initReactValue));
       }
       // Trigger the pop-up animation
       setIsReacted(true);

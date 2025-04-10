@@ -57,7 +57,9 @@ const ActivitiesHolder = ({
 
     if (!currentReaction) {
       return (
-        <span className="text-sm font-semibold text-textLightActivity">Like</span>
+        <span className="text-sm font-semibold text-textLightActivity">
+          Like
+        </span>
       );
     }
 
@@ -121,7 +123,9 @@ const ActivitiesHolder = ({
       {/* Reply Button */}
       {!isReply && replies > 0 && (
         <>
-          <span className="text-textLightActivity pr-1 text-xs font-light">•</span>
+          <span className="text-textLightActivity pr-1 text-xs font-light">
+            •
+          </span>
           <span className="text-xs font-normal text-textLightActivity">
             {replies} {replies === 1 ? "reply" : "replies"}
           </span>

@@ -14,7 +14,7 @@ const DropdownUsers = ({ name, onSelect }) => {
           params: {
             name: name,
             page: 1,
-            limit: 3
+            limit: 3,
           },
         });
         setUsers(response.data);
@@ -40,12 +40,18 @@ const DropdownUsers = ({ name, onSelect }) => {
             <button
               key={index}
               className="hover:bg-buttonIconHover p-2 w-full"
-              onClick={() => onSelect(user.userId, user.firstName, user.lastName)}
+              onClick={() =>
+                onSelect(user.userId, user.firstName, user.lastName)
+              }
             >
               <ActorHeader
                 authorId={user.id}
                 authorName={`${user.firstName} ${user.lastName}`}
-                authorBio={user.headline.length > 25 ? user.headline.slice(0, 25) + "..." : user.headline}
+                authorBio={
+                  user.headline.length > 25
+                    ? user.headline.slice(0, 25) + "..."
+                    : user.headline
+                }
                 authorPicture={user.profilePicture}
                 iconSize={32}
                 enableLink={false}

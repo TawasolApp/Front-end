@@ -1,123 +1,134 @@
-import { useState, useEffect, useMemo, useCallback, memo, useRef } from "react"
-import CloseIcon from "@mui/icons-material/Close"
-import ArrowDropDownIcon from "@mui/icons-material/ArrowDropDown"
-import reactionIcons from "../../../GenericComponents/reactionIcons"
-import DropdownMenu from "../../../GenericComponents/DropdownMenu"
-import { Link } from "react-router-dom"
-import { axiosInstance } from "../../../../../apis/axios"
+import { useState, useEffect, useMemo, useCallback, memo, useRef } from "react";
+import CloseIcon from "@mui/icons-material/Close";
+import ArrowDropDownIcon from "@mui/icons-material/ArrowDropDown";
+import reactionIcons from "../../../GenericComponents/reactionIcons";
+import DropdownMenu from "../../../GenericComponents/DropdownMenu";
+import { Link } from "react-router-dom";
+import { axiosInstance } from "../../../../../apis/axios";
 
 const capitalizeFirstLetter = (string) => {
-  if (!string) return ""
-  return string.charAt(0).toUpperCase() + string.slice(1)
-}
+  if (!string) return "";
+  return string.charAt(0).toUpperCase() + string.slice(1);
+};
 
 const ReactionsModal = ({ API_URL, setShowLikes, reactCounts }) => {
-
-  const [reactionsData, setReactionsData] = useState([])
-  const [selectedTab, setSelectedTab] = useState("all")
-  const [loading, setLoading] = useState(false)
-  const [page, setPage] = useState(1)
-  const [hasMore, setHasMore] = useState(true)
-  const observerRef = useRef(null)
-  const containerRef = useRef(null)
+  const [reactionsData, setReactionsData] = useState([]);
+  const [selectedTab, setSelectedTab] = useState("all");
+  const [loading, setLoading] = useState(false);
+  const [page, setPage] = useState(1);
+  const [hasMore, setHasMore] = useState(true);
+  const observerRef = useRef(null);
+  const containerRef = useRef(null);
 
   // Process reactCounts to include "All" category
   const processedReactCounts = useMemo(() => {
-    if (!reactCounts) return { all: 0 }
+    if (!reactCounts) return { all: 0 };
 
-    const total = Object.values(reactCounts).reduce((sum, count) => sum + (count || 0), 0)
+    const total = Object.values(reactCounts).reduce(
+      (sum, count) => sum + (count || 0),
+      0,
+    );
     return {
       ...reactCounts,
       all: total,
-    }
-  }, [reactCounts])
+    };
+  }, [reactCounts]);
 
   // Get reaction types sorted by count
   const reactionTypes = useMemo(() => {
-    if (!processedReactCounts) return []
-  
+    if (!processedReactCounts) return [];
+
     return Object.keys(processedReactCounts)
       .filter((type) => type !== "all" && processedReactCounts[type] > 0)
-      .sort((a, b) => (processedReactCounts[b] || 0) - (processedReactCounts[a] || 0))
-  }, [processedReactCounts])
+      .sort(
+        (a, b) =>
+          (processedReactCounts[b] || 0) - (processedReactCounts[a] || 0),
+      );
+  }, [processedReactCounts]);
 
   // Fetch reactions data with pagination
   const fetchReactions = useCallback(
     async (pageNum = 1, reset = false) => {
-      if (loading || (!hasMore && !reset)) return
+      if (loading || (!hasMore && !reset)) return;
 
-      setLoading(true)
+      setLoading(true);
       try {
         const response = await axiosInstance.get(API_URL, {
           params: {
             page: pageNum,
             type: capitalizeFirstLetter(selectedTab),
           },
-        })
+        });
 
-        const newData = response.data
+        const newData = response.data;
         if (newData.length === 0) {
-          setHasMore(false)
+          setHasMore(false);
         } else {
-          setHasMore(true)
+          setHasMore(true);
         }
 
-        const filteredData = selectedTab === "all"
-          ? newData
-          : newData.filter((reaction) => reaction.type.toLowerCase() === selectedTab.toLowerCase())
+        const filteredData =
+          selectedTab === "all"
+            ? newData
+            : newData.filter(
+                (reaction) =>
+                  reaction.type.toLowerCase() === selectedTab.toLowerCase(),
+              );
 
-        setReactionsData((prev) => (reset ? filteredData : [...prev, ...filteredData]))
-        setPage(pageNum)
+        setReactionsData((prev) =>
+          reset ? filteredData : [...prev, ...filteredData],
+        );
+        setPage(pageNum);
       } catch (error) {
-        console.error("Error fetching reactions:", error)
+        console.error("Error fetching reactions:", error);
       } finally {
-        setLoading(false)
+        setLoading(false);
       }
     },
     [API_URL, loading, hasMore, selectedTab],
-  )
+  );
 
   // Initial data fetch
   useEffect(() => {
-    setReactionsData([])
-    setPage(1)
-    setHasMore(true)
-    fetchReactions(1, true)
-  }, [selectedTab])
+    setReactionsData([]);
+    setPage(1);
+    setHasMore(true);
+    fetchReactions(1, true);
+  }, [selectedTab]);
 
   // Setup intersection observer for infinite scrolling
   useEffect(() => {
     const observer = new IntersectionObserver(
       (entries) => {
         if (entries[0].isIntersecting && hasMore && !loading) {
-          fetchReactions(page + 1)
+          fetchReactions(page + 1);
         }
       },
       { threshold: 0.5 },
-    )
+    );
 
     if (observerRef.current) {
-      observer.observe(observerRef.current)
+      observer.observe(observerRef.current);
     }
 
     return () => {
       if (observerRef.current) {
-        observer.unobserve(observerRef.current)
+        observer.unobserve(observerRef.current);
       }
-    }
-  }, [fetchReactions, hasMore, loading, page])
+    };
+  }, [fetchReactions, hasMore, loading, page]);
 
   const handleTabClick = useCallback((type) => {
     return (e) => {
-      if (e) e.preventDefault()
+      if (e) e.preventDefault();
       setSelectedTab(type);
-    }
-  }, [])
+    };
+  }, []);
 
   const [visibleTabs, dropdownTabs] = useMemo(() => {
-    if (reactionTypes.length <= 4) return [reactionTypes, []]
-    return [reactionTypes.slice(0, 3), reactionTypes.slice(3)]
-  }, [reactionTypes])
+    if (reactionTypes.length <= 4) return [reactionTypes, []];
+    return [reactionTypes.slice(0, 3), reactionTypes.slice(3)];
+  }, [reactionTypes]);
 
   return (
     <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
@@ -170,7 +181,9 @@ const ReactionsModal = ({ API_URL, setShowLikes, reactCounts }) => {
                       : "text-textActivity font-semibold text-sm"
                   }`}
                 >
-                  <span className="text-textActivity font-semibold text-sm">More</span>
+                  <span className="text-textActivity font-semibold text-sm">
+                    More
+                  </span>
                   <ArrowDropDownIcon />
                 </button>
               </DropdownMenu>
@@ -178,11 +191,14 @@ const ReactionsModal = ({ API_URL, setShowLikes, reactCounts }) => {
           </div>
         </div>
 
-        <div ref={containerRef} className="overflow-y-auto flex-1 p-2 min-h-[384px]">
+        <div
+          ref={containerRef}
+          className="overflow-y-auto flex-1 p-2 min-h-[384px]"
+        >
           {reactionsData.length > 0 ? (
             <>
               {reactionsData.map((reaction) => {
-                const IconComponent = reactionIcons[reaction.type]?.Icon
+                const IconComponent = reactionIcons[reaction.type]?.Icon;
                 return (
                   <Link
                     to={`/in/${reaction.authorId}`}
@@ -203,11 +219,15 @@ const ReactionsModal = ({ API_URL, setShowLikes, reactCounts }) => {
                       )}
                     </div>
                     <div className="flex-1 min-w-0">
-                      <p className="text-sm font-semibold truncate text-authorName">{reaction.authorName}</p>
-                      <p className="text-xs truncate text-authorBio">{reaction.authorBio}</p>
+                      <p className="text-sm font-semibold truncate text-authorName">
+                        {reaction.authorName}
+                      </p>
+                      <p className="text-xs truncate text-authorBio">
+                        {reaction.authorBio}
+                      </p>
                     </div>
                   </Link>
-                )
+                );
               })}
 
               {/* Loading indicator and intersection observer target */}
@@ -229,37 +249,50 @@ const ReactionsModal = ({ API_URL, setShowLikes, reactCounts }) => {
         </div>
       </div>
     </div>
-  )
-}
+  );
+};
 
 // Update the TabButton component to capitalize the label if it's not "All"
 const TabButton = memo(({ label, count, isActive, onClick }) => (
   <button
     onClick={onClick}
     className={`px-4 py-3 flex items-center gap-2 relative hover:bg-buttonIconHover hover:transition-all duration-200 ${
-      isActive ? "border-b-4 border-listSelected text-listSelected" : "text-textActivity"
+      isActive
+        ? "border-b-4 border-listSelected text-listSelected"
+        : "text-textActivity"
     }`}
   >
-    <span className="font-medium text-sm">{label === "all" ? "All" : capitalizeFirstLetter(label)}</span>
-    <span className={`font-medium text-sm ${isActive ? "text-listSelected" : "text-textActivity"}`}>{count}</span>
+    <span className="font-medium text-sm">
+      {label === "all" ? "All" : capitalizeFirstLetter(label)}
+    </span>
+    <span
+      className={`font-medium text-sm ${isActive ? "text-listSelected" : "text-textActivity"}`}
+    >
+      {count}
+    </span>
   </button>
-))
+));
 
 // Update the ReactionTab component to capitalize the type
 const ReactionTab = memo(({ type, count, isActive, onClick }) => {
-  const { Icon, color } = reactionIcons[type] || {}
+  const { Icon, color } = reactionIcons[type] || {};
   return (
     <button
       onClick={onClick}
       className={`px-4 py-3 flex items-center gap-2 relative font-medium hover:bg-buttonIconHover hover:transition-all duration-200 ${
-        isActive ? "border-b-4 border-listSelected text-listSelected" : "text-textActivity"
+        isActive
+          ? "border-b-4 border-listSelected text-listSelected"
+          : "text-textActivity"
       }`}
     >
       {Icon && <Icon className="w-6 h-6" />}
-      <span className={`text-sm ${isActive ? "text-listSelected" : "text-textActivity"}`}>{count}</span>
+      <span
+        className={`text-sm ${isActive ? "text-listSelected" : "text-textActivity"}`}
+      >
+        {count}
+      </span>
     </button>
-  )
-})
+  );
+});
 
-export default ReactionsModal
-
+export default ReactionsModal;

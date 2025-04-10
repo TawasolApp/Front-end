@@ -67,17 +67,17 @@ const ReactionPicker = ({ onSelectReaction, children }) => {
       const pickerElement = pickerRef.current;
       const containerRect = containerRef.current.getBoundingClientRect();
       const pickerRect = pickerElement.getBoundingClientRect();
-  
+
       // Calculate available space on the right
       const spaceRight = window.innerWidth - containerRect.right;
-      const spaceLeft = containerRect.left
-  
+      const spaceLeft = containerRect.left;
+
       // Default position: top-right of the container
       pickerElement.style.left = "0";
       pickerElement.style.right = "auto";
       pickerElement.style.top = "0";
       pickerElement.style.transform = "translateY(-100%)";
-  
+
       // If not enough space on right, show on left
       if (spaceRight < pickerRect.width && spaceLeft >= pickerRect.width) {
         pickerElement.style.left = "0";

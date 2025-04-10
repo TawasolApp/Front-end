@@ -3,10 +3,7 @@ import reactionIcons from "../../../../GenericComponents/reactionIcons";
 import { usePost } from "../../PostContext";
 import { useNavigate } from "react-router-dom";
 
-const EngagementMetrics = ({
-  setShowLikes,
-  setShowComments,
-}) => {
+const EngagementMetrics = ({ setShowLikes, setShowComments }) => {
   const { post } = usePost();
   const navigate = useNavigate();
   const reactions = post.reactCounts;

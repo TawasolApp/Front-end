@@ -47,7 +47,7 @@ export const PostProvider = ({
       taggedUsers: taggedUsers,
       media: media,
       visibility: visibility,
-      isEdited: true
+      isEdited: true,
     }));
   };
 
@@ -55,11 +55,11 @@ export const PostProvider = ({
     if (post.isSaved) {
       await axiosInstance.delete(`posts/save/${post.id}`);
       setPost((prev) => {
-        return { ...prev, isSaved: false};
+        return { ...prev, isSaved: false };
       });
       toast.success("Post unsaved.", {
         position: "bottom-left",
-        autoClose: 3000
+        autoClose: 3000,
       });
     } else {
       await axiosInstance.post(`posts/save/${post.id}`);
@@ -68,7 +68,7 @@ export const PostProvider = ({
       });
       toast.success("Post saved", {
         position: "bottom-left",
-        autoClose: 3000
+        autoClose: 3000,
       });
     }
   };
@@ -102,7 +102,7 @@ export const PostProvider = ({
     );
     toast.success("Link copied to clipboard.", {
       position: "bottom-left",
-      autoClose: 3000
+      autoClose: 3000,
     });
   };
 
@@ -127,7 +127,7 @@ export const PostProvider = ({
       });
 
       const newComments = response.data;
-      console.log(commentPage)
+      console.log(commentPage);
       console.log(response.data);
 
       setComments((prev) => {
@@ -145,7 +145,7 @@ export const PostProvider = ({
       setCommentPage((prev) => prev + 1);
       setHasMoreComments(post.comments > comments.length + newComments.length);
     } catch (e) {
-      console.log(e)
+      console.log(e);
       if (e.name === "CanceledError") return;
       if (e.response?.status === 404) {
         setHasMoreComments(false);
@@ -237,10 +237,10 @@ export const PostProvider = ({
       if (abortControllerRef.current) {
         abortControllerRef.current.abort();
       }
-  
+
       const controller = new AbortController();
       abortControllerRef.current = controller;
-  
+
       const currentPage = replies[commentId]?.replyPage || 1;
       const response = await axiosInstance.get(`/posts/comments/${commentId}`, {
         params: {
@@ -250,7 +250,7 @@ export const PostProvider = ({
         },
         signal: controller.signal,
       });
-  
+
       const newReplies = response.data;
       setReplies((prevReplies) => {
         const existingReplies = prevReplies[commentId]?.data || [];
@@ -258,9 +258,11 @@ export const PostProvider = ({
         const uniqueReplies = Array.from(
           new Map(mergedReplies.map((reply) => [reply.id, reply])).values(),
         ).sort((a, b) => new Date(a.timestamp) - new Date(b.timestamp));
-  
-        const wantedComment = comments.find((comment) => comment.id === commentId);
-  
+
+        const wantedComment = comments.find(
+          (comment) => comment.id === commentId,
+        );
+
         return {
           ...prevReplies,
           [commentId]: {
@@ -289,7 +291,6 @@ export const PostProvider = ({
   };
 
   const handleAddReplyToComment = async (commentId, text, taggedUsers) => {
-
     const response = await axiosInstance.post(`/posts/comment/${commentId}`, {
       content: text,
       taggedUsers: taggedUsers,

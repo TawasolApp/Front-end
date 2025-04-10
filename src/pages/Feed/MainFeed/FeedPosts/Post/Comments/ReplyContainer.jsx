@@ -13,7 +13,7 @@ const ReplyContainer = ({ commentId }) => {
     setIsLoading(true);
     await fetchReplies(commentId);
     setIsLoading(false);
-  }
+  };
 
   useEffect(() => {
     handleFetchReplies();

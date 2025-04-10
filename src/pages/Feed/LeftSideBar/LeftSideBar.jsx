@@ -8,16 +8,19 @@ import { useSelector } from "react-redux";
 import { Avatar } from "@mui/material";
 
 const LeftSideBar = () => {
-
   // State to track if the sidebar is in top position (mobile/tablet view)
   const [isTopPosition, setIsTopPosition] = useState(false);
   // State to track if the additional items are shown (when in top position)
   const [showMore, setShowMore] = useState(false);
 
   const currentAuthorName = `${useSelector((state) => state.authentication.firstName)} ${useSelector((state) => state.authentication.lastName)}`;
-  const currentAuthorPicture = useSelector((state) => state.authentication.profilePicture);
+  const currentAuthorPicture = useSelector(
+    (state) => state.authentication.profilePicture,
+  );
   const currentAuthorBio = useSelector((state) => state.authentication.bio);
-  const currentAuthorbackgroundImage = useSelector((state) => state.authentication.coverPhoto);
+  const currentAuthorbackgroundImage = useSelector(
+    (state) => state.authentication.coverPhoto,
+  );
 
   // Effect to check if we're in top position (mobile/tablet) based on screen width
   useEffect(() => {

@@ -10,9 +10,8 @@ const PostContainer = ({
   currentAuthorId,
   currentAuthorName,
   currentAuthorPicture,
-  isAdmin
+  isAdmin,
 }) => {
-
   const [showPostModal, setShowPostModal] = useState(false);
   const [mediaIndex, setMediaIndex] = useState(0);
 

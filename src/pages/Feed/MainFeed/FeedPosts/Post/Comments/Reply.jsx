@@ -75,7 +75,7 @@ const Reply = ({ commentId, reply }) => {
                   enableLink={false}
                 />
               </div>
-              
+
               <div className="flex items-center gap-2 flex-shrink-0">
                 <span className="text-xs text-gray-500">
                   {formatDate(reply.timestamp)}
@@ -101,12 +101,12 @@ const Reply = ({ commentId, reply }) => {
               <ActivitiesHolder
                 currentReaction={reply.reactType}
                 reactions={reply.reactCounts}
-                handleReaction={(reactionTypeAdd, reactionTypeRemove) => 
-                    handleReactOnReplyToComment(
-                      commentId,
-                      reply.id,
-                      reactionTypeAdd,
-                      reactionTypeRemove,
+                handleReaction={(reactionTypeAdd, reactionTypeRemove) =>
+                  handleReactOnReplyToComment(
+                    commentId,
+                    reply.id,
+                    reactionTypeAdd,
+                    reactionTypeRemove,
                   )
                 }
                 setShowReactions={() => setShowReactions(true)}

@@ -21,7 +21,6 @@ import DeletePostModal from "../DeleteModal/DeletePostModal";
 import SilentRepostHeader from "./Header/SilentRepostHeader";
 
 const PostCard = ({ setShowPostModal, setMediaIndex }) => {
-
   // MODALS
   const [showLikes, setShowLikes] = useState(false);
   const [showComments, setShowComments] = useState(false);
@@ -63,7 +62,10 @@ const PostCard = ({ setShowPostModal, setMediaIndex }) => {
     },
   ];
 
-  if ((post.authorType === "Company" && isAdmin) || (post.authorId === currentAuthorId)) {
+  if (
+    (post.authorType === "Company" && isAdmin) ||
+    post.authorId === currentAuthorId
+  ) {
     menuItems.push({
       text: "Edit post",
       onClick: () => setShowEditModal(true),

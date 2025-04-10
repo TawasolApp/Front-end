@@ -53,13 +53,9 @@ const TextModal = ({
       formData.append("file", file);
       setIsUploadingMedia(true); // Set uploading state to true
       try {
-        const response = await axiosInstance.post(
-          "/media",
-          formData,
-          {
-            headers: { "Content-Type": "multipart/form-data" },
-          }
-        );
+        const response = await axiosInstance.post("/media", formData, {
+          headers: { "Content-Type": "multipart/form-data" },
+        });
         console.log("Upload successful:", response.data);
         setIsUploadingMedia(false); // Set uploading state to false after upload
         return response.data.url;
@@ -158,9 +154,15 @@ const TextModal = ({
                 <button className="text-sm text-textPlaceholder font-medium py-1 flex items-center gap-1">
                   {visibilityType}{" "}
                   {visibilityType === "Public" ? (
-                    <PublicIcon sx={{ fontSize: 16 }} className="text-textPlaceholder" />
+                    <PublicIcon
+                      sx={{ fontSize: 16 }}
+                      className="text-textPlaceholder"
+                    />
                   ) : (
-                    <PeopleIcon sx={{ fontSize: 16 }} className="text-textPlaceholder" />
+                    <PeopleIcon
+                      sx={{ fontSize: 16 }}
+                      className="text-textPlaceholder"
+                    />
                   )}
                 </button>
               </div>
@@ -243,7 +245,9 @@ const TextModal = ({
               {isLoading ? (
                 <CircularProgress size={24} className="text-white" />
               ) : (
-                <span className="text-sm font-semibold text-buttonSubmitText">Post</span>
+                <span className="text-sm font-semibold text-buttonSubmitText">
+                  Post
+                </span>
               )}
             </button>
           </div>

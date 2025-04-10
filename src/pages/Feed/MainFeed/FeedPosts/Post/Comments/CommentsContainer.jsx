@@ -25,7 +25,7 @@ const CommentsContainer = () => {
     setIsLoading(true);
     await fetchComments();
     setIsLoading(false);
-  }
+  };
 
   return (
     <>
@@ -54,7 +54,7 @@ const CommentsContainer = () => {
           </button>
         </div>
       )}
-      
+
       {isLoading && (
         <div className="px-4 space-y-4 animate-pulse py-2">
           {[...Array(1)].map((_, idx) => (

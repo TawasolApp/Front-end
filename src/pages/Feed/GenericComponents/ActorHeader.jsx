@@ -20,7 +20,11 @@ const ActorHeader = ({
     <div className="flex gap-2 max-w-full items-center">
       <div className="flex-shrink-0 items-center">
         <Link
-          to={authorType === "User" ? `/users/${authorId}` : `/company/${authorId}`}
+          to={
+            authorType === "User"
+              ? `/users/${authorId}`
+              : `/company/${authorId}`
+          }
         >
           <Avatar
             src={authorPicture}
@@ -37,14 +41,20 @@ const ActorHeader = ({
         <div className="flex flex-col max-w-full">
           {enableLink ? (
             <Link
-              to={authorType === "User" ? `/users/${authorId}` : `/company/${authorId}`}
+              to={
+                authorType === "User"
+                  ? `/users/${authorId}`
+                  : `/company/${authorId}`
+              }
               className="block max-w-full"
             >
               <h3 className="font-medium text-sm text-authorName hover:text-authorNameHover hover:underline truncate">
                 {authorName}
               </h3>
               <p className="text-xs font-semibold text-authorBio mt-px truncate max-w-full">
-                {authorBio.length > 47 ? authorBio.slice(0, 47) + "..." : authorBio}
+                {authorBio.length > 47
+                  ? authorBio.slice(0, 47) + "..."
+                  : authorBio}
               </p>
             </Link>
           ) : (
@@ -80,9 +90,12 @@ const ActorHeader = ({
                   className="text-textDate shrink-0"
                 />
               )}
-              {isEdited && (<span className="text-xs font-semibold text-textDate shrink-0">
-                {" "}• Edited
-              </span>)}
+              {isEdited && (
+                <span className="text-xs font-semibold text-textDate shrink-0">
+                  {" "}
+                  • Edited
+                </span>
+              )}
             </div>
           )}
         </div>

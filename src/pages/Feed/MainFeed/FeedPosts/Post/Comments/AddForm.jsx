@@ -11,7 +11,6 @@ const AddForm = ({
   close = null,
   type,
 }) => {
-
   const { currentAuthorPicture } = usePost();
   const [commentText, setCommentText] = useState(initialText);
   const [taggedUsers, setTaggedUsers] = useState(initialTaggedUsers);
