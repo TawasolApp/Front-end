@@ -45,9 +45,9 @@ function Analytics({ jobs }) {
                 <XAxis
                   dataKey="name"
                   interval={0}
-                  angle={isMobile ? -25 : 0}
-                  textAnchor={isMobile ? "end" : "middle"}
-                  dy={isMobile ? 10 : 0}
+                  angle={-30}
+                  textAnchor="end"
+                  height={60}
                   tick={{
                     fill: "rgb(var(--companysubheader))",
                     fontSize: 12,

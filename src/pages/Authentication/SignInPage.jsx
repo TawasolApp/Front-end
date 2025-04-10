@@ -9,11 +9,13 @@ import {
   setFirstName,
   setLastName,
   setLocation,
-  setPicture,
+  setProfilePicture,
   setRefreshToken,
   setToken,
   setType,
   setUserId,
+  setCoverPhoto,
+  setIsSocialLogin
 } from "../../store/authenticationSlice";
 import { Link, useNavigate } from "react-router-dom";
 import AuthenticationHeader from "./GenericComponents/AuthenticationHeader";
@@ -34,16 +36,17 @@ const SignInPage = () => {
       });
 
       if (userResponse.status === 201) {
-        const { token, refreshToken } = userResponse.data;
+        const { token, refreshToken, isSocialLogin } = userResponse.data;
 
         dispatch(setEmail(formData.email));
         dispatch(setToken(token));
         dispatch(setRefreshToken(refreshToken));
+        dispatch(setIsSocialLogin(isSocialLogin));
 
         const profileResponse = await axiosInstance.get("/profile");
 
         if (profileResponse.status === 200) {
-          const { _id, firstName, lastName, location, bio, picture } =
+          const { _id, firstName, lastName, location, headline, profilePicture, coverPhoto } =
             profileResponse.data;
 
           dispatch(setType("User"));
@@ -59,11 +62,14 @@ const SignInPage = () => {
           if (location) {
             dispatch(setLocation(location));
           }
-          if (bio) {
-            dispatch(setBio(bio));
+          if (headline) {
+            dispatch(setBio(headline));
           }
-          if (picture) {
-            dispatch(setPicture(picture));
+          if (profilePicture) {
+            dispatch(setProfilePicture(profilePicture));
+          }
+          if (coverPhoto) {
+            dispatch(setCoverPhoto(coverPhoto));
           }
 
           navigate("/feed");

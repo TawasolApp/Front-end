@@ -19,14 +19,8 @@ import ReactionsModal from "../ReactionModal/ReactionsModal";
 import TextModal from "../../SharePost/TextModal";
 import DeletePostModal from "../DeleteModal/DeletePostModal";
 import SilentRepostHeader from "./Header/SilentRepostHeader";
-import { useSelector } from "react-redux";
 
 const PostCard = ({ setShowPostModal, setMediaIndex }) => {
-
-  const currentAuthorId = useSelector((state) => state.authentication.userId);
-  const currentAuthorName = `${useSelector((state) => state.authentication.firstName)} ${useSelector((state) => state.authentication.lastName)}`;
-  const currentAuthorPicture = useSelector((state) => state.authentication.picture);
-
   // MODALS
   const [showLikes, setShowLikes] = useState(false);
   const [showComments, setShowComments] = useState(false);
@@ -34,6 +28,10 @@ const PostCard = ({ setShowPostModal, setMediaIndex }) => {
   const [showDeleteModal, setShowDeleteModal] = useState(false);
 
   const {
+    currentAuthorId,
+    currentAuthorName,
+    currentAuthorPicture,
+    isAdmin,
     post,
     handleSavePost,
     handleCopyPost,
@@ -64,7 +62,10 @@ const PostCard = ({ setShowPostModal, setMediaIndex }) => {
     },
   ];
 
-  if (post.authorId === currentAuthorId) {  // TODO: if post.authorType === "Company" ? isAdmin : post.authorId === currentAuthor
+  if (
+    (post.authorType === "Company" && isAdmin) ||
+    post.authorId === currentAuthorId
+  ) {
     menuItems.push({
       text: "Edit post",
       onClick: () => setShowEditModal(true),
@@ -131,8 +132,9 @@ const PostCard = ({ setShowPostModal, setMediaIndex }) => {
 
       {showLikes && (
         <ReactionsModal
-          APIURL={`/posts/reactions/${post.id}`}
+          API_URL={`/posts/reactions/${post.id}`}
           setShowLikes={() => setShowLikes(false)}
+          reactCounts={post.reactCounts}
         />
       )}
 

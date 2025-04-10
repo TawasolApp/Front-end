@@ -14,16 +14,15 @@ import { formatDate } from "../../../../../../utils";
 import TextViewer from "../../../../GenericComponents/TextViewer";
 import { usePost } from "../../PostContext";
 import ReplyContainer from "./ReplyContainer";
-import { useSelector } from "react-redux";
 
 const Comment = ({ comment }) => {
   const {
+    currentAuthorId,
     handleDeleteComment,
     handleEditComment,
     handleReactOnComment,
   } = usePost();
 
-  const currentAuthorId = useSelector((state) => state.authentication.userId);
   const [showReactions, setShowReactions] = useState(false);
   const [editorMode, setEditorMode] = useState(false);
   const [showReplies, setShowReplies] = useState(false);
@@ -49,8 +48,8 @@ const Comment = ({ comment }) => {
     });
   }
 
-  const handleEditCommentInternal = (text, taggedUsers) => {
-    handleEditComment(comment.id, text, taggedUsers);
+  const handleEditCommentInternal = async (text, taggedUsers) => {
+    await handleEditComment(comment.id, text, taggedUsers);
     setEditorMode(false);
   };
 
@@ -122,8 +121,9 @@ const Comment = ({ comment }) => {
 
           {showReactions && (
             <ReactionsModal
-              APIURL={`/posts/reactions/${comment.id}`}
+              API_URL={`/posts/reactions/${comment.id}`}
               setShowLikes={() => setShowReactions(false)}
+              reactCounts={comment.reactCounts}
             />
           )}
         </article>

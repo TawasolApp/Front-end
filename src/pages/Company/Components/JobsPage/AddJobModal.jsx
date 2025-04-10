@@ -67,7 +67,7 @@ function AddJobModal({ onClose, companyId, onJobAdded }) {
       onClose();
     } catch (err) {
       console.error("Error posting job:", err);
-      console.error("Backend says:", err.response?.data); // helpful!
+      console.error("Backend says:", err.response?.data);
       alert(err.response?.data?.error || "Failed to post job. Try again.");
     }
   };
@@ -91,6 +91,7 @@ function AddJobModal({ onClose, companyId, onJobAdded }) {
             <div>
               <label className="block text-sm mb-1">Position*</label>
               <input
+                data-testid="position-input"
                 type="text"
                 name="position"
                 placeholder="FrontEnd Developer"
@@ -104,6 +105,7 @@ function AddJobModal({ onClose, companyId, onJobAdded }) {
             <div>
               <label className="block text-sm mb-1">Industry</label>
               <input
+                data-testid="industry-input"
                 type="text"
                 name="industry"
                 value={formData.industry}
@@ -116,6 +118,7 @@ function AddJobModal({ onClose, companyId, onJobAdded }) {
             <div>
               <label className="block text-sm mb-1">Location*</label>
               <input
+                data-testid="location-input"
                 type="text"
                 name="location"
                 placeholder="Cairo,Egypt"
@@ -129,6 +132,7 @@ function AddJobModal({ onClose, companyId, onJobAdded }) {
             <div>
               <label className="block text-sm mb-1">Salary</label>
               <input
+                data-testid="salary-input"
                 type="number"
                 name="salary"
                 value={formData.salary}
@@ -140,6 +144,7 @@ function AddJobModal({ onClose, companyId, onJobAdded }) {
             <div>
               <label className="block text-sm mb-1">Employment Type*</label>
               <select
+                data-testid="employment-type-select"
                 name="employmentType"
                 value={formData.employmentType}
                 onChange={handleChange}
@@ -157,6 +162,7 @@ function AddJobModal({ onClose, companyId, onJobAdded }) {
             <div>
               <label className="block text-sm mb-1">Location Type*</label>
               <select
+                data-testid="location-type-select"
                 name="locationType"
                 value={formData.locationType}
                 onChange={handleChange}
@@ -171,6 +177,7 @@ function AddJobModal({ onClose, companyId, onJobAdded }) {
             <div>
               <label className="block text-sm mb-1">Experience Level</label>
               <select
+                data-testid="experience-level-select"
                 name="experienceLevel"
                 value={formData.experienceLevel}
                 onChange={handleChange}
@@ -192,6 +199,7 @@ function AddJobModal({ onClose, companyId, onJobAdded }) {
           <div>
             <label className="block text-sm mb-1">Description</label>
             <textarea
+              data-testid="description-textarea"
               name="description"
               value={formData.description}
               onChange={handleChange}
@@ -202,6 +210,7 @@ function AddJobModal({ onClose, companyId, onJobAdded }) {
 
           <div className="pt-4">
             <button
+              data-testid="submit-button"
               type="submit"
               className="bg-blue-600 text-white px-6 py-2 rounded hover:bg-blue-700"
             >

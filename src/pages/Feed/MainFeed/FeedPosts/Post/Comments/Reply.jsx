@@ -1,5 +1,4 @@
 import { useState } from "react";
-
 import FlagIcon from "@mui/icons-material/Flag";
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
@@ -12,16 +11,15 @@ import TextViewer from "../../../../GenericComponents/TextViewer";
 import AddForm from "./AddForm";
 import ReactionsModal from "../../ReactionModal/ReactionsModal";
 import { usePost } from "../../PostContext";
-import { useSelector } from "react-redux";
 
 const Reply = ({ commentId, reply }) => {
   const {
+    currentAuthorId,
     handleDeleteReplyToComment,
     handleEditReplyToComment,
     handleReactOnReplyToComment,
   } = usePost();
 
-  const currentAuthorId = useSelector((state) => state.authentication.userId);
   const [showReactions, setShowReactions] = useState(false);
   const [editorMode, setEditorMode] = useState(false);
 
@@ -64,21 +62,25 @@ const Reply = ({ commentId, reply }) => {
       ) : (
         <>
           <div className="items-start pt-4">
-            <div className="flex">
-              <ActorHeader
-                authorId={reply.authorId}
-                authorName={reply.authorName}
-                authorBio={reply.authorBio}
-                authorPicture={reply.authorPicture}
-                iconSize={32}
-              />
-              <div className="ml-auto flex items-center gap-2">
+            <div className="flex items-start justify-between">
+              <div className="flex-1 min-w-0">
+                <ActorHeader
+                  authorId={reply.authorId}
+                  authorName={reply.authorName}
+                  authorBio={reply.authorBio}
+                  authorPicture={reply.authorPicture}
+                  iconSize={32}
+                  enableLink={false}
+                />
+              </div>
+
+              <div className="flex items-center gap-2 flex-shrink-0">
                 <span className="text-xs text-gray-500">
                   {formatDate(reply.timestamp)}
                 </span>
                 <DropdownMenu menuItems={menuItems} position="right-0">
-                  <button className="text-gray-500 hover:bg-gray-100 rounded-full p-1">
-                    <MoreHorizIcon className="w-5 h-5" />
+                  <button className="hover:bg-buttonIconHover rounded-full p-1">
+                    <MoreHorizIcon className="w-5 h-5 text-icon" />
                   </button>
                 </DropdownMenu>
               </div>
@@ -97,18 +99,14 @@ const Reply = ({ commentId, reply }) => {
               <ActivitiesHolder
                 currentReaction={reply.reactType}
                 reactions={reply.reactCounts}
-                handleReaction={(reactionTypeAdd, reactionTypeRemove) => {
-                  try {
-                    handleReactOnReplyToComment(
-                      commentId,
-                      reply.id,
-                      reactionTypeAdd,
-                      reactionTypeRemove,
-                    );
-                  } catch (e) {
-                    console.log(e);
-                  }
-                }}
+                handleReaction={(reactionTypeAdd, reactionTypeRemove) =>
+                  handleReactOnReplyToComment(
+                    commentId,
+                    reply.id,
+                    reactionTypeAdd,
+                    reactionTypeRemove,
+                  )
+                }
                 setShowReactions={() => setShowReactions(true)}
                 isReply={true}
               />
@@ -116,8 +114,9 @@ const Reply = ({ commentId, reply }) => {
           </div>
           {showReactions && (
             <ReactionsModal
-              APIURL={`/posts/reactions/${reply.id}`}
+              API_URL={`/posts/reactions/${reply.id}`}
               setShowLikes={() => setShowReactions(false)}
+              reactCounts={reply.reactCounts}
             />
           )}
         </>

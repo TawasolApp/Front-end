@@ -4,7 +4,6 @@ import { MemoryRouter, Route, Routes } from "react-router-dom";
 import JobOpenings from "../../pages/Company/Components/HomePage/JobOpenings";
 import { axiosInstance } from "../../apis/axios";
 
-// ✅ Mock navigate and params
 const mockNavigate = vi.fn();
 vi.mock("react-router-dom", async () => {
   const actual = await vi.importActual("react-router-dom");
@@ -12,10 +11,10 @@ vi.mock("react-router-dom", async () => {
     ...actual,
     useNavigate: () => mockNavigate,
     useParams: () => ({ companyId: "123" }),
+    useOutletContext: () => ({ company: mockCompany }),
   };
 });
 
-// ✅ Mock axios
 vi.mock("../../apis/axios", () => ({
   axiosInstance: {
     get: vi.fn(),
@@ -29,12 +28,12 @@ const mockCompany = {
 
 const mockJobs = [
   {
-    id: 1,
+    jobId: 1,
     position: "Software Engineer",
     location: "Cairo, Egypt",
   },
   {
-    id: 2,
+    jobId: 2,
     position: "Frontend Developer",
     location: "Giza, Egypt",
   },
@@ -50,10 +49,7 @@ describe("JobOpenings Component", () => {
     render(
       <MemoryRouter initialEntries={["/company/123"]}>
         <Routes>
-          <Route
-            path="/company/:companyId"
-            element={<JobOpenings company={mockCompany} />}
-          />
+          <Route path="/company/:companyId" element={<JobOpenings />} />
         </Routes>
       </MemoryRouter>
     );
@@ -81,5 +77,80 @@ describe("JobOpenings Component", () => {
     fireEvent.click(button);
 
     expect(mockNavigate).toHaveBeenCalledWith("/company/123/jobs");
+  });
+  test("scrolls right when right arrow is clicked", async () => {
+    render(
+      <MemoryRouter initialEntries={["/company/123"]}>
+        <Routes>
+          <Route
+            path="/company/:companyId"
+            element={<JobOpenings company={mockCompany} />}
+          />
+        </Routes>
+      </MemoryRouter>
+    );
+
+    const container = await screen.findByTestId("job-openings");
+    const scrollableDiv = container.querySelector(".overflow-x-scroll");
+
+    // Add scrollBy mock
+    scrollableDiv.scrollBy = vi.fn();
+
+    const rightButton = screen.getByLabelText("scroll-right");
+    fireEvent.click(rightButton);
+
+    expect(scrollableDiv.scrollBy).toHaveBeenCalledWith({
+      left: 350,
+      behavior: "smooth",
+    });
+  });
+
+  test("scrolls left when left arrow is clicked", async () => {
+    render(
+      <MemoryRouter initialEntries={["/company/123"]}>
+        <Routes>
+          <Route
+            path="/company/:companyId"
+            element={<JobOpenings company={mockCompany} />}
+          />
+        </Routes>
+      </MemoryRouter>
+    );
+
+    const container = await screen.findByTestId("job-openings");
+    const scrollableDiv = container.querySelector(".overflow-x-scroll");
+
+    //  Add scrollBy mock
+    scrollableDiv.scrollBy = vi.fn();
+
+    const leftButton = screen.getByLabelText("scroll-left");
+    fireEvent.click(leftButton);
+
+    expect(scrollableDiv.scrollBy).toHaveBeenCalledWith({
+      left: -350,
+      behavior: "smooth",
+    });
+  });
+  test("logs error when job fetching fails", async () => {
+    const consoleSpy = vi.spyOn(console, "error").mockImplementation(() => {});
+    axiosInstance.get.mockRejectedValueOnce(new Error("Fetch failed"));
+
+    render(
+      <MemoryRouter initialEntries={["/company/123"]}>
+        <Routes>
+          <Route path="/company/:companyId" element={<JobOpenings />} />
+        </Routes>
+      </MemoryRouter>
+    );
+
+    // Wait for useEffect to run
+    await waitFor(() => {
+      expect(consoleSpy).toHaveBeenCalledWith(
+        "Failed to fetch job openings:",
+        expect.any(Error)
+      );
+    });
+
+    consoleSpy.mockRestore();
   });
 });

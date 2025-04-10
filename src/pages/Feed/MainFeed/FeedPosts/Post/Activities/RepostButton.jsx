@@ -4,13 +4,10 @@ import DropdownMenu from "../../../../GenericComponents/DropdownMenu";
 import { usePost } from "../../PostContext";
 import { useState } from "react";
 import TextModal from "../../../SharePost/TextModal";
-import { useSelector } from "react-redux";
 
 const RepostButton = () => {
-  const currentAuthorName = `${useSelector((state) => state.authentication.firstName)} ${useSelector((state) => state.authentication.lastName)}`;
-  const currentAuthorPicture = useSelector((state) => state.authentication.picture);
-
-  const { post, handleSharePost } = usePost();
+  const { currentAuthorName, currentAuthorPicture, post, handleSharePost } =
+    usePost();
   const [openShare, setOpenShare] = useState(false);
 
   let menuItems = [
@@ -21,7 +18,8 @@ const RepostButton = () => {
     },
     {
       text: "Repost",
-      onClick: () => handleSharePost("dummy data", [], "", [], post.id, true),
+      onClick: () =>
+        handleSharePost("dummy data", [], post.visibility, [], post.id, true),
       icon: RepeatIcon,
     },
   ];
@@ -53,9 +51,7 @@ const RepostButton = () => {
               media,
               visibility,
               taggedUsers,
-              post.repostedComponents
-                ? post.repostedComponents.postId
-                : post.id,
+              post.id,
               false,
             )
           }

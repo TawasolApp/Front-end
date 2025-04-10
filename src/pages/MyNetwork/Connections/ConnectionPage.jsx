@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useRef, useCallback } from "react";
+import { useSelector } from "react-redux"; // Import useSelector
 import ConnectionCard from "./ConnectionCard";
 import { axiosInstance } from "../../../apis/axios";
 
@@ -12,6 +13,9 @@ const ConnectionPage = () => {
   const [hasMore, setHasMore] = useState(true);
   const [page, setPage] = useState(1);
   const limit = 5;
+
+  // Get userId from Redux store
+  const { userId } = useSelector((state) => state.authentication);
 
   const observer = useRef();
   const isFetching = useRef(false);
@@ -32,8 +36,10 @@ const ConnectionPage = () => {
     [loading, hasMore]
   );
 
-  // Fetch connections when sortBy, sortDirection, or page changes
+  // Fetch connections when sortBy, sortDirection, page, searchQuery, or userId changes
   useEffect(() => {
+    if (!userId) return;
+
     const fetchConnections = async () => {
       if (isFetching.current) return;
 
@@ -42,9 +48,18 @@ const ConnectionPage = () => {
       isFetching.current = true;
 
       try {
-        const response = await axiosInstance.get("/connections/list", {
-          params: { page, limit, by: sortBy, direction: sortDirection },
-        });
+        const response = await axiosInstance.get(
+          `/connections/${userId}/list`,
+          {
+            params: { 
+              page, 
+              limit, 
+              by: sortBy, 
+              direction: sortDirection,
+              name: searchQuery || undefined
+            },
+          }
+        );
 
         const newData = response.data;
 
@@ -66,43 +81,42 @@ const ConnectionPage = () => {
     };
 
     fetchConnections();
-  }, [page, sortBy, sortDirection]); // Fetch new connections when sort or direction changes
+  }, [page, sortBy, sortDirection, searchQuery, userId]); // Added userId to dependencies
 
-  const handleRemoveConnection = async (userId) => {
+  const handleRemoveConnection = async (userIdToRemove) => {
     try {
-      await axiosInstance.delete(`/connections/${userId}`);
-      setConnections((prev) => prev.filter((connection) => connection.userId !== userId));
+      await axiosInstance.delete(`/connections/${userIdToRemove}`);
+      setConnections((prev) => prev.filter((connection) => connection.userId !== userIdToRemove));
     } catch (error) {
       setError("Unable to remove connection.");
     }
   };
 
+  // ... rest of the component remains the same ...
   const handleSortChange = (event) => {
     setSortBy(Number(event.target.value));
-    setPage(1); // Reset page when sorting changes
+    setPage(1);
   };
 
   const handleDirectionChange = (event) => {
     setSortDirection(Number(event.target.value));
-    setPage(1); // Reset page when direction changes
+    setPage(1);
   };
 
   const handleSearchChange = (event) => {
     setSearchQuery(event.target.value.toLowerCase());
+    setPage(1);
   };
 
-  const filteredConnections = connections.filter((connection) => {
-    const fullName = `${connection.firstName} ${connection.lastName}`.toLowerCase();
-    return fullName.includes(searchQuery);
-  });
+  const displayedConnections = connections;
 
   return (
     <div className="p-4 bg-mainBackground min-h-screen flex justify-center">
       <div className="w-full max-w-4xl">
         <div className="bg-cardBackground border border-cardBorder rounded-t-lg shadow-sm p-4 border-b-0">
           <h1 className="text-xl text-textHeavyTitle">
-            {filteredConnections.length} Connection
-            {filteredConnections.length !== 1 ? "s" : ""}
+            {displayedConnections.length} Connection
+            {displayedConnections.length !== 1 ? "s" : ""}
           </h1>
 
           <div className="mt-2 flex items-center justify-between">
@@ -204,10 +218,10 @@ const ConnectionPage = () => {
         ) : (
           <>
             <div className="space-y-0">
-              {filteredConnections.map((connection, index) => (
+              {displayedConnections.map((connection, index) => (
                 <div
                   key={`${connection.userId}-${index}`}
-                  ref={index === filteredConnections.length - 1 ? lastElementRef : null}
+                  ref={index === displayedConnections.length - 1 ? lastElementRef : null}
                 >
                   <ConnectionCard
                     imageUrl={connection.profilePicture}
@@ -217,7 +231,7 @@ const ConnectionPage = () => {
                     connectionDate={`Connected on ${new Date(connection.createdAt).toLocaleDateString()}`}
                     onRemove={() => handleRemoveConnection(connection.userId)}
                   />
-                  {index !== filteredConnections.length - 1 && (
+                  {index !== displayedConnections.length - 1 && (
                     <div className="border-t border-cardBorder"></div>
                   )}
                 </div>
@@ -230,7 +244,7 @@ const ConnectionPage = () => {
               </div>
             )}
 
-            {!hasMore && filteredConnections.length > 0 && (
+            {!hasMore && displayedConnections.length > 0 && (
               <div className="text-center p-4 border-t border-cardBorder">
                 You've reached the end of your connections
               </div>

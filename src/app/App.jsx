@@ -1,64 +1,45 @@
 import "./App.css";
-
+import { useEffect } from "react";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
-
-import TawasolNavbar from "../layouts/TawasolNavbar";
+import { ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 import SignUpPage from "../pages/Authentication/SignUpPage";
 import SignInPage from "../pages/Authentication/SignInPage";
 import NamePage from "../pages/Authentication/NamePage";
 import LocationPage from "../pages/Authentication/LocationPage";
 import ExperienceAuthPage from "../pages/Authentication/ExperiencePage";
-import ChangePasswordPage from "../pages/Authentication/ChangePasswordPage";
-import ForgotPasswordPage from "../pages/Authentication/ForgotPasswordPage";
-import VerificationPendingPage from "../pages/Authentication/VerificationPendingPage.jsx";
-import NewPasswordPage from "../pages/Authentication/NewPasswordPage";
 import WelcomePage from "../pages/Authentication/WelcomePage";
-import ChangeEmailPage from "../pages/Authentication/ChangeEmailPage";
-import VerifyChangeEmailPage from "../pages/Authentication/VerifyChangeEmailPage.jsx";
-
-import ProfilePage from "../pages/UserProfile/Components/ProfilePage.jsx";
-import ProfileLayout from "../pages/UserProfile/profileLayout.jsx";
-import EducationPage from "../pages/UserProfile/Components/Pages/EducationPage";
-import ExperiencePage from "../pages/UserProfile/Components/Pages/ExperiencePage";
-import CertificationsPage from "../pages/UserProfile/Components/Pages/CertificationsPage";
-import SkillsPage from "../pages/UserProfile/Components/Pages/SkillsPage";
-
-import CompanyLayout from "../pages/Company/CompanyLayout.jsx";
-import PostsPage from "../pages/Company/Components/Pages/PostsPage.jsx";
-import AboutPage from "../pages/Company/Components/Pages/AboutPage.jsx";
-import HomePage from "../pages/Company/Components/Pages/HomePage.jsx";
-import JobsPage from "../pages/Company/Components/Pages/JobsPage.jsx";
-import CreateCompanyPage from "../pages/Company/Components/CreateCompanyPage/CreateCompanyPage.jsx";
-
-import ConnectionPage from "../pages/MyNetwork/Connections/ConnectionPage";
-import BlockedPage from "../pages/MyNetwork/BlockedPage";
-import FollowPage from "../pages/MyNetwork/FollowPage";
-import ManageConnections from "../pages/MyNetwork/ManageConnections";
-
-import FeedContainer from "../pages/Feed/FeedContainer";
-import SinglePost from "../pages/SinglePost/SinglePost";
-import SavedPostsContainer from "../pages/SavedPosts/SavedPostsContainer";
-import RepostsContainer from "../pages/Reposts/RepostsContainer";
-import SearchPosts from "../pages/Search/SearchPosts";
-
-import VerifySignUpPage from "../pages/Authentication/VerifySignUpPage.jsx";
-import VerifyResetPasswordPage from "../pages/Authentication/VerifyresetPasswordPage.jsx";
-import NetworkBox from "../pages/MyNetwork/NetworkBox.jsx";
-
-const RenderWithNavbar = (component) => {
-  return (
-    <>
-      <TawasolNavbar />
-      {component}
-    </>
-  );
-};
+import ForgotPasswordPage from "../pages/Authentication/ForgotPasswordPage";
+import VerifyChangeEmailPage from "../pages/Authentication/VerifyChangeEmailPage";
+import VerifySignUpPage from "../pages/Authentication/VerifySignUpPage";
+import VerifyResetPasswordPage from "../pages/Authentication/VerifyResetPasswordPage";
+import ProtectedRoute from "../apis/ProtectedRoute";
+import ProtectedRoutes from "./ProtectedRoutes";
+import VerificationPendingPage from "../pages/Authentication/VerificationPendingPage";
+import NewPasswordPage from "../pages/Authentication/NewPasswordPage";
 
 const App = () => {
+
+  useEffect(() => {
+    const savedTheme = localStorage.getItem("theme");
+    const themeToSet = savedTheme || "light";
+    document.documentElement.classList.remove("light", "dark");
+    document.documentElement.classList.add(themeToSet);
+    if (!savedTheme) localStorage.setItem("theme", "light");
+  }, []);
+
+  const getCurrentTheme = () => {
+    const rootElement = document.documentElement;
+    console.log(rootElement.classList)
+    const theme = rootElement.classList.contains('dark') ? 'dark' : 'light';
+    return theme;
+  };
+
   return (
     <Router>
       <Routes>
+        {/* Public Routes */}
         <Route path="/" element={<WelcomePage />} />
         <Route path="/auth/signin" element={<SignInPage />} />
         <Route path="/auth/signup" element={<SignUpPage />} />
@@ -68,12 +49,7 @@ const App = () => {
           path="/auth/signup/experience"
           element={<ExperienceAuthPage />}
         />
-        <Route path="/auth/update-password" element={<ChangePasswordPage />} />
         <Route path="/auth/forgot-password" element={<ForgotPasswordPage />} />
-        <Route
-          path="/auth/verification-pending"
-          element={<VerificationPendingPage />}
-        />
         <Route
           path="/users/confirm-email-change"
           element={<VerifyChangeEmailPage />}
@@ -83,47 +59,31 @@ const App = () => {
           path="/auth/reset-password"
           element={<VerifyResetPasswordPage />}
         />
+        <Route
+          path="/auth/verification-pending"
+          element={<VerificationPendingPage />}
+        />
         <Route path="/auth/new-password" element={<NewPasswordPage />} />
-        <Route path="/auth/update-email" element={<ChangeEmailPage />} />
 
-        <Route path="/search/:searchText" element={<SearchPosts />} />
-
-        <Route path="/users" element={<ProfileLayout />} />
-        <Route path="/users/:profileSlug" element={<ProfileLayout />}>
-          <Route index element={<ProfilePage />} />
-          <Route path="education" element={<EducationPage />} />
-          <Route path="workExperience" element={<ExperiencePage />} />
-          <Route path="certification" element={<CertificationsPage />} />
-          <Route path="skills" element={<SkillsPage />} />
-        </Route>
-
+        {/* Protected Routes */}
         <Route
-          path="/connections"
-          element={RenderWithNavbar(<ConnectionPage />)}
+          path="/*"
+          element={
+            <ProtectedRoute>
+              <ProtectedRoutes />
+            </ProtectedRoute>
+          }
         />
-        <Route path="/blocked" element={<BlockedPage />} />
-        <Route path="/follow" element={<FollowPage />} />
-        <Route path="/manage-connections" element={<ManageConnections />} />
-        <Route path="/network-box" element={<NetworkBox />} />
-
-        <Route path="/feed/:id" element={<SinglePost />} />
-        <Route path="/feed" element={RenderWithNavbar(<FeedContainer />)} />
-        <Route
-          path="/feed/reposts/:id"
-          element={RenderWithNavbar(<RepostsContainer />)}
-        />
-        <Route path="/my-items/saved-posts" element={<SavedPostsContainer />} />
-
-        <Route path="/company" element={<CompanyLayout />} />
-        <Route path="/company/:companyId/*" element={<CompanyLayout />}>
-          <Route index element={<HomePage />} />
-          <Route path="home" element={<HomePage />} />
-          <Route path="about" element={<AboutPage />} />
-          <Route path="posts" element={<PostsPage />} />
-          <Route path="jobs" element={<JobsPage />} />
-        </Route>
-        <Route path="/company/setup/new" element={<CreateCompanyPage />} />
       </Routes>
+      {/* Toast Container for the toasts */}
+      <ToastContainer
+        position="bottom-left"
+        autoClose={5000}
+        newestOnTop={false}
+        closeOnClick={true}
+        rtl={false}
+        theme={getCurrentTheme()}
+      />
     </Router>
   );
 };

@@ -1,11 +1,9 @@
 import { describe, expect, test, vi, beforeEach } from "vitest";
 import { render, screen, waitFor, fireEvent } from "@testing-library/react";
-import { formatNumbers } from "../../utils/formatNumbers";
 import CompanyHeader from "../../pages/Company/Components/GenericComponents/CompanyHeader";
 import { axiosInstance } from "../../apis/axios";
 import { MemoryRouter } from "react-router-dom";
 
-// Mock axios
 vi.mock("../../apis/axios", () => ({
   axiosInstance: {
     get: vi.fn(),
@@ -14,7 +12,7 @@ vi.mock("../../apis/axios", () => ({
     delete: vi.fn(),
   },
 }));
-const mockedAxios = axiosInstance;
+
 const mockNavigate = vi.fn();
 
 vi.mock("react-router-dom", async () => {
@@ -22,259 +20,305 @@ vi.mock("react-router-dom", async () => {
   return {
     ...actual,
     useNavigate: () => mockNavigate,
-    MemoryRouter: actual.MemoryRouter,
+    useLocation: () => ({ pathname: "/company/test-company/home" }),
   };
 });
 
-describe("formatNumbers function", () => {
-  test("formats numbers < 1K correctly", () => {
-    expect(formatNumbers(999)).toBe("999");
-  });
+const mockCompany = {
+  companyId: "test-company",
+  name: "Test Company",
+  banner: "",
+  logo: "",
+  description: "A test company description",
+  address: "Test Address",
+  followers: 1234,
+  companySize: "201-500 employees",
+  website: "https://testcompany.com",
+  isFollowing: false,
+  isManager: false,
+};
 
-  test("formats numbers >= 1K and < 1M correctly", () => {
-    expect(formatNumbers(1000)).toBe("1K");
-    expect(formatNumbers(15432)).toBe("15K");
-    expect(formatNumbers(999_999)).toBe("999K");
-  });
-
-  test("formats numbers >= 1M correctly", () => {
-    expect(formatNumbers(1_000_000)).toBe("1.0M");
-    expect(formatNumbers(2_500_000)).toBe("2.5M");
-  });
-});
+const renderHeader = (props = {}) => {
+  return render(
+    <MemoryRouter>
+      <CompanyHeader
+        company={{ ...mockCompany, ...props.company }}
+        setCompanyData={vi.fn()}
+        showAdminIcons={props.showAdminIcons ?? false}
+        setShowAdminIcons={props.setShowAdminIcons ?? vi.fn()}
+        isAdmin={props.isAdmin ?? false}
+      />
+    </MemoryRouter>
+  );
+};
 
 describe("CompanyHeader", () => {
-  const mockCompany = {
-    name: "Test Company",
-    banner: "",
-    logo: "",
-    description: "A test company description",
-    address: "Test Address",
-    followers: 1234,
-    companySize: "201-500 employees",
-    website: "https://testcompany.com",
-    isFollowing: false,
-  };
-
   beforeEach(() => {
-    mockedAxios.get.mockResolvedValue({ data: mockCompany });
-    mockedAxios.post.mockResolvedValue({});
-    mockedAxios.delete.mockResolvedValue({});
+    vi.clearAllMocks();
+    axiosInstance.post.mockResolvedValue({});
+    axiosInstance.delete.mockResolvedValue({});
   });
 
-  test("handles follow button toggle", async () => {
-    render(
-      <MemoryRouter>
-        <CompanyHeader companyId="test-company" />
-      </MemoryRouter>,
-    );
-
-    await waitFor(() =>
-      expect(screen.getByText("+ Follow")).toBeInTheDocument(),
-    );
-
-    fireEvent.click(screen.getByText("+ Follow"));
-    await waitFor(() =>
-      expect(screen.getByText("✓ Following")).toBeInTheDocument(),
-    );
-
-    fireEvent.click(screen.getByText("✓ Following")); // Open unfollow modal
-    await waitFor(() =>
-      expect(
-        screen.getByText(/Are you sure you want to unfollow/i),
-      ).toBeInTheDocument(),
-    );
-
-    fireEvent.click(screen.getByLabelText("Confirm Unfollow"));
-    await waitFor(() =>
-      expect(screen.getByText("+ Follow")).toBeInTheDocument(),
-    );
-  });
-  test("renders company info correctly", async () => {
-    render(
-      <MemoryRouter>
-        <CompanyHeader companyId="test-company" />
-      </MemoryRouter>,
-    );
-    // Wait for the company name to appear
-    await waitFor(() =>
-      expect(screen.getByText("Test Company")).toBeInTheDocument(),
-    );
-    // Wait until the logo and banner are rendered
-    const bannerImage = await screen.findByAltText("Company Banner");
-    const logoImage = await screen.findByAltText("Company Logo");
-    // Assert that the images are in the document
-    expect(bannerImage).toBeInTheDocument();
-    expect(logoImage).toBeInTheDocument();
-    // Verify other company details
-    expect(screen.getByText(/A test company description/)).toBeInTheDocument();
-    expect(
-      screen.getByText((content) => content.includes("1K followers")),
-    ).toBeInTheDocument();
-    expect(screen.getByText("+ Follow")).toBeInTheDocument();
-    expect(screen.getByText("Visit website")).toBeInTheDocument();
-    expect(
-      screen.getByText((content) => content.includes("201-500 employees")),
-    ).toBeInTheDocument();
-  });
-  test("opens image enlarge modal when banner is clicked", async () => {
-    render(
-      <MemoryRouter>
-        <CompanyHeader companyId="test-company" />
-      </MemoryRouter>,
-    );
-
-    const banner = await screen.findByAltText("Company Banner");
-    fireEvent.click(banner);
-
-    const modal = await screen.findByRole("dialog", {
-      name: "Enlarged Image Modal",
-    });
-
-    expect(modal).toBeInTheDocument();
-  });
-  test("closes the image enlarge modal when close button is clicked", async () => {
-    render(
-      <MemoryRouter>
-        <CompanyHeader companyId="test-company" />
-      </MemoryRouter>,
-    );
-
-    const banner = await screen.findByAltText("Company Banner");
-    fireEvent.click(banner);
-
-    const closeBtn = await screen.findByRole("button", {
-      name: /close enlarged image/i,
-    });
-    fireEvent.click(closeBtn);
-
-    expect(screen.queryByAltText("Profile Enlarged")).not.toBeInTheDocument();
+  test("follow and unfollow flow works", async () => {
+    renderHeader({ company: { isFollowing: true } });
+    fireEvent.click(await screen.findByText("✓ Following"));
+    fireEvent.click(await screen.findByLabelText("Confirm Unfollow"));
+    expect(await screen.findByText("+ Follow")).toBeInTheDocument();
   });
 
-  test("handles follow button toggle", async () => {
-    render(
-      <MemoryRouter>
-        <CompanyHeader companyId="test-company" />
-      </MemoryRouter>,
-    );
-
-    // Step 1: Wait for "+ Follow" button
-    await waitFor(() =>
-      expect(screen.getByText("+ Follow")).toBeInTheDocument(),
-    );
-
-    // Step 2: Click "+ Follow" → Should change to "✓ Following"
-    fireEvent.click(screen.getByText("+ Follow"));
-
-    await waitFor(() =>
-      expect(screen.getByText("✓ Following")).toBeInTheDocument(),
-    );
-
-    // Step 3: Click "✓ Following" → Opens Unfollow Modal
-    fireEvent.click(screen.getByText("✓ Following"));
-
-    await waitFor(() =>
-      expect(
-        screen.getByText(/Are you sure you want to unfollow/i),
-      ).toBeInTheDocument(),
-    );
-
-    // Step 4: Click "Close Unfollow" → Modal should disappear
-    const closeunfollow = screen.getByLabelText("Close Unfollow");
-    fireEvent.click(closeunfollow);
-
-    await waitFor(() =>
-      expect(
-        screen.queryByText(/Are you sure you want to unfollow/i),
-      ).not.toBeInTheDocument(),
-    );
-
-    // Step 5: Click "✓ Following" again → Reopen modal
-    fireEvent.click(screen.getByText("✓ Following"));
-
-    await waitFor(() =>
-      expect(
-        screen.getByText(/Are you sure you want to unfollow/i),
-      ).toBeInTheDocument(),
-    );
-
-    // Step 6: Click "Unfollow" → Should change back to "+ Follow"
-    const confirmunfollow = screen.getByLabelText("Confirm Unfollow");
-    fireEvent.click(confirmunfollow);
-
-    await waitFor(() =>
-      expect(screen.getByText("+ Follow")).toBeInTheDocument(),
-    );
-  });
-
-  test("opens the More Options modal when clicking the More Options button", async () => {
-    render(
-      <MemoryRouter>
-        <CompanyHeader companyId="test-company" />
-      </MemoryRouter>,
-    );
-
-    // Wait for company data to load
-    await waitFor(() =>
-      expect(screen.getByText("Test Company")).toBeInTheDocument(),
-    );
-    const moreOptionsBtn = screen.getByLabelText("More options");
-    fireEvent.click(moreOptionsBtn);
-
-    // Expect modal options to appear
+  test("more options toggles modal", async () => {
+    renderHeader();
+    const moreBtn = await screen.findByLabelText("More options");
+    fireEvent.click(moreBtn);
     expect(screen.getByText(/Send in a message/i)).toBeInTheDocument();
-    expect(screen.getByText(/Report abuse/i)).toBeInTheDocument();
-    expect(screen.getByText(/Create a Tawasol Page/i)).toBeInTheDocument();
-  });
-  test("closes the More Options modal when clicking the More Options button again", async () => {
-    render(
-      <MemoryRouter>
-        <CompanyHeader companyId="test-company" />
-      </MemoryRouter>,
-    );
-
-    const moreOptionsBtn = await screen.findByLabelText("More options");
-    fireEvent.click(moreOptionsBtn); // open
-    fireEvent.click(moreOptionsBtn); // close
-
-    expect(screen.queryByText(/Send in a message/i)).not.toBeInTheDocument(); // modal is gone
+    fireEvent.click(moreBtn);
+    expect(screen.queryByText(/Send in a message/i)).not.toBeInTheDocument();
   });
 
-  test("opens the Edit About modal when clicking the Edit About button", async () => {
-    render(
-      <MemoryRouter>
-        <CompanyHeader companyId="test-company" />
-      </MemoryRouter>,
-    );
-
-    await waitFor(() =>
-      expect(screen.getByText("Test Company")).toBeInTheDocument(),
-    );
-    const editBtn = screen.getByLabelText("Edit Company");
-    fireEvent.click(editBtn);
-
-    // Check that modal content appears
+  test("edit modal shows for admin", async () => {
+    renderHeader({ isAdmin: true, showAdminIcons: true });
+    fireEvent.click(await screen.findByLabelText("Edit Company"));
     expect(screen.getByText(/Edit Company Profile/i)).toBeInTheDocument();
   });
 
-  const buttons = ["Home", "About", "Posts", "Jobs"];
+  test("shows add manager button for admins", async () => {
+    renderHeader({
+      isAdmin: true,
+      showAdminIcons: true,
+      company: { isManager: true },
+    });
+    expect(await screen.findByText("Add Manager")).toBeInTheDocument();
+  });
 
-  buttons.forEach((button) => {
-    test(`navigates to ${button} page`, async () => {
-      render(
-        <MemoryRouter>
-          <CompanyHeader companyId="test-company" />
-        </MemoryRouter>,
-      );
+  test("toggles admin view buttons correctly", async () => {
+    const setShowAdminIcons = vi.fn();
+    renderHeader({ isAdmin: true, setShowAdminIcons });
+    fireEvent.click(await screen.findByText("Show Admin View"));
+    expect(setShowAdminIcons).toHaveBeenCalledWith(true);
+  });
 
-      await screen.findByText(button);
+  test("shows followers modal when followers count clicked", async () => {
+    renderHeader();
+    const buttons = screen.getAllByText(/followers/i);
+    fireEvent.click(buttons.find((btn) => btn.tagName === "BUTTON"));
+    expect(
+      screen.getByRole("heading", { name: /followers/i })
+    ).toBeInTheDocument();
+  });
 
-      fireEvent.click(screen.getByText(button));
-
+  ["Home", "About", "Posts", "Jobs"].forEach((label) => {
+    test(`navigates to ${label}`, async () => {
+      renderHeader();
+      fireEvent.click(await screen.findByText(label));
       expect(mockNavigate).toHaveBeenCalledWith(
-        `/company/test-company/${button.toLowerCase()}`,
-        expect.any(Object),
+        `/company/${mockCompany.companyId}/${label.toLowerCase()}`,
+        expect.any(Object)
       );
     });
+  });
+  test("renders LoadingPage if company is not provided", () => {
+    render(
+      <MemoryRouter>
+        <CompanyHeader
+          company={null}
+          setCompanyData={vi.fn()}
+          showAdminIcons={false}
+          setShowAdminIcons={vi.fn()}
+          isAdmin={false}
+        />
+      </MemoryRouter>
+    );
+
+    expect(screen.getByTestId("loading-page")).toBeInTheDocument();
+  });
+
+  test("follows a company when not already following", async () => {
+    renderHeader();
+    const followBtn = await screen.findByText("+ Follow");
+    fireEvent.click(followBtn);
+
+    await waitFor(() =>
+      expect(screen.getByText("✓ Following")).toBeInTheDocument()
+    );
+  });
+  test("shows 'Show Admin View' button for admins when icons hidden", async () => {
+    const setShowAdminIcons = vi.fn();
+    renderHeader({ isAdmin: true, showAdminIcons: false, setShowAdminIcons });
+
+    const toggleBtn = await screen.findByText("Show Admin View");
+    fireEvent.click(toggleBtn);
+    expect(setShowAdminIcons).toHaveBeenCalledWith(true);
+  });
+  test("shows 'Show User View' button and toggles to user view", async () => {
+    const setShowAdminIcons = vi.fn();
+    renderHeader({ isAdmin: true, showAdminIcons: true, setShowAdminIcons });
+
+    const toggleBtn = await screen.findByText("Show User View");
+    fireEvent.click(toggleBtn);
+    expect(setShowAdminIcons).toHaveBeenCalledWith(false);
+  });
+  test("renders the company website link correctly", () => {
+    renderHeader();
+    const websiteLink = screen.getByText("Visit website").closest("a");
+    expect(websiteLink).toHaveAttribute("href", "https://testcompany.com");
+    expect(websiteLink).toHaveAttribute("target", "_blank");
+  });
+  test("opens unfollow modal when clicking '✓ Following'", async () => {
+    renderHeader({
+      company: { isFollowing: true },
+      isAdmin: false,
+      showAdminIcons: false,
+    });
+
+    // Click the follow button
+    const followBtn = await screen.findByText("✓ Following");
+    fireEvent.click(followBtn);
+
+    // Check if modal is now visible
+    expect(
+      screen.getByText(/are you sure you want to unfollow/i)
+    ).toBeInTheDocument();
+  });
+
+  test("handles 409 error on follow attempt gracefully", async () => {
+    axiosInstance.post.mockRejectedValueOnce({
+      response: { status: 409 },
+    });
+
+    const consoleSpy = vi.spyOn(console, "warn").mockImplementation(() => {});
+    renderHeader({ isAdmin: false });
+
+    fireEvent.click(await screen.findByText("+ Follow"));
+
+    await waitFor(() => {
+      expect(consoleSpy).toHaveBeenCalledWith(
+        "Already following this company."
+      );
+    });
+
+    consoleSpy.mockRestore();
+  });
+  test("logs error when follow request fails with other error", async () => {
+    const mockError = new Error("Server Down");
+    axiosInstance.post.mockRejectedValueOnce(mockError);
+
+    const consoleSpy = vi.spyOn(console, "error").mockImplementation(() => {});
+    renderHeader({ isAdmin: false });
+
+    fireEvent.click(await screen.findByText("+ Follow"));
+
+    await waitFor(() => {
+      expect(consoleSpy).toHaveBeenCalledWith(
+        "Error following company:",
+        mockError
+      );
+    });
+
+    consoleSpy.mockRestore();
+  });
+  test("closes unfollow modal when Cancel is clicked", async () => {
+    renderHeader({
+      company: { isFollowing: true },
+      isAdmin: false,
+      showAdminIcons: false,
+    });
+
+    // Open the unfollow modal
+    fireEvent.click(await screen.findByText("✓ Following"));
+
+    // Click cancel
+    fireEvent.click(screen.getByLabelText("Close Unfollow"));
+
+    // Modal should disappear
+    await waitFor(() => {
+      expect(
+        screen.queryByText(/Are you sure you want to unfollow/i)
+      ).not.toBeInTheDocument();
+    });
+  });
+  test("opens Add Manager modal when button is clicked", async () => {
+    renderHeader({
+      isAdmin: true,
+      showAdminIcons: true,
+      company: { isManager: true },
+    });
+
+    // Click the actual button (not the modal heading)
+    const buttons = screen.getAllByText(/Add Manager/i);
+    const actualButton = buttons.find((el) => el.tagName === "BUTTON");
+    fireEvent.click(actualButton);
+
+    // Check that the modal heading is present
+    expect(
+      screen.getByRole("heading", { name: /Add Manager/i })
+    ).toBeInTheDocument();
+  });
+
+  test("enlarges banner when clicked", async () => {
+    renderHeader();
+    const banner = await screen.findByAltText("Company Banner");
+    fireEvent.click(banner);
+
+    // Assuming dialog/modal shows up
+    expect(screen.getByRole("dialog")).toBeInTheDocument();
+  });
+  test("closes image modal when close button clicked", async () => {
+    renderHeader();
+
+    // Open the modal
+    fireEvent.click(screen.getByAltText("Company Banner"));
+
+    // Close it
+    const closeButton = screen.getByLabelText(/close enlarged image/i);
+    fireEvent.click(closeButton);
+
+    // Assert modal is gone
+    expect(
+      screen.queryByRole("dialog", { name: /enlarged image modal/i })
+    ).not.toBeInTheDocument();
+  });
+  test("closes EditAboutModal when onClose is triggered", async () => {
+    renderHeader({ isAdmin: true, showAdminIcons: true });
+    fireEvent.click(await screen.findByLabelText("Edit Company"));
+
+    // Close modal (you may need a specific close button or `onClose`)
+    const closeBtn = screen.getByLabelText("Close Edit Modal"); // use appropriate label if exists
+    fireEvent.click(closeBtn);
+
+    await waitFor(() =>
+      expect(
+        screen.queryByText(/Edit Company Profile/i)
+      ).not.toBeInTheDocument()
+    );
+  });
+  test("closes AddManagerModal when onClose is called", async () => {
+    renderHeader({ isAdmin: true, showAdminIcons: true });
+
+    fireEvent.click(screen.getByText("Add Manager"));
+
+    // You might simulate the modal's close button here
+    fireEvent.click(screen.getByLabelText("Close Add Manager Modal"));
+
+    await waitFor(() =>
+      expect(
+        screen.queryByRole("heading", { name: /add manager/i })
+      ).not.toBeInTheDocument()
+    );
+  });
+  test("closes FollowersModal when onClose is called", async () => {
+    renderHeader();
+
+    fireEvent.click(
+      screen.getAllByText(/followers/i).find((btn) => btn.tagName === "BUTTON")
+    );
+
+    const closeBtn = screen.getByLabelText("Close Followers Modal");
+    fireEvent.click(closeBtn);
+
+    await waitFor(() =>
+      expect(
+        screen.queryByRole("heading", { name: /followers/i })
+      ).not.toBeInTheDocument()
+    );
   });
 });

@@ -38,15 +38,14 @@ export default defineConfig({
         "**/.gitignore",
 
         // ITEMS WITH SPECIFIC EXCLUSIONS
-        "src/pages/Feed/MainFeed/FeedPosts/PostCard/Content/MediaContent**",
-        "src/pages/Feed/MainFeed/FeedPosts/PostCard/Comments/Reply.jsx",
         "src/pages/Feed/GenericComponents/reactionIcons.js",
-
-        // CHECK WITH KHALED
-        "src/pages/AuthenticationPages/**",
       ],
     },
     setupFiles: "./src/setupTests.js",
   },
-
+  server: {
+    allowedHosts: ['tawasolapp.me', 'www.tawasolapp.me'],
+    host: '0.0.0.0',
+    port: 5173
+  }
 });

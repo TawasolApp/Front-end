@@ -6,14 +6,21 @@ const MoreOptionsModal = ({ show, onClose, navigate }) => {
   return (
     <div className="absolute top-full right-0 mt-2 w-56 bg-boxbackground shadow-lg rounded-lg overflow-hidden z-[999]">
       <ul className="text-sm">
-        <li className="hover:font-bold cursor-pointer px-4 py-2 flex items-center gap-2 font-semibold">
+        <li
+          className="hover:font-bold cursor-pointer px-4 py-2 flex items-center gap-2 font-semibold"
+          data-testid="send-message"
+        >
           <FiMessageSquare size={16} /> Send in a message
         </li>
-        <li className="hover:font-bold cursor-pointer px-4 py-2 flex items-center gap-2 font-semibold">
+        <li
+          className="hover:font-bold cursor-pointer px-4 py-2 flex items-center gap-2 font-semibold"
+          data-testid="report-abuse"
+        >
           <FiFlag size={16} /> Report abuse
         </li>
         <li
           className="hover:underline hover:font-semibold cursor-pointer px-4 py-2 flex items-center gap-2 font-semibold"
+          data-testid="create-page"
           onClick={() => {
             navigate("/company/setup/new");
             onClose(); // Close modal after navigation

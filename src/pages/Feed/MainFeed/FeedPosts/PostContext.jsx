@@ -1,4 +1,5 @@
 import { createContext, useContext, useState, useRef, useEffect } from "react";
+import { toast } from "react-toastify";
 import { axiosInstance } from "../../../../apis/axios";
 
 const PostContext = createContext();
@@ -16,6 +17,10 @@ export const PostProvider = ({
   initialPost,
   handleSharePost,
   handleDeletePost,
+  currentAuthorId,
+  currentAuthorName,
+  currentAuthorPicture,
+  isAdmin,
 }) => {
   const [post, setPost] = useState(initialPost);
   const [comments, setComments] = useState([]);
@@ -42,16 +47,30 @@ export const PostProvider = ({
       taggedUsers: taggedUsers,
       media: media,
       visibility: visibility,
+      isEdited: true,
     }));
   };
 
   const handleSavePost = async () => {
-    if (post.isSaved) await axiosInstance.delete(`posts/save/${post.id}`);
-    else await axiosInstance.post(`posts/save/${post.id}`);
-
-    setPost((prev) => {
-      return { ...prev, isSaved: !prev.isSaved };
-    });
+    if (post.isSaved) {
+      await axiosInstance.delete(`posts/save/${post.id}`);
+      setPost((prev) => {
+        return { ...prev, isSaved: false };
+      });
+      toast.success("Post unsaved.", {
+        position: "bottom-left",
+        autoClose: 3000,
+      });
+    } else {
+      await axiosInstance.post(`posts/save/${post.id}`);
+      setPost((prev) => {
+        return { ...prev, isSaved: true };
+      });
+      toast.success("Post saved", {
+        position: "bottom-left",
+        autoClose: 3000,
+      });
+    }
   };
 
   const handleReactOnPost = async (reactionTypeAdd, reactionTypeRemove) => {
@@ -79,8 +98,12 @@ export const PostProvider = ({
 
   const handleCopyPost = async () => {
     await navigator.clipboard.writeText(
-      `${window.location.origin}/posts/${post.id}`,
+      `${window.location.origin}/feed/${post.id}`,
     );
+    toast.success("Link copied to clipboard.", {
+      position: "bottom-left",
+      autoClose: 3000,
+    });
   };
 
   const fetchComments = async () => {
@@ -107,7 +130,7 @@ export const PostProvider = ({
 
       setComments((prev) => {
         // Merge and remove duplicates based on comment ID
-        const mergedComments = [...newComments, ...prev];
+        const mergedComments = [...prev, ...newComments];
         const uniqueComments = Array.from(
           new Map(
             mergedComments.map((comment) => [comment.id, comment]),
@@ -120,6 +143,7 @@ export const PostProvider = ({
       setCommentPage((prev) => prev + 1);
       setHasMoreComments(post.comments > comments.length + newComments.length);
     } catch (e) {
+      console.log(e);
       if (e.name === "CanceledError") return;
       if (e.response?.status === 404) {
         setHasMoreComments(false);
@@ -135,15 +159,17 @@ export const PostProvider = ({
       taggedUsers: taggedUsers,
       isReply: false,
     });
+
     setPost((prev) => ({
       ...prev,
       comments: prev.comments + 1,
     }));
+
     setComments((prevComments) => [response.data, ...prevComments]);
   };
 
   const handleEditComment = async (commentId, text, taggedUsers) => {
-    await axiosInstance.patch(`/posts/comments/${commentId}`, {
+    await axiosInstance.patch(`/posts/comment/${commentId}`, {
       content: text,
       tagged: taggedUsers,
       isReply: false,
@@ -158,12 +184,14 @@ export const PostProvider = ({
   };
 
   const handleDeleteComment = async (commentId) => {
-    await axiosInstance.delete(`/posts/comments/${commentId}`);
+    await axiosInstance.delete(`/posts/comment/${commentId}`);
 
     setPost((prev) => ({
       ...prev,
       comments: prev.comments - 1,
     }));
+
+    setCommentPage((prev) => prev - 1);
 
     setComments((prevComments) =>
       prevComments.filter((comment) => comment.id !== commentId),
@@ -206,54 +234,54 @@ export const PostProvider = ({
 
   const fetchReplies = async (commentId) => {
     try {
-      // Cancel previous request
       if (abortControllerRef.current) {
         abortControllerRef.current.abort();
       }
-      // Create new controller for this request
+
       const controller = new AbortController();
       abortControllerRef.current = controller;
+
       const currentPage = replies[commentId]?.replyPage || 1;
       const response = await axiosInstance.get(`/posts/comments/${commentId}`, {
         params: {
           page: currentPage,
           limit: 2,
-          _: Date.now(), // Cache buster
+          _: Date.now(),
         },
         signal: controller.signal,
       });
+
       const newReplies = response.data;
       setReplies((prevReplies) => {
         const existingReplies = prevReplies[commentId]?.data || [];
-        console.log(newReplies)
-        // Remove duplicate replies
         const mergedReplies = [...existingReplies, ...newReplies];
         const uniqueReplies = Array.from(
           new Map(mergedReplies.map((reply) => [reply.id, reply])).values(),
-        );
+        ).sort((a, b) => new Date(a.timestamp) - new Date(b.timestamp));
+
         const wantedComment = comments.find(
           (comment) => comment.id === commentId,
         );
+
         return {
           ...prevReplies,
           [commentId]: {
             data: uniqueReplies,
-            hasMore:
-              wantedComment.repliesCount >
-              existingReplies + newReplies,
+            hasMore: wantedComment.repliesCount > uniqueReplies.length,
             replyPage: currentPage + 1,
           },
         };
       });
     } catch (e) {
+      console.log(e);
       if (e.name === "CanceledError") return;
-      if (e.response?.status === 404) {
+      if (e.response?.status === 500) {
         setReplies((prevReplies) => ({
           ...prevReplies,
           [commentId]: {
-            data: prevReplies[commentId]?.data || [], // Initialize data to an empty array
-            hasMore: false, // No more replies
-            replyPage: (prevReplies[commentId]?.replyPage || 1) + 1, // Still increment page
+            data: prevReplies[commentId]?.data || [],
+            hasMore: false,
+            replyPage: (prevReplies[commentId]?.replyPage || 1) + 1,
           },
         }));
       } else {
@@ -263,11 +291,9 @@ export const PostProvider = ({
   };
 
   const handleAddReplyToComment = async (commentId, text, taggedUsers) => {
-
-    console.log(comments)
     const response = await axiosInstance.post(`/posts/comment/${commentId}`, {
       content: text,
-      tagged: taggedUsers,
+      taggedUsers: taggedUsers,
       isReply: true,
     });
 
@@ -275,7 +301,7 @@ export const PostProvider = ({
       ...prevReplies,
       [commentId]: {
         ...prevReplies[commentId],
-        data: [...(prevReplies[commentId]?.data || []), response.data], // Append reply
+        data: [...(prevReplies[commentId]?.data || []), response.data],
       },
     }));
 
@@ -284,7 +310,7 @@ export const PostProvider = ({
         comment.id === commentId
           ? {
               ...comment,
-              repliesCount: comment.repliesCount + 1, // Add dummy string
+              repliesCount: comment.repliesCount + 1,
             }
           : comment,
       ),
@@ -297,9 +323,9 @@ export const PostProvider = ({
     text,
     taggedUsers,
   ) => {
-    await axiosInstance.patch(`/posts/comments/${replyId}`, {
+    await axiosInstance.patch(`/posts/comment/${replyId}`, {
       content: text,
-      taggedUsers,
+      taggedUsers: taggedUsers,
       isReply: true,
     });
 
@@ -317,24 +343,30 @@ export const PostProvider = ({
   };
 
   const handleDeleteReplyToComment = async (commentId, replyId) => {
-    await axiosInstance.delete(`/posts/comments/${replyId}`);
-
-    setReplies((prevReplies) => ({
-      ...prevReplies,
-      [commentId]: {
-        ...prevReplies[commentId],
-        data: prevReplies[commentId].data.filter(
-          (reply) => reply.id !== replyId,
-        ),
-      },
-    }));
-
+    await axiosInstance.delete(`/posts/comment/${replyId}`);
+  
+    setReplies((prevReplies) => {
+      const existingReplies = prevReplies[commentId]?.data || [];
+      const updatedReplies = existingReplies.filter((reply) => reply.id !== replyId);
+  
+      const currentPage = prevReplies[commentId]?.replyPage || 1;
+  
+      return {
+        ...prevReplies,
+        [commentId]: {
+          ...prevReplies[commentId],
+          data: updatedReplies,
+          replyPage: Math.max(1, currentPage - 1),
+        },
+      };
+    });
+  
     setComments((prevComments) =>
       prevComments.map((comment) =>
         comment.id === commentId
           ? {
               ...comment,
-              replies: comment.replies.slice(0, comment.replies - 1), // Remove the last dummy reply
+              repliesCount: comment.repliesCount - 1,
             }
           : comment,
       ),
@@ -352,7 +384,7 @@ export const PostProvider = ({
     if (reactionTypeRemove) reacts[reactionTypeRemove] = 0;
     await axiosInstance.post(`posts/react/${replyId}`, {
       reactions: reacts,
-      postType: "Reply",
+      postType: "Comment",
     });
 
     setReplies((prevReplies) => ({
@@ -391,6 +423,10 @@ export const PostProvider = ({
 
     /***************************************************** Secondary parameters ******************************************************/
     hasMoreComments,
+    currentAuthorId,
+    currentAuthorName,
+    currentAuthorPicture,
+    isAdmin,
 
     /************************************************************** API **************************************************************/
     handleDeletePost,

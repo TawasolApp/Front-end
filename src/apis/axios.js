@@ -47,6 +47,11 @@ axiosInstance.interceptors.response.use(
           window.location.href = "/auth/signin";
         }
       }
+      else {
+        console.log("No refresh token. Logging out.");
+        store.dispatch(logout());
+        window.location.href = "/auth/signin";
+      }
     }
     return Promise.reject(error);
   },

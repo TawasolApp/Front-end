@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { useState, useEffect } from "react";
 import { usePost } from "../../PostContext";
 import OpenInFullIcon from "@mui/icons-material/OpenInFull";
 import CommentThreadWrapper from "./CommentThreadWrapper";
@@ -7,9 +7,16 @@ import Reply from "./Reply";
 
 const ReplyContainer = ({ commentId }) => {
   const { replies, fetchReplies, handleAddReplyToComment } = usePost();
+  const [isLoading, setIsLoading] = useState(false);
+
+  const handleFetchReplies = async () => {
+    setIsLoading(true);
+    await fetchReplies(commentId);
+    setIsLoading(false);
+  };
 
   useEffect(() => {
-    fetchReplies(commentId);
+    handleFetchReplies();
   }, [commentId]);
 
   const actualReplies = replies[commentId];
@@ -18,18 +25,34 @@ const ReplyContainer = ({ commentId }) => {
   return (
     <>
       {/* Fetch Replies */}
-      {hasMoreReplies && (
+      {!isLoading && hasMoreReplies && (
         <CommentThreadWrapper hasReplies={true}>
-          <div className="my-3 flex items-center">
+          <div className="my-2 flex items-center">
             <button
-              onClick={() => fetchReplies(commentId)}
-              className="flex items-center px-1 py-1 space-x-1 rounded-xl hover:bg-buttonIconHover transition-colors"
+              onClick={() => handleFetchReplies(commentId)}
+              className="flex items-center p-1 rounded-xl hover:bg-buttonIconHover transition-colors"
             >
               <OpenInFullIcon className="text-icon" fontSize="small" />
               <span className="text-xs font-medium text-icon pl-1">
                 Load more Replies
               </span>
             </button>
+          </div>
+        </CommentThreadWrapper>
+      )}
+
+      {isLoading && (
+        <CommentThreadWrapper hasReplies={true}>
+          <div className="pl-2 pt-2 space-y-4 animate-pulse">
+            {[...Array(1)].map((_, idx) => (
+              <div key={idx} className="flex gap-2">
+                <div className="w-9 h-9 bg-gray-300 dark:bg-gray-600 rounded-full" />
+                <div className="flex-1 space-y-2">
+                  <div className="w-1/4 h-2 bg-gray-300 dark:bg-gray-600 rounded" />
+                  <div className="w-5/6 h-3 bg-gray-300 dark:bg-gray-600 rounded" />
+                </div>
+              </div>
+            ))}
           </div>
         </CommentThreadWrapper>
       )}

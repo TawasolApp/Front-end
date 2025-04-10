@@ -119,21 +119,6 @@ const SignInForm = ({ onSubmit }) => {
         </Link>
       </div>
 
-      <div className="mb-6 flex items-center">
-        <input
-          type="checkbox"
-          id="keepLoggedIn"
-          className="w-4 h-4 sm:w-5 sm:h-5 mr-2 accent-buttonSubmitEnable"
-          defaultChecked
-        />
-        <label
-          htmlFor="keepLoggedIn"
-          className="text-textContent text-base sm:text-lg"
-        >
-          Keep me logged in
-        </label>
-      </div>
-
       <BlueSubmitButton text="Sign in" />
     </form>
   );

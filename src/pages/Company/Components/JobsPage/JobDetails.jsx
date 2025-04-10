@@ -19,7 +19,11 @@ function JobDetails({ job, logo, name }) {
       <div className="flex items-start justify-between flex-wrap">
         <div className="flex items-center gap-3">
           {logo && (
-            <img src={logo} alt={name} className="h-10 w-10 rounded-md" />
+            <img
+              src={logo}
+              alt={name}
+              className="h-10 w-10 rounded-md object-contain"
+            />
           )}
           <p className="text-sm font-semibold text-normaltext uppercase">
             {name}

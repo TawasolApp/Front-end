@@ -30,7 +30,7 @@ function CompanyLayout() {
     } else {
       // Fetch first available company
       axiosInstance
-        .get("/companies?page=1&limit=1&name=a")
+        .get("/companies?page=1&limit=1&name=y")
         .then((response) => {
           if (response.data.length > 0) {
             const firstCompany = response.data[0];

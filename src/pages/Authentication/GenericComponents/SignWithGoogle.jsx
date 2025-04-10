@@ -10,9 +10,12 @@ import {
   setLocation,
   setBio,
   setType,
-  setPicture,
+  setProfilePicture,
   setIsNewGoogleUser,
   setUserId,
+  setCoverPhoto,
+  setEmail,
+  setIsSocialLogin,
 } from "../../../store/authenticationSlice";
 import { axiosInstance } from "../../../apis/axios";
 
@@ -41,15 +44,16 @@ const SignWithGoogle = () => {
               );
 
               if (response.status === 201) {
-                const { token, refreshToken, isNewUser } = response.data;
+                const { token, refreshToken, email, isNewUser, isSocialLogin } = response.data;
 
                 dispatch(setToken(token));
                 dispatch(setRefreshToken(refreshToken));
+                dispatch(setEmail(email));
                 dispatch(setIsNewGoogleUser(isNewUser));
+                dispatch(setIsSocialLogin(isSocialLogin));
 
                 // New user, set-up account instead of logging in
                 if (isNewUser) {
-                  console.log(token);
                   navigate("/auth/signup/location");
                   return;
                 }
@@ -62,8 +66,9 @@ const SignWithGoogle = () => {
                     firstName,
                     lastName,
                     location,
-                    bio,
-                    picture,
+                    headline,
+                    profilePicture,
+                    coverPhoto,
                   } = profileResponse.data;
 
                   dispatch(setType("User"));
@@ -79,11 +84,14 @@ const SignWithGoogle = () => {
                   if (location) {
                     dispatch(setLocation(location));
                   }
-                  if (bio) {
-                    dispatch(setBio(bio));
+                  if (headline) {
+                    dispatch(setBio(headline));
                   }
-                  if (picture) {
-                    dispatch(setPicture(picture));
+                  if (profilePicture) {
+                    dispatch(setProfilePicture(profilePicture));
+                  }
+                  if (coverPhoto) {
+                    dispatch(setCoverPhoto(coverPhoto));
                   }
 
                   navigate("/feed");

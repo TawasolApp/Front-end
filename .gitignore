@@ -14,6 +14,7 @@ dist-ssr
 *.local
 requests.http
 coverage
+.env
 
 # Editor directories and files
 .vscode/*

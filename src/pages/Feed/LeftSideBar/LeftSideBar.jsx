@@ -13,12 +13,15 @@ const LeftSideBar = () => {
   // State to track if the additional items are shown (when in top position)
   const [showMore, setShowMore] = useState(false);
 
+  const currentAuthorId = useSelector((state) => state.authentication.userId);
   const currentAuthorName = `${useSelector((state) => state.authentication.firstName)} ${useSelector((state) => state.authentication.lastName)}`;
   const currentAuthorPicture = useSelector(
-    (state) => state.authentication.picture
+    (state) => state.authentication.profilePicture,
   );
   const currentAuthorBio = useSelector((state) => state.authentication.bio);
-  const currentAuthorbackgroundImage = "";
+  const currentAuthorbackgroundImage = useSelector(
+    (state) => state.authentication.coverPhoto,
+  );
 
   // Effect to check if we're in top position (mobile/tablet) based on screen width
   useEffect(() => {
@@ -53,12 +56,12 @@ const LeftSideBar = () => {
             src={currentAuthorPicture}
             alt={currentAuthorName}
             sx={{ width: 64, height: 64 }}
-            className="border-2 border-white"
+            className="border-2 border-white cursor-pointer"
           />
         </div>
       </div>
 
-      <Link to={`/users/`}>
+      <Link to={`/users/${currentAuthorId}`}>
         <div className="pt-10 pb-4 text-center px-2">
           <h2 className="font-semibold text-base text-authorName">
             {currentAuthorName}
