@@ -14,16 +14,15 @@ import { formatDate } from "../../../../../../utils";
 import TextViewer from "../../../../GenericComponents/TextViewer";
 import { usePost } from "../../PostContext";
 import ReplyContainer from "./ReplyContainer";
-import { useSelector } from "react-redux";
 
 const Comment = ({ comment }) => {
   const {
+    currentAuthorId,
     handleDeleteComment,
     handleEditComment,
     handleReactOnComment,
   } = usePost();
 
-  const currentAuthorId = useSelector((state) => state.authentication.userId);
   const [showReactions, setShowReactions] = useState(false);
   const [editorMode, setEditorMode] = useState(false);
   const [showReplies, setShowReplies] = useState(false);

@@ -1,7 +1,7 @@
 import { useState, useRef, useEffect } from "react";
 import { Avatar } from "@mui/material";
 import TextEditor from "../../../../GenericComponents/TextEditor";
-import { useSelector } from "react-redux";
+import { usePost } from "../../PostContext";
 import CircularProgress from "@mui/material/CircularProgress"; // For loading spinner
 
 const AddForm = ({
@@ -11,8 +11,8 @@ const AddForm = ({
   close = null,
   type,
 }) => {
-  const currentAuthorPicture = useSelector((state) => state.authentication.profilePicture);
 
+  const { currentAuthorPicture } = usePost();
   const [commentText, setCommentText] = useState(initialText);
   const [taggedUsers, setTaggedUsers] = useState(initialTaggedUsers);
   const [loading, setLoading] = useState(false); // New loading state

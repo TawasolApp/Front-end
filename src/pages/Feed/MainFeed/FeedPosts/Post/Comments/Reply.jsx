@@ -16,12 +16,12 @@ import { useSelector } from "react-redux";
 
 const Reply = ({ commentId, reply }) => {
   const {
+    currentAuthorId,
     handleDeleteReplyToComment,
     handleEditReplyToComment,
     handleReactOnReplyToComment,
   } = usePost();
 
-  const currentAuthorId = useSelector((state) => state.authentication.userId);
   const [showReactions, setShowReactions] = useState(false);
   const [editorMode, setEditorMode] = useState(false);
 

@@ -5,6 +5,10 @@ const FeedPosts = ({
   lastPostRef,
   handleSharePost,
   handleDeletePost,
+  currentAuthorId,
+  currentAuthorName,
+  currentAuthorPicture,
+  isAdmin,
 }) => {
   return (
     <div className="w-full">
@@ -18,6 +22,10 @@ const FeedPosts = ({
                   post={post}
                   handleSharePost={handleSharePost}
                   handleDeletePost={handleDeletePost}
+                  currentAuthorId={currentAuthorId}
+                  currentAuthorName={currentAuthorName}
+                  currentAuthorPicture={currentAuthorPicture}
+                  isAdmin={isAdmin}
                 />
               </div>
             );
@@ -28,6 +36,10 @@ const FeedPosts = ({
               post={post}
               handleSharePost={handleSharePost}
               handleDeletePost={handleDeletePost}
+              currentAuthorId={currentAuthorId}
+              currentAuthorName={currentAuthorName}
+              currentAuthorPicture={currentAuthorPicture}
+              isAdmin={isAdmin}
             />
           );
         })}

@@ -3,7 +3,15 @@ import { PostProvider } from "./PostContext";
 import PostCard from "./Post/PostCard";
 import PostModal from "./Post/PostModal";
 
-const PostContainer = ({ post, handleSharePost, handleDeletePost }) => {
+const PostContainer = ({
+  post,
+  handleSharePost,
+  handleDeletePost,
+  currentAuthorId,
+  currentAuthorName,
+  currentAuthorPicture,
+  isAdmin
+}) => {
 
   const [showPostModal, setShowPostModal] = useState(false);
   const [mediaIndex, setMediaIndex] = useState(0);
@@ -13,6 +21,10 @@ const PostContainer = ({ post, handleSharePost, handleDeletePost }) => {
       initialPost={post}
       handleSharePost={handleSharePost}
       handleDeletePost={handleDeletePost}
+      currentAuthorId={currentAuthorId}
+      currentAuthorName={currentAuthorName}
+      currentAuthorPicture={currentAuthorPicture}
+      isAdmin={isAdmin}
     >
       <PostCard
         setShowPostModal={() => setShowPostModal(true)}

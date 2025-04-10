@@ -17,6 +17,10 @@ export const PostProvider = ({
   initialPost,
   handleSharePost,
   handleDeletePost,
+  currentAuthorId,
+  currentAuthorName,
+  currentAuthorPicture,
+  isAdmin,
 }) => {
   const [post, setPost] = useState(initialPost);
   const [comments, setComments] = useState([]);
@@ -123,6 +127,8 @@ export const PostProvider = ({
       });
 
       const newComments = response.data;
+      console.log(commentPage)
+      console.log(response.data);
 
       setComments((prev) => {
         // Merge and remove duplicates based on comment ID
@@ -139,6 +145,7 @@ export const PostProvider = ({
       setCommentPage((prev) => prev + 1);
       setHasMoreComments(post.comments > comments.length + newComments.length);
     } catch (e) {
+      console.log(e)
       if (e.name === "CanceledError") return;
       if (e.response?.status === 404) {
         setHasMoreComments(false);
@@ -410,6 +417,10 @@ export const PostProvider = ({
 
     /***************************************************** Secondary parameters ******************************************************/
     hasMoreComments,
+    currentAuthorId,
+    currentAuthorName,
+    currentAuthorPicture,
+    isAdmin,
 
     /************************************************************** API **************************************************************/
     handleDeletePost,

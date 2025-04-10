@@ -3,11 +3,16 @@ import { toast } from "react-toastify";
 import SharePost from "./SharePost/SharePost";
 import FeedPosts from "./FeedPosts/FeedPosts";
 import { axiosInstance } from "../../../apis/axios";
+import { useSelector } from "react-redux";
 
 const MainFeed = ({
   API_ROUTE = "posts",
   q = null,
-  showShare = true
+  showShare = true,
+  currentAuthorId = useSelector((state) => state.authentication.userId),
+  currentAuthorName = `${useSelector((state) => state.authentication.firstName)} ${useSelector((state) => state.authentication.lastName)}`,
+  currentAuthorPicture = useSelector((state) => state.authentication.profilePicture),
+  isAdmin = false,
 }) => {
 
   const [posts, setPosts] = useState([]);
@@ -48,10 +53,7 @@ const MainFeed = ({
 
       // fetch new posts
       const params = { page: pageNum };
-      if (q != null) {
-        params.q = q;
-      }
-      
+      if (q != null) params.q = q;
       const response = await axiosInstance.get(API_ROUTE, {
         params: params,
       });
@@ -164,14 +166,23 @@ const MainFeed = ({
   return (
     <>
       {showShare && (
-        <SharePost handleSharePost={handleSharePost} />
+        <SharePost
+          handleSharePost={handleSharePost}
+          currentAuthorName={currentAuthorName}
+          currentAuthorPicture={currentAuthorPicture}
+        />
       )}
+
       <div className="sm:rounded-lg rounded-none">
         <FeedPosts
           posts={posts}
           lastPostRef={lastPostElementRef}
           handleSharePost={handleSharePost}
           handleDeletePost={handleDeletePost}
+          currentAuthorId={currentAuthorId}
+          currentAuthorName={currentAuthorName}
+          currentAuthorPicture={currentAuthorPicture}
+          isAdmin={isAdmin}
         />
 
         {loading && (
