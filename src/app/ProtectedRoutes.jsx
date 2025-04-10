@@ -72,10 +72,10 @@ const ProtectedRoutes = () => {
         path="/connections"
         element={RenderWithNavbar(<ConnectionPage />)}
       />
-      <Route path="/blocked" element={<BlockedPage />} />
-      <Route path="/follow" element={<FollowPage />} />
-      <Route path="/manage-connections" element={<ManageConnections />} />
-      <Route path="/network-box" element={<NetworkBox />} />
+      <Route path="/blocked" element={RenderWithNavbar(<BlockedPage />)} />
+      <Route path="/follow" element={RenderWithNavbar(<FollowPage />)} />
+      <Route path="/manage-connections" element={RenderWithNavbar(<ManageConnections />)} />
+      <Route path="/network-box" element={RenderWithNavbar(<NetworkBox />)} />
 
       <Route path="/feed/:id" element={RenderWithNavbar(<SinglePost />)} />
       <Route path="/feed" element={RenderWithNavbar(<FeedContainer />)} />

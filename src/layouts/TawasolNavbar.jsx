@@ -43,9 +43,9 @@ const TawasolNavbar = () => {
     },
     {
       name: "My Network",
-      path: "/connections",
-      icon: currentPath === "/connections" ? <GroupIcon sx={{ transform: "scaleX(-1)" }} /> : <GroupIcon />,
-      active: currentPath === "/connections",
+      path: "/network-box",
+      icon: currentPath === "/network-box" ? <GroupIcon sx={{ transform: "scaleX(-1)" }} /> : <GroupIcon />,
+      active: currentPath === "/network-box",
     },
     {
       name: "Jobs",
