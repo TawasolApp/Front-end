@@ -4,8 +4,7 @@ import ChangePasswordPage from "../pages/Authentication/ChangePasswordPage";
 import ChangeEmailPage from "../pages/Authentication/ChangeEmailPage";
 
 import ProfilePage from "../pages/UserProfile/Components/ProfilePage";
-import ProfileConnections from "../pages/UserProfile/Components/Connections";
-import ProfileLayout from "../pages/UserProfile/Components/profileLayout";
+import ProfileLayout from "../pages/UserProfile/profileLayout";
 import EducationPage from "../pages/UserProfile/Components/Pages/EducationPage";
 import ExperiencePage from "../pages/UserProfile/Components/Pages/ExperiencePage";
 import CertificationsPage from "../pages/UserProfile/Components/Pages/CertificationsPage";
@@ -65,7 +64,6 @@ const ProtectedRoutes = () => {
         <Route path="workExperience" element={<ExperiencePage />} />
         <Route path="certifications" element={<CertificationsPage />} />
         <Route path="skills" element={<SkillsPage />} />
-        <Route path="connections" element={<ProfileConnections />} />
       </Route>
 
       <Route
