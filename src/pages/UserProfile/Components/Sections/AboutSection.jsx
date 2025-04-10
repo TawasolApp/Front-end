@@ -37,7 +37,7 @@ function AboutSection({ user, isOwner }) {
         {isOwner && (
           <button
             onClick={handleOpenModal}
-            className="w-8 h-8 rounded-full flex items-center justify-center hover:bg-gray-200 transition text-text absolute top-5 right-5"
+            className="w-8 h-8 rounded-full flex items-center justify-center hover:bg-sliderbutton transition text-text absolute top-5 right-5"
           >
             {bio ? "✎" : "+"}
           </button>
@@ -45,7 +45,7 @@ function AboutSection({ user, isOwner }) {
       </div>
 
       {isBioEmpty && isOwner ? (
-        <p className="text-sm text-companyheader2 italic">
+        <p className="text-sm text-companyheader italic">
           Let others know more about you by adding a short bio.
         </p>
       ) : (

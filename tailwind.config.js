@@ -19,7 +19,7 @@ export default {
         boxheading: "rgb(var(--boxheading))",
         postsbuttoncolor: "rgb(var(--postsbuttoncolor))",
         text: "rgb(var(--text))",
-        companyheader1: "rgb(var(--companyheader1))",
+        companyheader: "rgb(var(--companyheader))",
         companysubheader: "rgb(var(--companysubheader))",
         navbuttons: "rgb(var(--navbuttons))",
         overview: "rgb(var(--overview))",

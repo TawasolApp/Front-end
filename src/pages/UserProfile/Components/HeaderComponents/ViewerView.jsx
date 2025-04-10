@@ -73,7 +73,7 @@ function ViewerView({ user, viewerId, initialStatus }) {
   return (
     <div className="flex gap-2 flex-wrap sm:flex-nowrap">
       <button
-        className="px-4 py-2 bg-blue-600 text-white rounded-full text-sm"
+        className="px-4 py-2 bg-blue-600 text-boxheading rounded-full text-sm"
         onClick={handleMessage}
       >
         Message
@@ -93,7 +93,7 @@ function ViewerView({ user, viewerId, initialStatus }) {
       <button
         className={`px-4 py-2 border rounded-full text-sm transition-all duration-300 ease-in-out ${
           isFollowing
-            ? "bg-blue-600 text-white"
+            ? "bg-blue-600 text-boxheading"
             : "text-blue-600 border-blue-600"
         } hover:bg-blue-100 hover:text-blue-700`}
         onClick={handleFollow}

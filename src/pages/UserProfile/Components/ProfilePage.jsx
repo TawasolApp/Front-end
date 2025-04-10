@@ -7,7 +7,7 @@ import SkillsSection from "./Sections/SkillsSection";
 import CertificationsSection from "./Sections/CertificationsSection";
 import AboutSection from "./Sections/AboutSection";
 import ResumeSection from "./Sections/ResumeSection";
-import RestrictedProfilevisibility from "./Profilevisibility/RestrictedProfilevisibility";
+import RestrictedProfilevisibility from "./ProfileVisibility/RestrictedProfilevisibility";
 function ProfilePage() {
   const { user, isOwner, onUserUpdate } = useOutletContext();
   const educationRef = useRef(null);

@@ -113,7 +113,7 @@ function GenericSection({ title, type, items, isOwner, user, onUserUpdate }) {
   return (
     <>
       {isSaving && (
-        <div className="fixed inset-0 z-50 bg-white bg-opacity-60 flex items-center justify-center">
+        <div className="fixed inset-0 z-50 bg-boxheading bg-opacity-60 flex items-center justify-center">
           <div className="w-8 h-8 border-4 border-gray-300 border-t-blue-500 rounded-full animate-spin"></div>
           <span className="ml-3 text-text text-lg font-medium">Saving...</span>
         </div>
@@ -143,7 +143,7 @@ function GenericSection({ title, type, items, isOwner, user, onUserUpdate }) {
         </div>
 
         {data.length === 0 && isOwner && (
-          <div className="text-text2 italic mb-4 text-center">
+          <div className="text-normaltext italic mb-4 text-center">
             No {title.toLowerCase()} added yet. Click + to add your first{" "}
             {singularMap[type] || type}.
           </div>

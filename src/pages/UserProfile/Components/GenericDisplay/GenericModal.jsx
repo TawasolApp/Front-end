@@ -205,7 +205,7 @@ function GenericModal({
   return (
     isOpen && (
       <div
-        className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50"
+        className="fixed inset-0 bg-modalbackground flex justify-center items-center z-50"
         data-testid="generic-modal"
       >
         <div
@@ -215,7 +215,7 @@ function GenericModal({
           {/* ✖ Close */}
           <button
             onClick={handleClose}
-            className="absolute top-4 right-4 text-3xl text-gray-600 hover:text-gray-900"
+            className="absolute top-4 right-4 text-3xl text-normaltext hover:text-companyheader"
             aria-label="Close modal"
           >
             &times;
@@ -397,12 +397,12 @@ function GenericModal({
               </button>
             )}
             <button
-              className={`px-4 py-2 rounded-full transition duration-200 text-white 
-    ${
-      isSaving || !hasUnsavedChanges
-        ? "bg-blue-400 cursor-not-allowed opacity-60"
-        : "bg-blue-600 hover:bg-blue-700"
-    }`}
+              className={`px-4 py-2 rounded-full transition duration-200 text-boxheading 
+            ${
+              isSaving || !hasUnsavedChanges
+                ? "bg-blue-400 cursor-not-allowed opacity-60"
+                : "bg-blue-600 hover:bg-blue-700"
+            }`}
               aria-label="Save changes"
               onClick={handleSubmit}
               disabled={isSaving || !hasUnsavedChanges}

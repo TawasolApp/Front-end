@@ -186,7 +186,7 @@ function GenericPage({ title, type }) {
 
           {isOwner && (
             <button
-              className="w-8 h-8 flex items-center justify-center rounded-full hover:bg-gray-200 transition text-text"
+              className="w-8 h-8 flex items-center justify-center rounded-full hover:bg-transition text-text"
               onClick={handleAdd}
             >
               +
@@ -216,7 +216,7 @@ function GenericPage({ title, type }) {
               {isOwner && (
                 <button
                   onClick={() => handleEdit(item, index)}
-                  className="absolute top-2 right-2 text-gray-500 hover:text-blue-700 p-1  group-hover:visible"
+                  className="absolute top-2 right-2 text-gray-500 hover:text-blue-700 p-1 group-hover:visible"
                 >
                   ✎
                 </button>

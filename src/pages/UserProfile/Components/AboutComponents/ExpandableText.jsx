@@ -21,7 +21,7 @@ const ExpandableText = ({ text = "", maxLines = 3, className = "" }) => {
   if (!text?.trim()) return null;
 
   return (
-    <div className={`text-sm text-companyheader2 ${className}`}>
+    <div className={`text-sm text-companyheader ${className}`}>
       <div
         ref={textRef}
         className={`whitespace-pre-wrap break-words transition-all duration-300 ease-in-out ${

@@ -55,20 +55,17 @@ function ProfileHeader({
 
     if (fileOrNull === null) {
       try {
-        console.log(`🗑️ Sending DELETE to ${deleteEndpoint}`);
         await axios.delete(deleteEndpoint);
 
         // Set local UI to default (empty string)
         setEditedUser((prev) => ({ ...prev, [field]: "" }));
-        console.log("✅ Local state updated: cleared", field);
       } catch (err) {
-        console.error(`❌ Failed to delete ${field}:`, err);
+        console.error(` Failed to delete ${field}:`, err);
       }
       return;
     }
 
     try {
-      console.log(`📤 Uploading new ${field}`);
       const formData = new FormData();
       formData.append("file", fileOrNull);
 
@@ -79,13 +76,12 @@ function ProfileHeader({
       });
 
       const imageUrl = uploadRes.data.url;
-      console.log(`✅ Upload complete. Patching ${field} with:`, imageUrl);
 
       await axios.patch(`/profile`, { [field]: imageUrl });
 
       setEditedUser((prev) => ({ ...prev, [field]: imageUrl }));
     } catch (err) {
-      console.error(`❌ Failed to upload ${field}:`, err);
+      console.error(` Failed to upload ${field}:`, err);
     }
   }
 
@@ -116,7 +112,7 @@ function ProfileHeader({
         />
         {isOwner && (
           <button
-            className="absolute w-8 h-8 top-35 right-8 bg-white p-1 rounded-full  hover:bg-gray-200"
+            className="text-text absolute w-8 h-8 top-35 right-8  p-1 rounded-full hover:bg-sliderbutton"
             onClick={() => setIsEditing(true)}
           >
             ✎
@@ -124,17 +120,17 @@ function ProfileHeader({
         )}
         {/* 3 dots  */}
         {isOwner && (
-          <div className="absolute right-0 top-35 z-10 ">
+          <div className=" text-text absolute right-0 top-35 z-10 ">
             <button
-              className="w-8 h-8 rounded-full font-bold hover:bg-gray-200 flex items-center justify-center text-l"
+              className="w-8 h-8 rounded-full font-bold hover:bg-sliderbutton flex items-center justify-center text-l"
               onClick={() => setIsMenuOpen(!isMenuOpen)}
             >
               ⋮
             </button>
             {isMenuOpen && (
-              <div className="absolute right-0 mt-2 w-48 bg-white border rounded shadow z-50">
+              <div className="absolute right-0 mt-2 w-48 bg-boxbackgroun border rounded shadow z-50">
                 <button
-                  className="w-full right-8 text-left px-4 py-2 text-sm hover:font-semibold"
+                  className="text-w-full right-8 text-left px-4 py-2 text-sm text-normaltext hover:font-semibold"
                   onClick={() => {
                     setIsVisibilityModalOpen(true);
                     setIsMenuOpen(false);
@@ -163,8 +159,8 @@ function ProfileHeader({
         </h1>
         {isVisible && (
           <>
-            <p className="text-sm text-gray-600">{editedUser.headline}</p>
-            <p className="text-sm text-gray-600">
+            <p className="text-sm text-normaltext">{editedUser.headline}</p>
+            <p className="text-sm text-normaltext">
               {editedUser.location} ·{" "}
               <span
                 className="text-blue-700 font-semibold cursor-pointer hover:underline"
@@ -187,13 +183,13 @@ function ProfileHeader({
         <>
           <div className="px-6 pt-2 pb-4 text-left space-y-1 text-sm">
             <p
-              className="text-companyheader2 cursor-pointer hover:text-blue-500 hover:underline"
+              className="text-companyheader cursor-pointer hover:text-blue-500 hover:underline"
               onClick={() => scrollToSection(experienceRef)}
             >
               {editedUser.workExperience?.[experienceIndex]?.title}
             </p>
             <p
-              className="text-companyheader2 cursor-pointer hover:text-blue-500 hover:underline"
+              className="text-companyheader cursor-pointer hover:text-blue-500 hover:underline"
               onClick={() => scrollToSection(educationRef)}
             >
               {editedUser.education?.[educationIndex]?.school}

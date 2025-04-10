@@ -41,7 +41,7 @@ function CertificationsFields({ formData, setFormData, handleChange, errors }) {
         Add license or certification
       </h2>
 
-      <p className="text-sm text-gray-600 mb-2">* Indicates required</p>
+      <p className="text-sm text-companysubheader mb-2">* Indicates required</p>
 
       <label htmlFor="name" className="block font-medium mb-1 text-text">
         Name*
@@ -52,7 +52,7 @@ function CertificationsFields({ formData, setFormData, handleChange, errors }) {
         name="name"
         value={formData.name || ""}
         onChange={handleChange}
-        className="border p-2 w-full rounded-md mb-2 bg-boxbackground text-companyheader2"
+        className="border p-2 w-full rounded-md mb-2 bg-boxbackground text-companysubheader"
         placeholder="Ex: Microsoft certified network associate security"
       />
       {errors.name && (
@@ -96,7 +96,7 @@ function CertificationsFields({ formData, setFormData, handleChange, errors }) {
           }}
           onFocus={() => setShowDropdown(true)}
           onBlur={() => setTimeout(() => setShowDropdown(false), 200)}
-          className="border p-2 w-full rounded-md mb-2 bg-boxbackground text-companyheader2"
+          className="border p-2 w-full rounded-md mb-2 bg-boxbackground text-companysubheader"
           autoComplete="off"
         />
         {errors.company && (

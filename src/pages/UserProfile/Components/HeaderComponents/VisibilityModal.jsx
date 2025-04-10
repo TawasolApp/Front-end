@@ -51,42 +51,44 @@ const VisibilityModal = ({ isOpen, onClose, currentVisibility, onSave }) => {
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 backdrop-blur-sm">
-      <div className="bg-white rounded-lg shadow-lg w-full max-w-md mx-4 sm:mx-0 p-6 relative">
+      <div className="bg-boxbackground rounded-lg shadow-lg w-full max-w-md mx-4 sm:mx-0 p-6 relative">
         {/* Close button */}
         <button
           onClick={onClose}
-          className="absolute top-3 right-3 text-gray-500 hover:text-gray-700 text-2xl"
+          className="absolute top-3 right-3 text-normaltext hover:text-companyheader text-2xl"
         >
           &times;
         </button>
         {/* Title */}
-        <h2 className="text-lg font-semibold mb-4">Edit Profile Visibility</h2>
+        <h2 className="text-lg text-text font-semibold mb-4">
+          Edit Profile Visibility
+        </h2>
 
         {/* Visibility options */}
-        <div className="space-y-3 py-2">
+        <div className="space-y-3 py-2 text-text bg-boxbackground ">
           {VISIBILITY_OPTIONS.map((option) => (
             <label
               key={option.value}
               className={`block cursor-pointer p-3 rounded border ${
                 selectedVisibility === option.value
-                  ? "border-blue-400 bg-gray-100"
+                  ? "border-blue-400 bg-modalbackground"
                   : "border-gray-400"
               }`}
               onClick={() => setSelectedVisibility(option.value)}
             >
-              <div className="flex items-center gap-3">
+              <div className="flex items-center gap-3 ">
                 <input
                   type="radio"
                   name="visibility"
                   value={option.value}
                   checked={selectedVisibility === option.value}
                   onChange={() => setSelectedVisibility(option.value)}
-                  className="accent-blue-600"
+                  className="accent-blue-600 "
                 />
                 <span className="text-sm font-semibold">{option.label}</span>
               </div>
               {selectedVisibility === option.value && (
-                <p className="text-xs text-gray-600 mt-1 pl-6">
+                <p className="text-xs text-normaltext  mt-1 pl-6">
                   {option.description}
                 </p>
               )}

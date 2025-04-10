@@ -148,7 +148,7 @@ function EditProfileModal({ user, isOpen, onClose, onSave }) {
       >
         <button
           onClick={handleCancel}
-          className="absolute top-2 right-2  text-gray-500 hover:text-gray-700 p-2 text-3xl"
+          className="absolute top-2 right-2  text-normaltext hover:text-companyheader p-2 text-3xl"
           aria-label="Close modal"
         >
           &times;{" "}
@@ -157,7 +157,7 @@ function EditProfileModal({ user, isOpen, onClose, onSave }) {
         <h2 className="text-xl font-bold mb-4 text-text">Edit Profile</h2>
         <label
           htmlFor="firstName"
-          className="block text-sm font-medium text-text2"
+          className="block text-sm font-medium text-normaltext"
         >
           First name *
         </label>
@@ -165,9 +165,10 @@ function EditProfileModal({ user, isOpen, onClose, onSave }) {
           id="firstName"
           type="text"
           name="firstName"
+          autoComplete="off"
           value={editedUser.firstName || ""}
           onChange={handleChange}
-          className={`border p-2 w-full mb-2 bg-boxbackground text-companyheader2 ${
+          className={`border p-2 w-full mb-2 bg-boxbackground text-companysubheader ${
             errors.firstName ? "border-red-500" : ""
           }`}
         />
@@ -176,7 +177,7 @@ function EditProfileModal({ user, isOpen, onClose, onSave }) {
         )}
         <label
           htmlFor="lastName"
-          className="block text-sm font-medium text-text2"
+          className="block text-sm font-medium text-normaltext"
         >
           Last name *
         </label>
@@ -184,9 +185,10 @@ function EditProfileModal({ user, isOpen, onClose, onSave }) {
           id="lastName"
           type="text"
           name="lastName"
+          autoComplete="off"
           value={editedUser.lastName || ""}
           onChange={handleChange}
-          className={`border p-2 w-full mb-2 bg-boxbackground text-companyheader2 ${
+          className={`border p-2 w-full mb-2 bg-boxbackground text-companysubheader ${
             errors.lastName ? "border-red-500" : ""
           }`}
         />
@@ -197,7 +199,7 @@ function EditProfileModal({ user, isOpen, onClose, onSave }) {
         )}
         <label
           htmlFor="location"
-          className="block text-sm font-medium text-text2"
+          className="block text-sm font-medium text-normaltext"
         >
           Location *
         </label>
@@ -205,9 +207,10 @@ function EditProfileModal({ user, isOpen, onClose, onSave }) {
           id="location"
           type="text"
           name="location"
+          autoComplete="off"
           value={editedUser.location || ""}
           onChange={handleChange}
-          className={`border p-2 w-full mb-2 bg-boxbackground text-companyheader2 ${
+          className={`border p-2 w-full mb-2 bg-boxbackground text-companysubheader ${
             errors.location ? "border-red-500" : ""
           }`}
         />
@@ -219,7 +222,7 @@ function EditProfileModal({ user, isOpen, onClose, onSave }) {
 
         <label
           htmlFor="industry"
-          className="block text-sm font-medium text-text2"
+          className="block text-sm font-medium text-normaltext"
         >
           Industry *
         </label>
@@ -227,9 +230,10 @@ function EditProfileModal({ user, isOpen, onClose, onSave }) {
           id="industry"
           type="text"
           name="industry"
+          autoComplete="off"
           value={editedUser.industry || ""}
           onChange={handleChange}
-          className={`border p-2 w-full mb-2  bg-boxbackground text-companyheader2 ${
+          className={`border p-2 w-full mb-2  bg-boxbackground text-companysubheader ${
             errors.industry ? "border-red-500" : ""
           }`}
         />
@@ -240,14 +244,14 @@ function EditProfileModal({ user, isOpen, onClose, onSave }) {
         )}
         <label
           htmlFor="workExperience"
-          className="block text-sm font-medium text-text2"
+          className="block text-sm font-medium text-normaltext"
         >
           Work Experience
         </label>
         <select
           id="workExperience"
           name="experience"
-          className="border p-2 w-full mb-2 bg-boxbackground text-companyheader2"
+          className="border p-2 w-full mb-2 bg-boxbackground text-companysubheader"
           value={selectedExperienceIndex}
           onChange={(e) => setSelectedExperienceIndex(Number(e.target.value))}
         >
@@ -259,14 +263,14 @@ function EditProfileModal({ user, isOpen, onClose, onSave }) {
         </select>
         <label
           htmlFor="education"
-          className="block text-sm font-medium text-text2"
+          className="block text-sm font-medium text-normaltext"
         >
           Education
         </label>
         <select
           id="education"
           name="education"
-          className="border p-2 w-full mb-2 bg-boxbackground text-companyheader2"
+          className="border p-2 w-full mb-2 bg-boxbackground text-companysubheader"
           value={selectedEducationIndex}
           onChange={(e) => setSelectedEducationIndex(Number(e.target.value))}
         >
@@ -301,7 +305,7 @@ function EditProfileModal({ user, isOpen, onClose, onSave }) {
         />
       )}
       {isSaving && (
-        <div className="fixed inset-0 z-50 bg-white bg-opacity-60 flex items-center justify-center">
+        <div className="fixed inset-0 z-50 bg-boxheading bg-opacity-60 flex items-center justify-center">
           <div className="w-8 h-8 border-4 border-gray-300 border-t-blue-500 rounded-full animate-spin"></div>
           <span className="ml-3 text-text text-lg font-medium">Saving...</span>
         </div>

@@ -47,7 +47,7 @@ function SkillEndorsement({ userId, skillName, endorsements = [], viewerId }) {
   return (
     <div>
       <p
-        className="text-companyheader2 flex items-center mt-1 hover:underline cursor-pointer w-fit"
+        className="text-companyheader flex items-center mt-1 hover:underline cursor-pointer w-fit"
         onClick={handleViewEndorsers}
         title="View who endorsed this skill"
       >
@@ -59,8 +59,8 @@ function SkillEndorsement({ userId, skillName, endorsements = [], viewerId }) {
         onClick={isEndorsed ? handleUnendorse : handleEndorse}
         disabled={loading}
         className={`mt-2 px-4 py-2 border rounded-full flex items-center justify-center gap-2 w-fit
-          ${isEndorsed ? "bg-gray-200 text-text2" : "bg-white text-text-text2"} 
-          border-companyheader2 hover:bg-gray-300 transition
+          ${isEndorsed ? "bg-modalbackground text-normaltext" : "bg-white text-text-normaltext"} 
+          border-companyheader hover:bg-sliderbutton transition
           ${loading ? "opacity-50 cursor-not-allowed" : ""}`}
         title={
           isEndorsed ? "Click to remove your endorsement" : "Click to endorse"

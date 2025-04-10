@@ -76,14 +76,14 @@ function ResumeSection({ user, isOwner }) {
         <button
           onClick={() => fileInputRef.current.click()}
           title="Edit Resume"
-          className="absolute rounded-full w-8 h-8 top-5 right-5 text-black  hover:bg-gray-200 transition text-text"
+          className=" absolute rounded-full w-8 h-8 top-5 right-5 text-text hover:bg-sliderbutton transition text-text"
         >
           ✎
         </button>
       )}
       {resumeUrl ? (
-        <div className="flex items-center justify-between bg-white border border-gray-200 p-3 rounded-md">
-          <div className="text-sm font-medium text-companyheader2 truncate max-w-[60%]">
+        <div className=" flex items-center justify-between bg-boxbackground border border-sliderbutton p-3 rounded-md">
+          <div className="text-sm font-medium text-companyheader truncate max-w-[60%]">
             {resumeUrl.split("/").pop()}
           </div>
 
@@ -111,12 +111,12 @@ function ResumeSection({ user, isOwner }) {
         </div>
       ) : (
         isOwner && (
-          <div className="flex flex-col items-center justify-center text-center border border-dashed border-gray-300 rounded-md p-6 bg-white">
+          <div className="flex flex-col items-center justify-center text-center border border-dashed border-gray-300 rounded-md p-6 bg-boxheading">
             <div className="text-5xl text-gray-400 mb-3">📄</div>
-            <p className="text-gray-600 mb-1">
+            <p className="text-normaltext mb-1">
               Add a resume to help recruiters find you
             </p>
-            <p className="text-gray-400 text-sm mb-4">
+            <p className="text-sliderbutton text-sm mb-4">
               PDF, DOC, DOCX files up to 10MB
             </p>
             <button

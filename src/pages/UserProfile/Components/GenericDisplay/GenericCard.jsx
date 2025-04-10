@@ -33,10 +33,6 @@ function GenericCard({
 }) {
   const { userId } = useSelector((state) => state.authentication);
   const viewerId = userId;
-  // const [isEndorsed, setIsEndorsed] = useState(false);
-  // const [endorsementCount, setEndorsementCount] = useState(
-  //   item.endorsements || 0
-  // );
   const [isModalOpen, setIsModalOpen] = useState(false);
 
   if (isCardEmpty(item, type)) return null;
@@ -54,45 +50,60 @@ function GenericCard({
       />
       <div className="break-all whitespace-pre-wrap w-full">
         <h3 className="text-lg font-semibold text-text">{item.title}</h3>
-        <p className="text-sm text-companyheader2 font-medium">
+        <p className="text-sm text-companyheader font-medium">
           {item.company}
+          {item.employmentType && (
+            <span className="ml-1">• {item.employmentType}</span>
+          )}
         </p>
-        {/*   <div className="text-companyheader2 font-medium">
-    {item.companyId ? (
-      <Link
-        to={`/company/${item.companyId}`}
-        className="text-blue-600 hover:underline"
-      >
-        {item.company}
-      </Link>
-    ) : (
-      item.company
-    )}
+        {/*   <div className="text-companysubheader font-medium">
+{item.companyId ? (
+  <Link
+    to={`/company/${item.companyId}`}
+    className="text-blue-600 hover:underline"
+  >
+    {item.company}
+    {item.employmentType && <span className="ml-1 text-companysubheader">· {item.employmentType}</span>}
+  </Link>
+) : (
+  <>
+    {item.company}
+    {item.employmentType && <span className="ml-1 text-companysubheader">· {item.employmentType}</span>}
+  </>
+)}
+
   </div> */}
         {/* Location and Location Type */}
         {(item.location || item.locationType) && (
-          <p className="text-text2 text-sm">
-            {item.location}
-            {item.location && item.locationType ? " • " : ""}
-            {item.locationType === "on_site" && "On-site"}
-            {item.locationType === "remote" && "Remote"}
-            {item.locationType === "hybrid" && "Hybrid"}
+          <p className="text-normaltext text-sm">
+            {item.location && <span>{item.location}</span>}
+            {item.location && item.locationType && (
+              <span className="mx-1">•</span>
+            )}
+            {item.locationType && (
+              <span>
+                {item.locationType === "on_site" && "On-site"}
+                {item.locationType === "remote" && "Remote"}
+                {item.locationType === "hybrid" && "Hybrid"}
+              </span>
+            )}
           </p>
         )}
-
-        {/* Description */}
-        {item.description && (
-          <div className="mt-1">
-            <ExpandableText text={item.description} maxLines={3} />
-          </div>
-        )}
-
         {/* Dates */}
         {item.startDate && (
-          <p className="text-text2 text-sm mt-1">
+          <p
+            className="text-companysubheader
+           text-sm mt-1"
+          >
             {displayDate(item.startDate)}
             {item.endDate ? ` - ${displayDate(item.endDate)}` : ""}
           </p>
+        )}
+        {/* Description */}
+        {item.description && (
+          <div className="mt-1 text-normaltext">
+            <ExpandableText text={item.description} maxLines={3} />
+          </div>
         )}
       </div>
     </div>
@@ -103,30 +114,35 @@ function GenericCard({
       <img
         src={defaultEducationImage}
         alt="Education"
-        className="w-10 h-10 rounded-full object-cover"
+        className="w-10 h-10 rounded-full object-cover text-text"
       />
       <div className="break-all whitespace-pre-wrap w-full">
         <h3 className="text-lg font-semibold text-text" data-testid="school">
           {item.school}
         </h3>
-        {item.degree && <p className="text-text2">{item.degree}</p>}
-        {item.field && <p className="text-text2">{item.field}</p>}
+        {(item.degree || item.field) && (
+          <p className="text-companyheader">
+            {[item.degree, item.field].filter(Boolean).join(", ")}
+          </p>
+        )}
+        {item.startDate && (
+          <p
+            className="text-companysubheader
+           text-sm mt-1"
+          >
+            {displayDate(item.startDate)}
+            {item.endDate ? ` - ${displayDate(item.endDate)}` : ""}
+          </p>
+        )}
         {item.grade && (
-          <p className="text-companyheader2 text-sm" data-testid="grade">
+          <p className="text-normaltext text-sm" data-testid="grade">
             Grade: {item.grade}
           </p>
         )}
         {item.description && (
-          <div className="mt-1">
+          <div className="mt-1 text-normaltext">
             <ExpandableText text={item.description} maxLines={3} />
           </div>
-        )}
-
-        {item.startDate && (
-          <p className="text-text2 text-sm mt-1">
-            {displayDate(item.startDate)}
-            {item.endDate ? ` - ${displayDate(item.endDate)}` : ""}
-          </p>
         )}
       </div>
     </div>
@@ -137,7 +153,9 @@ function GenericCard({
       <h3 className="text-lg font-semibold text-text">{item.skillName}</h3>
 
       {/* Position (optional) */}
-      {item.position && <p className="text-text2 text-sm">{item.position}</p>}
+      {item.position && (
+        <p className="text-companyheader text-sm">{item.position}</p>
+      )}
       {!isOwner && connectionStatus === "Connection" && (
         <SkillEndorsement
           userId={user._id} // profile owner
@@ -159,15 +177,19 @@ function GenericCard({
       <div className="break-all whitespace-pre-wrap w-full">
         <h3 className="text-lg font-semibold text-text">{item.name}</h3>
         {item.company && (
-          <p className="text-sm text-companyheader2 font-medium">
+          <p className="text-sm text-companyheader font-medium">
             {item.company}
           </p>
         )}
         {/* {item.credentialId && (
-          <p className="text-text2 text-sm">ID: {item.credentialId}</p>
+          <p className="text-normaltext
+           text-sm">ID: {item.credentialId}</p>
         )} */}
         {item.issueDate && (
-          <p className="text-text2 text-sm mt-1">
+          <p
+            className="text-companysubheader
+           text-sm mt-1"
+          >
             {displayDate(item.issueDate)}
             {item.expiryDate ? ` - ${displayDate(item.expiryDate)}` : ""}
           </p>
@@ -180,7 +202,7 @@ function GenericCard({
     <div className="bg-boxbackground p-4 rounded-lg shadow-sm w-full flex flex-col space-y-0 relative">
       {isOwner && showEditIcons && (
         <button
-          className="absolute top-2 right-2 text-companyheader2 hover:text-blue-700"
+          className="absolute top-2 right-2 text-companysubheader hover:text-blue-700"
           onClick={(e) => {
             e.stopPropagation();
             if (onEdit) onEdit();

@@ -80,7 +80,8 @@ function ExperienceFields({ formData, setFormData, handleChange, errors }) {
         placeholder="Ex: Retail Sales Manager"
         value={formData.title || ""}
         onChange={handleChange}
-        className="border p-2 w-full rounded-md mb-2 bg-boxbackground text-companyheader2"
+        className="border p-2 w-full rounded-md mb-2 bg-boxbackground text-companysubheader"
+        autoComplete="off" //  disables browser suggestions
       />
       {errors.title && (
         <p className="text-red-600 text-sm mb-2">{errors.title}</p>
@@ -98,7 +99,7 @@ function ExperienceFields({ formData, setFormData, handleChange, errors }) {
         name="employmentType"
         value={formData.employmentType || ""}
         onChange={handleChange}
-        className="border p-2 w-full rounded-md mb-2 bg-boxbackground text-companyheader2"
+        className="border p-2 w-full rounded-md mb-2 bg-boxbackground text-companysubheader"
       >
         <option value="">Please select</option>
         {employmentOptions.map((opt) => (
@@ -114,7 +115,7 @@ function ExperienceFields({ formData, setFormData, handleChange, errors }) {
       <label htmlFor="company" className="block font-medium mb-1 text-text">
         Company or organization*
       </label>
-      <div className="relative">
+      <div className="relative ">
         <input
           type="text"
           id="company"
@@ -148,7 +149,7 @@ function ExperienceFields({ formData, setFormData, handleChange, errors }) {
           }}
           onFocus={() => setShowDropdown(true)}
           onBlur={() => setTimeout(() => setShowDropdown(false), 200)}
-          className="border p-2 w-full rounded-md mb-2 bg-boxbackground text-companyheader2"
+          className="border p-2 w-full rounded-md mb-2 bg-boxbackground text-companysubheader"
           autoComplete="off"
         />
         {errors.company && (
@@ -156,7 +157,7 @@ function ExperienceFields({ formData, setFormData, handleChange, errors }) {
         )}
 
         {showDropdown && filteredOptions.length > 0 && (
-          <ul className="absolute z-10 w-full bg-white border border-gray-300 rounded shadow-md max-h-48 overflow-y-auto">
+          <ul className="absolute z-10 w-full bg-boxbackground border border-gray-300 rounded shadow-md max-h-48 overflow-y-auto">
             {filteredOptions.map((option, index) => (
               <li
                 key={index}
@@ -170,7 +171,7 @@ function ExperienceFields({ formData, setFormData, handleChange, errors }) {
                   alt={option.name}
                   className="w-5 h-5 rounded-full mr-2"
                 />
-                {option.name}
+                <span className="text-normaltext">{option.name}</span>
               </li>
             ))}
           </ul>
@@ -189,7 +190,7 @@ function ExperienceFields({ formData, setFormData, handleChange, errors }) {
           onChange={handleCurrentlyWorkingChange}
         />
 
-        <label htmlFor="currentlyWorking" className="text-text">
+        <label htmlFor="currentlyWorking" className="text-normaltext">
           I am currently working in this role
         </label>
       </div>
@@ -199,13 +200,14 @@ function ExperienceFields({ formData, setFormData, handleChange, errors }) {
         Location
       </label>
       <input
+        autoComplete="off"
         id="location"
         type="text"
         name="location"
         placeholder="Ex: London, United Kingdom"
         value={formData.location || ""}
         onChange={handleChange}
-        className="border p-2 w-full rounded-md mb-2 bg-boxbackground text-companyheader2"
+        className="border p-2 w-full rounded-md mb-2 bg-boxbackground text-companysubheader"
       />
 
       {/* Location Type */}
@@ -220,7 +222,7 @@ function ExperienceFields({ formData, setFormData, handleChange, errors }) {
         name="locationType"
         value={formData.locationType || ""}
         onChange={handleChange}
-        className="border p-2 w-full rounded-md mb-2 bg-boxbackground text-companyheader2"
+        className="border p-2 w-full rounded-md mb-2 bg- text-companysubheader"
       >
         <option value="">Please select</option>
         {locationOptions.map((opt) => (
@@ -237,7 +239,7 @@ function ExperienceFields({ formData, setFormData, handleChange, errors }) {
         name="description"
         value={formData.description || ""}
         onChange={handleChange}
-        className="border p-2 w-full mb-2 rounded-md resize-none bg-boxbackground"
+        className="border p-2 w-full mb-2 rounded-md resize-none bg-boxbackground  text-companysubheader"
         placeholder="Add more details..."
         maxLength={1000}
       />

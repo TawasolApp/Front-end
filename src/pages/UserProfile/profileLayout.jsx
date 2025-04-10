@@ -45,10 +45,9 @@ function ProfileLayout() {
 
   if (loading) return <LoadingPage />;
   if (!user) return null;
-  const isOwner = user?.status === "Owner"; // ✅ Dynamic ownership check
-  // console.log("isOwner SATUTS", user?.status);
+  const isOwner = user?.status === "Owner";
   return (
-    <div className="bg-mainBackground pt-0 pb-4 h--screen ">
+    <div className="bg-mainBackground pt-0 pb-4 h-screen ">
       <div className="max-w-6xl mx-auto " data-testid="layout-wrapper">
         <Outlet context={{ user, isOwner, onUserUpdate: setUser }} />
       </div>
