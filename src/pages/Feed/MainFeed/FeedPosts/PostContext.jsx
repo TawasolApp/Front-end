@@ -107,7 +107,7 @@ export const PostProvider = ({
 
       setComments((prev) => {
         // Merge and remove duplicates based on comment ID
-        const mergedComments = [...newComments, ...prev];
+        const mergedComments = [...prev, ...newComments];
         const uniqueComments = Array.from(
           new Map(
             mergedComments.map((comment) => [comment.id, comment]),
@@ -208,53 +208,52 @@ export const PostProvider = ({
 
   const fetchReplies = async (commentId) => {
     try {
-      // Cancel previous request
       if (abortControllerRef.current) {
         abortControllerRef.current.abort();
       }
-      // Create new controller for this request
+  
       const controller = new AbortController();
       abortControllerRef.current = controller;
+  
       const currentPage = replies[commentId]?.replyPage || 1;
       const response = await axiosInstance.get(`/posts/comments/${commentId}`, {
         params: {
           page: currentPage,
           limit: 2,
-          _: Date.now(), // Cache buster
+          _: Date.now(),
         },
         signal: controller.signal,
       });
+  
       const newReplies = response.data;
       setReplies((prevReplies) => {
         const existingReplies = prevReplies[commentId]?.data || [];
-        // Remove duplicate replies
         const mergedReplies = [...existingReplies, ...newReplies];
         const uniqueReplies = Array.from(
           new Map(mergedReplies.map((reply) => [reply.id, reply])).values(),
-        );
-        const wantedComment = comments.find(
-          (comment) => comment.id === commentId,
-        );
+        ).sort((a, b) => new Date(a.timestamp) - new Date(b.timestamp));
+  
+        const wantedComment = comments.find((comment) => comment.id === commentId);
+  
         return {
           ...prevReplies,
           [commentId]: {
             data: uniqueReplies,
-            hasMore:
-              wantedComment.repliesCount >
-              existingReplies + newReplies,
+            hasMore: wantedComment.repliesCount > uniqueReplies.length,
             replyPage: currentPage + 1,
           },
         };
       });
     } catch (e) {
+      console.log(e);
       if (e.name === "CanceledError") return;
-      if (e.response?.status === 404) {
+      if (e.response?.status === 500) {
         setReplies((prevReplies) => ({
           ...prevReplies,
           [commentId]: {
-            data: prevReplies[commentId]?.data || [], // Initialize data to an empty array
-            hasMore: false, // No more replies
-            replyPage: (prevReplies[commentId]?.replyPage || 1) + 1, // Still increment page
+            data: prevReplies[commentId]?.data || [],
+            hasMore: false,
+            replyPage: (prevReplies[commentId]?.replyPage || 1) + 1,
           },
         }));
       } else {
@@ -275,7 +274,7 @@ export const PostProvider = ({
       ...prevReplies,
       [commentId]: {
         ...prevReplies[commentId],
-        data: [...(prevReplies[commentId]?.data || []), response.data], // Append reply
+        data: [...(prevReplies[commentId]?.data || []), response.data],
       },
     }));
 
