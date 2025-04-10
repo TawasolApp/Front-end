@@ -1,6 +1,8 @@
 import "./App.css";
-
+import { useEffect } from "react";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import { ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 import SignUpPage from "../pages/Authentication/SignUpPage";
 import SignInPage from "../pages/Authentication/SignInPage";
@@ -17,7 +19,20 @@ import ProtectedRoutes from "./ProtectedRoutes";
 import VerificationPendingPage from "../pages/Authentication/VerificationPendingPage";
 import NewPasswordPage from "../pages/Authentication/NewPasswordPage";
 
+
 const App = () => {
+
+  useEffect(() => {
+    document.documentElement.classList.add('light');
+  }, []);
+
+  const getCurrentTheme = () => {
+    const rootElement = document.documentElement;
+    console.log(rootElement.classList)
+    const theme = rootElement.classList.contains('dark') ? 'dark' : 'light';
+    return theme;
+  };
+
   return (
     <Router>
       <Routes>
@@ -57,6 +72,16 @@ const App = () => {
           }
         />
       </Routes>
+
+      {/* Toast Container for the toasts */}
+      <ToastContainer
+        position="bottom-left"
+        autoClose={5000}
+        newestOnTop={false}
+        closeOnClick={true}
+        rtl={false}
+        theme={getCurrentTheme()}
+      />
     </Router>
   );
 };

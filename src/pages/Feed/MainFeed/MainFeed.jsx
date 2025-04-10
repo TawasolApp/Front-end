@@ -1,4 +1,5 @@
 import { useState, useEffect, useRef, useCallback } from "react";
+import { toast } from "react-toastify";
 import SharePost from "./SharePost/SharePost";
 import FeedPosts from "./FeedPosts/FeedPosts";
 import { axiosInstance } from "../../../apis/axios";
@@ -138,6 +139,10 @@ const MainFeed = ({
         isSilentRepost: silentRepost,
       });
       fetchPosts(1, true);
+      toast.success("Post shared successfully.", {
+        position: "bottom-left",
+        autoClose: 3000
+      });
     } catch (err) {
       console.log(`Error: ${err}`);
     }
@@ -147,6 +152,10 @@ const MainFeed = ({
     try {
       await axiosInstance.delete(`/posts/${postId}`);
       setPosts((prevPosts) => prevPosts.filter((post) => post.id !== postId));
+      toast.success("Post deleted successfully.", {
+        position: "bottom-left",
+        autoClose: 3000
+      });
     } catch (e) {
       console.log(e.message);
     }

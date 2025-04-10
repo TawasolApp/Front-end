@@ -1,4 +1,5 @@
 import { createContext, useContext, useState, useRef, useEffect } from "react";
+import { toast } from "react-toastify";
 import { axiosInstance } from "../../../../apis/axios";
 
 const PostContext = createContext();
@@ -47,12 +48,25 @@ export const PostProvider = ({
   };
 
   const handleSavePost = async () => {
-    if (post.isSaved) await axiosInstance.delete(`posts/save/${post.id}`);
-    else await axiosInstance.post(`posts/save/${post.id}`);
-
-    setPost((prev) => {
-      return { ...prev, isSaved: !prev.isSaved };
-    });
+    if (post.isSaved) {
+      await axiosInstance.delete(`posts/save/${post.id}`);
+      setPost((prev) => {
+        return { ...prev, isSaved: false};
+      });
+      toast.success("Post unsaved.", {
+        position: "bottom-left",
+        autoClose: 3000
+      });
+    } else {
+      await axiosInstance.post(`posts/save/${post.id}`);
+      setPost((prev) => {
+        return { ...prev, isSaved: true };
+      });
+      toast.success("Post saved", {
+        position: "bottom-left",
+        autoClose: 3000
+      });
+    }
   };
 
   const handleReactOnPost = async (reactionTypeAdd, reactionTypeRemove) => {
@@ -82,6 +96,10 @@ export const PostProvider = ({
     await navigator.clipboard.writeText(
       `${window.location.origin}/feed/${post.id}`,
     );
+    toast.success("Link copied to clipboard.", {
+      position: "bottom-left",
+      autoClose: 3000
+    });
   };
 
   const fetchComments = async () => {
