@@ -20,8 +20,7 @@ const SearchContainer = () => {
     setIsDropdownOpen(false);
   };
 
-  // Create a key that changes whenever filter values change
-  // This will force the SearchPosts component to re-render
+  // force re-render
   const searchPostsKey = `posts-${selectedTimeFrame}-${isWithinNetwork}-${searchText}`;
 
   return (
