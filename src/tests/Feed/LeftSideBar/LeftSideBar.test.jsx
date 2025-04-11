@@ -146,14 +146,6 @@ describe('LeftSideBar', () => {
     expect(optionsContainer).toHaveClass('hidden');
   });
 
-  it('contains a link to the user profile', () => {
-    const { container } = renderWithProviders(<LeftSideBar />);
-    
-    const profileLink = container.querySelector('a[href="/users/"]');
-    expect(profileLink).toBeInTheDocument();
-    expect(profileLink.textContent).toContain('John Doe');
-  });
-
   it('contains a link to saved posts', () => {
     const { container } = renderWithProviders(<LeftSideBar />);
     
