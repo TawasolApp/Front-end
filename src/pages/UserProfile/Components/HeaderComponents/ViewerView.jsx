@@ -96,7 +96,6 @@ function ViewerView({
       }
     }
   };
-
   const confirmAcceptConnection = async () => {
     try {
       // Optimistically update UI first
