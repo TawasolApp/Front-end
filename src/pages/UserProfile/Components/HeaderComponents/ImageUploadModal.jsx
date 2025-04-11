@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { FiUpload, FiTrash2 } from "react-icons/fi";
-import ConfirmModal from "../GenericDisplay/ConfirmModal";
+import ConfirmModal from "../ReusableModals/ConfirmModal";
 
 function ImageUploadModal({
   isOpen,

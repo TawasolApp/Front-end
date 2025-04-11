@@ -1,7 +1,7 @@
 import React, { useRef, useState } from "react";
 import { axiosInstance as axios } from "../../../../apis/axios";
 import { FaEye, FaDownload, FaTrash } from "react-icons/fa";
-import ConfirmModal from "../GenericDisplay/ConfirmModal"; // Import the ConfirmModal
+import ConfirmModal from "../ReusableModals/ConfirmModal"; // Import the ConfirmModal
 
 function ResumeSection({ user, isOwner }) {
   const [resumeUrl, setResumeUrl] = useState(user.resume || "");

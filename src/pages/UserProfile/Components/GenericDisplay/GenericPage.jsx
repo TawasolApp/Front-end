@@ -20,7 +20,7 @@ function GenericPage({ title, type }) {
   const [editIndex, setEditIndex] = useState(null);
   const [editData, setEditData] = useState(null);
   const [editMode, setEditMode] = useState(false);
-  const [isSaving, setIsSaving] = useState(false); // Track saving status
+  const [isSaving, setIsSaving] = useState(false);
   console.log("user in generic page", user);
   useEffect(() => {
     if (user && user[type]) {
@@ -166,7 +166,7 @@ function GenericPage({ title, type }) {
   return (
     <>
       {isSaving && (
-        <div className="fixed inset-0 z-50 bg-white bg-opacity-60 flex items-center justify-center">
+        <div className="fixed inset-0 z-50 bg-modalbackground bg-opacity-60 flex items-center justify-center">
           <div className="w-8 h-8 border-4 border-gray-300 border-t-blue-500 rounded-full animate-spin"></div>
           <span className="ml-3 text-text text-lg font-medium">Saving...</span>
         </div>
@@ -211,7 +211,8 @@ function GenericPage({ title, type }) {
                 isOwner={isOwner}
                 showEditIcons={false}
                 user={user}
-                connectionStatus={user.status}
+                // connectionStatus={user.status}
+                connectStatus={user.connectStatus}
               />
               {isOwner && (
                 <button

@@ -158,7 +158,8 @@ function GenericSection({ title, type, items, isOwner, user, onUserUpdate }) {
                 isOwner={isOwner}
                 showEditIcons={false}
                 user={user}
-                connectionStatus={user.status}
+                // connectionStatus={user.status}
+                connectStatus={user.connectStatus}
               />
             </div>
           ))}

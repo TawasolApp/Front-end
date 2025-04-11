@@ -203,7 +203,9 @@ function ProfileHeader({
           <ViewerView
             user={editedUser}
             viewerId={viewerId}
-            initialStatus={editedUser.status}
+            // initialStatus={editedUser.status}
+            initialConnectStatus={editedUser.connectStatus}
+            initialFollowStatus={editedUser.followStatus}
           />
         </div>
       )}
