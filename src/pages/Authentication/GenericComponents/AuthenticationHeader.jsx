@@ -4,7 +4,7 @@ import { useNavigate } from "react-router-dom";
 
 const AuthenticationHeader = ({ hideButtons = false }) => {
   // Destructure props properly
-  const Logo = getIconComponent("in-black");
+  const Logo = getIconComponent("tawasol-icon");
   const navigate = useNavigate();
 
   return (
@@ -14,10 +14,10 @@ const AuthenticationHeader = ({ hideButtons = false }) => {
       >
         {/* Logo on the left */}
         <div className="flex items-center">
-          <h1 className="text-2xl sm:text-3xl font-bold text-textContent">
-            Linked
+          <Logo className="h-10 sm:h-12 w-auto" />
+          <h1 className="text-2xl sm:text-3xl font-bold text-buttonSubmitEnable ml-1">
+            Tawasol
           </h1>
-          <Logo className="h-8 sm:h-10 w-auto" />
         </div>
 
         {!hideButtons && ( // Fixed: Removed erroneous curly brace comment
