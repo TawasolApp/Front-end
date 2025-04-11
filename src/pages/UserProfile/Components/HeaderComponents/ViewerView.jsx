@@ -57,36 +57,26 @@ function ViewerView({
   };
   const handleConnect = async () => {
     try {
-      /*if (connectStatus === "Connection") {
-        const res = await axios.delete(`/connections/${user._id}`);
-        console.log("Disconnected successfully:", res.status);
-        setConnectStatus("No Connection");
-      } else if (connectStatus === "No Connection") {
-        const res = await axios.post("/connections", {
-          userId: user._id,
-        });
-        console.log("Connection request sent:", res.data);
-        setConnectStatus("Pending");*/
-      if (status === "Connection") {
+      if (connectStatus === "Connection") {
         // Handle disconnection
         await axios.delete(`/connections/${user._id}`);
-        setStatus("No Connection"); // Update state immediately
-      } else if (status === "No Connection") {
+        setConnectStatus("No Connection");
+      } else if (connectStatus === "No Connection") {
         // Send connection request
         const res = await axios.post("/connections", {
           userId: user._id,
         });
         if (res.status === 201) {
           console.log("Connection request sent:", res.data);
-          setStatus("Pending"); // Update state immediately
+          setConnectStatus("Pending");
         }
-      } else if (status === "Request") {
+      } else if (connectStatus === "Request") {
         // Show modal for accepting connection request
         setShowAcceptModal(true);
-      } else if (status === "Pending") {
+      } else if (connectStatus === "Pending") {
         // Handle canceling a pending request
         await axios.delete(`/connections/${user._id}/pending`);
-        setStatus("No Connection"); // Update state immediately after successful deletion
+        setConnectStatus("No Connection");
       }
     } catch (err) {
       console.error("Connection error:", err.response?.data || err.message);
@@ -95,7 +85,6 @@ function ViewerView({
       }
     }
   };
-
   const confirmAcceptConnection = async () => {
     try {
       const res = await axios.patch(`/connections/${user._id}`, {
