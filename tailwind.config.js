@@ -21,6 +21,7 @@ export default {
         postsbuttoncolor: "rgb(var(--postsbuttoncolor))",
         text: "rgb(var(--text))",
         companyheader: "rgb(var(--companyheader))",
+        companyheader1: "rgb(var(--companyheader1))",
         companysubheader: "rgb(var(--companysubheader))",
         navbuttons: "rgb(var(--navbuttons))",
         overview: "rgb(var(--overview))",

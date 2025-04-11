@@ -43,17 +43,14 @@
   --boxheading: 0, 0, 0;
   --postsbuttoncolor: 255, 255, 255;
   --text: 0, 0, 0;
-  /* black */
   --companyheader: 17, 24, 39;
-  /* gray-900 */
+  --companyheader1: 17, 24, 39;
   --companysubheader: 107, 114, 128;
-  /* gray-500 */
   --navbuttons: 55, 65, 81;
   --overview: 17, 24, 39;
   --overviewcomponenttext: 107, 114, 128;
   --postsslider: 55, 65, 81;
   --normaltext: 55, 65, 81;
-  /* gray-700 */
   --modalbackground: 229, 231, 235;
   --sliderbutton: 209, 213, 219;
   --uploadimage: 243, 244, 246;
@@ -112,6 +109,7 @@
   --postsbuttoncolor: 27, 31, 35;
   --text: 255, 255, 255;
   --companyheader: 255, 255, 255;
+  --companyheader1: 255, 255, 255;
   --companysubheader: 155, 156, 158;
   --navbuttons: 153, 154, 156;
   --overview: 153, 154, 156;
