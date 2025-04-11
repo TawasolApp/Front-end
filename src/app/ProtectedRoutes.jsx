@@ -3,13 +3,6 @@ import { Route, Routes } from "react-router-dom";
 import ChangePasswordPage from "../pages/Authentication/ChangePasswordPage";
 import ChangeEmailPage from "../pages/Authentication/ChangeEmailPage";
 
-import ProfileLayout from "../pages/UserProfile/profileLayout";
-import ProfilePage from "../pages/UserProfile/Components/ProfilePage.jsx";
-import EducationPage from "../pages/UserProfile/Components/Pages/EducationPage";
-import ExperiencePage from "../pages/UserProfile/Components/Pages/ExperiencePage";
-import CertificationsPage from "../pages/UserProfile/Components/Pages/CertificationsPage";
-import SkillsPage from "../pages/UserProfile/Components/Pages/SkillsPage";
-
 import CompanyLayout from "../pages/Company/CompanyLayout";
 import PostsPage from "../pages/Company/Components/Pages/PostsPage";
 import AboutPage from "../pages/Company/Components/Pages/AboutPage";
@@ -56,16 +49,7 @@ const ProtectedRoutes = () => {
         path="/settings"
         element={RenderWithNavbar(<ThemeSettings />)}
       />
-
-      <Route path="/users" element={<ProfileLayout />} />
-      <Route path="/users/:profileSlug" element={<ProfileLayout />}>
-        <Route index element={<ProfilePage />} />
-        <Route path="education" element={<EducationPage />} />
-        <Route path="workExperience" element={<ExperiencePage />} />
-        <Route path="certifications" element={<CertificationsPage />} />
-        <Route path="skills" element={<SkillsPage />} />
-      </Route>
-
+      
       <Route
         path="/connections"
         element={RenderWithNavbar(<ConnectionPage />)}
