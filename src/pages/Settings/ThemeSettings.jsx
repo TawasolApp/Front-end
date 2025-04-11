@@ -1,7 +1,10 @@
 import { useEffect, useState } from "react";
+import { ArrowForwardOutlined } from "@mui/icons-material";
+import { useNavigate } from "react-router-dom";
 
 const ThemeSettings = () => {
   const [theme, setTheme] = useState("light");
+  const navigate = useNavigate();
 
   useEffect(() => {
     const storedTheme = localStorage.getItem("theme");
@@ -35,7 +38,9 @@ const ThemeSettings = () => {
       <div className="max-w-2xl mx-auto">
         {/* Header Section */}
         <div className="mb-8">
-          <h1 className="text-2xl font-bold text-header mb-2">Theme Preferences</h1>
+          <h1 className="text-2xl font-bold text-header mb-2">
+            Theme Preferences
+          </h1>
           <p className="text-textContent opacity-90">
             Choose how Tawasol looks to you
           </p>
@@ -44,8 +49,8 @@ const ThemeSettings = () => {
         {/* Theme Options Card */}
         <div className="bg-cardBackground rounded-xl p-6 shadow-lg border border-cardBorder">
           <div className="space-y-4">
-            <label 
-              htmlFor="light-theme" 
+            <label
+              htmlFor="light-theme"
               className="flex items-center gap-4 p-4 rounded-lg hover:bg-itemHoverBackground transition-colors cursor-pointer"
             >
               <input
@@ -64,7 +69,7 @@ const ThemeSettings = () => {
               </div>
             </label>
 
-            <label 
+            <label
               htmlFor="dark-theme"
               className="flex items-center gap-4 p-4 rounded-lg hover:bg-itemHoverBackground transition-colors cursor-pointer"
             >
@@ -84,6 +89,34 @@ const ThemeSettings = () => {
               </div>
             </label>
           </div>
+        </div>
+
+        {/* Delete Account Section */}
+        <div className="mt-12 mb-8">
+          <h2 className="text-2xl font-bold text-header mb-6">
+            Account Management
+          </h2>
+
+          <div
+            className="bg-cardBackground rounded-xl p-6 shadow-lg border border-cardBorder cursor-pointer"
+            onClick={() => navigate("/auth/delete-account")}
+          >
+            <div className="flex flex-row items-center justify-between gap-4">
+              <div>
+                <h3 className="text-lg font-semibold text-red-600">
+                  Delete your account
+                </h3>
+              </div>
+              <button type="button">
+                <ArrowForwardOutlined className="text-textPlaceholder" />
+              </button>
+            </div>
+          </div>
+
+          <p className="text-textContent opacity-90 mt-2 px-4 py-1">
+            Permanently delete your account and all of your data. This action
+            cannot be undone.
+          </p>
         </div>
 
         <p className="mt-6 text-sm text-textContent opacity-75">
