@@ -1,5 +1,7 @@
 import React, { useState, useEffect, useRef, useCallback } from "react";
 import { axiosInstance } from "../../apis/axios";
+import defaultProfilePicture from "../../assets/images/defaultProfilePicture.png";
+import { useNavigate } from 'react-router-dom';
 
 const RecommendedUsers = ({ onConnect, sentRequests }) => {
   const [recommendedUsers, setRecommendedUsers] = useState([]);
@@ -9,6 +11,7 @@ const RecommendedUsers = ({ onConnect, sentRequests }) => {
   const [showModal, setShowModal] = useState(false);
   const [hasMore, setHasMore] = useState(true);
   const [page, setPage] = useState(1);
+  const navigate = useNavigate();
   const limit = 9; // Items per load
 
   const observer = useRef();
@@ -83,6 +86,10 @@ const RecommendedUsers = ({ onConnect, sentRequests }) => {
     return sentRequests.some((request) => request.userId === userId);
   };
 
+  const handleNameClick = (userId) => {
+    navigate(`/users/${userId}`);
+  };
+
   const handleShowAll = () => {
     setShowModal(true);
     // Reset pagination when opening modal
@@ -123,12 +130,13 @@ const RecommendedUsers = ({ onConnect, sentRequests }) => {
               >
                 <div className="flex flex-col items-center text-center space-y-2">
                   <img
-                    src={user.profilePicture}
+                    src={user.profilePicture || defaultProfilePicture}
                     alt={`${user.firstName} ${user.lastName}`}
                     className="w-14 h-14 rounded-full object-cover"
                   />
                   <div className="w-full">
-                    <h3 className="font-semibold text-textHeavyTitle truncate">
+                    <h3 className="font-semibold text-textHeavyTitle truncate hover:underline"
+                    onClick={() => handleNameClick(user.userId)}>
                       {user.firstName} {user.lastName}
                     </h3>
                     <p className="text-sm text-textPlaceholder line-clamp-2">
@@ -182,12 +190,13 @@ const RecommendedUsers = ({ onConnect, sentRequests }) => {
                   >
                     <div className="flex flex-col items-center text-center space-y-1">
                       <img
-                        src={user.profilePicture}
+                        src={user.profilePicture || defaultProfilePicture}
                         alt={`${user.firstName} ${user.lastName}`}
                         className="w-10 h-10 rounded-full object-cover"
                       />
                       <div className="w-full px-1">
-                        <h3 className="font-semibold text-sm text-textHeavyTitle truncate">
+                        <h3 className="font-semibold text-sm text-textHeavyTitle truncate hover:underline"
+                        onClick={() => handleNameClick(user.userId)}>
                           {user.firstName} {user.lastName}
                         </h3>
                         <p className="text-xs text-textPlaceholder line-clamp-2">

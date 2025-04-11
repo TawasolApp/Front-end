@@ -1,4 +1,6 @@
 import React, { useState, useEffect, useRef } from "react";
+import { useNavigate } from "react-router-dom";
+import defaultProfilePicture from "../../../assets/images/defaultProfilePicture.png";
 
 const ConnectionCard = ({
   imageUrl,
@@ -7,11 +9,19 @@ const ConnectionCard = ({
   experience,
   connectionDate,
   onRemove,
+  userId,
 }) => {
+  const navigate = useNavigate();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isConfirmationOpen, setIsConfirmationOpen] = useState(false);
   const menuRef = useRef(null);
 
+  const profilePicture = imageUrl || defaultProfilePicture;
+
+  const handleNameClick = () => {
+    navigate(`/users/${userId}`);  // Use userId in the route
+  };
+  
   const toggleMenu = () => setIsMenuOpen(!isMenuOpen);
   const openConfirmation = () => {
     setIsConfirmationOpen(true);
@@ -48,12 +58,13 @@ const ConnectionCard = ({
         {/* Left Section */}
         <div className="flex items-center flex-1">
           <img
-            src={imageUrl}
+            src={profilePicture}
             alt={fullName}
             className="w-12 h-12 rounded-full object-cover"
           />
           <div className="ml-3 flex-1">
-            <h3 className="text-lg font-semibold hover:underline cursor-pointer text-textHeavyTitle">
+            <h3 className="text-lg font-semibold hover:underline cursor-pointer text-textHeavyTitle"
+            onClick={handleNameClick}>
               {firstName} {lastName}
             </h3>
             <p className="text-sm text-textActivity">

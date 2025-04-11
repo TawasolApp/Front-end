@@ -6,7 +6,9 @@ import { useNavigate } from "react-router-dom";
 const EngagementMetrics = ({ setShowLikes, setShowComments }) => {
   const { post } = usePost();
   const navigate = useNavigate();
-  const reactions = post.reactCounts;
+  const reactions = Object.fromEntries(
+    Object.entries(post.reactCounts).filter(([key]) => key !== 'none')
+  );
   const comments = post.comments;
   const shares = post.shares;
 

@@ -8,18 +8,18 @@ const FeedContainer = () => {
       {/* Container with max width and centered content */}
       <div className="max-w-7xl mx-auto">
         {/* Single responsive layout that maintains component instances */}
-        <div className="flex flex-wrap justify-center px-2 sm:px-4 md:px-4 lg:px-4 xl:px-6">
+        <div className="flex flex-wrap justify-center px-0 sm:px-2 md:px-4 lg:px-4 xl:px-6">
           {/* Left Sidebar - changes width/display based on breakpoints */}
-          <div className="w-full sm:w-full md:w-48 lg:w-52 xl:w-56 flex-shrink-0 mt-4">
+          <div className="w-full sm:w-full md:w-48 lg:w-52 xl:w-56 flex-shrink-0 mt-2 md:mt-4">
             <div className="md:top-4 md:h-fit">
-              <div className="bg-cardBackground rounded-lg border border-cardBorder">
+              <div className="bg-cardBackground rounded-none sm:rounded-lg border border-cardBorder">
                 <LeftSideBar />
               </div>
             </div>
           </div>
 
           {/* Main Feed - changes width based on breakpoints */}
-          <main className="w-full min-w-[430px] mt-4 md:ml-4 md:flex-1 lg:w-full lg:max-w-md xl:max-w-xl xl:flex-shrink-0">
+          <main className="w-full mt-2 md:mt-4 md:ml-4 md:flex-1 lg:max-w-md xl:max-w-xl xl:flex-shrink-0">
             <MainFeed />
           </main>
 

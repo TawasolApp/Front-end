@@ -4,12 +4,12 @@ import ChangePasswordPage from "../pages/Authentication/ChangePasswordPage";
 import ChangeEmailPage from "../pages/Authentication/ChangeEmailPage";
 
 import ProfilePage from "../pages/UserProfile/Components/ProfilePage";
-import ProfileConnections from "../pages/UserProfile/Components/Connections";
-import ProfileLayout from "../pages/UserProfile/Components/profileLayout";
+import ProfileLayout from "../pages/UserProfile/profileLayout";
 import EducationPage from "../pages/UserProfile/Components/Pages/EducationPage";
 import ExperiencePage from "../pages/UserProfile/Components/Pages/ExperiencePage";
 import CertificationsPage from "../pages/UserProfile/Components/Pages/CertificationsPage";
 import SkillsPage from "../pages/UserProfile/Components/Pages/SkillsPage";
+import UserPostsPage from "../pages/UserProfile/Components/UserPostsSlider/UserPostsPage.jsx";
 
 import CompanyLayout from "../pages/Company/CompanyLayout";
 import PostsPage from "../pages/Company/Components/Pages/PostsPage";
@@ -28,8 +28,8 @@ import FeedContainer from "../pages/Feed/FeedContainer";
 import SinglePost from "../pages/Feed/SinglePost";
 import SavedPostsContainer from "../pages/SavedPosts/SavedPostsContainer";
 import RepostsContainer from "../pages/Feed/RepostsContainer";
-import SearchPosts from "../pages/Search/SearchPosts";
 
+import SearchContainer from "../pages/Search/SearchContainer";
 import TawasolNavbar from "../layouts/TawasolNavbar";
 import ThemeSettings from "../pages/Settings/ThemeSettings.jsx";
 
@@ -50,7 +50,7 @@ const ProtectedRoutes = () => {
 
       <Route
         path="/search/:searchText"
-        element={RenderWithNavbar(<SearchPosts />)}
+        element={RenderWithNavbar(<SearchContainer />)}
       />
 
       <Route path="/settings" element={RenderWithNavbar(<ThemeSettings />)} />
@@ -60,19 +60,22 @@ const ProtectedRoutes = () => {
         <Route index element={<ProfilePage />} />
         <Route path="education" element={<EducationPage />} />
         <Route path="workExperience" element={<ExperiencePage />} />
-        <Route path="certifications" element={<CertificationsPage />} />
+        <Route path="certification" element={<CertificationsPage />} />
         <Route path="skills" element={<SkillsPage />} />
-        <Route path="connections" element={<ProfileConnections />} />
+        <Route path="posts" element={<UserPostsPage />} />
       </Route>
 
       <Route
         path="/connections"
         element={RenderWithNavbar(<ConnectionPage />)}
       />
-      <Route path="/blocked" element={<BlockedPage />} />
-      <Route path="/follow" element={<FollowPage />} />
-      <Route path="/manage-connections" element={<ManageConnections />} />
-      <Route path="/network-box" element={<NetworkBox />} />
+      <Route path="/blocked" element={RenderWithNavbar(<BlockedPage />)} />
+      <Route path="/follow" element={RenderWithNavbar(<FollowPage />)} />
+      <Route
+        path="/manage-connections"
+        element={RenderWithNavbar(<ManageConnections />)}
+      />
+      <Route path="/network-box" element={RenderWithNavbar(<NetworkBox />)} />
 
       <Route path="/feed/:id" element={RenderWithNavbar(<SinglePost />)} />
       <Route path="/feed" element={RenderWithNavbar(<FeedContainer />)} />

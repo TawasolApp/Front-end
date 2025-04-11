@@ -5,6 +5,7 @@ import PeopleIcon from "@mui/icons-material/People";
 import BlockIcon from "@mui/icons-material/Block";
 import SwitchAccountIcon from "@mui/icons-material/SwitchAccount";
 import RecommendedUsers from "./RecommendedUsers";
+import defaultProfilePicture from "../../assets/images/defaultProfilePicture.png";
 
 const NetworkBox = () => {
   const navigate = useNavigate();
@@ -18,7 +19,6 @@ const NetworkBox = () => {
   });
   const [hasMore, setHasMore] = useState(true);
   const observer = useRef();
-
   const lastElementRef = useCallback(node => {
     if (loading) return;
     if (observer.current) observer.current.disconnect();
@@ -219,7 +219,7 @@ const NetworkBox = () => {
                       <div className="flex items-center justify-between">
                         <div className="flex items-center space-x-4">
                           <img
-                            src={request.profilePicture}
+                            src={request.profilePicture || defaultProfilePicture}
                             alt={`${request.firstName} ${request.lastName}`}
                             className="w-12 h-12 rounded-full object-cover"
                           />

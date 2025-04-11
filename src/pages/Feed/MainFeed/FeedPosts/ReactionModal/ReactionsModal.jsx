@@ -23,13 +23,17 @@ const ReactionsModal = ({ API_URL, setShowLikes, reactCounts }) => {
   // Process reactCounts to include "All" category
   const processedReactCounts = useMemo(() => {
     if (!reactCounts) return { all: 0 };
-
-    const total = Object.values(reactCounts).reduce(
-      (sum, count) => sum + (count || 0),
+  
+    const filtered = Object.entries(reactCounts)
+      .filter(([key]) => key !== 'none');
+  
+    const total = filtered.reduce(
+      (sum, [, count]) => sum + (count || 0),
       0,
     );
+  
     return {
-      ...reactCounts,
+      ...Object.fromEntries(filtered),
       all: total,
     };
   }, [reactCounts]);
@@ -201,7 +205,7 @@ const ReactionsModal = ({ API_URL, setShowLikes, reactCounts }) => {
                 const IconComponent = reactionIcons[reaction.type]?.Icon;
                 return (
                   <Link
-                    to={`/in/${reaction.authorId}`}
+                    to={`/users/${reaction.authorId}`}
                     key={reaction.likeId}
                     className="flex items-center gap-3 hover:bg-buttonIconHover rounded-lg relative p-2 hover:cursor-pointer"
                   >

@@ -1,79 +1,117 @@
 import React, { useState, useEffect } from "react";
-import axios from "axios";
-// TODOs
-//1) call connect/follow apis to patch/delete connections in handle connect--> Omar
-//2)do message modal in handleMessage  ==>Khaled
+import { axiosInstance as axios } from "../../../../apis/axios.js";
+import ConfirmModal from "../ReusableModals/ConfirmModal.jsx";
 
-function ViewerView({ user }) {
-  const [isFollowing, setIsFollowing] = useState(false);
-  const [isConnected, setIsConnected] = useState(false);
-
-  // Handle follow/unfollow logic
+function ViewerView({
+  user,
+  viewerId,
+  initialConnectStatus,
+  initialFollowStatus,
+}) {
+  const [connectStatus, setConnectStatus] = useState(initialConnectStatus);
+  const [isFollowing, setIsFollowing] = useState(
+    initialFollowStatus === "Following" || initialConnectStatus === "Connection"
+  );
+  const [showUnfollowModal, setShowUnfollowModal] = useState(false);
+  const [showAcceptModal, setShowAcceptModal] = useState(false);
   useEffect(() => {
-    if (!viewerId || !user?._id || viewerId === user._id) return;
+    if (connectStatus === "Connection") {
+      setIsFollowing(true);
+    } else if (connectStatus === "No Connection") {
+      setIsFollowing(false);
+    }
+  }, [connectStatus]);
 
-    // check if current user is following this user
-    // Check following status
-    axios.get("/connections/following").then((res) => {
-      const followed = res.data.some(
-        (item) =>
-          item.sending_party === viewerId &&
-          item.receiving_party === user._id &&
-          item.status === "Following"
-      );
-      setIsFollowing(followed);
-    });
+  const connectionStatusLabel = {
+    Connection: "Connected",
+    Pending: "Pending",
+    Request: "Accept", // Changed from "Request" to "Accept" for better UX
+    "No Connection": "Connect",
+  };
 
-    // Check connection status
-    axios.get("/connections").then((res) => {
-      const connected = res.data.some(
-        (item) =>
-          item.sending_party === viewerId &&
-          item.receiving_party === user._id &&
-          item.status === "Connected"
-      );
-      setIsConnected(connected);
-    });
-  }, [user._id, viewerId]);
-
-  // Follow handler
   const handleFollow = async () => {
-    try {
-      if (!isFollowing) {
-        await axios.post("/connections/follow", {
-          sending_party: viewerId,
-          receiving_party: user._id,
-          status: "Following",
+    if (!isFollowing) {
+      try {
+        const res = await axios.post("/connections/follow", {
+          userId: user._id,
         });
-      } else {
-        await axios.delete("/connections/follow", {
-          data: {
-            sending_party: viewerId,
-            receiving_party: user._id,
-            status: "Following",
-          },
-        });
+        console.log("Followed successfully:", res.data);
+        setIsFollowing(true);
+      } catch (err) {
+        console.error("Follow error:", err.response?.data || err.message);
       }
-      setIsFollowing((prev) => !prev);
-    } catch (err) {
-      console.error("Follow error:", err.response?.data || err.message);
+    } else {
+      setShowUnfollowModal(true);
     }
   };
 
-  // Connect handler
+  const confirmUnfollow = async () => {
+    try {
+      const res = await axios.delete(`/connections/unfollow/${user._id}`);
+      console.log("Unfollowed successfully:", res.status);
+      setIsFollowing(false);
+    } catch (err) {
+      console.error("Unfollow error:", err.response?.data || err.message);
+    } finally {
+      setShowUnfollowModal(false);
+    }
+  };
   const handleConnect = async () => {
     try {
-      if (!isConnected) {
-        await axios.post("/connections", {
-          sending_party: viewerId,
-          receiving_party: user._id,
-        });
-      } else {
+      if (connectStatus === "Connection") {
+        // Handle disconnection
         await axios.delete(`/connections/${user._id}`);
+        setConnectStatus("No Connection"); // Update state immediately
+
+        // Try to unfollow after disconnecting, but ignore 404 errors
+        try {
+          await axios.delete(`/connections/unfollow/${user._id}`);
+        } catch (err) {
+          if (err.response?.status !== 404) {
+            console.error("Unfollow error:", err.response?.data || err.message);
+          }
+        }
+        setIsFollowing(false);
+      } else if (connectStatus === "No Connection") {
+        // Send connection request
+        const res = await axios.post("/connections", {
+          userId: user._id,
+        });
+        if (res.status === 201) {
+          console.log("Connection request sent:", res.data);
+          setConnectStatus("Pending"); // Update state immediately
+        }
+      } else if (connectStatus === "Request") {
+        // Show modal for accepting connection request
+        setShowAcceptModal(true);
+      } else if (connectStatus === "Pending") {
+        // Handle canceling a pending request
+        await axios.delete(`/connections/${user._id}/pending`);
+        setConnectStatus("No Connection"); // Update state immediately after successful deletion
       }
-      setIsConnected((prev) => !prev);
     } catch (err) {
-      console.error("Connect error:", err.response?.data || err.message);
+      console.error("Connection error:", err.response?.data || err.message);
+      if (err.response?.status === 409) {
+        alert("Connection request already exists");
+      }
+    }
+  };
+  const confirmAcceptConnection = async () => {
+    try {
+      const res = await axios.patch(`/connections/${user._id}`, {
+        isAccept: true,
+      });
+      if (res.status === 200) {
+        console.log("Connection accepted:", res.data);
+        setConnectStatus("Connection");
+      }
+    } catch (err) {
+      console.error(
+        "Accept connection error:",
+        err.response?.data || err.message
+      );
+    } finally {
+      setShowAcceptModal(false);
     }
   };
 
@@ -82,33 +120,64 @@ function ViewerView({ user }) {
   };
 
   return (
-    <div className="flex gap-2">
+    <div
+      data-testid="viewer-view"
+      className=" flex gap-2 flex-wrap sm:flex-nowrap"
+    >
       <button
-        className="px-4 py-2 bg-blue-600 text-white rounded-full text-sm"
+        className="px-4 py-2 bg-blue-600 text-boxbackground   rounded-full text-sm"
         onClick={handleMessage}
+        aria-label="Send message"
       >
         Message
       </button>
 
-      {/* Connect Button */}
       <button
-        className={`px-4 py-2 border rounded-full text-sm transition-all duration-300 ease-in-out
-        ${isConnected ? "bg-blue-600 text-white" : "text-blue-600 border-blue-600"}
-        hover:bg-blue-100 hover:text-blue-700`}
+        className={`px-4 py-2 border rounded-full text-sm capitalize transition-all duration-300 ease-in-out ${
+          ["Connection", "Pending", "Request"].includes(connectStatus)
+            ? "bg-blue-600 text-boxbackground  "
+            : "text-blue-600 border-blue-600"
+        } hover:bg-blue-100 hover:text-blue-700`}
         onClick={handleConnect}
+        aria-label={connectionStatusLabel[connectStatus] || "Connect"}
       >
-        {isConnected ? "Connected" : "Connect"}
+        {connectionStatusLabel[connectStatus] || "Connect"}
       </button>
 
-      {/* Follow Button */}
       <button
-        className={`px-4 py-2 border rounded-full text-sm transition-all duration-300 ease-in-out
-        ${isFollowing ? "bg-blue-600 text-white" : "text-blue-600 border-blue-600"}
-        hover:bg-blue-100 hover:text-blue-700`}
+        className={`px-4 py-2 border rounded-full text-sm transition-all duration-300 ease-in-out ${
+          isFollowing
+            ? "bg-blue-600 text-boxbackground  "
+            : "text-blue-600 border-blue-600"
+        } hover:bg-blue-100 hover:text-blue-700`}
         onClick={handleFollow}
+        aria-label={isFollowing ? "Unfollow user" : "Follow user"}
       >
-        {isFollowing ? "Following" : "Follow"}
+        {isFollowing ? "✓ Following" : "+ Follow"}
       </button>
+
+      {showUnfollowModal && (
+        <ConfirmModal
+          title={`Unfollow ${user.firstName} ${user.lastName}`}
+          message={`Stop seeing posts from ${user.firstName} on your feed. They won't be notified that you've unfollowed.`}
+          isOpen={showUnfollowModal}
+          onCancel={() => setShowUnfollowModal(false)}
+          onConfirm={confirmUnfollow}
+          confirmLabel="Unfollow"
+          cancelLabel="Cancel"
+        />
+      )}
+      {showAcceptModal && (
+        <ConfirmModal
+          title={`Accept Connection Request from ${user.firstName} ${user.lastName}`}
+          message={`Would you like to connect with ${user.firstName} and see their posts in your feed?`}
+          isOpen={showAcceptModal}
+          onCancel={() => setShowAcceptModal(false)}
+          onConfirm={confirmAcceptConnection}
+          confirmLabel="Accept"
+          cancelLabel="Cancel"
+        />
+      )}
     </div>
   );
 }

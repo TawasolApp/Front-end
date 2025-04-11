@@ -19,7 +19,6 @@ import ProtectedRoutes from "./ProtectedRoutes";
 import VerificationPendingPage from "../pages/Authentication/VerificationPendingPage";
 import NewPasswordPage from "../pages/Authentication/NewPasswordPage";
 
-
 const App = () => {
 
   useEffect(() => {
@@ -31,10 +30,9 @@ const App = () => {
   }, []);
 
   const getCurrentTheme = () => {
-    const rootElement = document.documentElement;
-    console.log(rootElement.classList)
-    const theme = rootElement.classList.contains('dark') ? 'dark' : 'light';
-    return theme;
+    const savedTheme = localStorage.getItem("theme");
+    const themeToSet = savedTheme || "light";
+    return themeToSet;
   };
 
   return (
@@ -76,7 +74,6 @@ const App = () => {
           }
         />
       </Routes>
-
       {/* Toast Container for the toasts */}
       <ToastContainer
         position="bottom-left"

@@ -43,9 +43,9 @@ const TawasolNavbar = () => {
     },
     {
       name: "My Network",
-      path: "/connections",
-      icon: currentPath === "/connections" ? <GroupIcon sx={{ transform: "scaleX(-1)" }} /> : <GroupIcon />,
-      active: currentPath === "/connections",
+      path: "/network-box",
+      icon: currentPath === "/network-box" ? <GroupIcon sx={{ transform: "scaleX(-1)" }} /> : <GroupIcon />,
+      active: currentPath === "/network-box",
     },
     {
       name: "Jobs",
@@ -67,7 +67,7 @@ const TawasolNavbar = () => {
     },
   ]
 
-  const Icon = getIconComponent("in-black")
+  const Icon = getIconComponent("tawasol-icon")
 
   useEffect(() => {
     function handleClickOutside(event) {
@@ -120,7 +120,6 @@ const TawasolNavbar = () => {
     if (e.key === "Enter" && searchText.trim()) {
       navigate(`/search/${encodeURIComponent(searchText.trim())}`)
       setIsSearchFocused(false)
-      setSearchText("")
     }
   }
 
@@ -128,7 +127,6 @@ const TawasolNavbar = () => {
     if (searchText.trim()) {
       navigate(`/search/${encodeURIComponent(searchText.trim())}`)
       setIsSearchFocused(false)
-      setSearchText("")
     }
   }
 

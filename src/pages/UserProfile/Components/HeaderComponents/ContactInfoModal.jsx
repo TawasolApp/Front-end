@@ -20,39 +20,36 @@ function ContactInfoModal({ user, isOpen, onClose, isOwner }) {
   const profileLink = `${window.location.origin}/users/${user._id}`;
 
   return (
-    <div className="fixed inset-0 bg-black/40 z-50 flex justify-center items-start pt-24 px-4">
-      <div className="bg-white rounded-lg w-full max-w-md shadow-xl relative overflow-hidden">
+    <div className="bg-modalbackground fixed inset-0 bg-black/40 z-50 flex justify-center items-start pt-24 px-4">
+      <div className="bg-boxbackground rounded-lg w-full max-w-md shadow-xl relative overflow-hidden">
         {/* Close Button */}
         <button
           onClick={onClose}
-          className="absolute top-4 right-4 text-gray-500 hover:text-black text-xl"
+          className="absolute top-3 right-3 text-normaltext hover:text-companyheader text-2xl"
           title="Close"
+          aria-label="Close modal"
         >
           &times;
         </button>
-
         {/* Header */}
         <div className="pt-4 px-4">
-          <h2 className="text-lg font-semibold text-gray-900">
+          <h2 className="text-lg font-semibold text-companyheader">
             {user.firstName} {user.lastName}
           </h2>
         </div>
-
         {/* Line after name */}
         <div className="border-b mt-2" />
-
         {/* Contact Info Heading */}
         <div className="px-4 pt-2 pb-3 ">
-          <p className="text-sm text-gray-700 font-semibold">Contact Info</p>
+          <p className="text-sm text-normaltext font-semibold">Contact Info</p>
         </div>
-
         {/* Body */}
-        <div className="p-4 space-y-4 text-sm text-gray-800">
+        <div className="p-4 space-y-4 text-sm text-normaltext">
           {/* Profile Link */}
           <div className="flex items-start gap-2">
             <span className="text-xl">🔗</span>
             <div className="flex flex-col">
-              <span className="text-gray-500">
+              <span className="text-normaltext">
                 {isOwner ? "Your Profile" : `${user.firstName}'s Profile`}
               </span>
               <a
@@ -67,18 +64,20 @@ function ContactInfoModal({ user, isOpen, onClose, isOwner }) {
           </div>
 
           {/* Email */}
-          <div className="flex items-start gap-2">
-            <span className="text-xl">✉️</span>
-            <div className="flex flex-col">
-              <span className="text-gray-500">Email</span>
-              <a
-                href={`mailto:${email}`}
-                className="text-blue-600 hover:underline break-all"
-              >
-                {email}
-              </a>
+          {isOwner && (
+            <div className="flex items-start gap-2">
+              <span className="text-xl">✉️</span>
+              <div className="flex flex-col">
+                <span className="text-normaltext">Email</span>
+                <a
+                  href={`mailto:${email}`}
+                  className="text-blue-600 hover:underline break-all"
+                >
+                  {email}
+                </a>
+              </div>
             </div>
-          </div>
+          )}
         </div>
       </div>
     </div>

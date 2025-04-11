@@ -52,7 +52,7 @@ const LikeButton = () => {
           />
           <span
             style={{ color }}
-            className="text-sm font-semibold text-gray-600 group-hover:text-black"
+            className="text-sm font-semibold text-gray-600 group-hover:text-black hidden sm:inline"
           >
             {label}
           </span>
@@ -66,7 +66,7 @@ const LikeButton = () => {
           sx={{ fontSize: 16 }}
           className={`text-textActivity group-hover:text-textActivityHover ${isReacted ? "animate-pop" : ""}`}
         />
-        <span className="text-sm font-semibold text-textActivity group-hover:text-textActivityHover">
+        <span className="text-sm font-semibold text-textActivity group-hover:text-textActivityHover hidden sm:inline">
           Like
         </span>
       </>

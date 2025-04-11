@@ -32,7 +32,16 @@ describe('RepostsContainer', () => {
     
     // Check that the main element has the correct classes
     const mainElement = container.querySelector('main');
-    expect(mainElement).toHaveClass('w-[540px]', 'flex-grow-0', 'mx-2', 'space-y-4');
+    expect(mainElement).toHaveClass(
+      'w-full',
+      'mt-2',
+      'md:mt-4',
+      'md:ml-4',
+      'md:flex-1',
+      'lg:max-w-md',
+      'xl:max-w-xl',
+      'xl:flex-shrink-0'
+    );
   });
 
   it('passes the correct props to MainFeed based on URL params', () => {

@@ -22,7 +22,7 @@ function ProfilePicture({
       />
       {isOwner && (
         <button
-          className="absolute top-20 -right-1 w-7 h-7 bg-blue-600 text-white rounded-full flex items-center justify-center border-2 border-white shadow z-50"
+          className="absolute bottom-1  -right-1 w-7 h-7 bg-blue-400 text-white rounded-full flex items-center justify-center border-2 border-white shadow z-50"
           onClick={onUpload}
           title="Edit Profile Picture"
         >

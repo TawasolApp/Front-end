@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { axiosInstance as axios } from "../../../../apis/axios.js";
-
+import ConfirmModal from "../ReusableModals/ConfirmModal.jsx";
 function EditProfileModal({ user, isOpen, onClose, onSave }) {
   const [editedUser, setEditedUser] = useState({ ...user });
   const [errors, setErrors] = useState({});
@@ -93,9 +93,6 @@ function EditProfileModal({ user, isOpen, onClose, onSave }) {
     onSave,
   ]);
 
-  // function handleSave() {
-  //   setIsSaving(true); // Set isSaving to true, triggering the useEffect above
-  // }
   function handleSave() {
     let validationErrors = {};
     if (!editedUser.firstName?.trim())
@@ -136,6 +133,8 @@ function EditProfileModal({ user, isOpen, onClose, onSave }) {
     setShowDiscardModal(false);
     onClose();
   }
+  const hasUnsavedChanges = JSON.stringify(editedUser) !== JSON.stringify(user);
+
   return (
     <div
       className={`fixed inset-0 z-50 ${
@@ -149,15 +148,16 @@ function EditProfileModal({ user, isOpen, onClose, onSave }) {
       >
         <button
           onClick={handleCancel}
-          className="absolute top-4 right-4 text-l text-gray-600 hover:text-gray-900"
+          className="absolute top-2 right-2  text-normaltext hover:text-companyheader p-2 text-3xl"
           aria-label="Close modal"
         >
-          ✖
+          &times;{" "}
         </button>
+
         <h2 className="text-xl font-bold mb-4 text-text">Edit Profile</h2>
         <label
           htmlFor="firstName"
-          className="block text-sm font-medium text-text2"
+          className="block text-sm font-medium text-normaltext"
         >
           First name *
         </label>
@@ -165,18 +165,21 @@ function EditProfileModal({ user, isOpen, onClose, onSave }) {
           id="firstName"
           type="text"
           name="firstName"
+          autoComplete="off"
           value={editedUser.firstName || ""}
           onChange={handleChange}
-          className={`border p-2 w-full mb-2 bg-boxbackground text-companyheader2 ${
+          className={`border p-2 w-full mb-2 bg-boxbackground text-companysubheader ${
             errors.firstName ? "border-red-500" : ""
           }`}
         />
         {errors.firstName && (
-          <p className="text-red-500 text-sm">{errors.firstName}</p>
+          <p className="text-red-500 text-sm" data-testid="firstName-error">
+            {errors.firstName}
+          </p>
         )}
         <label
           htmlFor="lastName"
-          className="block text-sm font-medium text-text2"
+          className="block text-sm font-medium text-normaltext"
         >
           Last name *
         </label>
@@ -184,9 +187,10 @@ function EditProfileModal({ user, isOpen, onClose, onSave }) {
           id="lastName"
           type="text"
           name="lastName"
+          autoComplete="off"
           value={editedUser.lastName || ""}
           onChange={handleChange}
-          className={`border p-2 w-full mb-2 bg-boxbackground text-companyheader2 ${
+          className={`border p-2 w-full mb-2 bg-boxbackground text-companysubheader ${
             errors.lastName ? "border-red-500" : ""
           }`}
         />
@@ -197,7 +201,7 @@ function EditProfileModal({ user, isOpen, onClose, onSave }) {
         )}
         <label
           htmlFor="location"
-          className="block text-sm font-medium text-text2"
+          className="block text-sm font-medium text-normaltext"
         >
           Location *
         </label>
@@ -205,9 +209,10 @@ function EditProfileModal({ user, isOpen, onClose, onSave }) {
           id="location"
           type="text"
           name="location"
+          autoComplete="off"
           value={editedUser.location || ""}
           onChange={handleChange}
-          className={`border p-2 w-full mb-2 bg-boxbackground text-companyheader2 ${
+          className={`border p-2 w-full mb-2 bg-boxbackground text-companysubheader ${
             errors.location ? "border-red-500" : ""
           }`}
         />
@@ -219,7 +224,7 @@ function EditProfileModal({ user, isOpen, onClose, onSave }) {
 
         <label
           htmlFor="industry"
-          className="block text-sm font-medium text-text2"
+          className="block text-sm font-medium text-normaltext"
         >
           Industry *
         </label>
@@ -227,9 +232,10 @@ function EditProfileModal({ user, isOpen, onClose, onSave }) {
           id="industry"
           type="text"
           name="industry"
+          autoComplete="off"
           value={editedUser.industry || ""}
           onChange={handleChange}
-          className={`border p-2 w-full mb-2  bg-boxbackground text-companyheader2 ${
+          className={`border p-2 w-full mb-2  bg-boxbackground text-companysubheader ${
             errors.industry ? "border-red-500" : ""
           }`}
         />
@@ -240,14 +246,14 @@ function EditProfileModal({ user, isOpen, onClose, onSave }) {
         )}
         <label
           htmlFor="workExperience"
-          className="block text-sm font-medium text-text2"
+          className="block text-sm font-medium text-normaltext"
         >
           Work Experience
         </label>
         <select
           id="workExperience"
           name="experience"
-          className="border p-2 w-full mb-2 bg-boxbackground text-companyheader2"
+          className="border p-2 w-full mb-2 bg-boxbackground text-companysubheader"
           value={selectedExperienceIndex}
           onChange={(e) => setSelectedExperienceIndex(Number(e.target.value))}
         >
@@ -259,14 +265,14 @@ function EditProfileModal({ user, isOpen, onClose, onSave }) {
         </select>
         <label
           htmlFor="education"
-          className="block text-sm font-medium text-text2"
+          className="block text-sm font-medium text-normaltext"
         >
           Education
         </label>
         <select
           id="education"
           name="education"
-          className="border p-2 w-full mb-2 bg-boxbackground text-companyheader2"
+          className="border p-2 w-full mb-2 bg-boxbackground text-companysubheader"
           value={selectedEducationIndex}
           onChange={(e) => setSelectedEducationIndex(Number(e.target.value))}
         >
@@ -279,41 +285,31 @@ function EditProfileModal({ user, isOpen, onClose, onSave }) {
         <div className="flex justify-end mt-4">
           <button
             onClick={handleSave}
-            className="px-4 py-2 bg-blue-500 text-white rounded-md"
+            disabled={!hasUnsavedChanges || isSaving}
+            className={`px-4 py-2 rounded-full transition duration-200 text-white ${
+              !hasUnsavedChanges || isSaving
+                ? "bg-blue-400 cursor-not-allowed opacity-50"
+                : "bg-blue-600 hover:bg-blue-700"
+            }`}
           >
-            Save
+            {isSaving ? "Saving..." : "Save"}
           </button>
         </div>
       </div>
       {showDiscardModal && (
-        <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
-          <div className="bg-boxbackground p-6 rounded-lg shadow-lg w-[350px] relative">
-            <button
-              onClick={() => setShowDiscardModal(false)}
-              className="absolute top-2 right-2 text-gray-500 hover:text-gray-700 p-2 text-2xl p-3"
-            >
-              &times;
-            </button>
-            <h3 className="text-lg font-semibold text-text">Discard changes</h3>
-            <p className="text-companyheader2 mt-2 ">
-              Are you sure you want to discard the changes you made?
-            </p>
-
-            <div className="flex justify-end mt-4 space-x-2">
-              <button
-                onClick={() => setShowDiscardModal(false)}
-                className="px-4 py-2 border border-blue-500 text-blue-500 rounded-full hover:bg-blue-50 transition duration-200"
-              >
-                No thanks
-              </button>
-              <button
-                onClick={confirmDiscard}
-                className="px-4 py-2 bg-blue-600 text-white rounded-full hover:bg-blue-700 transition duration-200"
-              >
-                Discard
-              </button>
-            </div>
-          </div>
+        <ConfirmModal
+          title="Discard changes"
+          message="Are you sure you want to discard the changes you made?"
+          onConfirm={confirmDiscard}
+          onCancel={() => setShowDiscardModal(false)}
+          confirmLabel="Discard"
+          cancelLabel="No thanks"
+        />
+      )}
+      {isSaving && (
+        <div className="fixed inset-0 z-50 bg-boxheading bg-opacity-60 flex items-center justify-center">
+          <div className="w-8 h-8 border-4 border-gray-300 border-t-blue-500 rounded-full animate-spin"></div>
+          <span className="ml-3 text-text text-lg font-medium">Saving...</span>
         </div>
       )}
     </div>

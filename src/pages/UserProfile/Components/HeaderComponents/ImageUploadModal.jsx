@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { FiUpload, FiTrash2 } from "react-icons/fi";
-import ConfirmModal from "../GenericDisplay/ConfirmModal";
+import ConfirmModal from "../ReusableModals/ConfirmModal";
+
 function ImageUploadModal({
   isOpen,
   onClose,
@@ -9,10 +10,10 @@ function ImageUploadModal({
   defaultImage,
   uploadType, // 'profile' or 'cover'
 }) {
-  const [selectedFile, setSelectedFile] = useState(null); // holds actual File object
-  const [previewImage, setPreviewImage] = useState(null); // base64 for preview
+  const [selectedFile, setSelectedFile] = useState(null);
+  const [previewImage, setPreviewImage] = useState(null);
   const [isSaving, setIsSaving] = useState(false);
-  const [showDeleteConfirm, setShowDeleteConfirm] = useState(false); // State for delete confirmation modal
+  const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
 
   useEffect(() => {
     if (isOpen) {
@@ -24,14 +25,15 @@ function ImageUploadModal({
   }, [isOpen]);
 
   const isDefaultImage = currentImage === defaultImage;
+  const hasUnsavedChanges = previewImage && previewImage !== currentImage;
 
   const handleFileChange = (event) => {
     const file = event.target.files[0];
     if (file) {
-      setSelectedFile(file); //  this is what i send to backend
+      setSelectedFile(file);
       const reader = new FileReader();
       reader.onloadend = () => {
-        setPreviewImage(reader.result); // for preview only
+        setPreviewImage(reader.result);
       };
       reader.readAsDataURL(file);
     }
@@ -40,41 +42,47 @@ function ImageUploadModal({
   const handleSave = () => {
     if (!selectedFile) return;
     setIsSaving(true);
-    onUpload(selectedFile); //  send real File object
-    setSelectedFile(null);
-    setPreviewImage(null);
-    setIsSaving(false);
-    onClose();
+    onUpload(selectedFile);
+    setTimeout(() => {
+      setSelectedFile(null);
+      setPreviewImage(null);
+      setIsSaving(false);
+      onClose();
+    }, 600); // simulate smooth UX
   };
 
   const handleDelete = () => {
-    setShowDeleteConfirm(true); // Show confirmation modal before delete
+    setShowDeleteConfirm(true);
   };
 
   const handleDeleteConfirm = () => {
     setIsSaving(true);
-    onUpload(null); // tells parent to remove image
-    setSelectedFile(null);
-    setPreviewImage(null);
-    setIsSaving(false);
-    setShowDeleteConfirm(false); // Close the delete confirmation modal
-    onClose();
+    onUpload(null);
+    setTimeout(() => {
+      setSelectedFile(null);
+      setPreviewImage(null);
+      setIsSaving(false);
+      setShowDeleteConfirm(false);
+      onClose();
+    }, 600);
   };
 
   const handleDeleteCancel = () => {
-    setShowDeleteConfirm(false); // Close the delete confirmation modal without deleting
+    setShowDeleteConfirm(false);
   };
 
   if (!isOpen) return null;
 
   return (
     <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
-      <div className="bg-boxbackground p-6 rounded-lg shadow-lg w-96">
-        <h2 className="text-xl font-semibold mb-3 text-text">Upload Image</h2>
+      <div className="bg-boxbackground p-6 rounded-lg shadow-lg w-full max-w-md relative">
+        <h2 className="text-xl font-semibold mb-3 text-text">
+          Upload {uploadType === "cover" ? "Cover" : "Profile"} Image
+        </h2>
 
         {/* Upload Section */}
-        <div className="border-dashed border-2 border-gray-300 p-4 text-center">
-          <label htmlFor="fileUpload" className="cursor-pointer">
+        <div className="border-dashed border-2 border-gray-300 p-4 text-center rounded-md">
+          <label htmlFor="fileUpload" className="cursor-pointer block">
             {previewImage ? (
               <img
                 src={previewImage}
@@ -82,13 +90,11 @@ function ImageUploadModal({
                 className="w-full h-40 object-cover rounded-md"
               />
             ) : (
-              <>
-                <div className="flex items-center justify-center gap-2 text-gray-600">
-                  <FiUpload className="text-xl font-semibold" />
-                  <p className="font-semibold">Choose file</p>
-                </div>
-                <p className="text-gray-600 text-sm">Upload to see preview</p>
-              </>
+              <div className="flex flex-col items-center text-gray-600">
+                <FiUpload className="text-2xl mb-1" />
+                <p className="font-semibold">Choose file</p>
+                <p className="text-sm text-gray-500">Upload to see preview</p>
+              </div>
             )}
           </label>
           <input
@@ -101,37 +107,50 @@ function ImageUploadModal({
           />
         </div>
 
-        {/* Buttons */}
-        <div className="mt-4 flex justify-end space-x-2">
+        {/* Action Buttons */}
+        <div className="mt-5 flex justify-end space-x-2">
           <button
             onClick={onClose}
-            className="px-4 py-2 text-gray-600 border border-gray-300 rounded-md"
             disabled={isSaving}
+            className="px-4 py-2 border border-blue-500 text-blue-500 rounded-full hover:bg-blue-50 transition duration-200"
           >
             Cancel
           </button>
 
-          {currentImage && currentImage !== defaultImage && !previewImage && (
+          {currentImage && !isDefaultImage && !previewImage && (
             <button
               onClick={handleDelete}
-              className="px-4 py-2 bg-red-500 text-white rounded-md flex items-center gap-1"
               disabled={isSaving}
+              className={`px-4 py-2 text-white rounded-full transition duration-200 ${
+                isSaving
+                  ? "bg-blue-400 cursor-not-allowed opacity-60"
+                  : "bg-blue-600 hover:bg-blue-700"
+              }`}
             >
-              <FiTrash2 /> Delete
+              {isSaving ? (
+                "Deleting..."
+              ) : (
+                <span className="flex items-center gap-1">Delete</span>
+              )}
             </button>
           )}
 
           {previewImage && (
             <button
-              className="px-4 py-2 bg-blue-500 text-white rounded-md"
               onClick={handleSave}
-              disabled={isSaving}
+              disabled={!hasUnsavedChanges || isSaving}
+              className={`px-4 py-2 text-white rounded-full transition duration-200 ${
+                !hasUnsavedChanges || isSaving
+                  ? "bg-blue-400 cursor-not-allowed opacity-60"
+                  : "bg-blue-600 hover:bg-blue-700"
+              }`}
             >
-              Save
+              {isSaving ? "Saving..." : "Save"}
             </button>
           )}
         </div>
       </div>
+
       {/* Confirm Delete Modal */}
       {showDeleteConfirm && (
         <ConfirmModal

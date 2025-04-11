@@ -295,7 +295,12 @@ describe('MainFeed', () => {
     
     await waitFor(() => {
       expect(axiosInstance.get).toHaveBeenCalledWith('posts', { 
-        params: { page: 1, q: 'searchTerm' } 
+        params: { 
+          page: 1, 
+          q: 'searchTerm',
+          timeframe: null,
+          network: null 
+        } 
       });
     });
   });

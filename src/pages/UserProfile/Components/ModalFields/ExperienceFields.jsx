@@ -5,14 +5,17 @@ import defaultExperienceImage from "../../../../assets/images/defaultExperienceI
 const employmentOptions = [
   { value: "full_time", label: "Full-time" },
   { value: "part_time", label: "Part-time" },
-  { value: "internship", label: "Internship" },
+  { value: "self_employed", label: "Self-employed" },
   { value: "freelance", label: "Freelance" },
+  { value: "contract", label: "Contract" },
+  { value: "internship", label: "Internship" },
+  { value: "apprenticeship", label: "Apprenticeship" },
 ];
 
 const locationOptions = [
   { value: "on_site", label: "On-site" },
-  { value: "remote", label: "Remote" },
   { value: "hybrid", label: "Hybrid" },
+  { value: "remote", label: "Remote" },
 ];
 
 function ExperienceFields({ formData, setFormData, handleChange, errors }) {
@@ -20,6 +23,7 @@ function ExperienceFields({ formData, setFormData, handleChange, errors }) {
   const [inputValue, setInputValue] = useState(formData.company || "");
   const [showDropdown, setShowDropdown] = useState(false);
   const [highlightedIndex, setHighlightedIndex] = useState(-1);
+  const [currentlyWorking, setCurrentlyWorking] = useState(!formData.endDate);
 
   useEffect(() => {
     axios
@@ -39,15 +43,28 @@ function ExperienceFields({ formData, setFormData, handleChange, errors }) {
     : [];
 
   const handleCompanySelect = (company) => {
+    console.log("📦 Selected company object:", company); // 👈 ADD THIS
+
     setInputValue(company.name);
     setFormData((prev) => ({
       ...prev,
       company: company.name,
-      workExperiencePicture: company.logo || defaultExperienceImage,
+      companyId: company.companyId, //  ADD THIS
+      companyLogo: company.logo || defaultExperienceImage,
     }));
     setShowDropdown(false);
   };
 
+  const handleCurrentlyWorkingChange = (e) => {
+    const checked = e.target.checked;
+    setCurrentlyWorking(checked);
+    if (checked) {
+      setFormData((prev) => ({
+        ...prev,
+        endDate: "", // remove endDate if user is currently working
+      }));
+    }
+  };
   return (
     <>
       <h2 className="text-lg font-semibold mb-4 text-text">Add experience</h2>
@@ -63,7 +80,8 @@ function ExperienceFields({ formData, setFormData, handleChange, errors }) {
         placeholder="Ex: Retail Sales Manager"
         value={formData.title || ""}
         onChange={handleChange}
-        className="border p-2 w-full rounded-md mb-2 bg-boxbackground text-companyheader2"
+        className="border p-2 w-full rounded-md mb-2 bg-boxbackground text-companysubheader"
+        autoComplete="off" //  disables browser suggestions
       />
       {errors.title && (
         <p className="text-red-600 text-sm mb-2">{errors.title}</p>
@@ -74,14 +92,14 @@ function ExperienceFields({ formData, setFormData, handleChange, errors }) {
         htmlFor="employmentType"
         className="block font-medium mb-1 text-text"
       >
-        Employment type
+        Employment type*
       </label>
       <select
         id="employmentType"
         name="employmentType"
         value={formData.employmentType || ""}
         onChange={handleChange}
-        className="border p-2 w-full rounded-md mb-2 bg-boxbackground text-companyheader2"
+        className="border p-2 w-full rounded-md mb-2 bg-boxbackground text-companysubheader"
       >
         <option value="">Please select</option>
         {employmentOptions.map((opt) => (
@@ -90,12 +108,14 @@ function ExperienceFields({ formData, setFormData, handleChange, errors }) {
           </option>
         ))}
       </select>
-
+      {errors.employmentType && (
+        <p className="text-red-600 text-sm mb-2">{errors.employmentType}</p>
+      )}
       {/* Company or Organization */}
       <label htmlFor="company" className="block font-medium mb-1 text-text">
         Company or organization*
       </label>
-      <div className="relative">
+      <div className="relative ">
         <input
           type="text"
           id="company"
@@ -105,7 +125,12 @@ function ExperienceFields({ formData, setFormData, handleChange, errors }) {
           onChange={(e) => {
             const value = e.target.value;
             setInputValue(value);
-            setFormData((prev) => ({ ...prev, company: value }));
+            setFormData((prev) => ({
+              ...prev,
+              company: value,
+              companyLogo: null, // 💥 Clear it if manually typing
+              companyId: null, // ✅ CLEAR this too!
+            }));
             setShowDropdown(true);
             setHighlightedIndex(-1);
           }}
@@ -129,7 +154,7 @@ function ExperienceFields({ formData, setFormData, handleChange, errors }) {
           }}
           onFocus={() => setShowDropdown(true)}
           onBlur={() => setTimeout(() => setShowDropdown(false), 200)}
-          className="border p-2 w-full rounded-md mb-2 bg-boxbackground text-companyheader2"
+          className="border p-2 w-full rounded-md mb-2 bg-boxbackground text-companysubheader"
           autoComplete="off"
         />
         {errors.company && (
@@ -137,7 +162,7 @@ function ExperienceFields({ formData, setFormData, handleChange, errors }) {
         )}
 
         {showDropdown && filteredOptions.length > 0 && (
-          <ul className="absolute z-10 w-full bg-white border border-gray-300 rounded shadow-md max-h-48 overflow-y-auto">
+          <ul className="absolute z-10 w-full bg-boxbackground border border-gray-300 rounded shadow-md max-h-48 overflow-y-auto">
             {filteredOptions.map((option, index) => (
               <li
                 key={index}
@@ -151,7 +176,7 @@ function ExperienceFields({ formData, setFormData, handleChange, errors }) {
                   alt={option.name}
                   className="w-5 h-5 rounded-full mr-2"
                 />
-                {option.name}
+                <span className="text-normaltext">{option.name}</span>
               </li>
             ))}
           </ul>
@@ -160,31 +185,34 @@ function ExperienceFields({ formData, setFormData, handleChange, errors }) {
 
       {/* Currently Working */}
       {/* ADD CURRENTLY WORKING ON AFTER CHECKING END DATE  */}
-      {/* <div className="flex items-center mb-3 gap-2">
+      <div className="flex items-center mb-3 gap-2">
         <input
           id="currentlyWorking"
           type="checkbox"
           name="currentlyWorking"
-          checked={formData.currentlyWorking || false}
-          onChange={handleChange}
+          checked={currentlyWorking}
+          disabled={formData.endMonth || formData.endYear}
+          onChange={handleCurrentlyWorkingChange}
         />
-        <label htmlFor="currentlyWorking" className="text-text">
+
+        <label htmlFor="currentlyWorking" className="text-normaltext">
           I am currently working in this role
         </label>
-      </div> */}
+      </div>
 
       {/* Location */}
       <label htmlFor="location" className="block font-medium mb-1 text-text">
         Location
       </label>
       <input
+        autoComplete="off"
         id="location"
         type="text"
         name="location"
         placeholder="Ex: London, United Kingdom"
         value={formData.location || ""}
         onChange={handleChange}
-        className="border p-2 w-full rounded-md mb-2 bg-boxbackground text-companyheader2"
+        className="border p-2 w-full rounded-md mb-2 bg-boxbackground text-companysubheader"
       />
 
       {/* Location Type */}
@@ -199,7 +227,7 @@ function ExperienceFields({ formData, setFormData, handleChange, errors }) {
         name="locationType"
         value={formData.locationType || ""}
         onChange={handleChange}
-        className="border p-2 w-full rounded-md mb-2 bg-boxbackground text-companyheader2"
+        className="border p-2 w-full rounded-md mb-2 bg- text-companysubheader"
       >
         <option value="">Please select</option>
         {locationOptions.map((opt) => (
@@ -208,6 +236,21 @@ function ExperienceFields({ formData, setFormData, handleChange, errors }) {
           </option>
         ))}
       </select>
+      <label htmlFor="description" className="block font-medium mb-1 text-text">
+        Description
+      </label>
+      <textarea
+        id="description"
+        name="description"
+        value={formData.description || ""}
+        onChange={handleChange}
+        className="border p-2 w-full mb-2 rounded-md resize-none bg-boxbackground  text-companysubheader"
+        placeholder="Add more details..."
+        maxLength={1000}
+      />
+      <p className="text-right text-gray-500 text-sm">
+        {formData.description?.length || 0}/1000
+      </p>
     </>
   );
 }
