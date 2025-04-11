@@ -7,7 +7,7 @@ const EngagementMetrics = ({ setShowLikes, setShowComments }) => {
   const { post } = usePost();
   const navigate = useNavigate();
   const reactions = Object.fromEntries(
-    Object.entries(post.reactCounts).filter(([key]) => key !== 'none')
+    Object.entries(post.reactCounts).filter(([key]) => key !== "none"),
   );
   const comments = post.comments;
   const shares = post.shares;

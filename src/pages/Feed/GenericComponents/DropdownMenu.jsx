@@ -18,13 +18,15 @@ const DropdownMenu = ({
     if (!isOpen && buttonRef.current) {
       const rect = buttonRef.current.getBoundingClientRect();
       let top = rect.bottom;
-      let left = position.includes('right') ? rect.right - parseInt(width.replace('w-', '')) * 4 : rect.left;
-      
+      let left = position.includes("right")
+        ? rect.right - parseInt(width.replace("w-", "")) * 4
+        : rect.left;
+
       setMenuPosition({ top, left });
     }
     setIsOpen((prev) => !prev);
   };
-  
+
   const handleClose = () => setIsOpen(false);
 
   useEffect(() => {
@@ -49,7 +51,7 @@ const DropdownMenu = ({
       {isOpen && (
         <div
           style={{
-            position: 'fixed',
+            position: "fixed",
             top: `${menuPosition.top}px`,
             left: `${menuPosition.left}px`,
             zIndex: 1000,
