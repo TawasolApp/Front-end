@@ -178,6 +178,8 @@ const ReactionsModal = ({ API_URL, setShowLikes, reactCounts }) => {
                 position="right-0"
                 iconSize="w-6 h-6"
                 width="w-48"
+                containerClassName="z-50"
+                menuClassName="absolute z-50"
               >
                 <button
                   className={`p-4 h-full flex items-center gap-1 relative ${

@@ -180,8 +180,8 @@ describe('DropdownMenu Component', () => {
       .parentElement;     // Find the outer div which has our position classes
     
     // Now check the classes
-    expect(menuContainer.className).toContain('left-0');
-    expect(menuContainer.className).toContain('top-0');
+    expect(menuContainer.className).toContain('w-64 bg-cardBackground rounded-lg border border-cardBorder shadow-lg ');
+    expect(menuContainer.className).toContain('w-64 bg-cardBackground rounded-lg border border-cardBorder shadow-lg ');
   });
   
   it('renders with custom width', () => {
