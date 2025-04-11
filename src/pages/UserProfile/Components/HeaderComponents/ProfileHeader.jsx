@@ -171,7 +171,7 @@ function ProfileHeader({
             </p>
             <p
               className="text-blue-600 text-sm cursor-pointer hover:underline mt-1"
-              onClick={() => navigate("/connections")}
+              onClick={() => navigate(`/connections/${editedUser._id}`)}
             >
               {editedUser.connectionCount} connections
             </p>

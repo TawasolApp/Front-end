@@ -66,7 +66,7 @@ const ProtectedRoutes = () => {
       </Route>
 
       <Route
-        path="/connections"
+        path="/connections/:userId"
         element={RenderWithNavbar(<ConnectionPage />)}
       />
       <Route path="/blocked" element={RenderWithNavbar(<BlockedPage />)} />

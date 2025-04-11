@@ -96,22 +96,31 @@ function ViewerView({
       }
     }
   };
+
   const confirmAcceptConnection = async () => {
     try {
+      // Optimistically update UI first
+      setConnectStatus("Connection");
+      setShowAcceptModal(false);
+      
+      // Then make the API call
       const res = await axios.patch(`/connections/${user._id}`, {
         isAccept: true,
       });
-      if (res.status === 200) {
+      
+      if (res.status !== 200) {
+        // Revert if API call fails
+        setConnectStatus("Request");
+        console.error("Connection acceptance failed:", res.data);
+        alert("Failed to accept connection");
+      } else {
         console.log("Connection accepted:", res.data);
-        setConnectStatus("Connection");
       }
     } catch (err) {
-      console.error(
-        "Accept connection error:",
-        err.response?.data || err.message
-      );
-    } finally {
-      setShowAcceptModal(false);
+      // Revert on error
+      setConnectStatus("Request");
+      console.error("Accept connection error:", err.response?.data || err.message);
+      alert("Failed to accept connection");
     }
   };
 

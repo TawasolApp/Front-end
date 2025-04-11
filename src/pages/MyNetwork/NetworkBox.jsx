@@ -6,6 +6,7 @@ import BlockIcon from "@mui/icons-material/Block";
 import SwitchAccountIcon from "@mui/icons-material/SwitchAccount";
 import RecommendedUsers from "./RecommendedUsers";
 import defaultProfilePicture from "../../assets/images/defaultProfilePicture.png";
+import { useSelector } from "react-redux";
 
 const NetworkBox = () => {
   const navigate = useNavigate();
@@ -17,6 +18,7 @@ const NetworkBox = () => {
     page: 1,
     limit: 5
   });
+  const {userId} = useSelector((state) => state.authentication);
   const [hasMore, setHasMore] = useState(true);
   const observer = useRef();
   const lastElementRef = useCallback(node => {
@@ -154,7 +156,7 @@ const NetworkBox = () => {
 
           <div className="space-y-2">
             <div
-              onClick={() => navigate("/connections")}
+              onClick={() => navigate(`/connections/${userId}`)}
               className="flex items-center p-4 hover:bg-cardBackgroundHover rounded-lg cursor-pointer transition-colors"
             >
               <PeopleIcon className="text-textActivity text-2xl mr-4" />
