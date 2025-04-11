@@ -67,7 +67,7 @@ const TawasolNavbar = () => {
     },
   ]
 
-  const Icon = getIconComponent("in-black")
+  const Icon = getIconComponent("tawasol-icon")
 
   useEffect(() => {
     function handleClickOutside(event) {
