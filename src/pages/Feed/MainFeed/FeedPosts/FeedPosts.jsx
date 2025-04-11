@@ -1,4 +1,4 @@
-import NewspaperIcon from '@mui/icons-material/Newspaper';
+import NewspaperIcon from "@mui/icons-material/Newspaper";
 import PostContainer from "./PostContainer";
 
 const FeedPosts = ({
@@ -12,7 +12,6 @@ const FeedPosts = ({
   isAdmin,
   loading,
 }) => {
-
   if (!loading && (!posts || posts.length === 0)) {
     return (
       <div className="w-full bg-cardBackground rounded-lg p-8 text-center flex flex-col items-center gap-4">
@@ -21,7 +20,8 @@ const FeedPosts = ({
         </div>
         <h3 className="text-2xl font-semibold text-header">No posts yet</h3>
         <p className="text-gray-500 text-sm max-w-md">
-          Your feed is quiet right now. Follow more people or check back later for fresh content!
+          Your feed is quiet right now. Follow more people or check back later
+          for fresh content!
         </p>
       </div>
     );

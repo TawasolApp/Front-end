@@ -24,15 +24,13 @@ const ReactionsModal = ({ API_URL, setShowLikes, reactCounts }) => {
   // Process reactCounts to include "All" category
   const processedReactCounts = useMemo(() => {
     if (!reactCounts) return { all: 0 };
-  
-    const filtered = Object.entries(reactCounts)
-      .filter(([key]) => key !== 'none');
-  
-    const total = filtered.reduce(
-      (sum, [, count]) => sum + (count || 0),
-      0,
+
+    const filtered = Object.entries(reactCounts).filter(
+      ([key]) => key !== "none",
     );
-  
+
+    const total = filtered.reduce((sum, [, count]) => sum + (count || 0), 0);
+
     return {
       ...Object.fromEntries(filtered),
       all: total,

@@ -223,7 +223,8 @@ const MainFeed = ({
               That's all for now!
             </p>
             <p className="text-sm text-gray-500">
-              You've reached the end of your feed. Take a break, or check back later for more updates.
+              You've reached the end of your feed. Take a break, or check back
+              later for more updates.
             </p>
           </div>
         )}

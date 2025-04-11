@@ -83,11 +83,13 @@ const CompanySearch = ({ searchText, industry }) => {
     // Prevent navigation when clicking the follow button
     event.stopPropagation();
     axiosInstance.post(`/companies/${companyId}/follow`);
-    setCompanies(companies.map(company => 
-      company.companyId === companyId 
-        ? { ...company, isFollowing: true } 
-        : company
-    ));
+    setCompanies(
+      companies.map((company) =>
+        company.companyId === companyId
+          ? { ...company, isFollowing: true }
+          : company,
+      ),
+    );
   };
 
   return (
@@ -141,11 +143,11 @@ const CompanySearch = ({ searchText, industry }) => {
                   </div>
 
                   {/* Follow/Following button */}
-                  <button 
+                  <button
                     onClick={(e) => handleFollow(company.companyId, e)}
                     className={`font-medium py-1 px-4 rounded-full transition-colors ${
-                      company.isFollowing 
-                        ? "bg-gray-200 text-gray-700" 
+                      company.isFollowing
+                        ? "bg-gray-200 text-gray-700"
                         : "bg-transparent hover:bg-cardBackgroundHover text-blue-500 border border-blue-500"
                     }`}
                   >

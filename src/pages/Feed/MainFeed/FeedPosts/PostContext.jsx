@@ -344,13 +344,15 @@ export const PostProvider = ({
 
   const handleDeleteReplyToComment = async (commentId, replyId) => {
     await axiosInstance.delete(`/posts/comment/${replyId}`);
-  
+
     setReplies((prevReplies) => {
       const existingReplies = prevReplies[commentId]?.data || [];
-      const updatedReplies = existingReplies.filter((reply) => reply.id !== replyId);
-  
+      const updatedReplies = existingReplies.filter(
+        (reply) => reply.id !== replyId,
+      );
+
       const currentPage = prevReplies[commentId]?.replyPage || 1;
-  
+
       return {
         ...prevReplies,
         [commentId]: {
@@ -360,7 +362,7 @@ export const PostProvider = ({
         },
       };
     });
-  
+
     setComments((prevComments) =>
       prevComments.map((comment) =>
         comment.id === commentId

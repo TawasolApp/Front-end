@@ -35,7 +35,7 @@ const SinglePost = () => {
     visibility,
     taggedUsers,
     parentPost = null,
-    silentRepost = false
+    silentRepost = false,
   ) => {
     try {
       await axiosInstance.post("posts", {
