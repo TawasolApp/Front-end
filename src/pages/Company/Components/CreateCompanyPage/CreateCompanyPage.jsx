@@ -24,6 +24,8 @@ function CreateCompanyPage() {
   const [errors, setErrors] = useState({});
   const [loading, setLoading] = useState(false);
   const [successMessage, setSuccessMessage] = useState("");
+  const [logoUploading, setLogoUploading] = useState(false);
+
   const navigate = useNavigate();
 
   function validateForm() {
@@ -54,6 +56,7 @@ function CreateCompanyPage() {
 
     const formData = new FormData();
     formData.append("file", file);
+    setLogoUploading(true);
 
     try {
       const uploadResponse = await axios.post("/media", formData, {
@@ -64,12 +67,18 @@ function CreateCompanyPage() {
 
       setLogoPreview(fileUrl);
       setLogoFile(file);
+      setErrors((prev) => {
+        const { logo, ...rest } = prev;
+        return rest;
+      });
     } catch (error) {
       console.error("Upload failed:", error);
       setErrors((prev) => ({
         ...prev,
         apiError: "Failed to upload logo. Please try again.",
       }));
+    } finally {
+      setLogoUploading(false);
     }
   }
 
@@ -118,15 +127,17 @@ function CreateCompanyPage() {
       }
     }
 
-    if (logoPreview && /^https?:\/\/.+/.test(logoPreview)) {
-      newCompany.logo = logoPreview;
-    } else if (logoFile) {
+    if (logoUploading) {
       setErrors((prev) => ({
         ...prev,
         logo: "Please wait for the logo to finish uploading.",
       }));
       setLoading(false);
       return;
+    }
+
+    if (logoPreview && /^https?:\/\/.+/.test(logoPreview)) {
+      newCompany.logo = logoPreview;
     }
 
     console.log("Request Body:", newCompany);
@@ -417,7 +428,12 @@ function CreateCompanyPage() {
 
             {/* Logo Upload */}
             <div>
-              <label className="block text-sm text-normaltext mb-1">Logo</label>
+              <label
+                className="block text-sm text-normaltext mb-1"
+                htmlFor="company-logo"
+              >
+                Logo
+              </label>
               <div className="w-full min-h-[100px] border border-gray-400 rounded-md bg-uploadimage relative flex flex-col items-center justify-center px-4 py-6 text-center">
                 <div className="flex flex-col items-center justify-center gap-1 text-gray-600">
                   <FiUpload className="text-2xl font-semibold text-normaltext" />
@@ -432,18 +448,27 @@ function CreateCompanyPage() {
                 <input
                   type="file"
                   id="company-logo"
+                  data-testid="company-logo"
                   accept="image/*"
                   className="absolute inset-0 opacity-0 cursor-pointer"
                   onChange={handleLogoUpload}
                 />
               </div>
+              {logoUploading && (
+                <p className="text-sm text-gray-500 mt-2">Uploading logo...</p>
+              )}
+              {errors.logo && (
+                <p
+                  className="text-red-500 text-xs mt-1"
+                  data-testid="logo-error"
+                >
+                  {errors.logo}
+                </p>
+              )}
 
               <p className="text-xs text-gray-500 mt-1">
                 300 x 300px recommended. JPGs, JPEGs, and PNGs supported.
               </p>
-              {errors.logo && (
-                <p className="text-red-500 text-xs mt-1">{errors.logo}</p>
-              )}
             </div>
 
             {/* Verification Checkbox */}

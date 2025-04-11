@@ -88,15 +88,21 @@ const ProtectedRoutes = () => {
         element={RenderWithNavbar(<SavedPostsContainer />)}
       />
 
-      <Route path="/company" element={<CompanyLayout />} />
-      <Route path="/company/:companyId/*" element={<CompanyLayout />}>
+      <Route path="/company" element={RenderWithNavbar(<CompanyLayout />)} />
+      <Route
+        path="/company/:companyId/*"
+        element={RenderWithNavbar(<CompanyLayout />)}
+      >
         <Route index element={<HomePage />} />
         <Route path="home" element={<HomePage />} />
         <Route path="about" element={<AboutPage />} />
         <Route path="posts" element={<PostsPage />} />
         <Route path="jobs" element={<JobsPage />} />
       </Route>
-      <Route path="/company/setup/new" element={<CreateCompanyPage />} />
+      <Route
+        path="/company/setup/new"
+        element={RenderWithNavbar(<CreateCompanyPage />)}
+      />
     </Routes>
   );
 };

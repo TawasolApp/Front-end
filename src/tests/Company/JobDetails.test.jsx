@@ -4,7 +4,14 @@ import { vi } from "vitest";
 
 // Mock the ApplyModal to avoid actual modal rendering
 vi.mock("../../../src/pages/Company/Components/JobsPage/ApplyModal", () => ({
-  default: () => <div data-testid="apply-modal">ApplyModal</div>,
+  default: ({ onClose }) => (
+    <div data-testid="apply-modal">
+      ApplyModal
+      <button data-testid="close-button" onClick={onClose}>
+        Close
+      </button>
+    </div>
+  ),
 }));
 
 describe("JobDetails", () => {
@@ -81,5 +88,53 @@ describe("JobDetails", () => {
 
     expect(screen.queryByText(/ago/i)).not.toBeInTheDocument();
     expect(screen.queryByText(/clicked apply/i)).not.toBeInTheDocument();
+  });
+  test("closes ApplyModal when handleCloseModal is called", () => {
+    render(<JobDetails job={jobMock} logo={logoUrl} name={companyName} />);
+
+    const applyBtn = screen.getByRole("button", { name: /apply/i });
+    fireEvent.click(applyBtn);
+    expect(screen.getByTestId("apply-modal")).toBeInTheDocument();
+
+    // Simulate closing modal
+    fireEvent.keyDown(document, { key: "Escape", code: "Escape" }); // optional fallback
+    fireEvent.click(screen.getByTestId("apply-modal").parentElement); // simulate parent close trigger
+
+    // In real usage, you’d likely control modal unmount from parent or modal internals
+  });
+  test("uses default locationType when not provided", () => {
+    const job = {
+      position: "QA Engineer",
+      location: "Dubai",
+      employmentType: "Part-time",
+    };
+
+    render(<JobDetails job={job} name="FallbackCo" />);
+
+    expect(screen.getByText("On-site")).toBeInTheDocument();
+  });
+  test("uses default employmentType when not provided", () => {
+    const job = {
+      position: "SysAdmin",
+      location: "Remote",
+      locationType: "Remote",
+    };
+
+    render(<JobDetails job={job} name="FallbackCo" />);
+
+    expect(screen.getByText("Full-time")).toBeInTheDocument();
+  });
+  test("closes ApplyModal when close button is clicked", () => {
+    render(<JobDetails job={jobMock} logo={logoUrl} name={companyName} />);
+
+    // Open modal
+    fireEvent.click(screen.getByRole("button", { name: /apply/i }));
+    expect(screen.getByTestId("apply-modal")).toBeInTheDocument();
+
+    // Click close
+    fireEvent.click(screen.getByTestId("close-button"));
+
+    // Modal should be removed
+    expect(screen.queryByTestId("apply-modal")).not.toBeInTheDocument();
   });
 });

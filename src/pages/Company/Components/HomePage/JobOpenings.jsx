@@ -52,22 +52,24 @@ function JobOpenings() {
         <h1 className="text-2xl font-semibold text-text">
           Recent Job Openings
         </h1>
-        <div className="flex space-x-2">
-          <button
-            className="bg-modalbackground p-2 rounded-full hover:bg-sliderbutton transition border border-white shadow-sm"
-            onClick={() => handleScroll("left")}
-            aria-label="scroll-left"
-          >
-            <AiOutlineLeft size={20} className="text-text" />
-          </button>
-          <button
-            className="bg-modalbackground p-2 rounded-full hover:bg-sliderbutton transition border border-white shadow-sm"
-            onClick={() => handleScroll("right")}
-            aria-label="scroll-right"
-          >
-            <AiOutlineRight size={20} className="text-text" />
-          </button>
-        </div>
+        {jobs.length > 3 && (
+          <div className="flex space-x-2">
+            <button
+              className="bg-modalbackground p-2 rounded-full hover:bg-sliderbutton transition border border-white shadow-sm"
+              onClick={() => handleScroll("left")}
+              aria-label="scroll-left"
+            >
+              <AiOutlineLeft size={20} className="text-text" />
+            </button>
+            <button
+              className="bg-modalbackground p-2 rounded-full hover:bg-sliderbutton transition border border-white shadow-sm"
+              onClick={() => handleScroll("right")}
+              aria-label="scroll-right"
+            >
+              <AiOutlineRight size={20} className="text-text" />
+            </button>
+          </div>
+        )}
       </div>
 
       {/* Slider */}

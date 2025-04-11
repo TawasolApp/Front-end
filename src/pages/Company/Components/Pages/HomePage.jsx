@@ -12,7 +12,7 @@ function HomePage() {
   return (
     <div>
       {company?.overview && <OverviewBox company={company} />}
-      {/* <PostsSlider /> */}
+      <PostsSlider />
       <JobOpenings />
     </div>
   );
