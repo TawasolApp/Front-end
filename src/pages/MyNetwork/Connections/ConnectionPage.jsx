@@ -2,6 +2,7 @@ import React, { useState, useEffect, useRef, useCallback } from "react";
 import { useSelector } from "react-redux"; // Import useSelector
 import ConnectionCard from "./ConnectionCard";
 import { axiosInstance } from "../../../apis/axios";
+import { useParams } from 'react-router-dom';
 
 const ConnectionPage = () => {
   const [connections, setConnections] = useState([]);
@@ -14,9 +15,8 @@ const ConnectionPage = () => {
   const [page, setPage] = useState(1);
   const limit = 5;
 
-  // Get userId from Redux store
-  const { userId } = useSelector((state) => state.authentication);
 
+  const { userId } = useParams();
   const observer = useRef();
   const isFetching = useRef(false);
 
