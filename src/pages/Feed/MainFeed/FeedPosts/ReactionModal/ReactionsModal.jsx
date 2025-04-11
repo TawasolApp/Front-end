@@ -5,6 +5,7 @@ import reactionIcons from "../../../GenericComponents/reactionIcons";
 import DropdownMenu from "../../../GenericComponents/DropdownMenu";
 import { Link } from "react-router-dom";
 import { axiosInstance } from "../../../../../apis/axios";
+import { Avatar } from "@mui/material";
 
 const capitalizeFirstLetter = (string) => {
   if (!string) return "";
@@ -210,10 +211,13 @@ const ReactionsModal = ({ API_URL, setShowLikes, reactCounts }) => {
                     className="flex items-center gap-3 hover:bg-buttonIconHover rounded-lg relative p-2 hover:cursor-pointer"
                   >
                     <div className="relative h-14">
-                      <img
-                        src={reaction.authorPicture || "/placeholder.svg"}
-                        alt={reaction.authorName}
-                        className="w-14 h-14 rounded-full"
+                      <Avatar
+                        src={reaction.authorPicture}
+                        sx={{
+                          width: 56,
+                          height: 56,
+                          borderRadius: "50%",
+                        }}
                       />
                       {IconComponent && (
                         <IconComponent
