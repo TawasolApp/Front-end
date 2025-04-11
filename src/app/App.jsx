@@ -21,7 +21,6 @@ import NewPasswordPage from "../pages/Authentication/NewPasswordPage";
 
 const App = () => {
   const theme = useSelector((state) => state.theme.theme);
-
   return (
     <Router>
       <Routes>

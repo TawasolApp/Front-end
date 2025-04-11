@@ -1,5 +1,5 @@
 import React from "react";
-import SignWithGoogle from "../GenericComponents//SignWithGoogle";
+import SignWithGoogle from "../GenericComponents/SignWithGoogle";
 import { Link, useNavigate } from "react-router-dom";
 
 const WelcomeForm = () => {
