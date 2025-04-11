@@ -6,11 +6,25 @@ const DropdownMenu = ({
   width = "w-64",
   iconSize = "w-4 h-4",
   children,
+  containerClassName = "",
+  menuClassName = "",
 }) => {
   const [isOpen, setIsOpen] = useState(false);
   const menuRef = useRef(null);
+  const buttonRef = useRef(null);
+  const [menuPosition, setMenuPosition] = useState({ top: 0, left: 0 });
 
-  const handleToggle = () => setIsOpen((prev) => !prev);
+  const handleToggle = () => {
+    if (!isOpen && buttonRef.current) {
+      const rect = buttonRef.current.getBoundingClientRect();
+      let top = rect.bottom;
+      let left = position.includes('right') ? rect.right - parseInt(width.replace('w-', '')) * 4 : rect.left;
+      
+      setMenuPosition({ top, left });
+    }
+    setIsOpen((prev) => !prev);
+  };
+  
   const handleClose = () => setIsOpen(false);
 
   useEffect(() => {
@@ -27,14 +41,20 @@ const DropdownMenu = ({
   }, [isOpen]);
 
   return (
-    <div className="relative" ref={menuRef}>
-      <div className="h-full" onClick={handleToggle}>
+    <div className={`relative ${containerClassName}`} ref={menuRef}>
+      <div className="h-full" onClick={handleToggle} ref={buttonRef}>
         {children}
       </div>
 
       {isOpen && (
         <div
-          className={`absolute ${position} mt-1 ${width} bg-cardBackground rounded-lg border border-cardBorder z-10`}
+          style={{
+            position: 'fixed',
+            top: `${menuPosition.top}px`,
+            left: `${menuPosition.left}px`,
+            zIndex: 1000,
+          }}
+          className={`${width} bg-cardBackground rounded-lg border border-cardBorder shadow-lg ${menuClassName}`}
         >
           <div className="p-1">
             {menuItems.map((item, index) => (

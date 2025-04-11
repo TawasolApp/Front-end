@@ -62,7 +62,7 @@ const ActorHeader = ({
               <h3 className="font-medium text-sm text-authorName truncate">
                 {authorName}
               </h3>
-              <p className="text-xs font-semibold text-authorBio mt-px truncate max-w-full">
+              <p className="text-xs font-semibold text-authorBio mt-px truncate max-w-48">
                 {authorBio}
               </p>
             </div>
