@@ -35,7 +35,7 @@ const NamePage = () => {
         password,
         firstName: formData.firstName,
         lastName: formData.lastName,
-        captchaToken,
+        captchaToken: "test-token",
       });
 
       navigate("/auth/verification-pending", { state: { type: "verifyEmail" } });
