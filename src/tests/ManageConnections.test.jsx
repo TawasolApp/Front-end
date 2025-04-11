@@ -20,13 +20,17 @@ vi.mock("react-router-dom", () => ({
 
 describe("ManageConnections", () => {
   const mockNavigate = vi.fn();
-  
+
   beforeEach(() => {
     vi.clearAllMocks();
     useNavigate.mockReturnValue(mockNavigate);
     axiosInstance.get.mockImplementation(() => Promise.resolve({ data: [] }));
-    axiosInstance.patch.mockImplementation(() => Promise.resolve({ status: 200 }));
-    axiosInstance.delete.mockImplementation(() => Promise.resolve({ status: 200 }));
+    axiosInstance.patch.mockImplementation(() =>
+      Promise.resolve({ status: 200 }),
+    );
+    axiosInstance.delete.mockImplementation(() =>
+      Promise.resolve({ status: 200 }),
+    );
   });
 
   it("should render loading state initially", () => {
@@ -44,8 +48,8 @@ describe("ManageConnections", () => {
       },
     ];
 
-    axiosInstance.get.mockImplementationOnce(() => 
-      Promise.resolve({ data: mockPendingRequests })
+    axiosInstance.get.mockImplementationOnce(() =>
+      Promise.resolve({ data: mockPendingRequests }),
     );
 
     render(<ManageConnections />);
@@ -70,7 +74,9 @@ describe("ManageConnections", () => {
 
     axiosInstance.get
       .mockImplementationOnce(() => Promise.resolve({ data: [] }))
-      .mockImplementationOnce(() => Promise.resolve({ data: mockSentRequests }));
+      .mockImplementationOnce(() =>
+        Promise.resolve({ data: mockSentRequests }),
+      );
 
     render(<ManageConnections />);
 
@@ -94,8 +100,8 @@ describe("ManageConnections", () => {
       },
     ];
 
-    axiosInstance.get.mockImplementationOnce(() => 
-      Promise.resolve({ data: mockPendingRequests })
+    axiosInstance.get.mockImplementationOnce(() =>
+      Promise.resolve({ data: mockPendingRequests }),
     );
 
     render(<ManageConnections />);
@@ -104,10 +110,9 @@ describe("ManageConnections", () => {
     fireEvent.click(acceptButton);
 
     await waitFor(() => {
-      expect(axiosInstance.patch).toHaveBeenCalledWith(
-        "/connections/1",
-        { isAccept: true }
-      );
+      expect(axiosInstance.patch).toHaveBeenCalledWith("/connections/1", {
+        isAccept: true,
+      });
     });
   });
 
@@ -121,8 +126,8 @@ describe("ManageConnections", () => {
       },
     ];
 
-    axiosInstance.get.mockImplementationOnce(() => 
-      Promise.resolve({ data: mockPendingRequests })
+    axiosInstance.get.mockImplementationOnce(() =>
+      Promise.resolve({ data: mockPendingRequests }),
     );
 
     render(<ManageConnections />);
@@ -131,28 +136,29 @@ describe("ManageConnections", () => {
     fireEvent.click(ignoreButton);
 
     await waitFor(() => {
-      expect(axiosInstance.patch).toHaveBeenCalledWith(
-        "/connections/1",
-        { isAccept: false }
-      );
+      expect(axiosInstance.patch).toHaveBeenCalledWith("/connections/1", {
+        isAccept: false,
+      });
     });
   });
 
   it("should display error message when fetch fails", async () => {
-    axiosInstance.get.mockImplementationOnce(() => 
-      Promise.reject(new Error("Network error"))
+    axiosInstance.get.mockImplementationOnce(() =>
+      Promise.reject(new Error("Network error")),
     );
 
     render(<ManageConnections />);
 
     await waitFor(() => {
-      expect(screen.getByText("Failed to load received requests.")).toBeInTheDocument();
+      expect(
+        screen.getByText("Failed to load received requests."),
+      ).toBeInTheDocument();
     });
   });
 
   it("should display empty state for no pending invitations", async () => {
-    axiosInstance.get.mockImplementationOnce(() => 
-      Promise.resolve({ data: [] })
+    axiosInstance.get.mockImplementationOnce(() =>
+      Promise.resolve({ data: [] }),
     );
 
     render(<ManageConnections />);

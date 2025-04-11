@@ -7,7 +7,11 @@ const ExperienceForm = ({ onSubmit }) => {
   const [jobTitle, setJobTitle] = useState("");
   const [employmentType, setEmploymentType] = useState("");
   const [company, setCompany] = useState("");
-  const [workStartDate, setWorkStartDate] = useState({ month: "", day: "", year: "" });
+  const [workStartDate, setWorkStartDate] = useState({
+    month: "",
+    day: "",
+    year: "",
+  });
   const [showAdditionalFields, setShowAdditionalFields] = useState(false);
 
   // Student fields
@@ -101,12 +105,12 @@ const ExperienceForm = ({ onSubmit }) => {
 
     let formattedWorkStartDate = "";
     if (workStartDate?.year && workStartDate?.month && workStartDate?.day) {
-        const dateStr = `${workStartDate.year}-${workStartDate.month.padStart(2, "0")}-${workStartDate.day.padStart(2, "0")}`;
-        const parsedDate = new Date(dateStr);
-        
-        if (!isNaN(parsedDate.getTime())) {
-            formattedWorkStartDate = parsedDate.toISOString().split("T")[0];
-        }
+      const dateStr = `${workStartDate.year}-${workStartDate.month.padStart(2, "0")}-${workStartDate.day.padStart(2, "0")}`;
+      const parsedDate = new Date(dateStr);
+
+      if (!isNaN(parsedDate.getTime())) {
+        formattedWorkStartDate = parsedDate.toISOString().split("T")[0];
+      }
     }
 
     let formattedStartYear = "";
@@ -152,7 +156,14 @@ const ExperienceForm = ({ onSubmit }) => {
         );
       }
     } else {
-      return jobTitle && company && employmentType && workStartDate.year && workStartDate.month && workStartDate.day;
+      return (
+        jobTitle &&
+        company &&
+        employmentType &&
+        workStartDate.year &&
+        workStartDate.month &&
+        workStartDate.day
+      );
     }
   };
 
@@ -335,7 +346,7 @@ const ExperienceForm = ({ onSubmit }) => {
                 <option value="">-</option>
                 {Array.from(
                   { length: 50 },
-                  (_, i) => new Date().getFullYear() - i
+                  (_, i) => new Date().getFullYear() - i,
                 ).map((year) => (
                   <option key={year} value={year}>
                     {year}
@@ -362,7 +373,7 @@ const ExperienceForm = ({ onSubmit }) => {
                 <option value="">-</option>
                 {Array.from(
                   { length: 50 },
-                  (_, i) => new Date().getFullYear() + 7 - i
+                  (_, i) => new Date().getFullYear() + 7 - i,
                 ).map((year) => (
                   <option key={year} value={year}>
                     {year}

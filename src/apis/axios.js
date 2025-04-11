@@ -3,7 +3,7 @@
  * import { axiosInstance as axios } from './apis/axios'
  */
 import axios from "axios";
-import { store } from "../store/store"
+import { store } from "../store/store";
 import { logout } from "../store/authenticationSlice";
 
 const BASE_URL = String(import.meta.env.VITE_APP_BASE_URL || "").trim();
@@ -46,8 +46,7 @@ axiosInstance.interceptors.response.use(
           store.dispatch(logout());
           window.location.href = "/auth/signin";
         }
-      }
-      else {
+      } else {
         console.log("No refresh token. Logging out.");
         store.dispatch(logout());
         window.location.href = "/auth/signin";

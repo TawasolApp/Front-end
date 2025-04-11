@@ -25,7 +25,7 @@ vi.mock(
   "../../../src/pages/Company/Components/JobsPage/JobApplications",
   () => ({
     default: () => <div data-testid="job-applications">JobApplications</div>,
-  })
+  }),
 );
 vi.mock("../../../src/pages/Company/Components/JobsPage/AddJobModal", () => ({
   default: ({ onClose, onJobAdded }) => (
@@ -77,12 +77,12 @@ describe("JobsPage", () => {
             <Route path="/company/:companyId/jobs" element={<JobsPage />} />
           </Route>
         </Routes>
-      </MemoryRouter>
+      </MemoryRouter>,
     );
 
     expect(screen.getByTestId("loading-page")).toBeInTheDocument();
     await waitFor(() =>
-      expect(screen.getByTestId("jobs-list")).toBeInTheDocument()
+      expect(screen.getByTestId("jobs-list")).toBeInTheDocument(),
     );
   });
 
@@ -94,7 +94,7 @@ describe("JobsPage", () => {
             <Route path="/company/:companyId/jobs" element={<JobsPage />} />
           </Route>
         </Routes>
-      </MemoryRouter>
+      </MemoryRouter>,
     );
 
     await waitFor(() => {
@@ -113,7 +113,7 @@ describe("JobsPage", () => {
             <Route path="/company/:companyId/jobs" element={<JobsPage />} />
           </Route>
         </Routes>
-      </MemoryRouter>
+      </MemoryRouter>,
     );
 
     await waitFor(() => {
@@ -122,7 +122,7 @@ describe("JobsPage", () => {
     });
 
     expect(
-      screen.getByRole("button", { name: /post a job opening/i })
+      screen.getByRole("button", { name: /post a job opening/i }),
     ).toBeInTheDocument();
   });
 
@@ -136,23 +136,23 @@ describe("JobsPage", () => {
             <Route path="/company/:companyId/jobs" element={<JobsPage />} />
           </Route>
         </Routes>
-      </MemoryRouter>
+      </MemoryRouter>,
     );
 
     await waitFor(() =>
-      expect(screen.getByTestId("job-applications")).toBeInTheDocument()
+      expect(screen.getByTestId("job-applications")).toBeInTheDocument(),
     );
 
     // Open modal
     fireEvent.click(
-      screen.getByRole("button", { name: /post a job opening/i })
+      screen.getByRole("button", { name: /post a job opening/i }),
     );
     expect(await screen.findByTestId("add-job-modal")).toBeInTheDocument();
 
     // Close modal
     fireEvent.click(screen.getByTestId("close-modal"));
     await waitFor(() =>
-      expect(screen.queryByTestId("add-job-modal")).not.toBeInTheDocument()
+      expect(screen.queryByTestId("add-job-modal")).not.toBeInTheDocument(),
     );
   });
 
@@ -166,11 +166,11 @@ describe("JobsPage", () => {
             <Route path="/company/:companyId/jobs" element={<JobsPage />} />
           </Route>
         </Routes>
-      </MemoryRouter>
+      </MemoryRouter>,
     );
 
     await waitFor(() =>
-      expect(screen.queryByTestId("jobs-list")).not.toBeInTheDocument()
+      expect(screen.queryByTestId("jobs-list")).not.toBeInTheDocument(),
     );
   });
   test("calls handleJobAdded when a job is added in the modal", async () => {
@@ -191,17 +191,17 @@ describe("JobsPage", () => {
             <Route path="/company/:companyId/jobs" element={<JobsPage />} />
           </Route>
         </Routes>
-      </MemoryRouter>
+      </MemoryRouter>,
     );
 
     // Wait for first fetch to finish
     await waitFor(() =>
-      expect(screen.getByTestId("job-applications")).toBeInTheDocument()
+      expect(screen.getByTestId("job-applications")).toBeInTheDocument(),
     );
 
     // Open modal
     fireEvent.click(
-      screen.getByRole("button", { name: /post a job opening/i })
+      screen.getByRole("button", { name: /post a job opening/i }),
     );
 
     // Trigger job add (calls handleJobAdded -> second fetch)
@@ -222,7 +222,7 @@ describe("JobsPage", () => {
       .spyOn(console, "error")
       .mockImplementation(() => {});
     axiosModule.axiosInstance.get.mockRejectedValueOnce(
-      new Error("Refetch failed")
+      new Error("Refetch failed"),
     );
 
     render(
@@ -234,17 +234,17 @@ describe("JobsPage", () => {
             <Route path="/company/:companyId/jobs" element={<JobsPage />} />
           </Route>
         </Routes>
-      </MemoryRouter>
+      </MemoryRouter>,
     );
 
     // Wait for first job fetch
     await waitFor(() =>
-      expect(screen.getByTestId("job-applications")).toBeInTheDocument()
+      expect(screen.getByTestId("job-applications")).toBeInTheDocument(),
     );
 
     // Open modal
     fireEvent.click(
-      screen.getByRole("button", { name: /post a job opening/i })
+      screen.getByRole("button", { name: /post a job opening/i }),
     );
 
     // Click Add Job → triggers handleJobAdded which will now fail
@@ -253,8 +253,8 @@ describe("JobsPage", () => {
     await waitFor(() =>
       expect(consoleErrorSpy).toHaveBeenCalledWith(
         "Failed to refetch jobs after add",
-        expect.any(Error)
-      )
+        expect.any(Error),
+      ),
     );
 
     consoleErrorSpy.mockRestore(); // Cleanup
@@ -269,7 +269,7 @@ describe("JobsPage", () => {
             <Route path="/company/:companyId/jobs" element={<JobsPage />} />
           </Route>
         </Routes>
-      </MemoryRouter>
+      </MemoryRouter>,
     );
 
     expect(screen.getByTestId("loading-page")).toBeInTheDocument();
@@ -285,7 +285,7 @@ describe("JobsPage", () => {
             <Route path="/company/:companyId/jobs" element={<JobsPage />} />
           </Route>
         </Routes>
-      </MemoryRouter>
+      </MemoryRouter>,
     );
 
     await waitFor(() => {
@@ -313,11 +313,11 @@ describe("JobsPage", () => {
             <Route path="/company/:companyId/jobs" element={<JobsPage />} />
           </Route>
         </Routes>
-      </MemoryRouter>
+      </MemoryRouter>,
     );
 
     await waitFor(() =>
-      expect(screen.getByTestId("jobs-list")).toBeInTheDocument()
+      expect(screen.getByTestId("jobs-list")).toBeInTheDocument(),
     );
 
     // No second render of component, no reason for second fetch
@@ -342,11 +342,11 @@ describe("JobsPage", () => {
             <Route path="/company/:companyId/jobs" element={<JobsPage />} />
           </Route>
         </Routes>
-      </MemoryRouter>
+      </MemoryRouter>,
     );
 
     await waitFor(() =>
-      expect(screen.getByTestId("job-details")).toBeInTheDocument()
+      expect(screen.getByTestId("job-details")).toBeInTheDocument(),
     );
   });
   test("does not fetch if companyId is missing", async () => {
@@ -370,7 +370,7 @@ describe("JobsPage", () => {
             <Route path="" element={<JobsPage />} />
           </Route>
         </Routes>
-      </MemoryRouter>
+      </MemoryRouter>,
     );
 
     // wait a bit to ensure useEffect finishes

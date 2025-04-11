@@ -14,7 +14,7 @@ describe("AboutPage", () => {
             <Route path="/company/:companyId/about" element={<AboutPage />} />
           </Route>
         </Routes>
-      </MemoryRouter>
+      </MemoryRouter>,
     );
 
     expect(screen.getByTestId("loading-page")).toBeInTheDocument();
@@ -42,12 +42,12 @@ describe("AboutPage", () => {
             <Route path="/company/:companyId/about" element={<AboutPage />} />
           </Route>
         </Routes>
-      </MemoryRouter>
+      </MemoryRouter>,
     );
 
     // Wait for AboutOverview to appear
     await waitFor(() =>
-      expect(screen.getByTestId("about-overview")).toBeInTheDocument()
+      expect(screen.getByTestId("about-overview")).toBeInTheDocument(),
     );
 
     // Assert both sections are present

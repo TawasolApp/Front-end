@@ -34,7 +34,7 @@ describe("CreateCompanyPage", () => {
     render(
       <MemoryRouter>
         <CreateCompanyPage />
-      </MemoryRouter>
+      </MemoryRouter>,
     );
 
     expect(screen.getByTestId("company-name")).toBeInTheDocument();
@@ -48,7 +48,7 @@ describe("CreateCompanyPage", () => {
     render(
       <MemoryRouter>
         <CreateCompanyPage />
-      </MemoryRouter>
+      </MemoryRouter>,
     );
 
     fireEvent.click(screen.getByTestId("agree-terms"));
@@ -57,13 +57,13 @@ describe("CreateCompanyPage", () => {
     await waitFor(() => {
       expect(screen.getByText("Please enter a name.")).toBeInTheDocument();
       expect(
-        screen.getByText("Please select an industry.")
+        screen.getByText("Please select an industry."),
       ).toBeInTheDocument();
       expect(
-        screen.getByText("Please select an organization size.")
+        screen.getByText("Please select an organization size."),
       ).toBeInTheDocument();
       expect(
-        screen.getByText("Please select an organization type.")
+        screen.getByText("Please select an organization type."),
       ).toBeInTheDocument();
     });
   });
@@ -78,7 +78,7 @@ describe("CreateCompanyPage", () => {
     render(
       <MemoryRouter>
         <CreateCompanyPage />
-      </MemoryRouter>
+      </MemoryRouter>,
     );
 
     // Fill required fields
@@ -128,7 +128,7 @@ describe("CreateCompanyPage", () => {
     render(
       <MemoryRouter>
         <CreateCompanyPage />
-      </MemoryRouter>
+      </MemoryRouter>,
     );
 
     // Fill required fields
@@ -168,7 +168,7 @@ describe("CreateCompanyPage", () => {
     render(
       <MemoryRouter>
         <CreateCompanyPage />
-      </MemoryRouter>
+      </MemoryRouter>,
     );
 
     const submitButton = screen.getByText("Create Page");
@@ -186,7 +186,7 @@ describe("CreateCompanyPage", () => {
     render(
       <MemoryRouter>
         <CreateCompanyPage />
-      </MemoryRouter>
+      </MemoryRouter>,
     );
 
     const input = screen
@@ -203,7 +203,7 @@ describe("CreateCompanyPage", () => {
     render(
       <MemoryRouter>
         <CreateCompanyPage />
-      </MemoryRouter>
+      </MemoryRouter>,
     );
 
     fireEvent.change(screen.getByTestId("company-name"), {
@@ -237,7 +237,7 @@ describe("CreateCompanyPage", () => {
 
     await waitFor(() => {
       expect(
-        screen.getByText(/Location must be a valid Google Maps link/i)
+        screen.getByText(/Location must be a valid Google Maps link/i),
       ).toBeInTheDocument();
     });
   });
@@ -250,7 +250,7 @@ describe("CreateCompanyPage", () => {
     render(
       <MemoryRouter>
         <CreateCompanyPage />
-      </MemoryRouter>
+      </MemoryRouter>,
     );
 
     // Fill required fields
@@ -286,19 +286,19 @@ describe("CreateCompanyPage", () => {
       () => {
         expect(mockNavigate).toHaveBeenCalledWith("/company/321/home");
       },
-      { timeout: 3000 }
+      { timeout: 3000 },
     );
 
     expect(axios.post).toHaveBeenCalledWith(
       "/companies",
-      expect.not.objectContaining({ founded: 1600 }) // founded should not be included
+      expect.not.objectContaining({ founded: 1600 }), // founded should not be included
     );
   });
   test("shows error if email is missing", async () => {
     render(
       <MemoryRouter>
         <CreateCompanyPage />
-      </MemoryRouter>
+      </MemoryRouter>,
     );
     fireEvent.change(screen.getByTestId("company-name"), {
       target: { value: "Example Co" },
@@ -323,7 +323,7 @@ describe("CreateCompanyPage", () => {
 
     await waitFor(() => {
       expect(
-        screen.getByText("Please enter an email address.")
+        screen.getByText("Please enter an email address."),
       ).toBeInTheDocument();
     });
   });
@@ -331,7 +331,7 @@ describe("CreateCompanyPage", () => {
     render(
       <MemoryRouter>
         <CreateCompanyPage />
-      </MemoryRouter>
+      </MemoryRouter>,
     );
     fireEvent.click(screen.getByTestId("agree-terms"));
     fireEvent.click(screen.getByText("Create Page"));
@@ -348,7 +348,7 @@ describe("CreateCompanyPage", () => {
     render(
       <MemoryRouter>
         <CreateCompanyPage />
-      </MemoryRouter>
+      </MemoryRouter>,
     );
     const file = new File(["dummy"], "logo.png", { type: "image/png" });
 
@@ -360,7 +360,7 @@ describe("CreateCompanyPage", () => {
     await waitFor(() => {
       expect(screen.getByAltText("Logo Preview")).toHaveAttribute(
         "src",
-        mockUrl
+        mockUrl,
       );
     });
   });
@@ -373,7 +373,7 @@ describe("CreateCompanyPage", () => {
     render(
       <MemoryRouter>
         <CreateCompanyPage />
-      </MemoryRouter>
+      </MemoryRouter>,
     );
 
     fireEvent.change(screen.getByTestId("company-name"), {
@@ -414,7 +414,7 @@ describe("CreateCompanyPage", () => {
     render(
       <MemoryRouter>
         <CreateCompanyPage />
-      </MemoryRouter>
+      </MemoryRouter>,
     );
 
     // Fill required fields
@@ -460,7 +460,7 @@ describe("CreateCompanyPage", () => {
     // Check for the error
     await waitFor(() => {
       expect(
-        screen.getByText("Please wait for the logo to finish uploading.")
+        screen.getByText("Please wait for the logo to finish uploading."),
       ).toBeInTheDocument();
     });
 
@@ -474,7 +474,7 @@ describe("CreateCompanyPage", () => {
     render(
       <MemoryRouter>
         <CreateCompanyPage />
-      </MemoryRouter>
+      </MemoryRouter>,
     );
 
     fireEvent.change(screen.getByTestId("company-name"), {
@@ -508,7 +508,7 @@ describe("CreateCompanyPage", () => {
     await waitFor(() => {
       expect(postSpy).toHaveBeenCalledWith(
         "/companies",
-        expect.objectContaining({ founded: 2005 })
+        expect.objectContaining({ founded: 2005 }),
       );
     });
   });

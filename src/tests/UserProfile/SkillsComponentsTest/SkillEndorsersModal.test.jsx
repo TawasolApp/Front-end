@@ -39,7 +39,7 @@ describe("SkillEndorsersModal", () => {
           userId={mockUserId}
           skillName={mockSkillName}
         />
-      </MemoryRouter>
+      </MemoryRouter>,
     );
 
     expect(screen.getByText(/loading.../i)).toBeInTheDocument();
@@ -56,12 +56,12 @@ describe("SkillEndorsersModal", () => {
           userId={mockUserId}
           skillName={mockSkillName}
         />
-      </MemoryRouter>
+      </MemoryRouter>,
     );
 
     await waitFor(() => {
       expect(
-        screen.getByText(/no one has endorsed this skill yet/i)
+        screen.getByText(/no one has endorsed this skill yet/i),
       ).toBeInTheDocument();
     });
   });
@@ -77,14 +77,14 @@ describe("SkillEndorsersModal", () => {
           userId={mockUserId}
           skillName={mockSkillName}
         />
-      </MemoryRouter>
+      </MemoryRouter>,
     );
 
     await waitFor(() => {
       expect(screen.getByText("John Doe")).toBeInTheDocument();
       expect(screen.getByRole("img")).toHaveAttribute(
         "src",
-        mockEndorsers[0].profilePicture
+        mockEndorsers[0].profilePicture,
       );
     });
   });
@@ -101,7 +101,7 @@ describe("SkillEndorsersModal", () => {
           userId={mockUserId}
           skillName={mockSkillName}
         />
-      </MemoryRouter>
+      </MemoryRouter>,
     );
 
     const closeButton = screen.getByRole("button", { name: /close modal/i });

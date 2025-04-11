@@ -16,26 +16,29 @@ const NetworkBox = () => {
   const [error, setError] = useState(null);
   const [pagination, setPagination] = useState({
     page: 1,
-    limit: 5
+    limit: 5,
   });
-  const {userId} = useSelector((state) => state.authentication);
+  const { userId } = useSelector((state) => state.authentication);
   const [hasMore, setHasMore] = useState(true);
   const observer = useRef();
-  const lastElementRef = useCallback(node => {
-    if (loading) return;
-    if (observer.current) observer.current.disconnect();
+  const lastElementRef = useCallback(
+    (node) => {
+      if (loading) return;
+      if (observer.current) observer.current.disconnect();
 
-    observer.current = new IntersectionObserver(entries => {
-      if (entries[0].isIntersecting && hasMore) {
-        setPagination(prev => ({
-          ...prev,
-          page: prev.page + 1
-        }));
-      }
-    });
+      observer.current = new IntersectionObserver((entries) => {
+        if (entries[0].isIntersecting && hasMore) {
+          setPagination((prev) => ({
+            ...prev,
+            page: prev.page + 1,
+          }));
+        }
+      });
 
-    if (node) observer.current.observe(node);
-  }, [loading, hasMore]);
+      if (node) observer.current.observe(node);
+    },
+    [loading, hasMore],
+  );
 
   useEffect(() => {
     const fetchPendingRequests = async () => {
@@ -45,18 +48,18 @@ const NetworkBox = () => {
           axiosInstance.get("/connections/pending", {
             params: {
               page: pagination.page,
-              limit: pagination.limit
-            }
+              limit: pagination.limit,
+            },
           }),
           axiosInstance.get("/connections/sent", {
             params: {
               page: pagination.page,
-              limit: pagination.limit
-            }
-          })
+              limit: pagination.limit,
+            },
+          }),
         ]);
 
-        setPendingRequests(prev => [...prev, ...pendingRes.data]);
+        setPendingRequests((prev) => [...prev, ...pendingRes.data]);
         setSentRequests(sentRes.data);
         setHasMore(pendingRes.data.length === pagination.limit);
       } catch (err) {
@@ -102,46 +105,50 @@ const NetworkBox = () => {
   const handleConnect = async (userId) => {
     try {
       // Check if request already sent
-      const isAlreadySent = sentRequests.some(request => request.userId === userId);
-      
+      const isAlreadySent = sentRequests.some(
+        (request) => request.userId === userId,
+      );
+
       if (isAlreadySent) {
         // Immediately remove from UI
-        setSentRequests(prev => prev.filter(request => request.userId !== userId));
+        setSentRequests((prev) =>
+          prev.filter((request) => request.userId !== userId),
+        );
         await axiosInstance.delete(`/connections/${userId}/pending`);
       } else {
         // Immediately add to sent requests in UI (with minimal data)
-        setSentRequests(prev => [...prev, { userId }]);
+        setSentRequests((prev) => [...prev, { userId }]);
         await axiosInstance.post("/connections", { userId });
       }
-  
+
       // Refresh both pending and sent connections
       const [pendingRes, sentRes] = await Promise.all([
         axiosInstance.get("/connections/pending", {
           params: {
             page: 1,
-            limit: pagination.limit * pagination.page
-          }
+            limit: pagination.limit * pagination.page,
+          },
         }),
         axiosInstance.get("/connections/sent", {
           params: {
             page: 1,
-            limit: pagination.limit * pagination.page
-          }
-        })
+            limit: pagination.limit * pagination.page,
+          },
+        }),
       ]);
-  
+
       setPendingRequests(pendingRes.data);
       setSentRequests(sentRes.data);
-  
     } catch (error) {
       console.error(
         "Failed to handle connection:",
         error.response?.data?.message || error.message,
       );
       // Revert UI changes if request fails
-      setSentRequests(prev => isAlreadySent 
-        ? [...prev, { userId }] 
-        : prev.filter(request => request.userId !== userId)
+      setSentRequests((prev) =>
+        isAlreadySent
+          ? [...prev, { userId }]
+          : prev.filter((request) => request.userId !== userId),
       );
     }
   };
@@ -160,9 +167,7 @@ const NetworkBox = () => {
               className="flex items-center p-4 hover:bg-cardBackgroundHover rounded-lg cursor-pointer transition-colors"
             >
               <PeopleIcon className="text-textActivity text-2xl mr-4" />
-              <span className="text-textActivity font-medium">
-                Connections
-              </span>
+              <span className="text-textActivity font-medium">Connections</span>
             </div>
 
             <div
@@ -180,9 +185,7 @@ const NetworkBox = () => {
               className="flex items-center p-4 hover:bg-cardBackgroundHover rounded-lg cursor-pointer transition-colors"
             >
               <BlockIcon className="text-textActivity text-2xl mr-4" />
-              <span className="text-textActivity font-medium">
-                Blocked
-              </span>
+              <span className="text-textActivity font-medium">Blocked</span>
             </div>
           </div>
         </div>
@@ -196,7 +199,7 @@ const NetworkBox = () => {
                   ({pendingRequests.length})
                 </span>
               </h2>
-              <Link 
+              <Link
                 to="/manage-connections"
                 className="px-4 py-2 text-medium font-medium text-textActivity hover:bg-buttonIconHover rounded-3xl transition-colors"
               >
@@ -205,7 +208,9 @@ const NetworkBox = () => {
             </div>
 
             {loading && pagination.page === 1 ? (
-              <div className="p-6 text-center text-textPlaceholder">Loading...</div>
+              <div className="p-6 text-center text-textPlaceholder">
+                Loading...
+              </div>
             ) : error ? (
               <div className="p-6 text-center text-error">{error}</div>
             ) : pendingRequests.length > 0 ? (
@@ -221,7 +226,9 @@ const NetworkBox = () => {
                       <div className="flex items-center justify-between">
                         <div className="flex items-center space-x-4">
                           <img
-                            src={request.profilePicture || defaultProfilePicture}
+                            src={
+                              request.profilePicture || defaultProfilePicture
+                            }
                             alt={`${request.firstName} ${request.lastName}`}
                             className="w-12 h-12 rounded-full object-cover"
                           />
@@ -253,7 +260,9 @@ const NetworkBox = () => {
                   );
                 })}
                 {loading && (
-                  <div className="p-6 text-center text-textPlaceholder">Loading more...</div>
+                  <div className="p-6 text-center text-textPlaceholder">
+                    Loading more...
+                  </div>
                 )}
               </div>
             ) : (
@@ -263,9 +272,9 @@ const NetworkBox = () => {
             )}
           </div>
 
-          <RecommendedUsers 
-            onConnect={handleConnect} 
-            sentRequests={sentRequests} 
+          <RecommendedUsers
+            onConnect={handleConnect}
+            sentRequests={sentRequests}
           />
 
           <div className="bg-cardBackground rounded-lg shadow-md border border-cardBorder p-6">

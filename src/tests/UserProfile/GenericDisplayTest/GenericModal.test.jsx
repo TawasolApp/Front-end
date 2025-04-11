@@ -33,8 +33,8 @@ describe("GenericModal", () => {
     await waitFor(() => {
       expect(
         screen.getByText((t) =>
-          t.toLowerCase().includes("please provide a skill")
-        )
+          t.toLowerCase().includes("please provide a skill"),
+        ),
       ).toBeInTheDocument();
     });
   });
@@ -46,7 +46,7 @@ describe("GenericModal", () => {
     });
     fireEvent.click(screen.getByTestId("save-button"));
     expect(defaultProps.onSave).toHaveBeenCalledWith(
-      expect.objectContaining({ skillName: "React" })
+      expect.objectContaining({ skillName: "React" }),
     );
   });
 
@@ -58,7 +58,7 @@ describe("GenericModal", () => {
 
   it("shows discard confirmation modal if changes are made", () => {
     render(
-      <GenericModal {...defaultProps} initialData={{ skillName: "React" }} />
+      <GenericModal {...defaultProps} initialData={{ skillName: "React" }} />,
     );
     fireEvent.change(screen.getByLabelText(/skill/i), {
       target: { value: "Angular", name: "skillName" },
@@ -81,14 +81,14 @@ describe("GenericModal", () => {
         {...defaultProps}
         type="education"
         initialData={{ startYear: "2024", endYear: "2022", school: "Test" }}
-      />
+      />,
     );
     fireEvent.click(screen.getByTestId("save-button"));
     await waitFor(() => {
       expect(
         screen.getByText((t) =>
-          t.includes("end year can't be before the start year")
-        )
+          t.includes("end year can't be before the start year"),
+        ),
       ).toBeInTheDocument();
     });
   });
@@ -107,65 +107,67 @@ describe("GenericModal", () => {
           endYear: "2024",
           endMonth: "January",
         }}
-      />
+      />,
     );
     fireEvent.click(screen.getByTestId("save-button"));
     await waitFor(() => {
       expect(
         screen.getByText((t) =>
-          t.includes("end month can't be before the start month")
-        )
+          t.includes("end month can't be before the start month"),
+        ),
       ).toBeInTheDocument();
     });
   });
 
   it("validates required fields for experience", async () => {
     render(
-      <GenericModal {...defaultProps} type="workExperience" initialData={{}} />
+      <GenericModal {...defaultProps} type="workExperience" initialData={{}} />,
     );
     fireEvent.click(screen.getByTestId("save-button"));
     await waitFor(() => {
       expect(
-        screen.getByText((t) => t.includes("please provide a company name"))
+        screen.getByText((t) => t.includes("please provide a company name")),
       ).toBeInTheDocument();
       expect(
-        screen.getByText((t) => t.includes("please provide a title"))
+        screen.getByText((t) => t.includes("please provide a title")),
       ).toBeInTheDocument();
     });
   });
 
   it("validates required fields for education", async () => {
     render(
-      <GenericModal {...defaultProps} type="education" initialData={{}} />
+      <GenericModal {...defaultProps} type="education" initialData={{}} />,
     );
     fireEvent.click(screen.getByTestId("save-button"));
     await waitFor(() => {
       expect(
-        screen.getByText((t) => t.includes("please provide a school"))
+        screen.getByText((t) => t.includes("please provide a school")),
       ).toBeInTheDocument();
     });
   });
 
   it("validates required fields for certifications", async () => {
     render(
-      <GenericModal {...defaultProps} type="certification" initialData={{}} />
+      <GenericModal {...defaultProps} type="certification" initialData={{}} />,
     );
     fireEvent.click(screen.getByTestId("save-button"));
     await waitFor(() => {
       expect(
-        screen.getByText((t) => t.includes("please provide a certificate name"))
+        screen.getByText((t) =>
+          t.includes("please provide a certificate name"),
+        ),
       ).toBeInTheDocument();
       expect(
         screen.getByText((t) =>
-          t.includes("please provide an issuing organization")
-        )
+          t.includes("please provide an issuing organization"),
+        ),
       ).toBeInTheDocument();
     });
   });
 
   it("closes discard modal without confirming", async () => {
     render(
-      <GenericModal {...defaultProps} initialData={{ skillName: "JS" }} />
+      <GenericModal {...defaultProps} initialData={{ skillName: "JS" }} />,
     );
     fireEvent.change(screen.getByLabelText(/skill/i), {
       target: { value: "TS", name: "skillName" },
@@ -179,7 +181,7 @@ describe("GenericModal", () => {
 
   it("closes discard modal after confirming", async () => {
     render(
-      <GenericModal {...defaultProps} initialData={{ skillName: "JS" }} />
+      <GenericModal {...defaultProps} initialData={{ skillName: "JS" }} />,
     );
     fireEvent.change(screen.getByLabelText(/skill/i), {
       target: { value: "TS", name: "skillName" },

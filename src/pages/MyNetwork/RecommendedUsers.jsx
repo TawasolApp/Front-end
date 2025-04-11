@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef, useCallback } from "react";
 import { axiosInstance } from "../../apis/axios";
 import defaultProfilePicture from "../../assets/images/defaultProfilePicture.png";
-import { useNavigate } from 'react-router-dom';
+import { useNavigate } from "react-router-dom";
 
 const RecommendedUsers = ({ onConnect, sentRequests }) => {
   const [recommendedUsers, setRecommendedUsers] = useState([]);
@@ -22,7 +22,7 @@ const RecommendedUsers = ({ onConnect, sentRequests }) => {
     const fetchRecommendedUsers = async () => {
       try {
         const response = await axiosInstance.get("/connections/recommended", {
-          params: { page: 1, limit: 8 } // Initial load of 8 items
+          params: { page: 1, limit: 8 }, // Initial load of 8 items
         });
         setRecommendedUsers(response.data);
         setHasMore(response.data.length === 8); // If we got 8, there might be more
@@ -50,7 +50,7 @@ const RecommendedUsers = ({ onConnect, sentRequests }) => {
 
       if (node) observer.current.observe(node);
     },
-    [modalLoading, hasMore, showModal]
+    [modalLoading, hasMore, showModal],
   );
 
   // Function to load more users when modal is open
@@ -63,7 +63,7 @@ const RecommendedUsers = ({ onConnect, sentRequests }) => {
       const nextPage = page + 1;
 
       const response = await axiosInstance.get("/connections/recommended", {
-        params: { page: nextPage, limit }
+        params: { page: nextPage, limit },
       });
 
       const newUsers = response.data;
@@ -135,8 +135,10 @@ const RecommendedUsers = ({ onConnect, sentRequests }) => {
                     className="w-14 h-14 rounded-full object-cover"
                   />
                   <div className="w-full">
-                    <h3 className="font-semibold text-textHeavyTitle truncate hover:underline"
-                    onClick={() => handleNameClick(user.userId)}>
+                    <h3
+                      className="font-semibold text-textHeavyTitle truncate hover:underline"
+                      onClick={() => handleNameClick(user.userId)}
+                    >
                       {user.firstName} {user.lastName}
                     </h3>
                     <p className="text-sm text-textPlaceholder line-clamp-2">
@@ -185,7 +187,11 @@ const RecommendedUsers = ({ onConnect, sentRequests }) => {
                 {recommendedUsers.map((user, index) => (
                   <div
                     key={`${user.userId}-${index}`}
-                    ref={index === recommendedUsers.length - 1 ? lastUserElementRef : null}
+                    ref={
+                      index === recommendedUsers.length - 1
+                        ? lastUserElementRef
+                        : null
+                    }
                     className="bg-cardBackgroundHover p-2 rounded-lg border border-cardBorder hover:shadow-md transition-shadow flex flex-col justify-between h-[170px]"
                   >
                     <div className="flex flex-col items-center text-center space-y-1">
@@ -195,8 +201,10 @@ const RecommendedUsers = ({ onConnect, sentRequests }) => {
                         className="w-10 h-10 rounded-full object-cover"
                       />
                       <div className="w-full px-1">
-                        <h3 className="font-semibold text-sm text-textHeavyTitle truncate hover:underline"
-                        onClick={() => handleNameClick(user.userId)}>
+                        <h3
+                          className="font-semibold text-sm text-textHeavyTitle truncate hover:underline"
+                          onClick={() => handleNameClick(user.userId)}
+                        >
                           {user.firstName} {user.lastName}
                         </h3>
                         <p className="text-xs text-textPlaceholder line-clamp-2">

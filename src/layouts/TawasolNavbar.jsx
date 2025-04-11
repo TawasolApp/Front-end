@@ -1,37 +1,38 @@
-import { useState, useRef, useEffect } from "react"
-import HomeIcon from "@mui/icons-material/Home"
-import CottageIcon from "@mui/icons-material/Cottage"
-import GroupIcon from "@mui/icons-material/Group"
-import WorkIcon from "@mui/icons-material/Work"
-import CasesIcon from "@mui/icons-material/Cases"
-import ChatBubbleIcon from "@mui/icons-material/ChatBubble"
-import ForumIcon from "@mui/icons-material/Forum"
-import NotificationsIcon from "@mui/icons-material/Notifications"
-import NotificationsActiveIcon from "@mui/icons-material/NotificationsActive"
-import ExpandMoreIcon from "@mui/icons-material/ExpandMore"
-import Avatar from "@mui/material/Avatar"
-import SearchIcon from "@mui/icons-material/Search"
-import { getIconComponent } from "../utils"
-import { useNavigate } from "react-router-dom"
+import { useState, useRef, useEffect } from "react";
+import HomeIcon from "@mui/icons-material/Home";
+import CottageIcon from "@mui/icons-material/Cottage";
+import GroupIcon from "@mui/icons-material/Group";
+import WorkIcon from "@mui/icons-material/Work";
+import CasesIcon from "@mui/icons-material/Cases";
+import ChatBubbleIcon from "@mui/icons-material/ChatBubble";
+import ForumIcon from "@mui/icons-material/Forum";
+import NotificationsIcon from "@mui/icons-material/Notifications";
+import NotificationsActiveIcon from "@mui/icons-material/NotificationsActive";
+import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
+import Avatar from "@mui/material/Avatar";
+import SearchIcon from "@mui/icons-material/Search";
+import { getIconComponent } from "../utils";
+import { useNavigate } from "react-router-dom";
 import { useSelector } from "react-redux";
 
-
 const TawasolNavbar = () => {
-  const currentPath = window.location.pathname
-  const [isMeOpen, setIsMeOpen] = useState(false)
-  const [isSearchFocused, setIsSearchFocused] = useState(false)
-  const [searchText, setSearchText] = useState("")
-  const [windowWidth, setWindowWidth] = useState(window.innerWidth)
-  const searchRef = useRef(null)
-  const searchContainerRef = useRef(null)
-  const searchIconRef = useRef(null)
-  const meDropdownRef = useRef(null)
-  const navbarRef = useRef(null)
-  const navigate = useNavigate()
+  const currentPath = window.location.pathname;
+  const [isMeOpen, setIsMeOpen] = useState(false);
+  const [isSearchFocused, setIsSearchFocused] = useState(false);
+  const [searchText, setSearchText] = useState("");
+  const [windowWidth, setWindowWidth] = useState(window.innerWidth);
+  const searchRef = useRef(null);
+  const searchContainerRef = useRef(null);
+  const searchIconRef = useRef(null);
+  const meDropdownRef = useRef(null);
+  const navbarRef = useRef(null);
+  const navigate = useNavigate();
 
   const currentAuthorId = useSelector((state) => state.authentication.userId);
   const currentAuthorName = `${useSelector((state) => state.authentication.firstName)} ${useSelector((state) => state.authentication.lastName)}`;
-  const currentAuthorPicture = useSelector((state) => state.authentication.profilePicture);
+  const currentAuthorPicture = useSelector(
+    (state) => state.authentication.profilePicture,
+  );
   const currentAuthorBio = useSelector((state) => state.authentication.bio);
 
   const navItems = [
@@ -44,7 +45,12 @@ const TawasolNavbar = () => {
     {
       name: "My Network",
       path: "/network-box",
-      icon: currentPath === "/network-box" ? <GroupIcon sx={{ transform: "scaleX(-1)" }} /> : <GroupIcon />,
+      icon:
+        currentPath === "/network-box" ? (
+          <GroupIcon sx={{ transform: "scaleX(-1)" }} />
+        ) : (
+          <GroupIcon />
+        ),
       active: currentPath === "/network-box",
     },
     {
@@ -62,12 +68,17 @@ const TawasolNavbar = () => {
     {
       name: "Notifications",
       path: "/notifications",
-      icon: currentPath === "/notifications" ? <NotificationsActiveIcon /> : <NotificationsIcon />,
+      icon:
+        currentPath === "/notifications" ? (
+          <NotificationsActiveIcon />
+        ) : (
+          <NotificationsIcon />
+        ),
       active: currentPath === "/notifications",
     },
-  ]
+  ];
 
-  const Icon = getIconComponent("tawasol-icon")
+  const Icon = getIconComponent("tawasol-icon");
 
   useEffect(() => {
     function handleClickOutside(event) {
@@ -78,65 +89,71 @@ const TawasolNavbar = () => {
         searchIconRef.current &&
         !searchIconRef.current.contains(event.target)
       ) {
-        setIsSearchFocused(false)
+        setIsSearchFocused(false);
       }
 
       // Handle me dropdown
-      if (meDropdownRef.current && !meDropdownRef.current.contains(event.target)) {
-        setIsMeOpen(false)
+      if (
+        meDropdownRef.current &&
+        !meDropdownRef.current.contains(event.target)
+      ) {
+        setIsMeOpen(false);
       }
     }
-    document.addEventListener("mousedown", handleClickOutside)
-    return () => document.removeEventListener("mousedown", handleClickOutside)
-  }, [])
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, []);
 
   useEffect(() => {
     function handleResize() {
-      setWindowWidth(window.innerWidth)
+      setWindowWidth(window.innerWidth);
     }
-    window.addEventListener("resize", handleResize)
-    return () => window.removeEventListener("resize", handleResize)
-  }, [])
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
+  }, []);
 
-  const isMobile = windowWidth < 768
+  const isMobile = windowWidth < 768;
 
   const toggleSearch = () => {
-    setIsSearchFocused(true)
-  }
+    setIsSearchFocused(true);
+  };
 
   const handleSearchFocus = () => {
-    setIsSearchFocused(true)
-  }
+    setIsSearchFocused(true);
+  };
 
   const handleSearchBlur = () => {
-    setIsSearchFocused(false)
-  }
+    setIsSearchFocused(false);
+  };
 
   const handleSearchChange = (e) => {
-    setSearchText(e.target.value)
-  }
+    setSearchText(e.target.value);
+  };
 
   const handleSearchKeyDown = (e) => {
     if (e.key === "Enter" && searchText.trim()) {
-      navigate(`/search/${encodeURIComponent(searchText.trim())}`)
-      setIsSearchFocused(false)
+      navigate(`/search/${encodeURIComponent(searchText.trim())}`);
+      setIsSearchFocused(false);
     }
-  }
+  };
 
   const handleSearchSubmit = () => {
     if (searchText.trim()) {
-      navigate(`/search/${encodeURIComponent(searchText.trim())}`)
-      setIsSearchFocused(false)
+      navigate(`/search/${encodeURIComponent(searchText.trim())}`);
+      setIsSearchFocused(false);
     }
-  }
+  };
 
   return (
-    <nav ref={navbarRef} className="sticky top-0 z-50 bg-cardBackground border-b border-cardBorder shadow-sm h-[52px]">
+    <nav
+      ref={navbarRef}
+      className="sticky top-0 z-50 bg-cardBackground border-b border-cardBorder shadow-sm h-[52px]"
+    >
       <div className="max-w-7xl mx-auto px-4 flex items-center justify-between h-full lg:justify-evenly">
         {/* Left Section */}
         <div className="flex items-center gap-2 md:gap-3">
           <div className="flex-shrink-0 h-10">
-            <Icon 
+            <Icon
               className="w-10 h-10 cursor-pointer"
               onClick={() => navigate("/feed")}
             />
@@ -149,7 +166,10 @@ const TawasolNavbar = () => {
               style={{ width: isSearchFocused ? "24rem" : "17.5rem" }}
             >
               <div className="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none z-10">
-                <SearchIcon className="text-navbarIconsNormal" fontSize="small" />
+                <SearchIcon
+                  className="text-navbarIconsNormal"
+                  fontSize="small"
+                />
               </div>
               <input
                 type="text"
@@ -180,7 +200,10 @@ const TawasolNavbar = () => {
           <div className="absolute left-0 top-0 w-full h-[52px] flex items-center px-4 z-50 animate-fadeIn">
             <div ref={searchContainerRef} className="relative w-full">
               <div className="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
-                <SearchIcon className="text-navbarIconsNormal" fontSize="small" />
+                <SearchIcon
+                  className="text-navbarIconsNormal"
+                  fontSize="small"
+                />
               </div>
               <input
                 type="text"
@@ -207,7 +230,11 @@ const TawasolNavbar = () => {
 
         <div className="flex items-center">
           {isMobile && !isSearchFocused && (
-            <button ref={searchIconRef} className="p-1 text-navbarIconsNormal mr-2" onClick={toggleSearch}>
+            <button
+              ref={searchIconRef}
+              className="p-1 text-navbarIconsNormal mr-2"
+              onClick={toggleSearch}
+            >
               <SearchIcon fontSize="small" />
             </button>
           )}
@@ -224,7 +251,9 @@ const TawasolNavbar = () => {
                   onClick={() => navigate(item.path)}
                 >
                   <span className="text-lg">{item.icon}</span>
-                  <span className={`text-xs ${isMobile ? "hidden" : "block"}`}>{item.name}</span>
+                  <span className={`text-xs ${isMobile ? "hidden" : "block"}`}>
+                    {item.name}
+                  </span>
                 </button>
               ))}
 
@@ -232,9 +261,17 @@ const TawasolNavbar = () => {
                 ref={meDropdownRef}
                 className="relative px-3 md:px-4 py-1 flex flex-col items-center justify-center h-[52px] text-navbarIconsNormal hover:text-navbarIconsSelected"
               >
-                <button className="flex flex-col items-center" onClick={() => setIsMeOpen(!isMeOpen)}>
-                  <Avatar src={currentAuthorPicture} sx={{ width: 24, height: 24 }} />
-                  <div className={`flex items-center text-xs ${isMobile ? "hidden" : "block"}`}>
+                <button
+                  className="flex flex-col items-center"
+                  onClick={() => setIsMeOpen(!isMeOpen)}
+                >
+                  <Avatar
+                    src={currentAuthorPicture}
+                    sx={{ width: 24, height: 24 }}
+                  />
+                  <div
+                    className={`flex items-center text-xs ${isMobile ? "hidden" : "block"}`}
+                  >
                     <span>Me</span>
                     <ExpandMoreIcon fontSize="inherit" />
                   </div>
@@ -250,10 +287,19 @@ const TawasolNavbar = () => {
                         className="p-4 flex gap-3 items-center hover:bg-buttonIconHover"
                         onClick={() => navigate(`/users/${currentAuthorId}`)}
                       >
-                        <Avatar src={currentAuthorPicture} sx={{ width: 56, height: 56 }} />
+                        <Avatar
+                          src={currentAuthorPicture}
+                          sx={{ width: 56, height: 56 }}
+                        />
                         <div>
-                          <h3 className="font-semibold text-authorName">{currentAuthorName}</h3>
-                          <p className="text-sm text-authorBio">{currentAuthorBio.length > 50 ? currentAuthorBio.slice(0, 48) + ".." : currentAuthorBio}</p>
+                          <h3 className="font-semibold text-authorName">
+                            {currentAuthorName}
+                          </h3>
+                          <p className="text-sm text-authorBio">
+                            {currentAuthorBio.length > 50
+                              ? currentAuthorBio.slice(0, 48) + ".."
+                              : currentAuthorBio}
+                          </p>
                         </div>
                       </div>
                     </div>
@@ -263,7 +309,7 @@ const TawasolNavbar = () => {
                         className="w-full py-2 px-4 text-left text-sm hover:bg-buttonIconHover transition-colors duration-150"
                         onClick={() => {
                           setIsMeOpen(false);
-                          navigate("/settings")
+                          navigate("/settings");
                         }}
                       >
                         Settings & Privacy
@@ -272,8 +318,8 @@ const TawasolNavbar = () => {
                         className="w-full py-2 px-4 text-left text-sm hover:bg-buttonIconHover transition-colors duration-150"
                         onClick={() => {
                           setIsMeOpen(false);
-                          navigate("/auth/signin")
-                        }}  
+                          navigate("/auth/signin");
+                        }}
                       >
                         Sign Out
                       </button>
@@ -286,8 +332,7 @@ const TawasolNavbar = () => {
         </div>
       </div>
     </nav>
-  )
-}
+  );
+};
 
-export default TawasolNavbar
-
+export default TawasolNavbar;

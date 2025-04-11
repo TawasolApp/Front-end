@@ -46,12 +46,12 @@ export default defineConfig({
     setupFiles: "./src/setupTests.js",
   },
   server: {
-    allowedHosts: ['tawasolapp.me', 'www.tawasolapp.me'],
-    host: '0.0.0.0',
+    allowedHosts: ["tawasolapp.me", "www.tawasolapp.me"],
+    host: "0.0.0.0",
     port: 5173,
     strictPort: true,
     hmr: {
       port: 5173,
     },
-  }
+  },
 });

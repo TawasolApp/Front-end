@@ -12,7 +12,7 @@ describe("ApplyModal", () => {
 
   const setup = () =>
     render(
-      <ApplyModal onClose={mockOnClose} job={mockJob} company={mockCompany} />
+      <ApplyModal onClose={mockOnClose} job={mockJob} company={mockCompany} />,
     );
 
   beforeEach(() => {

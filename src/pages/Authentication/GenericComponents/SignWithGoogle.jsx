@@ -40,11 +40,12 @@ const SignWithGoogle = () => {
                 {
                   idToken: tokenResponse.access_token,
                   isAndroid: false,
-                }
+                },
               );
 
               if (response.status === 201) {
-                const { token, refreshToken, email, isNewUser, isSocialLogin } = response.data;
+                const { token, refreshToken, email, isNewUser, isSocialLogin } =
+                  response.data;
 
                 dispatch(setToken(token));
                 dispatch(setRefreshToken(refreshToken));

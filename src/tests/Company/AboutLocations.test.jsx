@@ -29,7 +29,7 @@ describe("AboutLocations", () => {
     const link = screen.getByRole("link", { name: /get directions/i });
     expect(link).toHaveAttribute(
       "href",
-      "https://www.google.com/maps?q=30.0444,31.2357"
+      "https://www.google.com/maps?q=30.0444,31.2357",
     );
   });
 
@@ -40,7 +40,7 @@ describe("AboutLocations", () => {
     expect(iframe).toBeInTheDocument();
     expect(iframe).toHaveAttribute(
       "src",
-      "https://www.google.com/maps?q=30.0444,31.2357&z=15&output=embed"
+      "https://www.google.com/maps?q=30.0444,31.2357&z=15&output=embed",
     );
   });
 });
@@ -72,7 +72,7 @@ describe("AboutLocations fallback behavior", () => {
     expect(iframe).toBeInTheDocument();
     expect(iframe).toHaveAttribute(
       "src",
-      "https://www.google.com/maps?q=Cairo%2C%20Egypt&z=15&output=embed"
+      "https://www.google.com/maps?q=Cairo%2C%20Egypt&z=15&output=embed",
     );
   });
 });

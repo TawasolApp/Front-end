@@ -9,7 +9,7 @@ const ExpandableText = ({ text = "", maxLines = 3, className = "" }) => {
   useEffect(() => {
     if (textRef.current) {
       const lineHeight = parseFloat(
-        getComputedStyle(textRef.current).lineHeight
+        getComputedStyle(textRef.current).lineHeight,
       );
       const fullHeight = textRef.current.scrollHeight;
       const maxHeight = lineHeight * maxLines;

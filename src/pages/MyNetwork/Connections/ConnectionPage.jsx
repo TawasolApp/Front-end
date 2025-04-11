@@ -2,7 +2,7 @@ import React, { useState, useEffect, useRef, useCallback } from "react";
 import { useSelector } from "react-redux"; // Import useSelector
 import ConnectionCard from "./ConnectionCard";
 import { axiosInstance } from "../../../apis/axios";
-import { useParams } from 'react-router-dom';
+import { useParams } from "react-router-dom";
 
 const ConnectionPage = () => {
   const [connections, setConnections] = useState([]);
@@ -14,7 +14,6 @@ const ConnectionPage = () => {
   const [hasMore, setHasMore] = useState(true);
   const [page, setPage] = useState(1);
   const limit = 5;
-
 
   const { userId } = useParams();
   const observer = useRef();
@@ -33,7 +32,7 @@ const ConnectionPage = () => {
 
       if (node) observer.current.observe(node);
     },
-    [loading, hasMore]
+    [loading, hasMore],
   );
 
   // Fetch connections when sortBy, sortDirection, page, searchQuery, or userId changes
@@ -51,14 +50,14 @@ const ConnectionPage = () => {
         const response = await axiosInstance.get(
           `/connections/${userId}/list`,
           {
-            params: { 
-              page, 
-              limit, 
-              by: sortBy, 
+            params: {
+              page,
+              limit,
+              by: sortBy,
               direction: sortDirection,
-              name: searchQuery || undefined
+              name: searchQuery || undefined,
             },
-          }
+          },
         );
 
         const newData = response.data;
@@ -86,7 +85,9 @@ const ConnectionPage = () => {
   const handleRemoveConnection = async (userIdToRemove) => {
     try {
       await axiosInstance.delete(`/connections/${userIdToRemove}`);
-      setConnections((prev) => prev.filter((connection) => connection.userId !== userIdToRemove));
+      setConnections((prev) =>
+        prev.filter((connection) => connection.userId !== userIdToRemove),
+      );
     } catch (error) {
       setError("Unable to remove connection.");
     }
@@ -154,7 +155,10 @@ const ConnectionPage = () => {
             </div>
 
             <div className="flex items-center relative">
-              <label htmlFor="sortDirection" className="text-sm text-textPlaceholder">
+              <label
+                htmlFor="sortDirection"
+                className="text-sm text-textPlaceholder"
+              >
                 Direction:
               </label>
               <div className="ml-2 relative">
@@ -221,7 +225,11 @@ const ConnectionPage = () => {
               {displayedConnections.map((connection, index) => (
                 <div
                   key={`${connection.userId}-${index}`}
-                  ref={index === displayedConnections.length - 1 ? lastElementRef : null}
+                  ref={
+                    index === displayedConnections.length - 1
+                      ? lastElementRef
+                      : null
+                  }
                 >
                   <ConnectionCard
                     imageUrl={connection.profilePicture}

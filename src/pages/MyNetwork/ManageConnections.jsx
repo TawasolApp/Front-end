@@ -30,39 +30,40 @@ const ManageConnections = () => {
 
       if (node) observer.current.observe(node);
     },
-    [loading, hasMore]
+    [loading, hasMore],
   );
 
   useEffect(() => {
     const fetchData = async () => {
       if (isFetching.current) return;
-      
+
       setLoading(true);
       setError(null);
       isFetching.current = true;
 
       try {
-        const endpoint = activeTab === "received" 
-          ? "/connections/pending" 
-          : "/connections/sent";
-        
+        const endpoint =
+          activeTab === "received"
+            ? "/connections/pending"
+            : "/connections/sent";
+
         const response = await axiosInstance.get(endpoint, {
-          params: { page, limit }
+          params: { page, limit },
         });
 
         const newData = response.data;
-        
+
         if (newData.length === 0) {
           setHasMore(false);
         } else {
           if (page === 1) {
-            activeTab === "received" 
-              ? setPendingRequests(newData) 
+            activeTab === "received"
+              ? setPendingRequests(newData)
               : setSentRequests(newData);
           } else {
-            activeTab === "received" 
-              ? setPendingRequests(prev => [...prev, ...newData]) 
-              : setSentRequests(prev => [...prev, ...newData]);
+            activeTab === "received"
+              ? setPendingRequests((prev) => [...prev, ...newData])
+              : setSentRequests((prev) => [...prev, ...newData]);
           }
         }
       } catch (err) {
@@ -87,7 +88,9 @@ const ManageConnections = () => {
   const handleAccept = async (userId) => {
     try {
       await axiosInstance.patch(`/connections/${userId}`, { isAccept: true });
-      setPendingRequests(prev => prev.filter(request => request.userId !== userId));
+      setPendingRequests((prev) =>
+        prev.filter((request) => request.userId !== userId),
+      );
     } catch (error) {
       setError("Failed to accept connection. Please try again.");
     }
@@ -100,7 +103,9 @@ const ManageConnections = () => {
   const handleIgnore = async (userId) => {
     try {
       await axiosInstance.patch(`/connections/${userId}`, { isAccept: false });
-      setPendingRequests(prev => prev.filter(request => request.userId !== userId));
+      setPendingRequests((prev) =>
+        prev.filter((request) => request.userId !== userId),
+      );
     } catch (error) {
       setError("Failed to ignore connection. Please try again.");
     }
@@ -109,7 +114,9 @@ const ManageConnections = () => {
   const handleWithdraw = async (userId) => {
     try {
       await axiosInstance.delete(`/connections/${userId}/pending`);
-      setSentRequests(prev => prev.filter(request => request.userId !== userId));
+      setSentRequests((prev) =>
+        prev.filter((request) => request.userId !== userId),
+      );
     } catch (error) {
       setError("Failed to withdraw connection request. Please try again.");
     }
@@ -135,7 +142,7 @@ const ManageConnections = () => {
             }`}
             onClick={() => setActiveTab("received")}
           >
-            Received 
+            Received
           </button>
           <button
             className={`px-3 py-1 sm:px-4 sm:py-2 font-semibold text-sm sm:text-base ${
@@ -145,7 +152,7 @@ const ManageConnections = () => {
             }`}
             onClick={() => setActiveTab("sent")}
           >
-            Sent 
+            Sent
           </button>
         </div>
 
@@ -158,18 +165,29 @@ const ManageConnections = () => {
             {pendingRequests.length > 0 ? (
               <div className="space-y-0">
                 {pendingRequests.map((request, index) => (
-                  <div key={`${request.userId}-${index}`} ref={index === pendingRequests.length - 1 ? lastElementRef : null}>
+                  <div
+                    key={`${request.userId}-${index}`}
+                    ref={
+                      index === pendingRequests.length - 1
+                        ? lastElementRef
+                        : null
+                    }
+                  >
                     <div className="p-6">
                       <div className="flex items-center justify-between">
                         <div className="flex items-center space-x-4">
                           <img
-                            src={request.profilePicture || defaultProfilePicture}
+                            src={
+                              request.profilePicture || defaultProfilePicture
+                            }
                             alt={`${request.firstName} ${request.lastName}`}
                             className="w-12 h-12 rounded-full object-cover"
                           />
                           <div>
-                            <h3 className="font-semibold text-textHeavyTitle hover:underline"
-                            onClick={() => handleNameClick(request.userId)}>
+                            <h3
+                              className="font-semibold text-textHeavyTitle hover:underline"
+                              onClick={() => handleNameClick(request.userId)}
+                            >
                               {request.firstName} {request.lastName}
                             </h3>
                             <p className="text-sm text-textPlaceholder">
@@ -210,18 +228,27 @@ const ManageConnections = () => {
             {sentRequests.length > 0 ? (
               <div className="space-y-0">
                 {sentRequests.map((request, index) => (
-                  <div key={`${request.userId}-${index}`} ref={index === sentRequests.length - 1 ? lastElementRef : null}>
+                  <div
+                    key={`${request.userId}-${index}`}
+                    ref={
+                      index === sentRequests.length - 1 ? lastElementRef : null
+                    }
+                  >
                     <div className="p-6">
                       <div className="flex items-center justify-between">
                         <div className="flex items-center space-x-4">
                           <img
-                            src={request.profilePicture || defaultProfilePicture}
+                            src={
+                              request.profilePicture || defaultProfilePicture
+                            }
                             alt={`${request.firstName} ${request.lastName}`}
                             className="w-12 h-12 rounded-full object-cover"
                           />
                           <div>
-                            <h3 className="font-semibold text-textHeavyTitle hover:underline"
-                            onClick={() => handleNameClick(request.userId)}>
+                            <h3
+                              className="font-semibold text-textHeavyTitle hover:underline"
+                              onClick={() => handleNameClick(request.userId)}
+                            >
                               {request.firstName} {request.lastName}
                             </h3>
                             <p className="text-sm text-textPlaceholder">
@@ -257,11 +284,12 @@ const ManageConnections = () => {
           </div>
         )}
 
-        {!hasMore && (pendingRequests.length > 0 || sentRequests.length > 0) && (
-          <div className="text-center p-4 text-header">
-            You've reached the end of your {activeTab} requests
-          </div>
-        )}
+        {!hasMore &&
+          (pendingRequests.length > 0 || sentRequests.length > 0) && (
+            <div className="text-center p-4 text-header">
+              You've reached the end of your {activeTab} requests
+            </div>
+          )}
       </div>
     </div>
   );

@@ -67,7 +67,7 @@ describe("FollowersModal", () => {
 
     await waitFor(() => {
       expect(
-        screen.getByText("Failed to load followers. Please try again.")
+        screen.getByText("Failed to load followers. Please try again."),
       ).toBeInTheDocument();
     });
   });
@@ -145,7 +145,7 @@ describe("FollowersModal", () => {
 
   test("does not render when show is false", () => {
     const { container } = render(
-      <FollowersModal {...defaultProps} show={false} />
+      <FollowersModal {...defaultProps} show={false} />,
     );
     expect(container.firstChild).toBeNull();
   });

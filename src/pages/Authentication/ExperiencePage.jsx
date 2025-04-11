@@ -19,7 +19,7 @@ import { useNavigate } from "react-router-dom";
 
 const ExperienceAuthPage = () => {
   const { email, password, location, isNewGoogleUser } = useSelector(
-    (state) => state.authentication
+    (state) => state.authentication,
   );
   const navigate = useNavigate();
   const dispatch = useDispatch();
@@ -56,10 +56,10 @@ const ExperienceAuthPage = () => {
           email,
           password,
         });
-  
+
         if (userResponse.status === 201) {
           const { token, refreshToken, isSocialLogin } = userResponse.data;
-  
+
           dispatch(setToken(token));
           dispatch(setRefreshToken(refreshToken));
           dispatch(setIsSocialLogin(isSocialLogin));
@@ -88,7 +88,14 @@ const ExperienceAuthPage = () => {
       const profileResponse = await axiosInstance.get("/profile");
 
       if (profileResponse.status === 200) {
-        const { _id, firstName, lastName, headline, profilePicture, coverPhoto } = profileResponse.data;
+        const {
+          _id,
+          firstName,
+          lastName,
+          headline,
+          profilePicture,
+          coverPhoto,
+        } = profileResponse.data;
 
         if (_id) {
           dispatch(setUserId(_id));

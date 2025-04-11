@@ -26,7 +26,7 @@ describe("JobsList", () => {
         selectedJob={null}
         logo={logo}
         name={name}
-      />
+      />,
     );
 
     expect(screen.getByText("Frontend Developer")).toBeInTheDocument();
@@ -43,7 +43,7 @@ describe("JobsList", () => {
         selectedJob={null}
         logo={logo}
         name={name}
-      />
+      />,
     );
 
     const frontendCard = screen.getByText("Frontend Developer");
@@ -60,7 +60,7 @@ describe("JobsList", () => {
         selectedJob={mockJobs[1]}
         logo={logo}
         name={name}
-      />
+      />,
     );
 
     const selectedCard = screen.getByTestId("job-card-2");

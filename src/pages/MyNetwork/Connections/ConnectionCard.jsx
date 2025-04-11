@@ -19,9 +19,9 @@ const ConnectionCard = ({
   const profilePicture = imageUrl || defaultProfilePicture;
 
   const handleNameClick = () => {
-    navigate(`/users/${userId}`);  // Use userId in the route
+    navigate(`/users/${userId}`); // Use userId in the route
   };
-  
+
   const toggleMenu = () => setIsMenuOpen(!isMenuOpen);
   const openConfirmation = () => {
     setIsConfirmationOpen(true);
@@ -63,13 +63,13 @@ const ConnectionCard = ({
             className="w-12 h-12 rounded-full object-cover"
           />
           <div className="ml-3 flex-1">
-            <h3 className="text-lg font-semibold hover:underline cursor-pointer text-textHeavyTitle"
-            onClick={handleNameClick}>
+            <h3
+              className="text-lg font-semibold hover:underline cursor-pointer text-textHeavyTitle"
+              onClick={handleNameClick}
+            >
               {firstName} {lastName}
             </h3>
-            <p className="text-sm text-textActivity">
-              {experience}
-            </p>
+            <p className="text-sm text-textActivity">{experience}</p>
             <p className="text-xs text-textPlaceholder mt-1">
               {connectionDate}
             </p>

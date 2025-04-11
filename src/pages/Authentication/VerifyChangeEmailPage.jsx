@@ -28,7 +28,7 @@ const VerifyChangeEmailPage = () => {
         console.error(err);
         if (err.response?.status === 400) {
           setStatus(
-            "Invalid or expired token. Please request a new verification email."
+            "Invalid or expired token. Please request a new verification email.",
           );
         } else if (err.response?.status === 404) {
           setStatus("User not found. Please contact support.");

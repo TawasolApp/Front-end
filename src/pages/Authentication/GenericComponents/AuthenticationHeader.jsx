@@ -8,7 +8,9 @@ const AuthenticationHeader = ({ hideButtons = false }) => {
   const navigate = useNavigate();
 
   return (
-    <nav className={`bg-mainBackground pt-3 pb-6 px-4 sm:px-6 ${hideButtons ? "absolute top-0 left-0 right-0" : ""}`}>
+    <nav
+      className={`bg-mainBackground pt-3 pb-6 px-4 sm:px-6 ${hideButtons ? "absolute top-0 left-0 right-0" : ""}`}
+    >
       <div
         className={`mx-auto w-full max-w-7xl flex ${hideButtons ? "justify-start" : "justify-between"} items-center`}
       >

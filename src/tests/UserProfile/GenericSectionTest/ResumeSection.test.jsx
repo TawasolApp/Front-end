@@ -27,7 +27,7 @@ vi.mock(
         <button onClick={onCancel}>Cancel</button>
       </div>
     ),
-  })
+  }),
 );
 
 // ✅ Import AFTER mocks
@@ -55,7 +55,7 @@ describe("ResumeSection", () => {
   it("shows upload UI when no resume exists", () => {
     render(<ResumeSection user={{ id: "123" }} isOwner={true} />);
     expect(
-      screen.getByText("Add a resume to help recruiters find you")
+      screen.getByText("Add a resume to help recruiters find you"),
     ).toBeInTheDocument();
     expect(screen.getByText("Upload Resume")).toBeInTheDocument();
   });

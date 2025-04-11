@@ -10,7 +10,8 @@ function ViewerView({
 }) {
   const [connectStatus, setConnectStatus] = useState(initialConnectStatus);
   const [isFollowing, setIsFollowing] = useState(
-    initialFollowStatus === "Following" || initialConnectStatus === "Connection"
+    initialFollowStatus === "Following" ||
+      initialConnectStatus === "Connection",
   );
   const [showUnfollowModal, setShowUnfollowModal] = useState(false);
   const [showAcceptModal, setShowAcceptModal] = useState(false);
@@ -102,39 +103,45 @@ function ViewerView({
       setConnectStatus("Connection");
       setIsFollowing(true);
       setShowAcceptModal(false);
-      
+
       // 1. First accept the connection
       const connectionRes = await axios.patch(`/connections/${user._id}`, {
-        isAccept: true
+        isAccept: true,
       });
-  
+
       if (connectionRes.status !== 200) {
         throw new Error("Failed to accept connection");
       }
-  
+
       // 2. Then follow the user (only if connection was successful)
       try {
         const followRes = await axios.post("/connections/follow", {
-          userId: user._id
+          userId: user._id,
         });
-        
+
         if (followRes.status !== 201) {
           console.warn("Connection accepted but follow failed");
           // Don't revert connection status, just the follow state
           setIsFollowing(false);
         }
       } catch (followError) {
-        console.warn("Follow failed but connection succeeded:", followError.response?.data || followError.message);
+        console.warn(
+          "Follow failed but connection succeeded:",
+          followError.response?.data || followError.message,
+        );
         setIsFollowing(false);
       }
-  
+
       console.log("Connection successfully accepted");
     } catch (err) {
       // Revert everything if connection acceptance fails
       setConnectStatus("Request");
       setIsFollowing(false);
-      console.error("Accept connection error:", err.response?.data || err.message);
-      
+      console.error(
+        "Accept connection error:",
+        err.response?.data || err.message,
+      );
+
       if (err.response?.status === 409) {
         alert("Connection already exists");
       } else {

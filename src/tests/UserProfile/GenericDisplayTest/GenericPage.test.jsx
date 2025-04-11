@@ -70,7 +70,7 @@ describe("GenericPage Component", () => {
         <Provider store={store}>
           <GenericPage title="Experience" type="workExperience" />
         </Provider>
-      </MemoryRouter>
+      </MemoryRouter>,
     );
   }
 

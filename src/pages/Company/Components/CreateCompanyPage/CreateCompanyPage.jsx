@@ -152,7 +152,7 @@ function CreateCompanyPage() {
     } catch (error) {
       console.error(
         "Full error response:",
-        error.response?.data || error.message
+        error.response?.data || error.message,
       );
       if (error.response) {
         setErrors((prev) => ({

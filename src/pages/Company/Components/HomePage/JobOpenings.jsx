@@ -16,7 +16,7 @@ function JobOpenings() {
       setLoading(true);
       try {
         const res = await axiosInstance.get(
-          `/companies/${companyId}/jobs?page=1&limit=10`
+          `/companies/${companyId}/jobs?page=1&limit=10`,
         );
         setJobs(res.data.slice(0, 6));
       } catch (err) {

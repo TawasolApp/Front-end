@@ -21,7 +21,7 @@ function EducationFields({ formData, setFormData, handleChange, errors }) {
 
   const filteredOptions = inputValue
     ? schools.filter((school) =>
-        school.name.toLowerCase().includes(inputValue.toLowerCase())
+        school.name.toLowerCase().includes(inputValue.toLowerCase()),
       )
     : [];
 
@@ -69,12 +69,12 @@ function EducationFields({ formData, setFormData, handleChange, errors }) {
             if (e.key === "ArrowDown") {
               e.preventDefault();
               setHighlightedIndex((prev) =>
-                prev < filteredOptions.length - 1 ? prev + 1 : 0
+                prev < filteredOptions.length - 1 ? prev + 1 : 0,
               );
             } else if (e.key === "ArrowUp") {
               e.preventDefault();
               setHighlightedIndex((prev) =>
-                prev > 0 ? prev - 1 : filteredOptions.length - 1
+                prev > 0 ? prev - 1 : filteredOptions.length - 1,
               );
             } else if (e.key === "Enter" && highlightedIndex >= 0) {
               e.preventDefault();
