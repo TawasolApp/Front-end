@@ -14,6 +14,13 @@ function ViewerView({
   );
   const [showUnfollowModal, setShowUnfollowModal] = useState(false);
   const [showAcceptModal, setShowAcceptModal] = useState(false);
+  useEffect(() => {
+    if (connectStatus === "Connection") {
+      setIsFollowing(true);
+    } else if (connectStatus === "No Connection") {
+      setIsFollowing(false);
+    }
+  }, [connectStatus]);
 
   const connectionStatusLabel = {
     Connection: "Connected",
@@ -21,12 +28,6 @@ function ViewerView({
     Request: "Accept", // Changed from "Request" to "Accept" for better UX
     "No Connection": "Connect",
   };
-
-  useEffect(() => {
-    if (connectStatus === "Connection") {
-      setIsFollowing(true);
-    }
-  }, [connectStatus]);
 
   const handleFollow = async () => {
     if (!isFollowing) {
@@ -57,36 +58,36 @@ function ViewerView({
   };
   const handleConnect = async () => {
     try {
-      /*if (connectStatus === "Connection") {
-        const res = await axios.delete(`/connections/${user._id}`);
-        console.log("Disconnected successfully:", res.status);
-        setConnectStatus("No Connection");
-      } else if (connectStatus === "No Connection") {
-        const res = await axios.post("/connections", {
-          userId: user._id,
-        });
-        console.log("Connection request sent:", res.data);
-        setConnectStatus("Pending");*/
-      if (status === "Connection") {
+      if (connectStatus === "Connection") {
         // Handle disconnection
         await axios.delete(`/connections/${user._id}`);
-        setStatus("No Connection"); // Update state immediately
-      } else if (status === "No Connection") {
+        setConnectStatus("No Connection"); // Update state immediately
+
+        // Try to unfollow after disconnecting, but ignore 404 errors
+        try {
+          await axios.delete(`/connections/unfollow/${user._id}`);
+        } catch (err) {
+          if (err.response?.status !== 404) {
+            console.error("Unfollow error:", err.response?.data || err.message);
+          }
+        }
+        setIsFollowing(false);
+      } else if (connectStatus === "No Connection") {
         // Send connection request
         const res = await axios.post("/connections", {
           userId: user._id,
         });
         if (res.status === 201) {
           console.log("Connection request sent:", res.data);
-          setStatus("Pending"); // Update state immediately
+          setConnectStatus("Pending"); // Update state immediately
         }
-      } else if (status === "Request") {
+      } else if (connectStatus === "Request") {
         // Show modal for accepting connection request
         setShowAcceptModal(true);
-      } else if (status === "Pending") {
+      } else if (connectStatus === "Pending") {
         // Handle canceling a pending request
         await axios.delete(`/connections/${user._id}/pending`);
-        setStatus("No Connection"); // Update state immediately after successful deletion
+        setConnectStatus("No Connection"); // Update state immediately after successful deletion
       }
     } catch (err) {
       console.error("Connection error:", err.response?.data || err.message);
@@ -99,14 +100,17 @@ function ViewerView({
   const confirmAcceptConnection = async () => {
     try {
       const res = await axios.patch(`/connections/${user._id}`, {
-        isAccept: true
+        isAccept: true,
       });
       if (res.status === 200) {
         console.log("Connection accepted:", res.data);
-        setStatus("Connection");
+        setConnectStatus("Connection");
       }
     } catch (err) {
-      console.error("Accept connection error:", err.response?.data || err.message);
+      console.error(
+        "Accept connection error:",
+        err.response?.data || err.message
+      );
     } finally {
       setShowAcceptModal(false);
     }
@@ -122,7 +126,7 @@ function ViewerView({
       className=" flex gap-2 flex-wrap sm:flex-nowrap"
     >
       <button
-        className="px-4 py-2 bg-blue-600 text-boxheading rounded-full text-sm"
+        className="px-4 py-2 bg-blue-600 text-boxbackground   rounded-full text-sm"
         onClick={handleMessage}
       >
         Message
@@ -131,7 +135,7 @@ function ViewerView({
       <button
         className={`px-4 py-2 border rounded-full text-sm capitalize transition-all duration-300 ease-in-out ${
           ["Connection", "Pending", "Request"].includes(connectStatus)
-            ? "bg-blue-600 text-white"
+            ? "bg-blue-600 text-boxbackground  "
             : "text-blue-600 border-blue-600"
         } hover:bg-blue-100 hover:text-blue-700`}
         onClick={handleConnect}
@@ -142,7 +146,7 @@ function ViewerView({
       <button
         className={`px-4 py-2 border rounded-full text-sm transition-all duration-300 ease-in-out ${
           isFollowing
-            ? "bg-blue-600 text-boxheading"
+            ? "bg-blue-600 text-boxbackground  "
             : "text-blue-600 border-blue-600"
         } hover:bg-blue-100 hover:text-blue-700`}
         onClick={handleFollow}
