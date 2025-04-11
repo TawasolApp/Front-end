@@ -3,7 +3,7 @@ import { Route, Routes } from "react-router-dom";
 import ChangePasswordPage from "../pages/Authentication/ChangePasswordPage";
 import ChangeEmailPage from "../pages/Authentication/ChangeEmailPage";
 
-import ProfilePage from "../pages/UserProfile/Components/ProfilePage";
+import ProfilePage from "../pages/UserProfile/Components/ProfilePage.jsx";
 import ProfileLayout from "../pages/UserProfile/profileLayout";
 import EducationPage from "../pages/UserProfile/Components/Pages/EducationPage";
 import ExperiencePage from "../pages/UserProfile/Components/Pages/ExperiencePage";
