@@ -1,8 +1,7 @@
-"use client";
-
 import { useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import SearchPosts from "./SearchPosts";
+import PeopleSearch from "./SearchPeople";
 
 const SearchContainer = () => {
   const { searchText } = useParams();
@@ -131,22 +130,7 @@ const SearchContainer = () => {
       )}
 
       {selectedFilter === "People" && (
-        <div className="flex justify-center min-h-screen bg-mainBackground gap-0 p-4">
-          <main className="w-[540px] flex-grow-0 mx-2 space-y-4">
-            {/* Replace with your People search component */}
-            <div className="bg-cardBackground border border-cardBorder rounded p-4">
-              <h2 className="text-xl font-semibold mb-4 text-textActivity">
-                People Results for "{searchText}"
-              </h2>
-              {companyFilter && (
-                <p className="text-sm mb-4 text-textActivity">
-                  Filtering by company: {companyFilter}
-                </p>
-              )}
-              {/* Your people results would go here */}
-            </div>
-          </main>
-        </div>
+        <PeopleSearch searchText={searchText} company={companyFilter} />
       )}
 
       {selectedFilter === "Companies" && (
