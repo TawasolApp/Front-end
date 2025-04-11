@@ -230,6 +230,7 @@ const ConnectionPage = () => {
                     experience={connection.headline}
                     connectionDate={`Connected on ${new Date(connection.createdAt).toLocaleDateString()}`}
                     onRemove={() => handleRemoveConnection(connection.userId)}
+                    userId={connection.userId}
                   />
                   {index !== displayedConnections.length - 1 && (
                     <div className="border-t border-cardBorder"></div>
