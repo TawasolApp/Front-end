@@ -128,6 +128,7 @@ function ViewerView({
       <button
         className="px-4 py-2 bg-blue-600 text-boxbackground   rounded-full text-sm"
         onClick={handleMessage}
+        aria-label="Send message"
       >
         Message
       </button>
@@ -139,6 +140,7 @@ function ViewerView({
             : "text-blue-600 border-blue-600"
         } hover:bg-blue-100 hover:text-blue-700`}
         onClick={handleConnect}
+        aria-label={connectionStatusLabel[connectStatus] || "Connect"}
       >
         {connectionStatusLabel[connectStatus] || "Connect"}
       </button>
@@ -150,6 +152,7 @@ function ViewerView({
             : "text-blue-600 border-blue-600"
         } hover:bg-blue-100 hover:text-blue-700`}
         onClick={handleFollow}
+        aria-label={isFollowing ? "Unfollow user" : "Follow user"}
       >
         {isFollowing ? "✓ Following" : "+ Follow"}
       </button>
