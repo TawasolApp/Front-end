@@ -10,6 +10,7 @@ import ExperiencePage from "../pages/UserProfile/Components/Pages/ExperiencePage
 import CertificationsPage from "../pages/UserProfile/Components/Pages/CertificationsPage";
 import SkillsPage from "../pages/UserProfile/Components/Pages/SkillsPage";
 import UserPostsPage from "../pages/UserProfile/Components/UserPostsSlider/UserPostsPage.jsx";
+
 import CompanyLayout from "../pages/Company/CompanyLayout";
 import PostsPage from "../pages/Company/Components/Pages/PostsPage";
 import AboutPage from "../pages/Company/Components/Pages/AboutPage";
