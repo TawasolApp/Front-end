@@ -96,7 +96,6 @@ function ViewerView({
       }
     }
   };
-
   const confirmAcceptConnection = async () => {
     try {
       const res = await axios.patch(`/connections/${user._id}`, {
