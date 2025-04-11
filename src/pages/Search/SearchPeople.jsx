@@ -1,90 +1,84 @@
-"use client"
-
-import { useState, useEffect } from "react"
-import { useNavigate } from "react-router-dom"
-import { Avatar } from "@mui/material"
-import { axiosInstance } from "../../apis/axios"
+import { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
+import { Avatar } from "@mui/material";
+import { axiosInstance } from "../../apis/axios";
 
 const PeopleSearch = ({ searchText, company }) => {
-  const navigate = useNavigate()
-  const [people, setPeople] = useState([])
-  const [loading, setLoading] = useState(false)
-  const [error, setError] = useState(null)
-  const [page, setPage] = useState(1)
-  const [hasMore, setHasMore] = useState(true)
-  const limit = 10
+  const navigate = useNavigate();
+  const [people, setPeople] = useState([]);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState(null);
+  const [page, setPage] = useState(1);
+  const [hasMore, setHasMore] = useState(true);
+  const limit = 10;
 
   // Function to fetch people data
   const fetchPeople = async (pageNum = 1, reset = false) => {
     try {
-      setLoading(true)
-      setError(null)
+      setLoading(true);
+      setError(null);
 
-      // Construct query parameters
       const params = {
         page: pageNum,
         limit,
         name: searchText || "",
-      }
+      };
 
-      // Add company filter if provided
-      if (company) {
-        params.company = company
-      }
-
-      // Make API call
-      const response = await axiosInstance.get("/connections/users", { params })
-
-      // Update state based on response
+      if (company) params.company = company;
+      const response = await axiosInstance.get("/connections/users", {
+        params,
+      });
       if (reset) {
-        setPeople(response.data)
+        setPeople(response.data);
       } else {
-        setPeople((prev) => [...prev, ...response.data])
+        setPeople((prev) => [...prev, ...response.data]);
       }
 
       // Check if there are more results to load
-      setHasMore(response.data.length === limit)
+      setHasMore(response.data.length === limit);
     } catch (err) {
-      console.error("Error fetching people:", err)
-      setError("Failed to load people. Please try again.")
+      console.error("Error fetching people:", err);
+      setError("Failed to load people. Please try again.");
     } finally {
-      setLoading(false)
+      setLoading(false);
     }
-  }
+  };
 
   // Initial data fetch when component mounts or search params change
   useEffect(() => {
-    setPeople([])
-    setPage(1)
-    setHasMore(true)
-    fetchPeople(1, true)
-  }, [searchText, company])
+    setPeople([]);
+    setPage(1);
+    setHasMore(true);
+    fetchPeople(1, true);
+  }, [searchText, company]);
 
   // Load more results when page changes
   useEffect(() => {
     if (page > 1) {
-      fetchPeople(page)
+      fetchPeople(page);
     }
-  }, [page])
+  }, [page]);
 
   // Handle load more
   const handleLoadMore = () => {
     if (!loading && hasMore) {
-      setPage((prevPage) => prevPage + 1)
+      setPage((prevPage) => prevPage + 1);
     }
-  }
+  };
 
   // Handle user click
   const handleUserClick = (userId) => {
-    navigate(`/users/${userId}`)
-  }
+    navigate(`/users/${userId}`);
+  };
 
   return (
     <div className="flex justify-center bg-mainBackground gap-0 p-4">
       <main className="w-full max-w-[700px] flex-grow-0 mx-2 space-y-4">
         {/* Results count */}
         <div className="text-textActivity text-sm py-2">
-          {people.length > 0 ? `Showing ${people.length} results` : "No results found"}
+          {people.length > 0
+            ? `Showing ${people.length} results`
+            : "No results found"}
         </div>
 
         {/* People results */}
@@ -111,13 +105,17 @@ const PeopleSearch = ({ searchText, company }) => {
                 <h3 className="text-authorName font-medium hover:underline">
                   {person.firstName} {person.lastName}
                 </h3>
-                <p className="text-authorBio text-sm line-clamp-2">{person.headline}</p>
+                <p className="text-authorBio text-sm line-clamp-2">
+                  {person.headline}
+                </p>
               </div>
             </div>
           ))}
 
           {/* Loading and load more */}
-          {loading && <div className="p-4 text-center text-textActivity">Loading...</div>}
+          {loading && (
+            <div className="p-4 text-center text-textActivity">Loading...</div>
+          )}
 
           {error && <div className="p-4 text-center text-red-500">{error}</div>}
 
@@ -131,12 +129,14 @@ const PeopleSearch = ({ searchText, company }) => {
           )}
 
           {!loading && !hasMore && people.length > 0 && (
-            <div className="p-4 text-center text-textActivity">No more results</div>
+            <div className="p-4 text-center text-textActivity">
+              No more results
+            </div>
           )}
         </div>
       </main>
     </div>
-  )
-}
+  );
+};
 
-export default PeopleSearch
+export default PeopleSearch;

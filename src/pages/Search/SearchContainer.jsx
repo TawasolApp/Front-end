@@ -1,11 +1,11 @@
 import { useState } from "react";
-import { useParams, useNavigate } from "react-router-dom";
+import { useParams } from "react-router-dom";
 import SearchPosts from "./SearchPosts";
 import PeopleSearch from "./SearchPeople";
+import CompanySearch from "./SearchCompany";
 
 const SearchContainer = () => {
   const { searchText } = useParams();
-  const navigate = useNavigate();
 
   // Default filter states
   const [selectedFilter, setSelectedFilter] = useState("Posts");
@@ -134,22 +134,7 @@ const SearchContainer = () => {
       )}
 
       {selectedFilter === "Companies" && (
-        <div className="flex justify-center min-h-screen bg-mainBackground gap-0 p-4">
-          <main className="w-[540px] flex-grow-0 mx-2 space-y-4">
-            {/* Replace with your Companies search component */}
-            <div className="bg-cardBackground border border-cardBorder rounded p-4">
-              <h2 className="text-xl font-semibold mb-4 text-textActivity">
-                Companies Results for "{searchText}"
-              </h2>
-              {industryFilter && (
-                <p className="text-sm mb-4 text-textActivity">
-                  Filtering by industry: {industryFilter}
-                </p>
-              )}
-              {/* Your companies results would go here */}
-            </div>
-          </main>
-        </div>
+        <CompanySearch searchText={searchText} industry={industryFilter} />
       )}
     </div>
   );
