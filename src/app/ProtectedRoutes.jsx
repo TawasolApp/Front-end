@@ -32,6 +32,7 @@ import RepostsContainer from "../pages/Feed/RepostsContainer";
 import SearchContainer from "../pages/Search/SearchContainer";
 import TawasolNavbar from "../layouts/TawasolNavbar";
 import ThemeSettings from "../pages/Settings/ThemeSettings.jsx";
+import DeleteAccount from "../pages/Settings/DeleteAccount.jsx";
 
 const RenderWithNavbar = (component) => {
   return (
@@ -47,6 +48,7 @@ const ProtectedRoutes = () => {
     <Routes>
       <Route path="/auth/update-password" element={<ChangePasswordPage />} />
       <Route path="/auth/update-email" element={<ChangeEmailPage />} />
+      <Route path="/auth/delete-account" element={<DeleteAccount />} />
 
       <Route
         path="/search/:searchText"
