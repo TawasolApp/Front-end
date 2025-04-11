@@ -6,9 +6,9 @@ import ExperienceSection from "./Sections/ExperienceSection";
 import SkillsSection from "./Sections/SkillsSection";
 import CertificationsSection from "./Sections/CertificationsSection";
 import AboutSection from "./Sections/AboutSection";
-import ResumeSection from "./Sections/ResumeSection";
 import RestrictedProfilevisibility from "./Profilevisibility/RestrictedProfilevisibility.jsx";
 import PostsSlider from "./UserPostsSlider/UserPostsSlider.jsx";
+
 function ProfilePage() {
   const { user, isOwner, onUserUpdate } = useOutletContext();
   const educationRef = useRef(null);
@@ -30,7 +30,6 @@ function ProfilePage() {
       {isVisible ? (
         <>
           <AboutSection user={user} isOwner={isOwner} />
-          <ResumeSection user={user} isOwner={isOwner} />
           <EducationSection
             isOwner={isOwner}
             sectionRef={educationRef}
