@@ -30,10 +30,9 @@ const App = () => {
   }, []);
 
   const getCurrentTheme = () => {
-    const rootElement = document.documentElement;
-    console.log(rootElement.classList)
-    const theme = rootElement.classList.contains('dark') ? 'dark' : 'light';
-    return theme;
+    const savedTheme = localStorage.getItem("theme");
+    const themeToSet = savedTheme || "light";
+    return themeToSet;
   };
 
   return (

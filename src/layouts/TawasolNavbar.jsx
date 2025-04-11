@@ -120,7 +120,6 @@ const TawasolNavbar = () => {
     if (e.key === "Enter" && searchText.trim()) {
       navigate(`/search/${encodeURIComponent(searchText.trim())}`)
       setIsSearchFocused(false)
-      setSearchText("")
     }
   }
 
@@ -128,7 +127,6 @@ const TawasolNavbar = () => {
     if (searchText.trim()) {
       navigate(`/search/${encodeURIComponent(searchText.trim())}`)
       setIsSearchFocused(false)
-      setSearchText("")
     }
   }
 

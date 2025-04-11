@@ -1,11 +1,12 @@
 import React, { useState } from "react";
 import { axiosInstance as axios } from "../../../../apis/axios.js";
-// make navigation correct after implementing api
+import SkillEndorsersModal from "./SkillEndorsersModal.jsx";
 function SkillEndorsement({ userId, skillName, endorsements = [], viewerId }) {
   const alreadyEndorsed = endorsements.includes(viewerId);
   const [isEndorsed, setIsEndorsed] = useState(alreadyEndorsed);
   const [endorsementCount, setEndorsementCount] = useState(endorsements.length);
   const [loading, setLoading] = useState(false);
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
   const handleEndorse = async () => {
     try {
@@ -46,28 +47,36 @@ function SkillEndorsement({ userId, skillName, endorsements = [], viewerId }) {
 
   return (
     <div>
-      <p
-        className="text-companyheader flex items-center mt-1 hover:underline cursor-pointer w-fit"
-        onClick={handleViewEndorsers}
-        title="View who endorsed this skill"
-      >
-        <span className="mr-2">👥</span>
-        {endorsementCount} endorsement{endorsementCount !== 1 ? "s" : ""}
-      </p>
+      {endorsementCount > 0 && (
+        <p
+          className="text-companyheader flex items-center mt-1 hover:underline cursor-pointer w-fit"
+          onClick={() => setIsModalOpen(true)}
+          title="View who endorsed this skill"
+        >
+          <span className="mr-2">👥</span>
+          {endorsementCount} endorsement{endorsementCount !== 1 ? "s" : ""}
+        </p>
+      )}
 
       <button
         onClick={isEndorsed ? handleUnendorse : handleEndorse}
         disabled={loading}
         className={`mt-2 px-4 py-2 border rounded-full flex items-center justify-center gap-2 w-fit
-          ${isEndorsed ? "bg-modalbackground text-normaltext" : "bg-white text-text-normaltext"} 
+          ${isEndorsed ? "bg-modalbackground text-normaltext" : "bg-white text-normaltext"} 
           border-companyheader hover:bg-sliderbutton transition
           ${loading ? "opacity-50 cursor-not-allowed" : ""}`}
         title={
           isEndorsed ? "Click to remove your endorsement" : "Click to endorse"
         }
       >
-        {isEndorsed ? "✓  Endorsed" : " + Endorse"}
+        {isEndorsed ? "✓  Endorsed" : " Endorse"}
       </button>
+      <SkillEndorsersModal
+        isOpen={isModalOpen}
+        onClose={() => setIsModalOpen(false)}
+        userId={userId}
+        skillName={skillName}
+      />
     </div>
   );
 }

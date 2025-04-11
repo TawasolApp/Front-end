@@ -1,10 +1,17 @@
 import React, { useState, useEffect } from "react";
 import { axiosInstance as axios } from "../../../../apis/axios.js";
-import ConfirmModal from "../GenericDisplay/ConfirmModal";
+import ConfirmModal from "../ReusableModals/ConfirmModal.jsx";
 
-function ViewerView({ user, viewerId, initialStatus }) {
-  const [isFollowing, setIsFollowing] = useState(initialStatus === "Following");
-  const [status, setStatus] = useState(initialStatus);
+function ViewerView({
+  user,
+  viewerId,
+  initialConnectStatus,
+  initialFollowStatus,
+}) {
+  const [connectStatus, setConnectStatus] = useState(initialConnectStatus);
+  const [isFollowing, setIsFollowing] = useState(
+    initialFollowStatus === "Following" || initialConnectStatus === "Connection"
+  );
   const [showUnfollowModal, setShowUnfollowModal] = useState(false);
   const [showAcceptModal, setShowAcceptModal] = useState(false);
 
@@ -16,10 +23,10 @@ function ViewerView({ user, viewerId, initialStatus }) {
   };
 
   useEffect(() => {
-    if (status === "Connection") {
+    if (connectStatus === "Connection") {
       setIsFollowing(true);
     }
-  }, [status]);
+  }, [connectStatus]);
 
   const handleFollow = async () => {
     if (!isFollowing) {
@@ -50,6 +57,16 @@ function ViewerView({ user, viewerId, initialStatus }) {
   };
   const handleConnect = async () => {
     try {
+      /*if (connectStatus === "Connection") {
+        const res = await axios.delete(`/connections/${user._id}`);
+        console.log("Disconnected successfully:", res.status);
+        setConnectStatus("No Connection");
+      } else if (connectStatus === "No Connection") {
+        const res = await axios.post("/connections", {
+          userId: user._id,
+        });
+        console.log("Connection request sent:", res.data);
+        setConnectStatus("Pending");*/
       if (status === "Connection") {
         // Handle disconnection
         await axios.delete(`/connections/${user._id}`);
@@ -100,7 +117,10 @@ function ViewerView({ user, viewerId, initialStatus }) {
   };
 
   return (
-    <div className="flex gap-2 flex-wrap sm:flex-nowrap">
+    <div
+      data-testid="viewer-view"
+      className=" flex gap-2 flex-wrap sm:flex-nowrap"
+    >
       <button
         className="px-4 py-2 bg-blue-600 text-boxheading rounded-full text-sm"
         onClick={handleMessage}
@@ -110,13 +130,13 @@ function ViewerView({ user, viewerId, initialStatus }) {
 
       <button
         className={`px-4 py-2 border rounded-full text-sm capitalize transition-all duration-300 ease-in-out ${
-          ["Connection", "Pending", "Request"].includes(status)
+          ["Connection", "Pending", "Request"].includes(connectStatus)
             ? "bg-blue-600 text-white"
             : "text-blue-600 border-blue-600"
         } hover:bg-blue-100 hover:text-blue-700`}
         onClick={handleConnect}
       >
-        {connectionStatusLabel[status] || "Connect"}
+        {connectionStatusLabel[connectStatus] || "Connect"}
       </button>
 
       <button

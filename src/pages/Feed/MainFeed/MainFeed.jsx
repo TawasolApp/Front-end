@@ -8,6 +8,8 @@ import { useSelector } from "react-redux";
 const MainFeed = ({
   API_ROUTE = "posts",
   q = null,
+  timeframe = null,
+  network = null,
   showShare = true,
   currentAuthorId = useSelector((state) => state.authentication.userId),
   currentAuthorName = `${useSelector((state) => state.authentication.firstName)} ${useSelector((state) => state.authentication.lastName)}`,
@@ -54,7 +56,11 @@ const MainFeed = ({
 
       // fetch new posts
       const params = { page: pageNum };
-      if (q != null) params.q = q;
+      if (q != null) {
+        params.q = q;
+        params.network = network;
+        params.timeframe = timeframe;
+      }
       const response = await axiosInstance.get(API_ROUTE, {
         params: params,
       });
