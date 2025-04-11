@@ -27,8 +27,8 @@ import FeedContainer from "../pages/Feed/FeedContainer";
 import SinglePost from "../pages/Feed/SinglePost";
 import SavedPostsContainer from "../pages/SavedPosts/SavedPostsContainer";
 import RepostsContainer from "../pages/Feed/RepostsContainer";
-import SearchPosts from "../pages/Search/SearchPosts";
 
+import SearchContainer from "../pages/Search/SearchContainer";
 import TawasolNavbar from "../layouts/TawasolNavbar";
 import ThemeSettings from "../pages/Settings/ThemeSettings.jsx";
 
@@ -49,7 +49,7 @@ const ProtectedRoutes = () => {
 
       <Route
         path="/search/:searchText"
-        element={RenderWithNavbar(<SearchPosts />)}
+        element={RenderWithNavbar(<SearchContainer />)}
       />
 
       <Route
