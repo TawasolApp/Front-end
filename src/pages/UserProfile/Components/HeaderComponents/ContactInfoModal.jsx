@@ -27,6 +27,7 @@ function ContactInfoModal({ user, isOpen, onClose, isOwner }) {
           onClick={onClose}
           className="absolute top-3 right-3 text-normaltext hover:text-companyheader text-2xl"
           title="Close"
+          aria-label="Close modal"
         >
           &times;
         </button>

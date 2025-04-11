@@ -27,10 +27,6 @@ function EducationFields({ formData, setFormData, handleChange, errors }) {
 
   const handleSchoolSelect = (school) => {
     setInputValue(school.name);
-    handleChange({
-      target: { name: "school", value: school.name },
-    });
-
     setFormData((prev) => ({
       ...prev,
       school: school.name,
@@ -46,7 +42,7 @@ function EducationFields({ formData, setFormData, handleChange, errors }) {
         Education Details
       </h2>
 
-      {/* School Input */}
+      {/* School Dropdown Input */}
       <label htmlFor="school" className="block font-medium mb-1 text-text">
         School *
       </label>
@@ -66,7 +62,6 @@ function EducationFields({ formData, setFormData, handleChange, errors }) {
               companyId: null,
               companyLogo: null,
             }));
-            handleChange(e);
             setShowDropdown(true);
             setHighlightedIndex(-1);
           }}
@@ -99,20 +94,20 @@ function EducationFields({ formData, setFormData, handleChange, errors }) {
 
         {showDropdown && filteredOptions.length > 0 && (
           <ul className="absolute z-10 w-full bg-boxbackground border border-gray-300 rounded shadow-md max-h-48 overflow-y-auto">
-            {filteredOptions.map((school, index) => (
+            {filteredOptions.map((option, index) => (
               <li
                 key={index}
-                onMouseDown={() => handleSchoolSelect(school)}
+                onMouseDown={() => handleSchoolSelect(option)}
                 className={`flex items-center p-2 cursor-pointer ${
                   index === highlightedIndex ? "bg-gray-100" : ""
                 }`}
               >
                 <img
-                  src={school.logo || defaultEducationImage}
-                  alt={school.name}
+                  src={option.logo || defaultEducationImage}
+                  alt={option.name}
                   className="w-5 h-5 rounded-full mr-2"
                 />
-                <span className="text-normaltext">{school.name}</span>
+                <span className="text-normaltext">{option.name}</span>
               </li>
             ))}
           </ul>

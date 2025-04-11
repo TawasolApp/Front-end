@@ -3,7 +3,7 @@ import GenericModal, { displayDate } from "./GenericModal";
 import defaultExperienceImage from "../../../../assets/images/defaultExperienceImage.png";
 import defaultEducationImage from "../../../../assets/images/defaultEducationImage.png";
 import SkillEndorsement from "../SkillsComponents/SkillEndorsement";
-import ExpandableText from "../AboutComponents/ExpandableText";
+import ExpandableText from "../ReusableModals/ExpandableText";
 import { useSelector } from "react-redux";
 import { Link } from "react-router-dom";
 // Helper to skip rendering invalid entries
@@ -29,7 +29,7 @@ function GenericCard({
   onEdit,
   showEditIcons = false,
   user,
-  connectionStatus,
+  connectStatus,
 }) {
   const { userId } = useSelector((state) => state.authentication);
   const viewerId = userId;
@@ -113,15 +113,15 @@ function GenericCard({
   const renderEducation = () => (
     <div className="flex items-start gap-3 w-full">
       <img
-        src={item.schoolLogo || defaultEducationImage}
+        src={item.companyLogo || defaultEducationImage}
         alt={item.school || "School"}
         className="w-10 h-10 rounded-full object-cover text-text"
       />
       <div className="break-all whitespace-pre-wrap w-full">
         <h3 className="text-lg font-semibold text-text" data-testid="school">
-          {item.schoolId ? (
+          {item.companyId ? (
             <Link
-              to={`/school/${item.schoolId}`}
+              to={`/company/${item.companyId}`}
               className="text-blue-600 hover:underline"
             >
               {item.school}
@@ -167,7 +167,7 @@ function GenericCard({
       {item.position && (
         <p className="text-companyheader text-sm">{item.position}</p>
       )}
-      {!isOwner && connectionStatus === "Connection" && (
+      {!isOwner && connectStatus === "Connection" && (
         <SkillEndorsement
           userId={user._id} // profile owner
           skillName={item.skillName}
@@ -229,11 +229,12 @@ function GenericCard({
           ✎
         </button>
       )}
-
-      {type === "workExperience" && renderExperience()}
-      {type === "education" && renderEducation()}
-      {type === "skills" && renderSkills()}
-      {type === "certification" && renderCertifications()}
+      <div className="pr-8">
+        {type === "workExperience" && renderExperience()}
+        {type === "education" && renderEducation()}
+        {type === "skills" && renderSkills()}
+        {type === "certification" && renderCertifications()}
+      </div>
 
       {isModalOpen && (
         <GenericModal

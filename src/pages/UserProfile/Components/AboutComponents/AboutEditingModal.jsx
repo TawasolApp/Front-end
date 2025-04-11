@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import ConfirmModal from "../GenericDisplay/ConfirmModal";
+import ConfirmModal from "../ReusableModals/ConfirmModal";
 
 function AboutEditingModal({ initialBio, onClose, onSave }) {
   const [bio, setBio] = useState(initialBio || "");

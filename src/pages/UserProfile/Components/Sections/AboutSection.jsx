@@ -2,7 +2,7 @@
 import React, { useState } from "react";
 import { axiosInstance as axios } from "../../../../apis/axios.js";
 import AboutModal from "../AboutComponents/AboutEditingModal.jsx";
-import ExpandableText from "../AboutComponents/ExpandableText.jsx"; // ✅ Import
+import ExpandableText from "../ReusableModals/ExpandableText.jsx"; // ✅ Import
 
 function AboutSection({ user, isOwner }) {
   const [isModalOpen, setIsModalOpen] = useState(false);

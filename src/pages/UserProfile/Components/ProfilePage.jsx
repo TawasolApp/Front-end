@@ -7,7 +7,8 @@ import SkillsSection from "./Sections/SkillsSection";
 import CertificationsSection from "./Sections/CertificationsSection";
 import AboutSection from "./Sections/AboutSection";
 import ResumeSection from "./Sections/ResumeSection";
-import RestrictedProfilevisibility from "./ProfileVisibility/RestrictedProfilevisibility";
+import RestrictedProfilevisibility from "./Profilevisibility/RestrictedProfilevisibility.jsx";
+import PostsSlider from "./UserPostsSlider/UserPostsSlider.jsx";
 function ProfilePage() {
   const { user, isOwner, onUserUpdate } = useOutletContext();
   const educationRef = useRef(null);
@@ -15,7 +16,8 @@ function ProfilePage() {
   const isVisible =
     isOwner ||
     user.visibility === "public" ||
-    (user.visibility === "connections_only" && user.status === "Connection");
+    (user.visibility === "connections_only" &&
+      user.connectStatus === "Connection");
   return (
     <div className="bg-mainBackground pt-0 pb-4 ">
       <ProfileHeader
@@ -51,6 +53,7 @@ function ProfilePage() {
             user={user}
             onUserUpdate={onUserUpdate}
           />
+          <PostsSlider />
         </>
       ) : (
         <RestrictedProfilevisibility visibility={user.visibility} />

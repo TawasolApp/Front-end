@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { axiosInstance as axios } from "../../../../apis/axios.js";
-import ConfirmModal from "../GenericDisplay/ConfirmModal.jsx";
+import ConfirmModal from "../ReusableModals/ConfirmModal.jsx";
 function EditProfileModal({ user, isOpen, onClose, onSave }) {
   const [editedUser, setEditedUser] = useState({ ...user });
   const [errors, setErrors] = useState({});
@@ -173,7 +173,9 @@ function EditProfileModal({ user, isOpen, onClose, onSave }) {
           }`}
         />
         {errors.firstName && (
-          <p className="text-red-500 text-sm">{errors.firstName}</p>
+          <p className="text-red-500 text-sm" data-testid="firstName-error">
+            {errors.firstName}
+          </p>
         )}
         <label
           htmlFor="lastName"

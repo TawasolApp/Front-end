@@ -3,7 +3,7 @@ import EducationFields from "../ModalFields/EducationFields";
 import ExperienceFields from "../ModalFields/ExperienceFields";
 import SkillsFields from "../ModalFields/SkillsFields";
 import CertificationsFields from "../ModalFields/CertificationsFields";
-import ConfirmModal from "./ConfirmModal";
+import ConfirmModal from "../ReusableModals/ConfirmModal";
 // Shared date utilities
 const getAllMonths = () =>
   [...Array(12)].map((_, i) =>
@@ -51,20 +51,50 @@ function GenericModal({
     };
   }, [isOpen]);
 
+  // useEffect(() => {
+  //   if (isOpen && initialData) {
+  //     const parseDate = (dateStr) => {
+  //       if (!dateStr) return { month: "", year: "" };
+  //       const date = new Date(dateStr);
+  //       const month = date.toLocaleString("default", { month: "long" });
+  //       const year = String(date.getFullYear());
+  //       return { month, year };
+  //     };
+
+  //     const { month: startMonth, year: startYear } = parseDate(
+  //       initialData.startDate
+  //     );
+  //     const { month: endMonth, year: endYear } = parseDate(initialData.endDate);
+
+  //     const updatedForm = {
+  //       ...initialData,
+  //       startMonth,
+  //       startYear,
+  //       endMonth,
+  //       endYear,
+  //     };
+
+  //     setFormData(updatedForm);
+  //     setInitialFormData(updatedForm); // ✅ Set initialFormData after parsing
+  //   }
+  // }, [isOpen, initialData]);
   useEffect(() => {
     if (isOpen && initialData) {
       const parseDate = (dateStr) => {
         if (!dateStr) return { month: "", year: "" };
-        const date = new Date(dateStr);
-        const month = date.toLocaleString("default", { month: "long" });
-        const year = String(date.getFullYear());
+        const parsed = new Date(dateStr);
+        if (isNaN(parsed)) return { month: "", year: "" };
+        const month = parsed.toLocaleString("default", { month: "long" });
+        const year = String(parsed.getFullYear());
         return { month, year };
       };
 
       const { month: startMonth, year: startYear } = parseDate(
-        initialData.startDate
+        initialData.startDate || initialData.issueDate
       );
-      const { month: endMonth, year: endYear } = parseDate(initialData.endDate);
+      const { month: endMonth, year: endYear } = parseDate(
+        initialData.endDate || initialData.expiryDate
+      );
 
       const updatedForm = {
         ...initialData,
@@ -75,7 +105,7 @@ function GenericModal({
       };
 
       setFormData(updatedForm);
-      setInitialFormData(updatedForm); // ✅ Set initialFormData after parsing
+      setInitialFormData(updatedForm);
     }
   }, [isOpen, initialData]);
 
@@ -226,6 +256,7 @@ function GenericModal({
           {type === "education" && (
             <EducationFields
               formData={formData}
+              setFormData={setFormData} //  add this!
               handleChange={handleChange}
               errors={errors}
             />

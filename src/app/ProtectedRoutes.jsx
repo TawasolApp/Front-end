@@ -9,7 +9,7 @@ import EducationPage from "../pages/UserProfile/Components/Pages/EducationPage";
 import ExperiencePage from "../pages/UserProfile/Components/Pages/ExperiencePage";
 import CertificationsPage from "../pages/UserProfile/Components/Pages/CertificationsPage";
 import SkillsPage from "../pages/UserProfile/Components/Pages/SkillsPage";
-
+import UserPostsPage from "../pages/UserProfile/Components/UserPostsSlider/UserPostsPage.jsx";
 import CompanyLayout from "../pages/Company/CompanyLayout";
 import PostsPage from "../pages/Company/Components/Pages/PostsPage";
 import AboutPage from "../pages/Company/Components/Pages/AboutPage";
@@ -52,18 +52,16 @@ const ProtectedRoutes = () => {
         element={RenderWithNavbar(<SearchPosts />)}
       />
 
-      <Route
-        path="/settings"
-        element={RenderWithNavbar(<ThemeSettings />)}
-      />
+      <Route path="/settings" element={RenderWithNavbar(<ThemeSettings />)} />
 
       <Route path="/users" element={<ProfileLayout />} />
       <Route path="/users/:profileSlug" element={<ProfileLayout />}>
         <Route index element={<ProfilePage />} />
         <Route path="education" element={<EducationPage />} />
         <Route path="workExperience" element={<ExperiencePage />} />
-        <Route path="certifications" element={<CertificationsPage />} />
+        <Route path="certification" element={<CertificationsPage />} />
         <Route path="skills" element={<SkillsPage />} />
+        <Route path="posts" element={<UserPostsPage />} />
       </Route>
 
       <Route
@@ -72,7 +70,10 @@ const ProtectedRoutes = () => {
       />
       <Route path="/blocked" element={RenderWithNavbar(<BlockedPage />)} />
       <Route path="/follow" element={RenderWithNavbar(<FollowPage />)} />
-      <Route path="/manage-connections" element={RenderWithNavbar(<ManageConnections />)} />
+      <Route
+        path="/manage-connections"
+        element={RenderWithNavbar(<ManageConnections />)}
+      />
       <Route path="/network-box" element={RenderWithNavbar(<NetworkBox />)} />
 
       <Route path="/feed/:id" element={RenderWithNavbar(<SinglePost />)} />
