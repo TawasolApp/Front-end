@@ -205,7 +205,7 @@ const ReactionsModal = ({ API_URL, setShowLikes, reactCounts }) => {
                 const IconComponent = reactionIcons[reaction.type]?.Icon;
                 return (
                   <Link
-                    to={`/in/${reaction.authorId}`}
+                    to={`/users/${reaction.authorId}`}
                     key={reaction.likeId}
                     className="flex items-center gap-3 hover:bg-buttonIconHover rounded-lg relative p-2 hover:cursor-pointer"
                   >

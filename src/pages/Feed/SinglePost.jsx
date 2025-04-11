@@ -56,7 +56,7 @@ const SinglePost = () => {
     <div className="min-h-screen bg-mainBackground">
       <div className="max-w-7xl mx-auto">
         <div className="flex justify-center px-2 sm:px-4 md:px-4 lg:px-4 xl:px-6">
-          <main className="w-full min-w-[430px] mt-4 md:mt-10 md:flex-1 lg:max-w-md xl:max-w-xl">
+          <main className="w-full mt-2 md:mt-4 md:ml-4 md:flex-1 lg:max-w-md xl:max-w-xl xl:flex-shrink-0">
             {post && (
               <PostContainer
                 post={post}

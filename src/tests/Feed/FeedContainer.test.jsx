@@ -14,7 +14,6 @@ vi.mock('../../pages/Feed/RightSideBar/RightSideBar', () => ({
     default: () => <div data-testid="right-sidebar">Right Sidebar Mock</div>
 }));
 
-
 describe('FeedContainer', () => {
   it('renders the component with correct structure', () => {
     const { container } = render(<FeedContainer />);
@@ -46,13 +45,21 @@ describe('FeedContainer', () => {
     
     const mainElement = container.querySelector('main');
     expect(mainElement).toBeInTheDocument();
+    
+    // Updated class expectations based on actual component
     expect(mainElement).toHaveClass(
       'w-full',
-      'min-w-[430px]',
-      'mt-4',
+      'mt-2',
+      'md:mt-4',
       'md:ml-4',
-      'md:flex-1'
+      'md:flex-1',
+      'lg:max-w-md',
+      'xl:max-w-xl',
+      'xl:flex-shrink-0'
     );
+    
+    // Make sure the removed class is not present
+    expect(mainElement).not.toHaveClass('min-w-[430px]');
   });
   
   it('has the right sidebar initially hidden on smaller screens', () => {
