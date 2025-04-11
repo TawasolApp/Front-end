@@ -1,9 +1,11 @@
 import { useEffect, useState } from "react";
 import { ArrowForwardOutlined } from "@mui/icons-material";
 import { useNavigate } from "react-router-dom";
+import { useSelector } from "react-redux";
 
 const ThemeSettings = () => {
   const [theme, setTheme] = useState("light");
+  const { email, isSocialLogin } = useSelector((state) => state.authentication);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -91,35 +93,91 @@ const ThemeSettings = () => {
           </div>
         </div>
 
-        {/* Delete Account Section */}
+        {/* Account Management Section - Single Card with Dividers */}
         <div className="mt-12 mb-8">
           <h2 className="text-2xl font-bold text-header mb-6">
             Account Management
           </h2>
 
-          <div
-            className="bg-cardBackground rounded-xl p-6 shadow-lg border border-cardBorder cursor-pointer"
-            onClick={() => navigate("/auth/delete-account")}
-          >
-            <div className="flex flex-row items-center justify-between gap-4">
-              <div>
-                <h3 className="text-lg font-semibold text-red-600">
-                  Delete your account
-                </h3>
+          <div className="bg-cardBackground rounded-xl shadow-lg border border-cardBorder">
+            {/* Update Email Option */}
+            {email && (
+              <>
+                <div
+                  className="p-6 cursor-pointer hover:bg-itemHoverBackground transition-colors"
+                  onClick={() => navigate("/auth/update-email")}
+                >
+                  <div className="flex flex-row items-center justify-between gap-4">
+                    <div>
+                      <h3 className="text-lg font-semibold text-textContent">
+                        Update email address
+                      </h3>
+                      <p className="text-sm text-textPlaceholder mt-1">
+                        {email}
+                      </p>
+                    </div>
+                    <button type="button">
+                      <ArrowForwardOutlined className="text-textPlaceholder" />
+                    </button>
+                  </div>
+                </div>
+
+                {/* Divider */}
+                <div className="border-t border-itemBorder mx-6"></div>
+              </>
+            )}
+
+            {/* Update Password Option */}
+            {!isSocialLogin && (
+              <>
+                <div
+                  className="p-6 cursor-pointer hover:bg-itemHoverBackground transition-colors"
+                  onClick={() => navigate("/auth/update-password")}
+                >
+                  <div className="flex flex-row items-center justify-between gap-4">
+                    <div>
+                      <h3 className="text-lg font-semibold text-textContent">
+                        Change password
+                      </h3>
+                      <p className="text-sm text-textPlaceholder mt-1">
+                        Set a new password for your account
+                      </p>
+                    </div>
+                    <button type="button">
+                      <ArrowForwardOutlined className="text-textPlaceholder" />
+                    </button>
+                  </div>
+                </div>
+
+                {/* Divider */}
+                <div className="border-t border-itemBorder mx-6"></div>
+              </>
+            )}
+
+            {/* Delete Account Option */}
+            <div
+              className="p-6 cursor-pointer hover:bg-itemHoverBackground transition-colors"
+              onClick={() => navigate("/auth/delete-account")}
+            >
+              <div className="flex flex-row items-center justify-between gap-4">
+                <div>
+                  <h3 className="text-lg font-semibold text-red-600">
+                    Delete your account
+                  </h3>
+                  <p className="text-sm text-textPlaceholder mt-1">
+                    Permanently delete your account and all of your data. This
+                    action cannot be undone.
+                  </p>
+                </div>
+                <button type="button">
+                  <ArrowForwardOutlined className="text-textPlaceholder" />
+                </button>
               </div>
-              <button type="button">
-                <ArrowForwardOutlined className="text-textPlaceholder" />
-              </button>
             </div>
           </div>
-
-          <p className="text-textContent opacity-90 mt-2 px-4 py-1">
-            Permanently delete your account and all of your data. This action
-            cannot be undone.
-          </p>
         </div>
 
-        <p className="mt-6 text-sm text-textContent opacity-75">
+        <p className="mt-6 text-sm text-textPlaceholder">
           Changes will be applied immediately
         </p>
       </div>
