@@ -55,7 +55,7 @@ describe("GenericSection Component", () => {
         items={items}
         isOwner={true}
         user={user}
-      />
+      />,
     );
 
     expect(screen.getByText("Experience")).toBeInTheDocument();
@@ -73,7 +73,7 @@ describe("GenericSection Component", () => {
         items={items}
         isOwner={true}
         user={user}
-      />
+      />,
     );
 
     expect(screen.getByText("+")).toBeInTheDocument();
@@ -88,7 +88,7 @@ describe("GenericSection Component", () => {
         items={[{ _id: 1, title: "test", company: "A" }]}
         isOwner={true}
         user={user}
-      />
+      />,
     );
 
     fireEvent.click(screen.getByText("✎"));
@@ -103,7 +103,7 @@ describe("GenericSection Component", () => {
         items={[]}
         isOwner={true}
         user={user}
-      />
+      />,
     );
 
     fireEvent.click(screen.getByText("+"));
@@ -127,7 +127,7 @@ describe("GenericSection Component", () => {
         items={items}
         isOwner={true}
         user={user}
-      />
+      />,
     );
 
     fireEvent.click(screen.getByText(/Show all 3 workexperience records/i));

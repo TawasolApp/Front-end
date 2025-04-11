@@ -25,7 +25,7 @@ function JobApplications({ job }) {
             limit,
             ...(searchName.trim() && { name: searchName.trim() }),
           },
-        }
+        },
       );
       const fetchedApplicants = res.data;
 

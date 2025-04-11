@@ -86,7 +86,7 @@ function EditAboutModal({ show, companyData, onClose, setCompanyData }) {
           const trimmed = currentValue.trim();
           const isValidLocation =
             /^https:\/\/(www\.)?google\.com\/maps\?q=([-+]?[\d.]+),([-+]?[\d.]+)$/.test(
-              trimmed
+              trimmed,
             );
 
           if (trimmed !== (originalValue?.trim() || "")) {
@@ -134,7 +134,7 @@ function EditAboutModal({ show, companyData, onClose, setCompanyData }) {
 
       const response = await axios.patch(
         `/companies/${companyData.companyId}`,
-        payload
+        payload,
       );
 
       console.log("Company updated:", response.data);
@@ -152,7 +152,7 @@ function EditAboutModal({ show, companyData, onClose, setCompanyData }) {
       setErrorMessage(
         Array.isArray(backendMessage)
           ? backendMessage.join(", ")
-          : backendMessage || "Failed to update company profile."
+          : backendMessage || "Failed to update company profile.",
       );
     }
   };

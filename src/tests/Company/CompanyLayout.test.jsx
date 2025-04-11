@@ -20,7 +20,7 @@ vi.mock(
   "../../pages/Company/Components/GenericComponents/CompanyHeader",
   () => ({
     default: () => <div data-testid="company-header" />,
-  })
+  }),
 );
 
 // Mock Footer
@@ -61,7 +61,7 @@ describe("CompanyLayout", () => {
         <Routes>
           <Route path="/company/:companyId/*" element={<CompanyLayout />} />
         </Routes>
-      </MemoryRouter>
+      </MemoryRouter>,
     );
 
     // Should show loading first
@@ -95,12 +95,12 @@ describe("CompanyLayout", () => {
             element={<div data-testid="redirected-home" />}
           />
         </Routes>
-      </MemoryRouter>
+      </MemoryRouter>,
     );
 
     await waitFor(() => {
       expect(mockedAxios.get).toHaveBeenCalledWith(
-        "/companies?page=1&limit=1&name=y"
+        "/companies?page=1&limit=1&name=y",
       );
     });
   });

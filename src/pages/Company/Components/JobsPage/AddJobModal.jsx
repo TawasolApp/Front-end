@@ -45,7 +45,7 @@ function AddJobModal({ onClose, companyId, onJobAdded }) {
     try {
       const response = await axiosInstance.post(
         `/companies/${companyId}/jobs`,
-        cleanedFormData
+        cleanedFormData,
       );
 
       if (onJobAdded) {

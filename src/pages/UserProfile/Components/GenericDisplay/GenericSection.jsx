@@ -62,7 +62,7 @@ function GenericSection({ title, type, items, isOwner, user, onUserUpdate }) {
         const newKey =
           type === "skills" ? response.data.skillName : response.data._id;
         const exists = data.some((item) =>
-          type === "skills" ? item.skillName === newKey : item._id === newKey
+          type === "skills" ? item.skillName === newKey : item._id === newKey,
         );
 
         if (!exists) {

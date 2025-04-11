@@ -68,7 +68,7 @@ function GenericPage({ title, type }) {
 
         response = await axios.patch(
           `/profile/${endpointMap[type]}/${originalKey}`,
-          updatedItem
+          updatedItem,
         );
         //  faster
         // const updated = [...data];
@@ -80,7 +80,7 @@ function GenericPage({ title, type }) {
           prev.map((item) => {
             const itemKey = type === "skills" ? item.skillName : item._id;
             return itemKey === originalKey ? response.data : item;
-          })
+          }),
         );
       }
 
@@ -88,7 +88,7 @@ function GenericPage({ title, type }) {
       else {
         response = await axios.post(
           `/profile/${endpointMap[type]}`,
-          updatedItem
+          updatedItem,
         );
         console.log("🧾 response.data after POST:", response.data);
 
@@ -97,7 +97,7 @@ function GenericPage({ title, type }) {
         const newKey =
           type === "skills" ? response.data.skillName : response.data._id;
         const exists = data.some((item) =>
-          type === "skills" ? item.skillName === newKey : item._id === newKey
+          type === "skills" ? item.skillName === newKey : item._id === newKey,
         );
 
         if (!exists) {

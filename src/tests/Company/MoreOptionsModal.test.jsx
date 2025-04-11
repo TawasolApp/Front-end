@@ -21,7 +21,7 @@ describe("MoreOptionsModal", () => {
         show={false}
         onClose={onCloseMock}
         navigate={navigateMock}
-      />
+      />,
     );
     expect(container.firstChild).toBeNull();
   });
@@ -32,7 +32,7 @@ describe("MoreOptionsModal", () => {
         show={true}
         onClose={onCloseMock}
         navigate={navigateMock}
-      />
+      />,
     );
 
     expect(screen.getByTestId("send-message")).toBeInTheDocument();
@@ -46,7 +46,7 @@ describe("MoreOptionsModal", () => {
         show={true}
         onClose={onCloseMock}
         navigate={navigateMock}
-      />
+      />,
     );
 
     fireEvent.click(screen.getByTestId("create-page"));

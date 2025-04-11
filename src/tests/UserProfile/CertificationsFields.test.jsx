@@ -44,7 +44,7 @@ describe("CertificationsFields Component", () => {
     render(<CertificationsFields {...defaultProps} />);
     expect(screen.getByLabelText(/name\*/i)).toBeInTheDocument();
     expect(
-      screen.getByLabelText(/issuing organization\*/i)
+      screen.getByLabelText(/issuing organization\*/i),
     ).toBeInTheDocument();
   });
 
@@ -103,7 +103,7 @@ describe("CertificationsFields Component", () => {
         company: "Microsoft",
         companyId: "1",
         companyLogo: "logo.png",
-      })
+      }),
     );
   });
 });

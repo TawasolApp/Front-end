@@ -17,7 +17,7 @@ function SkillEndorsement({ userId, skillName, endorsements = [], viewerId }) {
     } catch (err) {
       console.error(
         "Failed to endorse skill:",
-        err.response?.data || err.message
+        err.response?.data || err.message,
       );
     } finally {
       setLoading(false);
@@ -33,7 +33,7 @@ function SkillEndorsement({ userId, skillName, endorsements = [], viewerId }) {
     } catch (err) {
       console.error(
         "Failed to unendorse skill:",
-        err.response?.data || err.message
+        err.response?.data || err.message,
       );
     } finally {
       setLoading(false);

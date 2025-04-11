@@ -14,7 +14,6 @@ const DeleteAccount = () => {
     try {
       await axiosInstance.delete("/users/delete-account");
 
-
       navigate("/auth/signin");
     } catch (error) {
       console.error("Error deleting account:", error);

@@ -20,7 +20,7 @@ describe("JobApplications", () => {
   test("displays message if no job is selected", () => {
     render(<JobApplications job={null} />);
     expect(
-      screen.getByText(/select a job to see applicants/i)
+      screen.getByText(/select a job to see applicants/i),
     ).toBeInTheDocument();
   });
 
@@ -29,8 +29,8 @@ describe("JobApplications", () => {
     axiosInstance.get.mockImplementationOnce(
       () =>
         new Promise(
-          (resolve) => setTimeout(() => resolve({ data: [] }), 100) // delay response
-        )
+          (resolve) => setTimeout(() => resolve({ data: [] }), 100), // delay response
+        ),
     );
 
     render(<JobApplications job={jobMock} />);
@@ -127,7 +127,7 @@ describe("JobApplications", () => {
 
     expect(consoleSpy).toHaveBeenCalledWith(
       "Failed to fetch applicants:",
-      errorMock
+      errorMock,
     );
 
     consoleSpy.mockRestore();

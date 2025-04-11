@@ -57,8 +57,8 @@ const ProtectedRoutes = () => {
 
       <Route path="/settings" element={RenderWithNavbar(<ThemeSettings />)} />
 
-      <Route path="/users" element={<ProfileLayout />} />
-      <Route path="/users/:profileSlug" element={<ProfileLayout />}>
+      <Route path="/users" element={RenderWithNavbar(<ProfileLayout />)} />
+      <Route path="/users/:profileSlug" element={RenderWithNavbar(<ProfileLayout />)}>
         <Route index element={<ProfilePage />} />
         <Route path="education" element={<EducationPage />} />
         <Route path="workExperience" element={<ExperiencePage />} />

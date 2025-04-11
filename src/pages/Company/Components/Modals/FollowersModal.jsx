@@ -16,7 +16,7 @@ function FollowersModal({ show, onClose, companyId }) {
     setLoading(true);
     try {
       const { data } = await axiosInstance.get(
-        `/companies/${companyId}/followers?page=${page}&limit=3`
+        `/companies/${companyId}/followers?page=${page}&limit=3`,
       );
 
       setFollowers((prev) => [...prev, ...data]);

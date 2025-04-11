@@ -43,9 +43,7 @@ const VerifySignUpPage = () => {
           Email Verification
         </h1>
 
-        <p className="text-base md:text-lg text-textHomeTitle">
-          {status}
-        </p>
+        <p className="text-base md:text-lg text-textHomeTitle">{status}</p>
       </div>
     </div>
   );

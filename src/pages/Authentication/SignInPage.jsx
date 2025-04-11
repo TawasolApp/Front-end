@@ -15,7 +15,7 @@ import {
   setType,
   setUserId,
   setCoverPhoto,
-  setIsSocialLogin
+  setIsSocialLogin,
 } from "../../store/authenticationSlice";
 import { Link, useNavigate } from "react-router-dom";
 import AuthenticationHeader from "./GenericComponents/AuthenticationHeader";
@@ -46,8 +46,15 @@ const SignInPage = () => {
         const profileResponse = await axiosInstance.get("/profile");
 
         if (profileResponse.status === 200) {
-          const { _id, firstName, lastName, location, headline, profilePicture, coverPhoto } =
-            profileResponse.data;
+          const {
+            _id,
+            firstName,
+            lastName,
+            location,
+            headline,
+            profilePicture,
+            coverPhoto,
+          } = profileResponse.data;
 
           dispatch(setType("User"));
           if (_id) {

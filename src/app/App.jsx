@@ -1,5 +1,5 @@
 import "./App.css";
-import { useEffect } from "react";
+import { useSelector } from "react-redux";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
@@ -20,20 +20,7 @@ import VerificationPendingPage from "../pages/Authentication/VerificationPending
 import NewPasswordPage from "../pages/Authentication/NewPasswordPage";
 
 const App = () => {
-
-  useEffect(() => {
-    const savedTheme = localStorage.getItem("theme");
-    const themeToSet = savedTheme || "light";
-    document.documentElement.classList.remove("light", "dark");
-    document.documentElement.classList.add(themeToSet);
-    if (!savedTheme) localStorage.setItem("theme", "light");
-  }, []);
-
-  const getCurrentTheme = () => {
-    const savedTheme = localStorage.getItem("theme");
-    const themeToSet = savedTheme || "light";
-    return themeToSet;
-  };
+  const theme = useSelector((state) => state.theme.theme);
 
   return (
     <Router>
@@ -81,7 +68,7 @@ const App = () => {
         newestOnTop={false}
         closeOnClick={true}
         rtl={false}
-        theme={getCurrentTheme()}
+        theme={theme}
       />
     </Router>
   );

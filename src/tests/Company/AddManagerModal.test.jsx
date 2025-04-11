@@ -36,7 +36,7 @@ describe("AddManagerModal", () => {
         show={false}
         onClose={mockOnClose}
         companyId={mockCompanyId}
-      />
+      />,
     );
     expect(container.firstChild).toBeNull();
   });
@@ -50,7 +50,7 @@ describe("AddManagerModal", () => {
           show={true}
           onClose={mockOnClose}
           companyId={mockCompanyId}
-        />
+        />,
       );
     });
 
@@ -69,7 +69,7 @@ describe("AddManagerModal", () => {
           show={true}
           onClose={mockOnClose}
           companyId={mockCompanyId}
-        />
+        />,
       );
     });
 
@@ -94,7 +94,7 @@ describe("AddManagerModal", () => {
           show={true}
           onClose={mockOnClose}
           companyId={mockCompanyId}
-        />
+        />,
       );
     });
 
@@ -109,11 +109,11 @@ describe("AddManagerModal", () => {
 
     await waitFor(() => {
       expect(
-        screen.getByText("Manager added successfully.")
+        screen.getByText("Manager added successfully."),
       ).toBeInTheDocument();
       expect(axiosInstance.post).toHaveBeenCalledWith(
         `/companies/${mockCompanyId}/managers`,
-        { newUserId: "1" }
+        { newUserId: "1" },
       );
     });
   });
@@ -127,7 +127,7 @@ describe("AddManagerModal", () => {
           show={true}
           onClose={mockOnClose}
           companyId={mockCompanyId}
-        />
+        />,
       );
     });
 
@@ -145,7 +145,7 @@ describe("AddManagerModal", () => {
           show={true}
           onClose={mockOnClose}
           companyId={mockCompanyId}
-        />
+        />,
       );
     });
 
@@ -167,7 +167,7 @@ describe("AddManagerModal", () => {
           show={true}
           onClose={mockOnClose}
           companyId={mockCompanyId}
-        />
+        />,
       );
     });
 

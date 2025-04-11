@@ -17,7 +17,7 @@ vi.mock(
       ) : null,
     displayDate: (date) =>
       typeof date === "string" ? date.split("T")[0] : "Date",
-  })
+  }),
 );
 
 // Mock Redux store with userId
@@ -48,7 +48,7 @@ describe("GenericCard Component", () => {
       description: "Worked on frontend and backend.",
     };
     renderWithProvider(
-      <GenericCard item={item} isOwner={true} type="workExperience" />
+      <GenericCard item={item} isOwner={true} type="workExperience" />,
     );
     expect(screen.getByText("Software Engineer")).toBeInTheDocument();
     expect(screen.getByText("Tech Corp")).toBeInTheDocument();
@@ -63,7 +63,7 @@ describe("GenericCard Component", () => {
       grade: "3.9 GPA",
     };
     renderWithProvider(
-      <GenericCard item={eduItem} isOwner={true} type="education" />
+      <GenericCard item={eduItem} isOwner={true} type="education" />,
     );
     expect(screen.getByTestId("school")).toHaveTextContent("Cairo University");
     expect(screen.getByTestId("grade")).toHaveTextContent("Grade: 3.9 GPA");
@@ -72,7 +72,7 @@ describe("GenericCard Component", () => {
   it("renders skill card without endorsement for owner", () => {
     const skillItem = { skillName: "React" };
     renderWithProvider(
-      <GenericCard item={skillItem} isOwner={true} type="skills" />
+      <GenericCard item={skillItem} isOwner={true} type="skills" />,
     );
     expect(screen.getByText("React")).toBeInTheDocument();
   });
@@ -87,7 +87,7 @@ describe("GenericCard Component", () => {
         showEditIcons={true}
         onEdit={onEdit}
         type="workExperience"
-      />
+      />,
     );
     fireEvent.click(screen.getByRole("button", { name: /✎/i }));
     expect(onEdit).toHaveBeenCalled();
@@ -101,10 +101,10 @@ describe("GenericCard Component", () => {
         isOwner={false}
         showEditIcons={true}
         type="workExperience"
-      />
+      />,
     );
     expect(
-      screen.queryByRole("button", { name: /✎/i })
+      screen.queryByRole("button", { name: /✎/i }),
     ).not.toBeInTheDocument();
   });
 
@@ -116,7 +116,7 @@ describe("GenericCard Component", () => {
         isOwner={true}
         showEditIcons={true}
         type="workExperience"
-      />
+      />,
     );
     fireEvent.click(screen.getByRole("button", { name: /✎/i }));
     expect(screen.getByTestId("generic-modal")).toBeInTheDocument();

@@ -45,7 +45,7 @@ describe("JobDetails", () => {
   test("renders fallback when no job is selected", () => {
     render(<JobDetails job={null} />);
     expect(
-      screen.getByText(/select a job to see details/i)
+      screen.getByText(/select a job to see details/i),
     ).toBeInTheDocument();
   });
 

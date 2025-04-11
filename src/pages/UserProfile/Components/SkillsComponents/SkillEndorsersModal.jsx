@@ -28,13 +28,13 @@ function SkillEndorsersModal({ isOpen, onClose, userId, skillName }) {
       try {
         setLoading(true);
         const res = await axios.get(
-          `/profile/skill-endorsements/${userId}?skill=${skillName}`
+          `/profile/skill-endorsements/${userId}?skill=${skillName}`,
         );
         setEndorsers(res.data);
       } catch (err) {
         console.error(
           "Error fetching endorsers:",
-          err.response?.data || err.message
+          err.response?.data || err.message,
         );
       } finally {
         setLoading(false);

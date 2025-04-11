@@ -11,7 +11,6 @@ const ConnectionPage = () => {
   const [pagination, setPagination] = useState({
     page: 1,
     limit: 10,
-
   });
 
   useEffect(() => {
@@ -20,8 +19,8 @@ const ConnectionPage = () => {
         const response = await axiosInstance.get("/connections/list", {
           params: {
             page: pagination.page,
-            limit: pagination.limit
-          }
+            limit: pagination.limit,
+          },
         });
         setConnections(response.data);
       } catch (err) {
@@ -54,7 +53,7 @@ const ConnectionPage = () => {
   };
 
   const handlePageChange = (newPage) => {
-    setPagination(prev => ({...prev, page: newPage}));
+    setPagination((prev) => ({ ...prev, page: newPage }));
   };
 
   // Sort connections
@@ -71,7 +70,8 @@ const ConnectionPage = () => {
 
   // Filter connections
   const filteredConnections = sortedConnections.filter((connection) => {
-    const fullName = `${connection.firstName} ${connection.lastName}`.toLowerCase();
+    const fullName =
+      `${connection.firstName} ${connection.lastName}`.toLowerCase();
     return fullName.includes(searchQuery);
   });
 
@@ -89,7 +89,10 @@ const ConnectionPage = () => {
           <div className="mt-2 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
             {/* Sort Dropdown */}
             <div className="flex items-center">
-              <label htmlFor="sortBy" className="text-sm text-textPlaceholder mr-2">
+              <label
+                htmlFor="sortBy"
+                className="text-sm text-textPlaceholder mr-2"
+              >
                 Sort by:
               </label>
               <div className="relative">
@@ -152,9 +155,7 @@ const ConnectionPage = () => {
         {loading && (
           <p className="text-center text-textPlaceholder mt-4">Loading...</p>
         )}
-        {error && (
-          <p className="text-center text-error mt-4">{error}</p>
-        )}
+        {error && <p className="text-center text-error mt-4">{error}</p>}
 
         {/* Connections List */}
         {!loading && !error && (
@@ -193,9 +194,7 @@ const ConnectionPage = () => {
             >
               Previous
             </button>
-            <span className="px-4 py-2">
-              Page {pagination.page}
-            </span>
+            <span className="px-4 py-2">Page {pagination.page}</span>
             <button
               onClick={() => handlePageChange(pagination.page + 1)}
               disabled={pagination.page * pagination.limit >= pagination.total}

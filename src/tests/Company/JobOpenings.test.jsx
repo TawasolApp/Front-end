@@ -51,7 +51,7 @@ describe("JobOpenings Component", () => {
         <Routes>
           <Route path="/company/:companyId" element={<JobOpenings />} />
         </Routes>
-      </MemoryRouter>
+      </MemoryRouter>,
     );
 
     expect(await screen.findByTestId("job-openings")).toBeInTheDocument();
@@ -71,7 +71,7 @@ describe("JobOpenings Component", () => {
         <Routes>
           <Route path="/company/:companyId" element={<JobOpenings />} />
         </Routes>
-      </MemoryRouter>
+      </MemoryRouter>,
     );
 
     const button = await screen.findByText("Show all jobs →");
@@ -85,7 +85,7 @@ describe("JobOpenings Component", () => {
         <Routes>
           <Route path="/company/:companyId" element={<JobOpenings />} />
         </Routes>
-      </MemoryRouter>
+      </MemoryRouter>,
     );
 
     const container = await screen.findByTestId("job-openings");
@@ -106,7 +106,7 @@ describe("JobOpenings Component", () => {
         <Routes>
           <Route path="/company/:companyId" element={<JobOpenings />} />
         </Routes>
-      </MemoryRouter>
+      </MemoryRouter>,
     );
 
     const container = await screen.findByTestId("job-openings");
@@ -130,13 +130,13 @@ describe("JobOpenings Component", () => {
         <Routes>
           <Route path="/company/:companyId" element={<JobOpenings />} />
         </Routes>
-      </MemoryRouter>
+      </MemoryRouter>,
     );
 
     await waitFor(() => {
       expect(consoleSpy).toHaveBeenCalledWith(
         "Failed to fetch job openings:",
-        expect.any(Error)
+        expect.any(Error),
       );
     });
 
@@ -151,7 +151,7 @@ describe("JobOpenings Component", () => {
         <Routes>
           <Route path="/company/:companyId" element={<JobOpenings />} />
         </Routes>
-      </MemoryRouter>
+      </MemoryRouter>,
     );
 
     // LoadingPage should be present before promise resolves
@@ -167,7 +167,7 @@ describe("JobOpenings Component", () => {
         <Routes>
           <Route path="/company/:companyId" element={<JobOpenings />} />
         </Routes>
-      </MemoryRouter>
+      </MemoryRouter>,
     );
 
     await waitFor(() => {
@@ -183,7 +183,7 @@ describe("JobOpenings Component", () => {
         <Routes>
           <Route path="/company/:companyId" element={<JobOpenings />} />
         </Routes>
-      </MemoryRouter>
+      </MemoryRouter>,
     );
 
     await screen.findByTestId("job-openings");

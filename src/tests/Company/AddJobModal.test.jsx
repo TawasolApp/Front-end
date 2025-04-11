@@ -20,7 +20,7 @@ describe("AddJobModal", () => {
         onClose={mockOnClose}
         onJobAdded={mockOnJobAdded}
         companyId="company123"
-      />
+      />,
     );
   };
 
@@ -91,7 +91,7 @@ describe("AddJobModal", () => {
     });
 
     expect(screen.getByTestId("position-input").value).toBe(
-      "Frontend Developer"
+      "Frontend Developer",
     );
     expect(screen.getByTestId("location-input").value).toBe("Cairo, Egypt");
   });
@@ -117,7 +117,7 @@ describe("AddJobModal", () => {
         expect.objectContaining({
           position: "Backend Developer",
           location: "Alexandria",
-        })
+        }),
       );
       expect(mockOnJobAdded).toHaveBeenCalledWith(mockResponse.data);
       expect(mockOnClose).toHaveBeenCalled();

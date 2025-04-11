@@ -9,7 +9,7 @@ import AuthenticationHeader from "./GenericComponents/AuthenticationHeader";
 const NamePage = () => {
   const dispatch = useDispatch();
   const { email, password, isNewGoogleUser } = useSelector(
-    (state) => state.authentication
+    (state) => state.authentication,
   );
   const navigate = useNavigate();
 
@@ -38,10 +38,12 @@ const NamePage = () => {
         captchaToken: "test-token",
       });
 
-      navigate("/auth/verification-pending", { state: { type: "verifyEmail" } });
+      navigate("/auth/verification-pending", {
+        state: { type: "verifyEmail" },
+      });
     } catch (error) {
       console.error(
-        `Registration Failed: ${error.response?.data?.message || error.message}`
+        `Registration Failed: ${error.response?.data?.message || error.message}`,
       );
     }
   };

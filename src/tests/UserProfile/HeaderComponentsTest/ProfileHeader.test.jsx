@@ -26,7 +26,7 @@ vi.mock(
         Enlarged: {profilePicture}
       </div>
     ),
-  })
+  }),
 );
 
 // ✅ Important: This path must match the one used in ProfileHeader.jsx
@@ -48,7 +48,7 @@ vi.mock(
           </button>
         </div>
       ) : null,
-  })
+  }),
 );
 
 // Mock edit modal
@@ -70,7 +70,7 @@ vi.mock(
           </button>
         </div>
       ) : null,
-  })
+  }),
 );
 
 // Mock profile picture component
@@ -89,7 +89,7 @@ vi.mock(
         </button>
       </>
     ),
-  })
+  }),
 );
 
 // Mock cover photo component
@@ -108,7 +108,7 @@ vi.mock(
         </button>
       </>
     ),
-  })
+  }),
 );
 
 describe("ProfileHeader Component", () => {
@@ -151,7 +151,7 @@ describe("ProfileHeader Component", () => {
             <Route path="/users/:profileSlug" element={ui} />
           </Routes>
         </MemoryRouter>
-      </Provider>
+      </Provider>,
     );
 
   it("returns null if user is null", () => {
@@ -168,7 +168,7 @@ describe("ProfileHeader Component", () => {
         onSave={vi.fn()}
         experienceRef={experienceRef}
         educationRef={educationRef}
-      />
+      />,
     );
 
     expect(screen.getByText("Fatma Gamal")).toBeInTheDocument();
@@ -188,7 +188,7 @@ describe("ProfileHeader Component", () => {
         onSave={vi.fn()}
         experienceRef={experienceRef}
         educationRef={educationRef}
-      />
+      />,
     );
     expect(screen.getByTestId("viewer-view")).toBeInTheDocument();
   });
@@ -202,7 +202,7 @@ describe("ProfileHeader Component", () => {
         onSave={vi.fn()}
         experienceRef={experienceRef}
         educationRef={educationRef}
-      />
+      />,
     );
 
     fireEvent.click(screen.getByRole("button", { name: /✎/i }));
@@ -219,13 +219,13 @@ describe("ProfileHeader Component", () => {
         onSave={onSave}
         experienceRef={experienceRef}
         educationRef={educationRef}
-      />
+      />,
     );
 
     fireEvent.click(screen.getByRole("button", { name: /✎/i }));
     fireEvent.click(screen.getByTestId("save-edit"));
     expect(onSave).toHaveBeenCalledWith(
-      expect.objectContaining({ firstName: "Updated" })
+      expect.objectContaining({ firstName: "Updated" }),
     );
   });
 
@@ -238,12 +238,12 @@ describe("ProfileHeader Component", () => {
         onSave={vi.fn()}
         experienceRef={experienceRef}
         educationRef={educationRef}
-      />
+      />,
     );
 
     fireEvent.click(screen.getByTestId("profile-picture"));
     expect(screen.getByTestId("image-enlarge")).toHaveTextContent(
-      "profile.jpg"
+      "profile.jpg",
     );
   });
 
@@ -256,7 +256,7 @@ describe("ProfileHeader Component", () => {
         onSave={vi.fn()}
         experienceRef={experienceRef}
         educationRef={educationRef}
-      />
+      />,
     );
 
     fireEvent.click(screen.getByTestId("cover-photo"));
@@ -272,7 +272,7 @@ describe("ProfileHeader Component", () => {
         onSave={vi.fn()}
         experienceRef={experienceRef}
         educationRef={educationRef}
-      />
+      />,
     );
 
     fireEvent.click(screen.getByTestId("upload-profile"));
@@ -289,7 +289,7 @@ describe("ProfileHeader Component", () => {
         onSave={vi.fn()}
         experienceRef={experienceRef}
         educationRef={educationRef}
-      />
+      />,
     );
 
     fireEvent.click(screen.getByTestId("upload-cover"));
@@ -306,7 +306,7 @@ describe("ProfileHeader Component", () => {
         onSave={vi.fn()}
         experienceRef={experienceRef}
         educationRef={educationRef}
-      />
+      />,
     );
 
     fireEvent.click(screen.getByText("Software Intern"));

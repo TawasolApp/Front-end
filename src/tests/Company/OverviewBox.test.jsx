@@ -34,7 +34,7 @@ describe("Overviewbox", () => {
     render(
       <MemoryRouter>
         <Overviewbox />
-      </MemoryRouter>
+      </MemoryRouter>,
     );
 
     expect(screen.getByTestId("overview-box")).toBeInTheDocument();
@@ -65,7 +65,7 @@ describe("Overviewbox", () => {
     render(
       <MemoryRouter>
         <Overviewbox />
-      </MemoryRouter>
+      </MemoryRouter>,
     );
 
     expect(screen.getByText("See More")).toBeInTheDocument();
@@ -92,7 +92,7 @@ describe("Overviewbox", () => {
     render(
       <MemoryRouter>
         <Overviewbox />
-      </MemoryRouter>
+      </MemoryRouter>,
     );
 
     const btn = screen.getByText("See More");
@@ -108,7 +108,7 @@ describe("Overviewbox", () => {
     render(
       <MemoryRouter>
         <Overviewbox />
-      </MemoryRouter>
+      </MemoryRouter>,
     );
 
     const btn = screen.getByText("Show all details →");
@@ -122,7 +122,7 @@ describe("Overviewbox", () => {
     const { container } = render(
       <MemoryRouter>
         <Overviewbox />
-      </MemoryRouter>
+      </MemoryRouter>,
     );
 
     expect(container.firstChild).toBeNull();
@@ -134,7 +134,7 @@ describe("Overviewbox", () => {
     render(
       <MemoryRouter>
         <Overviewbox />
-      </MemoryRouter>
+      </MemoryRouter>,
     );
 
     expect(screen.getByText("Show all details →")).toBeInTheDocument();

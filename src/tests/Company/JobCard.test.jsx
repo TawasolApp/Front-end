@@ -12,7 +12,12 @@ describe("JobCard", () => {
 
   test("renders job details correctly", () => {
     render(
-      <JobCard job={job} name={companyName} logo={logoUrl} isSelected={false} />
+      <JobCard
+        job={job}
+        name={companyName}
+        logo={logoUrl}
+        isSelected={false}
+      />,
     );
 
     expect(screen.getByText("Frontend Developer")).toBeInTheDocument();
@@ -38,7 +43,7 @@ describe("JobCard", () => {
         logo={logoUrl}
         isSelected={false}
         onClick={handleClick}
-      />
+      />,
     );
 
     const card = screen.getByText("Frontend Developer").closest("div");
@@ -48,7 +53,7 @@ describe("JobCard", () => {
 
   test("applies selected style when isSelected is true", () => {
     const { container } = render(
-      <JobCard job={job} name={companyName} isSelected={true} />
+      <JobCard job={job} name={companyName} isSelected={true} />,
     );
 
     const rootDiv = container.firstChild;
@@ -57,7 +62,7 @@ describe("JobCard", () => {
 
   test("applies hover style when isSelected is false", () => {
     const { container } = render(
-      <JobCard job={job} name={companyName} isSelected={false} />
+      <JobCard job={job} name={companyName} isSelected={false} />,
     );
 
     const rootDiv = container.firstChild;

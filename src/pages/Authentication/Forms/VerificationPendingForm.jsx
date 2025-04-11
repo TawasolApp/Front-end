@@ -53,21 +53,22 @@ const VerificationPendingForm = ({ type = null }) => {
         it’s not there, the email address may not be confirmed, or it may not
         match an existing Tawasol account.
       </p>
-      {type && (canResend ? (
-        <div>
-          <button
-            type="button"
-            onClick={handleResend}
-            className="text-buttonSubmitEnable hover:underline inline-block text-lg my-2 font-medium p-1 rounded-full transition duration-200 ease-in-out"
-          >
-            Resend code
-          </button>
-        </div>
-      ) : (
-        <p className="text-textPlaceholder text-lg">
-          You can send again in {timer} second{timer !== 1 ? "s" : ""}
-        </p>
-      ))}
+      {type &&
+        (canResend ? (
+          <div>
+            <button
+              type="button"
+              onClick={handleResend}
+              className="text-buttonSubmitEnable hover:underline inline-block text-lg my-2 font-medium p-1 rounded-full transition duration-200 ease-in-out"
+            >
+              Resend code
+            </button>
+          </div>
+        ) : (
+          <p className="text-textPlaceholder text-lg">
+            You can send again in {timer} second{timer !== 1 ? "s" : ""}
+          </p>
+        ))}
     </div>
   );
 };
