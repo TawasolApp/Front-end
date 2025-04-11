@@ -25,7 +25,6 @@ const App = () => {
   console.log(googleClientId);
 
   const theme = useSelector((state) => state.theme.theme);
-
   return (
     <Router>
       <Routes>
