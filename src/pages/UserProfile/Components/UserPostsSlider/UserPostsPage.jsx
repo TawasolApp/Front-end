@@ -15,11 +15,11 @@ function UserPostsPage() {
       <main className="w-full max-w-3xl mx-auto space-y-4">
         <MainFeed
           API_ROUTE={`/posts/user/${userId}`}
-          showShare={isOwner}
-          currentAuthorId={userId}
-          currentAuthorName={user.name}
-          currentAuthorPicture={user.profilePicture}
-          isAdmin={isOwner}
+          showShare={false}
+          // currentAuthorId={userId}
+          // currentAuthorName={user.name}
+          // currentAuthorPicture={user.profilePicture}
+          // isAdmin={isOwner}
         />
       </main>
     </div>

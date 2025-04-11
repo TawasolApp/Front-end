@@ -30,13 +30,13 @@ describe("GenericModal", () => {
   it("validates skill field and shows error", async () => {
     render(<GenericModal {...defaultProps} />);
     fireEvent.click(screen.getByTestId("save-button"));
-    await waitFor(() =>
+    await waitFor(() => {
       expect(
-        screen.queryByText((t) =>
+        screen.getByText((t) =>
           t.toLowerCase().includes("please provide a skill")
         )
-      ).toBeInTheDocument()
-    );
+      ).toBeInTheDocument();
+    });
   });
 
   it("calls onSave when valid form is submitted", () => {
@@ -67,10 +67,11 @@ describe("GenericModal", () => {
     expect(screen.getByText(/discard changes/i)).toBeInTheDocument();
   });
 
-  it("calls onDelete when delete is confirmed", () => {
+  it("calls onDelete when delete is confirmed", async () => {
     render(<GenericModal {...defaultProps} />);
     fireEvent.click(screen.getByTestId("delete-button"));
-    fireEvent.click(screen.getByTestId("confirm-delete"));
+    const confirmButtons = await screen.findAllByTestId("confirm-modal");
+    fireEvent.click(confirmButtons[confirmButtons.length - 1]);
     expect(defaultProps.onDelete).toHaveBeenCalled();
   });
 
@@ -79,17 +80,17 @@ describe("GenericModal", () => {
       <GenericModal
         {...defaultProps}
         type="education"
-        initialData={{ startYear: "2022", endYear: "2020" }}
+        initialData={{ startYear: "2024", endYear: "2022", school: "Test" }}
       />
     );
     fireEvent.click(screen.getByTestId("save-button"));
-    await waitFor(() =>
+    await waitFor(() => {
       expect(
-        screen.queryByText((t) =>
+        screen.getByText((t) =>
           t.includes("end year can't be before the start year")
         )
-      ).toBeInTheDocument()
-    );
+      ).toBeInTheDocument();
+    });
   });
 
   it("validates that end month cannot be before start month if same year", async () => {
@@ -98,6 +99,9 @@ describe("GenericModal", () => {
         {...defaultProps}
         type="workExperience"
         initialData={{
+          company: "Company",
+          title: "Title",
+          employmentType: "full_time",
           startYear: "2024",
           startMonth: "October",
           endYear: "2024",
@@ -106,13 +110,13 @@ describe("GenericModal", () => {
       />
     );
     fireEvent.click(screen.getByTestId("save-button"));
-    await waitFor(() =>
+    await waitFor(() => {
       expect(
-        screen.queryByText((t) =>
+        screen.getByText((t) =>
           t.includes("end month can't be before the start month")
         )
-      ).toBeInTheDocument()
-    );
+      ).toBeInTheDocument();
+    });
   });
 
   it("validates required fields for experience", async () => {
@@ -122,10 +126,10 @@ describe("GenericModal", () => {
     fireEvent.click(screen.getByTestId("save-button"));
     await waitFor(() => {
       expect(
-        screen.queryByText((t) => t.includes("please provide a company name"))
+        screen.getByText((t) => t.includes("please provide a company name"))
       ).toBeInTheDocument();
       expect(
-        screen.queryByText((t) => t.includes("please provide a title"))
+        screen.getByText((t) => t.includes("please provide a title"))
       ).toBeInTheDocument();
     });
   });
@@ -135,11 +139,11 @@ describe("GenericModal", () => {
       <GenericModal {...defaultProps} type="education" initialData={{}} />
     );
     fireEvent.click(screen.getByTestId("save-button"));
-    await waitFor(() =>
+    await waitFor(() => {
       expect(
-        screen.queryByText((t) => t.includes("please provide a school"))
-      ).toBeInTheDocument()
-    );
+        screen.getByText((t) => t.includes("please provide a school"))
+      ).toBeInTheDocument();
+    });
   });
 
   it("validates required fields for certifications", async () => {
@@ -149,12 +153,10 @@ describe("GenericModal", () => {
     fireEvent.click(screen.getByTestId("save-button"));
     await waitFor(() => {
       expect(
-        screen.queryByText((t) =>
-          t.includes("please provide a certificate name")
-        )
+        screen.getByText((t) => t.includes("please provide a certificate name"))
       ).toBeInTheDocument();
       expect(
-        screen.queryByText((t) =>
+        screen.getByText((t) =>
           t.includes("please provide an issuing organization")
         )
       ).toBeInTheDocument();
@@ -170,9 +172,9 @@ describe("GenericModal", () => {
     });
     fireEvent.click(screen.getByLabelText("Close modal"));
     fireEvent.click(screen.getByText("Cancel"));
-    await waitFor(() =>
-      expect(screen.queryByText(/discard changes/i)).not.toBeInTheDocument()
-    );
+    await waitFor(() => {
+      expect(screen.queryByText(/discard changes/i)).not.toBeInTheDocument();
+    });
   });
 
   it("closes discard modal after confirming", async () => {
@@ -183,7 +185,8 @@ describe("GenericModal", () => {
       target: { value: "TS", name: "skillName" },
     });
     fireEvent.click(screen.getByLabelText("Close modal"));
-    fireEvent.click(screen.getByTestId("confirm-modal"));
+    const confirmButtons = screen.getAllByTestId("confirm-modal");
+    fireEvent.click(confirmButtons[confirmButtons.length - 1]);
     await waitFor(() => {
       expect(defaultProps.onClose).toHaveBeenCalled();
     });

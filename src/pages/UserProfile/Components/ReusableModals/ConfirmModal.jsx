@@ -29,7 +29,7 @@ const ConfirmModal = ({
         </button>
         <button
           onClick={onConfirm}
-          className="px-4 py-2 bg-blue-600 text-boxheading rounded-full hover:bg-blue-700 transition duration-200"
+          className="px-4 py-2 bg-blue-600 text-boxbackground  rounded-full hover:bg-blue-700 transition duration-200"
           data-testid="confirm-modal"
         >
           {confirmLabel}
