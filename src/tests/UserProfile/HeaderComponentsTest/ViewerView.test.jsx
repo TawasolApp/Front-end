@@ -32,7 +32,7 @@ describe("ViewerView", () => {
         viewerId="viewer123"
         initialConnectStatus="No Connection"
         initialFollowStatus="None"
-      />
+      />,
     );
 
     expect(screen.getByLabelText("Send message")).toBeInTheDocument();
@@ -49,7 +49,7 @@ describe("ViewerView", () => {
         viewerId="viewer123"
         initialConnectStatus="No Connection"
         initialFollowStatus="None"
-      />
+      />,
     );
 
     fireEvent.click(screen.getByLabelText("Follow user"));
@@ -57,7 +57,7 @@ describe("ViewerView", () => {
     await waitFor(() =>
       expect(axios.post).toHaveBeenCalledWith("/connections/follow", {
         userId: "user123",
-      })
+      }),
     );
 
     expect(screen.getByText("✓ Following")).toBeInTheDocument();
@@ -70,7 +70,7 @@ describe("ViewerView", () => {
         viewerId="viewer123"
         initialConnectStatus="Connection"
         initialFollowStatus="Following"
-      />
+      />,
     );
 
     fireEvent.click(screen.getByText("✓ Following"));
@@ -86,14 +86,16 @@ describe("ViewerView", () => {
         viewerId="viewer123"
         initialConnectStatus="Connection"
         initialFollowStatus="Following"
-      />
+      />,
     );
 
     fireEvent.click(screen.getByText("✓ Following"));
     fireEvent.click(await screen.findByText("Unfollow"));
 
     await waitFor(() =>
-      expect(axios.delete).toHaveBeenCalledWith("/connections/unfollow/user123")
+      expect(axios.delete).toHaveBeenCalledWith(
+        "/connections/unfollow/user123",
+      ),
     );
 
     expect(screen.getByText("+ Follow")).toBeInTheDocument();
@@ -108,14 +110,14 @@ describe("ViewerView", () => {
         viewerId="viewer123"
         initialConnectStatus="No Connection"
         initialFollowStatus="None"
-      />
+      />,
     );
 
     fireEvent.click(screen.getByLabelText("Connect"));
     await waitFor(() =>
       expect(axios.post).toHaveBeenCalledWith("/connections", {
         userId: "user123",
-      })
+      }),
     );
     expect(screen.getByText("Pending")).toBeInTheDocument();
   });
@@ -129,14 +131,14 @@ describe("ViewerView", () => {
         viewerId="viewer123"
         initialConnectStatus="Connection"
         initialFollowStatus="Following"
-      />
+      />,
     );
 
     fireEvent.click(screen.getByText("Connected"));
     await waitFor(() => {
       expect(axios.delete).toHaveBeenCalledWith("/connections/user123");
       expect(axios.delete).toHaveBeenCalledWith(
-        "/connections/unfollow/user123"
+        "/connections/unfollow/user123",
       );
     });
 
@@ -151,12 +153,12 @@ describe("ViewerView", () => {
         viewerId="viewer123"
         initialConnectStatus="Request"
         initialFollowStatus="None"
-      />
+      />,
     );
 
     fireEvent.click(screen.getByText("Accept"));
     expect(
-      screen.getByText(/Accept Connection Request from John Doe/)
+      screen.getByText(/Accept Connection Request from John Doe/),
     ).toBeInTheDocument();
   });
 
@@ -169,7 +171,7 @@ describe("ViewerView", () => {
         viewerId="viewer123"
         initialConnectStatus="Request"
         initialFollowStatus="None"
-      />
+      />,
     );
 
     fireEvent.click(screen.getByText("Accept")); // open modal
@@ -178,7 +180,7 @@ describe("ViewerView", () => {
     await waitFor(() =>
       expect(axios.patch).toHaveBeenCalledWith("/connections/user123", {
         isAccept: true,
-      })
+      }),
     );
 
     expect(screen.getByText("Connected")).toBeInTheDocument();

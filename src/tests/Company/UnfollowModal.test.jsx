@@ -18,32 +18,32 @@ describe("UnfollowModal", () => {
 
   test("does not render when show is false", () => {
     const { container } = render(
-      <UnfollowModal show={false} cancel={cancelMock} confirm={confirmMock} />
+      <UnfollowModal show={false} cancel={cancelMock} confirm={confirmMock} />,
     );
     expect(container.firstChild).toBeNull();
     expect(document.body.style.overflow).toBe("auto");
   });
   test("renders correctly when show is true", () => {
     render(
-      <UnfollowModal show={true} cancel={cancelMock} confirm={confirmMock} />
+      <UnfollowModal show={true} cancel={cancelMock} confirm={confirmMock} />,
     );
 
     expect(
-      screen.getByText("Are you sure you want to unfollow?")
+      screen.getByText("Are you sure you want to unfollow?"),
     ).toBeInTheDocument();
 
     expect(
-      screen.getByRole("button", { name: "Close Unfollow" })
+      screen.getByRole("button", { name: "Close Unfollow" }),
     ).toBeInTheDocument();
 
     expect(
-      screen.getByRole("button", { name: "Confirm Unfollow" })
+      screen.getByRole("button", { name: "Confirm Unfollow" }),
     ).toBeInTheDocument();
   });
 
   test("calls cancel when cancel button is clicked", () => {
     render(
-      <UnfollowModal show={true} cancel={cancelMock} confirm={confirmMock} />
+      <UnfollowModal show={true} cancel={cancelMock} confirm={confirmMock} />,
     );
 
     fireEvent.click(screen.getByRole("button", { name: "Close Unfollow" }));
@@ -52,7 +52,7 @@ describe("UnfollowModal", () => {
 
   test("calls confirm when unfollow button is clicked", () => {
     render(
-      <UnfollowModal show={true} cancel={cancelMock} confirm={confirmMock} />
+      <UnfollowModal show={true} cancel={cancelMock} confirm={confirmMock} />,
     );
     fireEvent.click(screen.getByRole("button", { name: "Confirm Unfollow" }));
     expect(confirmMock).toHaveBeenCalled();
@@ -60,7 +60,7 @@ describe("UnfollowModal", () => {
 
   test("calls cancel when ✖ button is clicked", () => {
     render(
-      <UnfollowModal show={true} cancel={cancelMock} confirm={confirmMock} />
+      <UnfollowModal show={true} cancel={cancelMock} confirm={confirmMock} />,
     );
     fireEvent.click(screen.getByText("✖"));
     expect(cancelMock).toHaveBeenCalled();
@@ -68,7 +68,7 @@ describe("UnfollowModal", () => {
 
   test("restores body scroll on unmount", () => {
     const { unmount } = render(
-      <UnfollowModal show={true} cancel={cancelMock} confirm={confirmMock} />
+      <UnfollowModal show={true} cancel={cancelMock} confirm={confirmMock} />,
     );
     expect(document.body.style.overflow).toBe("hidden");
     unmount();

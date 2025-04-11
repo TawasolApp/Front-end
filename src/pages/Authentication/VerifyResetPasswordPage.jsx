@@ -28,7 +28,7 @@ const VerifyResetPasswordPage = () => {
         console.error(err);
         if (err.response?.status === 400) {
           setStatus(
-            "Invalid or expired token. Please request a new reset email."
+            "Invalid or expired token. Please request a new reset email.",
           );
         } else {
           setStatus("Something went wrong. Please try again later.");

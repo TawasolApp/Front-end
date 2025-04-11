@@ -40,7 +40,7 @@ const ChangePasswordForm = () => {
         currentPassword,
         newPassword,
       });
-      
+
       if (response.status === 200) {
         setCurrentPassword("");
         setNewPassword("");

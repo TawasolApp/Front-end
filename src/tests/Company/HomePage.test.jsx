@@ -41,7 +41,7 @@ describe("HomePage Component", () => {
             <Route path="/company/:companyId" element={<HomePage />} />
           </Route>
         </Routes>
-      </MemoryRouter>
+      </MemoryRouter>,
     );
 
     expect(screen.getByTestId("loading-page")).toBeInTheDocument();
@@ -60,7 +60,7 @@ describe("HomePage Component", () => {
             <Route path="/company/:companyId" element={<HomePage />} />
           </Route>
         </Routes>
-      </MemoryRouter>
+      </MemoryRouter>,
     );
 
     expect(screen.getByTestId("overview-box")).toBeInTheDocument();
@@ -81,7 +81,7 @@ describe("HomePage Component", () => {
             <Route path="/company/:companyId" element={<HomePage />} />
           </Route>
         </Routes>
-      </MemoryRouter>
+      </MemoryRouter>,
     );
 
     expect(screen.queryByTestId("overview-box")).not.toBeInTheDocument();

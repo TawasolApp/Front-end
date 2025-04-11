@@ -151,7 +151,6 @@ FRONT-END/
 2. Any API calls are only done through the axios instance created inside of `apis` directory.
 3. Try to use context instead of redux if the rendering tree is small.
 
-
 ## 🎯 Code Formatting
 
 We will be using prettier for this project

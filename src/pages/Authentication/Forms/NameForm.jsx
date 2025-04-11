@@ -97,7 +97,7 @@ const NameForm = ({ onSubmit }) => {
         <ReCAPTCHA
           ref={recaptchaRef}
           sitekey={String(
-            import.meta.env.VITE_APP_RECAPTCHA_SITE_KEY || ""
+            import.meta.env.VITE_APP_RECAPTCHA_SITE_KEY || "",
           ).trim()}
           className="bg-cardBackground text-textContent p-2 rounded-lg"
         />

@@ -49,7 +49,7 @@ describe("EditAboutModal", () => {
         companyData={defaultCompany}
         onClose={onClose}
         setCompanyData={setCompanyData}
-      />
+      />,
     );
     expect(container.firstChild).toBeNull();
   });
@@ -61,7 +61,7 @@ describe("EditAboutModal", () => {
         companyData={defaultCompany}
         onClose={onClose}
         setCompanyData={setCompanyData}
-      />
+      />,
     );
 
     expect(screen.getByDisplayValue("Old Description")).toBeInTheDocument();
@@ -79,7 +79,7 @@ describe("EditAboutModal", () => {
         companyData={defaultCompany}
         onClose={onClose}
         setCompanyData={setCompanyData}
-      />
+      />,
     );
 
     const input = screen.getByDisplayValue("Old Description");
@@ -99,7 +99,7 @@ describe("EditAboutModal", () => {
         companyData={defaultCompany}
         onClose={onClose}
         setCompanyData={setCompanyData}
-      />
+      />,
     );
 
     const input = screen.getByDisplayValue("Old Description");
@@ -110,7 +110,7 @@ describe("EditAboutModal", () => {
     await waitFor(() => {
       expect(axios.patch).toHaveBeenCalledWith(
         "/companies/1",
-        expect.objectContaining({ description: "New Description" })
+        expect.objectContaining({ description: "New Description" }),
       );
       expect(setCompanyData).toHaveBeenCalled();
       expect(onClose).toHaveBeenCalled();
@@ -128,14 +128,14 @@ describe("EditAboutModal", () => {
         companyData={defaultCompany}
         onClose={onClose}
         setCompanyData={setCompanyData}
-      />
+      />,
     );
 
     fireEvent.click(screen.getByText("Save Changes"));
 
     await waitFor(() => {
       expect(screen.getByTestId("error-message")).toHaveTextContent(
-        "Update failed."
+        "Update failed.",
       );
     });
   });
@@ -147,7 +147,7 @@ describe("EditAboutModal", () => {
         companyData={defaultCompany}
         onClose={onClose}
         setCompanyData={setCompanyData}
-      />
+      />,
     );
 
     fireEvent.click(screen.getByText("✖"));
@@ -161,7 +161,7 @@ describe("EditAboutModal", () => {
         companyData={{ ...defaultCompany, isVerified: false }}
         onClose={onClose}
         setCompanyData={setCompanyData}
-      />
+      />,
     );
 
     const checkbox = screen.getByRole("checkbox", { name: /Verified Page/i });
@@ -181,7 +181,7 @@ describe("EditAboutModal", () => {
         companyData={defaultCompany}
         onClose={onClose}
         setCompanyData={setCompanyData}
-      />
+      />,
     );
     expect(document.body.classList.contains("overflow-hidden")).toBe(true);
   });
@@ -200,7 +200,7 @@ describe("EditAboutModal", () => {
         companyData={defaultCompany}
         onClose={onClose}
         setCompanyData={setCompanyData}
-      />
+      />,
     );
 
     const fileInput = screen.getByTestId("banner-upload-input");
@@ -224,7 +224,7 @@ describe("EditAboutModal", () => {
         companyData={defaultCompany}
         onClose={onClose}
         setCompanyData={setCompanyData}
-      />
+      />,
     );
 
     const fileInput = screen.getByTestId("banner-upload-input");
@@ -232,7 +232,7 @@ describe("EditAboutModal", () => {
 
     await waitFor(() => {
       expect(screen.getByTestId("error-message")).toHaveTextContent(
-        "Failed to upload banner. Please try again."
+        "Failed to upload banner. Please try again.",
       );
     });
   });
@@ -249,7 +249,7 @@ describe("EditAboutModal", () => {
         companyData={defaultCompany}
         onClose={onClose}
         setCompanyData={setCompanyData}
-      />
+      />,
     );
 
     const fileInput = screen.getByTestId("logo-upload-input");
@@ -273,7 +273,7 @@ describe("EditAboutModal", () => {
         companyData={defaultCompany}
         onClose={onClose}
         setCompanyData={setCompanyData}
-      />
+      />,
     );
 
     const fileInput = screen.getByTestId("logo-upload-input");
@@ -281,7 +281,7 @@ describe("EditAboutModal", () => {
 
     await waitFor(() => {
       expect(screen.getByTestId("error-message")).toHaveTextContent(
-        "Failed to upload logo. Please try again."
+        "Failed to upload logo. Please try again.",
       );
     });
   });
@@ -292,7 +292,7 @@ describe("EditAboutModal", () => {
         companyData={null}
         onClose={onClose}
         setCompanyData={setCompanyData}
-      />
+      />,
     );
 
     expect(screen.getByText("Edit Company Profile")).toBeInTheDocument();
@@ -310,14 +310,14 @@ describe("EditAboutModal", () => {
         companyData={defaultCompany}
         onClose={onClose}
         setCompanyData={setCompanyData}
-      />
+      />,
     );
 
     fireEvent.click(screen.getByText("Save Changes"));
 
     await waitFor(() => {
       expect(screen.getByTestId("error-message")).toHaveTextContent(
-        "Field A is required, Field B is invalid"
+        "Field A is required, Field B is invalid",
       );
     });
   });
@@ -328,7 +328,7 @@ describe("EditAboutModal", () => {
         companyData={{ ...defaultCompany, founded: 2000 }}
         onClose={onClose}
         setCompanyData={setCompanyData}
-      />
+      />,
     );
 
     const input = screen.getByDisplayValue("2000");
@@ -339,7 +339,7 @@ describe("EditAboutModal", () => {
     await waitFor(() => {
       expect(axios.patch).not.toHaveBeenCalled();
       expect(screen.getByTestId("error-message")).toHaveTextContent(
-        "No changes to save."
+        "No changes to save.",
       );
     });
   });
@@ -350,7 +350,7 @@ describe("EditAboutModal", () => {
         companyData={defaultCompany}
         onClose={onClose}
         setCompanyData={setCompanyData}
-      />
+      />,
     );
 
     const input = screen.getByDisplayValue("https://map.com");
@@ -361,7 +361,7 @@ describe("EditAboutModal", () => {
     await waitFor(() => {
       expect(axios.patch).not.toHaveBeenCalled();
       expect(screen.getByTestId("error-message")).toHaveTextContent(
-        "Location must be a valid Google Maps link."
+        "Location must be a valid Google Maps link.",
       );
     });
   });
@@ -372,7 +372,7 @@ describe("EditAboutModal", () => {
         companyData={defaultCompany}
         onClose={onClose}
         setCompanyData={setCompanyData}
-      />
+      />,
     );
 
     const fileInput = screen.getByTestId("logo-upload-input");
@@ -389,7 +389,7 @@ describe("EditAboutModal", () => {
     await waitFor(() => {
       expect(axios.patch).toHaveBeenCalledWith(
         "/companies/1",
-        expect.objectContaining({ logo: "new-logo-url" })
+        expect.objectContaining({ logo: "new-logo-url" }),
       );
     });
   });
@@ -400,7 +400,7 @@ describe("EditAboutModal", () => {
         companyData={{ ...defaultCompany, founded: 2020 }}
         onClose={onClose}
         setCompanyData={setCompanyData}
-      />
+      />,
     );
 
     const input = screen.getByDisplayValue("2020");
@@ -411,7 +411,7 @@ describe("EditAboutModal", () => {
     await waitFor(() => {
       expect(axios.patch).not.toHaveBeenCalled();
       expect(screen.getByTestId("error-message")).toHaveTextContent(
-        "No changes to save."
+        "No changes to save.",
       );
     });
   });

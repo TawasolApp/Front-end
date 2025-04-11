@@ -12,7 +12,7 @@ vi.mock(
         <button onClick={onClose}>Close</button>
       </div>
     ),
-  })
+  }),
 );
 
 // ✅ Mock axiosInstance
@@ -42,7 +42,7 @@ describe("AboutSection", () => {
     fireEvent.click(screen.getByText("Save")); // save
 
     await waitFor(() =>
-      expect(screen.getByText("Updated bio")).toBeInTheDocument()
+      expect(screen.getByText("Updated bio")).toBeInTheDocument(),
     );
   });
 

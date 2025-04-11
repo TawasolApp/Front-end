@@ -74,7 +74,7 @@ function EditProfileModal({ user, isOpen, onClose, onSave }) {
         } catch (err) {
           console.error(
             "Failed to update profile:",
-            err.response?.data || err.message
+            err.response?.data || err.message,
           );
         }
 

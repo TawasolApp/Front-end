@@ -40,7 +40,7 @@ describe("AboutOverview", () => {
   test("renders overview text", () => {
     render(<AboutOverview />);
     expect(
-      screen.getByText("A great company with innovative products.")
+      screen.getByText("A great company with innovative products."),
     ).toBeInTheDocument();
   });
 

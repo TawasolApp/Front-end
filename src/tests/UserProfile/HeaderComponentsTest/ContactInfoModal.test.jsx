@@ -30,7 +30,7 @@ describe("ContactInfoModal", () => {
           onClose={vi.fn()}
           isOwner={true}
         />
-      </Provider>
+      </Provider>,
     );
 
     expect(screen.queryByText(/contact info/i)).not.toBeInTheDocument();
@@ -45,7 +45,7 @@ describe("ContactInfoModal", () => {
           onClose={vi.fn()}
           isOwner={true}
         />
-      </Provider>
+      </Provider>,
     );
 
     expect(screen.getByText(/contact info/i)).toBeInTheDocument();
@@ -62,7 +62,7 @@ describe("ContactInfoModal", () => {
           onClose={vi.fn()}
           isOwner={false}
         />
-      </Provider>
+      </Provider>,
     );
 
     expect(screen.queryByText("john@example.com")).not.toBeInTheDocument();
@@ -80,7 +80,7 @@ describe("ContactInfoModal", () => {
           onClose={mockOnClose}
           isOwner={true}
         />
-      </Provider>
+      </Provider>,
     );
 
     fireEvent.click(screen.getByLabelText(/close modal/i));

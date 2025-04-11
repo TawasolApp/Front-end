@@ -7,7 +7,7 @@ import ConfirmModal from "../ReusableModals/ConfirmModal";
 // Shared date utilities
 const getAllMonths = () =>
   [...Array(12)].map((_, i) =>
-    new Date(2000, i).toLocaleString("default", { month: "long" })
+    new Date(2000, i).toLocaleString("default", { month: "long" }),
   );
 
 const currentYear = new Date().getFullYear();
@@ -90,10 +90,10 @@ function GenericModal({
       };
 
       const { month: startMonth, year: startYear } = parseDate(
-        initialData.startDate || initialData.issueDate
+        initialData.startDate || initialData.issueDate,
       );
       const { month: endMonth, year: endYear } = parseDate(
-        initialData.endDate || initialData.expiryDate
+        initialData.endDate || initialData.expiryDate,
       );
 
       const updatedForm = {
@@ -276,7 +276,7 @@ function GenericModal({
               errors={errors}
               editMode={editMode} // wont show skillname if edit
               existingSkills={existingItems.map((item) =>
-                item.skillName.toLowerCase()
+                item.skillName.toLowerCase(),
               )}
             />
           )}

@@ -19,7 +19,7 @@ function AddManagerModal({ show, onClose, companyId }) {
 
       try {
         const { data } = await axiosInstance.get(
-          `/connections/users?name=${searchName}&page=1&limit=5`
+          `/connections/users?name=${searchName}&page=1&limit=5`,
         );
 
         console.log("Search API response:", data);
@@ -44,7 +44,7 @@ function AddManagerModal({ show, onClose, companyId }) {
 
       const currentPage = reset ? 1 : page;
       const { data } = await axiosInstance.get(
-        `/companies/${companyId}/managers?page=${currentPage}&limit=2`
+        `/companies/${companyId}/managers?page=${currentPage}&limit=2`,
       );
 
       const managerProfiles = data.map((user) => ({

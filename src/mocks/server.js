@@ -38,7 +38,6 @@ const storage = multer.diskStorage({
 
 const upload = multer({ storage });
 
-
 // API to handle file uploads
 server.post("/api/uploadImage", upload.single("file"), (req, res) => {
   if (!req.file) {
@@ -253,18 +252,20 @@ server.get("/connections/recommended", (req, res) => {
     // Get query parameters for pagination
     const page = parseInt(req.query.page) || 1;
     const limit = parseInt(req.query.limit) || 10;
-    
+
     // Get all recommended users from the database
     const allRecommended = _router.db.get("recommendedUsers").value();
-    
+
     // Calculate pagination
     const startIndex = (page - 1) * limit;
     const endIndex = page * limit;
     const paginatedRecommended = allRecommended.slice(startIndex, endIndex);
-    
+
     res.status(200).json(paginatedRecommended);
   } catch (error) {
-    res.status(500).json({ message: "Failed to retrieve list of recommended users" });
+    res
+      .status(500)
+      .json({ message: "Failed to retrieve list of recommended users" });
   }
 });
 
@@ -275,22 +276,26 @@ server.post("/connections", (req, res) => {
 
     // Check if user exists in recommended
     const recommendedUsers = db.get("recommendedUsers").value();
-    const userToConnect = recommendedUsers.find(u => u.userId === userId);
+    const userToConnect = recommendedUsers.find((u) => u.userId === userId);
 
     if (!userToConnect) {
-      return res.status(404).json({ message: "User ID does not exist in recommended users" });
+      return res
+        .status(404)
+        .json({ message: "User ID does not exist in recommended users" });
     }
 
     // Check if connection already exists or is pending
     const connections = db.get("connections").value();
     const sentConnections = db.get("sentConnections").value();
-    
-    if (connections.some(u => u.userId === userId)) {
+
+    if (connections.some((u) => u.userId === userId)) {
       return res.status(409).json({ message: "Connection already exists" });
     }
 
-    if (sentConnections.some(u => u.userId === userId)) {
-      return res.status(409).json({ message: "Connection request already sent" });
+    if (sentConnections.some((u) => u.userId === userId)) {
+      return res
+        .status(409)
+        .json({ message: "Connection request already sent" });
     }
 
     // Add to sent connections
@@ -298,7 +303,7 @@ server.post("/connections", (req, res) => {
 
     res.status(201).json({
       message: "Connection request sent successfully",
-      user: userToConnect
+      user: userToConnect,
     });
   } catch (error) {
     res.status(500).json({ message: "Failed to send connection request" });
@@ -312,11 +317,12 @@ server.delete("/connections/:userId/pending", (req, res) => {
 
     // Check if request exists in sent connections
     const sentConnections = db.get("sentConnections").value();
-    const pendingRequest = sentConnections.find(u => u.userId === userId);
+    const pendingRequest = sentConnections.find((u) => u.userId === userId);
 
     if (!pendingRequest) {
-      return res.status(404).json({ 
-        message: "User ID does not exist in sent connections or request does not exist" 
+      return res.status(404).json({
+        message:
+          "User ID does not exist in sent connections or request does not exist",
       });
     }
 
@@ -325,7 +331,7 @@ server.delete("/connections/:userId/pending", (req, res) => {
 
     res.status(200).json({
       message: "Connection request removed",
-      user: pendingRequest
+      user: pendingRequest,
     });
   } catch (error) {
     res.status(500).json({ message: "Failed to remove pending request" });
@@ -364,7 +370,7 @@ server.post("/auth/login", (req, res) => {
 
   const users = _router.db.get("auth").value();
   const user = users.find(
-    (user) => user.email === email && user.password === password
+    (user) => user.email === email && user.password === password,
   );
 
   if (!user) {
@@ -444,7 +450,7 @@ server.get("/users/confirm-email-change", (req, res) => {
   _router.db
     .set(
       "pendingEmailChanges",
-      pendingChanges.filter((req) => req.token !== token)
+      pendingChanges.filter((req) => req.token !== token),
     )
     .write();
 
@@ -580,7 +586,8 @@ server.post("/profile/:id/skills", (req, res) => {
 
   const items = user.get("skills").value() || [];
   const alreadyExists = items.some(
-    (item) => item.skillName?.toLowerCase() === newItem.skillName?.toLowerCase()
+    (item) =>
+      item.skillName?.toLowerCase() === newItem.skillName?.toLowerCase(),
   );
   if (alreadyExists) {
     return res.status(409).json({ error: "Skill already exists" });
@@ -597,7 +604,7 @@ server.patch("/profile/:userId/education/:itemId", (req, res) => {
   const updatedItems = user
     .get("education")
     .map((item) =>
-      String(item.id) === itemId ? { ...item, ...req.body } : item
+      String(item.id) === itemId ? { ...item, ...req.body } : item,
     )
     .value();
   user.assign({ education: updatedItems }).write();
@@ -612,7 +619,7 @@ server.patch("/profile/:userId/workExperience/:itemId", (req, res) => {
   const updatedItems = user
     .get("workExperience")
     .map((item) =>
-      String(item.id) === itemId ? { ...item, ...req.body } : item
+      String(item.id) === itemId ? { ...item, ...req.body } : item,
     )
     .value();
   user.assign({ workExperience: updatedItems }).write();
@@ -627,7 +634,7 @@ server.patch("/profile/:userId/certifications/:itemId", (req, res) => {
   const updatedItems = user
     .get("certifications")
     .map((item) =>
-      String(item.id) === itemId ? { ...item, ...req.body } : item
+      String(item.id) === itemId ? { ...item, ...req.body } : item,
     )
     .value();
   user.assign({ certifications: updatedItems }).write();
@@ -644,14 +651,14 @@ server.patch("/profile/:userId/skills/:itemId", (req, res) => {
   const updatedItems = user
     .get("skills")
     .map((item) =>
-      String(item.skillName) === itemId ? { ...item, ...req.body } : item
+      String(item.skillName) === itemId ? { ...item, ...req.body } : item,
     )
     .value();
 
   user.assign({ skills: updatedItems }).write();
 
   const updatedItem = updatedItems.find(
-    (item) => String(item.skillName) === itemId
+    (item) => String(item.skillName) === itemId,
   );
   res.status(200).json(updatedItem);
 });
@@ -735,66 +742,67 @@ server.get("/posts", (req, res) => {
 });
 
 server.post("/posts", (req, res) => {
-    // Get data from request body
-    const content = req.body.text || req.body.content; // Accept either name
-    const visibility = req.body.visibility;
-    const taggedUsers = req.body.taggedUsers || [];
-    const mediaItems = req.body.media || [];
-    const parentPostId = req.body.parentPostId || null;
-    const isSilentRepost = req.body.isSilentRepost || false;
-  
-    // Basic validation
-    if (!isSilentRepost && !content) {
-      return res.status(400).json({ error: "content is required when it is not a silent repost" });
+  // Get data from request body
+  const content = req.body.text || req.body.content; // Accept either name
+  const visibility = req.body.visibility;
+  const taggedUsers = req.body.taggedUsers || [];
+  const mediaItems = req.body.media || [];
+  const parentPostId = req.body.parentPostId || null;
+  const isSilentRepost = req.body.isSilentRepost || false;
+
+  // Basic validation
+  if (!isSilentRepost && !content) {
+    return res
+      .status(400)
+      .json({ error: "content is required when it is not a silent repost" });
+  }
+
+  const posts = _router.db.get("posts");
+
+  let parentPost = null;
+  if (parentPostId) {
+    parentPost = posts.find({ id: parentPostId }).value();
+
+    // Increment the share count if parentPost exists
+    if (parentPost) {
+      posts
+        .find({ id: parentPostId })
+        .assign({ shares: parentPost.shares + 1 })
+        .write();
     }
-  
-    const posts = _router.db.get("posts");
-  
-    let parentPost = null;
-    if (parentPostId) {
-      parentPost = posts.find({ id: parentPostId }).value();
-  
-      // Increment the share count if parentPost exists
-      if (parentPost) {
-        posts
-          .find({ id: parentPostId })
-          .assign({ shares: parentPost.shares + 1 })
-          .write();
-      }
-    }
-  
-    const newPost = {
-      id: Date.now().toString(),
-      isSaved: false,
-      authorId: currentUser.id,
-      authorName: currentUser.name,
-      authorPicture: currentUser.picture,
-      authorBio: currentUser.bio,
-      content: content,
-      media: mediaItems,
-      reactions: {
-        Love: 0,
-        Celebrate: 0,
-        Insightful: 0,
-        Funny: 0,
-        Support: 0,
-        Like: 0,
-      },
-      comments: 0,
-      shares: 0,
-      taggedUsers: taggedUsers,
-      visibility: visibility,
-      authorType: currentUser.type,
-      reactType: null,
-      timestamp: new Date().toISOString(),
-      parentPost: parentPost ? { ...parentPost } : null,
-      isSilentRepost: isSilentRepost
-    };
-  
-    posts.push(newPost).write();
-    res.status(201).json(newPost);
+  }
+
+  const newPost = {
+    id: Date.now().toString(),
+    isSaved: false,
+    authorId: currentUser.id,
+    authorName: currentUser.name,
+    authorPicture: currentUser.picture,
+    authorBio: currentUser.bio,
+    content: content,
+    media: mediaItems,
+    reactions: {
+      Love: 0,
+      Celebrate: 0,
+      Insightful: 0,
+      Funny: 0,
+      Support: 0,
+      Like: 0,
+    },
+    comments: 0,
+    shares: 0,
+    taggedUsers: taggedUsers,
+    visibility: visibility,
+    authorType: currentUser.type,
+    reactType: null,
+    timestamp: new Date().toISOString(),
+    parentPost: parentPost ? { ...parentPost } : null,
+    isSilentRepost: isSilentRepost,
+  };
+
+  posts.push(newPost).write();
+  res.status(201).json(newPost);
 });
-  
 
 server.delete("/delete/:postId", (req, res) => {
   const { postId } = req.params;
@@ -877,7 +885,7 @@ server.post("/posts/react/:postId", (req, res) => {
           ...entity.reactions,
           [existingReaction.type]: Math.max(
             (entity.reactions[existingReaction.type] || 0) - 1,
-            0
+            0,
           ),
         },
         reactType: null,
@@ -887,7 +895,7 @@ server.post("/posts/react/:postId", (req, res) => {
 
   // Add new reaction
   const reactionTypeAdd = Object.keys(reactions).find(
-    (type) => reactions[type] === 1
+    (type) => reactions[type] === 1,
   );
   if (reactionTypeAdd) {
     const newReaction = {

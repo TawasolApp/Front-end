@@ -1,38 +1,16 @@
-import { useEffect, useState } from "react";
 import { ArrowForwardOutlined } from "@mui/icons-material";
 import { useNavigate } from "react-router-dom";
-import { useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
+import { setTheme } from "../../store/themeSlice";
 
 const ThemeSettings = () => {
-  const [theme, setTheme] = useState("light");
+  const dispatch = useDispatch();
+  const theme = useSelector((state) => state.theme.theme);
   const { email, isSocialLogin } = useSelector((state) => state.authentication);
   const navigate = useNavigate();
 
-  useEffect(() => {
-    const storedTheme = localStorage.getItem("theme");
-    const initialTheme = storedTheme || "light";
-
-    // Set DOM class
-    document.documentElement.classList.remove("light", "dark");
-    document.documentElement.classList.add(initialTheme);
-
-    // Set in localStorage if not already
-    if (!storedTheme) {
-      localStorage.setItem("theme", initialTheme);
-    }
-
-    setTheme(initialTheme);
-  }, []);
-
   const handleThemeChange = (value) => {
-    setTheme(value);
-
-    // Update class on html root
-    document.documentElement.classList.remove("light", "dark");
-    document.documentElement.classList.add(value);
-
-    // Persist to localStorage
-    localStorage.setItem("theme", value);
+    dispatch(setTheme(value));
   };
 
   return (
