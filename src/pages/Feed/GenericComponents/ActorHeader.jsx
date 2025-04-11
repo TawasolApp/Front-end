@@ -17,7 +17,7 @@ const ActorHeader = ({
   isEdited = false,
 }) => {
   return (
-    <div className="flex gap-2 max-w-full items-center">
+    <div className="flex gap-2 max-w-[75%] items-center">
       <div className="flex-shrink-0 items-center">
         <Link
           to={
