@@ -51,11 +51,6 @@ const PostCard = ({ setShowPostModal, setMediaIndex }) => {
       icon: FlagIcon,
     },
     {
-      text: `Unfollow ${post.authorName}`,
-      onClick: () => console.log("User unfollowed"), // TODO: Phase 3 to integrate with noor
-      icon: HighlightOffIcon,
-    },
-    {
       text: "Copy link to post",
       onClick: () => handleCopyPost(),
       icon: LinkIcon,

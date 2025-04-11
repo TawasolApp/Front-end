@@ -30,7 +30,7 @@ const Comment = ({ comment }) => {
   let menuItems = [
     {
       text: "Report comment",
-      onClick: () => console.log("Reported post"), // TODO: when reporting is implemented
+      onClick: () => console.log("Reported comment"), // TODO: when reporting is implemented
       icon: FlagIcon,
     },
   ];
