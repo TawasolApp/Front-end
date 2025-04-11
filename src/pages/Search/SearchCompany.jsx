@@ -28,19 +28,12 @@ const CompanySearch = ({ searchText, industry }) => {
       setLoading(true);
       setError(null);
 
-      // Construct query parameters
       const params = {
         page: pageNum,
         limit,
         name: searchText || "",
       };
-
-      // Add industry filter if provided
-      if (industry) {
-        params.industry = industry;
-      }
-
-      // Make API call
+      if (industry) params.industry = industry;
       const response = await axiosInstance.get("/companies", { params });
 
       // Update state based on response
@@ -75,16 +68,26 @@ const CompanySearch = ({ searchText, industry }) => {
     }
   }, [page]);
 
-  // Handle load more
   const handleLoadMore = () => {
     if (!loading && hasMore) {
       setPage((prevPage) => prevPage + 1);
     }
   };
 
-  // Handle company click
   const handleCompanyClick = (companyId) => {
     navigate(`/company/${companyId}`);
+  };
+
+  // Handle follow click
+  const handleFollow = (companyId, event) => {
+    // Prevent navigation when clicking the follow button
+    event.stopPropagation();
+    axiosInstance.post(`/companies/${companyId}/follow`);
+    setCompanies(companies.map(company => 
+      company.companyId === companyId 
+        ? { ...company, isFollowing: true } 
+        : company
+    ));
   };
 
   return (
@@ -105,12 +108,10 @@ const CompanySearch = ({ searchText, industry }) => {
               className={`p-4 flex items-start gap-3 transition-colors ${
                 index !== 0 ? "border-t border-cardBorder" : ""
               }`}
+              onClick={() => handleCompanyClick(company.companyId)}
             >
               {/* Company logo */}
-              <div
-                className="flex-shrink-0"
-                onClick={() => handleCompanyClick(company.companyId)}
-              >
+              <div className="flex-shrink-0">
                 <Avatar
                   src={company.logo || "/placeholder.svg"}
                   alt={company.name}
@@ -123,10 +124,7 @@ const CompanySearch = ({ searchText, industry }) => {
               <div className="flex-grow">
                 <div className="flex justify-between items-start">
                   <div>
-                    <h3
-                      className="text-authorName font-medium hover:underline cursor-pointer"
-                      onClick={() => handleCompanyClick(company.companyId)}
-                    >
+                    <h3 className="text-authorName font-medium hover:underline cursor-pointer">
                       {company.name}
                       {company.isVerified && (
                         <span className="ml-1 text-blue-500">✓</span>
@@ -142,12 +140,17 @@ const CompanySearch = ({ searchText, industry }) => {
                     )}
                   </div>
 
-                  {/* Follow button - only shown if not already following */}
-                  {!company.isFollowing && (
-                    <button className="bg-transparent hover:bg-cardBackgroundHover text-blue-500 font-medium py-1 px-4 border border-blue-500 rounded-full transition-colors">
-                      Follow
-                    </button>
-                  )}
+                  {/* Follow/Following button */}
+                  <button 
+                    onClick={(e) => handleFollow(company.companyId, e)}
+                    className={`font-medium py-1 px-4 rounded-full transition-colors ${
+                      company.isFollowing 
+                        ? "bg-gray-200 text-gray-700" 
+                        : "bg-transparent hover:bg-cardBackgroundHover text-blue-500 border border-blue-500"
+                    }`}
+                  >
+                    {company.isFollowing ? "Followed" : "Follow"}
+                  </button>
                 </div>
               </div>
             </div>

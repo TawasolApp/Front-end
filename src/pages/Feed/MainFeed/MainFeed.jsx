@@ -189,6 +189,7 @@ const MainFeed = ({
           currentAuthorName={currentAuthorName}
           currentAuthorPicture={currentAuthorPicture}
           isAdmin={isAdmin}
+          loading={loading}
         />
 
         {loading && (
@@ -216,8 +217,14 @@ const MainFeed = ({
         )}
 
         {!hasMore && posts.length > 0 && (
-          <div className="text-center p-4 text-header">
-            Enough Scrolling for you today 😵
+          <div className="mt-6 mb-4 p-6 text-center bg-cardBackground border border-cardBorder rounded-xl shadow-sm flex flex-col items-center gap-2">
+            <span className="text-3xl">😵</span>
+            <p className="text-lg font-medium text-gray-800 dark:text-white">
+              That's all for now!
+            </p>
+            <p className="text-sm text-gray-500">
+              You've reached the end of your feed. Take a break, or check back later for more updates.
+            </p>
           </div>
         )}
       </div>
