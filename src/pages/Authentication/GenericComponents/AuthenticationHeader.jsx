@@ -14,8 +14,8 @@ const AuthenticationHeader = ({ hideButtons = false }) => {
       >
         {/* Logo on the left */}
         <div className="flex items-center">
-          <Logo className="h-10 sm:h-12 w-auto" />
-          <h1 className="text-2xl sm:text-3xl font-bold text-buttonSubmitEnable ml-1">
+          <Logo className="h-8 sm:h-12 w-auto" />
+          <h1 className="text-xl sm:text-3xl font-bold text-buttonSubmitEnable ml-1">
             Tawasol
           </h1>
         </div>
@@ -25,7 +25,7 @@ const AuthenticationHeader = ({ hideButtons = false }) => {
           <div className="flex space-x-2 sm:space-x-4">
             <button
               className="
-              px-4 py-2 sm:px-6 sm:py-3 md:px-8 md:py-4 
+              px-3 py-2 sm:px-6 sm:py-3 md:px-8 md:py-4 
               bg-mainBackground text-textContent rounded-full 
               hover:bg-buttonSubmitDisable 
               text-base sm:text-lg md:text-xl 
@@ -37,7 +37,7 @@ const AuthenticationHeader = ({ hideButtons = false }) => {
             </button>
             <button
               className="
-              px-4 py-2 sm:px-6 sm:py-3 md:px-8 md:py-4 
+              px-3 py-2 sm:px-6 sm:py-3 md:px-8 md:py-4 
               bg-mainBackground rounded-full 
               text-base sm:text-lg md:text-xl 
               font-medium 
