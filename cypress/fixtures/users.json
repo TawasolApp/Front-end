@@ -1,27 +1,33 @@
 {
     "userAbbigail": {
       "email": "devan_gottlieb@yahoo.com",
-      "password": "TestPassword123"
+      "password": "TestPassword123",
+      "owner": "marwan"
     },
     "userDarrion": {
       "email": "patsy71@yahoo.com",
-      "password": "TestPassword123"
+      "password": "TestPassword123",
+      "owner": "marwan"
     },
     "userAndre": {
       "email": "jesus_gusikowski@hotmail.com",
-      "password": "TestPassword123"
+      "password": "TestPassword123",
+      "owner": "marwan"
     },
     "userNatalia": {
       "email": "elliott.kshlerin@gmail.com",
-      "password": "TestPassword123"
+      "password": "TestPassword123",
+      "owner": "marwan"
     },
     "userJeramy": {
       "email": "mariane19@gmail.com",
-      "password": "TestPassword123"
+      "password": "TestPassword123",
+      "owner": "marwan"
     },
     "userHillard": {
       "email": "roger70@gmail.com",
-      "password": "TestPassword123"
+      "password": "TestPassword123",
+      "owner": "marwan"
     },
     "userWendy": {
       "email": "nathaniel.dach69@hotmail.com",
@@ -97,27 +103,33 @@
     },
     "userKareem": {
       "email": "hannah5@hotmail.com",
-      "password": "TestPassword123"
+      "password": "TestPassword123",
+      "owner": "sawy"
     },
     "userBertrand": {
       "email": "edgardo.mante77@hotmail.com",
-      "password": "TestPassword123"
+      "password": "TestPassword123",
+      "owner": "sawy"
     },
     "userDimitri": {
       "email": "vaughn.reinger@yahoo.com",
-      "password": "TestPassword123"
+      "password": "TestPassword123",
+      "owner": "sawy"
     },
     "userTrevor": {
       "email": "tom.emard6@hotmail.com",
-      "password": "TestPassword123"
+      "password": "TestPassword123",
+      "owner": "sawy"
     },
     "userEfren": {
       "email": "judah78@gmail.com",
-      "password": "TestPassword123"
+      "password": "TestPassword123",
+      "owner": "sawy"
     },
     "userDallas": {
       "email": "collin.davis@yahoo.com",
-      "password": "TestPassword123"
+      "password": "TestPassword123", 
+      "owner": "sawy"
     }
   }
   
