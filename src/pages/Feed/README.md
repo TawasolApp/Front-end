@@ -34,21 +34,26 @@ Feed/
 ## 🔍 Key Components
 
 ### Containers In General
+
 - FeedContainer
 - RepostContainer
 - SavedPostContainer
-All are the main layout component that calls the MainFeed component which handles all types of the feed.
+  All are the main layout component that calls the MainFeed component which handles all types of the feed.
 
 ### MainFeed
+
 Contains both the feed display and share post display, also handles displaying all types of scenarios (no more pagination, no posts at all, loading..)
 This component is the main manipulator for the Feed, it can be manipulated by giving different parameters to be used anywhere, it is used in the main feed, the saved feed, the search feed, the reposts feed, the company feed and the user's feed
 
 ### PostContainer, PostContext, PostCard and PostModal
+
 The post are propped down to post container, this container constructs the context of the post, and inside of it create 2 views for the post (card which appears by default on the feed, and modal which is shown after clicking on a media)
 PostContext provides the context for individual posts, it includes all API endpoints, and the general states (post, comments, replies)
 
 ### Post Components
+
 Handle the display and interactions for individual posts:
+
 - **Header**: the header of any post and allows navigation to users and company, also silentRepostHeader which is shown if a silent repost was made
 - **Content**: both the text content and and the media display (all types)
 - **Metrics**: the metrics of the post (reactions, commentsCount, and replies)
@@ -58,6 +63,7 @@ Handle the display and interactions for individual posts:
 - **TextModal**: Created in share post, but it is a generic component for sharing, editing posts, it handles media adding and user tagging, takes initial text, and initial tagged users and initial media for editing
 
 ### Generic Components
+
 - **ReactionsModal**: this modal takes the API and fetches the reactions and display them with pagination and filtering
 - **TextEditor**: Allows both posts, commenting and replying to have the same editor so adding markups for tagging could be in only one place and all other components use it
 - **TextViewer**: Takes the text, the tagged users, and maximum number of characters, removes the markups and create a hyperlink for any link or tagged users, while also slice the text if greater than max number of chars and shows "...more" or "...less"

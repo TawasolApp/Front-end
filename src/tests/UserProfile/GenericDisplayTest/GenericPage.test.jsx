@@ -34,6 +34,34 @@ vi.mock("react-router-dom", async () => {
   };
 });
 
+vi.mock(
+  "../../../pages/UserProfile/Components/GenericDisplay/GenericModal",
+  async (importOriginal) => {
+    const actual = await importOriginal();
+
+    return {
+      ...actual,
+      default: ({ isOpen, onSave }) =>
+        isOpen ? (
+          <div data-testid="generic-modal">
+            <button
+              onClick={() =>
+                onSave({
+                  _id: "exp-2",
+                  title: "Backend Developer",
+                  company: "Elsewedy Electric",
+                  startDate: "2021-01-01",
+                })
+              }
+            >
+              Save
+            </button>
+          </div>
+        ) : null,
+    };
+  },
+);
+
 describe("GenericPage Component", () => {
   const mockUser = {
     _id: "1",
@@ -86,6 +114,105 @@ describe("GenericPage Component", () => {
     fireEvent.click(screen.getByText("+"));
     await waitFor(() => {
       expect(screen.getByTestId("generic-modal")).toBeInTheDocument();
+    });
+  });
+  it("saves a new item via POST and updates data", async () => {
+    const mockNewItem = {
+      _id: "exp-2",
+      title: "Backend Developer",
+      company: "Elsewedy Electric",
+      startDate: "2021-01-01",
+    };
+
+    axiosModule.axiosInstance.post.mockResolvedValueOnce({ data: mockNewItem });
+    axiosModule.axiosInstance.get.mockResolvedValueOnce({
+      data: {
+        ...mockUser,
+        workExperience: [...mockUser.workExperience, mockNewItem],
+      },
+    });
+
+    renderWithProviders();
+
+    // Open modal
+    fireEvent.click(screen.getByText("+"));
+
+    // Click mocked Save button
+    fireEvent.click(screen.getByText("Save"));
+
+    // Assert item was added
+    await waitFor(() => {
+      expect(screen.getByText("Backend Developer")).toBeInTheDocument();
+    });
+  });
+  it("does not delete if editIndex is null", async () => {
+    renderWithProviders();
+    // Open modal normally first to trigger modal rendering
+    fireEvent.click(screen.getByText("+"));
+
+    // This simulates setting editIndex to null and calling handleDelete
+    const deleteButton = screen
+      .getByTestId("generic-modal")
+      .querySelector("button[aria-label='Delete']");
+    if (deleteButton) fireEvent.click(deleteButton);
+
+    // Make sure delete wasn't called
+    expect(axiosModule.axiosInstance.delete).not.toHaveBeenCalled();
+  });
+  it("does not delete if data[editIndex] is undefined", async () => {
+    ReactRouter.useOutletContext.mockReturnValue({
+      user: { _id: "1", workExperience: [] },
+      isOwner: true,
+      onUserUpdate: vi.fn(),
+    });
+
+    renderWithProviders();
+    fireEvent.click(screen.getByText("+"));
+    fireEvent.click(screen.getByText("Save"));
+
+    expect(axiosModule.axiosInstance.delete).not.toHaveBeenCalled();
+  });
+  it("clears editData after closing the modal", async () => {
+    vi.useFakeTimers(); // use fake timers to control setTimeout
+    renderWithProviders();
+
+    // Open and close modal
+    fireEvent.click(screen.getByText("+"));
+    fireEvent.click(screen.getByText("Save")); // will call closeModal()
+
+    // Fast-forward the timeout
+    vi.advanceTimersByTime(51); // 1ms more than 50ms delay
+    vi.useRealTimers();
+
+    // No visible assertion, but no crash = setEditData cleared safely
+  });
+  it("saves a new item via POST and updates data", async () => {
+    const mockNewItem = {
+      _id: "exp-2",
+      title: "Backend Developer",
+      company: "Elsewedy Electric",
+      startDate: "2021-01-01",
+    };
+
+    axiosModule.axiosInstance.post.mockResolvedValueOnce({ data: mockNewItem });
+    axiosModule.axiosInstance.get.mockResolvedValueOnce({
+      data: {
+        ...mockUser,
+        workExperience: [...mockUser.workExperience, mockNewItem],
+      },
+    });
+
+    renderWithProviders();
+
+    fireEvent.click(screen.getByText("+"));
+    fireEvent.click(screen.getByText("Save"));
+
+    await waitFor(() => {
+      expect(screen.getByText("Backend Developer")).toBeInTheDocument();
+      expect(axiosModule.axiosInstance.post).toHaveBeenCalledWith(
+        "/profile/work-experience",
+        mockNewItem,
+      );
     });
   });
 

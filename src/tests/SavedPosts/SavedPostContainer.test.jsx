@@ -7,14 +7,14 @@ import MainFeed from "../../pages/Feed/MainFeed/MainFeed";
 
 // Mock the MainFeed component
 vi.mock("../../pages/Feed/MainFeed/MainFeed", () => ({
-  default: vi.fn(() => <div data-testid="main-feed-mock"></div>)
+  default: vi.fn(() => <div data-testid="main-feed-mock"></div>),
 }));
 
 // Mock the PDF.js related modules
 vi.mock("react-pdf", () => ({
   Document: vi.fn(() => null),
   Page: vi.fn(() => null),
-  pdfjs: { GlobalWorkerOptions: { workerSrc: "" } }
+  pdfjs: { GlobalWorkerOptions: { workerSrc: "" } },
 }));
 
 describe("SavedPostsContainer", () => {
@@ -22,7 +22,7 @@ describe("SavedPostsContainer", () => {
     // Clear mock call history before each test
     vi.clearAllMocks();
   });
-  
+
   it("renders the SavedPostsContainer component", () => {
     render(<SavedPostsContainer />);
 

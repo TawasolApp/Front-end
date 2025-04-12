@@ -45,38 +45,43 @@ vi.mock("../../pages/Authentication/Forms/ChangeEmailForm", () => ({
     const testSubmit = (scenario) => {
       const newEmail = "new@example.com";
       const currentPassword = "password123";
-      
+
       // Call the onSubmit function passed as a prop with our global mock functions
-      onSubmit(newEmail, currentPassword, mockSetEmailError, mockSetCurrentPasswordError);
+      onSubmit(
+        newEmail,
+        currentPassword,
+        mockSetEmailError,
+        mockSetCurrentPasswordError,
+      );
     };
 
     return (
       <div data-testid="change-email-form">
-        <button 
+        <button
           onClick={() => testSubmit("success")}
           data-testid="test-submit-success"
         >
           Test Submit Success
         </button>
-        <button 
+        <button
           onClick={() => testSubmit("error-400")}
           data-testid="test-submit-error-400"
         >
           Test Submit Error 400
         </button>
-        <button 
+        <button
           onClick={() => testSubmit("error-401")}
           data-testid="test-submit-error-401"
         >
           Test Submit Error 401
         </button>
-        <button 
+        <button
           onClick={() => testSubmit("error-409")}
           data-testid="test-submit-error-409"
         >
           Test Submit Error 409
         </button>
-        <button 
+        <button
           onClick={() => testSubmit("error-other")}
           data-testid="test-submit-error-other"
         >
@@ -87,14 +92,19 @@ vi.mock("../../pages/Authentication/Forms/ChangeEmailForm", () => ({
   },
 }));
 
-vi.mock("../../pages/Authentication/GenericComponents/AuthenticationHeader", () => ({
-  default: ({ hideButtons }) => (
-    <header data-testid="auth-header">
-      Authentication Header
-      {hideButtons && <span data-testid="buttons-hidden">Buttons Hidden</span>}
-    </header>
-  ),
-}));
+vi.mock(
+  "../../pages/Authentication/GenericComponents/AuthenticationHeader",
+  () => ({
+    default: ({ hideButtons }) => (
+      <header data-testid="auth-header">
+        Authentication Header
+        {hideButtons && (
+          <span data-testid="buttons-hidden">Buttons Hidden</span>
+        )}
+      </header>
+    ),
+  }),
+);
 
 // Import the component after all mocks are set up
 import ChangeEmailPage from "../../pages/Authentication/ChangeEmailPage";
@@ -108,7 +118,7 @@ describe("ChangeEmailPage", () => {
     return render(
       <BrowserRouter>
         <ChangeEmailPage />
-      </BrowserRouter>
+      </BrowserRouter>,
     );
   };
 
@@ -137,15 +147,17 @@ describe("ChangeEmailPage", () => {
     it("handles successful email update", async () => {
       // Mock successful API response
       mockPatch.mockResolvedValueOnce({});
-      
+
       // Spy on console.log
-      const consoleLogSpy = vi.spyOn(console, "log").mockImplementation(() => {});
-      
+      const consoleLogSpy = vi
+        .spyOn(console, "log")
+        .mockImplementation(() => {});
+
       renderChangeEmailPage();
-      
+
       // Trigger a successful submission
       screen.getByTestId("test-submit-success").click();
-      
+
       // Wait for async operations
       await waitFor(() => {
         // Verify API call
@@ -153,19 +165,24 @@ describe("ChangeEmailPage", () => {
           newEmail: "new@example.com",
           password: "password123",
         });
-        
+
         // Verify Redux dispatch
-        expect(mockDispatch).toHaveBeenCalledWith(mockSetEmail("new@example.com"));
-        
+        expect(mockDispatch).toHaveBeenCalledWith(
+          mockSetEmail("new@example.com"),
+        );
+
         // Verify console.log
         expect(consoleLogSpy).toHaveBeenCalledWith("requested update email");
-        
+
         // Verify navigation
-        expect(mockNavigate).toHaveBeenCalledWith("/auth/verification-pending", {
-          state: { type: "updateEmail" },
-        });
+        expect(mockNavigate).toHaveBeenCalledWith(
+          "/auth/verification-pending",
+          {
+            state: { type: "updateEmail" },
+          },
+        );
       });
-      
+
       // Clean up spy
       consoleLogSpy.mockRestore();
     });
@@ -173,52 +190,56 @@ describe("ChangeEmailPage", () => {
     it("handles 400 error (incorrect password)", async () => {
       // Mock API error with 400 status
       mockPatch.mockRejectedValueOnce({
-        response: { status: 400 }
+        response: { status: 400 },
       });
-      
+
       renderChangeEmailPage();
-      
+
       // Trigger the submission that will result in a 400 error
       screen.getByTestId("test-submit-error-400").click();
-      
+
       // Wait for async operations
       await waitFor(() => {
         // Verify error was set
         expect(mockPatch).toHaveBeenCalled();
-        expect(mockSetCurrentPasswordError).toHaveBeenCalledWith("Incorrect password.");
+        expect(mockSetCurrentPasswordError).toHaveBeenCalledWith(
+          "Incorrect password.",
+        );
       });
     });
 
     it("handles 401 error (unauthorized)", async () => {
       // Mock API error with 401 status
       mockPatch.mockRejectedValueOnce({
-        response: { status: 401 }
+        response: { status: 401 },
       });
-      
+
       renderChangeEmailPage();
-      
+
       // Trigger the submission that will result in a 401 error
       screen.getByTestId("test-submit-error-401").click();
-      
+
       // Wait for async operations
       await waitFor(() => {
         // Verify error was set
         expect(mockPatch).toHaveBeenCalled();
-        expect(mockSetCurrentPasswordError).toHaveBeenCalledWith("Unauthorized.");
+        expect(mockSetCurrentPasswordError).toHaveBeenCalledWith(
+          "Unauthorized.",
+        );
       });
     });
 
     it("handles 409 error (email exists)", async () => {
       // Mock API error with 409 status
       mockPatch.mockRejectedValueOnce({
-        response: { status: 409 }
+        response: { status: 409 },
       });
-      
+
       renderChangeEmailPage();
-      
+
       // Trigger the submission that will result in a 409 error
       screen.getByTestId("test-submit-error-409").click();
-      
+
       // Wait for async operations
       await waitFor(() => {
         // Verify error was set
@@ -230,22 +251,26 @@ describe("ChangeEmailPage", () => {
     it("handles other errors", async () => {
       // Mock other API error
       mockPatch.mockRejectedValueOnce(new Error("Network error"));
-      
+
       // Spy on console.error
-      const consoleErrorSpy = vi.spyOn(console, "error").mockImplementation(() => {});
-      
+      const consoleErrorSpy = vi
+        .spyOn(console, "error")
+        .mockImplementation(() => {});
+
       renderChangeEmailPage();
-      
+
       // Trigger the submission that will result in an unexpected error
       screen.getByTestId("test-submit-error-other").click();
-      
+
       // Wait for async operations
       await waitFor(() => {
         // Verify error was logged
         expect(consoleErrorSpy).toHaveBeenCalled();
-        expect(mockSetEmailError).toHaveBeenCalledWith("An unexpected error occurred. Please try again.");
+        expect(mockSetEmailError).toHaveBeenCalledWith(
+          "An unexpected error occurred. Please try again.",
+        );
       });
-      
+
       // Clean up spy
       consoleErrorSpy.mockRestore();
     });

@@ -36,13 +36,16 @@ vi.mock("../../../apis/axios", () => ({
 }));
 
 // Mock child components
-vi.mock("../../../pages/Authentication/GenericComponents/BlueSubmitButton", () => ({
-  default: ({ text }) => (
-    <button type="submit" data-testid="submit-button">
-      {text}
-    </button>
-  ),
-}));
+vi.mock(
+  "../../../pages/Authentication/GenericComponents/BlueSubmitButton",
+  () => ({
+    default: ({ text }) => (
+      <button type="submit" data-testid="submit-button">
+        {text}
+      </button>
+    ),
+  }),
+);
 
 vi.mock("../../../pages/Authentication/GenericComponents/InputField", () => ({
   default: (props) => (
@@ -114,18 +117,18 @@ describe("ForgotPasswordForm", () => {
     it("updates email when input changes", () => {
       renderForgotPasswordForm();
       const emailInput = screen.getByTestId("email");
-      
+
       fireEvent.change(emailInput, { target: { value: "test@example.com" } });
-      
+
       expect(emailInput.value).toBe("test@example.com");
     });
 
     it("navigates back when Back button is clicked", () => {
       renderForgotPasswordForm();
       const backButton = screen.getByText("Back");
-      
+
       fireEvent.click(backButton);
-      
+
       expect(mockNavigate).toHaveBeenCalledWith(-1);
     });
   });
@@ -134,10 +137,10 @@ describe("ForgotPasswordForm", () => {
     it("validates empty email", () => {
       const { container } = renderForgotPasswordForm();
       const form = container.querySelector("form");
-      
+
       // Submit empty form
       fireEvent.submit(form);
-      
+
       // Check for error
       const errorMessage = screen.getByTestId("error-message");
       expect(errorMessage).toBeInTheDocument();
@@ -148,17 +151,19 @@ describe("ForgotPasswordForm", () => {
       const { container } = renderForgotPasswordForm();
       const emailInput = screen.getByTestId("email");
       const form = container.querySelector("form");
-      
+
       // Enter invalid email
       fireEvent.change(emailInput, { target: { value: "invalid-email" } });
-      
+
       // Submit form
       fireEvent.submit(form);
-      
+
       // Check for error
       const errorMessage = screen.getByTestId("error-message");
       expect(errorMessage).toBeInTheDocument();
-      expect(errorMessage).toHaveTextContent("Wrong email, Please try with an alternate email.");
+      expect(errorMessage).toHaveTextContent(
+        "Wrong email, Please try with an alternate email.",
+      );
     });
   });
 
@@ -166,17 +171,17 @@ describe("ForgotPasswordForm", () => {
     it("submits the form with valid email", async () => {
       // Mock successful API response
       mockPost.mockResolvedValueOnce({});
-      
+
       const { container } = renderForgotPasswordForm();
       const emailInput = screen.getByTestId("email");
       const form = container.querySelector("form");
-      
+
       // Fill form with valid email
       fireEvent.change(emailInput, { target: { value: "test@example.com" } });
-      
+
       // Submit form
       fireEvent.submit(form);
-      
+
       // Wait for async operations
       await waitFor(() => {
         // Check API call
@@ -184,14 +189,19 @@ describe("ForgotPasswordForm", () => {
           email: "test@example.com",
           isAndroid: false,
         });
-        
+
         // Check email was dispatched to Redux
-        expect(mockDispatch).toHaveBeenCalledWith(mockSetEmail("test@example.com"));
-        
+        expect(mockDispatch).toHaveBeenCalledWith(
+          mockSetEmail("test@example.com"),
+        );
+
         // Check navigation
-        expect(mockNavigate).toHaveBeenCalledWith("/auth/verification-pending", {
-          state: { type: "forgotPassword" },
-        });
+        expect(mockNavigate).toHaveBeenCalledWith(
+          "/auth/verification-pending",
+          {
+            state: { type: "forgotPassword" },
+          },
+        );
       });
     });
 
@@ -204,30 +214,32 @@ describe("ForgotPasswordForm", () => {
           },
         },
       });
-      
+
       // Spy on console.error
-      const consoleErrorSpy = vi.spyOn(console, "error").mockImplementation(() => {});
-      
+      const consoleErrorSpy = vi
+        .spyOn(console, "error")
+        .mockImplementation(() => {});
+
       const { container } = renderForgotPasswordForm();
       const emailInput = screen.getByTestId("email");
       const form = container.querySelector("form");
-      
+
       // Fill form with valid email
       fireEvent.change(emailInput, { target: { value: "test@example.com" } });
-      
+
       // Submit form
       fireEvent.submit(form);
-      
+
       // Wait for async operations
       await waitFor(() => {
         expect(consoleErrorSpy).toHaveBeenCalled();
-        
+
         // Check error message
         const errorMessage = screen.getByTestId("error-message");
         expect(errorMessage).toBeInTheDocument();
         expect(errorMessage).toHaveTextContent("Email not found");
       });
-      
+
       // Clean up spy
       consoleErrorSpy.mockRestore();
     });
@@ -237,30 +249,34 @@ describe("ForgotPasswordForm", () => {
       mockPost.mockRejectedValueOnce({
         request: {},
       });
-      
+
       // Spy on console.error
-      const consoleErrorSpy = vi.spyOn(console, "error").mockImplementation(() => {});
-      
+      const consoleErrorSpy = vi
+        .spyOn(console, "error")
+        .mockImplementation(() => {});
+
       const { container } = renderForgotPasswordForm();
       const emailInput = screen.getByTestId("email");
       const form = container.querySelector("form");
-      
+
       // Fill form with valid email
       fireEvent.change(emailInput, { target: { value: "test@example.com" } });
-      
+
       // Submit form
       fireEvent.submit(form);
-      
+
       // Wait for async operations
       await waitFor(() => {
         expect(consoleErrorSpy).toHaveBeenCalled();
-        
+
         // Check error message
         const errorMessage = screen.getByTestId("error-message");
         expect(errorMessage).toBeInTheDocument();
-        expect(errorMessage).toHaveTextContent("Network error. Please check your connection.");
+        expect(errorMessage).toHaveTextContent(
+          "Network error. Please check your connection.",
+        );
       });
-      
+
       // Clean up spy
       consoleErrorSpy.mockRestore();
     });
@@ -270,30 +286,32 @@ describe("ForgotPasswordForm", () => {
       mockPost.mockRejectedValueOnce({
         message: "General error",
       });
-      
+
       // Spy on console.error
-      const consoleErrorSpy = vi.spyOn(console, "error").mockImplementation(() => {});
-      
+      const consoleErrorSpy = vi
+        .spyOn(console, "error")
+        .mockImplementation(() => {});
+
       const { container } = renderForgotPasswordForm();
       const emailInput = screen.getByTestId("email");
       const form = container.querySelector("form");
-      
+
       // Fill form with valid email
       fireEvent.change(emailInput, { target: { value: "test@example.com" } });
-      
+
       // Submit form
       fireEvent.submit(form);
-      
+
       // Wait for async operations
       await waitFor(() => {
         expect(consoleErrorSpy).toHaveBeenCalled();
-        
+
         // Check error message
         const errorMessage = screen.getByTestId("error-message");
         expect(errorMessage).toBeInTheDocument();
         expect(errorMessage).toHaveTextContent("An unexpected error occurred.");
       });
-      
+
       // Clean up spy
       consoleErrorSpy.mockRestore();
     });

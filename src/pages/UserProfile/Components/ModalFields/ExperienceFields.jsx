@@ -43,7 +43,7 @@ function ExperienceFields({ formData, setFormData, handleChange, errors }) {
     : [];
 
   const handleCompanySelect = (company) => {
-    console.log("📦 Selected company object:", company); // 👈 ADD THIS
+    console.log(" Selected company object:", company); // 👈 ADD THIS
 
     setInputValue(company.name);
     setFormData((prev) => ({

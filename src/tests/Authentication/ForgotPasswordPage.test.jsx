@@ -6,12 +6,19 @@ import { BrowserRouter } from "react-router-dom";
 
 // Mock child components
 vi.mock("../../pages/Authentication/Forms/ForgotPasswordForm", () => ({
-  default: () => <div data-testid="forgot-password-form">Forgot Password Form</div>,
+  default: () => (
+    <div data-testid="forgot-password-form">Forgot Password Form</div>
+  ),
 }));
 
-vi.mock("../../pages/Authentication/GenericComponents/AuthenticationHeader", () => ({
-  default: () => <header data-testid="auth-header">Authentication Header</header>,
-}));
+vi.mock(
+  "../../pages/Authentication/GenericComponents/AuthenticationHeader",
+  () => ({
+    default: () => (
+      <header data-testid="auth-header">Authentication Header</header>
+    ),
+  }),
+);
 
 // Import the component after all mocks are set up
 import ForgotPasswordPage from "../../pages/Authentication/ForgotPasswordPage";
@@ -21,7 +28,7 @@ describe("ForgotPasswordPage", () => {
     return render(
       <BrowserRouter>
         <ForgotPasswordPage />
-      </BrowserRouter>
+      </BrowserRouter>,
     );
   };
 
@@ -48,16 +55,22 @@ describe("ForgotPasswordPage", () => {
     it("has proper container styling", () => {
       const { container } = renderForgotPasswordPage();
       const mainContainer = container.firstChild;
-      
-      expect(mainContainer).toHaveClass("min-h-screen", "bg-mainBackground", "overflow-x-hidden");
+
+      expect(mainContainer).toHaveClass(
+        "min-h-screen",
+        "bg-mainBackground",
+        "overflow-x-hidden",
+      );
     });
 
     it("has responsive padding", () => {
       const { container } = renderForgotPasswordPage();
-      
+
       // Find the div with responsive padding classes
-      const responsiveContainer = container.querySelector(".px-4.sm\\:px-6.lg\\:px-8");
-      
+      const responsiveContainer = container.querySelector(
+        ".px-4.sm\\:px-6.lg\\:px-8",
+      );
+
       expect(responsiveContainer).toBeInTheDocument();
     });
   });

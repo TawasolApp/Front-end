@@ -35,6 +35,148 @@ describe("SkillEndorsement", () => {
 
     expect(screen.getByText(/2 endorsements?/i)).toBeInTheDocument();
   });
+  it("logs error with response.data when endorsement fails", async () => {
+    const mockError = { response: { data: "Post failed" } };
+    axios.post.mockRejectedValueOnce(mockError);
+    const consoleSpy = vi.spyOn(console, "error").mockImplementation(() => {});
+
+    render(
+      <MemoryRouter>
+        <SkillEndorsement
+          userId="user123"
+          skillName="React"
+          endorsements={[]}
+          viewerId="viewer1"
+        />
+      </MemoryRouter>,
+    );
+
+    const button = screen.getByRole("button", { name: /endorse/i });
+    fireEvent.click(button);
+
+    await waitFor(() => {
+      expect(consoleSpy).toHaveBeenCalledWith(
+        "Failed to endorse skill:",
+        "Post failed",
+      );
+    });
+
+    consoleSpy.mockRestore();
+  });
+  it("logs error with message when endorsement fails without response", async () => {
+    const mockError = { message: "No server response" };
+    axios.post.mockRejectedValueOnce(mockError);
+    const consoleSpy = vi.spyOn(console, "error").mockImplementation(() => {});
+
+    render(
+      <MemoryRouter>
+        <SkillEndorsement
+          userId="user123"
+          skillName="React"
+          endorsements={[]}
+          viewerId="viewer1"
+        />
+      </MemoryRouter>,
+    );
+
+    const button = screen.getByRole("button", { name: /endorse/i });
+    fireEvent.click(button);
+
+    await waitFor(() => {
+      expect(consoleSpy).toHaveBeenCalledWith(
+        "Failed to endorse skill:",
+        "No server response",
+      );
+    });
+
+    consoleSpy.mockRestore();
+  });
+  it("logs error when unendorsement fails", async () => {
+    const mockError = { response: { data: "Delete failed" } };
+    axios.delete.mockRejectedValueOnce(mockError);
+    const consoleSpy = vi.spyOn(console, "error").mockImplementation(() => {});
+
+    render(
+      <MemoryRouter>
+        <SkillEndorsement
+          userId="user123"
+          skillName="React"
+          endorsements={["viewer1"]}
+          viewerId="viewer1"
+        />
+      </MemoryRouter>,
+    );
+
+    const button = screen.getByRole("button", { name: /endorsed/i });
+    fireEvent.click(button);
+
+    await waitFor(() => {
+      expect(consoleSpy).toHaveBeenCalledWith(
+        "Failed to unendorse skill:",
+        "Delete failed",
+      );
+    });
+
+    consoleSpy.mockRestore();
+  });
+
+  it("logs error when endorsement fails", async () => {
+    const mockError = { response: { data: "Post failed" } };
+    axios.post.mockRejectedValueOnce(mockError);
+    const consoleSpy = vi.spyOn(console, "error").mockImplementation(() => {});
+
+    render(
+      <MemoryRouter>
+        <SkillEndorsement
+          userId="u1"
+          skillName="React"
+          endorsements={[]}
+          viewerId="viewer"
+        />
+      </MemoryRouter>,
+    );
+
+    const button = screen.getByRole("button", { name: /endorse/i });
+    fireEvent.click(button);
+
+    await waitFor(() => {
+      expect(consoleSpy).toHaveBeenCalledWith(
+        "Failed to endorse skill:",
+        "Post failed",
+      );
+    });
+
+    consoleSpy.mockRestore();
+  });
+
+  it("logs error when unendorsement fails", async () => {
+    const mockError = { message: "Delete failed" };
+    axios.delete.mockRejectedValueOnce(mockError);
+    const consoleSpy = vi.spyOn(console, "error").mockImplementation(() => {});
+
+    render(
+      <MemoryRouter>
+        <SkillEndorsement
+          userId="u1"
+          skillName="React"
+          endorsements={["viewer"]}
+          viewerId="viewer"
+        />
+      </MemoryRouter>,
+    );
+
+    const button = screen.getByRole("button", { name: /endorsed/i });
+    fireEvent.click(button);
+
+    await waitFor(() => {
+      expect(consoleSpy).toHaveBeenCalledWith(
+        "Failed to unendorse skill:",
+        "Delete failed",
+      );
+    });
+
+    consoleSpy.mockRestore();
+  });
 
   it("endorses a skill when not already endorsed", async () => {
     axios.post.mockResolvedValueOnce({});

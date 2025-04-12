@@ -39,7 +39,7 @@ vi.mock(
         {text}
       </button>
     ),
-  })
+  }),
 );
 
 // Create a mock for InputField that captures its props
@@ -96,7 +96,7 @@ describe("NewPasswordForm", () => {
     return render(
       <BrowserRouter>
         <NewPasswordForm />
-      </BrowserRouter>
+      </BrowserRouter>,
     );
   };
 
@@ -122,7 +122,7 @@ describe("NewPasswordForm", () => {
       renderNewPasswordForm();
       const newPasswordField = screen.getByTestId("input-field-newPassword");
       const confirmPasswordField = screen.getByTestId(
-        "input-field-confirmNewPassword"
+        "input-field-confirmNewPassword",
       );
 
       expect(newPasswordField).toBeInTheDocument();
@@ -194,7 +194,7 @@ describe("NewPasswordForm", () => {
       const passwordError = screen.getByTestId("newPassword-error");
       expect(passwordError).toBeInTheDocument();
       expect(passwordError).toHaveTextContent(
-        "Please enter your new password."
+        "Please enter your new password.",
       );
     });
 
@@ -273,7 +273,7 @@ describe("NewPasswordForm", () => {
 
       // Check error status message
       const statusMsg = screen.getByText(
-        "Something went wrong. Please try again."
+        "Something went wrong. Please try again.",
       );
       expect(statusMsg).toBeInTheDocument();
 
@@ -315,10 +315,10 @@ describe("NewPasswordForm", () => {
       await waitFor(
         () => {
           expect(
-            screen.getByText("Password reset successful! Redirecting...")
+            screen.getByText("Password reset successful! Redirecting..."),
           ).toBeInTheDocument();
         },
-        { timeout: 1000 }
+        { timeout: 1000 },
       );
     });
   });

@@ -5,7 +5,9 @@ import React from "react";
 
 // Mock child component
 vi.mock("../../pages/Authentication/Forms/ChangePasswordForm", () => ({
-  default: () => <div data-testid="change-password-form">Change Password Form</div>,
+  default: () => (
+    <div data-testid="change-password-form">Change Password Form</div>
+  ),
 }));
 
 // Import the component after all mocks are set up
@@ -33,20 +35,20 @@ describe("ChangePasswordPage", () => {
     it("has proper container styling", () => {
       const { container } = renderChangePasswordPage();
       const mainContainer = container.firstChild;
-      
+
       expect(mainContainer).toHaveClass(
-        "min-h-screen", 
-        "bg-mainBackground", 
-        "flex", 
-        "items-center", 
-        "justify-center"
+        "min-h-screen",
+        "bg-mainBackground",
+        "flex",
+        "items-center",
+        "justify-center",
       );
     });
 
     it("applies responsive padding", () => {
       const { container } = renderChangePasswordPage();
       const mainContainer = container.firstChild;
-      
+
       expect(mainContainer).toHaveClass("p-4", "sm:p-6", "lg:p-8");
     });
   });

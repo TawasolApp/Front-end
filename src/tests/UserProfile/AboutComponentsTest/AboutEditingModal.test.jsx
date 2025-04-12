@@ -90,4 +90,41 @@ describe("AboutEditingModal", () => {
     fireEvent.click(screen.getByLabelText("Close modal"));
     expect(screen.getByText(/Discard changes/i)).toBeInTheDocument();
   });
+  it("updates bio when initialBio prop changes", () => {
+    const { rerender } = render(
+      <AboutEditingModal
+        initialBio="Initial Bio"
+        onClose={mockOnClose}
+        onSave={mockOnSave}
+      />,
+    );
+    expect(screen.getByDisplayValue("Initial Bio")).toBeInTheDocument();
+
+    rerender(
+      <AboutEditingModal
+        initialBio="Updated Bio"
+        onClose={mockOnClose}
+        onSave={mockOnSave}
+      />,
+    );
+
+    expect(screen.getByDisplayValue("Updated Bio")).toBeInTheDocument();
+  });
+  it("calls onClose and hides confirm modal on discard", () => {
+    render(
+      <AboutEditingModal
+        initialBio="Original"
+        onClose={mockOnClose}
+        onSave={mockOnSave}
+      />,
+    );
+    fireEvent.change(screen.getByRole("textbox"), {
+      target: { value: "Changed Bio" },
+    });
+    fireEvent.click(screen.getByLabelText("Close modal")); // opens confirm modal
+    const discardButton = screen.getByRole("button", { name: /Discard/i });
+    fireEvent.click(discardButton);
+    expect(mockOnClose).toHaveBeenCalled();
+    expect(screen.queryByText(/Discard changes/i)).not.toBeInTheDocument(); // modal gone
+  });
 });

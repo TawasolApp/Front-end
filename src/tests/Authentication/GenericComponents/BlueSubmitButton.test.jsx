@@ -8,7 +8,7 @@ describe("BlueSubmitButton", () => {
   describe("Rendering", () => {
     it("renders with the provided text", () => {
       render(<BlueSubmitButton text="Submit Form" />);
-      
+
       const button = screen.getByText("Submit Form");
       expect(button).toBeInTheDocument();
       expect(button.tagName).toBe("BUTTON");
@@ -16,7 +16,7 @@ describe("BlueSubmitButton", () => {
 
     it("renders with type submit", () => {
       render(<BlueSubmitButton text="Submit" />);
-      
+
       const button = screen.getByText("Submit");
       expect(button).toHaveAttribute("type", "submit");
     });
@@ -25,14 +25,14 @@ describe("BlueSubmitButton", () => {
   describe("Disabled State", () => {
     it("is not disabled by default", () => {
       render(<BlueSubmitButton text="Submit" />);
-      
+
       const button = screen.getByText("Submit");
       expect(button).not.toBeDisabled();
     });
 
     it("is disabled when disabled prop is true", () => {
       render(<BlueSubmitButton text="Submit" disabled={true} />);
-      
+
       const button = screen.getByText("Submit");
       expect(button).toBeDisabled();
     });
@@ -41,7 +41,7 @@ describe("BlueSubmitButton", () => {
   describe("Styling", () => {
     it("has enabled styling when not disabled", () => {
       const { container } = render(<BlueSubmitButton text="Submit" />);
-      
+
       const button = container.firstChild;
       expect(button.className).toContain("bg-buttonSubmitEnable");
       expect(button.className).toContain("text-buttonSubmitText");
@@ -49,8 +49,10 @@ describe("BlueSubmitButton", () => {
     });
 
     it("has disabled styling when disabled", () => {
-      const { container } = render(<BlueSubmitButton text="Submit" disabled={true} />);
-      
+      const { container } = render(
+        <BlueSubmitButton text="Submit" disabled={true} />,
+      );
+
       const button = container.firstChild;
       expect(button.className).toContain("bg-buttonSubmitDisable");
       expect(button.className).toContain("text-buttonSubmitDisabledText");
@@ -59,7 +61,7 @@ describe("BlueSubmitButton", () => {
 
     it("has common styling regardless of disabled state", () => {
       const { container } = render(<BlueSubmitButton text="Submit" />);
-      
+
       const button = container.firstChild;
       expect(button.className).toContain("w-full");
       expect(button.className).toContain("rounded-full");

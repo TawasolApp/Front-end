@@ -13,13 +13,16 @@ vi.mock("react-redux", () => ({
 }));
 
 // Mock child components
-vi.mock("../../../pages/Authentication/GenericComponents/BlueSubmitButton", () => ({
-  default: ({ text }) => (
-    <button type="submit" data-testid="submit-button">
-      {text}
-    </button>
-  ),
-}));
+vi.mock(
+  "../../../pages/Authentication/GenericComponents/BlueSubmitButton",
+  () => ({
+    default: ({ text }) => (
+      <button type="submit" data-testid="submit-button">
+        {text}
+      </button>
+    ),
+  }),
+);
 
 vi.mock("../../../pages/Authentication/GenericComponents/InputField", () => ({
   default: (props) => (
@@ -95,18 +98,18 @@ describe("LocationForm", () => {
     it("updates location when input changes", () => {
       renderLocationForm();
       const locationInput = screen.getByTestId("location");
-      
+
       fireEvent.change(locationInput, { target: { value: "New York, NY" } });
-      
+
       expect(locationInput.value).toBe("New York, NY");
     });
 
     it("shows error for empty location on blur", () => {
       renderLocationForm();
       const locationInput = screen.getByTestId("location");
-      
+
       fireEvent.blur(locationInput);
-      
+
       const locationError = screen.getByTestId("location-error");
       expect(locationError).toBeInTheDocument();
       expect(locationError).toHaveTextContent("Please enter your location.");
@@ -115,14 +118,14 @@ describe("LocationForm", () => {
     it("clears error when location input changes", () => {
       renderLocationForm();
       const locationInput = screen.getByTestId("location");
-      
+
       // Generate error
       fireEvent.blur(locationInput);
       expect(screen.getByTestId("location-error")).toBeInTheDocument();
-      
+
       // Change input
       fireEvent.change(locationInput, { target: { value: "New York, NY" } });
-      
+
       // Error should be gone
       expect(screen.queryByTestId("location-error")).not.toBeInTheDocument();
     });
@@ -133,13 +136,13 @@ describe("LocationForm", () => {
       const { container } = renderLocationForm();
       const locationInput = screen.getByTestId("location");
       const form = container.querySelector("form");
-      
+
       // Fill form
       fireEvent.change(locationInput, { target: { value: "New York, NY" } });
-      
+
       // Submit form
       fireEvent.submit(form);
-      
+
       // Check onSubmit was called with correct location
       expect(mockOnSubmit).toHaveBeenCalledWith("New York, NY");
     });
@@ -147,14 +150,14 @@ describe("LocationForm", () => {
     it("prevents submission with empty location", () => {
       const { container } = renderLocationForm();
       const form = container.querySelector("form");
-      
+
       // Submit empty form
       fireEvent.submit(form);
-      
+
       // Check for error message
       const locationError = screen.getByTestId("location-error");
       expect(locationError).toBeInTheDocument();
-      
+
       // Check onSubmit was not called
       expect(mockOnSubmit).not.toHaveBeenCalled();
     });

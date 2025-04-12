@@ -12,7 +12,7 @@ vi.mock("react-redux", () => ({
     // Create a mock state and run the selector on it
     const mockState = { authentication: { email: "test@example.com" } };
     return selector(mockState);
-  }
+  },
 }));
 
 // Mock axios instance
@@ -34,30 +34,32 @@ describe("VerificationPendingForm", () => {
   describe("Rendering", () => {
     it("renders the form with email verification heading", () => {
       render(<VerificationPendingForm />);
-      
+
       const heading = screen.getByText("Email Verification Pending");
       expect(heading).toBeInTheDocument();
     });
 
     it("shows serialized email from Redux store", () => {
       render(<VerificationPendingForm />);
-      
+
       // Find text containing the serialized email
-      const emailText = screen.getByText(/A verification link was sent to/, { exact: false });
+      const emailText = screen.getByText(/A verification link was sent to/, {
+        exact: false,
+      });
       expect(emailText).toBeInTheDocument();
       expect(emailText).toHaveTextContent("t*****@example.com");
     });
 
     it("does not show resend button when type is null", () => {
       render(<VerificationPendingForm type={null} />);
-      
+
       const resendButton = screen.queryByText("Resend code");
       expect(resendButton).not.toBeInTheDocument();
     });
 
     it("shows resend button when type is provided", () => {
       render(<VerificationPendingForm type="signup" />);
-      
+
       const resendButton = screen.getByText("Resend code");
       expect(resendButton).toBeInTheDocument();
     });
@@ -67,10 +69,12 @@ describe("VerificationPendingForm", () => {
     it("correctly serializes email with domain", () => {
       // Override the redux mock just for this test
       const originalUseSelector = vi.mocked(require("react-redux").useSelector);
-      
+
       // Test with default email
       render(<VerificationPendingForm />);
-      let emailText = screen.getByText(/A verification link was sent to/, { exact: false });
+      let emailText = screen.getByText(/A verification link was sent to/, {
+        exact: false,
+      });
       expect(emailText).toHaveTextContent("t*****@example.com");
     });
   });
@@ -78,14 +82,14 @@ describe("VerificationPendingForm", () => {
   describe("Resend Functionality", () => {
     it("calls API when resend button is clicked", async () => {
       render(<VerificationPendingForm type="signup" />);
-      
+
       const resendButton = screen.getByText("Resend code");
       fireEvent.click(resendButton);
-      
+
       // Verify API was called with correct params
-      expect(mockPost).toHaveBeenCalledWith("/auth/resend-confirmation", { 
+      expect(mockPost).toHaveBeenCalledWith("/auth/resend-confirmation", {
         email: "test@example.com",
-        type: "signup" 
+        type: "signup",
       });
     });
   });
@@ -93,37 +97,37 @@ describe("VerificationPendingForm", () => {
   describe("Different Types", () => {
     it("passes signup type to API", async () => {
       render(<VerificationPendingForm type="signup" />);
-      
+
       const resendButton = screen.getByText("Resend code");
       fireEvent.click(resendButton);
-      
-      expect(mockPost).toHaveBeenCalledWith("/auth/resend-confirmation", { 
+
+      expect(mockPost).toHaveBeenCalledWith("/auth/resend-confirmation", {
         email: "test@example.com",
-        type: "signup" 
+        type: "signup",
       });
     });
 
     it("passes forgotPassword type to API", async () => {
       render(<VerificationPendingForm type="forgotPassword" />);
-      
+
       const resendButton = screen.getByText("Resend code");
       fireEvent.click(resendButton);
-      
-      expect(mockPost).toHaveBeenCalledWith("/auth/resend-confirmation", { 
+
+      expect(mockPost).toHaveBeenCalledWith("/auth/resend-confirmation", {
         email: "test@example.com",
-        type: "forgotPassword" 
+        type: "forgotPassword",
       });
     });
 
     it("passes updateEmail type to API", async () => {
       render(<VerificationPendingForm type="updateEmail" />);
-      
+
       const resendButton = screen.getByText("Resend code");
       fireEvent.click(resendButton);
-      
-      expect(mockPost).toHaveBeenCalledWith("/auth/resend-confirmation", { 
+
+      expect(mockPost).toHaveBeenCalledWith("/auth/resend-confirmation", {
         email: "test@example.com",
-        type: "updateEmail" 
+        type: "updateEmail",
       });
     });
   });

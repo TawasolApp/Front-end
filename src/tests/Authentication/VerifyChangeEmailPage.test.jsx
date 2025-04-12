@@ -27,14 +27,19 @@ vi.mock("../../apis/axios", () => ({
 }));
 
 // Mock child components
-vi.mock("../../pages/Authentication/GenericComponents/AuthenticationHeader", () => ({
-  default: ({ hideButtons }) => (
-    <header data-testid="auth-header">
-      Authentication Header
-      {hideButtons && <span data-testid="buttons-hidden">Buttons Hidden</span>}
-    </header>
-  ),
-}));
+vi.mock(
+  "../../pages/Authentication/GenericComponents/AuthenticationHeader",
+  () => ({
+    default: ({ hideButtons }) => (
+      <header data-testid="auth-header">
+        Authentication Header
+        {hideButtons && (
+          <span data-testid="buttons-hidden">Buttons Hidden</span>
+        )}
+      </header>
+    ),
+  }),
+);
 
 // Import the component after all mocks are set up
 import VerifyChangeEmailPage from "../../pages/Authentication/VerifyChangeEmailPage";
@@ -45,9 +50,11 @@ describe("VerifyChangeEmailPage", () => {
     // Always set up a default mock response to avoid "then of undefined" errors
     mockGet.mockResolvedValue({});
     // Default mock for useSearchParams
-    mockUseSearchParams.mockReturnValue([{ 
-      get: (param) => param === "token" ? "valid-token" : null 
-    }]);
+    mockUseSearchParams.mockReturnValue([
+      {
+        get: (param) => (param === "token" ? "valid-token" : null),
+      },
+    ]);
   });
 
   afterEach(() => {
@@ -56,29 +63,31 @@ describe("VerifyChangeEmailPage", () => {
 
   const renderVerifyChangeEmailPage = (mockToken = "valid-token") => {
     // Set up the token for this specific test
-    mockUseSearchParams.mockReturnValue([{ 
-      get: (param) => param === "token" ? mockToken : null 
-    }]);
+    mockUseSearchParams.mockReturnValue([
+      {
+        get: (param) => (param === "token" ? mockToken : null),
+      },
+    ]);
 
     return render(
       <BrowserRouter>
         <VerifyChangeEmailPage />
-      </BrowserRouter>
+      </BrowserRouter>,
     );
   };
 
   describe("Rendering", () => {
     it("renders the page with initial status", () => {
       renderVerifyChangeEmailPage();
-      
+
       // Check page title
       const title = screen.getByText("Email Verification");
       expect(title).toBeInTheDocument();
-      
+
       // Check initial status
       const status = screen.getByText("Verifying your email...");
       expect(status).toBeInTheDocument();
-      
+
       // Check header
       const header = screen.getByTestId("auth-header");
       expect(header).toBeInTheDocument();
@@ -91,13 +100,13 @@ describe("VerifyChangeEmailPage", () => {
     it("handles missing token", async () => {
       // Pass null as token explicitly
       renderVerifyChangeEmailPage(null);
-      
+
       // Check for error message
       await waitFor(() => {
         const status = screen.getByText("Invalid verification link.");
         expect(status).toBeInTheDocument();
       });
-      
+
       // API should not be called
       expect(mockGet).not.toHaveBeenCalled();
     });
@@ -108,26 +117,30 @@ describe("VerifyChangeEmailPage", () => {
       // Reset the default mock and set up specific rejection
       mockGet.mockReset();
       mockGet.mockRejectedValueOnce({
-        response: { status: 400 }
+        response: { status: 400 },
       });
-      
+
       // Spy on console.error
-      const consoleErrorSpy = vi.spyOn(console, "error").mockImplementation(() => {});
-      
+      const consoleErrorSpy = vi
+        .spyOn(console, "error")
+        .mockImplementation(() => {});
+
       renderVerifyChangeEmailPage();
-      
+
       // Wait for error status
       await waitFor(() => {
-        const status = screen.getByText("Invalid or expired token. Please request a new verification email.");
+        const status = screen.getByText(
+          "Invalid or expired token. Please request a new verification email.",
+        );
         expect(status).toBeInTheDocument();
       });
-      
+
       // Check console.error was called
       expect(consoleErrorSpy).toHaveBeenCalled();
-      
+
       // No navigation should happen
       expect(mockNavigate).not.toHaveBeenCalled();
-      
+
       // Clean up spy
       consoleErrorSpy.mockRestore();
     });
@@ -136,26 +149,30 @@ describe("VerifyChangeEmailPage", () => {
       // Reset the default mock and set up specific rejection
       mockGet.mockReset();
       mockGet.mockRejectedValueOnce({
-        response: { status: 404 }
+        response: { status: 404 },
       });
-      
+
       // Spy on console.error
-      const consoleErrorSpy = vi.spyOn(console, "error").mockImplementation(() => {});
-      
+      const consoleErrorSpy = vi
+        .spyOn(console, "error")
+        .mockImplementation(() => {});
+
       renderVerifyChangeEmailPage();
-      
+
       // Wait for error status
       await waitFor(() => {
-        const status = screen.getByText("User not found. Please contact support.");
+        const status = screen.getByText(
+          "User not found. Please contact support.",
+        );
         expect(status).toBeInTheDocument();
       });
-      
+
       // Check console.error was called
       expect(consoleErrorSpy).toHaveBeenCalled();
-      
+
       // No navigation should happen
       expect(mockNavigate).not.toHaveBeenCalled();
-      
+
       // Clean up spy
       consoleErrorSpy.mockRestore();
     });
@@ -164,24 +181,28 @@ describe("VerifyChangeEmailPage", () => {
       // Reset the default mock and set up specific rejection
       mockGet.mockReset();
       mockGet.mockRejectedValueOnce(new Error("Network error"));
-      
+
       // Spy on console.error
-      const consoleErrorSpy = vi.spyOn(console, "error").mockImplementation(() => {});
-      
+      const consoleErrorSpy = vi
+        .spyOn(console, "error")
+        .mockImplementation(() => {});
+
       renderVerifyChangeEmailPage();
-      
+
       // Wait for error status
       await waitFor(() => {
-        const status = screen.getByText("Something went wrong. Please try again later.");
+        const status = screen.getByText(
+          "Something went wrong. Please try again later.",
+        );
         expect(status).toBeInTheDocument();
       });
-      
+
       // Check console.error was called
       expect(consoleErrorSpy).toHaveBeenCalled();
-      
+
       // No navigation should happen
       expect(mockNavigate).not.toHaveBeenCalled();
-      
+
       // Clean up spy
       consoleErrorSpy.mockRestore();
     });
@@ -190,11 +211,11 @@ describe("VerifyChangeEmailPage", () => {
   describe("UI Structure", () => {
     it("renders in a container with proper elements", () => {
       const { container } = renderVerifyChangeEmailPage();
-      
+
       // Check the main container exists
       const mainContainer = container.firstChild;
       expect(mainContainer).toBeInTheDocument();
-      
+
       // Check card exists
       const card = screen.getByText("Email Verification").closest("div");
       expect(card).toBeInTheDocument();
