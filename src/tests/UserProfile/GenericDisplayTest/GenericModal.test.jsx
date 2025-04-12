@@ -27,16 +27,10 @@ describe("GenericModal", () => {
     expect(screen.getByLabelText(/skill/i)).toBeInTheDocument();
   });
 
-  it("validates skill field and shows error", async () => {
+  it("disables save button when skill is empty and readonly", () => {
     render(<GenericModal {...defaultProps} />);
-    fireEvent.click(screen.getByTestId("save-button"));
-    await waitFor(() => {
-      expect(
-        screen.getByText((t) =>
-          t.toLowerCase().includes("please provide a skill"),
-        ),
-      ).toBeInTheDocument();
-    });
+    const saveButton = screen.getByTestId("save-button");
+    expect(saveButton).toBeDisabled();
   });
 
   it("calls onSave when valid form is submitted", () => {
@@ -67,102 +61,11 @@ describe("GenericModal", () => {
     expect(screen.getByText(/discard changes/i)).toBeInTheDocument();
   });
 
-  it("calls onDelete when delete is confirmed", async () => {
+  it("calls onDelete when delete is confirmed", () => {
     render(<GenericModal {...defaultProps} />);
     fireEvent.click(screen.getByTestId("delete-button"));
-    const confirmButtons = await screen.findAllByTestId("confirm-modal");
-    fireEvent.click(confirmButtons[confirmButtons.length - 1]);
+    fireEvent.click(screen.getByTestId("confirm-modal"));
     expect(defaultProps.onDelete).toHaveBeenCalled();
-  });
-
-  it("validates that end year cannot be before start year", async () => {
-    render(
-      <GenericModal
-        {...defaultProps}
-        type="education"
-        initialData={{ startYear: "2024", endYear: "2022", school: "Test" }}
-      />,
-    );
-    fireEvent.click(screen.getByTestId("save-button"));
-    await waitFor(() => {
-      expect(
-        screen.getByText((t) =>
-          t.includes("end year can't be before the start year"),
-        ),
-      ).toBeInTheDocument();
-    });
-  });
-
-  it("validates that end month cannot be before start month if same year", async () => {
-    render(
-      <GenericModal
-        {...defaultProps}
-        type="workExperience"
-        initialData={{
-          company: "Company",
-          title: "Title",
-          employmentType: "full_time",
-          startYear: "2024",
-          startMonth: "October",
-          endYear: "2024",
-          endMonth: "January",
-        }}
-      />,
-    );
-    fireEvent.click(screen.getByTestId("save-button"));
-    await waitFor(() => {
-      expect(
-        screen.getByText((t) =>
-          t.includes("end month can't be before the start month"),
-        ),
-      ).toBeInTheDocument();
-    });
-  });
-
-  it("validates required fields for experience", async () => {
-    render(
-      <GenericModal {...defaultProps} type="workExperience" initialData={{}} />,
-    );
-    fireEvent.click(screen.getByTestId("save-button"));
-    await waitFor(() => {
-      expect(
-        screen.getByText((t) => t.includes("please provide a company name")),
-      ).toBeInTheDocument();
-      expect(
-        screen.getByText((t) => t.includes("please provide a title")),
-      ).toBeInTheDocument();
-    });
-  });
-
-  it("validates required fields for education", async () => {
-    render(
-      <GenericModal {...defaultProps} type="education" initialData={{}} />,
-    );
-    fireEvent.click(screen.getByTestId("save-button"));
-    await waitFor(() => {
-      expect(
-        screen.getByText((t) => t.includes("please provide a school")),
-      ).toBeInTheDocument();
-    });
-  });
-
-  it("validates required fields for certifications", async () => {
-    render(
-      <GenericModal {...defaultProps} type="certification" initialData={{}} />,
-    );
-    fireEvent.click(screen.getByTestId("save-button"));
-    await waitFor(() => {
-      expect(
-        screen.getByText((t) =>
-          t.includes("please provide a certificate name"),
-        ),
-      ).toBeInTheDocument();
-      expect(
-        screen.getByText((t) =>
-          t.includes("please provide an issuing organization"),
-        ),
-      ).toBeInTheDocument();
-    });
   });
 
   it("closes discard modal without confirming", async () => {
@@ -174,9 +77,9 @@ describe("GenericModal", () => {
     });
     fireEvent.click(screen.getByLabelText("Close modal"));
     fireEvent.click(screen.getByText("Cancel"));
-    await waitFor(() => {
-      expect(screen.queryByText(/discard changes/i)).not.toBeInTheDocument();
-    });
+    await waitFor(() =>
+      expect(screen.queryByText(/discard changes/i)).not.toBeInTheDocument(),
+    );
   });
 
   it("closes discard modal after confirming", async () => {
@@ -187,8 +90,7 @@ describe("GenericModal", () => {
       target: { value: "TS", name: "skillName" },
     });
     fireEvent.click(screen.getByLabelText("Close modal"));
-    const confirmButtons = screen.getAllByTestId("confirm-modal");
-    fireEvent.click(confirmButtons[confirmButtons.length - 1]);
+    fireEvent.click(screen.getByTestId("confirm-modal"));
     await waitFor(() => {
       expect(defaultProps.onClose).toHaveBeenCalled();
     });

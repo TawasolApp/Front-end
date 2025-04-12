@@ -50,12 +50,6 @@ function GenericCard({
       />
       <div className="break-all whitespace-pre-wrap w-full">
         <h3 className="text-lg font-semibold text-text">{item.title}</h3>
-        {/* <p className="text-sm text-companyheader font-medium">
-          {item.company}
-          {item.employmentType && (
-            <span className="ml-1">• {item.employmentType}</span>
-          )}
-        </p> */}
         <div className="text-sm text-companyheader font-medium">
           {item.companyId ? (
             <Link

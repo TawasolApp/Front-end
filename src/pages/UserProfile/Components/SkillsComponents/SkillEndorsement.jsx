@@ -40,11 +40,6 @@ function SkillEndorsement({ userId, skillName, endorsements = [], viewerId }) {
     }
   };
 
-  const handleViewEndorsers = () => {
-    // TODO: Replace this console.log with navigation when API is ready
-    console.log(`Navigate to: /users/${userId}/skills/${skillName}/endorsers`);
-  };
-
   return (
     <div>
       {endorsementCount > 0 && (
