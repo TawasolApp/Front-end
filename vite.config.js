@@ -39,6 +39,7 @@ export default defineConfig({
 
         // ITEMS WITH SPECIFIC EXCLUSIONS
         "src/pages/Feed/GenericComponents/reactionIcons.js",
+        "src/pages/Feed/MainFeed/FeedPosts/Post/Content/MediaContent/PdfViewer.jsx",
         "src/pages/Company/Components/Slider/PostsSlider.jsx",
         "src/pages/Company/Components/Pages/PostsPage.jsx",
       ],
