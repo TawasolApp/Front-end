@@ -32,30 +32,32 @@ vi.mock("../../store/authenticationSlice", () => ({
 vi.mock("../../pages/Authentication/Forms/LocationForm", () => ({
   default: ({ onSubmit }) => (
     <div data-testid="location-form">
-      <button 
+      <button
         onClick={() => onSubmit("New York, NY")}
         data-testid="submit-with-location"
       >
         Submit With Location
       </button>
-      <button 
-        onClick={() => onSubmit("")}
-        data-testid="submit-empty-location"
-      >
+      <button onClick={() => onSubmit("")} data-testid="submit-empty-location">
         Submit Empty Location
       </button>
     </div>
   ),
 }));
 
-vi.mock("../../pages/Authentication/GenericComponents/AuthenticationHeader", () => ({
-  default: ({ hideButtons }) => (
-    <header data-testid="auth-header">
-      Authentication Header
-      {hideButtons && <span data-testid="buttons-hidden">Buttons Hidden</span>}
-    </header>
-  ),
-}));
+vi.mock(
+  "../../pages/Authentication/GenericComponents/AuthenticationHeader",
+  () => ({
+    default: ({ hideButtons }) => (
+      <header data-testid="auth-header">
+        Authentication Header
+        {hideButtons && (
+          <span data-testid="buttons-hidden">Buttons Hidden</span>
+        )}
+      </header>
+    ),
+  }),
+);
 
 // Import the component after all mocks are set up
 import LocationPage from "../../pages/Authentication/LocationPage";
@@ -69,7 +71,7 @@ describe("LocationPage", () => {
     return render(
       <BrowserRouter>
         <LocationPage />
-      </BrowserRouter>
+      </BrowserRouter>,
     );
   };
 
@@ -97,37 +99,41 @@ describe("LocationPage", () => {
   describe("Form Submission", () => {
     it("handles valid location submission", () => {
       renderLocationPage();
-      
+
       // Submit form with location
       const submitButton = screen.getByTestId("submit-with-location");
       submitButton.click();
-      
+
       // Verify actions were dispatched
-      expect(mockDispatch).toHaveBeenCalledWith(mockSetLocation("New York, NY"));
-      
+      expect(mockDispatch).toHaveBeenCalledWith(
+        mockSetLocation("New York, NY"),
+      );
+
       // Verify navigation occurred
       expect(mockNavigate).toHaveBeenCalledWith("/auth/signup/experience");
     });
 
     it("handles empty location submission", () => {
       // Spy on console.error
-      const consoleErrorSpy = vi.spyOn(console, "error").mockImplementation(() => {});
-      
+      const consoleErrorSpy = vi
+        .spyOn(console, "error")
+        .mockImplementation(() => {});
+
       renderLocationPage();
-      
+
       // Submit form with empty location
       const submitButton = screen.getByTestId("submit-empty-location");
       submitButton.click();
-      
+
       // Verify error was logged
       expect(consoleErrorSpy).toHaveBeenCalledWith("Error: Missing location.");
-      
+
       // Verify no actions were dispatched
       expect(mockDispatch).not.toHaveBeenCalled();
-      
+
       // Verify no navigation occurred
       expect(mockNavigate).not.toHaveBeenCalled();
-      
+
       // Clean up spy
       consoleErrorSpy.mockRestore();
     });
@@ -137,11 +143,11 @@ describe("LocationPage", () => {
     it("has proper container styling", () => {
       const { container } = renderLocationPage();
       const mainContainer = container.firstChild;
-      
+
       expect(mainContainer).toHaveClass(
-        "min-h-screen", 
-        "bg-mainBackground", 
-        "overflow-x-hidden"
+        "min-h-screen",
+        "bg-mainBackground",
+        "overflow-x-hidden",
       );
     });
   });

@@ -15,7 +15,7 @@ const mockUseSelector = vi.hoisted(() =>
     email: "test@example.com",
     password: "password123",
     isNewGoogleUser: false,
-  }))
+  })),
 );
 
 // Mock react-router-dom
@@ -71,7 +71,7 @@ vi.mock(
         )}
       </header>
     ),
-  })
+  }),
 );
 
 // Import the component after all mocks are set up
@@ -86,7 +86,7 @@ describe("NamePage", () => {
     return render(
       <BrowserRouter>
         <NamePage />
-      </BrowserRouter>
+      </BrowserRouter>,
     );
   };
 
@@ -109,7 +109,7 @@ describe("NamePage", () => {
       const heading = screen.getByRole("heading", { level: 1 });
       expect(heading).toBeInTheDocument();
       expect(heading).toHaveTextContent(
-        "Make the most of your professional life"
+        "Make the most of your professional life",
       );
     });
 
@@ -150,7 +150,7 @@ describe("NamePage", () => {
           "/auth/verification-pending",
           {
             state: { type: "verifyEmail" },
-          }
+          },
         );
       });
     });
@@ -197,7 +197,7 @@ describe("NamePage", () => {
 
       // Verify error was logged
       expect(consoleErrorSpy).toHaveBeenCalledWith(
-        "Error: Missing email or password. Please sign up again."
+        "Error: Missing email or password. Please sign up again.",
       );
 
       // Verify no navigation happened
@@ -242,7 +242,7 @@ describe("NamePage", () => {
       expect(mainContainer).toHaveClass(
         "min-h-screen",
         "bg-mainBackground",
-        "overflow-x-hidden"
+        "overflow-x-hidden",
       );
     });
 

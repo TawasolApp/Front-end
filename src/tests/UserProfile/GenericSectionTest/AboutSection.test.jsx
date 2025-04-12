@@ -13,7 +13,7 @@ vi.mock(
         <button onClick={onClose}>Close</button>
       </div>
     ),
-  })
+  }),
 );
 
 // ✅ Mock axios
@@ -43,7 +43,7 @@ describe("AboutSection", () => {
     fireEvent.click(screen.getByText("Save")); // simulate save updated bio
 
     await waitFor(() =>
-      expect(screen.getByText("Updated bio")).toBeInTheDocument()
+      expect(screen.getByText("Updated bio")).toBeInTheDocument(),
     );
   });
 
@@ -57,7 +57,7 @@ describe("AboutSection", () => {
     await waitFor(() => {
       expect(axiosInstance.delete).toHaveBeenCalledWith("/profile/bio");
       expect(
-        screen.queryByText("This is a sample bio")
+        screen.queryByText("This is a sample bio"),
       ).not.toBeInTheDocument();
     });
   });

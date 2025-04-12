@@ -30,7 +30,7 @@ describe("SkillEndorsement", () => {
           endorsements={[viewerId, "otherUser"]}
           viewerId={viewerId}
         />
-      </MemoryRouter>
+      </MemoryRouter>,
     );
 
     expect(screen.getByText(/2 endorsements?/i)).toBeInTheDocument();
@@ -48,7 +48,7 @@ describe("SkillEndorsement", () => {
           endorsements={[]}
           viewerId="viewer1"
         />
-      </MemoryRouter>
+      </MemoryRouter>,
     );
 
     const button = screen.getByRole("button", { name: /endorse/i });
@@ -57,7 +57,7 @@ describe("SkillEndorsement", () => {
     await waitFor(() => {
       expect(consoleSpy).toHaveBeenCalledWith(
         "Failed to endorse skill:",
-        "Post failed"
+        "Post failed",
       );
     });
 
@@ -76,7 +76,7 @@ describe("SkillEndorsement", () => {
           endorsements={[]}
           viewerId="viewer1"
         />
-      </MemoryRouter>
+      </MemoryRouter>,
     );
 
     const button = screen.getByRole("button", { name: /endorse/i });
@@ -85,7 +85,7 @@ describe("SkillEndorsement", () => {
     await waitFor(() => {
       expect(consoleSpy).toHaveBeenCalledWith(
         "Failed to endorse skill:",
-        "No server response"
+        "No server response",
       );
     });
 
@@ -104,7 +104,7 @@ describe("SkillEndorsement", () => {
           endorsements={["viewer1"]}
           viewerId="viewer1"
         />
-      </MemoryRouter>
+      </MemoryRouter>,
     );
 
     const button = screen.getByRole("button", { name: /endorsed/i });
@@ -113,7 +113,7 @@ describe("SkillEndorsement", () => {
     await waitFor(() => {
       expect(consoleSpy).toHaveBeenCalledWith(
         "Failed to unendorse skill:",
-        "Delete failed"
+        "Delete failed",
       );
     });
 
@@ -133,7 +133,7 @@ describe("SkillEndorsement", () => {
           endorsements={[]}
           viewerId="viewer"
         />
-      </MemoryRouter>
+      </MemoryRouter>,
     );
 
     const button = screen.getByRole("button", { name: /endorse/i });
@@ -142,7 +142,7 @@ describe("SkillEndorsement", () => {
     await waitFor(() => {
       expect(consoleSpy).toHaveBeenCalledWith(
         "Failed to endorse skill:",
-        "Post failed"
+        "Post failed",
       );
     });
 
@@ -162,7 +162,7 @@ describe("SkillEndorsement", () => {
           endorsements={["viewer"]}
           viewerId="viewer"
         />
-      </MemoryRouter>
+      </MemoryRouter>,
     );
 
     const button = screen.getByRole("button", { name: /endorsed/i });
@@ -171,7 +171,7 @@ describe("SkillEndorsement", () => {
     await waitFor(() => {
       expect(consoleSpy).toHaveBeenCalledWith(
         "Failed to unendorse skill:",
-        "Delete failed"
+        "Delete failed",
       );
     });
 
@@ -189,7 +189,7 @@ describe("SkillEndorsement", () => {
           endorsements={[]}
           viewerId={viewerId}
         />
-      </MemoryRouter>
+      </MemoryRouter>,
     );
 
     const button = screen.getByRole("button", { name: /endorse/i });
@@ -198,8 +198,8 @@ describe("SkillEndorsement", () => {
     await waitFor(() =>
       expect(axios.post).toHaveBeenCalledWith(
         `/connections/${mockUserId}/endorse-skill`,
-        { skillName: mockSkill }
-      )
+        { skillName: mockSkill },
+      ),
     );
 
     expect(await screen.findByText(/✓\s+Endorsed/)).toBeInTheDocument();
@@ -216,7 +216,7 @@ describe("SkillEndorsement", () => {
           endorsements={[viewerId]}
           viewerId={viewerId}
         />
-      </MemoryRouter>
+      </MemoryRouter>,
     );
 
     const button = screen.getByRole("button", { name: /endorsed/i });
@@ -224,8 +224,8 @@ describe("SkillEndorsement", () => {
 
     await waitFor(() =>
       expect(axios.delete).toHaveBeenCalledWith(
-        `/connections/${mockUserId}/endorsement/${mockSkill}`
-      )
+        `/connections/${mockUserId}/endorsement/${mockSkill}`,
+      ),
     );
 
     expect(await screen.findByText(/endorse/i)).toBeInTheDocument();
@@ -244,7 +244,7 @@ describe("SkillEndorsement", () => {
           endorsements={[]}
           viewerId={viewerId}
         />
-      </MemoryRouter>
+      </MemoryRouter>,
     );
 
     const button = screen.getByRole("button", { name: /endorse/i });
@@ -263,7 +263,7 @@ describe("SkillEndorsement", () => {
           endorsements={[viewerId, "otherUser"]}
           viewerId="anotherUser"
         />
-      </MemoryRouter>
+      </MemoryRouter>,
     );
 
     const count = screen.getByText(/2 endorsements?/i);
@@ -271,7 +271,7 @@ describe("SkillEndorsement", () => {
 
     await waitFor(() => {
       expect(
-        screen.getByText(/no one has endorsed this skill yet/i)
+        screen.getByText(/no one has endorsed this skill yet/i),
       ).toBeInTheDocument();
     });
   });

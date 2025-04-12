@@ -19,13 +19,13 @@ vi.mock(
   "../../../src/pages/UserProfile/Components/HeaderComponents/ProfileHeader",
   () => ({
     default: () => <div data-testid="profile-header">ProfileHeader</div>,
-  })
+  }),
 );
 vi.mock(
   "../../../src/pages/UserProfile/Components/Sections/EducationSection",
   () => ({
     default: () => <div data-testid="education-section">EducationSection</div>,
-  })
+  }),
 );
 vi.mock(
   "../../../src/pages/UserProfile/Components/Sections/ExperienceSection",
@@ -33,13 +33,13 @@ vi.mock(
     default: () => (
       <div data-testid="experience-section">ExperienceSection</div>
     ),
-  })
+  }),
 );
 vi.mock(
   "../../../src/pages/UserProfile/Components/Sections/SkillsSection",
   () => ({
     default: () => <div data-testid="skills-section">SkillsSection</div>,
-  })
+  }),
 );
 vi.mock(
   "../../../src/pages/UserProfile/Components/Sections/CertificationsSection",
@@ -47,7 +47,7 @@ vi.mock(
     default: () => (
       <div data-testid="certifications-section">CertificationsSection</div>
     ),
-  })
+  }),
 );
 vi.mock(
   "../../../src/pages/UserProfile/Components/Profilevisibility/RestrictedProfilevisibility",
@@ -55,19 +55,19 @@ vi.mock(
     default: ({ visibility }) => (
       <div data-testid="restricted-profile">Restricted: {visibility}</div>
     ),
-  })
+  }),
 );
 vi.mock(
   "../../../src/pages/UserProfile/Components/UserPostsSlider/UserPostsSlider",
   () => ({
     default: () => <div data-testid="posts-slider">PostsSlider</div>,
-  })
+  }),
 );
 vi.mock(
   "../../../src/pages/UserProfile/Components/Sections/AboutSection",
   () => ({
     default: () => <div data-testid="about-section">AboutSection</div>,
-  })
+  }),
 );
 
 beforeEach(() => {
@@ -118,7 +118,7 @@ describe("ProfilePage", () => {
     expect(screen.queryByTestId("experience-section")).not.toBeInTheDocument();
     expect(screen.queryByTestId("skills-section")).not.toBeInTheDocument();
     expect(
-      screen.queryByTestId("certifications-section")
+      screen.queryByTestId("certifications-section"),
     ).not.toBeInTheDocument();
     expect(screen.queryByTestId("posts-slider")).not.toBeInTheDocument();
   });

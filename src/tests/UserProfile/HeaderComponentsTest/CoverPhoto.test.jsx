@@ -13,7 +13,7 @@ describe("CoverPhoto Component", () => {
         isOwner={true}
         onImageClick={vi.fn()}
         onUpload={vi.fn()}
-      />
+      />,
     );
 
     const img = screen.getByAltText("Cover");
@@ -30,7 +30,7 @@ describe("CoverPhoto Component", () => {
         isOwner={true}
         onImageClick={handleClick}
         onUpload={vi.fn()}
-      />
+      />,
     );
 
     fireEvent.click(screen.getByAltText("Cover"));
@@ -46,7 +46,7 @@ describe("CoverPhoto Component", () => {
         isOwner={true}
         onImageClick={vi.fn()}
         onUpload={handleUpload}
-      />
+      />,
     );
 
     const button = screen.getByRole("button");
@@ -65,7 +65,7 @@ describe("CoverPhoto Component", () => {
         isOwner={true}
         onImageClick={vi.fn()}
         onUpload={handleUpload}
-      />
+      />,
     );
 
     const icon = screen.getByAltText("Change Cover");
@@ -83,7 +83,7 @@ describe("CoverPhoto Component", () => {
         isOwner={false}
         onImageClick={vi.fn()}
         onUpload={vi.fn()}
-      />
+      />,
     );
 
     expect(screen.queryByRole("button")).toBeNull();

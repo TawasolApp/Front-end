@@ -32,7 +32,7 @@ describe("ViewerView", () => {
         viewerId="viewer123"
         initialConnectStatus="No Connection"
         initialFollowStatus="None"
-      />
+      />,
     );
 
     expect(screen.getByLabelText("Send message")).toBeInTheDocument();
@@ -49,7 +49,7 @@ describe("ViewerView", () => {
         viewerId="viewer123"
         initialConnectStatus="No Connection"
         initialFollowStatus="None"
-      />
+      />,
     );
 
     fireEvent.click(screen.getByLabelText("Follow user"));
@@ -57,7 +57,7 @@ describe("ViewerView", () => {
     await waitFor(() =>
       expect(axios.post).toHaveBeenCalledWith("/connections/follow", {
         userId: "user123",
-      })
+      }),
     );
 
     expect(screen.getByText("✓ Following")).toBeInTheDocument();
@@ -70,7 +70,7 @@ describe("ViewerView", () => {
         viewerId="viewer123"
         initialConnectStatus="Connection"
         initialFollowStatus="Following"
-      />
+      />,
     );
 
     fireEvent.click(screen.getByText("✓ Following"));
@@ -86,14 +86,16 @@ describe("ViewerView", () => {
         viewerId="viewer123"
         initialConnectStatus="Connection"
         initialFollowStatus="Following"
-      />
+      />,
     );
 
     fireEvent.click(screen.getByText("✓ Following"));
     fireEvent.click(await screen.findByText("Unfollow"));
 
     await waitFor(() =>
-      expect(axios.delete).toHaveBeenCalledWith("/connections/unfollow/user123")
+      expect(axios.delete).toHaveBeenCalledWith(
+        "/connections/unfollow/user123",
+      ),
     );
 
     expect(screen.getByText("+ Follow")).toBeInTheDocument();
@@ -108,14 +110,14 @@ describe("ViewerView", () => {
         viewerId="viewer123"
         initialConnectStatus="No Connection"
         initialFollowStatus="None"
-      />
+      />,
     );
 
     fireEvent.click(screen.getByLabelText("Connect"));
     await waitFor(() =>
       expect(axios.post).toHaveBeenCalledWith("/connections", {
         userId: "user123",
-      })
+      }),
     );
     expect(screen.getByText("Pending")).toBeInTheDocument();
   });
@@ -129,14 +131,14 @@ describe("ViewerView", () => {
         viewerId="viewer123"
         initialConnectStatus="Connection"
         initialFollowStatus="Following"
-      />
+      />,
     );
 
     fireEvent.click(screen.getByText("Connected"));
     await waitFor(() => {
       expect(axios.delete).toHaveBeenCalledWith("/connections/user123");
       expect(axios.delete).toHaveBeenCalledWith(
-        "/connections/unfollow/user123"
+        "/connections/unfollow/user123",
       );
     });
 
@@ -151,12 +153,12 @@ describe("ViewerView", () => {
         viewerId="viewer123"
         initialConnectStatus="Request"
         initialFollowStatus="None"
-      />
+      />,
     );
 
     fireEvent.click(screen.getByText("Accept"));
     expect(
-      screen.getByText(/Accept Connection Request from John Doe/)
+      screen.getByText(/Accept Connection Request from John Doe/),
     ).toBeInTheDocument();
   });
   it("logs successful follow response", async () => {
@@ -169,7 +171,7 @@ describe("ViewerView", () => {
         viewerId="viewer123"
         initialConnectStatus="No Connection"
         initialFollowStatus="None"
-      />
+      />,
     );
 
     fireEvent.click(screen.getByLabelText("Follow user"));
@@ -177,7 +179,7 @@ describe("ViewerView", () => {
     await waitFor(() =>
       expect(consoleLogSpy).toHaveBeenCalledWith("Followed successfully:", {
         message: "Followed",
-      })
+      }),
     );
 
     consoleLogSpy.mockRestore();
@@ -193,7 +195,7 @@ describe("ViewerView", () => {
         viewerId="viewer123"
         initialConnectStatus="No Connection"
         initialFollowStatus="None"
-      />
+      />,
     );
 
     fireEvent.click(screen.getByLabelText("Follow user"));
@@ -212,7 +214,7 @@ describe("ViewerView", () => {
         viewerId="viewer123"
         initialConnectStatus="No Connection"
         initialFollowStatus="None"
-      />
+      />,
     );
 
     fireEvent.click(screen.getByLabelText("Send message"));
@@ -233,15 +235,15 @@ describe("ViewerView", () => {
         viewerId="viewer123"
         initialConnectStatus="No Connection"
         initialFollowStatus="None"
-      />
+      />,
     );
 
     fireEvent.click(screen.getByLabelText("Connect"));
 
     await waitFor(() =>
       expect(alertMock).toHaveBeenCalledWith(
-        "Connection request already exists"
-      )
+        "Connection request already exists",
+      ),
     );
   });
   it("handles canceling a pending request", async () => {
@@ -253,7 +255,7 @@ describe("ViewerView", () => {
         viewerId="viewer123"
         initialConnectStatus="Pending"
         initialFollowStatus="None"
-      />
+      />,
     );
 
     fireEvent.click(screen.getByLabelText("Pending"));
@@ -274,7 +276,7 @@ describe("ViewerView", () => {
         viewerId="viewer123"
         initialConnectStatus="Request"
         initialFollowStatus="None"
-      />
+      />,
     );
 
     fireEvent.click(screen.getByText("Accept"));
@@ -297,14 +299,14 @@ describe("ViewerView", () => {
         viewerId="viewer123"
         initialConnectStatus="Request"
         initialFollowStatus="None"
-      />
+      />,
     );
 
     fireEvent.click(screen.getByText("Accept"));
     fireEvent.click(screen.getByTestId("confirm-modal"));
 
     await waitFor(() =>
-      expect(alertMock).toHaveBeenCalledWith("Connection already exists")
+      expect(alertMock).toHaveBeenCalledWith("Connection already exists"),
     );
   });
 
@@ -320,14 +322,14 @@ describe("ViewerView", () => {
         viewerId="viewer123"
         initialConnectStatus="Request"
         initialFollowStatus="None"
-      />
+      />,
     );
 
     fireEvent.click(screen.getByText("Accept"));
     fireEvent.click(screen.getByTestId("confirm-modal"));
 
     await waitFor(() =>
-      expect(alertMock).toHaveBeenCalledWith("Failed to accept connection")
+      expect(alertMock).toHaveBeenCalledWith("Failed to accept connection"),
     );
   });
   it("updates isFollowing to false when disconnecting", async () => {
@@ -338,13 +340,13 @@ describe("ViewerView", () => {
         viewerId="viewer123"
         initialConnectStatus="Connection"
         initialFollowStatus="Following"
-      />
+      />,
     );
 
     fireEvent.click(screen.getByText("Connected"));
 
     await waitFor(() =>
-      expect(screen.getByText("+ Follow")).toBeInTheDocument()
+      expect(screen.getByText("+ Follow")).toBeInTheDocument(),
     );
   });
   it("logs error if unfollow after disconnect fails with non-404", async () => {
@@ -360,13 +362,13 @@ describe("ViewerView", () => {
         viewerId="viewer123"
         initialConnectStatus="Connection"
         initialFollowStatus="Following"
-      />
+      />,
     );
 
     fireEvent.click(screen.getByText("Connected"));
 
     await waitFor(() =>
-      expect(consoleSpy).toHaveBeenCalledWith("Unfollow error:", "Oops")
+      expect(consoleSpy).toHaveBeenCalledWith("Unfollow error:", "Oops"),
     );
 
     consoleSpy.mockRestore();
@@ -378,7 +380,7 @@ describe("ViewerView", () => {
         viewerId="viewer123"
         initialConnectStatus="Connection"
         initialFollowStatus="Following"
-      />
+      />,
     );
 
     fireEvent.click(screen.getByText("✓ Following"));
@@ -386,7 +388,7 @@ describe("ViewerView", () => {
     fireEvent.click(screen.getByText("Cancel"));
 
     await waitFor(() =>
-      expect(screen.queryByText(/Unfollow John Doe/)).not.toBeInTheDocument()
+      expect(screen.queryByText(/Unfollow John Doe/)).not.toBeInTheDocument(),
     );
   });
 
@@ -399,7 +401,7 @@ describe("ViewerView", () => {
         viewerId="viewer123"
         initialConnectStatus="Request"
         initialFollowStatus="None"
-      />
+      />,
     );
 
     fireEvent.click(screen.getByText("Accept")); // open modal
@@ -408,7 +410,7 @@ describe("ViewerView", () => {
     await waitFor(() =>
       expect(axios.patch).toHaveBeenCalledWith("/connections/user123", {
         isAccept: true,
-      })
+      }),
     );
 
     expect(screen.getByText("Connected")).toBeInTheDocument();

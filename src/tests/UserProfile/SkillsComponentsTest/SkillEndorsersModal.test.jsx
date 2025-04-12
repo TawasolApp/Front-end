@@ -52,7 +52,7 @@ describe("SkillEndorsersModal", () => {
           userId={mockUserId}
           skillName={mockSkillName}
         />
-      </MemoryRouter>
+      </MemoryRouter>,
     );
 
     expect(screen.getByText(/loading.../i)).toBeInTheDocument();
@@ -69,12 +69,12 @@ describe("SkillEndorsersModal", () => {
           userId={mockUserId}
           skillName={mockSkillName}
         />
-      </MemoryRouter>
+      </MemoryRouter>,
     );
 
     await waitFor(() => {
       expect(
-        screen.getByText(/no one has endorsed this skill yet/i)
+        screen.getByText(/no one has endorsed this skill yet/i),
       ).toBeInTheDocument();
     });
   });
@@ -90,14 +90,14 @@ describe("SkillEndorsersModal", () => {
           userId={mockUserId}
           skillName={mockSkillName}
         />
-      </MemoryRouter>
+      </MemoryRouter>,
     );
 
     await waitFor(() => {
       expect(screen.getByText("John Doe")).toBeInTheDocument();
       expect(screen.getByRole("img")).toHaveAttribute(
         "src",
-        mockEndorsers[0].profilePicture
+        mockEndorsers[0].profilePicture,
       );
     });
   });
@@ -114,7 +114,7 @@ describe("SkillEndorsersModal", () => {
           userId={mockUserId}
           skillName={mockSkillName}
         />
-      </MemoryRouter>
+      </MemoryRouter>,
     );
 
     const closeButton = screen.getByRole("button", { name: /close modal/i });
@@ -135,13 +135,13 @@ describe("SkillEndorsersModal", () => {
           userId="errorUser"
           skillName="React"
         />
-      </MemoryRouter>
+      </MemoryRouter>,
     );
 
     await waitFor(() => {
       expect(consoleSpy).toHaveBeenCalledWith(
         "Error fetching endorsers:",
-        "Network Error"
+        "Network Error",
       );
     });
 
@@ -167,7 +167,7 @@ describe("SkillEndorsersModal", () => {
           userId="noPicId"
           skillName="React"
         />
-      </MemoryRouter>
+      </MemoryRouter>,
     );
 
     const avatar = await screen.findByRole("img");
@@ -188,13 +188,13 @@ describe("SkillEndorsersModal", () => {
           userId="user123"
           skillName="React"
         />
-      </MemoryRouter>
+      </MemoryRouter>,
     );
 
     await waitFor(() => {
       expect(consoleSpy).toHaveBeenCalledWith(
         "Error fetching endorsers:",
-        "Server error"
+        "Server error",
       );
     });
 
@@ -216,13 +216,13 @@ describe("SkillEndorsersModal", () => {
           userId="user123"
           skillName="React"
         />
-      </MemoryRouter>
+      </MemoryRouter>,
     );
 
     await waitFor(() => {
       expect(consoleSpy).toHaveBeenCalledWith(
         "Error fetching endorsers:",
-        "Network failed"
+        "Network failed",
       );
     });
 
@@ -252,7 +252,7 @@ describe("SkillEndorsersModal", () => {
           userId="user123"
           skillName="React"
         />
-      </MemoryRouter>
+      </MemoryRouter>,
     );
 
     const button = await screen.findByRole("button", { name: "Jane Smith" });

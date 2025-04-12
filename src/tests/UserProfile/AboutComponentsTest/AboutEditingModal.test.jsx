@@ -17,7 +17,7 @@ describe("AboutEditingModal", () => {
         initialBio="This is my bio"
         onClose={mockOnClose}
         onSave={mockOnSave}
-      />
+      />,
     );
     expect(screen.getByText("Edit About")).toBeInTheDocument();
     expect(screen.getByDisplayValue("This is my bio")).toBeInTheDocument();
@@ -29,7 +29,7 @@ describe("AboutEditingModal", () => {
         initialBio="Same Bio"
         onClose={mockOnClose}
         onSave={mockOnSave}
-      />
+      />,
     );
     const saveButton = screen.getByRole("button", { name: "Save" });
     expect(saveButton).toBeDisabled();
@@ -41,7 +41,7 @@ describe("AboutEditingModal", () => {
         initialBio="Old Bio"
         onClose={mockOnClose}
         onSave={mockOnSave}
-      />
+      />,
     );
     fireEvent.change(screen.getByRole("textbox"), {
       target: { value: "New Bio" },
@@ -55,7 +55,7 @@ describe("AboutEditingModal", () => {
         initialBio="Old Bio"
         onClose={mockOnClose}
         onSave={mockOnSave}
-      />
+      />,
     );
     fireEvent.change(screen.getByRole("textbox"), {
       target: { value: "  New Bio  " },
@@ -70,7 +70,7 @@ describe("AboutEditingModal", () => {
         initialBio="Test Bio"
         onClose={mockOnClose}
         onSave={mockOnSave}
-      />
+      />,
     );
     fireEvent.click(screen.getByLabelText("Close modal"));
     expect(mockOnClose).toHaveBeenCalled();
@@ -82,7 +82,7 @@ describe("AboutEditingModal", () => {
         initialBio="Original"
         onClose={mockOnClose}
         onSave={mockOnSave}
-      />
+      />,
     );
     fireEvent.change(screen.getByRole("textbox"), {
       target: { value: "Changed" },
@@ -96,7 +96,7 @@ describe("AboutEditingModal", () => {
         initialBio="Initial Bio"
         onClose={mockOnClose}
         onSave={mockOnSave}
-      />
+      />,
     );
     expect(screen.getByDisplayValue("Initial Bio")).toBeInTheDocument();
 
@@ -105,7 +105,7 @@ describe("AboutEditingModal", () => {
         initialBio="Updated Bio"
         onClose={mockOnClose}
         onSave={mockOnSave}
-      />
+      />,
     );
 
     expect(screen.getByDisplayValue("Updated Bio")).toBeInTheDocument();
@@ -116,7 +116,7 @@ describe("AboutEditingModal", () => {
         initialBio="Original"
         onClose={mockOnClose}
         onSave={mockOnSave}
-      />
+      />,
     );
     fireEvent.change(screen.getByRole("textbox"), {
       target: { value: "Changed Bio" },

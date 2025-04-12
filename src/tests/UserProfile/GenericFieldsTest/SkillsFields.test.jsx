@@ -26,7 +26,7 @@ describe("SkillsFields Component", () => {
       <SkillsFields
         {...defaultProps}
         errors={{ skillName: "Skill is required" }}
-      />
+      />,
     );
     expect(screen.getByText("Skill is required")).toBeInTheDocument();
   });
@@ -46,12 +46,12 @@ describe("SkillsFields Component", () => {
       <SkillsFields
         {...defaultProps}
         formData={{ skillName: "React", position: "Frontend Developer" }}
-      />
+      />,
     );
 
     expect(screen.getByLabelText(/skill \*/i)).toHaveValue("React");
     expect(screen.getByLabelText(/position \(optional\)/i)).toHaveValue(
-      "Frontend Developer"
+      "Frontend Developer",
     );
   });
 
@@ -60,7 +60,7 @@ describe("SkillsFields Component", () => {
     const skillInput = screen.getByLabelText(/skill \*/i);
     expect(skillInput).toHaveAttribute("readOnly");
     expect(
-      screen.getByText(/skill name cannot be edited/i)
+      screen.getByText(/skill name cannot be edited/i),
     ).toBeInTheDocument();
   });
 });

@@ -27,9 +27,11 @@ Authentication/
 ## 🔄 Authentication Flow
 
 1. **New Users**:
+
    - WelcomePage → SignUpPage → VerifySignUpPage → NamePage → LocationPage → ExperiencePage → Main App
 
 2. **Returning Users**:
+
    - WelcomePage → SignInPage → Main App
 
 3. **Password Recovery**:
@@ -49,6 +51,7 @@ Authentication/
 ## 🧪 Testing
 
 When writing tests for authentication components:
+
 - Mock authentication API responses using files in `src/mocks`
 - Test both success and failure authentication flows
 - Ensure form validation works correctly for all inputs

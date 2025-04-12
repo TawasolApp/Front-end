@@ -79,7 +79,7 @@ describe("ExperienceFields Component", () => {
 
     expect(logSpy).toHaveBeenCalledWith(
       " Selected company object:",
-      expect.objectContaining({ name: "OpenAI" })
+      expect.objectContaining({ name: "OpenAI" }),
     );
 
     logSpy.mockRestore();
@@ -89,7 +89,7 @@ describe("ExperienceFields Component", () => {
       <ExperienceFields
         {...defaultProps}
         errors={{ company: "Company is required" }}
-      />
+      />,
     );
 
     expect(screen.getByText("Company is required")).toBeInTheDocument();
@@ -181,7 +181,7 @@ describe("ExperienceFields Component", () => {
           title: "Title is required",
           employmentType: "Employment type is required",
         }}
-      />
+      />,
     );
 
     expect(screen.getByText("Title is required")).toBeInTheDocument();
@@ -192,7 +192,7 @@ describe("ExperienceFields Component", () => {
       <ExperienceFields
         {...defaultProps}
         formData={{ ...defaultProps.formData, endDate: "2024-01-01" }}
-      />
+      />,
     );
 
     const checkbox = screen.getByLabelText(/currently working/i);

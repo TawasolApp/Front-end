@@ -12,24 +12,34 @@ const mockGet = vi.hoisted(() => vi.fn());
 
 // Hoist mock actions - this is the key fix
 const mockSetToken = vi.hoisted(() => vi.fn(() => "SET_TOKEN_ACTION"));
-const mockSetRefreshToken = vi.hoisted(() => vi.fn(() => "SET_REFRESH_TOKEN_ACTION"));
+const mockSetRefreshToken = vi.hoisted(() =>
+  vi.fn(() => "SET_REFRESH_TOKEN_ACTION"),
+);
 const mockSetFirstName = vi.hoisted(() => vi.fn(() => "SET_FIRST_NAME_ACTION"));
 const mockSetLastName = vi.hoisted(() => vi.fn(() => "SET_LAST_NAME_ACTION"));
 const mockSetLocation = vi.hoisted(() => vi.fn(() => "SET_LOCATION_ACTION"));
 const mockSetBio = vi.hoisted(() => vi.fn(() => "SET_BIO_ACTION"));
 const mockSetType = vi.hoisted(() => vi.fn(() => "SET_TYPE_ACTION"));
-const mockSetProfilePicture = vi.hoisted(() => vi.fn(() => "SET_PROFILE_PICTURE_ACTION"));
-const mockSetIsNewGoogleUser = vi.hoisted(() => vi.fn(() => "SET_IS_NEW_GOOGLE_USER_ACTION"));
+const mockSetProfilePicture = vi.hoisted(() =>
+  vi.fn(() => "SET_PROFILE_PICTURE_ACTION"),
+);
+const mockSetIsNewGoogleUser = vi.hoisted(() =>
+  vi.fn(() => "SET_IS_NEW_GOOGLE_USER_ACTION"),
+);
 const mockSetUserId = vi.hoisted(() => vi.fn(() => "SET_USER_ID_ACTION"));
-const mockSetCoverPhoto = vi.hoisted(() => vi.fn(() => "SET_COVER_PHOTO_ACTION"));
+const mockSetCoverPhoto = vi.hoisted(() =>
+  vi.fn(() => "SET_COVER_PHOTO_ACTION"),
+);
 const mockSetEmail = vi.hoisted(() => vi.fn(() => "SET_EMAIL_ACTION"));
-const mockSetIsSocialLogin = vi.hoisted(() => vi.fn(() => "SET_IS_SOCIAL_LOGIN_ACTION"));
+const mockSetIsSocialLogin = vi.hoisted(() =>
+  vi.fn(() => "SET_IS_SOCIAL_LOGIN_ACTION"),
+);
 
 // Mock env variable
-vi.mock('import.meta', () => ({
+vi.mock("import.meta", () => ({
   env: {
-    VITE_GOOGLE_CLIENT_ID: 'mock-client-id'
-  }
+    VITE_GOOGLE_CLIENT_ID: "mock-client-id",
+  },
 }));
 
 // Mock react-redux
@@ -78,12 +88,12 @@ import SignWithGoogle from "../../../pages/Authentication/GenericComponents/Sign
 describe("SignWithGoogle", () => {
   const mockRequestAccessToken = vi.fn();
   const mockInitTokenClient = vi.fn().mockReturnValue({
-    requestAccessToken: mockRequestAccessToken
+    requestAccessToken: mockRequestAccessToken,
   });
 
   beforeEach(() => {
     vi.clearAllMocks();
-    
+
     // Mock GoogleGIcon component
     mockGetIconComponent.mockReturnValue(({ className }) => (
       <div data-testid="google-icon" className={className}>
@@ -97,20 +107,22 @@ describe("SignWithGoogle", () => {
       google: {
         accounts: {
           oauth2: {
-            initTokenClient: mockInitTokenClient
-          }
-        }
-      }
+            initTokenClient: mockInitTokenClient,
+          },
+        },
+      },
     };
   });
 
   describe("Rendering", () => {
     it("renders sign in with Google button", () => {
       render(<SignWithGoogle />);
-      
-      const button = screen.getByRole("button", { name: /Sign in with Google/i });
+
+      const button = screen.getByRole("button", {
+        name: /Sign in with Google/i,
+      });
       expect(button).toBeInTheDocument();
-      
+
       const googleIcon = screen.getByTestId("google-icon");
       expect(googleIcon).toBeInTheDocument();
     });
@@ -119,10 +131,12 @@ describe("SignWithGoogle", () => {
   describe("Button Interaction", () => {
     it("calls requestAccessToken when button is clicked", () => {
       render(<SignWithGoogle />);
-      
-      const button = screen.getByRole("button", { name: /Sign in with Google/i });
+
+      const button = screen.getByRole("button", {
+        name: /Sign in with Google/i,
+      });
       fireEvent.click(button);
-      
+
       expect(mockRequestAccessToken).toHaveBeenCalledTimes(1);
     });
   });
@@ -137,34 +151,38 @@ describe("SignWithGoogle", () => {
           refreshToken: "mock-refresh-token",
           email: "test@example.com",
           isNewUser: true,
-          isSocialLogin: true
-        }
+          isSocialLogin: true,
+        },
       });
-      
+
       render(<SignWithGoogle />);
-      
+
       // Extract the callback function passed to initTokenClient
       const callbackFn = mockInitTokenClient.mock.calls[0][0].callback;
-      
+
       // Call the callback with a mock token response
       await callbackFn({ access_token: "mock-access-token" });
-      
+
       // Verify API call
       expect(mockPost).toHaveBeenCalledWith("/auth/social-login/google", {
         idToken: "mock-access-token",
-        isAndroid: false
+        isAndroid: false,
       });
-      
+
       // Verify Redux actions
       expect(mockDispatch).toHaveBeenCalledWith(mockSetToken("mock-token"));
-      expect(mockDispatch).toHaveBeenCalledWith(mockSetRefreshToken("mock-refresh-token"));
-      expect(mockDispatch).toHaveBeenCalledWith(mockSetEmail("test@example.com"));
+      expect(mockDispatch).toHaveBeenCalledWith(
+        mockSetRefreshToken("mock-refresh-token"),
+      );
+      expect(mockDispatch).toHaveBeenCalledWith(
+        mockSetEmail("test@example.com"),
+      );
       expect(mockDispatch).toHaveBeenCalledWith(mockSetIsNewGoogleUser(true));
       expect(mockDispatch).toHaveBeenCalledWith(mockSetIsSocialLogin(true));
-      
+
       // Verify navigation
       expect(mockNavigate).toHaveBeenCalledWith("/auth/signup/location");
-      
+
       // Profile API should not be called for new users
       expect(mockGet).not.toHaveBeenCalled();
     });
@@ -178,10 +196,10 @@ describe("SignWithGoogle", () => {
           refreshToken: "mock-refresh-token",
           email: "test@example.com",
           isNewUser: false,
-          isSocialLogin: true
-        }
+          isSocialLogin: true,
+        },
       });
-      
+
       mockGet.mockResolvedValueOnce({
         status: 200,
         data: {
@@ -191,31 +209,35 @@ describe("SignWithGoogle", () => {
           location: "New York",
           headline: "Software Developer",
           profilePicture: "profile.jpg",
-          coverPhoto: "cover.jpg"
-        }
+          coverPhoto: "cover.jpg",
+        },
       });
-      
+
       render(<SignWithGoogle />);
-      
+
       // Extract the callback function passed to initTokenClient
       const callbackFn = mockInitTokenClient.mock.calls[0][0].callback;
-      
+
       // Call the callback with a mock token response
       await callbackFn({ access_token: "mock-access-token" });
-      
+
       // Verify profile API call
       expect(mockGet).toHaveBeenCalledWith("/profile");
-      
+
       // Verify Redux actions for user profile
       expect(mockDispatch).toHaveBeenCalledWith(mockSetType("User"));
       expect(mockDispatch).toHaveBeenCalledWith(mockSetUserId("user123"));
       expect(mockDispatch).toHaveBeenCalledWith(mockSetFirstName("John"));
       expect(mockDispatch).toHaveBeenCalledWith(mockSetLastName("Doe"));
       expect(mockDispatch).toHaveBeenCalledWith(mockSetLocation("New York"));
-      expect(mockDispatch).toHaveBeenCalledWith(mockSetBio("Software Developer"));
-      expect(mockDispatch).toHaveBeenCalledWith(mockSetProfilePicture("profile.jpg"));
+      expect(mockDispatch).toHaveBeenCalledWith(
+        mockSetBio("Software Developer"),
+      );
+      expect(mockDispatch).toHaveBeenCalledWith(
+        mockSetProfilePicture("profile.jpg"),
+      );
       expect(mockDispatch).toHaveBeenCalledWith(mockSetCoverPhoto("cover.jpg"));
-      
+
       // Verify navigation to feed
       expect(mockNavigate).toHaveBeenCalledWith("/feed");
     });
@@ -223,21 +245,26 @@ describe("SignWithGoogle", () => {
     it("handles API error gracefully", async () => {
       // Setup mock for API error
       mockPost.mockRejectedValueOnce(new Error("API Error"));
-      
+
       // Spy on console.error
-      const consoleErrorSpy = vi.spyOn(console, "error").mockImplementation(() => {});
-      
+      const consoleErrorSpy = vi
+        .spyOn(console, "error")
+        .mockImplementation(() => {});
+
       render(<SignWithGoogle />);
-      
+
       // Extract the callback function passed to initTokenClient
       const callbackFn = mockInitTokenClient.mock.calls[0][0].callback;
-      
+
       // Call the callback with a mock token response
       await callbackFn({ access_token: "mock-access-token" });
-      
+
       // Verify error was logged
-      expect(consoleErrorSpy).toHaveBeenCalledWith("Google login failed:", expect.any(Error));
-      
+      expect(consoleErrorSpy).toHaveBeenCalledWith(
+        "Google login failed:",
+        expect.any(Error),
+      );
+
       // Clean up spy
       consoleErrorSpy.mockRestore();
     });

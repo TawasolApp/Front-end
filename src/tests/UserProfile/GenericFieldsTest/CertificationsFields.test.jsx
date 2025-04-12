@@ -40,7 +40,7 @@ describe("CertificationsFields Component", () => {
     render(<CertificationsFields {...defaultProps} />);
     expect(await screen.findByLabelText(/name\*/i)).toBeInTheDocument();
     expect(
-      screen.getByLabelText(/issuing organization\*/i)
+      screen.getByLabelText(/issuing organization\*/i),
     ).toBeInTheDocument();
   });
 
@@ -123,7 +123,7 @@ describe("CertificationsFields Component", () => {
         company: "Micro",
         companyId: null,
         companyLogo: null,
-      })
+      }),
     );
   });
 
@@ -155,7 +155,7 @@ describe("CertificationsFields Component", () => {
 
     const calls = mockSetFormData.mock.calls;
     const microsoftCall = calls.find(
-      ([fn]) => typeof fn === "function" && fn({}).company === "Microsoft"
+      ([fn]) => typeof fn === "function" && fn({}).company === "Microsoft",
     );
     expect(microsoftCall).toBeDefined();
   });
@@ -187,7 +187,7 @@ describe("CertificationsFields Component", () => {
 
     const calls = mockSetFormData.mock.calls;
     const microsoftCall = calls.find(
-      ([fn]) => typeof fn === "function" && fn({}).company === "Microsoft"
+      ([fn]) => typeof fn === "function" && fn({}).company === "Microsoft",
     );
     expect(microsoftCall).toBeDefined();
   });

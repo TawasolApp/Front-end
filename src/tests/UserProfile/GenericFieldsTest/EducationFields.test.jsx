@@ -51,7 +51,7 @@ describe("EducationFields Component", () => {
       <EducationFields
         {...defaultProps}
         errors={{ school: "School is required" }}
-      />
+      />,
     );
     expect(screen.getByText("School is required")).toBeInTheDocument();
   });
@@ -165,12 +165,12 @@ describe("EducationFields Component", () => {
     await waitFor(() =>
       fireEvent.keyDown(screen.getByLabelText(/school/i), {
         key: "ArrowDown",
-      })
+      }),
     );
     await waitFor(() =>
       fireEvent.keyDown(screen.getByLabelText(/school/i), {
         key: "Enter",
-      })
+      }),
     );
     expect(mockSetFormData).toHaveBeenCalled();
   });
@@ -197,7 +197,7 @@ describe("EducationFields Component", () => {
       <EducationFields
         {...defaultProps}
         formData={{ ...defaultProps.formData, description: undefined }}
-      />
+      />,
     );
     expect(screen.getByText("0/1000")).toBeInTheDocument();
   });
@@ -243,7 +243,7 @@ describe("EducationFields Component", () => {
       <EducationFields
         {...defaultProps}
         formData={{ ...defaultProps.formData, description: "" }}
-      />
+      />,
     );
     expect(screen.getByText("0/1000")).toBeInTheDocument();
   });

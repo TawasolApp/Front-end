@@ -33,7 +33,7 @@ vi.mock(
     default: () => (
       <header data-testid="auth-header">Authentication Header</header>
     ),
-  })
+  }),
 );
 
 // Import the component after all mocks are set up
@@ -48,7 +48,7 @@ describe("WelcomePage", () => {
     return render(
       <BrowserRouter>
         <WelcomePage />
-      </BrowserRouter>
+      </BrowserRouter>,
     );
   };
 
@@ -66,7 +66,7 @@ describe("WelcomePage", () => {
     it("displays the welcome heading", () => {
       renderWelcomePage();
       const headings = screen.getAllByText(
-        "Welcome to your professional community"
+        "Welcome to your professional community",
       );
       expect(headings).toHaveLength(2);
 
@@ -120,7 +120,7 @@ describe("WelcomePage", () => {
         "w-full",
         "max-w-md",
         "rounded-full",
-        "darken"
+        "darken",
       );
     });
 
@@ -131,7 +131,7 @@ describe("WelcomePage", () => {
         "w-full",
         "rounded-full",
         "shadow-xl",
-        "darken"
+        "darken",
       );
     });
   });
@@ -143,17 +143,17 @@ describe("WelcomePage", () => {
       expect(mainContainer).toHaveClass(
         "min-h-screen",
         "bg-mainBackground",
-        "overflow-x-hidden"
+        "overflow-x-hidden",
       );
     });
 
     it("structures the desktop layout with two columns", () => {
       const { container } = renderWelcomePage();
       const leftColumn = container.querySelector(
-        ".hidden.lg\\:flex > div:first-child"
+        ".hidden.lg\\:flex > div:first-child",
       );
       const rightColumn = container.querySelector(
-        ".hidden.lg\\:flex > div:last-child"
+        ".hidden.lg\\:flex > div:last-child",
       );
 
       expect(leftColumn).toHaveClass("flex-1", "max-w-2xl");

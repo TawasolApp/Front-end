@@ -59,7 +59,7 @@ vi.mock(
           </div>
         ) : null,
     };
-  }
+  },
 );
 
 describe("GenericPage Component", () => {
@@ -98,7 +98,7 @@ describe("GenericPage Component", () => {
         <Provider store={store}>
           <GenericPage title="Experience" type="workExperience" />
         </Provider>
-      </MemoryRouter>
+      </MemoryRouter>,
     );
   }
 
@@ -211,7 +211,7 @@ describe("GenericPage Component", () => {
       expect(screen.getByText("Backend Developer")).toBeInTheDocument();
       expect(axiosModule.axiosInstance.post).toHaveBeenCalledWith(
         "/profile/work-experience",
-        mockNewItem
+        mockNewItem,
       );
     });
   });

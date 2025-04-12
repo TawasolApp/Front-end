@@ -46,7 +46,7 @@ describe("ImageUploadModal Component", () => {
         isOpen={false}
         onClose={mockOnClose}
         onUpload={mockOnUpload}
-      />
+      />,
     );
     expect(container.innerHTML).toBe("");
   });
@@ -56,7 +56,7 @@ describe("ImageUploadModal Component", () => {
         isOpen={true}
         onClose={mockOnClose}
         onUpload={mockOnUpload}
-      />
+      />,
     );
     expect(document.body.classList.contains("overflow-hidden")).toBe(true);
 
@@ -65,7 +65,7 @@ describe("ImageUploadModal Component", () => {
         isOpen={false}
         onClose={mockOnClose}
         onUpload={mockOnUpload}
-      />
+      />,
     );
     expect(document.body.classList.contains("overflow-hidden")).toBe(false);
 
@@ -80,7 +80,7 @@ describe("ImageUploadModal Component", () => {
         onUpload={mockOnUpload}
         currentImage="non-default.jpg"
         defaultImage="default.jpg"
-      />
+      />,
     );
 
     const deleteBtn = screen.getByRole("button", { name: /delete/i });
@@ -98,7 +98,7 @@ describe("ImageUploadModal Component", () => {
         onUpload={mockOnUpload}
         currentImage="some-image.jpg"
         defaultImage="default.jpg"
-      />
+      />,
     );
 
     // Click main delete button (opens confirmation modal)
@@ -121,7 +121,7 @@ describe("ImageUploadModal Component", () => {
         onClose={mockOnClose}
         onUpload={mockOnUpload}
         uploadType="profile"
-      />
+      />,
     );
 
     expect(screen.getByText("Upload Profile Image")).toBeInTheDocument();
@@ -136,7 +136,7 @@ describe("ImageUploadModal Component", () => {
         onUpload={mockOnUpload}
         currentImage="non-default.jpg"
         defaultImage="default.jpg"
-      />
+      />,
     );
 
     // Step 1: Open confirmation modal
@@ -153,7 +153,7 @@ describe("ImageUploadModal Component", () => {
     // Step 4: Confirm the modal disappears
     await waitFor(() => {
       expect(
-        screen.queryByText(/are you sure you want to delete this image/i)
+        screen.queryByText(/are you sure you want to delete this image/i),
       ).not.toBeInTheDocument();
     });
   });
@@ -165,7 +165,7 @@ describe("ImageUploadModal Component", () => {
         onClose={mockOnClose}
         onUpload={mockOnUpload}
         uploadType="profile"
-      />
+      />,
     );
     fireEvent.click(screen.getByText("Cancel"));
     expect(mockOnClose).toHaveBeenCalled();
@@ -178,7 +178,7 @@ describe("ImageUploadModal Component", () => {
         onClose={mockOnClose}
         onUpload={mockOnUpload}
         uploadType="profile"
-      />
+      />,
     );
 
     const file = new File(["dummy"], "test.png", { type: "image/png" });
@@ -190,7 +190,7 @@ describe("ImageUploadModal Component", () => {
 
     expect(await screen.findByAltText("Preview")).toBeInTheDocument();
     expect(
-      await screen.findByRole("button", { name: /save/i })
+      await screen.findByRole("button", { name: /save/i }),
     ).toBeInTheDocument();
   });
 
@@ -201,7 +201,7 @@ describe("ImageUploadModal Component", () => {
         onClose={mockOnClose}
         onUpload={mockOnUpload}
         uploadType="profile"
-      />
+      />,
     );
 
     const file = new File(["avatar"], "avatar.jpg", { type: "image/jpeg" });
