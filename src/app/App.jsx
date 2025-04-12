@@ -21,6 +21,7 @@ import NewPasswordPage from "../pages/Authentication/NewPasswordPage";
 
 const App = () => {
   const theme = useSelector((state) => state.theme.theme);
+  console.log(import.meta.env.VITE_GOOGLE_CLIENT_ID);
   return (
     <Router>
       <Routes>
