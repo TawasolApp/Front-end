@@ -1,14 +1,21 @@
 import { describe, it, vi, beforeEach, afterEach, expect } from "vitest";
-import { render, screen, fireEvent, cleanup } from "@testing-library/react";
+import {
+  render,
+  screen,
+  fireEvent,
+  cleanup,
+  waitFor,
+} from "@testing-library/react";
 import { MemoryRouter, Route, Routes } from "react-router-dom";
 import { Provider } from "react-redux";
 import { configureStore } from "@reduxjs/toolkit";
 import ProfileHeader from "../../../pages/UserProfile/Components/HeaderComponents/ProfileHeader";
+import { axiosInstance as axios } from "../../../apis/axios.js";
 
 // Setup a basic redux store with mocked authentication
 const mockStore = configureStore({
   reducer: {
-    authentication: () => ({ userId: "viewer-1" }), // your viewer user id
+    authentication: () => ({ userId: "viewer-1" }),
   },
 });
 
@@ -26,10 +33,9 @@ vi.mock(
         Enlarged: {profilePicture}
       </div>
     ),
-  }),
+  })
 );
 
-// ✅ Important: This path must match the one used in ProfileHeader.jsx
 vi.mock(
   "../../../pages/UserProfile/Components/HeaderComponents/ImageUploadModal",
   () => ({
@@ -46,12 +52,14 @@ vi.mock(
           <button data-testid="upload-cancel" onClick={onClose}>
             Cancel
           </button>
+          <button data-testid="upload-delete" onClick={() => onUpload(null)}>
+            Delete
+          </button>
         </div>
       ) : null,
-  }),
+  })
 );
 
-// Mock edit modal
 vi.mock(
   "../../../pages/UserProfile/Components/HeaderComponents/EditProfileModal",
   () => ({
@@ -70,10 +78,9 @@ vi.mock(
           </button>
         </div>
       ) : null,
-  }),
+  })
 );
 
-// Mock profile picture component
 vi.mock(
   "../../../pages/UserProfile/Components/HeaderComponents/ProfilePicture",
   () => ({
@@ -89,10 +96,9 @@ vi.mock(
         </button>
       </>
     ),
-  }),
+  })
 );
 
-// Mock cover photo component
 vi.mock(
   "../../../pages/UserProfile/Components/HeaderComponents/CoverPhoto",
   () => ({
@@ -108,7 +114,7 @@ vi.mock(
         </button>
       </>
     ),
-  }),
+  })
 );
 
 describe("ProfileHeader Component", () => {
@@ -151,7 +157,7 @@ describe("ProfileHeader Component", () => {
             <Route path="/users/:profileSlug" element={ui} />
           </Routes>
         </MemoryRouter>
-      </Provider>,
+      </Provider>
     );
 
   it("returns null if user is null", () => {
@@ -168,7 +174,7 @@ describe("ProfileHeader Component", () => {
         onSave={vi.fn()}
         experienceRef={experienceRef}
         educationRef={educationRef}
-      />,
+      />
     );
 
     expect(screen.getByText("Fatma Gamal")).toBeInTheDocument();
@@ -177,6 +183,28 @@ describe("ProfileHeader Component", () => {
     expect(screen.getByText("42 connections")).toBeInTheDocument();
     expect(screen.getByText("Software Intern")).toBeInTheDocument();
     expect(screen.getByText("Cairo University")).toBeInTheDocument();
+  });
+
+  it("handles deleting profile picture when fileOrNull is null", async () => {
+    const deleteSpy = vi.spyOn(axios, "delete");
+
+    renderWithProviders(
+      <ProfileHeader
+        user={mockUser}
+        isOwner={true}
+        isVisible={true}
+        onSave={vi.fn()}
+        experienceRef={experienceRef}
+        educationRef={educationRef}
+      />
+    );
+
+    fireEvent.click(screen.getByTestId("upload-profile"));
+    fireEvent.click(screen.getByTestId("upload-delete"));
+
+    await waitFor(() => {
+      expect(deleteSpy).toHaveBeenCalledWith("/profile/profile-picture");
+    });
   });
 
   it("renders viewer view if not owner", () => {
@@ -188,7 +216,7 @@ describe("ProfileHeader Component", () => {
         onSave={vi.fn()}
         experienceRef={experienceRef}
         educationRef={educationRef}
-      />,
+      />
     );
     expect(screen.getByTestId("viewer-view")).toBeInTheDocument();
   });
@@ -202,7 +230,7 @@ describe("ProfileHeader Component", () => {
         onSave={vi.fn()}
         experienceRef={experienceRef}
         educationRef={educationRef}
-      />,
+      />
     );
 
     fireEvent.click(screen.getByRole("button", { name: /✎/i }));
@@ -219,13 +247,13 @@ describe("ProfileHeader Component", () => {
         onSave={onSave}
         experienceRef={experienceRef}
         educationRef={educationRef}
-      />,
+      />
     );
 
     fireEvent.click(screen.getByRole("button", { name: /✎/i }));
     fireEvent.click(screen.getByTestId("save-edit"));
     expect(onSave).toHaveBeenCalledWith(
-      expect.objectContaining({ firstName: "Updated" }),
+      expect.objectContaining({ firstName: "Updated" })
     );
   });
 
@@ -238,12 +266,12 @@ describe("ProfileHeader Component", () => {
         onSave={vi.fn()}
         experienceRef={experienceRef}
         educationRef={educationRef}
-      />,
+      />
     );
 
     fireEvent.click(screen.getByTestId("profile-picture"));
     expect(screen.getByTestId("image-enlarge")).toHaveTextContent(
-      "profile.jpg",
+      "profile.jpg"
     );
   });
 
@@ -256,7 +284,7 @@ describe("ProfileHeader Component", () => {
         onSave={vi.fn()}
         experienceRef={experienceRef}
         educationRef={educationRef}
-      />,
+      />
     );
 
     fireEvent.click(screen.getByTestId("cover-photo"));
@@ -272,7 +300,7 @@ describe("ProfileHeader Component", () => {
         onSave={vi.fn()}
         experienceRef={experienceRef}
         educationRef={educationRef}
-      />,
+      />
     );
 
     fireEvent.click(screen.getByTestId("upload-profile"));
@@ -289,7 +317,7 @@ describe("ProfileHeader Component", () => {
         onSave={vi.fn()}
         experienceRef={experienceRef}
         educationRef={educationRef}
-      />,
+      />
     );
 
     fireEvent.click(screen.getByTestId("upload-cover"));
@@ -306,7 +334,7 @@ describe("ProfileHeader Component", () => {
         onSave={vi.fn()}
         experienceRef={experienceRef}
         educationRef={educationRef}
-      />,
+      />
     );
 
     fireEvent.click(screen.getByText("Software Intern"));

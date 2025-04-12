@@ -13,7 +13,7 @@ describe("ProfilePicture Component", () => {
         isOwner={true}
         onImageClick={vi.fn()}
         onUpload={vi.fn()}
-      />,
+      />
     );
 
     const img = screen.getByAltText("Profile");
@@ -30,7 +30,7 @@ describe("ProfilePicture Component", () => {
         isOwner={true}
         onImageClick={handleClick}
         onUpload={vi.fn()}
-      />,
+      />
     );
 
     const img = screen.getByAltText("Profile");
@@ -48,7 +48,7 @@ describe("ProfilePicture Component", () => {
         isOwner={true}
         onImageClick={handleClick}
         onUpload={vi.fn()}
-      />,
+      />
     );
 
     const img = screen.getByAltText("Profile");
@@ -66,7 +66,7 @@ describe("ProfilePicture Component", () => {
         isOwner={true}
         onImageClick={vi.fn()}
         onUpload={handleUpload}
-      />,
+      />
     );
 
     const uploadButton = screen.getByTitle("Edit Profile Picture");
@@ -83,7 +83,7 @@ describe("ProfilePicture Component", () => {
         isOwner={true}
         onImageClick={vi.fn()}
         onUpload={vi.fn()}
-      />,
+      />
     );
 
     const uploadButton = screen.getByTitle("Edit Profile Picture");
@@ -97,7 +97,7 @@ describe("ProfilePicture Component", () => {
         isOwner={false}
         onImageClick={vi.fn()}
         onUpload={vi.fn()}
-      />,
+      />
     );
 
     const uploadButton = screen.queryByTitle("Edit Profile Picture");

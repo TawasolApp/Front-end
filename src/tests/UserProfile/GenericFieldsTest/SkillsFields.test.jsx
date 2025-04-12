@@ -1,6 +1,6 @@
 import { render, screen, fireEvent } from "@testing-library/react";
 import { describe, it, expect, vi } from "vitest";
-import SkillsFields from "../pages/UserProfile/Components/ModalFields/SkillsFields";
+import SkillsFields from "../../../pages/UserProfile/Components/ModalFields/SkillsFields";
 
 describe("SkillsFields Component", () => {
   const mockHandleChange = vi.fn();
@@ -12,11 +12,11 @@ describe("SkillsFields Component", () => {
     },
     handleChange: mockHandleChange,
     errors: {},
+    editMode: false,
   };
 
   it("renders skill and position input fields", () => {
     render(<SkillsFields {...defaultProps} />);
-
     expect(screen.getByLabelText(/skill \*/i)).toBeInTheDocument();
     expect(screen.getByLabelText(/position \(optional\)/i)).toBeInTheDocument();
   });
@@ -25,14 +25,13 @@ describe("SkillsFields Component", () => {
     render(
       <SkillsFields
         {...defaultProps}
-        errors={{ skill: "Skill is required" }}
-      />,
+        errors={{ skillName: "Skill is required" }}
+      />
     );
-
     expect(screen.getByText("Skill is required")).toBeInTheDocument();
   });
 
-  it("calls handleChange on input change", () => {
+  it("calls handleChange on skill input change if editMode is false", () => {
     render(<SkillsFields {...defaultProps} />);
 
     fireEvent.change(screen.getByLabelText(/skill \*/i), {
@@ -46,13 +45,22 @@ describe("SkillsFields Component", () => {
     render(
       <SkillsFields
         {...defaultProps}
-        formData={{ skill: "React", position: "Frontend Developer" }}
-      />,
+        formData={{ skillName: "React", position: "Frontend Developer" }}
+      />
     );
 
     expect(screen.getByLabelText(/skill \*/i)).toHaveValue("React");
     expect(screen.getByLabelText(/position \(optional\)/i)).toHaveValue(
-      "Frontend Developer",
+      "Frontend Developer"
     );
+  });
+
+  it("renders edit note and skill input as readOnly when editMode is true", () => {
+    render(<SkillsFields {...defaultProps} editMode={true} />);
+    const skillInput = screen.getByLabelText(/skill \*/i);
+    expect(skillInput).toHaveAttribute("readOnly");
+    expect(
+      screen.getByText(/skill name cannot be edited/i)
+    ).toBeInTheDocument();
   });
 });

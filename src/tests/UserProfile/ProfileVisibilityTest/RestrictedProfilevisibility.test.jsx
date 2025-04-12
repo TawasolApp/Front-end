@@ -13,7 +13,7 @@ describe("RestrictedProfilevisibility", () => {
 
     expect(screen.getByText("This Profile is Private")).toBeInTheDocument();
     expect(
-      screen.getByText("Only the profile owner can view this profile."),
+      screen.getByText("Only the profile owner can view this profile.")
     ).toBeInTheDocument();
 
     // ✅ Just check image presence and alt
@@ -27,8 +27,8 @@ describe("RestrictedProfilevisibility", () => {
     expect(screen.getByText("This Profile is Private")).toBeInTheDocument();
     expect(
       screen.getByText(
-        "Connect with this member to view their full profile and professional journey.",
-      ),
+        "Connect with this member to view their full profile and professional journey."
+      )
     ).toBeInTheDocument();
   });
 });

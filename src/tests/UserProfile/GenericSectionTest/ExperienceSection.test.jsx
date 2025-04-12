@@ -2,7 +2,7 @@ import { render, screen } from "@testing-library/react";
 import { describe, it, expect, vi } from "vitest";
 import ExperienceSection from "../../../pages/UserProfile/Components/Sections/ExperienceSection";
 
-// ✅ Correct mock path and consistent field name (workExperience)
+// Correct mock path and consistent field name (workExperience)
 vi.mock(
   "../../../pages/UserProfile/Components/GenericDisplay/GenericSection",
   () => ({
@@ -20,7 +20,7 @@ vi.mock(
         </ul>
       </div>
     ),
-  }),
+  })
 );
 
 describe("ExperienceSection Component", () => {

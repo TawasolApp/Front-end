@@ -23,7 +23,7 @@ describe("VisibilityModal", () => {
         onClose={mockOnClose}
         currentVisibility="connections_only"
         onSave={mockOnSave}
-      />,
+      />
     );
 
     expect(container.innerHTML).toBe("");
@@ -36,7 +36,7 @@ describe("VisibilityModal", () => {
         onClose={mockOnClose}
         currentVisibility="connections_only"
         onSave={mockOnSave}
-      />,
+      />
     );
 
     expect(screen.getByText("Edit Profile Visibility")).toBeInTheDocument();
@@ -51,7 +51,7 @@ describe("VisibilityModal", () => {
         onClose={mockOnClose}
         currentVisibility="connections_only"
         onSave={mockOnSave}
-      />,
+      />
     );
 
     const publicRadio = screen.getByDisplayValue("public");
@@ -66,7 +66,7 @@ describe("VisibilityModal", () => {
         onClose={mockOnClose}
         currentVisibility="connections_only"
         onSave={mockOnSave}
-      />,
+      />
     );
 
     const publicRadio = screen.getByDisplayValue("public");
@@ -85,7 +85,7 @@ describe("VisibilityModal", () => {
         onClose={mockOnClose}
         currentVisibility="connections_only"
         onSave={mockOnSave}
-      />,
+      />
     );
 
     const saveButton = screen.getByRole("button", { name: /save/i });
@@ -99,7 +99,7 @@ describe("VisibilityModal", () => {
         onClose={mockOnClose}
         currentVisibility="connections_only"
         onSave={mockOnSave}
-      />,
+      />
     );
 
     const cancelButton = screen.getByRole("button", { name: /cancel/i });

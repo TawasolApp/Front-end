@@ -12,7 +12,7 @@ vi.mock(
         <div data-testid="type">{type}</div>
       </div>
     ),
-  }),
+  })
 );
 
 describe("CertificationsPage Component", () => {

@@ -1,4 +1,4 @@
-import { describe, it, expect, vi, beforeEach } from "vitest";
+import { describe, it, expect, vi, beforeEach, beforeAll } from "vitest";
 import { render, screen, waitFor } from "@testing-library/react";
 import { MemoryRouter, Route, Routes } from "react-router-dom";
 import ProfileLayout from "../../../src/pages/UserProfile/profileLayout.jsx";
@@ -20,6 +20,7 @@ vi.mock("react-router-dom", async () => {
     ...actual,
     useNavigate: () => mockNavigate,
     useParams: () => mockParams,
+    Outlet: actual.Outlet,
   };
 });
 
@@ -31,12 +32,14 @@ vi.mock("../../../src/apis/axios", () => ({
   },
 }));
 
-// Mock window.location.replace
+beforeAll(() => {
+  delete window.location;
+  window.location = { replace: mockReplace };
+});
+
 beforeEach(() => {
   vi.clearAllMocks();
   mockParams = { profileSlug: "123" };
-  delete window.location;
-  window.location = { replace: mockReplace };
 });
 
 describe("ProfileLayout", () => {
@@ -48,14 +51,14 @@ describe("ProfileLayout", () => {
             <Route index element={<DummyOutlet />} />
           </Route>
         </Routes>
-      </MemoryRouter>,
+      </MemoryRouter>
     );
     expect(screen.getByTestId("loading-page")).toBeInTheDocument();
   });
 
   it("renders layout and passes context when user is found", async () => {
     axiosInstance.get.mockResolvedValueOnce({
-      data: { _id: "123", status: "Owner" },
+      data: { _id: "123", connectStatus: "Owner", followStatus: "Owner" },
     });
 
     render(
@@ -65,7 +68,7 @@ describe("ProfileLayout", () => {
             <Route index element={<DummyOutlet />} />
           </Route>
         </Routes>
-      </MemoryRouter>,
+      </MemoryRouter>
     );
 
     await waitFor(() => {
@@ -84,7 +87,7 @@ describe("ProfileLayout", () => {
             <Route index element={<DummyOutlet />} />
           </Route>
         </Routes>
-      </MemoryRouter>,
+      </MemoryRouter>
     );
 
     await waitFor(() => {
@@ -92,8 +95,8 @@ describe("ProfileLayout", () => {
     });
   });
 
-  it("fetches first user and redirects if no profileSlug is provided", async () => {
-    mockParams = {}; // simulate missing slug
+  it("fetches first user and navigates to their profile if no profileSlug", async () => {
+    mockParams = {};
     axiosInstance.get.mockResolvedValueOnce({
       data: [{ _id: "111" }],
     });
@@ -105,7 +108,7 @@ describe("ProfileLayout", () => {
             <Route index element={<DummyOutlet />} />
           </Route>
         </Routes>
-      </MemoryRouter>,
+      </MemoryRouter>
     );
 
     await waitFor(() => {
@@ -113,7 +116,7 @@ describe("ProfileLayout", () => {
     });
   });
 
-  it("redirects to /notfound when first user list is empty", async () => {
+  it("redirects to /notfound if no users are returned", async () => {
     mockParams = {};
     axiosInstance.get.mockResolvedValueOnce({ data: [] });
 
@@ -124,7 +127,7 @@ describe("ProfileLayout", () => {
             <Route index element={<DummyOutlet />} />
           </Route>
         </Routes>
-      </MemoryRouter>,
+      </MemoryRouter>
     );
 
     await waitFor(() => {
@@ -132,10 +135,9 @@ describe("ProfileLayout", () => {
     });
   });
 
-  it("logs error but renders nothing on fetch failure", async () => {
-    axiosInstance.get.mockRejectedValueOnce(new Error("Network Error"));
-
+  it("logs error and renders nothing on fetch failure", async () => {
     const errorSpy = vi.spyOn(console, "error").mockImplementation(() => {});
+    axiosInstance.get.mockRejectedValueOnce(new Error("Network Error"));
 
     render(
       <MemoryRouter initialEntries={["/users/123"]}>
@@ -144,11 +146,12 @@ describe("ProfileLayout", () => {
             <Route index element={<DummyOutlet />} />
           </Route>
         </Routes>
-      </MemoryRouter>,
+      </MemoryRouter>
     );
 
     await waitFor(() => {
       expect(errorSpy).toHaveBeenCalled();
+      expect(screen.queryByTestId("layout-wrapper")).not.toBeInTheDocument();
     });
 
     errorSpy.mockRestore();
