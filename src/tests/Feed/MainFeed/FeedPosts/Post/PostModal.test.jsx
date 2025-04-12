@@ -306,7 +306,7 @@ describe("PostModal Component", () => {
     );
 
     const mediaCarousel = screen.getByTestId("media-carousel");
-    expect(mediaCarousel).toHaveTextContent("Media count: 1");
+    expect(mediaCarousel).toHaveTextContent("Media index: 1Media count: 3");
   });
 
   it("disables body scrolling when mounted and restores it when unmounted", () => {
