@@ -30,10 +30,152 @@ describe("SkillEndorsement", () => {
           endorsements={[viewerId, "otherUser"]}
           viewerId={viewerId}
         />
-      </MemoryRouter>,
+      </MemoryRouter>
     );
 
     expect(screen.getByText(/2 endorsements?/i)).toBeInTheDocument();
+  });
+  it("logs error with response.data when endorsement fails", async () => {
+    const mockError = { response: { data: "Post failed" } };
+    axios.post.mockRejectedValueOnce(mockError);
+    const consoleSpy = vi.spyOn(console, "error").mockImplementation(() => {});
+
+    render(
+      <MemoryRouter>
+        <SkillEndorsement
+          userId="user123"
+          skillName="React"
+          endorsements={[]}
+          viewerId="viewer1"
+        />
+      </MemoryRouter>
+    );
+
+    const button = screen.getByRole("button", { name: /endorse/i });
+    fireEvent.click(button);
+
+    await waitFor(() => {
+      expect(consoleSpy).toHaveBeenCalledWith(
+        "Failed to endorse skill:",
+        "Post failed"
+      );
+    });
+
+    consoleSpy.mockRestore();
+  });
+  it("logs error with message when endorsement fails without response", async () => {
+    const mockError = { message: "No server response" };
+    axios.post.mockRejectedValueOnce(mockError);
+    const consoleSpy = vi.spyOn(console, "error").mockImplementation(() => {});
+
+    render(
+      <MemoryRouter>
+        <SkillEndorsement
+          userId="user123"
+          skillName="React"
+          endorsements={[]}
+          viewerId="viewer1"
+        />
+      </MemoryRouter>
+    );
+
+    const button = screen.getByRole("button", { name: /endorse/i });
+    fireEvent.click(button);
+
+    await waitFor(() => {
+      expect(consoleSpy).toHaveBeenCalledWith(
+        "Failed to endorse skill:",
+        "No server response"
+      );
+    });
+
+    consoleSpy.mockRestore();
+  });
+  it("logs error when unendorsement fails", async () => {
+    const mockError = { response: { data: "Delete failed" } };
+    axios.delete.mockRejectedValueOnce(mockError);
+    const consoleSpy = vi.spyOn(console, "error").mockImplementation(() => {});
+
+    render(
+      <MemoryRouter>
+        <SkillEndorsement
+          userId="user123"
+          skillName="React"
+          endorsements={["viewer1"]}
+          viewerId="viewer1"
+        />
+      </MemoryRouter>
+    );
+
+    const button = screen.getByRole("button", { name: /endorsed/i });
+    fireEvent.click(button);
+
+    await waitFor(() => {
+      expect(consoleSpy).toHaveBeenCalledWith(
+        "Failed to unendorse skill:",
+        "Delete failed"
+      );
+    });
+
+    consoleSpy.mockRestore();
+  });
+
+  it("logs error when endorsement fails", async () => {
+    const mockError = { response: { data: "Post failed" } };
+    axios.post.mockRejectedValueOnce(mockError);
+    const consoleSpy = vi.spyOn(console, "error").mockImplementation(() => {});
+
+    render(
+      <MemoryRouter>
+        <SkillEndorsement
+          userId="u1"
+          skillName="React"
+          endorsements={[]}
+          viewerId="viewer"
+        />
+      </MemoryRouter>
+    );
+
+    const button = screen.getByRole("button", { name: /endorse/i });
+    fireEvent.click(button);
+
+    await waitFor(() => {
+      expect(consoleSpy).toHaveBeenCalledWith(
+        "Failed to endorse skill:",
+        "Post failed"
+      );
+    });
+
+    consoleSpy.mockRestore();
+  });
+
+  it("logs error when unendorsement fails", async () => {
+    const mockError = { message: "Delete failed" };
+    axios.delete.mockRejectedValueOnce(mockError);
+    const consoleSpy = vi.spyOn(console, "error").mockImplementation(() => {});
+
+    render(
+      <MemoryRouter>
+        <SkillEndorsement
+          userId="u1"
+          skillName="React"
+          endorsements={["viewer"]}
+          viewerId="viewer"
+        />
+      </MemoryRouter>
+    );
+
+    const button = screen.getByRole("button", { name: /endorsed/i });
+    fireEvent.click(button);
+
+    await waitFor(() => {
+      expect(consoleSpy).toHaveBeenCalledWith(
+        "Failed to unendorse skill:",
+        "Delete failed"
+      );
+    });
+
+    consoleSpy.mockRestore();
   });
 
   it("endorses a skill when not already endorsed", async () => {
@@ -47,7 +189,7 @@ describe("SkillEndorsement", () => {
           endorsements={[]}
           viewerId={viewerId}
         />
-      </MemoryRouter>,
+      </MemoryRouter>
     );
 
     const button = screen.getByRole("button", { name: /endorse/i });
@@ -56,8 +198,8 @@ describe("SkillEndorsement", () => {
     await waitFor(() =>
       expect(axios.post).toHaveBeenCalledWith(
         `/connections/${mockUserId}/endorse-skill`,
-        { skillName: mockSkill },
-      ),
+        { skillName: mockSkill }
+      )
     );
 
     expect(await screen.findByText(/✓\s+Endorsed/)).toBeInTheDocument();
@@ -74,7 +216,7 @@ describe("SkillEndorsement", () => {
           endorsements={[viewerId]}
           viewerId={viewerId}
         />
-      </MemoryRouter>,
+      </MemoryRouter>
     );
 
     const button = screen.getByRole("button", { name: /endorsed/i });
@@ -82,8 +224,8 @@ describe("SkillEndorsement", () => {
 
     await waitFor(() =>
       expect(axios.delete).toHaveBeenCalledWith(
-        `/connections/${mockUserId}/endorsement/${mockSkill}`,
-      ),
+        `/connections/${mockUserId}/endorsement/${mockSkill}`
+      )
     );
 
     expect(await screen.findByText(/endorse/i)).toBeInTheDocument();
@@ -102,7 +244,7 @@ describe("SkillEndorsement", () => {
           endorsements={[]}
           viewerId={viewerId}
         />
-      </MemoryRouter>,
+      </MemoryRouter>
     );
 
     const button = screen.getByRole("button", { name: /endorse/i });
@@ -121,7 +263,7 @@ describe("SkillEndorsement", () => {
           endorsements={[viewerId, "otherUser"]}
           viewerId="anotherUser"
         />
-      </MemoryRouter>,
+      </MemoryRouter>
     );
 
     const count = screen.getByText(/2 endorsements?/i);
@@ -129,7 +271,7 @@ describe("SkillEndorsement", () => {
 
     await waitFor(() => {
       expect(
-        screen.getByText(/no one has endorsed this skill yet/i),
+        screen.getByText(/no one has endorsed this skill yet/i)
       ).toBeInTheDocument();
     });
   });

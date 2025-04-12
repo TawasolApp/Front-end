@@ -42,6 +42,8 @@ export default defineConfig({
         "src/pages/Feed/MainFeed/FeedPosts/Post/Content/MediaContent/PdfViewer.jsx",
         "src/pages/Company/Components/Slider/PostsSlider.jsx",
         "src/pages/Company/Components/Pages/PostsPage.jsx",
+        "src/Pages/UserProfile/Components/Sections/ResumeSection.jsx",
+        "src/pages/UserProfile/Components/UserPostsSlider/UserPostsSlider.jsx",
       ],
     },
     setupFiles: "./src/setupTests.js",

@@ -17,7 +17,7 @@ function SkillEndorsement({ userId, skillName, endorsements = [], viewerId }) {
     } catch (err) {
       console.error(
         "Failed to endorse skill:",
-        err.response?.data || err.message,
+        err.response?.data || err.message
       );
     } finally {
       setLoading(false);
@@ -33,16 +33,11 @@ function SkillEndorsement({ userId, skillName, endorsements = [], viewerId }) {
     } catch (err) {
       console.error(
         "Failed to unendorse skill:",
-        err.response?.data || err.message,
+        err.response?.data || err.message
       );
     } finally {
       setLoading(false);
     }
-  };
-
-  const handleViewEndorsers = () => {
-    // TODO: Replace this console.log with navigation when API is ready
-    console.log(`Navigate to: /users/${userId}/skills/${skillName}/endorsers`);
   };
 
   return (

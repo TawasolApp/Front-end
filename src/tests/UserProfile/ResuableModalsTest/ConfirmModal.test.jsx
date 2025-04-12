@@ -17,7 +17,7 @@ describe("ConfirmModal", () => {
         confirmLabel="Yes, Delete"
         cancelLabel="Cancel"
         {...props}
-      />,
+      />
     );
 
     return { onConfirm, onCancel };
@@ -28,7 +28,7 @@ describe("ConfirmModal", () => {
 
     expect(screen.getByText("Delete Item")).toBeInTheDocument();
     expect(
-      screen.getByText("Are you sure you want to delete this item?"),
+      screen.getByText("Are you sure you want to delete this item?")
     ).toBeInTheDocument();
     expect(screen.getByText("Yes, Delete")).toBeInTheDocument();
     expect(screen.getByText("Cancel")).toBeInTheDocument();
