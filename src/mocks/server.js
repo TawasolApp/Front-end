@@ -1,4 +1,5 @@
 import pkg from "json-server";
+
 const { create, router, defaults, bodyParser } = pkg;
 const server = create();
 const _router = router("./src/mocks/db.json");
@@ -17,7 +18,7 @@ const subdirectories = ["images", "videos", "documents"];
 subdirectories.forEach((subdir) => {
   const fullPath = path.join(uploadDir, subdir);
   if (!fs.existsSync(fullPath)) {
-    fs.mkdirSync(fullPath, { recursive: true }); // Ensure full path is created
+    fs.mkdirSync(fullPath, { recursive: true });
   }
 });
 
@@ -57,6 +58,27 @@ server.post("/api/uploadImage", upload.single("file"), (req, res) => {
 });
 
 server.use("/public", express.static(uploadDir));
+
+// Retain your existing PATCH /profile/:id endpoint
+server.patch("/profile/:id", (req, res) => {
+  const { id } = req.params;
+  const updates = req.body;
+  const db = _router.db;
+  const user = db
+    .get("users")
+    .find({ id: String(id) })
+    .value();
+
+  if (!user) return res.status(404).json({ error: "User not found" });
+
+  const updatedUser = { ...user, ...updates };
+  db.get("users")
+    .find({ id: String(id) })
+    .assign(updatedUser)
+    .write();
+
+  return res.status(200).json(updatedUser);
+});
 
 server.get("/connections/list", (req, res) => {
   try {
@@ -225,6 +247,97 @@ server.post("/auth/check-email", (req, res) => {
   return res.status(200).json({ message: "Email is available" });
 });
 
+server.get("/connections/recommended", (req, res) => {
+  try {
+    // Get query parameters for pagination
+    const page = parseInt(req.query.page) || 1;
+    const limit = parseInt(req.query.limit) || 10;
+
+    // Get all recommended users from the database
+    const allRecommended = _router.db.get("recommendedUsers").value();
+
+    // Calculate pagination
+    const startIndex = (page - 1) * limit;
+    const endIndex = page * limit;
+    const paginatedRecommended = allRecommended.slice(startIndex, endIndex);
+
+    res.status(200).json(paginatedRecommended);
+  } catch (error) {
+    res
+      .status(500)
+      .json({ message: "Failed to retrieve list of recommended users" });
+  }
+});
+
+server.post("/connections", (req, res) => {
+  try {
+    const { userId } = req.body;
+    const db = _router.db;
+
+    // Check if user exists in recommended
+    const recommendedUsers = db.get("recommendedUsers").value();
+    const userToConnect = recommendedUsers.find((u) => u.userId === userId);
+
+    if (!userToConnect) {
+      return res
+        .status(404)
+        .json({ message: "User ID does not exist in recommended users" });
+    }
+
+    // Check if connection already exists or is pending
+    const connections = db.get("connections").value();
+    const sentConnections = db.get("sentConnections").value();
+
+    if (connections.some((u) => u.userId === userId)) {
+      return res.status(409).json({ message: "Connection already exists" });
+    }
+
+    if (sentConnections.some((u) => u.userId === userId)) {
+      return res
+        .status(409)
+        .json({ message: "Connection request already sent" });
+    }
+
+    // Add to sent connections
+    db.get("sentConnections").push(userToConnect).write();
+
+    res.status(201).json({
+      message: "Connection request sent successfully",
+      user: userToConnect,
+    });
+  } catch (error) {
+    res.status(500).json({ message: "Failed to send connection request" });
+  }
+});
+
+server.delete("/connections/:userId/pending", (req, res) => {
+  try {
+    const { userId } = req.params;
+    const db = _router.db;
+
+    // Check if request exists in sent connections
+    const sentConnections = db.get("sentConnections").value();
+    const pendingRequest = sentConnections.find((u) => u.userId === userId);
+
+    if (!pendingRequest) {
+      return res.status(404).json({
+        message:
+          "User ID does not exist in sent connections or request does not exist",
+      });
+    }
+
+    // Remove from sent connections
+    db.get("sentConnections").remove({ userId }).write();
+
+    res.status(200).json({
+      message: "Connection request removed",
+      user: pendingRequest,
+    });
+  } catch (error) {
+    res.status(500).json({ message: "Failed to remove pending request" });
+  }
+});
+
 server.post("/auth/register", (req, res) => {
   const { email, password, firstName, lastName } = req.body;
 
@@ -257,7 +370,7 @@ server.post("/auth/login", (req, res) => {
 
   const users = _router.db.get("auth").value();
   const user = users.find(
-    (user) => user.email === email && user.password === password
+    (user) => user.email === email && user.password === password,
   );
 
   if (!user) {
@@ -337,7 +450,7 @@ server.get("/users/confirm-email-change", (req, res) => {
   _router.db
     .set(
       "pendingEmailChanges",
-      pendingChanges.filter((req) => req.token !== token)
+      pendingChanges.filter((req) => req.token !== token),
     )
     .write();
 
@@ -387,7 +500,6 @@ server.patch("/users/request-email-update", (req, res) => {
   });
 });
 
-const supportedTypes = ["education", "experience", "skills", "certifications"];
 // GET all users
 server.get("/profile", (req, res) => {
   const users = _router.db.get("users").value();
@@ -403,6 +515,7 @@ server.get("/profile/:id", (req, res) => {
 
   if (user) {
     res.jsonp(user);
+    // console.log("hi from the server", res);
   } else {
     res.status(404).jsonp({ error: "User not found" });
   }
@@ -440,13 +553,13 @@ server.post("/profile/:id/education", (req, res) => {
   return res.status(201).json(newItem);
 });
 
-server.post("/profile/:id/experience", (req, res) => {
+server.post("/profile/:id/workExperience", (req, res) => {
   const userId = req.params.id;
   const newItem = { id: Date.now().toString(), ...req.body };
   const user = _router.db.get("users").find({ id: String(userId) });
   if (!user.value()) return res.status(404).json({ error: "User not found" });
-  const items = user.get("experience").value() || [];
-  user.assign({ experience: [...items, newItem] }).write();
+  const items = user.get("workExperience").value() || [];
+  user.assign({ workExperience: [...items, newItem] }).write();
   return res.status(201).json(newItem);
 });
 
@@ -462,14 +575,25 @@ server.post("/profile/:id/certifications", (req, res) => {
 
 server.post("/profile/:id/skills", (req, res) => {
   const userId = req.params.id;
-  const newItem = { id: Date.now().toString(), ...req.body };
+  const newItem = { ...req.body }; //  no  id generation
+
+  if (!newItem.skillName) {
+    return res.status(400).json({ error: "Missing skill name" });
+  }
 
   const user = _router.db.get("users").find({ id: String(userId) });
   if (!user.value()) return res.status(404).json({ error: "User not found" });
 
   const items = user.get("skills").value() || [];
-  user.assign({ skills: [...items, newItem] }).write();
+  const alreadyExists = items.some(
+    (item) =>
+      item.skillName?.toLowerCase() === newItem.skillName?.toLowerCase(),
+  );
+  if (alreadyExists) {
+    return res.status(409).json({ error: "Skill already exists" });
+  }
 
+  user.assign({ skills: [...items, newItem] }).write();
   return res.status(201).json(newItem);
 });
 
@@ -480,7 +604,7 @@ server.patch("/profile/:userId/education/:itemId", (req, res) => {
   const updatedItems = user
     .get("education")
     .map((item) =>
-      String(item.id) === itemId ? { ...item, ...req.body } : item
+      String(item.id) === itemId ? { ...item, ...req.body } : item,
     )
     .value();
   user.assign({ education: updatedItems }).write();
@@ -488,17 +612,17 @@ server.patch("/profile/:userId/education/:itemId", (req, res) => {
   res.status(200).json(updatedItem);
 });
 
-server.patch("/profile/:userId/experience/:itemId", (req, res) => {
+server.patch("/profile/:userId/workExperience/:itemId", (req, res) => {
   const { userId, itemId } = req.params;
   const user = _router.db.get("users").find({ id: String(userId) });
   if (!user.value()) return res.status(404).json({ error: "User not found" });
   const updatedItems = user
-    .get("experience")
+    .get("workExperience")
     .map((item) =>
-      String(item.id) === itemId ? { ...item, ...req.body } : item
+      String(item.id) === itemId ? { ...item, ...req.body } : item,
     )
     .value();
-  user.assign({ experience: updatedItems }).write();
+  user.assign({ workExperience: updatedItems }).write();
   const updatedItem = updatedItems.find((item) => String(item.id) === itemId);
   res.status(200).json(updatedItem);
 });
@@ -510,7 +634,7 @@ server.patch("/profile/:userId/certifications/:itemId", (req, res) => {
   const updatedItems = user
     .get("certifications")
     .map((item) =>
-      String(item.id) === itemId ? { ...item, ...req.body } : item
+      String(item.id) === itemId ? { ...item, ...req.body } : item,
     )
     .value();
   user.assign({ certifications: updatedItems }).write();
@@ -527,13 +651,15 @@ server.patch("/profile/:userId/skills/:itemId", (req, res) => {
   const updatedItems = user
     .get("skills")
     .map((item) =>
-      String(item.id) === itemId ? { ...item, ...req.body } : item
+      String(item.skillName) === itemId ? { ...item, ...req.body } : item,
     )
     .value();
 
   user.assign({ skills: updatedItems }).write();
 
-  const updatedItem = updatedItems.find((item) => String(item.id) === itemId);
+  const updatedItem = updatedItems.find(
+    (item) => String(item.skillName) === itemId,
+  );
   res.status(200).json(updatedItem);
 });
 
@@ -549,15 +675,15 @@ server.delete("/profile/:userId/education/:itemId", (req, res) => {
   res.status(204).end();
 });
 
-server.delete("/profile/:userId/experience/:itemId", (req, res) => {
+server.delete("/profile/:userId/workExperience/:itemId", (req, res) => {
   const { userId, itemId } = req.params;
   const user = _router.db.get("users").find({ id: String(userId) });
   if (!user.value()) return res.status(404).json({ error: "User not found" });
   const filteredItems = user
-    .get("experience")
+    .get("workExperience")
     .filter((item) => String(item.id) !== itemId)
     .value();
-  user.assign({ experience: filteredItems }).write();
+  user.assign({ workExperience: filteredItems }).write();
   res.status(204).end();
 });
 
@@ -581,7 +707,7 @@ server.delete("/profile/:userId/skills/:itemId", (req, res) => {
 
   const filteredItems = user
     .get("skills")
-    .filter((item) => String(item.id) !== itemId)
+    .filter((item) => String(item.skillName) !== itemId)
     .value();
 
   user.assign({ skills: filteredItems }).write();
@@ -591,12 +717,21 @@ server.delete("/profile/:userId/skills/:itemId", (req, res) => {
 const currentUser = {
   id: "mohsobh",
   name: "Mohamed Sobh",
-  picture: "https://media.licdn.com/dms/image/v2/D4D03AQH7Ais8BxRXzw/profile-displayphoto-shrink_100_100/profile-displayphoto-shrink_100_100/0/1721080103981?e=1747872000&v=beta&t=nDnZdgCqkI8v5B2ymXZzluMZVlF6h_o-dN1pA95Fzv4",
+  picture:
+    "https://media.licdn.com/dms/image/v2/D4D03AQH7Ais8BxRXzw/profile-displayphoto-shrink_100_100/profile-displayphoto-shrink_100_100/0/1721080103981?e=1747872000&v=beta&t=nDnZdgCqkI8v5B2ymXZzluMZVlF6h_o-dN1pA95Fzv4",
   bio: "Computer Engineering Student at Cairo University",
   type: "User",
 };
 
 /*********************************************************** POSTS ***********************************************************/
+
+server.get("/posts/:postId", (req, res) => {
+  const { postId } = req.params;
+  const post = _router.db.get("posts").find({ id: postId }).value();
+  if (!post) return res.status(404).json({ error: "Post not found" });
+  res.jsonp(post);
+});
+
 server.get("/posts", (req, res) => {
   const page = parseInt(req.query.page) || 1;
   const limit = parseInt(req.query.limit) || 10;
@@ -616,10 +751,26 @@ server.post("/posts", (req, res) => {
   const isSilentRepost = req.body.isSilentRepost || false;
 
   // Basic validation
-  if (!isSilentRepost && !content) return res.status(400).json({ error: "content is required when it is not a silent repost" });
+  if (!isSilentRepost && !content) {
+    return res
+      .status(400)
+      .json({ error: "content is required when it is not a silent repost" });
+  }
 
   const posts = _router.db.get("posts");
-  const parentPost = parentPostId ? posts.find({ id: parentPostId }).value() : null;
+
+  let parentPost = null;
+  if (parentPostId) {
+    parentPost = posts.find({ id: parentPostId }).value();
+
+    // Increment the share count if parentPost exists
+    if (parentPost) {
+      posts
+        .find({ id: parentPostId })
+        .assign({ shares: parentPost.shares + 1 })
+        .write();
+    }
+  }
 
   const newPost = {
     id: Date.now().toString(),
@@ -646,9 +797,9 @@ server.post("/posts", (req, res) => {
     reactType: null,
     timestamp: new Date().toISOString(),
     parentPost: parentPost ? { ...parentPost } : null,
-    isSilentRepost: isSilentRepost
+    isSilentRepost: isSilentRepost,
   };
-  
+
   posts.push(newPost).write();
   res.status(201).json(newPost);
 });
@@ -734,7 +885,7 @@ server.post("/posts/react/:postId", (req, res) => {
           ...entity.reactions,
           [existingReaction.type]: Math.max(
             (entity.reactions[existingReaction.type] || 0) - 1,
-            0
+            0,
           ),
         },
         reactType: null,
@@ -744,7 +895,7 @@ server.post("/posts/react/:postId", (req, res) => {
 
   // Add new reaction
   const reactionTypeAdd = Object.keys(reactions).find(
-    (type) => reactions[type] === 1
+    (type) => reactions[type] === 1,
   );
   if (reactionTypeAdd) {
     const newReaction = {
@@ -876,7 +1027,10 @@ server.post("/posts/comment/:postId", (req, res) => {
     }
   } else {
     // Find the parent comment
-    const parentComment = _router.db.get("comments").find({ id: postId }).value();
+    const parentComment = _router.db
+      .get("comments")
+      .find({ id: postId })
+      .value();
     if (!parentComment) {
       return res.status(404).jsonp({ error: "Parent comment not found" });
     }
@@ -921,10 +1075,13 @@ server.delete("/posts/comments/:commentId", (req, res) => {
       comments.remove({ id: commentId }).write();
       return res.status(200).json({ message: "Comment deleted successfully" });
     } else {
-      const wantedParentComment = comments.find({ id: wantedComment.postId }).value();
+      const wantedParentComment = comments
+        .find({ id: wantedComment.postId })
+        .value();
       console.log(wantedParentComment);
       if (wantedParentComment) {
-        comments.find({ id: wantedComment.postId })
+        comments
+          .find({ id: wantedComment.postId })
           .assign({ replies: wantedComment.replies.slice(0, -1) }) // Removes last element
           .write();
         comments.remove({ id: commentId }).write();

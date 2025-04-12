@@ -1,7 +1,7 @@
-import React from "react";
+import React, { useEffect } from "react";
 import SignUpForm from "./Forms/SignUpForm";
 import { useDispatch } from "react-redux";
-import { setEmail, setPassword } from "../../store/authenticationSlice";
+import { logout, setEmail, setPassword } from "../../store/authenticationSlice";
 import { axiosInstance } from "../../apis/axios";
 import { useNavigate } from "react-router-dom";
 import AuthenticationHeader from "./GenericComponents/AuthenticationHeader";
@@ -10,13 +10,17 @@ const SignUpPage = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
+  useEffect(() => {
+    dispatch(logout());
+  }, [dispatch]);
+
   const handleSignUp = async (formData, setEmailError) => {
     try {
       const response = await axiosInstance.post("/auth/check-email", {
         email: formData.email,
       });
 
-      if (response.status === 200) {
+      if (response.status === 201) {
         setEmailError("");
         dispatch(setEmail(formData.email));
         dispatch(setPassword(formData.password));
@@ -28,10 +32,10 @@ const SignUpPage = () => {
         if (error.response.status === 409) {
           setEmailError("Email already in use.");
         } else {
-          console.log("Unexpected error:", error.response.status);
+          console.error("Unexpected error:", error.response.status);
         }
       } else {
-        console.log("Network error or server is down");
+        console.error("Network error or server is down");
       }
     }
   };

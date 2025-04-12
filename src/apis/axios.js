@@ -3,6 +3,8 @@
  * import { axiosInstance as axios } from './apis/axios'
  */
 import axios from "axios";
+import { store } from "../store/store";
+import { logout } from "../store/authenticationSlice";
 
 const BASE_URL = String(import.meta.env.VITE_APP_BASE_URL || "").trim();
 
@@ -41,11 +43,13 @@ axiosInstance.interceptors.response.use(
           return axiosInstance(error.config); // Retry request with new token
         } catch (refreshError) {
           console.log("Refresh failed. Logging out.");
-          localStorage.removeItem("token");
-          localStorage.removeItem("refreshToken");
-
+          store.dispatch(logout());
           window.location.href = "/auth/signin";
         }
+      } else {
+        console.log("No refresh token. Logging out.");
+        store.dispatch(logout());
+        window.location.href = "/auth/signin";
       }
     }
     return Promise.reject(error);

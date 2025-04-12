@@ -6,9 +6,9 @@ function JobsList({ jobs, onSelectJob, selectedJob, logo, name }) {
     <div className="w-full md:w-1/2 border-b md:border-b-0 md:border-r max-h-[300px] md:max-h-full overflow-y-auto pr-2">
       {jobs.map((job) => (
         <JobCard
-          key={job.id}
+          key={job.jobId}
           job={job}
-          isSelected={selectedJob?.id === job.id}
+          isSelected={selectedJob?.jobId === job.jobId}
           onClick={() => onSelectJob(job)}
           logo={logo}
           name={name}

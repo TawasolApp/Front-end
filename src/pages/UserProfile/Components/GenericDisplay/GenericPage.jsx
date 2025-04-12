@@ -2,25 +2,39 @@ import React, { useState, useEffect } from "react";
 import { useNavigate, useOutletContext } from "react-router-dom";
 import GenericCard from "./GenericCard";
 import GenericModal from "./GenericModal";
+// import LoadingPage from "../../../LoadingScreen/LoadingPage.jsx";
 import { axiosInstance as axios } from "../../../../apis/axios.js";
 
+// Map for endpoint base path
+const endpointMap = {
+  skills: "skills",
+  education: "education",
+  certification: "certification",
+  workExperience: "work-experience",
+};
 function GenericPage({ title, type }) {
   const navigate = useNavigate();
-  const { user, isOwner } = useOutletContext();
+  const { user, isOwner, onUserUpdate } = useOutletContext();
   const [data, setData] = useState([]);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [editIndex, setEditIndex] = useState(null);
   const [editData, setEditData] = useState(null);
   const [editMode, setEditMode] = useState(false);
-  const [isSaving, setIsSaving] = useState(false); // Track saving status
-  // const [saveError, setSaveError] = useState(null); // if error in saving to show user a msg
-
-  // Load data on mount
+  const [isSaving, setIsSaving] = useState(false);
+  console.log("user in generic page", user);
   useEffect(() => {
     if (user && user[type]) {
       setData(user[type]);
     }
-  }, [user, type]);
+  }, [user?.[type]]);
+  // if (isSaving) {
+  //   return (
+  //     <div className="flex justify-center items-center p-8">
+  //       <div className="w-6 h-6 border-4 border-gray-300 border-t-blue-500 rounded-full animate-spin"></div>
+  //       <span className="ml-3 text-sm text-text">Saving...</span>
+  //     </div>
+  //   );
+  // }
 
   const handleAdd = () => {
     setEditIndex(null);
@@ -37,7 +51,7 @@ function GenericPage({ title, type }) {
   };
 
   const handleSave = async (updatedItem) => {
-    if (isSaving || !user?.id) return;
+    if (isSaving || !user?._id) return;
     setIsSaving(true);
 
     try {
@@ -45,10 +59,15 @@ function GenericPage({ title, type }) {
 
       //  PATCH — Edit existing item (uses id)
       if (editMode && editIndex !== null && data[editIndex]) {
-        const itemId = data[editIndex].id;
+        let originalKey =
+          type === "skills" ? data[editIndex].skillName : data[editIndex]._id;
+
+        if (type === "skills") {
+          updatedItem.skillName = originalKey; // prevent renaming
+        }
 
         response = await axios.patch(
-          `/profile/${user.id}/${type}/${itemId}`,
+          `/profile/${endpointMap[type]}/${originalKey}`,
           updatedItem,
         );
         //  faster
@@ -58,53 +77,76 @@ function GenericPage({ title, type }) {
 
         // safer as replace only the updated item
         setData((prev) =>
-          prev.map((item) =>
-            item.id === response.data.id ? response.data : item,
-          ),
+          prev.map((item) => {
+            const itemKey = type === "skills" ? item.skillName : item._id;
+            return itemKey === originalKey ? response.data : item;
+          }),
         );
       }
 
-      // POST — Add new item without sending id
+      // POST (Add)
       else {
-        response = await axios.post(`/profile/${user.id}/${type}`, updatedItem);
+        response = await axios.post(
+          `/profile/${endpointMap[type]}`,
+          updatedItem,
+        );
+        console.log("🧾 response.data after POST:", response.data);
 
-        if (!response?.data) {
-          throw new Error("❌ No data returned from backend");
+        if (!response?.data) throw new Error("No data from backend");
+
+        const newKey =
+          type === "skills" ? response.data.skillName : response.data._id;
+        const exists = data.some((item) =>
+          type === "skills" ? item.skillName === newKey : item._id === newKey,
+        );
+
+        if (!exists) {
+          setData((prev) => [...prev, response.data]);
         }
-
-        setData((prev) => [...prev, response.data]);
       }
+      closeModal();
+
+      //  Refresh the global user
+      const refreshed = await axios.get(`/profile/${user._id}`);
+      onUserUpdate?.(refreshed.data);
     } catch (err) {
       console.error("Failed to save item:", err);
     } finally {
       //finally happen no matter what: even if: The API fails PATCH/POST throws an error or return early
       setIsSaving(false);
-      closeModal();
     }
   };
-
   const handleDelete = async () => {
-    if (!user?.id || editIndex === null || !data[editIndex]?.id) return;
+    if (editIndex === null || !data[editIndex]) return;
+    setIsSaving(true); //  Start the loading spinner
 
-    const itemId = data[editIndex].id;
+    const itemId =
+      type === "skills" ? data[editIndex].skillName : data[editIndex]._id;
 
     try {
-      await axios.delete(`/profile/${user.id}/${type}/${itemId}`);
+      await axios.delete(`/profile/${endpointMap[type]}/${itemId}`);
+      setData((prev) => prev.filter((_, i) => i !== editIndex));
 
-      const updatedData = data.filter((_, i) => i !== editIndex);
-      setData(updatedData);
+      closeModal();
+
+      //  Refresh the global user
+      const refreshed = await axios.get(`/profile/${user._id}`);
+      onUserUpdate?.(refreshed.data);
     } catch (err) {
       console.error("Failed to delete item:", err);
+    } finally {
+      setIsSaving(false); // Stop the spinner
     }
-
-    closeModal();
   };
 
   const closeModal = () => {
     setIsModalOpen(false);
-    setEditData(null);
     setEditIndex(null);
     setEditMode(false);
+    // Delay clearing editData so modal doesn't flicker empty
+    setTimeout(() => {
+      setEditData(null);
+    }, 50); // delay matches the modal transition (adjust if needed)
   };
 
   const renderModal = () => {
@@ -122,54 +164,72 @@ function GenericPage({ title, type }) {
   };
 
   return (
-    <div className="bg-boxbackground p-6 shadow-md rounded-md w-full max-w-3xl mx-auto">
-      {/* Header */}
-      <div className="flex items-center justify-between mb-4">
-        <div className="flex items-center gap-2">
-          <button
-            onClick={() => navigate(-1)}
-            className="w-10 h-10 flex items-center justify-center text-xl rounded-full hover:bg-gray-200 transition text-text"
-          >
-            ←
-          </button>
-          <h2 className="text-2xl font-semibold text-text">All {title}</h2>
+    <>
+      {isSaving && (
+        <div className="fixed inset-0 z-50 bg-modalbackground bg-opacity-60 flex items-center justify-center">
+          <div className="w-8 h-8 border-4 border-gray-300 border-t-blue-500 rounded-full animate-spin"></div>
+          <span className="ml-3 text-text text-lg font-medium">Saving...</span>
+        </div>
+      )}
+      <div className="bg-boxbackground p-6 shadow-md rounded-md w-full max-w-3xl mx-auto">
+        {/* Header */}
+        <div className="flex items-center justify-between mb-4">
+          <div className="flex items-center gap-2">
+            <button
+              onClick={() => navigate(-1)}
+              className="w-10 h-10 flex items-center justify-center text-xl rounded-full hover:bg-gray-200 transition text-text"
+            >
+              ←
+            </button>
+            <h2 className="text-2xl font-semibold text-text">All {title}</h2>
+          </div>
+
+          {isOwner && (
+            <button
+              className="w-8 h-8 flex items-center justify-center rounded-full hover:bg-transition text-text"
+              onClick={handleAdd}
+            >
+              +
+            </button>
+          )}
         </div>
 
-        {isOwner && (
-          <button
-            className="w-8 h-8 flex items-center justify-center rounded-full hover:bg-gray-200 transition text-text"
-            onClick={handleAdd}
-          >
-            +
-          </button>
-        )}
-      </div>
+        {/* Card List */}
+        <div className="space-y-4">
+          {data.map((item, index) => (
+            <div
+              key={
+                type === "skills"
+                  ? (item.skillName ?? `skillName-${index}`)
+                  : (item._id ?? index)
+              }
+              className="relative group"
+            >
+              <GenericCard
+                item={item}
+                type={type}
+                isOwner={isOwner}
+                showEditIcons={false}
+                user={user}
+                // connectionStatus={user.status}
+                connectStatus={user.connectStatus}
+              />
+              {isOwner && (
+                <button
+                  onClick={() => handleEdit(item, index)}
+                  className="absolute top-2 right-2 text-gray-500 hover:text-blue-700 p-1 group-hover:visible"
+                >
+                  ✎
+                </button>
+              )}
+            </div>
+          ))}
+        </div>
 
-      {/* Card List */}
-      <div className="space-y-4">
-        {data.map((item, index) => (
-          <div key={item.id ?? index} className="relative group">
-            <GenericCard
-              item={item}
-              type={type}
-              isOwner={isOwner}
-              showEditIcons={false}
-            />
-            {isOwner && (
-              <button
-                onClick={() => handleEdit(item, index)}
-                className="absolute top-2 right-2 text-gray-500 hover:text-blue-700 p-1  group-hover:visible"
-              >
-                ✎
-              </button>
-            )}
-          </div>
-        ))}
+        {/* Modal */}
+        {renderModal()}
       </div>
-
-      {/* Modal */}
-      {renderModal()}
-    </div>
+    </>
   );
 }
 

@@ -1,23 +1,29 @@
 import { createSlice } from "@reduxjs/toolkit";
 
 const initialState = {
+  userId: localStorage.getItem("userId") || "",
   email: localStorage.getItem("email") || "",
+  password: localStorage.getItem("password") || "",
   firstName: localStorage.getItem("firstName") || "",
   lastName: localStorage.getItem("lastName") || "",
   location: localStorage.getItem("location") || "",
   token: localStorage.getItem("token") || null,
   refreshToken: localStorage.getItem("refreshToken") || null,
-  userId: localStorage.getItem("userId") || null,
   bio: localStorage.getItem("bio") || "",
   type: localStorage.getItem("type") || "",
-  picture: localStorage.getItem("picture") || null,
-  isNewGoogleUser: false,
+  profilePicture: localStorage.getItem("profilePicture") || null,
+  coverPhoto: localStorage.getItem("cover") || null,
+  isSocialLogin: localStorage.getItem("isSocialLogin") || false,
 };
 
 export const authenticationSlice = createSlice({
   name: "authentication",
   initialState,
   reducers: {
+    setUserId: (state, action) => {
+      state.userId = action.payload;
+      localStorage.setItem("userId", action.payload);
+    },
     setEmail: (state, action) => {
       state.email = action.payload;
       localStorage.setItem("email", action.payload);
@@ -36,6 +42,7 @@ export const authenticationSlice = createSlice({
     },
     setPassword: (state, action) => {
       state.password = action.payload;
+      localStorage.setItem("password", action.payload);
     },
     setToken: (state, action) => {
       state.token = action.payload;
@@ -45,10 +52,6 @@ export const authenticationSlice = createSlice({
       state.refreshToken = action.payload;
       localStorage.setItem("refreshToken", action.payload);
     },
-    setUserId: (state, action) => {
-      state.userId = action.payload;
-      localStorage.setItem("userId", action.payload);
-    },
     setBio: (state, action) => {
       state.bio = action.payload;
       localStorage.setItem("bio", action.payload);
@@ -57,14 +60,23 @@ export const authenticationSlice = createSlice({
       state.type = action.payload;
       localStorage.setItem("type", action.payload);
     },
-    setPicture: (state, action) => {
-      state.picture = action.payload;
-      localStorage.setItem("picture", action.payload);
+    setProfilePicture: (state, action) => {
+      state.profilePicture = action.payload;
+      localStorage.setItem("profilePicture", action.payload);
+    },
+    setCoverPhoto: (state, action) => {
+      state.coverPhoto = action.payload;
+      localStorage.setItem("cover", action.payload);
     },
     setIsNewGoogleUser: (state, action) => {
       state.isNewGoogleUser = action.payload;
     },
+    setIsSocialLogin: (state, action) => {
+      state.isSocialLogin = action.payload;
+      localStorage.setItem("isSocialLogin", action.payload);
+    },
     logout: (state) => {
+      state.userId = "";
       state.email = "";
       state.password = "";
       state.firstName = "";
@@ -72,26 +84,30 @@ export const authenticationSlice = createSlice({
       state.location = "";
       state.token = null;
       state.refreshToken = null;
-      state.userId = null;
       state.bio = "";
       state.type = "";
-      state.picture = "";
+      state.profilePicture = "";
+      state.coverPhoto = "";
       state.isNewGoogleUser = false;
+      state.isSocialLogin = false;
+      localStorage.removeItem("userId");
       localStorage.removeItem("email");
       localStorage.removeItem("firstName");
       localStorage.removeItem("lastName");
       localStorage.removeItem("location");
       localStorage.removeItem("token");
       localStorage.removeItem("refreshToken");
-      localStorage.removeItem("userId");
       localStorage.removeItem("bio");
       localStorage.removeItem("type");
-      localStorage.removeItem("picture");
+      localStorage.removeItem("profilePicture");
+      localStorage.removeItem("coverPhoto");
+      localStorage.removeItem("isSocialLogin");
     },
   },
 });
 
 export const {
+  setUserId,
   setEmail,
   setFirstName,
   setLastName,
@@ -99,11 +115,12 @@ export const {
   setLocation,
   setToken,
   setRefreshToken,
-  setUserId,
   setBio,
   setType,
-  setPicture,
+  setProfilePicture,
+  setCoverPhoto,
   setIsNewGoogleUser,
+  setIsSocialLogin,
   logout,
 } = authenticationSlice.actions;
 

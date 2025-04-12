@@ -1,17 +1,23 @@
 import { useState, useEffect, useRef, useCallback } from "react";
+import { toast } from "react-toastify";
 import SharePost from "./SharePost/SharePost";
 import FeedPosts from "./FeedPosts/FeedPosts";
 import { axiosInstance } from "../../../apis/axios";
+import { useSelector } from "react-redux";
 
-const MainFeed = () => {
-  // TODO: change this to redux states
-  const currentAuthorId = "mohsobh";
-  const currentAuthorName = "Mohamed Sobh";
-  const currentAuthorPicture =
-    "https://media.licdn.com/dms/image/v2/D4D03AQH7Ais8BxRXzw/profile-displayphoto-shrink_100_100/profile-displayphoto-shrink_100_100/0/1721080103981?e=1747872000&v=beta&t=nDnZdgCqkI8v5B2ymXZzluMZVlF6h_o-dN1pA95Fzv4";
-  const currentAuthorBio = "Computer Engineering Student at Cairo University";
-  const currentAuthorType = "User";
-
+const MainFeed = ({
+  API_ROUTE = "posts",
+  q = null,
+  timeframe = null,
+  network = null,
+  showShare = true,
+  currentAuthorId = useSelector((state) => state.authentication.userId),
+  currentAuthorName = `${useSelector((state) => state.authentication.firstName)} ${useSelector((state) => state.authentication.lastName)}`,
+  currentAuthorPicture = useSelector(
+    (state) => state.authentication.profilePicture,
+  ),
+  isAdmin = false,
+}) => {
   const [posts, setPosts] = useState([]);
   const [page, setPage] = useState(1);
   const [loading, setLoading] = useState(false);
@@ -36,12 +42,10 @@ const MainFeed = () => {
     [loading, hasMore],
   );
 
-  // Initial fetch of posts
   useEffect(() => {
     fetchPosts(1, true);
   }, []);
 
-  // Function to fetch posts with pagination
   const fetchPosts = async (pageNum, reset = false) => {
     if (isFetching.current) return;
 
@@ -51,9 +55,16 @@ const MainFeed = () => {
       isFetching.current = true;
 
       // fetch new posts
-      const response = await axiosInstance.get("posts", {
-        params: { page: pageNum },
+      const params = { page: pageNum };
+      if (q != null) {
+        params.q = q;
+        params.network = network;
+        params.timeframe = timeframe;
+      }
+      const response = await axiosInstance.get(API_ROUTE, {
+        params: params,
       });
+
       const rawPosts = response.data;
       const newPosts = rawPosts
         .map((post) => {
@@ -110,7 +121,6 @@ const MainFeed = () => {
     }
   };
 
-  // Function to load more posts
   const loadMorePosts = () => {
     if (!hasMore || loading) return;
 
@@ -128,8 +138,7 @@ const MainFeed = () => {
     silentRepost = false,
   ) => {
     try {
-      console.log(parentPost);
-      const response = await axiosInstance.post("posts", {
+      await axiosInstance.post("posts", {
         content: text,
         media: media,
         taggedUsers: taggedUsers,
@@ -137,52 +146,24 @@ const MainFeed = () => {
         parentPostId: parentPost,
         isSilentRepost: silentRepost,
       });
-
-      const newPost = response.data; // Process the post the same way as in fetchPosts
-      let formattedPost = newPost;
-      if (newPost.parentPost) {
-        if (newPost.isSilentRepost) {
-          formattedPost = {
-            ...newPost.parentPost,
-            isSilentRepost: true,
-            headerData: {
-              authorId: newPost.authorId,
-              authorPicture: newPost.authorPicture,
-              authorName: newPost.authorName,
-            },
-          };
-        } else {
-          // For quoted reposts (when you implement them)
-          formattedPost = formattedPost = {
-            ...newPost,
-            repostedComponents: {
-              postId: newPost.parentPost.id,
-              authorId: newPost.parentPost.authorId,
-              authorPicture: newPost.parentPost.authorPicture,
-              authorName: newPost.parentPost.authorName,
-              authorBio: newPost.parentPost.authorBio,
-              authorType: newPost.parentPost.authorType,
-              timestamp: newPost.parentPost.timestamp,
-              visibility: newPost.parentPost.visibility,
-              content: newPost.parentPost.content,
-              media: newPost.parentPost.media,
-              taggedUsers: newPost.parentPost.taggedUsers,
-            },
-          };
-        }
-      }
-
-      const updatedPosts = [formattedPost, ...posts];
-      setPosts(updatedPosts);
+      fetchPosts(1, true);
+      toast.success("Post shared successfully.", {
+        position: "bottom-left",
+        autoClose: 3000,
+      });
     } catch (err) {
-      console.log(`Error: ${err.message}`);
+      console.log(`Error: ${err}`);
     }
   };
 
   const handleDeletePost = async (postId) => {
     try {
-      await axiosInstance.delete(`/delete/${postId}`);
+      await axiosInstance.delete(`/posts/${postId}`);
       setPosts((prevPosts) => prevPosts.filter((post) => post.id !== postId));
+      toast.success("Post deleted successfully.", {
+        position: "bottom-left",
+        autoClose: 3000,
+      });
     } catch (e) {
       console.log(e.message);
     }
@@ -190,24 +171,61 @@ const MainFeed = () => {
 
   return (
     <>
-      <SharePost handleSharePost={handleSharePost} />
+      {showShare && (
+        <SharePost
+          handleSharePost={handleSharePost}
+          currentAuthorName={currentAuthorName}
+          currentAuthorPicture={currentAuthorPicture}
+        />
+      )}
+
       <div className="sm:rounded-lg rounded-none">
         <FeedPosts
           posts={posts}
           lastPostRef={lastPostElementRef}
           handleSharePost={handleSharePost}
           handleDeletePost={handleDeletePost}
+          currentAuthorId={currentAuthorId}
+          currentAuthorName={currentAuthorName}
+          currentAuthorPicture={currentAuthorPicture}
+          isAdmin={isAdmin}
+          loading={loading}
         />
 
         {loading && (
-          <div className="flex justify-center p-4">
-            <div className="loader">Loading...</div>
+          <div className="w-full bg-cardBackground rounded-none sm:rounded-lg border border-cardBorder mb-4 animate-pulse p-4 space-y-4">
+            <div className="flex items-center space-x-4">
+              <div className="w-10 h-10 bg-gray-300 dark:bg-gray-600 rounded-full" />
+              <div className="flex-1 space-y-2">
+                <div className="w-1/3 h-3 bg-gray-300 dark:bg-gray-600 rounded" />
+                <div className="w-1/4 h-2 bg-gray-300 dark:bg-gray-600 rounded" />
+              </div>
+            </div>
+
+            <div className="space-y-2">
+              <div className="w-full h-3 bg-gray-300 dark:bg-gray-600 rounded" />
+              <div className="w-5/6 h-3 bg-gray-300 dark:bg-gray-600 rounded" />
+              <div className="w-2/3 h-3 bg-gray-300 dark:bg-gray-600 rounded" />
+            </div>
+
+            <div className="flex space-x-4 pt-2">
+              <div className="w-16 h-3 bg-gray-300 dark:bg-gray-600 rounded" />
+              <div className="w-16 h-3 bg-gray-300 dark:bg-gray-600 rounded" />
+              <div className="w-16 h-3 bg-gray-300 dark:bg-gray-600 rounded" />
+            </div>
           </div>
         )}
 
         {!hasMore && posts.length > 0 && (
-          <div className="text-center p-4 text-header">
-            Enough Scrolling for you today 😵
+          <div className="mt-6 mb-4 p-6 text-center bg-cardBackground border border-cardBorder rounded-xl shadow-sm flex flex-col items-center gap-2">
+            <span className="text-3xl">😵</span>
+            <p className="text-lg font-medium text-gray-800 dark:text-white">
+              That's all for now!
+            </p>
+            <p className="text-sm text-gray-500">
+              You've reached the end of your feed. Take a break, or check back
+              later for more updates.
+            </p>
           </div>
         )}
       </div>

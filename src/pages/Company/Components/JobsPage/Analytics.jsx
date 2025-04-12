@@ -20,7 +20,7 @@ function Analytics({ jobs }) {
 
   const chartData = jobs.map((job) => ({
     name: job.position,
-    applicants: job.applicantCount ?? 0,
+    applicants: job.applicants ?? 0,
   }));
 
   return (
@@ -45,9 +45,9 @@ function Analytics({ jobs }) {
                 <XAxis
                   dataKey="name"
                   interval={0}
-                  angle={isMobile ? -25 : 0}
-                  textAnchor={isMobile ? "end" : "middle"}
-                  dy={isMobile ? 10 : 0}
+                  angle={-30}
+                  textAnchor="end"
+                  height={60}
                   tick={{
                     fill: "rgb(var(--companysubheader))",
                     fontSize: 12,
@@ -77,12 +77,12 @@ function Analytics({ jobs }) {
           <ul className="space-y-3 mt-6">
             {jobs.map((job) => (
               <li
-                key={job.id}
+                key={job.jobId}
                 className="flex items-center justify-between border border-companysubheader rounded-md px-4 py-3 bg-boxbackground"
               >
                 <span className="text-text font-medium">{job.position}</span>
                 <span className="text-sm font-semibold text-blue-400">
-                  {job.applicantCount ?? 0} applicants
+                  {job.applicants ?? 0} applicants
                 </span>
               </li>
             ))}

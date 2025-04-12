@@ -17,14 +17,11 @@ import ReplyContainer from "./ReplyContainer";
 
 const Comment = ({ comment }) => {
   const {
+    currentAuthorId,
     handleDeleteComment,
     handleEditComment,
     handleReactOnComment,
-    handleAddReplyToComment,
   } = usePost();
-
-  // TODO: change this to redux states
-  const currentAuthorId = "mohsobh";
 
   const [showReactions, setShowReactions] = useState(false);
   const [editorMode, setEditorMode] = useState(false);
@@ -33,7 +30,7 @@ const Comment = ({ comment }) => {
   let menuItems = [
     {
       text: "Report comment",
-      onClick: () => console.log("Reported post"), // TODO: when reporting is implemented
+      onClick: () => console.log("Reported comment"), // TODO: when reporting is implemented
       icon: FlagIcon,
     },
   ];
@@ -51,8 +48,8 @@ const Comment = ({ comment }) => {
     });
   }
 
-  const handleEditCommentInternal = (text, taggedUsers) => {
-    handleEditComment(comment.id, text, taggedUsers);
+  const handleEditCommentInternal = async (text, taggedUsers) => {
+    await handleEditComment(comment.id, text, taggedUsers);
     setEditorMode(false);
   };
 
@@ -105,7 +102,7 @@ const Comment = ({ comment }) => {
             <div className="pl-1 pt-1">
               <ActivitiesHolder
                 currentReaction={comment.reactType}
-                reactions={comment.reactions}
+                reactions={comment.reactCounts}
                 handleReaction={(reactionTypeAdd, reactionTypeRemove) =>
                   handleReactOnComment(
                     comment.id,
@@ -114,7 +111,7 @@ const Comment = ({ comment }) => {
                   )
                 }
                 setShowReactions={() => setShowReactions(true)}
-                replies={comment.replies.length}
+                replies={comment.repliesCount}
                 setShowReplies={() => setShowReplies(true)}
               />
             </div>
@@ -124,8 +121,9 @@ const Comment = ({ comment }) => {
 
           {showReactions && (
             <ReactionsModal
-              APIURL={`/posts/reactions/${comment.id}`}
+              API_URL={`/posts/reactions/${comment.id}`}
               setShowLikes={() => setShowReactions(false)}
+              reactCounts={comment.reactCounts}
             />
           )}
         </article>

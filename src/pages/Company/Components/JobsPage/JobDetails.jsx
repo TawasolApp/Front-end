@@ -19,7 +19,11 @@ function JobDetails({ job, logo, name }) {
       <div className="flex items-start justify-between flex-wrap">
         <div className="flex items-center gap-3">
           {logo && (
-            <img src={logo} alt={name} className="h-10 w-10 rounded-md" />
+            <img
+              src={logo}
+              alt={name}
+              className="h-10 w-10 rounded-md object-contain"
+            />
           )}
           <p className="text-sm font-semibold text-normaltext uppercase">
             {name}
@@ -31,14 +35,14 @@ function JobDetails({ job, logo, name }) {
 
       <p className="text-sm text-companysubheader mt-1">
         {job.location}
-        {job.postDate && (
+        {job.postedAt && (
           <>
             {" • "}
-            {formatDistanceToNow(new Date(job.postDate), { addSuffix: true })}
+            {formatDistanceToNow(new Date(job.postedAt), { addSuffix: true })}
           </>
         )}
-        {typeof job.applicantCount === "number" && job.applicantCount > 0 && (
-          <> • {job.applicantCount} people clicked apply</>
+        {typeof job.applicants === "number" && job.applicants > 0 && (
+          <> • {job.applicants} people clicked apply</>
         )}
       </p>
 

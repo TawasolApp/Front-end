@@ -1,57 +1,64 @@
+// AboutSection.jsx
 import React, { useState } from "react";
-import OwnerActions from "../OwnerActions";
+import { axiosInstance as axios } from "../../../../apis/axios.js";
+import AboutModal from "../AboutComponents/AboutEditingModal.jsx";
+import ExpandableText from "../ReusableModals/ExpandableText.jsx"; // ✅ Import
 
-function AboutSection({ user, isOwner, onAddAbout, onEditAbout }) {
-  if (!user) return null;
-  const [expanded, setExpanded] = useState(false);
-  const isClamped = user.about.length > 100;
-  const hasAbout = user.about && user.about.trim().length > 0; // Check if About exists
+function AboutSection({ user, isOwner }) {
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [bio, setBio] = useState(user.bio ?? "");
 
-  const handleAddAbout = () => {
-    // alert("add About button clicked!");
+  const handleOpenModal = () => setIsModalOpen(true);
+  const handleCloseModal = () => setIsModalOpen(false);
 
-    if (onAddAbout) onAddAbout();
+  const handleSave = async (newBio) => {
+    try {
+      if (newBio.trim() === "") {
+        await axios.delete("/profile/bio");
+        setBio("");
+      } else {
+        const response = await axios.patch("/profile", { bio: newBio });
+        setBio(response.data.bio || "");
+      }
+      setIsModalOpen(false);
+    } catch (err) {
+      console.error("Failed to update bio:", err);
+    }
   };
 
-  const handleEditAbout = () => {
-    // alert("Edit About button clicked!");
-    if (onEditAbout) onEditAbout();
-  };
+  const isBioEmpty = !bio || bio.trim() === "";
+  const shouldHide = !isOwner && isBioEmpty;
+  if (shouldHide) return null;
 
   return (
-    <div className="bg-white p-6 shadow-md rounded-md w-full max-w-3xl mx-auto pb-0 mb-4">
-      <div className="flex justify-between items-center mb-2">
-        <h2 className="text-2xl font-semibold mb-2">About</h2>
-
-        {/* Show Add Button only if there's NO about content */}
-        {isOwner && !hasAbout && <OwnerActions onAdd={handleAddAbout} />}
-
-        {/* Show Edit Button only if there IS about content */}
-        {isOwner && hasAbout && <OwnerActions onEdit={handleEditAbout} />}
+    <div className="bg-boxbackground p-6 shadow-md rounded-md w-full max-w-3xl mx-auto mb-2 relative ">
+      <div className="flex justify-between items-center mb-3">
+        <h2 className="text-2xl font-semibold text-text">About</h2>
+        {isOwner && (
+          <button
+            onClick={handleOpenModal}
+            className="w-8 h-8 rounded-full flex items-center justify-center hover:bg-sliderbutton transition text-text absolute top-5 right-5"
+          >
+            {bio ? "✎" : "+"}
+          </button>
+        )}
       </div>
 
-      {/* Display About Content if it exists */}
-      {hasAbout ? (
-        <>
-          <p
-            className={`font-sans text-lg text-gray-600 tracking-tight ${
-              expanded ? "" : "line-clamp-3"
-            }`}
-          >
-            {user.about}
-          </p>
-          {isClamped && (
-            <button
-              onClick={() => setExpanded(!expanded)}
-              className="text-gray-600 font-medium hover:text-blue-400"
-            >
-              {!expanded ? "see more" : null}
-            </button>
-          )}
-        </>
+      {isBioEmpty && isOwner ? (
+        <p className="text-sm text-companyheader italic">
+          Let others know more about you by adding a short bio.
+        </p>
       ) : (
-        // If No About Content, Show a Placeholder
-        <p className="text-gray-400 italic">No about information added yet.</p>
+        <ExpandableText text={bio} maxLines={3} />
+      )}
+
+      {isModalOpen && (
+        <AboutModal
+          initialBio={bio}
+          userId={user.id}
+          onClose={handleCloseModal}
+          onSave={handleSave}
+        />
       )}
     </div>
   );

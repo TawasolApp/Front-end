@@ -3,15 +3,15 @@ import { PostProvider } from "./PostContext";
 import PostCard from "./Post/PostCard";
 import PostModal from "./Post/PostModal";
 
-const PostContainer = ({ post, handleSharePost, handleDeletePost }) => {
-  // TODO: change this to redux states
-  const currentAuthorId = "mohsobh";
-  const currentAuthorName = "Mohamed Sobh";
-  const currentAuthorPicture =
-    "https://media.licdn.com/dms/image/v2/D4D03AQH7Ais8BxRXzw/profile-displayphoto-shrink_100_100/profile-displayphoto-shrink_100_100/0/1721080103981?e=1747872000&v=beta&t=nDnZdgCqkI8v5B2ymXZzluMZVlF6h_o-dN1pA95Fzv4";
-  const currentAuthorBio = "Computer Engineering Student at Cairo University";
-  const currentAuthorType = "User";
-
+const PostContainer = ({
+  post,
+  handleSharePost,
+  handleDeletePost,
+  currentAuthorId,
+  currentAuthorName,
+  currentAuthorPicture,
+  isAdmin,
+}) => {
   const [showPostModal, setShowPostModal] = useState(false);
   const [mediaIndex, setMediaIndex] = useState(0);
 
@@ -20,6 +20,10 @@ const PostContainer = ({ post, handleSharePost, handleDeletePost }) => {
       initialPost={post}
       handleSharePost={handleSharePost}
       handleDeletePost={handleDeletePost}
+      currentAuthorId={currentAuthorId}
+      currentAuthorName={currentAuthorName}
+      currentAuthorPicture={currentAuthorPicture}
+      isAdmin={isAdmin}
     >
       <PostCard
         setShowPostModal={() => setShowPostModal(true)}

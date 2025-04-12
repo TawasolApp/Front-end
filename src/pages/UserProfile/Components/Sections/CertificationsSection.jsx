@@ -1,15 +1,16 @@
 import React from "react";
 import GenericSection from "../GenericDisplay/GenericSection";
 
-function CertificationsSection({ isOwner, user }) {
+function CertificationsSection({ isOwner, user, onUserUpdate }) {
   return (
     <div>
       <GenericSection
         title="Licenses & Certifications"
-        type="certifications"
-        items={user.certifications || []}
+        type="certification"
+        items={user.certification || []}
         isOwner={isOwner}
-        user={user} // needed for PATCH
+        user={user}
+        onUserUpdate={onUserUpdate}
       />
     </div>
   );

@@ -3,11 +3,14 @@ import InputField from "../GenericComponents//InputField";
 import BlueSubmitButton from "../GenericComponents//BlueSubmitButton";
 import { useNavigate } from "react-router-dom";
 import { axiosInstance } from "../../../apis/axios";
+import { useDispatch } from "react-redux";
+import { setEmail } from "../../../store/authenticationSlice";
 
 const ForgotPasswordForm = () => {
-  const [email, setEmail] = useState("");
+  const [email, setEmailState] = useState("");
   const [error, setError] = useState("");
   const navigate = useNavigate();
+  const dispatch = useDispatch();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -22,8 +25,14 @@ const ForgotPasswordForm = () => {
     }
 
     try {
-      await axiosInstance.post("/auth/forgot-password", { email });
-      navigate("/auth/email-verification");
+      await axiosInstance.post("/auth/forgot-password", {
+        email,
+        isAndroid: false,
+      });
+      dispatch(setEmail(email));
+      navigate("/auth/verification-pending", {
+        state: { type: "forgotPassword" },
+      });
     } catch (error) {
       if (error.response) {
         console.error("Forgot password error:", error.response.data);
@@ -64,7 +73,7 @@ const ForgotPasswordForm = () => {
         labelText="Email"
         value={email}
         onChange={(e) => {
-          setEmail(e.target.value);
+          setEmailState(e.target.value);
           setError("");
         }}
         placeholder="Enter your email"

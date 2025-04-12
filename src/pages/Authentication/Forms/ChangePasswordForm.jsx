@@ -36,16 +36,18 @@ const ChangePasswordForm = () => {
     try {
       setLoading(true);
       setErrorMessage("");
-      const response = await axiosInstance.patch("/user/update-password", {
+      const response = await axiosInstance.patch("/users/update-password", {
         currentPassword,
         newPassword,
       });
+
       if (response.status === 200) {
         setCurrentPassword("");
         setNewPassword("");
         setConfirmNewPassword("");
       }
     } catch (error) {
+      console.log("catch");
       if (error.response?.status === 400) {
         setErrorMessage("Incorrect current password.");
       } else if (error.response?.status === 401) {

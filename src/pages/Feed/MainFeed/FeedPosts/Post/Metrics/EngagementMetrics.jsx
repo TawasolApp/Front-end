@@ -1,16 +1,16 @@
 import { useMemo } from "react";
 import reactionIcons from "../../../../GenericComponents/reactionIcons";
 import { usePost } from "../../PostContext";
+import { useNavigate } from "react-router-dom";
 
-const EngagementMetrics = ({
-  setShowLikes,
-  setShowComments,
-  setShowReposts,
-}) => {
+const EngagementMetrics = ({ setShowLikes, setShowComments }) => {
   const { post } = usePost();
-  const reactions = post.reactions;
+  const navigate = useNavigate();
+  const reactions = Object.fromEntries(
+    Object.entries(post.reactCounts).filter(([key]) => key !== "none"),
+  );
   const comments = post.comments;
-  const reposts = post.reposts;
+  const shares = post.shares;
 
   const topReactions = useMemo(() => {
     return Object.entries(reactions)
@@ -54,13 +54,13 @@ const EngagementMetrics = ({
             {comments} {comments === 1 ? "comment" : "comments"}
           </button>
         )}
-        {comments > 0 && reposts > 0 && <span className="mx-1">•</span>}
-        {reposts > 0 && (
+        {comments > 0 && shares > 0 && <span className="mx-1">•</span>}
+        {shares > 0 && (
           <button
             className="text-xs mx-1 hover:underline hover:text-textPlaceholderHover"
-            onClick={setShowReposts}
+            onClick={() => navigate(`/feed/reposts/${post.id}`)}
           >
-            {reposts} {reposts === 1 ? "repost" : "reposts"}
+            {shares} {shares === 1 ? "repost" : "reposts"}
           </button>
         )}
       </div>

@@ -15,7 +15,7 @@ function ImageEnlarge({ profilePicture, isOpen, onClose }) {
   if (!isOpen || !profilePicture) return null; // Don't render if modal is closed
 
   return (
-    <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-80 z-50">
+    <div className="fixed inset-0 flex items-center justify-center bg-modalbackground z-50">
       {/* Prevent Closing When Clicking Inside the Modal */}
       <div
         className="relative bg-black p-4 rounded-lg max-w-[90%] max-h-[90vh] flex items-center justify-center"
@@ -32,7 +32,7 @@ function ImageEnlarge({ profilePicture, isOpen, onClose }) {
         <img
           src={profilePicture}
           alt="Profile Enlarged"
-          className="max-w-full max-h-screen object-contain"
+          className="max-w-full max-h-[90vh] object-contain"
         />
       </div>
     </div>

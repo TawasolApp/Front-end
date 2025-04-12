@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import { useParams, useOutletContext } from "react-router-dom";
 import { axiosInstance } from "../../../../apis/axios.js";
 import LoadingPage from "../../../LoadingScreen/LoadingPage.jsx";
@@ -16,12 +16,14 @@ function JobsPage() {
   const [selectedJob, setSelectedJob] = useState(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
 
-  // Fetch jobs
+  const hasFetched = useRef(false);
+
   useEffect(() => {
-    if (companyId) {
+    if (companyId && company && !hasFetched.current) {
+      hasFetched.current = true;
       setLoading(true);
       axiosInstance
-        .get(`/companies/${companyId}/jobs`)
+        .get(`/companies/${companyId}/jobs?page=1&limit=10`)
         .then((res) => {
           setJobs(res.data);
           setSelectedJob(res.data[0] || null);
@@ -29,12 +31,12 @@ function JobsPage() {
         .catch((err) => console.error("Failed to fetch jobs", err))
         .finally(() => setLoading(false));
     }
-  }, [companyId]);
+  }, [companyId, company]);
 
   const handleJobAdded = () => {
     setLoading(true);
     axiosInstance
-      .get(`/companies/${companyId}/jobs`)
+      .get(`/companies/${companyId}/jobs?page=1&limit=10`)
       .then((res) => {
         setJobs(res.data);
         setSelectedJob(res.data[0] || null);
@@ -71,30 +73,37 @@ function JobsPage() {
           onJobAdded={handleJobAdded}
         />
       )}
-
-      <div className="bg-boxbackground p-4 shadow-md rounded-md w-full">
-        <div className="flex flex-col md:flex-row h-auto md:h-[600px] gap-4">
-          {/* Left: Fixed Job List */}
-          <JobsList
-            jobs={jobs}
-            onSelectJob={setSelectedJob}
-            selectedJob={selectedJob}
-            logo={company.logo}
-            name={company.name}
-          />
-
-          {/* Right: Conditional Panel */}
-          {showAdminIcons ? (
-            <JobApplications job={selectedJob} />
-          ) : (
-            <JobDetails
-              job={selectedJob}
-              logo={company.logo}
+      {jobs.length > 0 && (
+        <div className="bg-boxbackground p-4 shadow-md rounded-md w-full">
+          <div className="flex flex-col md:flex-row h-auto md:h-[600px] gap-4">
+            {/* Left: Fixed Job List */}
+            <JobsList
+              jobs={jobs}
+              onSelectJob={setSelectedJob}
+              selectedJob={selectedJob}
+              logo={
+                company.logo ||
+                "https://media.licdn.com/dms/image/D4E12AQFuCmxN72C2yQ/article-cover_image-shrink_720_1280/0/1702503196049?e=2147483647&v=beta&t=9HHff4rJDnxuWrqfzPqX9j2dncDBKQeShXf2Wt5nrUc"
+              }
               name={company.name}
             />
-          )}
+
+            {/* Right: Conditional Panel */}
+            {showAdminIcons ? (
+              <JobApplications job={selectedJob} />
+            ) : (
+              <JobDetails
+                job={selectedJob}
+                logo={
+                  company.logo ||
+                  "https://media.licdn.com/dms/image/D4E12AQFuCmxN72C2yQ/article-cover_image-shrink_720_1280/0/1702503196049?e=2147483647&v=beta&t=9HHff4rJDnxuWrqfzPqX9j2dncDBKQeShXf2Wt5nrUc"
+                }
+                name={company.name}
+              />
+            )}
+          </div>
         </div>
-      </div>
+      )}
       {showAdminIcons && <Analytics jobs={jobs} />}
     </div>
   );

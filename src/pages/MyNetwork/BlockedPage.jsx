@@ -4,9 +4,7 @@ import BlockIcon from "@mui/icons-material/Block";
 
 const BlockedPage = () => {
   const navigate = useNavigate();
-  const [blockedUsers, setBlockedUsers] = useState([
-
-  ]);
+  const [blockedUsers, setBlockedUsers] = useState([]);
 
   const handleUnblock = (id) => {
     setBlockedUsers(blockedUsers.filter((user) => user.id !== id));

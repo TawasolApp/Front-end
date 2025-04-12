@@ -1,7 +1,7 @@
 import React from "react";
 import GenericSection from "../GenericDisplay/GenericSection";
 
-function EducationSection({ isOwner, sectionRef, user }) {
+function EducationSection({ isOwner, sectionRef, user, onUserUpdate }) {
   return (
     <div ref={sectionRef}>
       <GenericSection
@@ -9,7 +9,8 @@ function EducationSection({ isOwner, sectionRef, user }) {
         type="education"
         items={user.education || []}
         isOwner={isOwner}
-        user={user} // needed for PATCH
+        user={user}
+        onUserUpdate={onUserUpdate}
       />
     </div>
   );

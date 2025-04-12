@@ -15,7 +15,7 @@ function CompanyLayout() {
   const [showAdminIcons, setShowAdminIcons] = useState(false);
   useEffect(() => {
     if (companyId) {
-      // If companyId is present in the URL, fetch the company data for that companyId
+      // Fetch specific company by ID
       axiosInstance
         .get(`/companies/${companyId}`)
         .then((response) => {
@@ -28,14 +28,14 @@ function CompanyLayout() {
         })
         .finally(() => setLoading(false));
     } else {
-      // If no companyId in the URL, fetch the list of all companies and set the first one as default
+      // Fetch first available company
       axiosInstance
-        .get("/companies")
+        .get("/companies?page=1&limit=1&name=y")
         .then((response) => {
           if (response.data.length > 0) {
             const firstCompany = response.data[0];
             setDefaultCompanyId(firstCompany.companyId);
-            setCompanyData(firstCompany); // Set the default company data
+            setCompanyData(firstCompany);
             navigate(`/company/${firstCompany.companyId}/home`, {
               replace: true,
             });
@@ -43,7 +43,7 @@ function CompanyLayout() {
         })
         .catch((error) => {
           console.error("❌ Error fetching companies:", error);
-          navigate("/404"); // Redirect to a 404 page if there are no companies
+          navigate("/404");
         })
         .finally(() => setLoading(false));
     }
@@ -55,17 +55,24 @@ function CompanyLayout() {
     return <LoadingPage />;
   }
   return (
-    <div className="bg-mainBackground pt-4 pb-4">
+    <div className="min-h-screen bg-mainBackground pt-4 pb-4">
       <CompanyHeader
         company={companyData}
+        setCompanyData={setCompanyData}
         showAdminIcons={showAdminIcons}
         setShowAdminIcons={setShowAdminIcons}
         isAdmin={isAdmin}
       />
-      <div className="max-w-6xl mx-auto mt-4">
+      <div className="max-w-6xl mx-auto mt-4 ">
         {/* Pass companyData to the Outlet as context */}
         <Outlet
-          context={{ company: companyData, showAdminIcons, setShowAdminIcons }}
+          context={{
+            company: companyData,
+            setCompanyData,
+            showAdminIcons,
+            setShowAdminIcons,
+            isAdmin,
+          }}
         />
       </div>
       <Footer company={companyData} />

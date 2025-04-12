@@ -1,9 +1,14 @@
 /** @type {import('tailwindcss').Config} */
 export default {
   content: ["./index.html", "./src/**/*.{js,ts,jsx,tsx}"],
+  darkMode: "class",
   theme: {
     extend: {
       colors: {
+        navbarIconsNormal: "rgb(var(--navbar-icons-normal))",
+        navbarIconsSelected: "rgb(var(--navbar-icons-selected))",
+        navbarSearch: "rgb(var(--navbar-search))",
+        navbarSearchBorder: "rgb(var(--navbar-search-border))",
         mainBackground: "rgb(var(--main-background))",
         cardBackground: "rgb(var(--card-background))",
         cardBackgroundHover: "rgb(var(--card-background-hover))",
@@ -15,6 +20,7 @@ export default {
         boxheading: "rgb(var(--boxheading))",
         postsbuttoncolor: "rgb(var(--postsbuttoncolor))",
         text: "rgb(var(--text))",
+        companyheader: "rgb(var(--companyheader))",
         companyheader1: "rgb(var(--companyheader1))",
         companysubheader: "rgb(var(--companysubheader))",
         navbuttons: "rgb(var(--navbuttons))",

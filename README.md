@@ -34,10 +34,12 @@ npm install
 
 #### Start the development server:
 
-1. First you need to update the base URL with backend URL:
+1. First you need to add a .env file containing all the needed env variables
 
 ```bash
 VITE_APP_BASE_URL=https://tawasolapp.me/api/
+VITE_APP_RECAPTCHA_SITE_KEY=6LdMDv0qAAAAAC935jMxhIW2ZSMaei6Hs1YU2PyR
+VITE_GOOGLE_CLIENT_ID=255166583275-q52g6235gpjiq68u9o23doqcs2sdi9h2.apps.googleusercontent.com
 ```
 
 2. Then you can normally run vite project:
@@ -169,7 +171,6 @@ FRONT-END/
 1. Any general function (eg. date formatting) must be in a specific file in utils directory.
 2. Any API calls are only done through the axios instance created inside of `apis` directory.
 3. Try to use context instead of redux if the rendering tree is small.
-
 
 ## 🎯 Code Formatting
 

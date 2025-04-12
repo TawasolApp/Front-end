@@ -1,11 +1,15 @@
 import React from "react";
 import ExperienceForm from "./Forms/ExperienceForm";
 import AuthenticationHeader from "./GenericComponents/AuthenticationHeader";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { axiosInstance } from "../../apis/axios";
 import {
   setBio,
-  setPicture,
+  setCoverPhoto,
+  setFirstName,
+  setIsSocialLogin,
+  setLastName,
+  setProfilePicture,
   setRefreshToken,
   setToken,
   setType,
@@ -14,14 +18,14 @@ import {
 import { useNavigate } from "react-router-dom";
 
 const ExperienceAuthPage = () => {
-  const { email, password, firstName, lastName, location, isNewGoogleUser } =
-    useSelector((state) => state.authentication);
+  const { email, password, location, isNewGoogleUser } = useSelector(
+    (state) => state.authentication,
+  );
   const navigate = useNavigate();
+  const dispatch = useDispatch();
 
   const handleSubmit = async (experienceData) => {
     let profileData = {
-      firstName,
-      lastName,
       location,
     };
 
@@ -44,6 +48,35 @@ const ExperienceAuthPage = () => {
       ];
     }
 
+    dispatch(setType("User"));
+
+    if (!isNewGoogleUser) {
+      try {
+        const userResponse = await axiosInstance.post("/auth/login", {
+          email,
+          password,
+        });
+
+        if (userResponse.status === 201) {
+          const { token, refreshToken, isSocialLogin } = userResponse.data;
+
+          dispatch(setToken(token));
+          dispatch(setRefreshToken(refreshToken));
+          dispatch(setIsSocialLogin(isSocialLogin));
+        }
+      } catch (error) {
+        if (error.response && error.response.status === 400) {
+          console.error("Email not verified.");
+        } else if (error.response && error.response.status === 401) {
+          console.error("Invalid email or password.");
+        } else if (error.response && error.response.status === 404) {
+          console.error("User not found.");
+        } else {
+          console.error("Login failed", error);
+        }
+      }
+    }
+
     try {
       await axiosInstance.post("/profile", profileData);
     } catch (error) {
@@ -51,53 +84,45 @@ const ExperienceAuthPage = () => {
       return;
     }
 
-    dispatch(setType("User"));
+    try {
+      const profileResponse = await axiosInstance.get("/profile");
 
-    // New Google user, already logged in, no profile to get
-    if (isNewGoogleUser) {
-      navigate("/feed");
+      if (profileResponse.status === 200) {
+        const {
+          _id,
+          firstName,
+          lastName,
+          headline,
+          profilePicture,
+          coverPhoto,
+        } = profileResponse.data;
+
+        if (_id) {
+          dispatch(setUserId(_id));
+        }
+        if (firstName) {
+          dispatch(setFirstName(firstName));
+        }
+        if (lastName) {
+          dispatch(setLastName(lastName));
+        }
+        if (headline) {
+          dispatch(setBio(headline));
+        }
+        if (profilePicture) {
+          dispatch(setProfilePicture(profilePicture));
+        }
+        if (coverPhoto) {
+          dispatch(setCoverPhoto(coverPhoto));
+        }
+
+        navigate("/feed");
+      }
 
       return;
-    }
-
-    try {
-      const userResponse = await axiosInstance.post("/auth/login", {
-        email,
-        password,
-      });
-
-      if (userResponse.status === 200) {
-        const { userId, token, refreshToken } = userResponse.data;
-
-        dispatch(setUserId(userId));
-        dispatch(setToken(token));
-        dispatch(setRefreshToken(refreshToken));
-
-        const profileResponse = await axiosInstance.get(`/profile/${userId}`);
-
-        if (profileResponse.status === 200) {
-          const { bio, picture } = profileResponse.data;
-
-          if (bio) {
-            dispatch(setBio(bio));
-          }
-          if (picture) {
-            dispatch(setPicture(picture));
-          }
-
-          navigate("/feed");
-        }
-      }
-    } catch (error) {
-      if (error.response && error.response.status === 400) {
-        console.error("Email not verified.");
-      } else if (error.response && error.response.status === 401) {
-        console.error("Invalid email or password.");
-      } else if (error.response && error.response.status === 404) {
-        console.error("User not found.");
-      } else {
-        console.error("Login failed", error);
-      }
+    } catch {
+      console.error("Error retreiving profile:", error);
+      return;
     }
   };
 

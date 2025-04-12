@@ -1,15 +1,26 @@
 import React, { useState, useEffect, useRef } from "react";
+import { useNavigate } from "react-router-dom";
+import defaultProfilePicture from "../../../assets/images/defaultProfilePicture.png";
 
 const ConnectionCard = ({
   imageUrl,
-  username,
+  firstName,
+  lastName,
   experience,
   connectionDate,
   onRemove,
+  userId,
 }) => {
+  const navigate = useNavigate();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isConfirmationOpen, setIsConfirmationOpen] = useState(false);
   const menuRef = useRef(null);
+
+  const profilePicture = imageUrl || defaultProfilePicture;
+
+  const handleNameClick = () => {
+    navigate(`/users/${userId}`); // Use userId in the route
+  };
 
   const toggleMenu = () => setIsMenuOpen(!isMenuOpen);
   const openConfirmation = () => {
@@ -38,24 +49,27 @@ const ConnectionCard = ({
     };
   }, [isMenuOpen]);
 
+  const fullName = `${firstName} ${lastName}`;
+
   return (
     <>
       {/* Connection Card */}
-      <div className="flex items-center justify-between p-3 bg-cardBackground border border-cardBorder rounded-lg shadow-sm transition-shadow w-full">
+      <div className="flex items-center justify-between p-3 bg-cardBackground border border-cardBorder rounded-lg shadow-sm transition-shadow w-full h-28">
         {/* Left Section */}
         <div className="flex items-center flex-1">
           <img
-            src={imageUrl}
-            alt={username}
+            src={profilePicture}
+            alt={fullName}
             className="w-12 h-12 rounded-full object-cover"
           />
           <div className="ml-3 flex-1">
-            <h3 className="text-lg font-semibold hover:underline cursor-pointer text-textHeavyTitle">
-              {username}
+            <h3
+              className="text-lg font-semibold hover:underline cursor-pointer text-textHeavyTitle"
+              onClick={handleNameClick}
+            >
+              {firstName} {lastName}
             </h3>
-            <p className="text-sm text-textActivity">
-              {experience}
-            </p>
+            <p className="text-sm text-textActivity">{experience}</p>
             <p className="text-xs text-textPlaceholder mt-1">
               {connectionDate}
             </p>
@@ -146,8 +160,8 @@ const ConnectionCard = ({
             <div className="border-t border-cardBorder mb-4"></div>
 
             <p className="text-textContent mb-4">
-              Are you sure you want to remove {username} as a connection? Don't
-              worry, {username} won't be notified by LinkedIn.
+              Are you sure you want to remove {fullName} as a connection? Don't
+              worry, {fullName} won't be notified by LinkedIn.
             </p>
 
             <div className="flex justify-end space-x-4">

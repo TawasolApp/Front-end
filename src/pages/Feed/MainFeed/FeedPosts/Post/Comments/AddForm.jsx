@@ -1,6 +1,8 @@
 import { useState, useRef, useEffect } from "react";
 import { Avatar } from "@mui/material";
 import TextEditor from "../../../../GenericComponents/TextEditor";
+import { usePost } from "../../PostContext";
+import CircularProgress from "@mui/material/CircularProgress"; // For loading spinner
 
 const AddForm = ({
   handleAddFunction,
@@ -9,12 +11,10 @@ const AddForm = ({
   close = null,
   type,
 }) => {
-  // TODO: change this to redux states
-  const currentAuthorPicture =
-    "https://media.licdn.com/dms/image/v2/D4D03AQH7Ais8BxRXzw/profile-displayphoto-shrink_100_100/profile-displayphoto-shrink_100_100/0/1721080103981?e=1747872000&v=beta&t=nDnZdgCqkI8v5B2ymXZzluMZVlF6h_o-dN1pA95Fzv4";
-
+  const { currentAuthorPicture } = usePost();
   const [commentText, setCommentText] = useState(initialText);
   const [taggedUsers, setTaggedUsers] = useState(initialTaggedUsers);
+  const [loading, setLoading] = useState(false); // New loading state
   const hasText = commentText.trim().length > 0;
   const textareaRef = useRef(null);
 
@@ -36,11 +36,17 @@ const AddForm = ({
     }
   }, [commentText, hasText, type]);
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     if (commentText.trim()) {
-      handleAddFunction(commentText, taggedUsers);
-      setCommentText("");
+      setLoading(true);
+      try {
+        await handleAddFunction(commentText, taggedUsers);
+        setCommentText("");
+      } catch (error) {
+        console.error("Error adding comment:", error);
+      }
+      setLoading(false); // Set loading to false once done
     }
   };
 
@@ -83,7 +89,7 @@ const AddForm = ({
             <button
               type="button"
               onClick={close}
-              className="px-3 py-1 text-sm font-medium text-white bg-gray-500 rounded-lg hover:bg-gray-600"
+              className="px-3 py-1 text-sm font-medium text-buttonSubmitText bg-buttonSubmitEnable hover:bg-buttonSubmitEnableHover rounded-lg"
             >
               Cancel
             </button>
@@ -92,9 +98,14 @@ const AddForm = ({
           {(hasText || type === "Reply") && (
             <button
               type="submit"
-              className="px-3 py-1 text-sm font-medium text-buttonSubmitText bg-buttonSubmitEnable rounded-lg hover:bg-buttonSubmitEnableHover"
+              className="px-3 py-1 text-sm font-medium text-buttonSubmitText bg-buttonSubmitEnable hover:bg-buttonSubmitEnableHover rounded-lg"
+              disabled={loading}
             >
-              {type}
+              {loading ? (
+                <CircularProgress size={20} className="text-white" />
+              ) : (
+                type
+              )}
             </button>
           )}
         </div>

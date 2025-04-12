@@ -68,28 +68,20 @@ const ReactionPicker = ({ onSelectReaction, children }) => {
       const containerRect = containerRef.current.getBoundingClientRect();
       const pickerRect = pickerElement.getBoundingClientRect();
 
-      // Check if picker would go off-screen to the left
-      if (
-        containerRect.left + containerRect.width / 2 - pickerRect.width / 2 <
-        0
-      ) {
+      // Calculate available space on the right
+      const spaceRight = window.innerWidth - containerRect.right;
+      const spaceLeft = containerRect.left;
+
+      // Default position: top-right of the container
+      pickerElement.style.left = "0";
+      pickerElement.style.right = "auto";
+      pickerElement.style.top = "0";
+      pickerElement.style.transform = "translateY(-100%)";
+
+      // If not enough space on right, show on left
+      if (spaceRight < pickerRect.width && spaceLeft >= pickerRect.width) {
         pickerElement.style.left = "0";
-        pickerElement.style.transform = "translateX(0)";
-      }
-      // Check if picker would go off-screen to the right
-      else if (
-        containerRect.left + containerRect.width / 2 + pickerRect.width / 2 >
-        window.innerWidth
-      ) {
-        pickerElement.style.left = "auto";
-        pickerElement.style.right = "0";
-        pickerElement.style.transform = "translateX(0)";
-      }
-      // Default centered position
-      else {
-        pickerElement.style.left = "50%";
         pickerElement.style.right = "auto";
-        pickerElement.style.transform = "translateX(-50%)";
       }
     }
   }, [showPicker]);
@@ -108,10 +100,10 @@ const ReactionPicker = ({ onSelectReaction, children }) => {
       {showPicker && (
         <div
           ref={pickerRef}
-          className={`absolute h-16 bottom-full mb-2 flex items-center bg-cardBackground rounded-full shadow-lg px-2 border border-itemBorder z-[60] transition-all duration-300 ${hoveredIcon ? "scale-90" : ""}`}
+          className={`absolute h-16 bottom-full mb-2 flex items-center bg-cardBackground rounded-full shadow-lg px-2 border border-itemBorder transition-all duration-300 ${hoveredIcon ? "scale-90" : ""}`}
         >
           {Object.entries(reactionIcons).map(
-            ([reactionType, { Icon, color, label }], index, array) => {
+            ([reactionType, { Icon, _, label }], index, array) => {
               const isHovered = hoveredIcon === reactionType;
 
               let pushClass = "";

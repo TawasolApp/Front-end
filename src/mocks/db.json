@@ -127,139 +127,119 @@
       "headline": "Student at Cairo University faculty of Engineering",
       "bio": "I am a motivated Software Engineer ",
       "country": "Egypt",
-      "city": "Cairo",
-      "industry": "Computer ",
-      "connectionCount": 50,
-      "achievements": "Dean's List Award",
+      "city": "Giza",
+      "industry": "Software Engineering",
+      "connectionCount": 120,
       "email": "fatma@example.com",
-      "isOwner": true,
       "visibility": "Public",
-      "experience": [
+      "workExperience": [
         {
-          "title": "Frontend Developer",
+          "id": "ea8d9d1e-2c04-4ce0-99f3-68e0e28a6a42",
+          "title": "Software Engineer ",
           "company": "Google",
+          "workExperiencePicture": "https://logo.clearbit.com/google.com",
           "location": "San Francisco, CA",
-          "description": "Worked on developing scalable web applications.",
-          "employmentType": "Full-time",
-          "locationType": "On-site",
-          "id": "3af1d711-92ae-4a84-b2ff-0f4d95dcc8d8",
+          "startDate": "2009-12-01",
+          "endDate": "",
+          "description": "Worked on backend microservices and API development using Go and Kubernetes.",
           "startMonth": "December",
-          "startYear": "2010",
+          "startYear": "2009"
+        },
+        {
+          "id": "6d220b10-e48c-4398-b4aa-85da48d4a04a",
+          "title": "Frontend Developer Intern",
+          "company": "Microsoft",
+          "workExperiencePicture": "https://logo.clearbit.com/microsoft.com",
+          "location": "Cairo, Egypt",
+          "startDate": "2022-06-01",
+          "endDate": "2022-08-30",
+          "description": "Contributed to internal dashboard development using React, TypeScript and Fluent UI."
+        },
+        {
+          "id": "1743980160576",
+          "title": "TRIAL",
+          "company": "elsewedy electric",
+          "workExperiencePicture": "https://media.licdn.com/dms/image/v2/C560BAQF2a3ilv6hXXw/company-logo_200_200/company-logo_200_200/0/1631303609923?e=1747872000&v=beta&t=M9wVeJt_Zk6nNOEnz5X6PQVoUzb8wzaSFYK9JeRNA60",
+          "startDate": "2008-06-01",
+          "endDate": "2015-10-30",
           "currentlyWorking": true
         },
         {
-          "id": "6d70b97c-65bb-4173-af67-f16cf61a0c9b",
-          "title": "Software Engineer",
-          "company": "Google",
+          "id": "1743980892325",
+          "title": "Frontend Developer",
+          "company": "google",
+          "workExperiencePicture": "https://media.licdn.com/dms/image/v2/C560BAQF2a3ilv6hXXw/company-logo_200_200/company-logo_200_200/0/1631303609923?e=1747872000&v=beta&t=M9wVeJt_Zk6nNOEnz5X6PQVoUzb8wzaSFYK9JeRNA60",
+          "startDate": "2014-11-01",
+          "endDate": "2017-11-30"
+        },
+        {
+          "id": "1743990736996",
+          "company": "elsewedy electric",
+          "workExperiencePicture": "https://media.licdn.com/dms/image/v2/C560BAQF2a3ilv6hXXw/company-logo_200_200/company-logo_200_200/0/1631303609923?e=1747872000&v=beta&t=M9wVeJt_Zk6nNOEnz5X6PQVoUzb8wzaSFYK9JeRNA60",
+          "title": "Software Engineer ",
           "location": "San Francisco, CA",
-          "startMonth": "July",
-          "startYear": "2015",
-          "description": "Studied software engineering and AI."
-        },
-        {
-          "id": "exp-1",
-          "title": "UI/UX Intern",
-          "company": "Microsoft",
-          "location": "Remote",
-          "startMonth": "March",
-          "startYear": "2021",
-          "endMonth": "September",
-          "endYear": "2021",
-          "description": "Designed UI components and improved user flows.",
-          "currentlyWorking": true,
-          "employmentType": "Internship"
-        },
-        {
-          "id": "1742918855839",
-          "currentlyWorking": true,
-          "startMonth": "December",
-          "startYear": "2007",
-          "company": "Microsoft",
-          "title": "UI/UX Intern",
-          "location": "Remote",
-          "description": "Designed UI components and improved user flows."
+          "description": "BFHS",
+          "startDate": "2008-12-01",
+          "endDate": ""
         }
       ],
       "education": [
         {
-          "id": "959a50e8-2c55-4d85-84a0-ab1c414aa7e3",
-          "institution": "Stanford University",
-          "degree": "Master's",
-          "grade": "4.0 GPA",
-          "startMonth": "November",
-          "startYear": "2008",
-          "endMonth": "December",
-          "endYear": "2015"
+          "id": "6543dfa3-aa91-49c3-8331-cc7463d33e42",
+          "school": "Cairo University",
+          "degree": "Bachelor's",
+          "fieldOfStudy": "Computer Engineering",
+          "grade": "3.9 GPA",
+          "startDate": "2020-09-01",
+          "endDate": "2025-06-30"
         },
         {
-          "id": "1742918830957",
-          "institution": "Harvard University",
-          "degree": "Bachelor's",
-          "grade": "4.0 GPA",
-          "startMonth": "November",
-          "startYear": "2008"
+          "id": "75109d84-3f9e-4a96-afd1-15b2f40b3a9a",
+          "school": "Stanford University",
+          "degree": "Summer Program",
+          "fieldOfStudy": "AI and Machine Learning",
+          "grade": "",
+          "startDate": "2023-06-01",
+          "endDate": "2023-08-31"
         }
       ],
       "certifications": [
         {
+          "id": "1377c452-3258-4067-812a-4bcb2ab78289",
+          "name": "AWS Certified Solutions Architect – Associate",
+          "issuingOrganization": "Amazon Web Services (AWS)",
+          "companyLogo": "https://logo.clearbit.com/aws.amazon.com",
+          "startDate": "2024-03-01",
+          "endDate": "2027-03-01"
+        },
+        {
+          "id": "65ffb60f-ff54-4be1-82df-67afdad7c31c",
           "name": "Google Cloud Professional Data Engineer",
-          "company": "Google Cloud",
-          "issueDate": "2022-11-15",
-          "expirationDate": "2025-11-15",
-          "id": "14a15be0-c040-4421-b7ec-ce6303888c8d",
-          "startMonth": "November",
-          "startYear": "2008",
-          "issuingOrganization": "Amazon"
+          "issuingOrganization": "Google Cloud",
+          "companyLogo": "https://logo.clearbit.com/cloud.google.com",
+          "startDate": "2023-01-01",
+          "endDate": "2026-01-01",
+          "credentialId": "GCP123456789",
+          "credentialUrl": "https://www.credential.net/google-cloud-data-engineer"
         },
         {
-          "id": "cert-2",
+          "id": "1743991715923",
           "name": "AWS Certified Solutions Architect",
-          "issuingOrganization": "Amazon Web Services",
-          "startMonth": "January",
-          "startYear": "2023"
+          "company": "elsewedy electric",
+          "certificationPicture": "https://media.licdn.com/dms/image/v2/C560BAQF2a3ilv6hXXw/company-logo_200_200/company-logo_200_200/0/1631303609923?e=1747872000&v=beta&t=M9wVeJt_Zk6nNOEnz5X6PQVoUzb8wzaSFYK9JeRNA60",
+          "issueDate": "2010-11-01",
+          "expireDate": ""
         }
       ],
-      "planDetails": [
-        {
-          "planType": "",
-          "startDate": "",
-          "expiryDate": "",
-          "autoRenewal": "",
-          "cancelDate": ""
-        },
-        {
-          "planType": "",
-          "startDate": "",
-          "expiryDate": "",
-          "autoRenewal": "",
-          "cancelDate": ""
-        }
-      ],
+      "skills": [],
+      "planDetails": [],
       "planStatistics": {
-        "messageCount": "",
-        "applicationCount": ""
+        "messageCount": "12",
+        "applicationCount": "5"
       },
-      "selectedExperienceIndex": 0,
+      "selectedworkExperienceIndex": 0,
       "selectedEducationIndex": 0,
-      "skills": [
-        {
-          "skill": "Kotlin",
-          "position": "Android Developer Intern at Banque Misr",
-          "endorsements": 2,
-          "id": "2a0b8e72-3385-436a-8e63-9417e9ed1045"
-        },
-        {
-          "skill": "Java",
-          "position": "Android Developer Intern at Banque Misr",
-          "endorsements": 0,
-          "id": "2029666a-5975-41c7-9e22-b332d07fab1b"
-        },
-        {
-          "id": "1742918882726",
-          "skill": "xml",
-          "position": "front end developer "
-        }
-      ]
+      "selectedExperienceIndex": 0
     },
     {
       "id": "2",
@@ -278,76 +258,21 @@
       "email": "mohamed@example.com",
       "isOwner": false,
       "visibility": "Public",
-      "experience": [
-        {
-          "title": "Software Engineer",
-          "company": "Google",
-          "location": "San Francisco, CA",
-          "description": "Worked on developing scalable web applications.",
-          "employmentType": "Full-time",
-          "locationType": "Onsite",
-          "id": "425a3fcc-e32d-45aa-aeec-c08d7dc15814"
-        },
-        {
-          "title": "Frontend Developer",
-          "company": "Microsoft",
-          "location": "Redmond, WA",
-          "description": "Built UI components for enterprise applications.",
-          "employmentType": "Full-time",
-          "locationType": "Hybrid",
-          "id": "096eb06f-3a62-4f8a-a305-bfd18581bbd3"
-        }
-      ],
-      "education": [
-        {
-          "institution": "Harvard University",
-          "degree": "Bachelor's",
-          "field": "Computer Science",
-          "description": "Studied software engineering and AI.",
-          "grade": "3.9 GPA",
-          "activities": "tt",
-          "id": "234bfd72-fc41-4567-9c0d-bbb8b38db01c"
-        },
-        {
-          "institution": "Stanford University",
-          "degree": "Master's",
-          "field": "Artificial Intelligence",
-          "description": "Focused on deep learning and data science.",
-          "grade": "4.0 GPA",
-          "activities": "tt",
-          "id": "020a7d74-13ab-4c2f-842c-bb2539d796c5"
-        }
-      ],
-      "certifications": [
-        {
-          "name": "AWS Certified Solutions Architect",
-          "company": "Amazon Web Services (AWS)",
-          "issueDate": "2023-05-20",
-          "expirationDate": "2026-05-20",
-          "id": "604ae3db-88d1-455b-944a-ff74fb54a48e"
-        },
-        {
-          "name": "Google Cloud Professional Data Engineer",
-          "company": "Google Cloud",
-          "issueDate": "2022-11-15",
-          "expirationDate": "2025-11-15",
-          "id": "ed6c2757-86bf-4ee0-b2f5-c6a093d95a1f"
-        }
-      ],
+      "workExperience": [],
+      "education": [],
+      "certifications": [],
       "skills": [
         {
-          "skillName": "Kotlin",
+          "skill": "Kotlin",
           "position": "Android Developer Intern at Banque Misr",
           "endorsements": 2,
-          "recentEndorsement": "Endorsed by 2 people in the last 3 months",
-          "id": "2a0b8e72-3385-436a-8e63-9417e9ed1045"
+          "recentEndorsement": "Endorsed by 2 people in the last 3 months"
         },
         {
-          "skillName": "Java",
+          "skill": "Java",
           "position": "Android Developer Intern at Banque Misr",
           "endorsements": 0,
-          "recentEndorsement": "Endorsed by 3 people in the last 1 year",
-          "id": "2029666a-5975-41c7-9e22-b332d07fab1b"
+          "recentEndorsement": "Endorsed by 3 people in the last 1 year"
         }
       ],
       "planDetails": [
@@ -388,7 +313,7 @@
       "resume": "https://linkedin.com/in/salma-ahmed",
       "isOwner": false,
       "visibility": "Public",
-      "experience": [
+      "workExperience": [
         {
           "title": "Software Engineer",
           "company": "Google",
@@ -410,21 +335,19 @@
       ],
       "education": [
         {
-          "institution": "Harvard University",
+          "school": "Harvard University",
           "degree": "Bachelor's",
           "field": "Computer Science",
           "description": "Studied software engineering and AI.",
           "grade": "3.9 GPA",
-          "activities": "tt",
           "id": "b60160fc-b728-4413-8e6c-b2520f1c26c7"
         },
         {
-          "institution": "Stanford University",
+          "school": "Stanford University",
           "degree": "Master's",
           "field": "Artificial Intelligence",
           "description": "Focused on deep learning and data science.",
           "grade": "4.0 GPA",
-          "activities": "tt",
           "id": "aeac791c-15db-4b49-9c3b-f7a3647fdf83"
         }
       ],
@@ -439,11 +362,10 @@
       ],
       "skills": [
         {
-          "skillName": "React",
+          "skill": "React",
           "position": "Content Creator and Frontend Dev",
           "endorsements": 5,
-          "recentEndorsement": "Endorsed by 3 people in the last 6 months",
-          "id": "8b954a99-9623-4548-873e-734633791d94"
+          "recentEndorsement": "Endorsed by 3 people in the last 6 months"
         }
       ],
       "planDetails": [
@@ -488,12 +410,8 @@
       "location": "https://maps.app.goo.gl/fEh4pBYt6LvTFxQE8",
       "email": "elsewedyelectric@yahoo.com",
       "contactNumber": "19019",
-      "banner": "https://media.licdn.com/dms/image/v2/D563DAQE4HioUznS0qQ/image-scale_191_1128/B56ZVMz7QJGoAg-/0/1740750438895/elsewedyelectric_cover?e=1744239600&v=beta&t=fe4Yc08ksyoXUa8DuSOljgRE7RyYbf8dSo3pamB9cWk",
-      "Managers": [
-        "1",
-        "2",
-        "3"
-      ]
+      "banner": "https://media.licdn.com/dms/image/v2/D563DAQE4HioUznS0qQ/image-scale_191_1128/B56ZVMz7QJGoAg-/0/1740750438895/elsewedyelectric_cover?e=1744574400&v=beta&t=p2BmjQRmAdJb304MnK-9cP2mqlqqZuUiMkUzQI4kvBU",
+      "Managers": ["1", "2"]
     },
     {
       "companyId": "google",
@@ -601,6 +519,24 @@
       "location": "",
       "email": "xxxx@gmail.com",
       "contactNumber": "233"
+    },
+    {
+      "companyId": "testpp",
+      "isManager": true,
+      "name": "testpp",
+      "logo": "http://localhost:5000/public/images/1743967345418.png",
+      "banner": "",
+      "description": "",
+      "companySize": "1-50 employees",
+      "companyType": "Public company",
+      "industry": "pptest",
+      "overview": "",
+      "founded": null,
+      "website": "www.testcompany.com",
+      "address": "",
+      "location": "",
+      "email": "testpp@gmail.com",
+      "contactNumber": "011"
     }
   ],
   "posts": [
@@ -612,15 +548,13 @@
       "authorPicture": "https://media.licdn.com/dms/image/v2/D4D03AQH7Ais8BxRXzw/profile-displayphoto-shrink_100_100/profile-displayphoto-shrink_100_100/0/1721080103981?e=1747872000&v=beta&t=nDnZdgCqkI8v5B2ymXZzluMZVlF6h_o-dN1pA95Fzv4",
       "authorBio": "Computer Engineering Student at Cairo University",
       "content": "FOR REAL! During my recent spring break trip to Spain 🇪🇸, I encountered an unexpected reminder of why robust coding practices matter — all thanks to a game of Mahjong Solitaire on the in-flight entertainment system (IFE). The system, still running Android 4.X, (apparent due to the Android Skin of the UI) crashed with an SDL Assertion Error.",
-      "media": [
-        "http://localhost:5000/public/images/1743658328495.jpeg"
-      ],
+      "media": ["http://localhost:5000/public/images/1743658328495.jpeg"],
       "reactions": {
         "Love": 0,
         "Celebrate": 0,
         "Insightful": 0,
         "Funny": 0,
-        "Support": 0,
+        "Support": 1,
         "Like": 0
       },
       "comments": 1,
@@ -628,7 +562,7 @@
       "taggedUsers": [],
       "visibility": "Public",
       "authorType": "User",
-      "reactType": null,
+      "reactType": "Support",
       "timestamp": "2025-03-17T23:15:11.484Z",
       "parentPost": null,
       "isSilentRepost": false
@@ -659,6 +593,60 @@
       "timestamp": "2025-03-23T07:08:27.860Z",
       "parentPost": null,
       "isSilentRepost": false
+    },
+    {
+      "id": "1743966478367",
+      "isSaved": false,
+      "authorId": "mohsobh",
+      "authorName": "Mohamed Sobh",
+      "authorPicture": "https://media.licdn.com/dms/image/v2/D4D03AQH7Ais8BxRXzw/profile-displayphoto-shrink_100_100/profile-displayphoto-shrink_100_100/0/1721080103981?e=1747872000&v=beta&t=nDnZdgCqkI8v5B2ymXZzluMZVlF6h_o-dN1pA95Fzv4",
+      "authorBio": "Computer Engineering Student at Cairo University",
+      "content": "test company",
+      "media": [],
+      "reactions": {
+        "Love": 0,
+        "Celebrate": 0,
+        "Insightful": 0,
+        "Funny": 0,
+        "Support": 0,
+        "Like": 0
+      },
+      "comments": 0,
+      "shares": 0,
+      "taggedUsers": [],
+      "visibility": "Public",
+      "authorType": "User",
+      "reactType": null,
+      "timestamp": "2025-04-06T19:07:58.367Z",
+      "parentPost": null,
+      "isSilentRepost": false
+    },
+    {
+      "id": "1743966535738",
+      "isSaved": false,
+      "authorId": "elsewedy-electric",
+      "authorName": "elsewedy electric",
+      "authorPicture": "https://media.licdn.com/dms/image/v2/C560BAQF2a3ilv6hXXw/company-logo_200_200/company-logo_200_200/0/1631303609923?e=1747872000&v=beta&t=M9wVeJt_Zk6nNOEnz5X6PQVoUzb8wzaSFYK9JeRNA60",
+      "authorBio": "",
+      "content": "test company",
+      "media": [],
+      "reactions": {
+        "Love": 0,
+        "Celebrate": 0,
+        "Insightful": 0,
+        "Funny": 0,
+        "Support": 0,
+        "Like": 0
+      },
+      "comments": 0,
+      "shares": 0,
+      "taggedUsers": [],
+      "visibility": "Public",
+      "authorType": "Company",
+      "reactType": null,
+      "timestamp": "2025-04-06T19:08:55.738Z",
+      "parentPost": null,
+      "isSilentRepost": false
     }
   ],
   "comments": [
@@ -670,9 +658,7 @@
       "authorPicture": "https://media.licdn.com/dms/image/v2/D4D03AQH7Ais8BxRXzw/profile-displayphoto-shrink_100_100/profile-displayphoto-shrink_100_100/0/1721080103981?e=1747872000&v=beta&t=nDnZdgCqkI8v5B2ymXZzluMZVlF6h_o-dN1pA95Fzv4",
       "authorBio": "Computer Engineering Student at Cairo University",
       "content": "hello ali abdelghani",
-      "replies": [
-        "dummy reply"
-      ],
+      "replies": ["dummy reply"],
       "reactions": {
         "Love": 0,
         "Celebrate": 0,
@@ -707,96 +693,115 @@
     }
   ],
   "reactions": [
+    {
+      "likeId": "1-mohsobh-Support",
+      "postId": "1",
+      "authorId": "mohsobh",
+      "authorType": "User",
+      "type": "Support",
+      "authorName": "Mohamed Sobh",
+      "authorPicture": "https://media.licdn.com/dms/image/v2/D4D03AQH7Ais8BxRXzw/profile-displayphoto-shrink_100_100/profile-displayphoto-shrink_100_100/0/1721080103981?e=1747872000&v=beta&t=nDnZdgCqkI8v5B2ymXZzluMZVlF6h_o-dN1pA95Fzv4",
+      "authorBio": "Computer Engineering Student at Cairo University"
+    }
   ],
   "jobs": [
     {
-      "id": "1743454820455",
-      "company": "elsewedy-electric",
+      "jobId": "1743454820455",
+      "companyId": "elsewedy-electric",
       "isOpen": true,
       "position": "FrontEnd Developer",
-      "industry": "Computer",
       "description": "We're hiring a frontend engineer to build UI with React.",
       "location": "Cairo,egypt",
       "salary": "2000",
       "experienceLevel": "Internship",
       "locationType": "On-site",
       "employmentType": "Full-time",
-      "postDate": "2025-03-31T21:00:20.455Z",
-      "applicantCount": 7
+      "postedAt": "2025-03-31T21:00:20.455Z",
+      "applicants": 7
     },
     {
-      "id": "1743454919168",
-      "company": "elsewedy-electric",
+      "jobId": "1743454919168",
+      "companyId": "elsewedy-electric",
       "isOpen": true,
       "position": "Backend Engineer",
-      "industry": "Computer",
       "description": "Build scalable APIs using Node.js and MongoDB.",
       "location": "october",
       "salary": "50000",
       "experienceLevel": "Entry-level",
       "locationType": "On-site",
       "employmentType": "Part-time",
-      "postDate": "2025-03-31T21:01:59.168Z",
-      "applicantCount": 1
+      "postedAt": "2025-03-31T21:01:59.168Z",
+      "applicants": 1
     },
     {
-      "id": "1743454820458",
-      "company": "google",
+      "jobId": "1743454820458",
+      "companyId": "google",
       "isOpen": true,
       "position": "FrontEnd Developer",
-      "industry": "Computer",
       "description": "We're hiring a frontend engineer to build UI with React.",
       "location": "Cairo,egypt",
       "salary": "2000",
       "experienceLevel": "Internship",
       "locationType": "On-site",
       "employmentType": "Full-time",
-      "postDate": "2025-03-31T21:00:20.455Z",
-      "applicantCount": 0
+      "postedAt": "2025-03-31T21:00:20.455Z",
+      "applicants": 0
     },
     {
-      "id": "1743457897007",
-      "company": "elsewedy-electric",
+      "jobId": "1743457897007",
+      "companyId": "elsewedy-electric",
       "isOpen": true,
       "position": "web developer",
-      "industry": "computer",
       "description": "company website implemintation",
       "location": "cairo",
       "salary": "60000",
       "experienceLevel": "Internship",
       "locationType": "On-site",
       "employmentType": "Full-time",
-      "postDate": "2025-03-31T21:51:37.007Z",
-      "applicantCount": 4
+      "postedAt": "2025-03-31T21:51:37.007Z",
+      "applicants": 4
     },
     {
-      "id": "1743500575995",
-      "company": "elsewedy-electric",
+      "jobId": "1743500575995",
+      "companyId": "elsewedy-electric",
       "isOpen": true,
       "position": "computer engineer",
-      "industry": "Computer",
       "description": "xx",
       "location": "october",
       "salary": "10000",
       "experienceLevel": "Internship",
       "locationType": "On-site",
       "employmentType": "Full-time",
-      "postDate": "2025-04-01T09:42:55.995Z",
-      "applicantCount": 0
+      "postedAt": "2025-04-01T09:42:55.995Z",
+      "applicants": 0
     },
     {
-      "id": "1743536810411",
-      "company": "elsewedy-electric",
+      "jobId": "1743536810411",
+      "companyId": "elsewedy-electric",
       "isOpen": true,
       "position": "test",
-      "industry": "",
       "description": "",
       "location": "test",
       "salary": "",
       "experienceLevel": "Internship",
       "locationType": "On-site",
       "employmentType": "Full-time",
-      "postDate": "2025-04-01T19:46:50.411Z",
+      "postedAt": "2025-04-01T19:46:50.411Z",
+      "applicants": 0
+    },
+    {
+      "id": "1743970991136",
+      "company": "elsewedy-electric",
+      "isOpen": true,
+      "position": "testjob",
+      "industry": "",
+      "description": "",
+      "location": "october",
+      "salary": "",
+      "experienceLevel": "Internship",
+      "locationType": "On-site",
+      "employmentType": "Full-time",
+      "postDate": "2025-04-06T20:23:11.136Z",
       "applicantCount": 0
     }
   ],

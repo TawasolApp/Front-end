@@ -5,15 +5,17 @@ import { useNavigate } from "react-router-dom";
 import {
   setToken,
   setRefreshToken,
-  setUserId,
-  setEmail,
   setFirstName,
   setLastName,
   setLocation,
   setBio,
   setType,
-  setPicture,
+  setProfilePicture,
   setIsNewGoogleUser,
+  setUserId,
+  setCoverPhoto,
+  setEmail,
+  setIsSocialLogin,
 } from "../../../store/authenticationSlice";
 import { axiosInstance } from "../../../apis/axios";
 
@@ -28,7 +30,8 @@ const SignWithGoogle = () => {
     if (window.google) {
       googleClient.current = window.google.accounts.oauth2.initTokenClient({
         client_id: googleClientId,
-        scope: "email profile openid",
+        scope:
+          "email profile openid https://www.googleapis.com/auth/userinfo.profile",
         callback: async (tokenResponse) => {
           if (tokenResponse?.access_token) {
             try {
@@ -36,33 +39,43 @@ const SignWithGoogle = () => {
                 "/auth/social-login/google",
                 {
                   idToken: tokenResponse.access_token,
-                }
+                  isAndroid: false,
+                },
               );
 
-              if (response.status === 200) {
-                const { userId, token, refreshToken, isNewUser } =
+              if (response.status === 201) {
+                const { token, refreshToken, email, isNewUser, isSocialLogin } =
                   response.data;
 
-                dispatch(setUserId(userId));
                 dispatch(setToken(token));
                 dispatch(setRefreshToken(refreshToken));
+                dispatch(setEmail(email));
                 dispatch(setIsNewGoogleUser(isNewUser));
+                dispatch(setIsSocialLogin(isSocialLogin));
 
                 // New user, set-up account instead of logging in
                 if (isNewUser) {
-                  navigate("/auth/signup/name");
+                  navigate("/auth/signup/location");
                   return;
                 }
 
-                const profileResponse = await axiosInstance.get(
-                  `/profile/${userId}`
-                );
+                const profileResponse = await axiosInstance.get("/profile");
 
                 if (profileResponse.status === 200) {
-                  const { firstName, lastName, location, bio, picture } =
-                    profileResponse.data;
+                  const {
+                    _id,
+                    firstName,
+                    lastName,
+                    location,
+                    headline,
+                    profilePicture,
+                    coverPhoto,
+                  } = profileResponse.data;
 
                   dispatch(setType("User"));
+                  if (_id) {
+                    dispatch(setUserId(_id));
+                  }
                   if (firstName) {
                     dispatch(setFirstName(firstName));
                   }
@@ -72,11 +85,14 @@ const SignWithGoogle = () => {
                   if (location) {
                     dispatch(setLocation(location));
                   }
-                  if (bio) {
-                    dispatch(setBio(bio));
+                  if (headline) {
+                    dispatch(setBio(headline));
                   }
-                  if (picture) {
-                    dispatch(setPicture(picture));
+                  if (profilePicture) {
+                    dispatch(setProfilePicture(profilePicture));
+                  }
+                  if (coverPhoto) {
+                    dispatch(setCoverPhoto(coverPhoto));
                   }
 
                   navigate("/feed");

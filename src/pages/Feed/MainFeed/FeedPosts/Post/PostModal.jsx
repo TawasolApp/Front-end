@@ -24,7 +24,6 @@ const PostModal = ({ mediaIndex, handleClosePostModal }) => {
 
   const [showLikes, setShowLikes] = useState(false);
   const [showComments, setShowComments] = useState(false);
-  const [showReposts, setShowReposts] = useState(false);
 
   return (
     <div
@@ -41,7 +40,7 @@ const PostModal = ({ mediaIndex, handleClosePostModal }) => {
           <MediaCarousel
             media={
               post.repostedComponents
-                ? post.repostedComponents.media
+                ? [...post.repostedComponents.media, ...post.media]
                 : post.media
             }
             mediaIndex={mediaIndex}
@@ -77,7 +76,6 @@ const PostModal = ({ mediaIndex, handleClosePostModal }) => {
             <EngagementMetrics
               setShowLikes={() => setShowLikes(true)}
               setShowComments={() => setShowComments(true)}
-              setShowReposts={() => setShowReposts(true)}
             />
 
             <ActivitiesHolder setShowComments={() => setShowComments(true)} />
@@ -86,8 +84,9 @@ const PostModal = ({ mediaIndex, handleClosePostModal }) => {
 
             {showLikes && (
               <ReactionsModal
-                APIURL={`/posts/reactions/${post.id}`}
+                API_URL={`/posts/reactions/${post.id}`}
                 setShowLikes={() => setShowLikes(false)}
+                reactCounts={post.reactCounts}
               />
             )}
           </div>

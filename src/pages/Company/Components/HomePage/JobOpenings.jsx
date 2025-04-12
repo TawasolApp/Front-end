@@ -15,7 +15,9 @@ function JobOpenings() {
     const fetchJobs = async () => {
       setLoading(true);
       try {
-        const res = await axiosInstance.get(`/companies/${companyId}/jobs`);
+        const res = await axiosInstance.get(
+          `/companies/${companyId}/jobs?page=1&limit=10`,
+        );
         setJobs(res.data.slice(0, 6));
       } catch (err) {
         console.error("Failed to fetch job openings:", err);
@@ -50,22 +52,24 @@ function JobOpenings() {
         <h1 className="text-2xl font-semibold text-text">
           Recent Job Openings
         </h1>
-        <div className="flex space-x-2">
-          <button
-            className="bg-modalbackground p-2 rounded-full hover:bg-sliderbutton transition border border-white shadow-sm"
-            onClick={() => handleScroll("left")}
-            aria-label="scroll-left"
-          >
-            <AiOutlineLeft size={20} className="text-text" />
-          </button>
-          <button
-            className="bg-modalbackground p-2 rounded-full hover:bg-sliderbutton transition border border-white shadow-sm"
-            onClick={() => handleScroll("right")}
-            aria-label="scroll-right"
-          >
-            <AiOutlineRight size={20} className="text-text" />
-          </button>
-        </div>
+        {jobs.length > 3 && (
+          <div className="flex space-x-2">
+            <button
+              className="bg-modalbackground p-2 rounded-full hover:bg-sliderbutton transition border border-white shadow-sm"
+              onClick={() => handleScroll("left")}
+              aria-label="scroll-left"
+            >
+              <AiOutlineLeft size={20} className="text-text" />
+            </button>
+            <button
+              className="bg-modalbackground p-2 rounded-full hover:bg-sliderbutton transition border border-white shadow-sm"
+              onClick={() => handleScroll("right")}
+              aria-label="scroll-right"
+            >
+              <AiOutlineRight size={20} className="text-text" />
+            </button>
+          </div>
+        )}
       </div>
 
       {/* Slider */}
@@ -90,11 +94,14 @@ function JobOpenings() {
           <div className="flex gap-4 no-scrollbar">
             {jobs.map((job) => (
               <div
-                key={job.id}
+                key={job.jobId}
                 className="flex-shrink-0 w-[260px] min-h-[260px] bg-boxbackground border border-gray-700 rounded-xl shadow-sm p-4"
               >
                 <img
-                  src={company.logo}
+                  src={
+                    company.logo ||
+                    "https://media.licdn.com/dms/image/D4E12AQFuCmxN72C2yQ/article-cover_image-shrink_720_1280/0/1702503196049?e=2147483647&v=beta&t=9HHff4rJDnxuWrqfzPqX9j2dncDBKQeShXf2Wt5nrUc"
+                  }
                   alt="Company Logo"
                   className="w-20 h-20 object-contain mb-2"
                 />

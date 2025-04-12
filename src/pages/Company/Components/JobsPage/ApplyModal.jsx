@@ -9,10 +9,14 @@ function ApplyModal({ onClose, job, company }) {
     };
   }, []);
   return (
-    <div className="fixed inset-0 z-50 bg-modalbackground flex items-center justify-center px-4">
+    <div
+      className="fixed inset-0 z-50 bg-modalbackground flex items-center justify-center px-4"
+      data-testid="apply-modal"
+    >
       <div className="bg-boxbackground rounded-xl w-full max-w-2xl max-h-[90vh] overflow-y-auto p-6 relative shadow-lg">
         {/* Close Button */}
         <button
+          data-testid="close-button"
           onClick={onClose}
           className="absolute top-3 right-4 text-xl font-bold text-gray-400 hover:text-white"
         >
@@ -26,22 +30,26 @@ function ApplyModal({ onClose, job, company }) {
 
         {/* Job Info */}
         <div className="mb-6">
-          <p className="font-medium text-text">{job?.title}</p>
+          <p className="font-medium text-text">{job?.position}</p>
           <p className="text-sm text-gray-400">{job?.location}</p>
         </div>
 
         {/* Form Start */}
-        <form className="space-y-6">
+        <form className="space-y-6" data-testid="apply-form">
           {/* Contact Info */}
           <div className="space-y-4 border-t-2 pt-2">
             <h3 className="text-md font-semibold mb-2 text-text">
               Contact Info
             </h3>
             <div>
-              <label className="block text-sm font-medium text-text">
+              <label
+                htmlFor="email"
+                className="block text-sm font-medium text-text"
+              >
                 Email address*
               </label>
               <input
+                data-testid="email-input"
                 type="email"
                 defaultValue=""
                 className="w-full border rounded px-3 py-2 mt-1 bg-transparent text-text"
@@ -49,10 +57,14 @@ function ApplyModal({ onClose, job, company }) {
               />
             </div>
             <div>
-              <label className="block text-sm font-medium text-text">
+              <label
+                htmlFor="phoneCode"
+                className="block text-sm font-medium text-text"
+              >
                 Phone country code*
               </label>
               <select
+                data-testid="phone-code-select"
                 className="w-full border rounded px-3 py-2 mt-1 bg-transparent text-text"
                 defaultValue="Egypt (+20)"
               >
@@ -62,10 +74,14 @@ function ApplyModal({ onClose, job, company }) {
               </select>
             </div>
             <div>
-              <label className="block text-sm font-medium text-text">
+              <label
+                htmlFor="mobile"
+                className="block text-sm font-medium text-text"
+              >
                 Mobile phone number*
               </label>
               <input
+                data-testid="mobile-input"
                 type="tel"
                 defaultValue=""
                 className="w-full border rounded px-3 py-2 mt-1 bg-transparent text-text"
@@ -80,11 +96,15 @@ function ApplyModal({ onClose, job, company }) {
             </h3>
             <div className="space-y-3">
               <div>
-                <label className="block text-sm font-medium text-text">
+                <label
+                  htmlFor="experience"
+                  className="block text-sm font-medium text-text"
+                >
                   How many years of experience do you have in material
                   planning?*
                 </label>
                 <input
+                  data-testid="experience-input"
                   type="text"
                   className="w-full border rounded px-3 py-2 mt-1 bg-transparent text-text"
                   required
@@ -92,10 +112,14 @@ function ApplyModal({ onClose, job, company }) {
               </div>
 
               <div>
-                <label className="block text-sm font-medium text-text">
+                <label
+                  htmlFor="salary"
+                  className="block text-sm font-medium text-text"
+                >
                   What is your current monthly salary?*
                 </label>
                 <input
+                  data-testid="salary-input"
                   type="text"
                   className="w-full border rounded px-3 py-2 mt-1 bg-transparent text-text"
                   required
@@ -103,11 +127,15 @@ function ApplyModal({ onClose, job, company }) {
               </div>
 
               <div>
-                <label className="block text-sm font-medium text-text">
+                <label
+                  htmlFor="agreeToWork"
+                  className="block text-sm font-medium text-text"
+                >
                   Do you agree to work in 10th Of Ramadan city (Transportation
                   Provided)?*
                 </label>
                 <select
+                  data-testid="agree-input"
                   className="w-full border rounded px-3 py-2 mt-1 bg-transparent text-text"
                   required
                 >
@@ -121,6 +149,7 @@ function ApplyModal({ onClose, job, company }) {
 
           {/* Submit Button */}
           <button
+            data-testid="submit-button"
             type="submit"
             className="w-full bg-blue-600 text-text py-2 rounded hover:bg-blue-700 mt-4"
           >

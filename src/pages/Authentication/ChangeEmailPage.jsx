@@ -17,17 +17,17 @@ const ChangeEmailPage = () => {
     setCurrentPasswordError,
   ) => {
     try {
-      const response = await axiosInstance.patch(
-        "/users/request-email-update",
-        {
-          newEmail,
-          password: currentPassword,
-        },
-      );
+      await axiosInstance.patch("/users/request-email-update", {
+        newEmail,
+        password: currentPassword,
+      });
 
       dispatch(setEmail(newEmail));
+      console.log("requested update email");
 
-      navigate("/auth/email-verification");
+      navigate("/auth/verification-pending", {
+        state: { type: "updateEmail" },
+      });
     } catch (error) {
       if (error.response && error.response.status === 400) {
         setCurrentPasswordError("Incorrect password.");

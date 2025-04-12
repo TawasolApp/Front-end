@@ -6,6 +6,7 @@ import LoadingPage from "../../../LoadingScreen/LoadingPage";
 
 function CreateCompanyPage() {
   const [companyName, setName] = useState("");
+  const [redirecting, setRedirecting] = useState(false);
   const [tagline, setTagline] = useState("");
   const [industry, setIndustry] = useState("");
   const [orgSize, setOrgSize] = useState("");
@@ -23,6 +24,8 @@ function CreateCompanyPage() {
   const [errors, setErrors] = useState({});
   const [loading, setLoading] = useState(false);
   const [successMessage, setSuccessMessage] = useState("");
+  const [logoUploading, setLogoUploading] = useState(false);
+
   const navigate = useNavigate();
 
   function validateForm() {
@@ -47,44 +50,110 @@ function CreateCompanyPage() {
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
   }
+  async function handleLogoUpload(e) {
+    const file = e.target.files[0];
+    if (!file) return;
+
+    const formData = new FormData();
+    formData.append("file", file);
+    setLogoUploading(true);
+
+    try {
+      const uploadResponse = await axios.post("/media", formData, {
+        headers: { "Content-Type": "multipart/form-data" },
+      });
+
+      const fileUrl = uploadResponse.data.url;
+
+      setLogoPreview(fileUrl);
+      setLogoFile(file);
+      setErrors((prev) => {
+        const { logo, ...rest } = prev;
+        return rest;
+      });
+    } catch (error) {
+      console.error("Upload failed:", error);
+      setErrors((prev) => ({
+        ...prev,
+        apiError: "Failed to upload logo. Please try again.",
+      }));
+    } finally {
+      setLogoUploading(false);
+    }
+  }
 
   async function handleSubmit() {
     if (!validateForm()) return;
 
     setLoading(true);
 
-    let base64Logo = "";
-    if (logoFile) {
-      base64Logo = await getBase64(logoFile);
-    }
-
     const newCompany = {
       name: companyName,
-      logo: base64Logo,
-      banner: null,
-      description: tagline,
       companySize: orgSize,
       companyType: orgType,
       industry,
-      overview,
-      founded: parseInt(founded),
       website,
-      address,
-      location,
       email,
       contactNumber,
     };
+    if (overview.trim()) newCompany.overview = overview.trim();
+    if (tagline.trim()) newCompany.description = tagline.trim();
+    if (address.trim()) newCompany.address = address.trim();
 
+    // Valid founded year (number + reasonable range)
+    const parsedFounded = parseInt(founded);
+    if (
+      !isNaN(parsedFounded) &&
+      parsedFounded >= 1800 &&
+      parsedFounded <= new Date().getFullYear()
+    ) {
+      newCompany.founded = parsedFounded;
+    }
+
+    // Valid URL for location
+    const locationPattern =
+      /^https:\/\/(www\.)?google\.com\/maps\?q=([-+]?[\d.]+),([-+]?[\d.]+)$/;
+    if (location.trim()) {
+      if (!locationPattern.test(location.trim())) {
+        setErrors((prev) => ({
+          ...prev,
+          location:
+            "Location must be a valid Google Maps link (e.g., https://www.google.com/maps?q=89.6833,27.6897).",
+        }));
+        setLoading(false);
+        return;
+      } else {
+        newCompany.location = location.trim();
+      }
+    }
+
+    if (logoUploading) {
+      setErrors((prev) => ({
+        ...prev,
+        logo: "Please wait for the logo to finish uploading.",
+      }));
+      setLoading(false);
+      return;
+    }
+
+    if (logoPreview && /^https?:\/\/.+/.test(logoPreview)) {
+      newCompany.logo = logoPreview;
+    }
+
+    console.log("Request Body:", newCompany);
     try {
       const response = await axios.post("/companies", newCompany);
+      console.log("Response Body:", response.data);
       if (response.status === 201) {
-        setSuccessMessage("Company page created successfully!");
-        const createdCompany = response.data.company;
-        setTimeout(() => {
-          navigate(`/company/${createdCompany.companyId}/home`);
-        }, 2000);
+        const createdCompany = response.data;
+        setRedirecting(true); // prevent re-render
+        navigate(`/company/${createdCompany.companyId}/home`);
       }
     } catch (error) {
+      console.error(
+        "Full error response:",
+        error.response?.data || error.message,
+      );
       if (error.response) {
         setErrors((prev) => ({
           ...prev,
@@ -100,9 +169,11 @@ function CreateCompanyPage() {
       setLoading(false);
     }
   }
-  if (loading) {
+
+  if (loading || redirecting) {
     return <LoadingPage />;
   }
+
   return (
     <div className="bg-background">
       <div className="max-w-7xl mx-auto p-6 bg-background">
@@ -167,11 +238,11 @@ function CreateCompanyPage() {
                 }`}
               >
                 <option value="">Select size</option>
-                <option>1-50 employees</option>
-                <option>51-400 employees</option>
-                <option>401-1000 employees</option>
-                <option>1001-10000 employees</option>
-                <option>10K+ employees</option>
+                <option>1-50 Employees</option>
+                <option>51-400 Employees</option>
+                <option>401-1000 Employees</option>
+                <option>1001-10000 Employees</option>
+                <option>10000+ Employees</option>
               </select>
               {errors.orgSize && (
                 <p className="text-red-500 text-xs mt-1">{errors.orgSize}</p>
@@ -193,12 +264,12 @@ function CreateCompanyPage() {
                 }`}
               >
                 <option value="">Select type</option>
-                <option>Public company</option>
-                <option>Self-employed</option>
-                <option>Government agency</option>
-                <option>Nonprofit</option>
-                <option>Sole proprietorship</option>
-                <option>Privately held</option>
+                <option>Public Company</option>
+                <option>Self Employed</option>
+                <option>Government Agency</option>
+                <option>Non Profit</option>
+                <option>Sole Proprietorship</option>
+                <option>Privately Held</option>
                 <option>Partnership</option>
               </select>
               {errors.orgType && (
@@ -231,7 +302,9 @@ function CreateCompanyPage() {
                 Overview
               </label>
               <textarea
+                id="company-overview"
                 value={overview}
+                data-testid="company-overview"
                 onChange={(e) => setOverview(e.target.value)}
                 className="w-full p-2 border rounded-md bg-boxbackground text-normaltext"
                 placeholder="Brief description of your company"
@@ -244,8 +317,10 @@ function CreateCompanyPage() {
                 Founded Year
               </label>
               <input
+                id="company-founded"
                 type="number"
                 value={founded}
+                data-testid="company-founded"
                 onChange={(e) => setFounded(e.target.value)}
                 className="w-full p-1 border text-sm rounded-md bg-boxbackground text-normaltext"
                 placeholder="e.g., 1999"
@@ -280,6 +355,8 @@ function CreateCompanyPage() {
               <input
                 type="text"
                 value={address}
+                id="company-address"
+                data-testid="company-address"
                 onChange={(e) => setAddress(e.target.value)}
                 className="w-full p-1 border text-sm rounded-md bg-boxbackground text-normaltext"
                 placeholder="123 Example Street"
@@ -294,10 +371,15 @@ function CreateCompanyPage() {
               <input
                 type="text"
                 value={location}
+                id="company-location"
+                data-testid="company-location"
                 onChange={(e) => setLocation(e.target.value)}
                 className="w-full p-1 border text-sm rounded-md bg-boxbackground text-normaltext"
-                placeholder="City, Country"
+                placeholder="Google maps location"
               />
+              {errors.location && (
+                <p className="text-red-500 text-xs mt-1">{errors.location}</p>
+              )}
             </div>
 
             {/* Email */}
@@ -308,6 +390,8 @@ function CreateCompanyPage() {
               <input
                 type="email"
                 value={email}
+                id="company-email"
+                data-testid="company-email"
                 onChange={(e) => setEmail(e.target.value)}
                 className={`w-full p-1 border text-sm rounded-md bg-boxbackground text-normaltext ${
                   errors.email ? "border-red-500" : "border-gray-400"
@@ -327,6 +411,8 @@ function CreateCompanyPage() {
               <input
                 type="tel"
                 value={contactNumber}
+                id="company-contactNumber"
+                data-testid="company-contactNumber"
                 onChange={(e) => setContactNumber(e.target.value)}
                 className={`w-full p-1 border text-sm rounded-md bg-boxbackground text-normaltext ${
                   errors.contactNumber ? "border-red-500" : "border-gray-400"
@@ -342,7 +428,12 @@ function CreateCompanyPage() {
 
             {/* Logo Upload */}
             <div>
-              <label className="block text-sm text-normaltext mb-1">Logo</label>
+              <label
+                className="block text-sm text-normaltext mb-1"
+                htmlFor="company-logo"
+              >
+                Logo
+              </label>
               <div className="w-full min-h-[100px] border border-gray-400 rounded-md bg-uploadimage relative flex flex-col items-center justify-center px-4 py-6 text-center">
                 <div className="flex flex-col items-center justify-center gap-1 text-gray-600">
                   <FiUpload className="text-2xl font-semibold text-normaltext" />
@@ -357,17 +448,23 @@ function CreateCompanyPage() {
                 <input
                   type="file"
                   id="company-logo"
+                  data-testid="company-logo"
                   accept="image/*"
                   className="absolute inset-0 opacity-0 cursor-pointer"
-                  onChange={(e) => {
-                    const file = e.target.files[0];
-                    if (file) {
-                      setLogoFile(file);
-                      setLogoPreview(URL.createObjectURL(file));
-                    }
-                  }}
+                  onChange={handleLogoUpload}
                 />
               </div>
+              {logoUploading && (
+                <p className="text-sm text-gray-500 mt-2">Uploading logo...</p>
+              )}
+              {errors.logo && (
+                <p
+                  className="text-red-500 text-xs mt-1"
+                  data-testid="logo-error"
+                >
+                  {errors.logo}
+                </p>
+              )}
 
               <p className="text-xs text-gray-500 mt-1">
                 300 x 300px recommended. JPGs, JPEGs, and PNGs supported.
@@ -449,10 +546,14 @@ function CreateCompanyPage() {
           </button>
           {/* Success or Error Message */}
           {successMessage && (
-            <p className="text-green-600 mt-2">{successMessage}</p>
+            <p className="text-green-600 mt-2" data-testid="success-message">
+              {successMessage}
+            </p>
           )}
           {errors.apiError && (
-            <p className="text-red-600 mt-2">{errors.apiError}</p>
+            <p className="text-red-600 mt-2" data-testid="api-error-message">
+              {errors.apiError}
+            </p>
           )}
         </div>
       </div>

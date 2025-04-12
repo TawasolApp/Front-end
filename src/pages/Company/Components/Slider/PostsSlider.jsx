@@ -10,14 +10,26 @@ function PostsSlider() {
   const navigate = useNavigate();
   const { companyId } = useParams();
   const [posts, setPosts] = useState([]);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    if (companyId) {
-      axiosInstance
-        .get(`/companies/${companyId}/posts`)
-        .then((res) => setPosts(res.data))
-        .catch((err) => console.error("Error fetching posts:", err));
-    }
+    if (!companyId) return;
+
+    setLoading(true);
+
+    axiosInstance
+      .get(`/posts/user/${companyId}`, {
+        params: { limit: 5 },
+      })
+      .then((response) => {
+        setPosts(response.data); // API already returns the limited posts
+      })
+      .catch((error) => {
+        console.error("Error fetching posts:", error);
+      })
+      .finally(() => {
+        setLoading(false);
+      });
   }, [companyId]);
 
   const handleScrollLeft = () => {
@@ -30,10 +42,6 @@ function PostsSlider() {
     if (sliderRef.current) {
       sliderRef.current.scrollBy({ left: 350, behavior: "smooth" });
     }
-  };
-  const handlePostClick = (postId) => {
-    // Update URL with postId and scroll down to that post
-    navigate(`/company/${companyId}/posts?postId=${postId}`);
   };
   if (posts.length === 0) return null;
 
@@ -74,7 +82,7 @@ function PostsSlider() {
           {posts.slice(0, 4).map((post) => (
             <div
               key={post.id}
-              className="flex-shrink-0 w-[350px] min-h-[400px] bg-boxbackground border border-gray-700 rounded-xl shadow-sm p-4"
+              className="flex-shrink-0 w-[400px] min-h-[400px] bg-boxbackground border border-gray-700 rounded-xl shadow-sm p-4"
               onClick={() => handlePostClick(post.id)}
             >
               <PostContainer post={post} />
@@ -82,7 +90,7 @@ function PostsSlider() {
           ))}
 
           {/* Last Slide */}
-          <div className="bg-boxbackground rounded-2xl border border-gray-700 p-4 w-[350px] flex-shrink-0 flex flex-col justify-between min-h-[400px] h-[400px]">
+          <div className="bg-boxbackground rounded-2xl border border-gray-700 p-4 w-[350px] flex-shrink-0 flex flex-col justify-between min-h-[400px] h-auto">
             <HiOutlineDocumentText className="text-gray-500 w-12 h-12 mb-3" />
             <p className="text-normaltext text-center mb-4">Show all posts</p>
             <button

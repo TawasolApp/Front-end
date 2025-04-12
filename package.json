@@ -13,6 +13,7 @@
     "test:e2e:headless": "cypress run",
     "coverage": "vitest --coverage",
     "mock": "set VITE_APP_BASE_URL=http://localhost:5000 && start cmd /c node src/mocks/server.js && vite",
+    "local": "set VITE_APP_BASE_URL=http://localhost:3000/api && vite",
     "pretty": "npx prettier --write ."
   },
   "dependencies": {
@@ -25,7 +26,7 @@
     "axios": "^1.8.3",
     "date-fns": "^4.1.0",
     "dayjs": "^1.11.13",
-    "multer": "^1.4.5-lts.2",
+    "express": "^5.1.0",
     "pdfjs-dist": "^4.8.69",
     "prettier": "^3.5.3",
     "react": "^19.0.0",
@@ -35,7 +36,9 @@
     "react-pdf": "^9.2.1",
     "react-redux": "^9.2.0",
     "react-router-dom": "^7.4.0",
-    "recharts": "^2.15.1",
+    "react-select": "^5.10.1",
+    "react-toastify": "^11.0.5",
+    "recharts": "^2.15.2",
     "swiper": "^11.2.5",
     "uuid": "^11.1.0"
   },
@@ -60,6 +63,7 @@
     "json-server": "^0.17.4",
     "msw": "^2.7.3",
     "postcss": "^8.5.3",
+    "redux-mock-store": "^1.5.5",
     "tailwindcss": "^3.4.17",
     "vite": "^6.2.3",
     "vite-plugin-svgr": "^4.3.0",
