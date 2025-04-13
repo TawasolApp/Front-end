@@ -146,6 +146,7 @@ const TawasolNavbar = () => {
 
   return (
     <nav
+      data-testid="navbar"
       ref={navbarRef}
       className="sticky top-0 z-50 bg-cardBackground border-b border-cardBorder shadow-sm h-[52px]"
     >
@@ -174,6 +175,7 @@ const TawasolNavbar = () => {
               <input
                 type="text"
                 placeholder="Search"
+                data-testid="navbarSearch"
                 ref={searchRef}
                 value={searchText}
                 onChange={handleSearchChange}
@@ -243,6 +245,7 @@ const TawasolNavbar = () => {
             <>
               {navItems.map((item) => (
                 <button
+                  data-testid={`navbar-${item.name}`}
                   key={item.name}
                   className={`px-3 md:px-4 py-1 flex flex-col items-center justify-center h-[52px] relative
                     ${item.active ? "text-navbarIconsSelected" : "text-navbarIconsNormal"}
@@ -262,6 +265,7 @@ const TawasolNavbar = () => {
                 className="relative px-3 md:px-4 py-1 flex flex-col items-center justify-center h-[52px] text-navbarIconsNormal hover:text-navbarIconsSelected"
               >
                 <button
+                  data-testid="navbar-me-dropdown"
                   className="flex flex-col items-center"
                   onClick={() => setIsMeOpen(!isMeOpen)}
                 >
@@ -272,7 +276,7 @@ const TawasolNavbar = () => {
                   <div
                     className={`flex items-center text-xs ${isMobile ? "hidden" : "block"}`}
                   >
-                    <span>Me</span>
+                    <span data-testid="navbar-me">Me</span>
                     <ExpandMoreIcon fontSize="inherit" />
                   </div>
                 </button>
@@ -284,6 +288,7 @@ const TawasolNavbar = () => {
                   >
                     <div className="border-b border-cardBorder">
                       <div
+                        data-testid="navbar-me-dropdown-profile"  
                         className="p-4 flex gap-3 items-center hover:bg-buttonIconHover"
                         onClick={() => navigate(`/users/${currentAuthorId}`)}
                       >
@@ -306,6 +311,7 @@ const TawasolNavbar = () => {
 
                     <div className="border-t border-cardBorder">
                       <button
+                        data-testid="navbar-me-dropdown-settings"
                         className="w-full py-2 px-4 text-left text-sm hover:bg-buttonIconHover transition-colors duration-150"
                         onClick={() => {
                           setIsMeOpen(false);
@@ -315,6 +321,7 @@ const TawasolNavbar = () => {
                         Settings & Privacy
                       </button>
                       <button
+                        data-testid="navbar-me-dropdown-SignOut"
                         className="w-full py-2 px-4 text-left text-sm hover:bg-buttonIconHover transition-colors duration-150"
                         onClick={() => {
                           setIsMeOpen(false);
