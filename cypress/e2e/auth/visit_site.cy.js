@@ -17,8 +17,8 @@ describe('visit website', () => {
   })
 
   it('Displays header, greetings, and picture', () => {
-    cy.getHeader().should('exist');
-    cy.getGreeting().should('have.text', 'Welcome to your professional community');
-    cy.getPicture().should('exist');
+    cy.getLoginPageHeader().should('exist');
+    cy.getLoginPageGreeting().should('have.text', 'Welcome to your professional community');
+    cy.getLoginPagePicture().should('exist');
   })
 })
