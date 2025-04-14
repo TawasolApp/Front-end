@@ -40,7 +40,7 @@ const SignWithGoogle = () => {
                 {
                   idToken: tokenResponse.access_token,
                   isAndroid: false,
-                },
+                }
               );
 
               if (response.status === 201) {
@@ -59,43 +59,52 @@ const SignWithGoogle = () => {
                   return;
                 }
 
-                const profileResponse = await axiosInstance.get("/profile");
+                try {
+                  const profileResponse = await axiosInstance.get("/profile");
 
-                if (profileResponse.status === 200) {
-                  const {
-                    _id,
-                    firstName,
-                    lastName,
-                    location,
-                    headline,
-                    profilePicture,
-                    coverPhoto,
-                  } = profileResponse.data;
+                  if (profileResponse.status === 200) {
+                    const {
+                      _id,
+                      firstName,
+                      lastName,
+                      location,
+                      headline,
+                      profilePicture,
+                      coverPhoto,
+                    } = profileResponse.data;
 
-                  dispatch(setType("User"));
-                  if (_id) {
-                    dispatch(setUserId(_id));
-                  }
-                  if (firstName) {
-                    dispatch(setFirstName(firstName));
-                  }
-                  if (lastName) {
-                    dispatch(setLastName(lastName));
-                  }
-                  if (location) {
-                    dispatch(setLocation(location));
-                  }
-                  if (headline) {
-                    dispatch(setBio(headline));
-                  }
-                  if (profilePicture) {
-                    dispatch(setProfilePicture(profilePicture));
-                  }
-                  if (coverPhoto) {
-                    dispatch(setCoverPhoto(coverPhoto));
-                  }
+                    dispatch(setType("User"));
+                    if (_id) {
+                      dispatch(setUserId(_id));
+                    }
+                    if (firstName) {
+                      dispatch(setFirstName(firstName));
+                    }
+                    if (lastName) {
+                      dispatch(setLastName(lastName));
+                    }
+                    if (location) {
+                      dispatch(setLocation(location));
+                    }
+                    if (headline) {
+                      dispatch(setBio(headline));
+                    }
+                    if (profilePicture) {
+                      dispatch(setProfilePicture(profilePicture));
+                    }
+                    if (coverPhoto) {
+                      dispatch(setCoverPhoto(coverPhoto));
+                    }
 
-                  navigate("/feed");
+                    navigate("/feed");
+                  }
+                } catch (error) {
+                  if (error.response && error.response.status === 404) {
+                    navigate("/auth/signup/location");
+                    return;
+                  } else {
+                    throw error;
+                  }
                 }
               }
             } catch (error) {
