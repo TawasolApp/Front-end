@@ -34,26 +34,48 @@ Cypress.Commands.add('getLoginPagePicture', () => {
 
 // *********************************************** LOGIN FORM ***********************************************
 
-Cypress.Commands.add('getEmailLabel', () => {
+Cypress.Commands.add('getLoginFormEmailLabel', () => {
     cy.get(':nth-child(4) > .block');
 })
 
-Cypress.Commands.add('getEmailTextbox', () => {
+Cypress.Commands.add('getLoginFormEmailTextbox', () => {
     cy.get('#email');
 })
 
-Cypress.Commands.add('getPasswordLabel', () => {
+Cypress.Commands.add('getLoginFormPasswordLabel', () => {
     cy.get(':nth-child(5) > .block');
 })
 
-Cypress.Commands.add('getPasswordTextbox', () => {
+Cypress.Commands.add('getLoginFormPasswordTextbox', () => {
     cy.get('#password');
 })
 
-Cypress.Commands.add('getForgotPasswordLink', () => {
+Cypress.Commands.add('getLoginFormForgotPasswordLink', () => {
     cy.get('.sm\\:mb-6 > .font-medium');
 })
 
 Cypress.Commands.add('getLoginFormButton', () => {
+    cy.get('.focus\\:ring-2');
+})
+
+// *********************************************** REGISTRATION FORM ***********************************************
+
+Cypress.Commands.add('getRegistrationFormEmailLabel', () => {
+    cy.get(':nth-child(1) > .block');
+})
+
+Cypress.Commands.add('getRegistrationFormEmailTextbox', () => {
+    cy.get('#email');
+})
+
+Cypress.Commands.add('getRegistrationFormPasswordLabel', () => {
+    cy.get(':nth-child(2) > .block');
+})
+
+Cypress.Commands.add('getRegistrationFormPasswordTextbox', () => {
+    cy.get('#password');
+})
+
+Cypress.Commands.add('getRegistrationFormButton', () => {
     cy.get('.focus\\:ring-2');
 })
