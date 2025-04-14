@@ -19,6 +19,7 @@ import {
 } from "../../store/authenticationSlice";
 import { Link, useNavigate } from "react-router-dom";
 import AuthenticationHeader from "./GenericComponents/AuthenticationHeader";
+import { toast } from "react-toastify";
 
 const SignInPage = () => {
   const dispatch = useDispatch();
@@ -108,6 +109,10 @@ const SignInPage = () => {
         setCredentialsError("Email not verified.");
       } else {
         console.error("Login failed", error);
+        toast.error("Login failed, please try again.", {
+          position: "top-right",
+          autoClose: 3000,
+        });
       }
     }
   };

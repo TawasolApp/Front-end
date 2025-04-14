@@ -16,10 +16,11 @@ import {
   setUserId,
 } from "../../store/authenticationSlice";
 import { useNavigate } from "react-router-dom";
+import { toast } from "react-toastify";
 
 const ExperienceAuthPage = () => {
   const { email, password, location, isNewGoogleUser } = useSelector(
-    (state) => state.authentication,
+    (state) => state.authentication
   );
   const navigate = useNavigate();
   const dispatch = useDispatch();
@@ -71,12 +72,28 @@ const ExperienceAuthPage = () => {
         setIsLoading(false);
         if (error.response && error.response.status === 400) {
           console.error("Email not verified.");
+          toast.error("Email is not verified.", {
+            position: "top-right",
+            autoClose: 3000,
+          });
         } else if (error.response && error.response.status === 401) {
           console.error("Invalid email or password.");
+          toast.error("Invalid email or password.", {
+            position: "top-right",
+            autoClose: 3000,
+          });
         } else if (error.response && error.response.status === 404) {
           console.error("User not found.");
+          toast.error("User not found.", {
+            position: "top-right",
+            autoClose: 3000,
+          });
         } else {
           console.error("Login failed", error);
+          toast.error("An unexpected error occured, please try again.", {
+            position: "top-right",
+            autoClose: 3000,
+          });
         }
         return;
       }
@@ -87,6 +104,10 @@ const ExperienceAuthPage = () => {
     } catch (error) {
       setIsLoading(false);
       console.error("Error submitting data:", error);
+      toast.error("An unexpected error occured while submitting data.", {
+        position: "top-right",
+        autoClose: 3000,
+      });
       return;
     }
 
@@ -130,6 +151,10 @@ const ExperienceAuthPage = () => {
     } catch {
       setIsLoading(false);
       console.error("Error retreiving profile:", error);
+      toast.error("An unexpected error occured, please try again.", {
+        position: "top-right",
+        autoClose: 3000,
+      });
       return;
     }
   };

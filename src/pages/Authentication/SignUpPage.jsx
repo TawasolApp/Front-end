@@ -5,6 +5,7 @@ import { logout, setEmail, setPassword } from "../../store/authenticationSlice";
 import { axiosInstance } from "../../apis/axios";
 import { useNavigate } from "react-router-dom";
 import AuthenticationHeader from "./GenericComponents/AuthenticationHeader";
+import { toast } from "react-toastify";
 
 const SignUpPage = () => {
   const dispatch = useDispatch();
@@ -37,9 +38,17 @@ const SignUpPage = () => {
           setEmailError("Email already in use.");
         } else {
           console.error("Unexpected error:", error.response.status);
+          toast.error("Unexpected error, please try again.", {
+            position: "top-right",
+            autoClose: 3000,
+          });
         }
       } else {
         console.error("Network error or server is down");
+        toast.error("Network error or server is down.", {
+          position: "top-right",
+          autoClose: 3000,
+        });
       }
     }
   };

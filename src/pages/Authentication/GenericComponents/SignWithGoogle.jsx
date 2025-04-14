@@ -18,6 +18,7 @@ import {
   setIsSocialLogin,
 } from "../../../store/authenticationSlice";
 import { axiosInstance } from "../../../apis/axios";
+import { toast } from "react-toastify";
 
 const SignWithGoogle = () => {
   const dispatch = useDispatch();
@@ -115,6 +116,10 @@ const SignWithGoogle = () => {
             } catch (error) {
               setIsLoading(false);
               console.error("Google login failed:", error);
+              toast.error("Google login failed, please try again.", {
+                position: "top-right",
+                autoClose: 3000,
+              });
             }
           }
         },
@@ -140,13 +145,15 @@ const SignWithGoogle = () => {
         bg-cardBackground text-textContent hover:bg-cardBackgroundHover
         focus:outline-none focus:border-itemBorderFocus
         transition-all duration-200 ease-in-out
-        ${isLoading && "opacity-70 cursor-not-allowed" }
+        ${isLoading && "opacity-70 cursor-not-allowed"}
       `}
     >
       {isLoading ? (
         <span className="flex items-center justify-center gap-1">
           <span className="font-semibold text-textContent">Signing you in</span>
-          <span className="animate-bounce mx-0.5 font-bold text-textContent">.</span>
+          <span className="animate-bounce mx-0.5 font-bold text-textContent">
+            .
+          </span>
           <span
             className="animate-bounce mx-0.5 font-bold text-textContent"
             style={{ animationDelay: "0.2s" }}

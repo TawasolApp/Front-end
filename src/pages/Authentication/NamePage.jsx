@@ -5,11 +5,12 @@ import { setFirstName, setLastName } from "../../store/authenticationSlice";
 import { axiosInstance } from "../../apis/axios";
 import { useNavigate } from "react-router-dom";
 import AuthenticationHeader from "./GenericComponents/AuthenticationHeader";
+import { toast } from "react-toastify";
 
 const NamePage = () => {
   const dispatch = useDispatch();
   const { email, password, isNewGoogleUser } = useSelector(
-    (state) => state.authentication,
+    (state) => state.authentication
   );
   const navigate = useNavigate();
   const [isLoading, setIsLoading] = useState(false);
@@ -47,8 +48,12 @@ const NamePage = () => {
     } catch (error) {
       setIsLoading(false);
       console.error(
-        `Registration Failed: ${error.response?.data?.message || error.message}`,
+        `Registration Failed: ${error.response?.data?.message || error.message}`
       );
+      toast.error("Registration failed, please try again.", {
+        position: "top-right",
+        autoClose: 3000,
+      });
     }
   };
 

@@ -4,6 +4,7 @@ import { useNavigate } from "react-router-dom";
 import AuthenticationHeader from "./GenericComponents/AuthenticationHeader";
 import { useDispatch } from "react-redux";
 import { setLocation } from "../../store/authenticationSlice";
+import { toast } from "react-toastify";
 
 const LocationPage = () => {
   const navigate = useNavigate();
@@ -12,6 +13,10 @@ const LocationPage = () => {
   const handleSubmit = (location) => {
     if (!location) {
       console.error("Error: Missing location.");
+      toast.error("Please enter your current location.", {
+        position: "top-right",
+        autoClose: 3000,
+      });
       return;
     }
 
