@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import SignInForm from "./Forms/SignInForm";
 import { axiosInstance } from "../../apis/axios";
 import { useDispatch } from "react-redux";
@@ -23,6 +23,7 @@ import AuthenticationHeader from "./GenericComponents/AuthenticationHeader";
 const SignInPage = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
+  const [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {
     dispatch(logout());
@@ -30,6 +31,7 @@ const SignInPage = () => {
 
   const handleSignIn = async (formData, setCredentialsError) => {
     try {
+      setIsLoading(true);
       const userResponse = await axiosInstance.post("/auth/login", {
         email: formData.email,
         password: formData.password,
@@ -80,10 +82,12 @@ const SignInPage = () => {
               dispatch(setCoverPhoto(coverPhoto));
             }
 
+            setIsLoading(false);
             navigate("/feed");
           }
         } catch (error) {
           if (error.response && error.response.status === 404) {
+            setIsLoading(false);
             navigate("/auth/signup/location");
             return;
           } else {
@@ -92,6 +96,7 @@ const SignInPage = () => {
         }
       }
     } catch (error) {
+      setIsLoading(false);
       if (
         error.response &&
         (error.response.status === 400 ||
@@ -112,7 +117,7 @@ const SignInPage = () => {
       <AuthenticationHeader hideButtons={true} />
 
       <div className="bg-cardBackground p-6 sm:p-8 md:p-10 rounded-lg shadow-lg w-full max-w-md sm:max-w-lg">
-        <SignInForm onSubmit={handleSignIn} />
+        <SignInForm onSubmit={handleSignIn} isLoading={isLoading} />
       </div>
       <p className="mt-4 sm:mt-6 text-center text-textContent text-base sm:text-lg md:text-xl">
         New to Tawasol?{" "}

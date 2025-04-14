@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import NameForm from "./Forms/NameForm";
 import { useDispatch, useSelector } from "react-redux";
 import { setFirstName, setLastName } from "../../store/authenticationSlice";
@@ -12,6 +12,7 @@ const NamePage = () => {
     (state) => state.authentication,
   );
   const navigate = useNavigate();
+  const [isLoading, setIsLoading] = useState(false);
 
   const handleName = async (formData, captchaToken) => {
     if ((!email || !password) && !isNewGoogleUser) {
@@ -30,6 +31,7 @@ const NamePage = () => {
     }
 
     try {
+      setIsLoading(true);
       await axiosInstance.post("/auth/register", {
         email,
         password,
@@ -38,10 +40,12 @@ const NamePage = () => {
         captchaToken: "test-token",
       });
 
+      setIsLoading(false);
       navigate("/auth/verification-pending", {
         state: { type: "verifyEmail" },
       });
     } catch (error) {
+      setIsLoading(false);
       console.error(
         `Registration Failed: ${error.response?.data?.message || error.message}`,
       );
@@ -56,7 +60,7 @@ const NamePage = () => {
         Make the most of your professional life
       </h1>
       <div className="bg-cardBackground p-10 rounded-lg shadow-lg w-full max-w-lg min-w-[350px]">
-        <NameForm onSubmit={handleName} />
+        <NameForm onSubmit={handleName} isLoading={isLoading} />
       </div>
     </div>
   );

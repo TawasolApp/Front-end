@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import ChangeEmailForm from "./Forms/ChangeEmailForm";
 import { useDispatch } from "react-redux";
 import { setEmail } from "../../store/authenticationSlice";
@@ -9,6 +9,7 @@ import AuthenticationHeader from "./GenericComponents/AuthenticationHeader";
 const ChangeEmailPage = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
+  const [isLoading, setIsLoading] = useState(false);
 
   const handleSubmit = async (
     newEmail,
@@ -17,18 +18,20 @@ const ChangeEmailPage = () => {
     setCurrentPasswordError,
   ) => {
     try {
+      setIsLoading(true);
       await axiosInstance.patch("/users/request-email-update", {
         newEmail,
         password: currentPassword,
       });
 
       dispatch(setEmail(newEmail));
-      console.log("requested update email");
 
+      setIsLoading(false);
       navigate("/auth/verification-pending", {
         state: { type: "updateEmail" },
       });
     } catch (error) {
+      setIsLoading(false);
       if (error.response && error.response.status === 400) {
         setCurrentPasswordError("Incorrect password.");
       } else if (error.response && error.response.status === 401) {
@@ -47,7 +50,7 @@ const ChangeEmailPage = () => {
       <AuthenticationHeader hideButtons={true} />
 
       <div className="bg-cardBackground p-10 rounded-lg w-full max-w-xl shadow-md">
-        <ChangeEmailForm onSubmit={handleSubmit} />
+        <ChangeEmailForm onSubmit={handleSubmit} isLoading={isLoading} />
       </div>
     </div>
   );

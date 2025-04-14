@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import ExperienceForm from "./Forms/ExperienceForm";
 import AuthenticationHeader from "./GenericComponents/AuthenticationHeader";
 import { useDispatch, useSelector } from "react-redux";
@@ -23,6 +23,7 @@ const ExperienceAuthPage = () => {
   );
   const navigate = useNavigate();
   const dispatch = useDispatch();
+  const [isLoading, setIsLoading] = useState(false);
 
   const handleSubmit = async (experienceData) => {
     let profileData = {
@@ -50,6 +51,8 @@ const ExperienceAuthPage = () => {
 
     dispatch(setType("User"));
 
+    setIsLoading(true);
+
     if (!isNewGoogleUser) {
       try {
         const userResponse = await axiosInstance.post("/auth/login", {
@@ -65,6 +68,7 @@ const ExperienceAuthPage = () => {
           dispatch(setIsSocialLogin(isSocialLogin));
         }
       } catch (error) {
+        setIsLoading(false);
         if (error.response && error.response.status === 400) {
           console.error("Email not verified.");
         } else if (error.response && error.response.status === 401) {
@@ -74,12 +78,14 @@ const ExperienceAuthPage = () => {
         } else {
           console.error("Login failed", error);
         }
+        return;
       }
     }
 
     try {
       await axiosInstance.post("/profile", profileData);
     } catch (error) {
+      setIsLoading(false);
       console.error("Error submitting data:", error);
       return;
     }
@@ -116,11 +122,13 @@ const ExperienceAuthPage = () => {
           dispatch(setCoverPhoto(coverPhoto));
         }
 
+        setIsLoading(false);
         navigate("/feed");
       }
 
       return;
     } catch {
+      setIsLoading(false);
       console.error("Error retreiving profile:", error);
       return;
     }
@@ -136,7 +144,7 @@ const ExperienceAuthPage = () => {
         </h1>
       </div>
       <div className="bg-cardBackground p-6 sm:p-8 md:p-10 rounded-lg w-full max-w-md sm:max-w-xl">
-        <ExperienceForm onSubmit={handleSubmit} />
+        <ExperienceForm onSubmit={handleSubmit} isLoading={isLoading} />
       </div>
     </div>
   );

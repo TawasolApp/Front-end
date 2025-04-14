@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import SignUpForm from "./Forms/SignUpForm";
 import { useDispatch } from "react-redux";
 import { logout, setEmail, setPassword } from "../../store/authenticationSlice";
@@ -9,6 +9,7 @@ import AuthenticationHeader from "./GenericComponents/AuthenticationHeader";
 const SignUpPage = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
+  const [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {
     dispatch(logout());
@@ -16,6 +17,7 @@ const SignUpPage = () => {
 
   const handleSignUp = async (formData, setEmailError) => {
     try {
+      setIsLoading(true);
       const response = await axiosInstance.post("/auth/check-email", {
         email: formData.email,
       });
@@ -25,9 +27,11 @@ const SignUpPage = () => {
         dispatch(setEmail(formData.email));
         dispatch(setPassword(formData.password));
 
+        setIsLoading(false);
         navigate("/auth/signup/name");
       }
     } catch (error) {
+      setIsLoading(false);
       if (error.response) {
         if (error.response.status === 409) {
           setEmailError("Email already in use.");
@@ -48,7 +52,7 @@ const SignUpPage = () => {
         Make the most of your professional life
       </h1>
       <div className="bg-cardBackground p-6 sm:p-8 md:p-10 rounded-lg shadow-lg w-full max-w-md sm:max-w-lg">
-        <SignUpForm onSubmit={handleSignUp} />
+        <SignUpForm onSubmit={handleSignUp} isLoading={isLoading} />
       </div>
     </div>
   );
