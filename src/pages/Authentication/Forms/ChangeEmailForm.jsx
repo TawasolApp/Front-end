@@ -3,7 +3,7 @@ import BlueSubmitButton from "../GenericComponents/BlueSubmitButton";
 import InputField from "../GenericComponents/InputField";
 import { useSelector } from "react-redux";
 
-const ChangeEmailForm = ({ onSubmit }) => {
+const ChangeEmailForm = ({ onSubmit, isLoading = false }) => {
   const { email } = useSelector((state) => state.authentication);
   const [newEmail, setNewEmail] = useState(email);
   const [currentPassword, setCurrentPassword] = useState("");
@@ -99,7 +99,7 @@ const ChangeEmailForm = ({ onSubmit }) => {
         error={currentPasswordError}
       />
 
-      <BlueSubmitButton text="Submit" />
+      <BlueSubmitButton text="Submit" isLoading={isLoading} />
     </form>
   );
 };

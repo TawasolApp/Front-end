@@ -5,7 +5,7 @@ import Divider from "../GenericComponents//Divider";
 import BlueSubmitButton from "../GenericComponents//BlueSubmitButton";
 import { Link } from "react-router-dom";
 
-const SignInForm = ({ onSubmit }) => {
+const SignInForm = ({ onSubmit, isLoading = false }) => {
   const [formData, setFormData] = useState({
     email: "",
     password: "",
@@ -119,7 +119,7 @@ const SignInForm = ({ onSubmit }) => {
         </Link>
       </div>
 
-      <BlueSubmitButton text="Sign in" />
+      <BlueSubmitButton text="Sign in" isLoading={isLoading} />
     </form>
   );
 };

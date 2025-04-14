@@ -5,7 +5,7 @@ import InputField from "../GenericComponents//InputField";
 import BlueSubmitButton from "../GenericComponents//BlueSubmitButton";
 import { Link } from "react-router-dom";
 
-const SignUpForm = ({ onSubmit }) => {
+const SignUpForm = ({ onSubmit, isLoading = false }) => {
   const [formData, setFormData] = useState({
     email: "",
     password: "",
@@ -93,7 +93,7 @@ const SignUpForm = ({ onSubmit }) => {
         showPassword={showPassword}
         error={passwordError}
       />
-      <BlueSubmitButton text="Join" />
+      <BlueSubmitButton text="Join" isLoading={isLoading} />
       <Divider />
       <SignWithGoogle />
       <p className="mt-4 md:mt-6 text-center text-textContent text-base sm:text-lg md:text-xl">

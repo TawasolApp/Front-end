@@ -1,4 +1,4 @@
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import { getIconComponent } from "../../../utils";
 import { useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
@@ -18,6 +18,7 @@ import {
   setIsSocialLogin,
 } from "../../../store/authenticationSlice";
 import { axiosInstance } from "../../../apis/axios";
+import { toast } from "react-toastify";
 
 const SignWithGoogle = () => {
   const dispatch = useDispatch();
@@ -25,6 +26,7 @@ const SignWithGoogle = () => {
   const GoogleGIcon = getIconComponent("google-g");
   const googleClient = useRef(null);
   const googleClientId = import.meta.env.VITE_GOOGLE_CLIENT_ID;
+  const [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {
     if (window.google) {
@@ -35,6 +37,7 @@ const SignWithGoogle = () => {
         callback: async (tokenResponse) => {
           if (tokenResponse?.access_token) {
             try {
+              setIsLoading(true);
               const response = await axiosInstance.post(
                 "/auth/social-login/google",
                 {
@@ -55,6 +58,7 @@ const SignWithGoogle = () => {
 
                 // New user, set-up account instead of logging in
                 if (isNewUser) {
+                  setIsLoading(false);
                   navigate("/auth/signup/location");
                   return;
                 }
@@ -100,6 +104,8 @@ const SignWithGoogle = () => {
                   }
                 } catch (error) {
                   if (error.response && error.response.status === 404) {
+                    setIsLoading(false);
+                    dispatch(setIsNewGoogleUser(true));
                     navigate("/auth/signup/location");
                     return;
                   } else {
@@ -108,7 +114,12 @@ const SignWithGoogle = () => {
                 }
               }
             } catch (error) {
+              setIsLoading(false);
               console.error("Google login failed:", error);
+              toast.error("Google login failed, please try again.", {
+                position: "top-right",
+                autoClose: 3000,
+              });
             }
           }
         },
@@ -126,17 +137,42 @@ const SignWithGoogle = () => {
     <button
       onClick={handleGoogleLogin}
       type="button"
-      className="
+      disabled={isLoading}
+      className={`
         w-full flex items-center justify-center gap-3
         py-3 sm:py-4 px-4 rounded-full border-2 border-itemBorder
         text-lg sm:text-xl font-medium
         bg-cardBackground text-textContent hover:bg-cardBackgroundHover
         focus:outline-none focus:border-itemBorderFocus
         transition-all duration-200 ease-in-out
-      "
+        ${isLoading && "opacity-70 cursor-not-allowed"}
+      `}
     >
-      <GoogleGIcon className="w-6 h-6 sm:w-7 sm:h-7" />
-      <span>Sign in with Google</span>
+      {isLoading ? (
+        <span className="flex items-center justify-center gap-1">
+          <span className="font-semibold text-textContent">Signing you in</span>
+          <span className="animate-bounce mx-0.5 font-bold text-textContent">
+            .
+          </span>
+          <span
+            className="animate-bounce mx-0.5 font-bold text-textContent"
+            style={{ animationDelay: "0.2s" }}
+          >
+            .
+          </span>
+          <span
+            className="animate-bounce mx-0.5 font-bold text-textContent"
+            style={{ animationDelay: "0.4s" }}
+          >
+            .
+          </span>
+        </span>
+      ) : (
+        <>
+          <GoogleGIcon className="w-6 h-6 sm:w-7 sm:h-7" />
+          <span>Sign in with Google</span>
+        </>
+      )}
     </button>
   );
 };
