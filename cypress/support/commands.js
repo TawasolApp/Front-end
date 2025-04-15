@@ -24,6 +24,8 @@
 // -- This will overwrite an existing command --
 // Cypress.Commands.overwrite('visit', (originalFn, url, options) => { ... })
 
+import 'cypress-file-upload';
+
 Cypress.Commands.add('login', (username) => {
     cy.visit('http://localhost:5173/auth/signin');
     cy.get('#email').type(username.email);
