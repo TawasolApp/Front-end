@@ -80,7 +80,7 @@ const Comment = ({ comment }) => {
                 {formatDate(comment.timestamp)}
               </span>
               <DropdownMenu menuItems={menuItems} position="right-0">
-                <button className="text-icon hover:bg-buttonIconHover rounded-full p-1">
+                <button data-testid="PostCommentEllipsis" className="text-icon hover:bg-buttonIconHover rounded-full p-1">
                   <MoreHorizIcon className="w-5 h-5" />
                 </button>
               </DropdownMenu>

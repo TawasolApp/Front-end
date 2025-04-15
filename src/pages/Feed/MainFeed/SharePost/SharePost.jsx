@@ -19,6 +19,7 @@ const SharePost = ({
             src={currentAuthorPicture}
           />
           <button
+            data-testid="start-post-button"
             onClick={() => setIsModalOpen(true)}
             className="flex-1 pl-4 pr-2 py-2 my-1 bg-cardBackground hover:bg-cardBackgroundHover rounded-full border-2 border-itemBorder text-left"
           >
