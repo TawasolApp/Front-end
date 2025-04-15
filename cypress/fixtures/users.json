@@ -39,7 +39,8 @@
     },
     "userDestiny": {
       "email": "danika25@gmail.com",
-      "password": "TestPassword123"
+      "password": "TestPassword123",
+      "owner": "marwan"
     },
     "userPrice": {
       "email": "carlie_murray@yahoo.com",
