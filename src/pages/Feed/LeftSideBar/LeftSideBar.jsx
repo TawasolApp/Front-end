@@ -45,7 +45,7 @@ const LeftSideBar = () => {
   };
 
   return (
-    <div className="w-full">
+    <div data-testid="LeftSideBar" className="w-full">
       <div className="relative">
         <div
           className="h-20 bg-cover bg-center rounded-t-lg"
@@ -63,10 +63,10 @@ const LeftSideBar = () => {
 
       <Link to={`/users/${currentAuthorId}`}>
         <div className="pt-10 pb-4 text-center px-2">
-          <h2 className="font-semibold text-base text-authorName">
+          <h2 data-testid="LeftSideBarName" className="font-semibold text-base text-authorName">
             {currentAuthorName}
           </h2>
-          <p className="text-xs font-normal text-authorBio mt-1">
+          <p data-testid="LeftSideBarBio" className="text-xs font-normal text-authorBio mt-1">
             {currentAuthorBio}
           </p>
         </div>
@@ -80,7 +80,7 @@ const LeftSideBar = () => {
       >
         <div className="flex items-center px-3 py-2 text-sm hover:bg-buttonIconHover cursor-pointer group transition-all">
           <WorkIcon className="text-yellow-600 mr-2 text-base" />
-          <span className="text-xs font-semibold text-textHeavyTitle group-hover:text-textHeavyTitleHover">
+          <span data-testid="LeftSideBarPremium" className="text-xs font-semibold text-textHeavyTitle group-hover:text-textHeavyTitleHover">
             Try Premium for EGP0
           </span>
         </div>
@@ -88,7 +88,7 @@ const LeftSideBar = () => {
         <Link to="/my-items/saved-posts">
           <div className="flex items-center px-3 py-2 text-sm hover:bg-buttonIconHover cursor-pointer group transition-all">
             <BookmarkIcon className="text-gray-400 mr-2 text-base" />
-            <span className="text-xs font-semibold text-textHeavyTitle group-hover:text-textHeavyTitleHover">
+            <span data-testid="LeftSideBarSavedItems" className="text-xs font-semibold text-textHeavyTitle group-hover:text-textHeavyTitleHover">
               Saved items
             </span>
           </div>

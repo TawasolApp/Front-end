@@ -36,7 +36,7 @@ const CommentsContainer = () => {
       {comments &&
         comments.length > 0 &&
         comments.map((comment, index) => (
-          <div key={index} className="py-2">
+          <div key={index} data-testid="CommentContainer" className="py-2">
             <Comment comment={comment} />
           </div>
         ))}

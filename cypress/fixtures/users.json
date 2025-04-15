@@ -1,136 +1,316 @@
 {
-    "userAbbigail": {
-      "email": "devan_gottlieb@yahoo.com",
-      "password": "TestPassword123",
-      "owner": "marwan"
-    },
-    "userDarrion": {
-      "email": "patsy71@yahoo.com",
-      "password": "TestPassword123",
-      "owner": "marwan"
-    },
-    "userAndre": {
-      "email": "jesus_gusikowski@hotmail.com",
-      "password": "TestPassword123",
-      "owner": "marwan"
-    },
-    "userNatalia": {
-      "email": "elliott.kshlerin@gmail.com",
-      "password": "TestPassword123",
-      "owner": "marwan"
-    },
-    "userJeramy": {
-      "email": "mariane19@gmail.com",
-      "password": "TestPassword123",
-      "owner": "marwan"
-    },
-    "userHillard": {
-      "email": "roger70@gmail.com",
-      "password": "TestPassword123",
-      "owner": "marwan"
-    },
-    "userWendy": {
-      "email": "nathaniel.dach69@hotmail.com",
-      "password": "TestPassword123"
-    },
-    "userVirginie": {
-      "email": "marjory70@yahoo.com",
-      "password": "TestPassword123"
-    },
-    "userDestiny": {
-      "email": "danika25@gmail.com",
-      "password": "TestPassword123",
-      "owner": "marwan"
-    },
-    "userPrice": {
-      "email": "carlie_murray@yahoo.com",
-      "password": "TestPassword123"
-    },
-    "userBrooks": {
-      "email": "rosalinda.roob@gmail.com",
-      "password": "TestPassword123"
-    },
-    "userKaylie": {
-      "email": "petra_barrows@yahoo.com",
-      "password": "TestPassword123"
-    },
-    "userRaegan": {
-      "email": "alana2@gmail.com",
-      "password": "TestPassword123"
-    },
-    "userDwight": {
-      "email": "jed51@hotmail.com",
-      "password": "TestPassword123"
-    },
-    "userEdison": {
-      "email": "eulah94@hotmail.com",
-      "password": "TestPassword123"
-    },
-    "userEloy": {
-      "email": "melody56@yahoo.com",
-      "password": "TestPassword123"
-    },
-    "userProvidenci": {
-      "email": "hilton.oconnell11@yahoo.com",
-      "password": "TestPassword123"
-    },
-    "userBuford": {
-      "email": "shane48@gmail.com",
-      "password": "TestPassword123"
-    },
-    "userAlphonso": {
-      "email": "stephon31@yahoo.com",
-      "password": "TestPassword123"
-    },
-    "userColby": {
-      "email": "renee30@gmail.com",
-      "password": "TestPassword123"
-    },
-    "userDillan": {
-      "email": "hilbert.blick64@gmail.com",
-      "password": "TestPassword123"
-    },
-    "userGilberto": {
-      "email": "rylee_franey@hotmail.com",
-      "password": "TestPassword123"
-    },
-    "userDarrick": {
-      "email": "cyril.marks@yahoo.com",
-      "password": "TestPassword123"
-    },
-    "userTheresa": {
-      "email": "annabelle.mills70@yahoo.com",
-      "password": "TestPassword123"
-    },
-    "userKareem": {
-      "email": "hannah5@hotmail.com",
-      "password": "TestPassword123",
-      "owner": "sawy"
-    },
-    "userBertrand": {
-      "email": "edgardo.mante77@hotmail.com",
-      "password": "TestPassword123",
-      "owner": "sawy"
-    },
-    "userDimitri": {
-      "email": "vaughn.reinger@yahoo.com",
-      "password": "TestPassword123",
-      "owner": "sawy"
-    },
-    "userTrevor": {
-      "email": "tom.emard6@hotmail.com",
-      "password": "TestPassword123",
-      "owner": "sawy"
-    },
-    "userEfren": {
-      "email": "judah78@gmail.com",
-      "password": "TestPassword123",
-      "owner": "sawy"
-    },
-    "userDallas": {
-      "email": "collin.davis@yahoo.com",
-      "password": "TestPassword123", 
-      "owner": "sawy"
-    }
+  "userAbbigail": {
+    "first_name": "Abbigail",
+    "last_name": "Howe",
+    "email": "devan_gottlieb@yahoo.com",
+    "password": "TestPassword123",
+    "role": "manager",
+    "is_verified": true,
+    "is_social_login": false,
+    "created_at": "2025-02-27T10:19:27.368Z",
+    "owner": "marwan"
+  },
+  "userDarrion": {
+    "first_name": "Darrion",
+    "last_name": "Tromp",
+    "email": "patsy71@yahoo.com",
+    "password": "TestPassword123",
+    "role": "employer",
+    "is_verified": true,
+    "is_social_login": false,
+    "created_at": "2024-06-07T12:37:54.640Z",
+    "owner": "marwan"
+  },
+  "userAndre": {
+    "first_name": "Andre",
+    "last_name": "Kiehn",
+    "email": "jesus_gusikowski@hotmail.com",
+    "password": "TestPassword123",
+    "role": "admin",
+    "is_verified": true,
+    "is_social_login": false,
+    "created_at": "2023-11-05T18:49:41.760Z",
+    "owner": "marwan"
+  },
+  "userNatalia": {
+    "first_name": "Natalia",
+    "last_name": "Rosenbaum",
+    "email": "elliott.kshlerin@gmail.com",
+    "password": "TestPassword123",
+    "role": "customer",
+    "is_verified": true,
+    "is_social_login": false,
+    "created_at": "2023-06-08T12:32:18.828Z",
+    "owner": "marwan"
+  },
+  "userJeramy": {
+    "first_name": "Jeramy",
+    "last_name": "Batz",
+    "email": "mariane19@gmail.com",
+    "password": "TestPassword123",
+    "role": "admin",
+    "is_verified": true,
+    "is_social_login": false,
+    "created_at": "2024-10-11T04:42:23.112Z",
+    "owner": "marwan"
+  },
+  "userHillard": {
+    "first_name": "Hillard",
+    "last_name": "Macejkovic",
+    "email": "roger70@gmail.com",
+    "password": "TestPassword123",
+    "role": "customer",
+    "is_verified": true,
+    "is_social_login": false,
+    "created_at": "2023-08-04T00:16:01.361Z",
+    "owner": "marwan"
+  },
+  "userDestiny": {
+    "first_name": "Destiny",
+    "last_name": "Tromp",
+    "email": "danika25@gmail.com",
+    "password": "TestPassword123",
+    "role": "customer",
+    "is_verified": true,
+    "is_social_login": false,
+    "created_at": "2024-08-29T05:50:27.070Z",
+    "owner": "marwan"
+  },
+  "userWendy": {
+    "first_name": "Wendy",
+    "last_name": "Nicolas",
+    "email": "nathaniel.dach69@hotmail.com",
+    "password": "TestPassword123",
+    "role": "employer",
+    "is_verified": true,
+    "is_social_login": false,
+    "created_at": "2024-11-20T13:12:30.195Z"
+  },
+  "userVirginie": {
+    "first_name": "Virginie",
+    "last_name": "Gibson",
+    "email": "marjory70@yahoo.com",
+    "password": "TestPassword123",
+    "role": "employer",
+    "is_verified": true,
+    "is_social_login": false,
+    "created_at": "2023-06-29T07:26:00.181Z"
+  },
+  "userPrice": {
+    "first_name": "Price",
+    "last_name": "Emmerich",
+    "email": "carlie_murray@yahoo.com",
+    "password": "TestPassword123",
+    "role": "manager",
+    "is_verified": true,
+    "is_social_login": false,
+    "created_at": "2024-12-28T06:14:36.319Z"
+  },
+  "userBrooks": {
+    "first_name": "Brooks",
+    "last_name": "Ferry",
+    "email": "rosalinda.roob@gmail.com",
+    "password": "TestPassword123",
+    "role": "manager",
+    "is_verified": true,
+    "is_social_login": false,
+    "created_at": "2023-07-19T20:58:10.589Z"
+  },
+  "userKaylie": {
+    "first_name": "Kaylie",
+    "last_name": "Hoeger",
+    "email": "petra_barrows@yahoo.com",
+    "password": "TestPassword123",
+    "role": "admin",
+    "is_verified": true,
+    "is_social_login": false,
+    "created_at": "2024-11-25T04:01:56.367Z"
+  },
+  "userRaegan": {
+    "first_name": "Raegan",
+    "last_name": "Yost",
+    "email": "alana2@gmail.com",
+    "password": "TestPassword123",
+    "role": "customer",
+    "is_verified": true,
+    "is_social_login": false,
+    "created_at": "2023-07-17T09:06:40.599Z"
+  },
+  "userDwight": {
+    "first_name": "Dwight",
+    "last_name": "Halvorson",
+    "email": "jed51@hotmail.com",
+    "password": "TestPassword123",
+    "role": "customer",
+    "is_verified": true,
+    "is_social_login": false,
+    "created_at": "2024-03-21T15:40:49.656Z"
+  },
+  "userEdison": {
+    "first_name": "Edison",
+    "last_name": "Hilpert",
+    "email": "eulah94@hotmail.com",
+    "password": "TestPassword123",
+    "role": "manager",
+    "is_verified": true,
+    "is_social_login": false,
+    "created_at": "2024-10-07T01:10:11.631Z"
+  },
+  "userEloy": {
+    "first_name": "Eloy",
+    "last_name": "Dibbert",
+    "email": "melody56@yahoo.com",
+    "password": "TestPassword123",
+    "role": "customer",
+    "is_verified": true,
+    "is_social_login": false,
+    "created_at": "2024-11-18T02:35:42.618Z"
+  },
+  "userProvidenci": {
+    "first_name": "Providenci",
+    "last_name": "Keeling",
+    "email": "hilton.oconnell11@yahoo.com",
+    "password": "TestPassword123",
+    "role": "customer",
+    "is_verified": true,
+    "is_social_login": false,
+    "created_at": "2023-10-22T17:04:31.427Z"
+  },
+  "userBuford": {
+    "first_name": "Buford",
+    "last_name": "Okuneva",
+    "email": "shane48@gmail.com",
+    "password": "TestPassword123",
+    "role": "employer",
+    "is_verified": true,
+    "is_social_login": false,
+    "created_at": "2023-09-11T03:15:38.481Z"
+  },
+  "userAlphonso": {
+    "first_name": "Alphonso",
+    "last_name": "Hartmann",
+    "email": "stephon31@yahoo.com",
+    "password": "TestPassword123",
+    "role": "customer",
+    "is_verified": true,
+    "is_social_login": false,
+    "created_at": "2024-01-11T23:30:06.406Z"
+  },
+  "userColby": {
+    "first_name": "Colby",
+    "last_name": "Jacobs",
+    "email": "renee30@gmail.com",
+    "password": "TestPassword123",
+    "role": "employer",
+    "is_verified": true,
+    "is_social_login": false,
+    "created_at": "2023-11-08T08:14:21.976Z"
+  },
+  "userDillan": {
+    "first_name": "Dillan",
+    "last_name": "Koepp",
+    "email": "hilbert.blick64@gmail.com",
+    "password": "TestPassword123",
+    "role": "admin",
+    "is_verified": true,
+    "is_social_login": false,
+    "created_at": "2024-02-08T18:51:19.853Z"
+  },
+  "userGilberto": {
+    "first_name": "Gilberto",
+    "last_name": "Walter",
+    "email": "rylee_franey@hotmail.com",
+    "password": "TestPassword123",
+    "role": "manager",
+    "is_verified": true,
+    "is_social_login": false,
+    "created_at": "2024-01-11T12:19:51.719Z"
+  },
+  "userDarrick": {
+    "first_name": "Darrick",
+    "last_name": "Reynolds",
+    "email": "cyril.marks@yahoo.com",
+    "password": "TestPassword123",
+    "role": "employer",
+    "is_verified": true,
+    "is_social_login": false,
+    "created_at": "2023-11-02T03:04:13.083Z"
+  },
+  "userTheresa": {
+    "first_name": "Theresa",
+    "last_name": "Gislason",
+    "email": "annabelle.mills70@yahoo.com",
+    "password": "TestPassword123",
+    "role": "employer",
+    "is_verified": true,
+    "is_social_login": false,
+    "created_at": "2023-11-27T22:19:18.789Z"
+  },
+  "userKareem": {
+    "first_name": "Kareem",
+    "last_name": "Luettgen",
+    "email": "hannah5@hotmail.com",
+    "password": "TestPassword123",
+    "role": "manager",
+    "is_verified": true,
+    "is_social_login": false,
+    "created_at": "2024-04-06T08:34:00.577Z",
+    "owner": "sawy"
+  },
+  "userBertrand": {
+    "first_name": "Bertrand",
+    "last_name": "Crooks-Smitham",
+    "email": "edgardo.mante77@hotmail.com",
+    "password": "TestPassword123",
+    "role": "employer",
+    "is_verified": true,
+    "is_social_login": false,
+    "created_at": "2024-05-27T04:29:23.026Z",
+    "owner": "sawy"
+
+  },
+  "userDimitri": {
+    "first_name": "Dimitri",
+    "last_name": "Torphy",
+    "email": "vaughn.reinger@yahoo.com",
+    "password": "TestPassword123",
+    "role": "manager",
+    "is_verified": true,
+    "is_social_login": false,
+    "created_at": "2025-02-21T09:11:24.284Z",
+    "owner": "sawy"
+  },
+  "userTrevor": {
+    "first_name": "Trevor",
+    "last_name": "Erdman-Kozey",
+    "email": "tom.emard6@hotmail.com",
+    "password": "TestPassword123",
+    "role": "employer",
+    "is_verified": true,
+    "is_social_login": false,
+    "created_at": "2024-06-17T11:04:02.850Z",
+    "owner": "sawy"
+  },
+  "userEfren": {
+    "first_name": "Efren",
+    "last_name": "Ernser",
+    "email": "judah78@gmail.com",
+    "password": "TestPassword123",
+    "role": "admin",
+    "is_verified": true,
+    "is_social_login": false,
+    "created_at": "2024-06-24T10:03:56.513Z",
+    "owner": "sawy"
+  },
+  "userDallas": {
+    "first_name": "Dallas",
+    "last_name": "Shields",
+    "email": "collin.davis@yahoo.com",
+    "password": "TestPassword123",
+    "role": "manager",
+    "is_verified": true,
+    "is_social_login": false,
+    "created_at": "2023-07-28T19:23:20.247Z",
+    "owner": "sawy"
   }
-  
+}

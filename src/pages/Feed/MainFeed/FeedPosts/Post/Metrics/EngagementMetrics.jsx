@@ -40,7 +40,7 @@ const EngagementMetrics = ({ setShowLikes, setShowComments }) => {
           })}
         </div>
         {totalLikes > 0 && (
-          <span className="text-sm ml-1 group-hover:text-textPlaceholderHover group-hover:underline">
+          <span data-testid="PostLikeCount" className="text-sm ml-1 group-hover:text-textPlaceholderHover group-hover:underline">
             {totalLikes}
           </span>
         )}
@@ -48,6 +48,7 @@ const EngagementMetrics = ({ setShowLikes, setShowComments }) => {
       <div className="flex items-center">
         {comments > 0 && (
           <button
+            data-testid="PostCommentCount"
             className="text-xs mx-1 hover:underline hover:text-textPlaceholderHover"
             onClick={setShowComments}
           >
@@ -57,6 +58,7 @@ const EngagementMetrics = ({ setShowLikes, setShowComments }) => {
         {comments > 0 && shares > 0 && <span className="mx-1">•</span>}
         {shares > 0 && (
           <button
+            data-testid="PostRepostCount"
             className="text-xs mx-1 hover:underline hover:text-textPlaceholderHover"
             onClick={() => navigate(`/feed/reposts/${post.id}`)}
           >

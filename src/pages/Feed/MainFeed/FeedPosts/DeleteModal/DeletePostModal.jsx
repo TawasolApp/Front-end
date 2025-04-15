@@ -37,6 +37,7 @@ const DeletePostModal = ({ closeModal, deleteFunc, commentOrPost }) => {
             Cancel
           </button>
           <button
+            data-testid="postDeleteButton"
             onClick={handleDelete}
             className="px-4 py-2 rounded font-medium text-buttonSubmitText bg-buttonSubmitEnable hover:bg-buttonSubmitEnableHover disabled:cursor-not-allowed"
             disabled={isLoading}
