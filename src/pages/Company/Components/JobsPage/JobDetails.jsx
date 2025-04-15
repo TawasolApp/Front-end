@@ -57,6 +57,7 @@ function JobDetails({ job, logo, name }) {
 
       <div className="mt-4">
         <button
+          data-testid="JobApplyButton"
           onClick={handleApplyClick}
           className="flex items-center gap-2 bg-blue-600 hover:bg-blue-700 text-text px-5 py-2 rounded-md text-sm font-medium"
         >

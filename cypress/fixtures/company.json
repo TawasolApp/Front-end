@@ -1,0 +1,32 @@
+{
+    "testCompany2": {
+      "name": "Acme Corporation",
+      "tagline": "Building the Future Today",
+      "organizationType": "Public Company",
+      "organizationSize": "1-50 Employees",
+      "industry": "Technology",
+      "overview": "Leading technology company specializing in innovative solutions",
+      "foundedYear": "2020",
+      "website": "https://www.acmecorp.com",
+      "address": "123 Innovation Drive",
+      "location": "https://www.google.com/maps?q=89.6833,27.6897",
+      "email": "contact@acmecorp.com",
+      "phone": "1234567890",
+      "logo": "cypress/fixtures/t-stat.png"
+    },
+    "testCompany": {
+        "name": "TechVision Labs",
+        "tagline": "Innovate. Transform. Excel.",
+        "organizationType": "Public Company",
+        "organizationSize": "51-400 Employees",
+        "industry": "Software Development",
+        "overview": "A cutting-edge software development company focused on AI and machine learning solutions, transforming businesses through innovative technology.",
+        "foundedYear": "2018",
+        "website": "https://www.techvisionlabs.com",
+        "address": "456 Digital Avenue",
+        "location": "https://www.google.com/maps?q=34.0522,118.2437",
+        "email": "info@techvisionlabs.com",
+        "phone": "9876543210",
+        "logo": "cypress/fixtures/t-stat.png"
+    }
+}

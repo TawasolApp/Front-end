@@ -9,13 +9,13 @@ describe('Search Posts & Interactions', () => {
       cy.getNavbarSearch().type('Taceo{enter}');
     });
 
-    it.skip('Searches for a post', () => {
+    it('Searches for a post', () => {
         cy.getPost().first().within(() => {
             cy.contains('Textilis atqui thesaurus. Taceo aqua carmen. Aestivus quae pax solio talio cursus mollitia.').should('exist');
         });
     });
 
-    it.skip('Adds a like to a post', () => {
+    it('Adds a like to a post', () => {
         cy.getPost().first().within(() => {
             cy.getPostLikeCount().should('have.text', '5');
             cy.getPostReact().click();
@@ -47,7 +47,7 @@ describe('Search Posts & Interactions', () => {
         cy.getPostCommentCount().should('have.text', '1 comment');
     });
     
-    //SEED FOR THIS TO PASS
+    //SEED FOR THIS TO PASS (Cannot remove repost)
     it('Reposts a post', () => {
         cy.getPostRepostCount().should('have.text', '2 reposts'); 
         cy.getPost().first().within(() => {
@@ -74,7 +74,6 @@ describe('Search Posts & Interactions', () => {
         });
     });
 
-    
     it('unsaves a post', () => {
         cy.intercept('DELETE', '**/posts/save/**').as('deletePost');
         cy.visit('http://localhost:5173/my-items/saved-posts');
@@ -86,6 +85,4 @@ describe('Search Posts & Interactions', () => {
         cy.visit('http://localhost:5173/my-items/saved-posts');
         cy.contains('No posts yet').should('be.visible');
     });
-
-
   });

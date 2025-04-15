@@ -238,7 +238,7 @@ function CreateCompanyPage() {
                 }`}
               >
                 <option value="">Select size</option>
-                <option>1-50 Employees</option>
+                <option data-testid="1-50Emp">1-50 Employees</option>
                 <option>51-400 Employees</option>
                 <option>401-1000 Employees</option>
                 <option>1001-10000 Employees</option>
@@ -264,7 +264,7 @@ function CreateCompanyPage() {
                 }`}
               >
                 <option value="">Select type</option>
-                <option>Public Company</option>
+                <option data-testid="PublicCompany">Public Company</option>
                 <option>Self Employed</option>
                 <option>Government Agency</option>
                 <option>Non Profit</option>
@@ -434,7 +434,7 @@ function CreateCompanyPage() {
               >
                 Logo
               </label>
-              <div className="w-full min-h-[100px] border border-gray-400 rounded-md bg-uploadimage relative flex flex-col items-center justify-center px-4 py-6 text-center">
+              <div data-testid="company-logo" className="w-full min-h-[100px] border border-gray-400 rounded-md bg-uploadimage relative flex flex-col items-center justify-center px-4 py-6 text-center">
                 <div className="flex flex-col items-center justify-center gap-1 text-gray-600">
                   <FiUpload className="text-2xl font-semibold text-normaltext" />
                   <p className="font-semibold text-sm text-normaltext">
@@ -448,7 +448,7 @@ function CreateCompanyPage() {
                 <input
                   type="file"
                   id="company-logo"
-                  data-testid="company-logo"
+                  data-testid="company-logo-add"
                   accept="image/*"
                   className="absolute inset-0 opacity-0 cursor-pointer"
                   onChange={handleLogoUpload}
@@ -534,6 +534,7 @@ function CreateCompanyPage() {
         {/* Submit Button */}
         <div className="flex mt-6">
           <button
+            data-testid="create-page-button"
             onClick={handleSubmit}
             disabled={!agreeTerms}
             className={`px-6 py-2 rounded-full font-semibold transition ${
