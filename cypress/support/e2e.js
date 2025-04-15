@@ -15,5 +15,6 @@
 
 // Import commands.js using ES2015 syntax:
 import './commands'
-import './NewsFeed'
+import './posts'
 import './auth'
+import './companies'

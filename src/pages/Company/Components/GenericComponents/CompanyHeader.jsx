@@ -106,8 +106,10 @@ function CompanyHeader({
             <h1 className="text-2xl font-semibold uppercase text-text">
               {company.name}
             </h1>
-            {showAdminIcons && (
+            {showAdminIcons 
+            && (
               <button
+                data-testid="EditCompanyButton"
                 className="absolute right-0 bg-boxbackground p-2 rounded-full shadow-md border border-gray-300 transition"
                 aria-label="Edit Company"
                 onClick={() => setShowEditModal(true)}
@@ -168,6 +170,7 @@ function CompanyHeader({
             {/* More Options Button */}
             <div className="relative">
               <button
+                data-testid="company-page-ellipsis"
                 className="w-9 h-9 border-2 border-gray-600 rounded-full flex items-center justify-center"
                 aria-label="More options"
                 onClick={() => setShowMoreModal((prev) => !prev)}
@@ -207,6 +210,7 @@ function CompanyHeader({
             <div className="flex flex-nowrap gap-3 sm:gap-4 items-center justify-start pb-0">
               {["Home", "About", "Posts", "Jobs"].map((buttonName) => (
                 <button
+                  data-testid={`company-${buttonName.toLowerCase()}-button`}
                   key={buttonName}
                   className={` pb-2 ${
                     activeButton === buttonName.toLowerCase()

@@ -32,6 +32,7 @@ const SearchContainer = () => {
             {/* Filter Type Dropdown - Custom green button */}
             <div className="relative mr-4">
               <button
+                data-testid="SearchDropdown"
                 onClick={() => setIsDropdownOpen(!isDropdownOpen)}
                 className="flex items-center space-x-2 px-4 py-2 rounded-full bg-green-500 hover:bg-green-600 text-black font-medium transition-colors"
               >
@@ -44,6 +45,7 @@ const SearchContainer = () => {
                   <div className="py-1" role="menu" aria-orientation="vertical">
                     {["Posts", "People", "Companies"].map((filter) => (
                       <button
+                        data-testid={`SearchDropdownOption-${filter.toLowerCase()}`}
                         key={filter}
                         onClick={() => handleFilterChange(filter)}
                         className={`block w-full text-left px-4 py-2 text-sm text-textActivity hover:text-textActivityHover hover:bg-cardBackgroundHover transition-colors ${

@@ -7,7 +7,7 @@ describe('open news feed', () => {
 
     });
 
-    describe.skip('Post interactions', () => {
+    describe('Post interactions', () => {
         it('Creates a Post', () => {
             cy.getCreatePost().click();
             cy.getCreatePostInput().click().type('This is a test post');
