@@ -32,6 +32,24 @@ describe("creates and updates profile", () => {
       // assert new info is displayed
       cy.contains('Australia').should('be.visible');
       cy.get('p').contains('Wakanda').should('not.exist');
+
+      // add bio
+      cy.get('.justify-between > .w-8').click();
+      cy.get('.shadow-md.relative > .fixed > .p-6 > .w-full').type("Hello");
+      cy.get('.shadow-md.relative > .fixed > .p-6 > .flex > .px-4').click();
+
+      cy.wait(2000);
+
+      // aseert existence
+      cy.get('.text-sm > .whitespace-pre-wrap').should('have.text', "Hello");
+
+      // update bio
+      cy.get('.justify-between > .w-8').click();
+      cy.get('.shadow-md.relative > .fixed > .p-6 > .w-full').type(", world!");
+      cy.get('.shadow-md.relative > .fixed > .p-6 > .flex > .px-4').click();
+
+      // assert update
+      cy.get('.text-sm > .whitespace-pre-wrap').should('have.text', "Hello, world!");
     });
   });
   

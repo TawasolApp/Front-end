@@ -1,10 +1,10 @@
-describe("adds, updates, deletes cover photo", () => {
+describe("adds, updates, deletes work experience", () => {
     beforeEach(() => {
       cy.visit("http://localhost:5173");
       cy.getUpperRegistrationButton().click();
     });
   
-    it("interacts with cover photo", () => {
+    it("interacts with work experience", () => {
       let user = {
         email: "",
         password: "07032004",
@@ -72,6 +72,8 @@ describe("adds, updates, deletes cover photo", () => {
       cy.get('[data-testid="delete-button"]').click();
       cy.get('[data-testid="confirm-modal"]').click();
       cy.get('.gap-2 > .w-10').click();
+
+      cy.wait(5000);
 
       // assert non-existence of updates
       cy.contains("Consultant").should('not.exist');
