@@ -80,15 +80,15 @@ Cypress.Commands.add('getRegistrationFormButton', () => {
     cy.get('.focus\\:ring-2');
 })
 
-Cypress.Commands.add('register', (user, inboxName) => {
+Cypress.Commands.add('register', (user, inboxName, firstName = "Marwan", lastName = "Ahmed") => {
     // Complete registration form
     cy.getRegistrationFormEmailTextbox().type(user.email);
     cy.getRegistrationFormPasswordTextbox().type(user.password);
     cy.getRegistrationFormButton().click();
 
     // Complete profile info
-    cy.get("#firstName").type("Marwan");
-    cy.get("#lastName").type("Ahmed");
+    cy.get("#firstName").type(firstName);
+    cy.get("#lastName").type(lastName);
     cy.get(".py-3").click();
 
     cy.wait(10000);
