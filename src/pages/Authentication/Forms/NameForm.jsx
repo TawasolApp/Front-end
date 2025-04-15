@@ -58,10 +58,10 @@ const NameForm = ({ onSubmit }) => {
 
     const captchaToken = await recaptchaRef.current.getValue();
 
-    if (!captchaToken) {
-      setCaptchaError("Please complete the CAPTCHA.");
-      return;
-    }
+    // if (!captchaToken) {
+    //   setCaptchaError("Please complete the CAPTCHA.");
+    //   return;
+    // }
     setCaptchaError("");
 
     onSubmit(formData, captchaToken);
