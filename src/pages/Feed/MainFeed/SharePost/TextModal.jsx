@@ -192,6 +192,7 @@ const TextModal = ({
                     {renderMediaPreview(item)}
 
                     <button
+                      data-testid="removeMediaButton"
                       type="button"
                       onClick={() => removeMedia(index)}
                       className="absolute top-1 right-1 bg-black bg-opacity-50 rounded-full p-1 hover:bg-opacity-70"
@@ -211,6 +212,7 @@ const TextModal = ({
           <div className="flex justify-between items-center mt-4">
             {/* Media Upload Button */}
             <button
+              data-testid="mediaUploadButton"
               type="button"
               className="p-2 rounded-md hover:bg-buttonIconHover flex items-center gap-1 font-semibold text-textActivity hover:text-textActivityHover disabled:cursor-not-allowed"
               onClick={() => fileInputRef.current.click()}

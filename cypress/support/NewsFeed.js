@@ -80,7 +80,7 @@ Cypress.Commands.add('getPost', () => {
   return cy.get('[data-testid="post"]');
 });
 
-Cypress.Commands.add('getPostComment', () => {
+Cypress.Commands.add('getPostCommentShow', () => {
   return cy.get('[data-testid="postComment"]');
 });
 
@@ -99,6 +99,24 @@ Cypress.Commands.add('getPostSend', () => {
 Cypress.Commands.add('getPostEllipsis', () => {
   return cy.get('[data-testid="postEllipsis"]');
 });
+
+Cypress.Commands.add("getPostLikeCount", () => {
+  return cy.get('[data-testid="PostLikeCount"]');
+});
+
+Cypress.Commands.add("getPostCommentCount", () => {
+  return cy.get('[data-testid="PostCommentCount"]');
+});
+
+Cypress.Commands.add("getPostRepostCount", () => {
+  return cy.get('[data-testid="PostRepostCount"]');
+});
+
+Cypress.Commands.add('getPostEllipsisRepost', () => {
+  return cy.get('[data-testid="postEllipsis-repost"]');
+});
+
+
 
 
 // Post ellipsis menu options
@@ -122,6 +140,67 @@ Cypress.Commands.add('getPostEllipsisSave', () => {
   return cy.get('[data-testid="postEllipsis-save-post"]');
 });
 
+Cypress.Commands.add("getPostEllipsisUnsave", () => {
+  return cy.get('[data-testid="postEllipsis-unsave-post"]');
+});
+
 Cypress.Commands.add('getPostEllipsisCopyLink', () => {
   return cy.get('[data-testid="postEllipsis-copy-link-to-post"]');
+});
+
+Cypress.Commands.add('getPostCommentEllipsis', () => {
+  return cy.get('[data-testid="PostCommentEllipsis"]');
+});
+
+Cypress.Commands.add('getPostCommentEllipsisEdit', () => {
+  return cy.get('[data-testid="postEllipsis-edit-comment"]');
+});
+
+Cypress.Commands.add('getPostCommentEllipsisEdit', () => {
+  return cy.get('[data-testid="postEllipsis-edit-comment"]');
+});
+
+Cypress.Commands.add('getPostCommentEllipsisDelete', () => {
+  return cy.get('[data-testid="postEllipsis-delete-comment"]');
+});
+
+// *********************************************** CREATE POSTS ***********************************************
+
+Cypress.Commands.add('getCreatePost', () => {
+  return cy.get('[data-testid="start-post-button"]');
+});
+
+Cypress.Commands.add('getCreatePostInput', () => {
+  return cy.get('.pb-4 > .relative > .w-full');
+});
+
+
+Cypress.Commands.add('getCreatePostButton', () => {
+  return cy.get('.px-6');
+});
+
+
+Cypress.Commands.add("getPostDeleteButton", () => {
+  return cy.get('[data-testid="postDeleteButton"]');
+});
+
+
+Cypress.Commands.add("getPostCommentInput", () => {
+  return cy.get('.flex-1 > .relative > .w-full');
+});
+
+Cypress.Commands.add("getPostCommentButton", () => {
+  return cy.get('.absolute > .px-3');
+});
+
+Cypress.Commands.add("getPostComment", () => {
+  return cy.get('[data-testid="CommentContainer"]');
+});
+
+Cypress.Commands.add("getAddMediaButton", () => {
+  return cy.get('[data-testid="mediaUploadButton"]');
+});
+
+Cypress.Commands.add("getRemoveMediaButton", () => {
+  return cy.get('[data-testid="removeMediaButton"]');
 });
