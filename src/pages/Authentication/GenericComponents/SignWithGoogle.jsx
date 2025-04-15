@@ -47,7 +47,7 @@ const SignWithGoogle = () => {
               );
 
               if (response.status === 201) {
-                const { token, refreshToken, email, isNewUser, isSocialLogin } =
+                const { token, refreshToken, email, isNewUser, is_social_login: isSocialLogin } =
                   response.data;
 
                 dispatch(setToken(token));

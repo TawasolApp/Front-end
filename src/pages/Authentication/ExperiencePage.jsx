@@ -62,7 +62,7 @@ const ExperienceAuthPage = () => {
         });
 
         if (userResponse.status === 201) {
-          const { token, refreshToken, isSocialLogin } = userResponse.data;
+          const { token, refreshToken, is_social_login: isSocialLogin } = userResponse.data;
 
           dispatch(setToken(token));
           dispatch(setRefreshToken(refreshToken));
