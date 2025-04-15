@@ -1,4 +1,4 @@
-const BlueSubmitButton = ({ text, disabled = false, isLoading = false }) => (
+const BlueSubmitButton = ({ text, disabled = false, isLoading = false, loadingText = "Loading" }) => (
   <button
     type="submit"
     className={`
@@ -16,8 +16,8 @@ const BlueSubmitButton = ({ text, disabled = false, isLoading = false }) => (
   >
     {isLoading ? (
       <span className="flex items-center justify-center gap-1">
-        <span className="animate-spin font-semibold text-textContent">↻</span>
-        <span className="font-semibold text-textContent">Loading</span>
+        {/* <span className="animate-spin font-semibold text-textContent">↻</span> */}
+        <span className="font-semibold text-textContent">{loadingText}</span>
         <span className="animate-bounce mx-0.5 font-bold text-textContent">
           .
         </span>

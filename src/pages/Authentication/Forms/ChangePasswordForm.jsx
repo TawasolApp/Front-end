@@ -4,6 +4,7 @@ import BlueSubmitButton from "../GenericComponents//BlueSubmitButton";
 import ArrowBack from "@mui/icons-material/ArrowBack";
 import { axiosInstance } from "../../../apis/axios";
 import { useNavigate } from "react-router-dom";
+import { toast } from "react-toastify";
 
 const ChangePasswordForm = () => {
   const [currentPassword, setCurrentPassword] = useState("");
@@ -15,7 +16,7 @@ const ChangePasswordForm = () => {
   const [newPasswordError, setNewPasswordError] = useState("");
   const [confirmNewPasswordError, setConfirmNewPasswordError] = useState("");
   const [errorMessage, setErrorMessage] = useState("");
-  const [loading, setLoading] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
   const navigate = useNavigate();
 
   const handleSubmit = async (e) => {
@@ -34,7 +35,7 @@ const ChangePasswordForm = () => {
     }
 
     try {
-      setLoading(true);
+      setIsLoading(true);
       setErrorMessage("");
       const response = await axiosInstance.patch("/users/update-password", {
         currentPassword,
@@ -51,14 +52,23 @@ const ChangePasswordForm = () => {
       if (error.response?.status === 400) {
         setErrorMessage("Incorrect current password.");
       } else if (error.response?.status === 401) {
-        setErrorMessage("Unauthorized.");
+        toast.error("Unauthorized.", {
+          position: "top-right",
+          autoClose: 3000,
+        });
       } else if (error.response?.status === 404) {
-        setErrorMessage("User not found.");
+        toast.error("User not found.", {
+          position: "top-right",
+          autoClose: 3000,
+        });
       } else {
-        setErrorMessage("Something went wrong. Please try again.");
+        toast.error("Something went wrong. Please try again.", {
+          position: "top-right",
+          autoClose: 3000,
+        });
       }
     } finally {
-      setLoading(false);
+      setIsLoading(false);
     }
   };
 
@@ -85,7 +95,7 @@ const ChangePasswordForm = () => {
       confirmNewPassword &&
       newPassword.length >= 8 &&
       newPassword === confirmNewPassword &&
-      !loading
+      !isLoading
     );
   };
 
@@ -154,7 +164,7 @@ const ChangePasswordForm = () => {
               setNewPasswordError("Please enter your new password.");
             } else if (newPassword.length < 8) {
               setNewPasswordError(
-                "Your password is too short. It should be at least 8 characters long",
+                "Your password is too short. It should be at least 8 characters long"
               );
             }
           }}
@@ -199,10 +209,7 @@ const ChangePasswordForm = () => {
 
       {/* Buttons */}
       <div className="flex flex-col space-y-4 mt-6">
-        <BlueSubmitButton
-          text={loading ? "Saving..." : "Save Password"}
-          disabled={!isFormValid() || loading}
-        />
+        <BlueSubmitButton text="Save Password" disabled={!isFormValid()} isLoading={isLoading} loadingText="Submitting" />
         <button
           type="button"
           onClick={handleForgotPassword}

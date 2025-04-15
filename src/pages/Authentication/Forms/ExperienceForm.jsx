@@ -526,7 +526,7 @@ const ExperienceForm = ({ onSubmit, isLoading = false }) => {
         </button>
       </div>
 
-      <BlueSubmitButton text="Continue" disabled={!isFormValid()} isLoading={isLoading} />
+      <BlueSubmitButton text="Continue" disabled={!isFormValid()} isLoading={isLoading} loadingText="Submitting" />
     </form>
   );
 };

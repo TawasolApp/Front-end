@@ -99,7 +99,7 @@ const ChangeEmailForm = ({ onSubmit, isLoading = false }) => {
         error={currentPasswordError}
       />
 
-      <BlueSubmitButton text="Submit" isLoading={isLoading} />
+      <BlueSubmitButton text="Submit" isLoading={isLoading} loadingText="Submitting" />
     </form>
   );
 };
