@@ -54,7 +54,7 @@ const ConnectionCard = ({
   return (
     <>
       {/* Connection Card */}
-      <div className="flex items-center justify-between p-3 bg-cardBackground border border-cardBorder rounded-lg shadow-sm transition-shadow w-full h-28">
+      <div data-testid="connections-card" className="flex items-center justify-between p-3 bg-cardBackground border border-cardBorder rounded-lg shadow-sm transition-shadow w-full h-28">
         {/* Left Section */}
         <div className="flex items-center flex-1">
           <img
