@@ -164,6 +164,7 @@ const NetworkBox = () => {
           <div className="space-y-2">
             <div
               onClick={() => navigate(`/connections/${userId}`)}
+              data-testid="connections"
               className="flex items-center p-4 hover:bg-cardBackgroundHover rounded-lg cursor-pointer transition-colors"
             >
               <PeopleIcon className="text-textActivity text-2xl mr-4" />
@@ -171,6 +172,7 @@ const NetworkBox = () => {
             </div>
 
             <div
+              data-testid="following"
               onClick={() => navigate("/follow")}
               className="flex items-center p-4 hover:bg-cardBackgroundHover rounded-lg cursor-pointer transition-colors"
             >
@@ -181,6 +183,7 @@ const NetworkBox = () => {
             </div>
 
             <div
+              data-testid="blocked"
               onClick={() => navigate("/blocked")}
               className="flex items-center p-4 hover:bg-cardBackgroundHover rounded-lg cursor-pointer transition-colors"
             >

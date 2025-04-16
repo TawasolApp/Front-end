@@ -168,6 +168,7 @@ function ViewerView({
       </button>
 
       <button
+        data-testid="connect-button"
         className={`px-4 py-2 border rounded-full text-sm capitalize transition-all duration-300 ease-in-out ${
           ["Connection", "Pending", "Request"].includes(connectStatus)
             ? "bg-blue-600 text-boxbackground  "
@@ -180,6 +181,7 @@ function ViewerView({
       </button>
 
       <button
+        data-testid="follow-button"
         className={`px-4 py-2 border rounded-full text-sm transition-all duration-300 ease-in-out ${
           isFollowing
             ? "bg-blue-600 text-boxbackground  "

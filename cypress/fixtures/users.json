@@ -104,7 +104,8 @@
     "role": "manager",
     "is_verified": true,
     "is_social_login": false,
-    "created_at": "2024-12-28T06:14:36.319Z"
+    "created_at": "2024-12-28T06:14:36.319Z",
+    "owner": "sawy"
   },
   "userBrooks": {
     "first_name": "Brooks",
