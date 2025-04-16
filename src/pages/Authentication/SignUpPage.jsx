@@ -1,12 +1,12 @@
 import React, { useEffect } from "react";
 import SignUpForm from "./Forms/SignUpForm";
 import { useDispatch } from "react-redux";
-import { logout, setEmail, setPassword } from "../../store/authenticationSlice";
+import { logout, setEmail } from "../../store/authenticationSlice";
 import { axiosInstance } from "../../apis/axios";
 import { useNavigate } from "react-router-dom";
 import AuthenticationHeader from "./GenericComponents/AuthenticationHeader";
 
-const SignUpPage = () => {
+const SignUpPage = ({ onSubmit }) => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
@@ -23,7 +23,7 @@ const SignUpPage = () => {
       if (response.status === 201) {
         setEmailError("");
         dispatch(setEmail(formData.email));
-        dispatch(setPassword(formData.password));
+        onSubmit(formData.email, formData.password)
 
         navigate("/auth/signup/name");
       }
