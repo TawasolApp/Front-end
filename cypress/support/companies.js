@@ -187,6 +187,54 @@ Cypress.Commands.add('getSchool', () => {
 }
 );
 
+Cypress.Commands.add('getShowCompanyDetails', () => {
+    return cy.get('[data-testid="overview-box"] > .w-full')
+});
+
+Cypress.Commands.add('getShowCompanyOverview', () => {
+    return cy.get('.text-overview');
+});
+
+Cypress.Commands.add('getShowCompanyWebsite', () => {
+    return cy.get('.text-blue-600');
+});
+
+Cypress.Commands.add('getShowCompanyPhone', () => {
+    return cy.get(':nth-child(4) > .text-overviewcomponenttext');
+});
+
+Cypress.Commands.add('getShowCompanyIndustry', () => {
+    return cy.get(':nth-child(5) > .text-overviewcomponenttext');
+});
+
+Cypress.Commands.add('getShowCompanySize', () => {
+    return cy.get(':nth-child(6) > .text-overviewcomponenttext');
+});
+
+Cypress.Commands.add('getShowCompanyHeadquarters', () => {
+    return cy.get(':nth-child(7) > .text-overviewcomponenttext');
+});
+
+Cypress.Commands.add('getShowCompanyType', () => {
+    return cy.get(':nth-child(8) > .text-overviewcomponenttext');
+});
+
+Cypress.Commands.add('getShowCompanyFounded', () => {
+    return cy.get(':nth-child(9) > .text-overviewcomponenttext');
+});
+
+Cypress.Commands.add('verifyCompanyDetails', (company) => {
+    cy.getShowCompanyOverview().should('contain', company.overview);
+    cy.getShowCompanyWebsite().should('contain', company.website);
+    cy.getShowCompanyPhone().should('contain', company.phone);
+    cy.getShowCompanyIndustry().should('contain', company.industry);
+    cy.getShowCompanySize().should('contain', company.organizationSize);
+    cy.getShowCompanyHeadquarters().should('contain', company.address);
+    cy.getShowCompanyType().should('contain', company.organizationType);
+    cy.getShowCompanyFounded().should('contain', company.foundedYear);
+});
+
+
 Cypress.Commands.add('navigateToCompanyPage', () => {
     cy.intercept('GET', '**/companies?**').as('searchCompanies');
     cy.intercept('GET', '**/posts/search/?**').as('searchPosts');
@@ -199,7 +247,7 @@ Cypress.Commands.add('navigateToCompanyPage', () => {
 });
 
 
-// *********************************************** COMPANY ***********************************************
+// *********************************************** COMPANY JOB ***********************************************
 
 Cypress.Commands.add('getPostJobButton', () => {
     return cy.get('.mb-8 > .flex > .bg-blue-600');
