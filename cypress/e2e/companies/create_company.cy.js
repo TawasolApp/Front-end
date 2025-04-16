@@ -19,7 +19,7 @@ describe('Company Creation', () => {
     });
 
     //SEED TO PASS
-    it.skip('Creates a company', () => {
+    it('Creates a company', () => {
         cy.visit('http://localhost:5173/company/setup/new');
         
         cy.intercept('POST', '**/companies').as('createCompany');
@@ -51,8 +51,14 @@ describe('Company Creation', () => {
         .and('contain', company.organizationSize);
     });
 
+    it('Verifies company creation', () => {
+        cy.navigateToCompanyPage();
+        cy.getShowCompanyDetails().click();
+        cy.verifyCompanyDetails(company);
+    });
+
     //SEED TO PASS
-    it.skip('Edits a company', () => {
+    it('Edits a company', () => {
         cy.navigateToCompanyPage();
         cy.getCompanyPageEdit().click();
 
@@ -72,7 +78,14 @@ describe('Company Creation', () => {
         .and('contain', company_updated.organizationSize);
     });
 
-    it.skip('Creates a Job', () => {
+    it('Verifies company edit', () => {
+        cy.navigateToCompanyPage();
+        cy.getShowCompanyDetails().click();
+        cy.verifyCompanyDetails(company_updated);
+    });
+
+
+    it('Creates a Job', () => {
         cy.navigateToCompanyPage();
         cy.getCompanyJobs().click();
 
