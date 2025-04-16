@@ -14,20 +14,20 @@ describe("register", () => {
     cy.getRegistrationFormEmailTextbox().should("exist");
     cy.getRegistrationFormPasswordLabel().should(
       "have.text",
-      "Password (6+ characters)"
+      "Password (6+ characters)",
     );
     cy.getRegistrationFormPasswordTextbox().should("exist");
     cy.getRegistrationFormButton().should("exist");
   });
 
-    it("Registers successfully", () => {
-      // Generate random Mailinator email
-      const randomString = Math.random().toString(36).substring(2, 10);
-      user.email = `${randomString}@mailinator.com`;
-      const inboxName = randomString;
+  it("Registers successfully", () => {
+    // Generate random Mailinator email
+    const randomString = Math.random().toString(36).substring(2, 10);
+    user.email = `${randomString}@mailinator.com`;
+    const inboxName = randomString;
 
-      cy.register(user, inboxName);
-    });
+    cy.register(user, inboxName);
+  });
 
   it("Does not register due to invalid email", () => {
     // Generate random Mailinator email
@@ -41,7 +41,7 @@ describe("register", () => {
 
     cy.get(".text-red-500").should(
       "have.text",
-      "Please enter a valid email address."
+      "Please enter a valid email address.",
     );
     cy.url().should("not.include", "auth/signup/name");
   });
@@ -59,7 +59,7 @@ describe("register", () => {
 
     cy.get(".text-red-500").should(
       "have.text",
-      "Password must be at least 6 characters long"
+      "Password must be at least 6 characters long",
     );
     cy.url().should("not.include", "auth/signup/name");
   });
@@ -81,7 +81,7 @@ describe("register", () => {
     // Assert failure to proceed
     cy.get(".text-red-500").should(
       "have.text",
-      "Please enter your first name."
+      "Please enter your first name.",
     );
     cy.url().should("include", "auth/signup/name");
 
@@ -118,7 +118,7 @@ describe("register", () => {
     // Resend email
     cy.wait(5000);
     cy.get(
-      ".max-w-lg > :nth-child(1) > div > .text-buttonSubmitEnable"
+      ".max-w-lg > :nth-child(1) > div > .text-buttonSubmitEnable",
     ).click();
 
     // First origin: Mailinator email retrieval
@@ -128,7 +128,7 @@ describe("register", () => {
       ({ inboxName }) => {
         // Visit the Mailinator inbox directly
         cy.visit(
-          `https://www.mailinator.com/v4/public/inboxes.jsp?to=${inboxName}`
+          `https://www.mailinator.com/v4/public/inboxes.jsp?to=${inboxName}`,
         );
 
         // Wait for emails to load
@@ -136,12 +136,12 @@ describe("register", () => {
 
         // Assert the existence of 2 emails
         cy.get(
-          '[style="width:300px;max-width:300px;overflow: hidden;white-space: nowrap;text-overflow: ellipsis;font-size: 22px;"]'
+          '[style="width:300px;max-width:300px;overflow: hidden;white-space: nowrap;text-overflow: ellipsis;font-size: 22px;"]',
         ).should("have.length", 2);
 
         // Click on the most recent verification email
         cy.get(
-          '[style="width:300px;max-width:300px;overflow: hidden;white-space: nowrap;text-overflow: ellipsis;font-size: 22px;"]'
+          '[style="width:300px;max-width:300px;overflow: hidden;white-space: nowrap;text-overflow: ellipsis;font-size: 22px;"]',
         )
           .first()
           .click();
@@ -159,36 +159,36 @@ describe("register", () => {
               Cypress.env("verificationUrl", verificationUrl);
             });
         });
-      }
+      },
     );
 
     // Back in main origin, get the stored URL and verify
     cy.then(() => {
-        const verificationUrl = Cypress.env("verificationUrl");
-        cy.log(`Verification URL: ${verificationUrl}`);
+      const verificationUrl = Cypress.env("verificationUrl");
+      cy.log(`Verification URL: ${verificationUrl}`);
 
-        // Visit the verification URL directly
-        cy.visit(verificationUrl);
+      // Visit the verification URL directly
+      cy.visit(verificationUrl);
 
-        // Verify successful verification
-        cy.contains("Welcome").should("be.visible");
+      // Verify successful verification
+      cy.contains("Welcome").should("be.visible");
 
-        // Enter location
-        cy.get("#location").type("Wakanda");
-        cy.contains("button", "Next").click();
+      // Enter location
+      cy.get("#location").type("Wakanda");
+      cy.contains("button", "Next").click();
 
-        // Enter job information
-        cy.get("input#jobTitle").type("Software Developer");
-        cy.get("select#employmentType").select("Internship");
-        cy.get("input#company").type("Tawasol");
-        cy.get('select[name="month"]').select("July");
-        cy.get('select[name="day"]').select("10");
-        cy.get('select[name="year"]').select("2024");
-        cy.contains("button", "Continue").click();
+      // Enter job information
+      cy.get("input#jobTitle").type("Software Developer");
+      cy.get("select#employmentType").select("Internship");
+      cy.get("input#company").type("Tawasol");
+      cy.get('select[name="month"]').select("July");
+      cy.get('select[name="day"]').select("10");
+      cy.get('select[name="year"]').select("2024");
+      cy.contains("button", "Continue").click();
 
-        // Assert redirection to feed
-        cy.wait(10000);
-        cy.url().should("include", "/feed");
-      });
+      // Assert redirection to feed
+      cy.wait(10000);
+      cy.url().should("include", "/feed");
+    });
   });
 });

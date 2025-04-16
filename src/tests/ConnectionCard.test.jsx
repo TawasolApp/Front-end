@@ -18,11 +18,11 @@ describe("ConnectionCard", () => {
     render(
       <MemoryRouter>
         <ConnectionCard {...mockProps} />
-      </MemoryRouter>
+      </MemoryRouter>,
     );
 
     expect(
-      screen.getByText(`${mockProps.firstName} ${mockProps.lastName}`)
+      screen.getByText(`${mockProps.firstName} ${mockProps.lastName}`),
     ).toBeTruthy();
     expect(screen.getByText(mockProps.experience)).toBeTruthy();
     expect(screen.getByText(mockProps.connectionDate)).toBeTruthy();
@@ -35,11 +35,11 @@ describe("ConnectionCard", () => {
     render(
       <MemoryRouter>
         <ConnectionCard {...propsWithoutImage} />
-      </MemoryRouter>
+      </MemoryRouter>,
     );
 
     const image = screen.getByAltText(
-      `${mockProps.firstName} ${mockProps.lastName}`
+      `${mockProps.firstName} ${mockProps.lastName}`,
     );
     expect(image.src).toContain("defaultProfilePicture.png");
   });
@@ -48,7 +48,7 @@ describe("ConnectionCard", () => {
     render(
       <MemoryRouter>
         <ConnectionCard {...mockProps} />
-      </MemoryRouter>
+      </MemoryRouter>,
     );
 
     const menuButton = screen.getByTestId("menu-button");
@@ -66,7 +66,7 @@ describe("ConnectionCard", () => {
           <div data-testid="outside">Click Outside</div>
           <ConnectionCard {...mockProps} />
         </div>
-      </MemoryRouter>
+      </MemoryRouter>,
     );
 
     fireEvent.click(screen.getByTestId("menu-button"));
@@ -80,38 +80,34 @@ describe("ConnectionCard", () => {
     render(
       <MemoryRouter>
         <ConnectionCard {...mockProps} />
-      </MemoryRouter>
+      </MemoryRouter>,
     );
 
     fireEvent.click(screen.getByTestId("menu-button"));
     fireEvent.click(screen.getByText(/remove connection/i));
 
-    expect(
-      screen.getByText(/are you sure you want to remove/i)
-    ).toBeTruthy();
+    expect(screen.getByText(/are you sure you want to remove/i)).toBeTruthy();
   });
 
   it("closes confirmation modal when cancel is clicked", () => {
     render(
       <MemoryRouter>
         <ConnectionCard {...mockProps} />
-      </MemoryRouter>
+      </MemoryRouter>,
     );
 
     fireEvent.click(screen.getByTestId("menu-button"));
     fireEvent.click(screen.getByText(/remove connection/i));
     fireEvent.click(screen.getByText(/cancel/i));
 
-    expect(
-      screen.queryByText(/are you sure you want to remove/i)
-    ).toBeNull();
+    expect(screen.queryByText(/are you sure you want to remove/i)).toBeNull();
   });
 
   it("calls onRemove when confirm remove is clicked", () => {
     render(
       <MemoryRouter>
         <ConnectionCard {...mockProps} />
-      </MemoryRouter>
+      </MemoryRouter>,
     );
 
     fireEvent.click(screen.getByTestId("menu-button"));
@@ -122,11 +118,11 @@ describe("ConnectionCard", () => {
     const { container } = render(
       <MemoryRouter>
         <ConnectionCard {...mockProps} />
-      </MemoryRouter>
+      </MemoryRouter>,
     );
 
     fireEvent.click(
-      screen.getByText(`${mockProps.firstName} ${mockProps.lastName}`)
+      screen.getByText(`${mockProps.firstName} ${mockProps.lastName}`),
     );
   });
 
@@ -134,11 +130,11 @@ describe("ConnectionCard", () => {
     render(
       <MemoryRouter>
         <ConnectionCard {...mockProps} />
-      </MemoryRouter>
+      </MemoryRouter>,
     );
 
     const image = screen.getByAltText(
-      `${mockProps.firstName} ${mockProps.lastName}`
+      `${mockProps.firstName} ${mockProps.lastName}`,
     );
     fireEvent.error(image);
   });

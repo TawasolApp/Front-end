@@ -7,7 +7,10 @@ const SendButton = () => {
         sx={{ fontSize: 16 }}
         className="text-textActivity group-hover:text-textActivityHover"
       />
-      <span data-testid="postSend" className="text-sm font-semibold text-textActivity group-hover:text-textActivityHover hidden sm:inline">
+      <span
+        data-testid="postSend"
+        className="text-sm font-semibold text-textActivity group-hover:text-textActivityHover hidden sm:inline"
+      >
         Send
       </span>
     </button>

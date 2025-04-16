@@ -34,7 +34,7 @@ describe("FollowPage", () => {
     firstName: "John",
     lastName: "Doe",
     headline: "Software Developer",
-    profilePicture: null
+    profilePicture: null,
   };
 
   beforeEach(() => {
@@ -45,8 +45,12 @@ describe("FollowPage", () => {
   it("should render the component with default tab", () => {
     render(<FollowPage />);
     expect(screen.getByText("My Network")).toBeInTheDocument();
-    expect(screen.getByText("Following").closest('button')).toHaveClass('border-b-2');
-    expect(screen.getByText("Followers").closest('button')).not.toHaveClass('border-b-2');
+    expect(screen.getByText("Following").closest("button")).toHaveClass(
+      "border-b-2",
+    );
+    expect(screen.getByText("Followers").closest("button")).not.toHaveClass(
+      "border-b-2",
+    );
   });
 
   it("should fetch and display following users on mount", async () => {
@@ -66,37 +70,41 @@ describe("FollowPage", () => {
       .mockImplementationOnce(() => Promise.resolve({ data: mockFollowers }));
 
     render(<FollowPage />);
-    
+
     // Switch to followers tab
     fireEvent.click(screen.getByText("Followers"));
-    
+
     await waitFor(() => {
       expect(axiosInstance.get).toHaveBeenCalledWith("/connections/followers", {
-        params: { page: 1, limit: 10 }
+        params: { page: 1, limit: 10 },
       });
-      expect(screen.getByText("Followers").closest('button')).toHaveClass('border-b-2');
+      expect(screen.getByText("Followers").closest("button")).toHaveClass(
+        "border-b-2",
+      );
     });
   });
 
   it("should show loading spinner when loading initial data", async () => {
     axiosInstance.get.mockImplementationOnce(() => new Promise(() => {}));
-    
+
     render(<FollowPage />);
     expect(screen.getByTestId("loading-spinner")).toBeInTheDocument();
   });
 
   it("should show loading spinner when loading more items", async () => {
-    axiosInstance.get.mockImplementationOnce(() => 
-      Promise.resolve({ data: Array(10).fill(mockUser) })
-      .mockImplementationOnce(() => new Promise(() => {})))
+    axiosInstance.get.mockImplementationOnce(() =>
+      Promise.resolve({
+        data: Array(10).fill(mockUser),
+      }).mockImplementationOnce(() => new Promise(() => {})),
+    );
 
     render(<FollowPage />);
     await screen.findByText("John Doe");
-    
+
     // Trigger loading more
     axiosInstance.get.mockImplementationOnce(() => new Promise(() => {}));
     setPage({ following: 2, followers: 1 });
-    
+
     expect(screen.getByTestId("loading-spinner")).toBeInTheDocument();
   });
 
@@ -106,7 +114,9 @@ describe("FollowPage", () => {
     );
 
     render(<FollowPage />);
-    expect(await screen.findByText(/Failed to load following list/i)).toBeInTheDocument();
+    expect(
+      await screen.findByText(/Failed to load following list/i),
+    ).toBeInTheDocument();
     expect(screen.getByText("Retry")).toBeInTheDocument();
   });
 
@@ -116,7 +126,9 @@ describe("FollowPage", () => {
     );
 
     render(<FollowPage />);
-    expect(await screen.findByText(/You're not following anyone yet/i)).toBeInTheDocument();
+    expect(
+      await screen.findByText(/You're not following anyone yet/i),
+    ).toBeInTheDocument();
   });
 
   it("should show empty state when no followers", async () => {
@@ -126,7 +138,9 @@ describe("FollowPage", () => {
 
     render(<FollowPage />);
     fireEvent.click(screen.getByText("Followers"));
-    expect(await screen.findByText(/You don't have any followers yet/i)).toBeInTheDocument();
+    expect(
+      await screen.findByText(/You don't have any followers yet/i),
+    ).toBeInTheDocument();
   });
 
   it("should show unfollow modal when clicking Following button", async () => {
@@ -143,7 +157,6 @@ describe("FollowPage", () => {
     expect(screen.getByText("Cancel")).toBeInTheDocument();
     expect(screen.getByText("Unfollow")).toBeInTheDocument();
   });
-
 
   it("should navigate to user profile when clicking user name", async () => {
     axiosInstance.get.mockImplementationOnce(() =>

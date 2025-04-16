@@ -115,7 +115,7 @@ Use the following to name your created branch
 | develop | Latest development branch with all merged features. |
 | feature/{feature-name} | New feature implementation. |
 | bugfix/{bug-name} | Fix bug before merging into develop. |
-| test/{feature-name} | New E2E tests for feature. | 
+| test/{feature-name} | New E2E tests for feature. |
 
 ➡️ **Pull Requests** must be created in the `develop` branch for review and testing before merging into main
 

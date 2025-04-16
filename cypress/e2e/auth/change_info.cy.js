@@ -41,7 +41,7 @@ describe("change user info", () => {
       ({ inboxName }) => {
         // Visit the Mailinator inbox directly
         cy.visit(
-          `https://www.mailinator.com/v4/public/inboxes.jsp?to=${inboxName}`
+          `https://www.mailinator.com/v4/public/inboxes.jsp?to=${inboxName}`,
         );
 
         // Wait for emails to load
@@ -49,7 +49,7 @@ describe("change user info", () => {
 
         // Find the verification email
         cy.get(
-          '[style="width:300px;max-width:300px;overflow: hidden;white-space: nowrap;text-overflow: ellipsis;font-size: 22px;"]'
+          '[style="width:300px;max-width:300px;overflow: hidden;white-space: nowrap;text-overflow: ellipsis;font-size: 22px;"]',
         )
           .first()
           .click();
@@ -67,7 +67,7 @@ describe("change user info", () => {
               Cypress.env("verificationUrl", verificationUrl);
             });
         });
-      }
+      },
     );
 
     // Back in main origin, get the stored URL and verify
@@ -132,7 +132,7 @@ describe("change user info", () => {
       ({ inboxNameNew }) => {
         // Visit the Mailinator inbox directly
         cy.visit(
-          `https://www.mailinator.com/v4/public/inboxes.jsp?to=${inboxNameNew}`
+          `https://www.mailinator.com/v4/public/inboxes.jsp?to=${inboxNameNew}`,
         );
 
         // Wait for emails to load
@@ -140,7 +140,7 @@ describe("change user info", () => {
 
         // Find the verification email
         cy.get(
-          '[style="width:300px;max-width:300px;overflow: hidden;white-space: nowrap;text-overflow: ellipsis;font-size: 22px;"]'
+          '[style="width:300px;max-width:300px;overflow: hidden;white-space: nowrap;text-overflow: ellipsis;font-size: 22px;"]',
         )
           .first()
           .click();
@@ -158,7 +158,7 @@ describe("change user info", () => {
               Cypress.env("verificationUrl", verificationUrl);
             });
         });
-      }
+      },
     );
 
     // Back in main origin, get the stored URL and verify
@@ -242,13 +242,13 @@ describe("change user info", () => {
     cy.get("#firstName").type(newFirstName);
     cy.get("#lastName").clear();
     cy.get("#lastName").type(newLastName);
-    cy.get('#industry').type('Software Engineering');
+    cy.get("#industry").type("Software Engineering");
     cy.get(".flex > .px-4").click();
 
     // assert new name is displayed
     cy.get(".pt-4 > .text-xl").should(
       "have.text",
-      `${newFirstName} ${newLastName}`
+      `${newFirstName} ${newLastName}`,
     );
   });
 });

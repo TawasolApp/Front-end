@@ -27,7 +27,7 @@ describe("adds, updates, deletes skills", () => {
     // assert no skills added
     cy.get(":nth-child(5) > .text-normaltext").should(
       "include.text",
-      "No skills added yet."
+      "No skills added yet.",
     );
 
     // add skill
@@ -53,7 +53,7 @@ describe("adds, updates, deletes skills", () => {
     cy.get(".pr-8 > .break-all > .text-lg").should("include.text", "Cooking");
     cy.get(".pr-8 > .break-all > .text-companyheader").should(
       "include.text",
-      "Chef"
+      "Chef",
     );
 
     // delete skill

@@ -33,7 +33,10 @@ const RepostButton = () => {
               sx={{ fontSize: 16 }}
               className="text-textActivity group-hover:text-textActivityHover"
             />
-            <span data-testid="postRepost" className="text-sm font-semibold text-textActivity group-hover:text-textActivityHover hidden sm:inline">
+            <span
+              data-testid="postRepost"
+              className="text-sm font-semibold text-textActivity group-hover:text-textActivityHover hidden sm:inline"
+            >
               Repost
             </span>
           </button>

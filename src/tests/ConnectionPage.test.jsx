@@ -46,8 +46,8 @@ describe("Connections Page", () => {
     });
 
     it("should change sort option", async () => {
-      fireEvent.change(screen.getByLabelText("Sort by:"), { 
-        target: { value: "firstName" } 
+      fireEvent.change(screen.getByLabelText("Sort by:"), {
+        target: { value: "firstName" },
       });
     });
   });
@@ -72,9 +72,11 @@ describe("Connections Page", () => {
 
   describe("Error handling", () => {
     it("should handle network error when fetching connections", async () => {
-      const consoleErrorSpy = vi.spyOn(console, "error").mockImplementation(() => {});
+      const consoleErrorSpy = vi
+        .spyOn(console, "error")
+        .mockImplementation(() => {});
       axiosInstance.get.mockRejectedValueOnce(new Error("Network error"));
-      
+
       render(<Connections />);
 
       await waitFor(() => {
@@ -96,5 +98,3 @@ describe("Connections Page", () => {
     });
   });
 });
-
-

@@ -102,7 +102,10 @@ const PeopleSearch = ({ searchText, company }) => {
 
               {/* Person info */}
               <div className="flex-grow">
-                <h3 data-testid="searchUserName" className="text-authorName font-medium hover:underline">
+                <h3
+                  data-testid="searchUserName"
+                  className="text-authorName font-medium hover:underline"
+                >
                   {person.firstName} {person.lastName}
                 </h3>
                 <p className="text-authorBio text-sm line-clamp-2">

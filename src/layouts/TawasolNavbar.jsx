@@ -288,7 +288,7 @@ const TawasolNavbar = () => {
                   >
                     <div className="border-b border-cardBorder">
                       <div
-                        data-testid="navbar-me-dropdown-profile"  
+                        data-testid="navbar-me-dropdown-profile"
                         className="p-4 flex gap-3 items-center hover:bg-buttonIconHover"
                         onClick={() => navigate(`/users/${currentAuthorId}`)}
                       >

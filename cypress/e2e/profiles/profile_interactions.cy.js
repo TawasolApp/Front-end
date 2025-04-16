@@ -56,7 +56,7 @@ describe("endorsements, visibility, and viewing other profiles", () => {
 
       cy.get(".pt-4 > .text-xl").should("include.text", "Natalia Rosenbaum");
       cy.contains("Only the profile owner can view this profile").should(
-        "be.visible"
+        "be.visible",
       );
 
       // send connection request
@@ -70,7 +70,7 @@ describe("endorsements, visibility, and viewing other profiles", () => {
 
       // accept most recent connection request
       cy.get(
-        ":nth-child(1) > .justify-between > .space-x-3 > .text-buttonSubmitEnable"
+        ":nth-child(1) > .justify-between > .space-x-3 > .text-buttonSubmitEnable",
       ).click();
 
       // search for user1
@@ -86,15 +86,15 @@ describe("endorsements, visibility, and viewing other profiles", () => {
       // assert profile is visible
       cy.get(".pt-4 > .text-xl").should(
         "include.text",
-        `${firstName1} ${lastName1}`
+        `${firstName1} ${lastName1}`,
       );
       cy.get(":nth-child(3) > .p-6 > .justify-between > .text-2xl").should(
         "include.text",
-        "Experience"
+        "Experience",
       );
       cy.get(":nth-child(4) > .justify-between > .text-2xl").should(
         "include.text",
-        "Skills"
+        "Skills",
       );
 
       // endorse skill
@@ -103,7 +103,7 @@ describe("endorsements, visibility, and viewing other profiles", () => {
       // assert endorsement
       cy.get(".break-all > div > .text-companyheader").should(
         "include.text",
-        "1 endorsement"
+        "1 endorsement",
       );
       cy.get(".mt-2").should("include.text", "Endorsed");
 
@@ -121,7 +121,7 @@ describe("endorsements, visibility, and viewing other profiles", () => {
       // assert profile is correct and private
       cy.get(".pt-4 > .text-xl").should("include.text", "Natalia Rosenbaum");
       cy.contains("Only the profile owner can view this profile").should(
-        "be.visible"
+        "be.visible",
       );
       // go to profile
       cy.get("div.relative > .flex-col > .flex > span").click();
@@ -157,7 +157,7 @@ describe("endorsements, visibility, and viewing other profiles", () => {
 
       // accept most recent connection request
       cy.get(
-        ":nth-child(1) > .justify-between > .space-x-3 > .text-buttonSubmitEnable"
+        ":nth-child(1) > .justify-between > .space-x-3 > .text-buttonSubmitEnable",
       ).click();
 
       // search for user1
@@ -173,21 +173,21 @@ describe("endorsements, visibility, and viewing other profiles", () => {
       // assert profile is visible
       cy.get(".pt-4 > .text-xl").should(
         "include.text",
-        `${firstName1} ${lastName1}`
+        `${firstName1} ${lastName1}`,
       );
       cy.get(":nth-child(3) > .p-6 > .justify-between > .text-2xl").should(
         "include.text",
-        "Experience"
+        "Experience",
       );
       cy.get(":nth-child(4) > .justify-between > .text-2xl").should(
         "include.text",
-        "Skills"
+        "Skills",
       );
 
       // assert endorsement
       cy.get(".break-all > div > .text-companyheader").should(
         "include.text",
-        "1 endorsement"
+        "1 endorsement",
       );
       cy.get(".mt-2").should("include.text", "Endorse");
 
@@ -221,7 +221,7 @@ describe("endorsements, visibility, and viewing other profiles", () => {
       cy.contains("Experience").should("not.exist");
       cy.contains("Skills").should("not.exist");
       cy.contains("Connect with this member to view their full profile").should(
-        "be.visible"
+        "be.visible",
       );
     });
   });

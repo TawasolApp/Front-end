@@ -40,7 +40,10 @@ const EngagementMetrics = ({ setShowLikes, setShowComments }) => {
           })}
         </div>
         {totalLikes > 0 && (
-          <span data-testid="PostLikeCount" className="text-sm ml-1 group-hover:text-textPlaceholderHover group-hover:underline">
+          <span
+            data-testid="PostLikeCount"
+            className="text-sm ml-1 group-hover:text-textPlaceholderHover group-hover:underline"
+          >
             {totalLikes}
           </span>
         )}

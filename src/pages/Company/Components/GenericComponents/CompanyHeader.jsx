@@ -106,8 +106,7 @@ function CompanyHeader({
             <h1 className="text-2xl font-semibold uppercase text-text">
               {company.name}
             </h1>
-            {showAdminIcons 
-            && (
+            {showAdminIcons && (
               <button
                 data-testid="EditCompanyButton"
                 className="absolute right-0 bg-boxbackground p-2 rounded-full shadow-md border border-gray-300 transition"

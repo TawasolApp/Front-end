@@ -23,12 +23,12 @@ describe("adds, updates, deletes education/certification", () => {
     // assert no education added
     cy.get(":nth-child(3) > .bg-boxbackground > .text-normaltext").should(
       "include.text",
-      "No education added yet."
+      "No education added yet.",
     );
 
     // add education
     cy.get(
-      ":nth-child(3) > .bg-boxbackground > .justify-between > .gap-0 > .w-8"
+      ":nth-child(3) > .bg-boxbackground > .justify-between > .gap-0 > .w-8",
     ).click();
     cy.get("#school").type("Cairo University");
     cy.get("#degree").type("Bachelor's");
@@ -51,7 +51,7 @@ describe("adds, updates, deletes education/certification", () => {
 
     // edit education
     cy.get(
-      ":nth-child(3) > .p-6 > .justify-between > .gap-0 > :nth-child(2)"
+      ":nth-child(3) > .p-6 > .justify-between > .gap-0 > :nth-child(2)",
     ).click();
     cy.get(".group > .absolute").click();
     cy.get("#grade").type("3.21 GPA");
@@ -73,7 +73,7 @@ describe("adds, updates, deletes education/certification", () => {
 
     // delete education
     cy.get(
-      ":nth-child(3) > .p-6 > .justify-between > .gap-0 > :nth-child(2)"
+      ":nth-child(3) > .p-6 > .justify-between > .gap-0 > :nth-child(2)",
     ).click();
     cy.get(".group > .absolute").click();
     cy.get('[data-testid="delete-button"]').click();
@@ -96,12 +96,12 @@ describe("adds, updates, deletes education/certification", () => {
     // assert no certification added
     cy.get(":nth-child(6) > .bg-boxbackground > .text-normaltext").should(
       "include.text",
-      "No licenses & certifications added yet."
+      "No licenses & certifications added yet.",
     );
 
     // add certification
     cy.get(
-      ":nth-child(6) > .bg-boxbackground > .justify-between > .gap-0 > .w-8"
+      ":nth-child(6) > .bg-boxbackground > .justify-between > .gap-0 > .w-8",
     ).click();
     cy.get("#name").type("Certified Yoga Instructor");
     cy.get("#company").type("Microsoft");
@@ -113,17 +113,17 @@ describe("adds, updates, deletes education/certification", () => {
 
     // assert existence
     cy.get(
-      ":nth-child(6) > .p-6 > .gap-4 > :nth-child(1) > .bg-boxbackground > .pr-8 > .flex > .break-all > .text-lg"
+      ":nth-child(6) > .p-6 > .gap-4 > :nth-child(1) > .bg-boxbackground > .pr-8 > .flex > .break-all > .text-lg",
     ).should("include.text", "Certified Yoga Instructor");
     cy.get(".break-all > p.text-companyheader").should(
       "include.text",
-      "Microsoft"
+      "Microsoft",
     );
     cy.contains("Jan 2009").should("be.visible");
 
     // edit certification
     cy.get(
-      ":nth-child(6) > .p-6 > .justify-between > .gap-0 > :nth-child(2)"
+      ":nth-child(6) > .p-6 > .justify-between > .gap-0 > :nth-child(2)",
     ).click();
     cy.get(".group > .absolute").click();
     cy.get("#endMonth").select("December");
@@ -135,18 +135,18 @@ describe("adds, updates, deletes education/certification", () => {
 
     // assert existence of updates
     cy.get(
-      ":nth-child(6) > .p-6 > .gap-4 > :nth-child(1) > .bg-boxbackground > .pr-8 > .flex > .break-all > .text-lg"
+      ":nth-child(6) > .p-6 > .gap-4 > :nth-child(1) > .bg-boxbackground > .pr-8 > .flex > .break-all > .text-lg",
     ).should("include.text", "Certified Yoga Instructor");
     cy.get(".break-all > p.text-companyheader").should(
       "include.text",
-      "Microsoft"
+      "Microsoft",
     );
     cy.contains("Jan 2009").should("be.visible");
     cy.contains("Dec 2009").should("be.visible");
 
     // delete certification
     cy.get(
-      ":nth-child(6) > .p-6 > .justify-between > .gap-0 > :nth-child(2)"
+      ":nth-child(6) > .p-6 > .justify-between > .gap-0 > :nth-child(2)",
     ).click();
     cy.get(".group > .absolute").click();
     cy.get('[data-testid="delete-button"]').click();

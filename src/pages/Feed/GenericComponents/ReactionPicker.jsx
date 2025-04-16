@@ -119,7 +119,7 @@ const ReactionPicker = ({ onSelectReaction, children }) => {
               }
 
               return (
-                <div 
+                <div
                   data-testid="postReactionElement"
                   key={reactionType}
                   className={`relative transition-all duration-300 ${pushClass}`}

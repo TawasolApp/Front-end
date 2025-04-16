@@ -105,7 +105,7 @@ Cypress.Commands.add(
       ({ inboxName }) => {
         // Visit the Mailinator inbox directly
         cy.visit(
-          `https://www.mailinator.com/v4/public/inboxes.jsp?to=${inboxName}`
+          `https://www.mailinator.com/v4/public/inboxes.jsp?to=${inboxName}`,
         );
 
         // Wait for emails to load
@@ -113,7 +113,7 @@ Cypress.Commands.add(
 
         // Find the verification email
         cy.get(
-          '[style="width:300px;max-width:300px;overflow: hidden;white-space: nowrap;text-overflow: ellipsis;font-size: 22px;"]'
+          '[style="width:300px;max-width:300px;overflow: hidden;white-space: nowrap;text-overflow: ellipsis;font-size: 22px;"]',
         )
           .first()
           .click();
@@ -133,7 +133,7 @@ Cypress.Commands.add(
               Cypress.env("verificationUrl", verificationUrl);
             });
         });
-      }
+      },
     );
 
     // Back in main origin, get the stored URL and verify
@@ -164,5 +164,5 @@ Cypress.Commands.add(
       cy.wait(10000);
       cy.url().should("include", "/feed");
     });
-  }
+  },
 );

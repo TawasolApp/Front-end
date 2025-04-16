@@ -18,7 +18,7 @@ describe("visit website", () => {
     cy.getLoginPageHeader().should("exist");
     cy.getLoginPageGreeting().should(
       "have.text",
-      "Welcome to your professional community"
+      "Welcome to your professional community",
     );
     cy.getLoginPagePicture().should("exist");
   });

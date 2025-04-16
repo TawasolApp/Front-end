@@ -21,6 +21,7 @@ MyNetwork/
 ### Network Management
 
 - **NetworkBox.jsx**:
+
   - Main dashboard showing invitations, recommendations, and premium features
   - Handles connection requests with accept/ignore functionality
   - Entry point for network management workflows
@@ -32,6 +33,7 @@ MyNetwork/
 ### Connections
 
 - **ConnectionPage.jsx**:
+
   - Displays all established connections
   - Provides sorting options (recently added, first name, last name)
   - Enables messaging and connection management
@@ -43,6 +45,7 @@ MyNetwork/
 ### Following System
 
 - **FollowPage.jsx**:
+
   - Manages followers and following relationships with tabbed interface
   - Supports follow/unfollow actions with confirmation modals
   - Implements infinite scroll for pagination
@@ -61,14 +64,17 @@ MyNetwork/
 ## 🔄 Data Flow
 
 1. **Network Dashboard**:
+
    - Network data is fetched and displayed in NetworkBox.jsx
    - Provides navigation to more detailed network management components
 
 2. **Connection Management**:
+
    - ManageConnections.jsx handles incoming and outgoing connection requests
    - Actions in this component affect the Redux store and trigger API calls
 
 3. **Following System**:
+
    - FollowPage.jsx manages the follow/follower relationships
    - Follows a similar pattern with API-connected actions for follow/unfollow
 
@@ -95,6 +101,7 @@ MyNetwork/
 ## 🔌 Integration
 
 The MyNetwork components integrate with:
+
 - Authentication system for protected actions
 - User profile system for displaying user details
 - Redux store for managing network-related state

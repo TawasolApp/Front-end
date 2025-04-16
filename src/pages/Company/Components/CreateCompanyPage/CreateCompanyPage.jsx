@@ -434,7 +434,10 @@ function CreateCompanyPage() {
               >
                 Logo
               </label>
-              <div data-testid="company-logo" className="w-full min-h-[100px] border border-gray-400 rounded-md bg-uploadimage relative flex flex-col items-center justify-center px-4 py-6 text-center">
+              <div
+                data-testid="company-logo"
+                className="w-full min-h-[100px] border border-gray-400 rounded-md bg-uploadimage relative flex flex-col items-center justify-center px-4 py-6 text-center"
+              >
                 <div className="flex flex-col items-center justify-center gap-1 text-gray-600">
                   <FiUpload className="text-2xl font-semibold text-normaltext" />
                   <p className="font-semibold text-sm text-normaltext">

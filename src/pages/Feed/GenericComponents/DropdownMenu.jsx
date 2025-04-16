@@ -61,7 +61,7 @@ const DropdownMenu = ({
           <div className="p-1">
             {menuItems.map((item, index) => (
               <button
-                data-testid={`postEllipsis-${item.text.toLowerCase().replace(/\s+/g, '-')}`}
+                data-testid={`postEllipsis-${item.text.toLowerCase().replace(/\s+/g, "-")}`}
                 key={index}
                 onClick={() => {
                   handleClose();
