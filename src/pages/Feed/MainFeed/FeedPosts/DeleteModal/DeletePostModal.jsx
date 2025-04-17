@@ -38,7 +38,7 @@ const DeletePostModal = ({ closeModal, deleteFunc, commentOrPost }) => {
           </button>
           <button
             onClick={handleDelete}
-            className="px-4 py-2 rounded font-medium text-buttonSubmitText bg-buttonSubmitEnable hover:bg-buttonSubmitEnableHover disabled:cursor-not-allowed"
+            className="px-4 py-2 rounded font-medium text-buttonSubmitText bg-red-600 hover:bg-red-800 disabled:cursor-not-allowed"
             disabled={isLoading}
           >
             {isLoading ? (
