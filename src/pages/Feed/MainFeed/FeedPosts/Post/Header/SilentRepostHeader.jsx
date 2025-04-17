@@ -1,5 +1,5 @@
-import { Avatar } from "@mui/material";
 import { Link } from "react-router-dom";
+import { Avatar } from "@mui/material";
 
 const SilentRepostHeader = ({ authorId, authorPicture, authorName }) => {
   return (

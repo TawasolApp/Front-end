@@ -1,8 +1,8 @@
 import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
+import { useSelector } from "react-redux";
 import { axiosInstance } from "../../apis/axios";
 import PostContainer from "./MainFeed/FeedPosts/PostContainer";
-import { useSelector } from "react-redux";
 
 const SinglePost = () => {
   const { id } = useParams();

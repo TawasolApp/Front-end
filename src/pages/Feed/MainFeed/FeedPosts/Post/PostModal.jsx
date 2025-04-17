@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-
+import { usePost } from "../PostContext";
 import PostCardHeader from "./Header/PostCardHeader";
 import PostContent from "./Content/PostContent";
 import EngagementMetrics from "./Metrics/EngagementMetrics";
@@ -8,7 +8,6 @@ import CommentsContainer from "./Comments/CommentsContainer";
 import ReactionsModal from "../ReactionModal/ReactionsModal";
 import MediaCarousel from "./MediaCarousel/MediaCarousel";
 import SilentRepostHeader from "./Header/SilentRepostHeader";
-import { usePost } from "../PostContext";
 
 const PostModal = ({ mediaIndex, handleClosePostModal }) => {
   const { post } = usePost();

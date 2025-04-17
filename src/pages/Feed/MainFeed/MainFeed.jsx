@@ -1,9 +1,9 @@
 import { useState, useEffect, useRef, useCallback } from "react";
+import { useSelector } from "react-redux";
 import { toast } from "react-toastify";
+import { axiosInstance } from "../../../apis/axios";
 import SharePost from "./SharePost/SharePost";
 import FeedPosts from "./FeedPosts/FeedPosts";
-import { axiosInstance } from "../../../apis/axios";
-import { useSelector } from "react-redux";
 
 const MainFeed = ({
   API_ROUTE = "posts",

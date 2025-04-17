@@ -1,4 +1,6 @@
 import { useState, useRef, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
+import { useSelector } from "react-redux";
 import HomeIcon from "@mui/icons-material/Home";
 import CottageIcon from "@mui/icons-material/Cottage";
 import GroupIcon from "@mui/icons-material/Group";
@@ -12,8 +14,6 @@ import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import Avatar from "@mui/material/Avatar";
 import SearchIcon from "@mui/icons-material/Search";
 import { getIconComponent } from "../utils";
-import { useNavigate } from "react-router-dom";
-import { useSelector } from "react-redux";
 
 const TawasolNavbar = () => {
   const currentPath = window.location.pathname;

@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import CircularProgress from "@mui/material/CircularProgress"; // Import loading spinner
+import CircularProgress from "@mui/material/CircularProgress";
 
 const DeletePostModal = ({ closeModal, deleteFunc, commentOrPost }) => {
   const [isLoading, setIsLoading] = useState(false);
