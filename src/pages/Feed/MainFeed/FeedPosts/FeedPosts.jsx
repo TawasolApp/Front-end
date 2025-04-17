@@ -30,9 +30,14 @@ const FeedPosts = ({
   return (
     <div className="w-full">
       {posts.map((post, index) => {
+        // Create a unique key using post ID + author + timestamp or index as fallback
+        const uniqueKey = post.id
+          ? `${post.id}-${post.authorId || index}-${post.timestamp}`
+          : `post-${index}`;
+          
         if (index === posts.length - 1) {
           return (
-            <div ref={lastPostRef} key={index}>
+            <div ref={lastPostRef} key={uniqueKey}>
               <PostContainer
                 post={post}
                 handleSharePost={handleSharePost}
@@ -47,7 +52,7 @@ const FeedPosts = ({
         }
         return (
           <PostContainer
-            key={index}
+            key={uniqueKey}
             post={post}
             handleSharePost={handleSharePost}
             handleDeletePost={handleDeletePost}
