@@ -25,7 +25,7 @@ const DeletePostModal = ({ closeModal, deleteFunc, commentOrPost }) => {
           </h3>
           <p className="text-textPlaceholder">
             Are you sure you want to delete this{" "}
-            {commentOrPost === "Post" ? "post" : "comment"}?
+            {commentOrPost === "Post" ? "post" : (commentOrPost === "Comment" ? "comment" : "reply")}?
           </p>
         </div>
 

@@ -14,6 +14,7 @@ import { formatDate } from "../../../../../../utils";
 import TextViewer from "../../../../GenericComponents/TextViewer";
 import { usePost } from "../../PostContext";
 import ReplyContainer from "./ReplyContainer";
+import DeletePostModal from "../../DeleteModal/DeletePostModal";
 
 const Comment = ({ comment }) => {
   const {
@@ -26,6 +27,7 @@ const Comment = ({ comment }) => {
   const [showReactions, setShowReactions] = useState(false);
   const [editorMode, setEditorMode] = useState(false);
   const [showReplies, setShowReplies] = useState(false);
+  const [showDeleteModal, setShowDeleteModal] = useState(false);
 
   let menuItems = [
     {
@@ -43,7 +45,7 @@ const Comment = ({ comment }) => {
     });
     menuItems.push({
       text: "Delete comment",
-      onClick: () => handleDeleteComment(comment.id),
+      onClick: () => setShowDeleteModal(true),
       icon: DeleteIcon,
     });
   }
@@ -124,6 +126,16 @@ const Comment = ({ comment }) => {
               API_URL={`/posts/reactions/${comment.id}`}
               setShowLikes={() => setShowReactions(false)}
               reactCounts={comment.reactCounts}
+            />
+          )}
+          {showDeleteModal && (
+            <DeletePostModal
+              closeModal={() => setShowDeleteModal(false)}
+              deleteFunc={async () => {
+                await handleDeleteComment(comment.id);
+                setShowDeleteModal(false);
+              }}
+              commentOrPost="Comment"
             />
           )}
         </article>

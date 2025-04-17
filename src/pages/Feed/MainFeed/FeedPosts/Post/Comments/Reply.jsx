@@ -11,6 +11,7 @@ import TextViewer from "../../../../GenericComponents/TextViewer";
 import AddForm from "./AddForm";
 import ReactionsModal from "../../ReactionModal/ReactionsModal";
 import { usePost } from "../../PostContext";
+import DeletePostModal from "../../DeleteModal/DeletePostModal";
 
 const Reply = ({ commentId, reply }) => {
   const {
@@ -22,6 +23,7 @@ const Reply = ({ commentId, reply }) => {
 
   const [showReactions, setShowReactions] = useState(false);
   const [editorMode, setEditorMode] = useState(false);
+  const [showDeleteModal, setShowDeleteModal] = useState(false);
 
   const menuItems = [
     {
@@ -39,7 +41,7 @@ const Reply = ({ commentId, reply }) => {
     });
     menuItems.push({
       text: "Delete reply",
-      onClick: () => handleDeleteReplyToComment(commentId, reply.id),
+      onClick: () => setShowDeleteModal(true),
       icon: DeleteIcon,
     });
   }
@@ -117,6 +119,16 @@ const Reply = ({ commentId, reply }) => {
               API_URL={`/posts/reactions/${reply.id}`}
               setShowLikes={() => setShowReactions(false)}
               reactCounts={reply.reactCounts}
+            />
+          )}
+          {showDeleteModal && (
+            <DeletePostModal
+              closeModal={() => setShowDeleteModal(false)}
+              deleteFunc={async () => {
+                await handleDeleteReplyToComment(commentId, reply.id);
+                setShowDeleteModal(false);
+              }}
+              commentOrPost="Reply"
             />
           )}
         </>
