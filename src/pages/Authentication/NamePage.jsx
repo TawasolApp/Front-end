@@ -9,7 +9,7 @@ import { toast } from "react-toastify";
 
 const NamePage = ({ email, password }) => {
   const dispatch = useDispatch();
-  const { email, password, isNewGoogleUser } = useSelector(
+  const { isNewGoogleUser } = useSelector(
     (state) => state.authentication
   );
   const navigate = useNavigate();
