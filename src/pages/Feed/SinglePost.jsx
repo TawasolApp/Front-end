@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { axiosInstance } from "../../apis/axios";
 import PostContainer from "./MainFeed/FeedPosts/PostContainer";
+import { useSelector } from "react-redux";
 
 const SinglePost = () => {
   const { id } = useParams();
@@ -52,6 +53,12 @@ const SinglePost = () => {
     }
   };
 
+  const currentAuthorId = useSelector((state) => state.authentication.userId);
+  const currentAuthorName = `${useSelector((state) => state.authentication.firstName)} ${useSelector((state) => state.authentication.lastName)}`;
+  const currentAuthorPicture = useSelector(
+    (state) => state.authentication.profilePicture,
+  );
+
   return (
     <div className="min-h-screen bg-mainBackground">
       <div className="max-w-7xl mx-auto">
@@ -62,6 +69,9 @@ const SinglePost = () => {
                 post={post}
                 handleSharePost={handleSharePost}
                 handleDeletePost={handleDeletePost}
+                currentAuthorId={currentAuthorId}
+                currentAuthorName={currentAuthorName}
+                currentAuthorPicture={currentAuthorPicture}
               />
             )}
           </main>

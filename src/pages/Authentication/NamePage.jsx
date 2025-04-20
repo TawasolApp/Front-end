@@ -7,7 +7,7 @@ import { useNavigate } from "react-router-dom";
 import AuthenticationHeader from "./GenericComponents/AuthenticationHeader";
 import { toast } from "react-toastify";
 
-const NamePage = () => {
+const NamePage = ({ email, password }) => {
   const dispatch = useDispatch();
   const { email, password, isNewGoogleUser } = useSelector(
     (state) => state.authentication
