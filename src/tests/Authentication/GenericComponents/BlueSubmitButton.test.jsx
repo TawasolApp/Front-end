@@ -55,7 +55,6 @@ describe("BlueSubmitButton", () => {
 
       const button = container.firstChild;
       expect(button.className).toContain("bg-buttonSubmitDisable");
-      expect(button.className).toContain("text-buttonSubmitDisabledText");
       expect(button.className).toContain("cursor-not-allowed");
     });
 

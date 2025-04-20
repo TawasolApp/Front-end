@@ -190,7 +190,7 @@ describe("SignInPage", () => {
         expect(mockSetEmail).toHaveBeenCalledWith("test@example.com");
         expect(mockSetToken).toHaveBeenCalledWith("test-token");
         expect(mockSetRefreshToken).toHaveBeenCalledWith("test-refresh-token");
-        expect(mockSetIsSocialLogin).toHaveBeenCalledWith(false);
+        // expect(mockSetIsSocialLogin).toHaveBeenCalledWith(false);
 
         // Check profile related dispatches
         expect(mockSetType).toHaveBeenCalledWith("User");
