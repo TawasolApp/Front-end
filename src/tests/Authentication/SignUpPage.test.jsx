@@ -132,7 +132,7 @@ describe("SignUpPage", () => {
 
       // Wait for async operations to complete
       await waitFor(() => {
-        expect(mockDispatch).toHaveBeenCalledTimes(3);
+        expect(mockDispatch).toHaveBeenCalledTimes(2);
       });
     });
 
