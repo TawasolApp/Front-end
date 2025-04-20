@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { axiosInstance as axios } from "../../../../apis/axios.js";
 import ConfirmModal from "../ReusableModals/ConfirmModal.jsx";
+import NewMessageModal from "../../../Messaging/New Message Modal/NewMessageModal.jsx";
 
 function ViewerView({
   user,
@@ -10,11 +11,11 @@ function ViewerView({
 }) {
   const [connectStatus, setConnectStatus] = useState(initialConnectStatus);
   const [isFollowing, setIsFollowing] = useState(
-    initialFollowStatus === "Following" ||
-      initialConnectStatus === "Connection",
+    initialFollowStatus === "Following" || initialConnectStatus === "Connection"
   );
   const [showUnfollowModal, setShowUnfollowModal] = useState(false);
   const [showAcceptModal, setShowAcceptModal] = useState(false);
+  const [showMessageModal, setShowMessageModal] = useState(false);
   useEffect(() => {
     if (connectStatus === "Connection") {
       setIsFollowing(true);
@@ -127,7 +128,7 @@ function ViewerView({
       } catch (followError) {
         console.warn(
           "Follow failed but connection succeeded:",
-          followError.response?.data || followError.message,
+          followError.response?.data || followError.message
         );
         setIsFollowing(false);
       }
@@ -139,7 +140,7 @@ function ViewerView({
       setIsFollowing(false);
       console.error(
         "Accept connection error:",
-        err.response?.data || err.message,
+        err.response?.data || err.message
       );
 
       if (err.response?.status === 409) {
@@ -151,7 +152,7 @@ function ViewerView({
   };
 
   const handleMessage = () => {
-    console.log("Message clicked");
+    setShowMessageModal(true);
   };
 
   return (
@@ -211,6 +212,12 @@ function ViewerView({
           onConfirm={confirmAcceptConnection}
           confirmLabel="Accept"
           cancelLabel="Cancel"
+        />
+      )}
+      {showMessageModal && (
+        <NewMessageModal
+          recipient={user}
+          onClose={() => setShowMessageModal(false)}
         />
       )}
     </div>
