@@ -18,6 +18,7 @@ import ProtectedRoute from "../apis/ProtectedRoute";
 import ProtectedRoutes from "./ProtectedRoutes";
 import VerificationPendingPage from "../pages/Authentication/VerificationPendingPage";
 import NewPasswordPage from "../pages/Authentication/NewPasswordPage";
+import NewMessageModal from "../pages/Messaging/New Message Modal/NewMessageModal";
 
 const App = () => {
   const googleClientId = import.meta.env.VITE_GOOGLE_CLIENT_ID;

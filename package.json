@@ -24,6 +24,7 @@
     "axios": "^1.8.3",
     "date-fns": "^4.1.0",
     "dayjs": "^1.11.13",
+    "emoji-picker-react": "^4.12.2",
     "express": "^5.1.0",
     "pdfjs-dist": "^4.8.69",
     "prettier": "^3.5.3",
