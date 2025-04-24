@@ -35,6 +35,8 @@ import ThemeSettings from "../pages/Settings/ThemeSettings.jsx";
 import DeleteAccount from "../pages/Settings/DeleteAccount.jsx";
 import Error404 from "../pages/Error/Error404.jsx";
 
+import BlockedUsersPage from "../pages/Settings/BlockedUsersPage.jsx";
+import ProfileVisibilityPage from "../pages/Settings/ProfileVisibilityPage.jsx";
 const RenderWithNavbar = (component) => {
   return (
     <>
@@ -57,6 +59,15 @@ const ProtectedRoutes = () => {
       />
 
       <Route path="/settings" element={RenderWithNavbar(<ThemeSettings />)} />
+      <Route
+        path="/mypreferences/manage-by-blocked-list"
+        element={RenderWithNavbar(<BlockedUsersPage />)}
+      />
+
+      <Route
+        path="/mypreferences/profile-visibility"
+        element={RenderWithNavbar(<ProfileVisibilityPage />)}
+      />
 
       <Route path="/users" element={RenderWithNavbar(<ProfileLayout />)} />
       <Route

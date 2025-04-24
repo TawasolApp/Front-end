@@ -1,6 +1,7 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { axiosInstance as axios } from "../../../../apis/axios.js";
 import ConfirmModal from "../ReusableModals/ConfirmModal.jsx";
+import ReportBlockModal from "../ReportAndBlockModals/ReportBlockModal.jsx";
 import NewMessageModal from "../../../Messaging/New Message Modal/NewMessageModal.jsx";
 
 function ViewerView({
@@ -15,6 +16,11 @@ function ViewerView({
   );
   const [showUnfollowModal, setShowUnfollowModal] = useState(false);
   const [showAcceptModal, setShowAcceptModal] = useState(false);
+  const [showReportModal, setShowReportModal] = useState(false);
+
+  const [dropdownOpen, setDropdownOpen] = useState(false);
+  const dropdownRef = useRef(null);
+
   const [showMessageModal, setShowMessageModal] = useState(false);
   useEffect(() => {
     if (connectStatus === "Connection") {
@@ -23,6 +29,17 @@ function ViewerView({
       setIsFollowing(false);
     }
   }, [connectStatus]);
+
+  // Close dropdown on outside click
+  useEffect(() => {
+    const handleClickOutside = (e) => {
+      if (dropdownRef.current && !dropdownRef.current.contains(e.target)) {
+        setDropdownOpen(false);
+      }
+    };
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, []);
 
   const connectionStatusLabel = {
     Connection: "Connected",
@@ -180,7 +197,7 @@ function ViewerView({
         {connectionStatusLabel[connectStatus] || "Connect"}
       </button>
 
-      <button
+      {/* <button
         className={`px-4 py-2 border rounded-full text-sm transition-all duration-300 ease-in-out ${
           isFollowing
             ? "bg-blue-600 text-boxbackground  "
@@ -190,7 +207,46 @@ function ViewerView({
         aria-label={isFollowing ? "Unfollow user" : "Follow user"}
       >
         {isFollowing ? "✓ Following" : "+ Follow"}
-      </button>
+      </button> */}
+
+      {/* More dropdown */}
+      <div className="relative" ref={dropdownRef}>
+        <button
+          className="px-4 py-2 border border-black text-black rounded-full text-sm outline outline-0 hover:outline-2 hover:outline-black transition-all duration-200"
+          onClick={() => setDropdownOpen((prev) => !prev)}
+          aria-haspopup="true"
+          aria-expanded={dropdownOpen}
+        >
+          More
+        </button>
+
+        {dropdownOpen && (
+          <div className="absolute right-0 mt-2 w-48 bg-white border rounded shadow z-50">
+            <button
+              className="w-full text-left px-4 py-2 hover:bg-gray-100 text-sm"
+              onClick={() => {
+                handleFollow();
+                setDropdownOpen(false);
+              }}
+              aria-label={isFollowing ? "Unfollow user" : "Follow user"}
+            >
+              {isFollowing ? "Unfollow" : "Follow"}
+            </button>
+            <button
+              className="w-full text-left px-4 py-2 hover:bg-gray-100 text-sm text-red-600"
+              onClick={() => {
+                setDropdownOpen(false);
+                setShowReportModal(true); // open the modal
+              }}
+              aria-label="Report or block this user"
+            >
+              Report / Block
+            </button>
+          </div>
+        )}
+      </div>
+
+      {/* Modals */}
 
       {showUnfollowModal && (
         <ConfirmModal
@@ -214,6 +270,19 @@ function ViewerView({
           cancelLabel="Cancel"
         />
       )}
+      <ReportBlockModal
+        isOpen={showReportModal}
+        onClose={() => setShowReportModal(false)}
+        onBlock={() => {
+          console.log("Block logic here");
+          setShowReportModal(false);
+        }}
+        onReport={() => {
+          console.log("Report logic here");
+          setShowReportModal(false);
+        }}
+        fullName={`${user.firstName} ${user.lastName}`}
+      />
       {showMessageModal && (
         <NewMessageModal
           recipient={user}
