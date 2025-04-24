@@ -41,7 +41,7 @@ const ReplyContainer = ({ commentId }) => {
         </CommentThreadWrapper>
       )}
 
-      {isLoading && (
+      {isLoading && hasMoreReplies && (
         <CommentThreadWrapper hasReplies={true}>
           <div className="pl-2 pt-2 space-y-4 animate-pulse">
             {[...Array(1)].map((_, idx) => (
