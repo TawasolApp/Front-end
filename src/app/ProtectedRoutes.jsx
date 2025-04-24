@@ -26,7 +26,7 @@ import NetworkBox from "../pages/MyNetwork/NetworkBox.jsx";
 
 import FeedContainer from "../pages/Feed/FeedContainer";
 import SinglePost from "../pages/Feed/SinglePost";
-import SavedPostsContainer from "../pages/SavedPosts/SavedPostsContainer";
+import SavedPostsContainer from "../pages/Saved/SavedPostsContainer";
 import RepostsContainer from "../pages/Feed/RepostsContainer";
 
 import SearchContainer from "../pages/Search/SearchContainer";
