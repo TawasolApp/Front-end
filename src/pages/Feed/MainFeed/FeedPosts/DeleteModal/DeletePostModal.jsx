@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import CircularProgress from "@mui/material/CircularProgress"; // Import loading spinner
+import CircularProgress from "@mui/material/CircularProgress";
 
 const DeletePostModal = ({ closeModal, deleteFunc, commentOrPost }) => {
   const [isLoading, setIsLoading] = useState(false);
@@ -25,7 +25,7 @@ const DeletePostModal = ({ closeModal, deleteFunc, commentOrPost }) => {
           </h3>
           <p className="text-textPlaceholder">
             Are you sure you want to delete this{" "}
-            {commentOrPost === "Post" ? "post" : "comment"}?
+            {commentOrPost === "Post" ? "post" : (commentOrPost === "Comment" ? "comment" : "reply")}?
           </p>
         </div>
 
@@ -38,7 +38,7 @@ const DeletePostModal = ({ closeModal, deleteFunc, commentOrPost }) => {
           </button>
           <button
             onClick={handleDelete}
-            className="px-4 py-2 rounded font-medium text-buttonSubmitText bg-buttonSubmitEnable hover:bg-buttonSubmitEnableHover disabled:cursor-not-allowed"
+            className="px-4 py-2 rounded font-medium text-buttonSubmitText bg-red-600 hover:bg-red-800 disabled:cursor-not-allowed"
             disabled={isLoading}
           >
             {isLoading ? (

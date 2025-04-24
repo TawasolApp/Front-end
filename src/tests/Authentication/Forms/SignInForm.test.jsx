@@ -28,7 +28,7 @@ vi.mock(
     default: () => (
       <div data-testid="google-sign-in">Sign with Google Component</div>
     ),
-  })
+  }),
 );
 
 vi.mock(
@@ -39,7 +39,7 @@ vi.mock(
         {text}
       </button>
     ),
-  })
+  }),
 );
 
 // Create a mock for InputField that captures its props
@@ -91,7 +91,7 @@ describe("SignInForm", () => {
     return render(
       <BrowserRouter>
         <SignInForm onSubmit={mockOnSubmit} {...props} />
-      </BrowserRouter>
+      </BrowserRouter>,
     );
   };
 
@@ -133,7 +133,7 @@ describe("SignInForm", () => {
       expect(forgotPasswordLink).toBeInTheDocument();
       expect(forgotPasswordLink).toHaveAttribute(
         "href",
-        "/auth/forgot-password"
+        "/auth/forgot-password",
       );
     });
 
@@ -286,7 +286,7 @@ describe("SignInForm", () => {
           email: "test@example.com",
           password: "password123",
         },
-        expect.any(Function) // the setCredentialsError function
+        expect.any(Function), // the setCredentialsError function
       );
     });
 

@@ -14,12 +14,8 @@ function UserPostsPage() {
     <div className="flex justify-center min-h-screen bg-mainBackground gap-0 p-4">
       <main className="w-full max-w-3xl mx-auto space-y-4">
         <MainFeed
-          API_ROUTE={`/posts/user/${userId}`}
+          API_ROUTE={`/posts/${userId}/user/${userId}`}
           showShare={false}
-          // currentAuthorId={userId}
-          // currentAuthorName={user.name}
-          // currentAuthorPicture={user.profilePicture}
-          // isAdmin={isOwner}
         />
       </main>
     </div>

@@ -31,21 +31,21 @@ vi.mock("react-redux", () => ({
     email: "test@example.com",
     password: "password123",
     location: "New York",
-    isNewGoogleUser: false
-  })
+    isNewGoogleUser: false,
+  }),
 }));
 
 // Mock react-router-dom
 vi.mock("react-router-dom", () => ({
-  useNavigate: () => mockNavigate
+  useNavigate: () => mockNavigate,
 }));
 
 // Mock axios instance
 vi.mock("../../apis/axios", () => ({
   axiosInstance: {
     post: (...args) => mockPost(...args),
-    get: (...args) => mockGet(...args)
-  }
+    get: (...args) => mockGet(...args),
+  },
 }));
 
 // Mock redux actions
@@ -59,7 +59,7 @@ vi.mock("../../store/authenticationSlice", () => ({
   setLastName: mockSetLastName,
   setBio: mockSetBio,
   setProfilePicture: mockSetProfilePicture,
-  setCoverPhoto: mockSetCoverPhoto
+  setCoverPhoto: mockSetCoverPhoto,
 }));
 
 // Mock child components - directly capture the props
@@ -68,12 +68,15 @@ vi.mock("../../pages/Authentication/Forms/ExperienceForm", () => ({
     // Store the onSubmit prop for later use in tests
     capturedOnSubmit = onSubmit;
     return <div>Experience Form Mock</div>;
-  }
+  },
 }));
 
-vi.mock("../../pages/Authentication/GenericComponents/AuthenticationHeader", () => ({
-  default: () => <div>Authentication Header Mock</div>
-}));
+vi.mock(
+  "../../pages/Authentication/GenericComponents/AuthenticationHeader",
+  () => ({
+    default: () => <div>Authentication Header Mock</div>,
+  }),
+);
 
 // Import the component after all mocks are set up
 import ExperienceAuthPage from "../../pages/Authentication/ExperiencePage";
@@ -82,17 +85,17 @@ describe("ExperienceAuthPage", () => {
   beforeEach(() => {
     vi.clearAllMocks();
     capturedOnSubmit = null;
-    
+
     // Default mock responses
     mockPost.mockResolvedValue({
       status: 201,
       data: {
         token: "mock-token",
         refreshToken: "mock-refresh-token",
-        isSocialLogin: false
-      }
+        isSocialLogin: false,
+      },
     });
-    
+
     mockGet.mockResolvedValue({
       status: 200,
       data: {
@@ -101,29 +104,31 @@ describe("ExperienceAuthPage", () => {
         lastName: "Doe",
         headline: "Software Developer",
         profilePicture: "profile.jpg",
-        coverPhoto: "cover.jpg"
-      }
+        coverPhoto: "cover.jpg",
+      },
     });
   });
 
   describe("Rendering", () => {
     it("renders the page with title", () => {
       render(<ExperienceAuthPage />);
-      
-      const title = screen.getByText("Your profile helps you discover new people and opportunities");
+
+      const title = screen.getByText(
+        "Your profile helps you discover new people and opportunities",
+      );
       expect(title).toBeInTheDocument();
     });
 
     it("renders the header component", () => {
       render(<ExperienceAuthPage />);
-      
+
       const header = screen.getByText("Authentication Header Mock");
       expect(header).toBeInTheDocument();
     });
 
     it("renders the form component", () => {
       render(<ExperienceAuthPage />);
-      
+
       const form = screen.getByText("Experience Form Mock");
       expect(form).toBeInTheDocument();
     });
@@ -132,68 +137,72 @@ describe("ExperienceAuthPage", () => {
   describe("Form Submission Logic", () => {
     it("handles student submission correctly", async () => {
       render(<ExperienceAuthPage />);
-      
+
       // Make sure onSubmit was captured
       expect(capturedOnSubmit).toBeTruthy();
-      
+
       // Call it with student data
       await capturedOnSubmit({
         isStudent: true,
         school: "Test University",
         startDate: "2020-01",
-        endDate: "2024-01"
+        endDate: "2024-01",
       });
-      
+
       // Check type is set
       expect(mockDispatch).toHaveBeenCalledWith(mockSetType("User"));
-      
+
       // Check login API call
       expect(mockPost).toHaveBeenCalledWith("/auth/login", {
         email: "test@example.com",
-        password: "password123"
+        password: "password123",
       });
-      
+
       // Check profile API call with education data
       expect(mockPost).toHaveBeenCalledWith("/profile", {
         location: "New York",
-        education: [{
-          school: "Test University",
-          startDate: "2020-01",
-          endDate: "2024-01"
-        }]
+        education: [
+          {
+            school: "Test University",
+            startDate: "2020-01",
+            endDate: "2024-01",
+          },
+        ],
       });
-      
+
       // Check profile retrieval
       expect(mockGet).toHaveBeenCalledWith("/profile");
-      
+
       // Check navigation to feed
       expect(mockNavigate).toHaveBeenCalledWith("/feed");
     });
 
     it("handles professional submission correctly", async () => {
       render(<ExperienceAuthPage />);
-      
+
       // Make sure onSubmit was captured
       expect(capturedOnSubmit).toBeTruthy();
-      
+
       // Call it with professional data
       await capturedOnSubmit({
         isStudent: false,
         title: "Software Engineer",
         employmentType: "Full-time",
         company: "Tech Corp",
-        startDate: "2020-01"
+        startDate: "2020-01",
       });
-      
+
       // Check profile API call with work experience data
       expect(mockPost).toHaveBeenCalledWith("/profile", {
         location: "New York",
-        workExperience: [{
-          title: "Software Engineer",
-          employmentType: "Full-time",
-          company: "Tech Corp",
-          startDate: "2020-01"
-        }]
+        workExperience: [
+          {
+            title: "Software Engineer",
+            employmentType: "Full-time",
+            company: "Tech Corp",
+            startDate: "2020-01",
+          },
+        ],
       });
     });
   });
@@ -201,68 +210,79 @@ describe("ExperienceAuthPage", () => {
   describe("Error Handling", () => {
     it("handles login errors properly", async () => {
       // Mock console.error
-      const consoleErrorSpy = vi.spyOn(console, "error").mockImplementation(() => {});
-      
+      const consoleErrorSpy = vi
+        .spyOn(console, "error")
+        .mockImplementation(() => {});
+
       // Mock login error
-      mockPost.mockRejectedValueOnce({ 
-        response: { status: 401 }
+      mockPost.mockRejectedValueOnce({
+        response: { status: 401 },
       });
-      
+
       render(<ExperienceAuthPage />);
-      
+
       // Make sure onSubmit was captured
       expect(capturedOnSubmit).toBeTruthy();
-      
+
       // Call it with data
       await capturedOnSubmit({
         isStudent: true,
         school: "Test University",
         startDate: "2020-01",
-        endDate: "2024-01"
+        endDate: "2024-01",
       });
-      
+
       // Should log the error
-      expect(consoleErrorSpy).toHaveBeenCalledWith("Invalid email or password.");
-      
+      expect(consoleErrorSpy).toHaveBeenCalledWith(
+        "Invalid email or password.",
+      );
+
       // Restore spy
       consoleErrorSpy.mockRestore();
     });
 
     it("handles profile creation errors", async () => {
       // Mock console.error
-      const consoleErrorSpy = vi.spyOn(console, "error").mockImplementation(() => {});
-      
+      const consoleErrorSpy = vi
+        .spyOn(console, "error")
+        .mockImplementation(() => {});
+
       // Mock profile creation error
-      mockPost.mockImplementationOnce(() => Promise.resolve({
-        status: 201,
-        data: {
-          token: "mock-token",
-          refreshToken: "mock-refresh-token",
-          isSocialLogin: false
-        }
-      }));
-      
+      mockPost.mockImplementationOnce(() =>
+        Promise.resolve({
+          status: 201,
+          data: {
+            token: "mock-token",
+            refreshToken: "mock-refresh-token",
+            isSocialLogin: false,
+          },
+        }),
+      );
+
       mockPost.mockRejectedValueOnce(new Error("Profile creation failed"));
-      
+
       render(<ExperienceAuthPage />);
-      
+
       // Make sure onSubmit was captured
       expect(capturedOnSubmit).toBeTruthy();
-      
+
       // Call it with data
       await capturedOnSubmit({
         isStudent: true,
         school: "Test University",
         startDate: "2020-01",
-        endDate: "2024-01"
+        endDate: "2024-01",
       });
-      
+
       // Should log the error
-      expect(consoleErrorSpy).toHaveBeenCalledWith("Error submitting data:", expect.any(Error));
-      
+      expect(consoleErrorSpy).toHaveBeenCalledWith(
+        "Error submitting data:",
+        expect.any(Error),
+      );
+
       // Should not proceed to get profile
       expect(mockGet).not.toHaveBeenCalled();
-      
+
       // Restore spy
       consoleErrorSpy.mockRestore();
     });

@@ -9,14 +9,19 @@ vi.mock("../../pages/Authentication/Forms/NewPasswordForm", () => ({
   default: () => <div data-testid="new-password-form">New Password Form</div>,
 }));
 
-vi.mock("../../pages/Authentication/GenericComponents/AuthenticationHeader", () => ({
-  default: ({ hideButtons }) => (
-    <header data-testid="auth-header">
-      Authentication Header
-      {hideButtons && <span data-testid="buttons-hidden">Buttons Hidden</span>}
-    </header>
-  ),
-}));
+vi.mock(
+  "../../pages/Authentication/GenericComponents/AuthenticationHeader",
+  () => ({
+    default: ({ hideButtons }) => (
+      <header data-testid="auth-header">
+        Authentication Header
+        {hideButtons && (
+          <span data-testid="buttons-hidden">Buttons Hidden</span>
+        )}
+      </header>
+    ),
+  }),
+);
 
 // Import the component after all mocks are set up
 import NewPasswordPage from "../../pages/Authentication/NewPasswordPage";
@@ -26,7 +31,7 @@ describe("NewPasswordPage", () => {
     return render(
       <BrowserRouter>
         <NewPasswordPage />
-      </BrowserRouter>
+      </BrowserRouter>,
     );
   };
 
@@ -55,21 +60,21 @@ describe("NewPasswordPage", () => {
     it("has a full-screen container with proper styling", () => {
       const { container } = renderNewPasswordPage();
       const mainContainer = container.firstChild;
-      
+
       expect(mainContainer).toHaveClass(
-        "min-h-screen", 
-        "flex", 
-        "items-center", 
-        "justify-center", 
+        "min-h-screen",
+        "flex",
+        "items-center",
+        "justify-center",
         "bg-mainBackground",
-        "overflow-x-hidden"
+        "overflow-x-hidden",
       );
     });
 
     it("applies responsive padding", () => {
       const { container } = renderNewPasswordPage();
       const mainContainer = container.firstChild;
-      
+
       expect(mainContainer).toHaveClass("px-4", "sm:px-6", "lg:px-8");
     });
   });

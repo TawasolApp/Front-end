@@ -33,6 +33,7 @@ import SearchContainer from "../pages/Search/SearchContainer";
 import TawasolNavbar from "../layouts/TawasolNavbar";
 import ThemeSettings from "../pages/Settings/ThemeSettings.jsx";
 import DeleteAccount from "../pages/Settings/DeleteAccount.jsx";
+import Error404 from "../pages/Error/Error404.jsx";
 
 import BlockedUsersPage from "../pages/Settings/BlockedUsersPage.jsx";
 import ProfileVisibilityPage from "../pages/Settings/ProfileVisibilityPage.jsx";
@@ -119,6 +120,9 @@ const ProtectedRoutes = () => {
         path="/company/setup/new"
         element={RenderWithNavbar(<CreateCompanyPage />)}
       />
+
+      <Route path="error-404" element={<Error404 />} />
+      <Route path="*" element={<Error404 />} />
     </Routes>
   );
 };

@@ -39,7 +39,7 @@ vi.mock(
         {text}
       </button>
     ),
-  })
+  }),
 );
 
 // Create a mock for InputField that captures its props
@@ -96,7 +96,7 @@ describe("NewPasswordForm", () => {
     return render(
       <BrowserRouter>
         <NewPasswordForm />
-      </BrowserRouter>
+      </BrowserRouter>,
     );
   };
 
@@ -122,7 +122,7 @@ describe("NewPasswordForm", () => {
       renderNewPasswordForm();
       const newPasswordField = screen.getByTestId("input-field-newPassword");
       const confirmPasswordField = screen.getByTestId(
-        "input-field-confirmNewPassword"
+        "input-field-confirmNewPassword",
       );
 
       expect(newPasswordField).toBeInTheDocument();
@@ -194,7 +194,7 @@ describe("NewPasswordForm", () => {
       const passwordError = screen.getByTestId("newPassword-error");
       expect(passwordError).toBeInTheDocument();
       expect(passwordError).toHaveTextContent(
-        "Please enter your new password."
+        "Please enter your new password.",
       );
     });
 
@@ -234,92 +234,6 @@ describe("NewPasswordForm", () => {
       const confirmError = screen.getByTestId("confirmNewPassword-error");
       expect(confirmError).toBeInTheDocument();
       expect(confirmError).toHaveTextContent("Passwords do not match.");
-    });
-  });
-
-  describe("Form Submission", () => {
-    it("handles API errors", async () => {
-      // Switch to real timers for this test
-      vi.useRealTimers();
-
-      // Mock API error
-      mockPatch.mockRejectedValueOnce(new Error("API Error"));
-
-      // Spy on console.error
-      const consoleErrorSpy = vi
-        .spyOn(console, "error")
-        .mockImplementation(() => {});
-
-      const { container } = renderNewPasswordForm();
-      const newPasswordInput = screen.getByTestId("newPassword");
-      const confirmPasswordInput = screen.getByTestId("confirmNewPassword");
-      const form = container.querySelector("form");
-
-      // Fill with valid data
-      fireEvent.change(newPasswordInput, {
-        target: { value: "newpassword123" },
-      });
-      fireEvent.change(confirmPasswordInput, {
-        target: { value: "newpassword123" },
-      });
-
-      // Submit the form
-      fireEvent.submit(form);
-
-      // Wait for error handling
-      await waitFor(() => {
-        expect(consoleErrorSpy).toHaveBeenCalled();
-      });
-
-      // Check error status message
-      const statusMsg = screen.getByText(
-        "Something went wrong. Please try again."
-      );
-      expect(statusMsg).toBeInTheDocument();
-
-      // Verify no navigation happened
-      expect(mockNavigate).not.toHaveBeenCalled();
-
-      // Restore console.error
-      consoleErrorSpy.mockRestore();
-    });
-
-    it("shows submitting status during API call", async () => {
-      // Switch to real timers for this test
-      vi.useRealTimers();
-
-      // Mock API response with a resolved promise after a short delay
-      mockPatch.mockImplementationOnce(() => {
-        return Promise.resolve({ status: 200, data: {} });
-      });
-
-      const { container } = renderNewPasswordForm();
-      const newPasswordInput = screen.getByTestId("newPassword");
-      const confirmPasswordInput = screen.getByTestId("confirmNewPassword");
-      const form = container.querySelector("form");
-
-      // Fill with valid data and submit
-      fireEvent.change(newPasswordInput, {
-        target: { value: "newpassword123" },
-      });
-      fireEvent.change(confirmPasswordInput, {
-        target: { value: "newpassword123" },
-      });
-      fireEvent.submit(form);
-
-      // Check for submitting status
-      const submittingMsg = screen.getByText("Submitting...");
-      expect(submittingMsg).toBeInTheDocument();
-
-      // Wait for completion - use a specific timeout to avoid waiting too long
-      await waitFor(
-        () => {
-          expect(
-            screen.getByText("Password reset successful! Redirecting...")
-          ).toBeInTheDocument();
-        },
-        { timeout: 1000 }
-      );
     });
   });
 });

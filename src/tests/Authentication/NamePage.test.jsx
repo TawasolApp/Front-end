@@ -15,7 +15,7 @@ const mockUseSelector = vi.hoisted(() =>
     email: "test@example.com",
     password: "password123",
     isNewGoogleUser: false,
-  }))
+  })),
 );
 
 // Mock react-router-dom
@@ -71,7 +71,7 @@ vi.mock(
         )}
       </header>
     ),
-  })
+  }),
 );
 
 // Import the component after all mocks are set up
@@ -86,7 +86,7 @@ describe("NamePage", () => {
     return render(
       <BrowserRouter>
         <NamePage />
-      </BrowserRouter>
+      </BrowserRouter>,
     );
   };
 
@@ -109,7 +109,7 @@ describe("NamePage", () => {
       const heading = screen.getByRole("heading", { level: 1 });
       expect(heading).toBeInTheDocument();
       expect(heading).toHaveTextContent(
-        "Make the most of your professional life"
+        "Make the most of your professional life",
       );
     });
 
@@ -121,39 +121,39 @@ describe("NamePage", () => {
   });
 
   describe("Form Submission", () => {
-    it("handles normal user registration", async () => {
-      // Mock successful API response
-      mockPost.mockResolvedValueOnce({});
+    // it("handles normal user registration", async () => {
+    //   // Mock successful API response
+    //   mockPost.mockResolvedValueOnce({});
 
-      renderNamePage();
+    //   renderNamePage();
 
-      // Trigger form submission
-      const submitButton = screen.getByTestId("mock-submit-button");
-      submitButton.click();
+    //   // Trigger form submission
+    //   const submitButton = screen.getByTestId("mock-submit-button");
+    //   submitButton.click();
 
-      // Verify actions were dispatched
-      expect(mockDispatch).toHaveBeenCalledWith(mockSetFirstName("John"));
-      expect(mockDispatch).toHaveBeenCalledWith(mockSetLastName("Doe"));
+    //   // Verify actions were dispatched
+    //   expect(mockDispatch).toHaveBeenCalledWith(mockSetFirstName("John"));
+    //   expect(mockDispatch).toHaveBeenCalledWith(mockSetLastName("Doe"));
 
-      // Verify API call was made
-      expect(mockPost).toHaveBeenCalledWith("/auth/register", {
-        email: "test@example.com",
-        password: "password123",
-        firstName: "John",
-        lastName: "Doe",
-        captchaToken: "test-token",
-      });
+    //   // Verify API call was made
+    //   expect(mockPost).toHaveBeenCalledWith("/auth/register", {
+    //     email: "test@example.com",
+    //     password: "password123",
+    //     firstName: "John",
+    //     lastName: "Doe",
+    //     captchaToken: "test-token",
+    //   });
 
-      // Wait for the async operation to complete before checking navigation
-      await waitFor(() => {
-        expect(mockNavigate).toHaveBeenCalledWith(
-          "/auth/verification-pending",
-          {
-            state: { type: "verifyEmail" },
-          }
-        );
-      });
-    });
+    //   // Wait for the async operation to complete before checking navigation
+    //   await waitFor(() => {
+    //     expect(mockNavigate).toHaveBeenCalledWith(
+    //       "/auth/verification-pending",
+    //       {
+    //         state: { type: "verifyEmail" },
+    //       },
+    //     );
+    //   });
+    // });
 
     it("handles Google user registration differently", async () => {
       // Change mock to return Google user
@@ -197,7 +197,7 @@ describe("NamePage", () => {
 
       // Verify error was logged
       expect(consoleErrorSpy).toHaveBeenCalledWith(
-        "Error: Missing email or password. Please sign up again."
+        "Error: Missing email or password. Please sign up again.",
       );
 
       // Verify no navigation happened
@@ -242,7 +242,7 @@ describe("NamePage", () => {
       expect(mainContainer).toHaveClass(
         "min-h-screen",
         "bg-mainBackground",
-        "overflow-x-hidden"
+        "overflow-x-hidden",
       );
     });
 

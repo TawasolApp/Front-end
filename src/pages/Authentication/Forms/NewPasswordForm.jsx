@@ -4,6 +4,7 @@ import InputField from "../GenericComponents/InputField";
 import BlueSubmitButton from "../GenericComponents/BlueSubmitButton";
 import { useNavigate } from "react-router-dom";
 import { axiosInstance } from "../../../apis/axios";
+import { toast } from "react-toastify";
 
 const NewPasswordForm = () => {
   const [newPassword, setNewPassword] = useState("");
@@ -11,7 +12,7 @@ const NewPasswordForm = () => {
   const [showNewPassword, setShowNewPassword] = useState(false);
   const [newPasswordError, setNewPasswordError] = useState("");
   const [confirmNewPasswordError, setConfirmNewPasswordError] = useState("");
-  const [status, setStatus] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
 
   const email = useSelector((state) => state.authentication.email); // Access email from Redux state
   const navigate = useNavigate();
@@ -34,7 +35,7 @@ const NewPasswordForm = () => {
     }
 
     try {
-      setStatus("Submitting...");
+      setIsLoading(true);
 
       const response = await axiosInstance.patch("/auth/set-new-password", {
         email: email,
@@ -42,14 +43,22 @@ const NewPasswordForm = () => {
       });
 
       if (response.status === 200) {
-        setStatus("Password reset successful! Redirecting...");
+        toast.success("Password reset successful! Redirecting...", {
+          position: "top-right",
+          autoClose: 3000,
+        });
         setTimeout(() => {
           navigate("/auth/signin");
         }, 1500);
       }
     } catch (error) {
       console.error("Error resetting password:", error);
-      setStatus("Something went wrong. Please try again.");
+      toast.error("Something went wrong. Please try again.", {
+        position: "top-right",
+        autoClose: 3000,
+      });
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -100,9 +109,7 @@ const NewPasswordForm = () => {
         error={confirmNewPasswordError}
       />
 
-      <p className="text-base text-center text-textHomeTitle">{status}</p>
-
-      <BlueSubmitButton text="Submit" />
+      <BlueSubmitButton text="Submit" isLoading={isLoading} loadingText="Submitting" />
     </form>
   );
 };

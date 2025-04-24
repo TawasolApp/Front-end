@@ -2,6 +2,8 @@ import React, { useState, useEffect, useRef } from "react";
 import { axiosInstance as axios } from "../../../../apis/axios.js";
 import ConfirmModal from "../ReusableModals/ConfirmModal.jsx";
 import ReportBlockModal from "../ReportAndBlockModals/ReportBlockModal.jsx";
+import NewMessageModal from "../../../Messaging/New Message Modal/NewMessageModal.jsx";
+
 function ViewerView({
   user,
   viewerId,
@@ -18,6 +20,8 @@ function ViewerView({
 
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const dropdownRef = useRef(null);
+
+  const [showMessageModal, setShowMessageModal] = useState(false);
   useEffect(() => {
     if (connectStatus === "Connection") {
       setIsFollowing(true);
@@ -165,7 +169,7 @@ function ViewerView({
   };
 
   const handleMessage = () => {
-    console.log("Message clicked");
+    setShowMessageModal(true);
   };
 
   return (
@@ -279,6 +283,12 @@ function ViewerView({
         }}
         fullName={`${user.firstName} ${user.lastName}`}
       />
+      {showMessageModal && (
+        <NewMessageModal
+          recipient={user}
+          onClose={() => setShowMessageModal(false)}
+        />
+      )}
     </div>
   );
 }

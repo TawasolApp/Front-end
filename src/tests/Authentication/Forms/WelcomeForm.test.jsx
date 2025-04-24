@@ -17,9 +17,14 @@ vi.mock("react-router-dom", async () => {
 });
 
 // Mock SignWithGoogle component
-vi.mock("../../../pages/Authentication/GenericComponents/SignWithGoogle", () => ({
-  default: () => <div data-testid="google-sign-in">Sign with Google Component</div>
-}));
+vi.mock(
+  "../../../pages/Authentication/GenericComponents/SignWithGoogle",
+  () => ({
+    default: () => (
+      <div data-testid="google-sign-in">Sign with Google Component</div>
+    ),
+  }),
+);
 
 // Import the component after all mocks are set up
 import WelcomeForm from "../../../pages/Authentication/Forms/WelcomeForm";
@@ -33,7 +38,7 @@ describe("WelcomeForm", () => {
     return render(
       <BrowserRouter>
         <WelcomeForm />
-      </BrowserRouter>
+      </BrowserRouter>,
     );
   };
 
@@ -51,7 +56,9 @@ describe("WelcomeForm", () => {
 
     it("renders sign-in with email button", () => {
       renderWelcomeForm();
-      const signInButton = screen.getByRole("button", { name: /sign in with email/i });
+      const signInButton = screen.getByRole("button", {
+        name: /sign in with email/i,
+      });
       expect(signInButton).toBeInTheDocument();
     });
 
@@ -72,10 +79,12 @@ describe("WelcomeForm", () => {
   describe("Navigation", () => {
     it("navigates to sign in page when 'Sign in with Email' button is clicked", () => {
       renderWelcomeForm();
-      const signInButton = screen.getByRole("button", { name: /sign in with email/i });
-      
+      const signInButton = screen.getByRole("button", {
+        name: /sign in with email/i,
+      });
+
       fireEvent.click(signInButton);
-      
+
       expect(mockNavigate).toHaveBeenCalledWith("/auth/signin");
     });
   });
@@ -83,8 +92,10 @@ describe("WelcomeForm", () => {
   describe("UI Styling", () => {
     it("applies appropriate styling to sign in button", () => {
       renderWelcomeForm();
-      const signInButton = screen.getByRole("button", { name: /sign in with email/i });
-      
+      const signInButton = screen.getByRole("button", {
+        name: /sign in with email/i,
+      });
+
       // Check for important styling classes
       expect(signInButton.className).toMatch(/w-full/);
       expect(signInButton.className).toMatch(/rounded-full/);
@@ -94,7 +105,7 @@ describe("WelcomeForm", () => {
 
     it("has responsive styling", () => {
       const { container } = renderWelcomeForm();
-      
+
       // Look for responsive class patterns
       const responsiveClasses = container.innerHTML.match(/sm:|md:|lg:/g);
       expect(responsiveClasses).not.toBeNull();
@@ -103,7 +114,7 @@ describe("WelcomeForm", () => {
     it("applies text styling for Join now link", () => {
       renderWelcomeForm();
       const joinLink = screen.getByRole("link", { name: /join now/i });
-      
+
       expect(joinLink.className).toMatch(/text-buttonSubmitEnable/);
       expect(joinLink.className).toMatch(/hover:underline/);
     });
@@ -113,10 +124,10 @@ describe("WelcomeForm", () => {
     it("has the correct container structure", () => {
       const { container } = renderWelcomeForm();
       const mainContainer = container.firstChild;
-      
+
       // Check container styling
       expect(mainContainer).toHaveClass("space-y-4", "sm:space-y-6");
-      
+
       // Check for correct content hierarchy
       const children = Array.from(mainContainer.children);
       expect(children.length).toBe(3); // SignWithGoogle + button + paragraph

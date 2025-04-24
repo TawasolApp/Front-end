@@ -3,14 +3,15 @@ import FlagIcon from "@mui/icons-material/Flag";
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
 import MoreHorizIcon from "@mui/icons-material/MoreHoriz";
+import { formatDate } from "../../../../../../utils";
+import { usePost } from "../../PostContext";
 import DropdownMenu from "../../../../GenericComponents/DropdownMenu";
 import ActorHeader from "../../../../GenericComponents/ActorHeader";
 import ActivitiesHolder from "./ActivitiesHolder";
-import { formatDate } from "../../../../../../utils";
 import TextViewer from "../../../../GenericComponents/TextViewer";
 import AddForm from "./AddForm";
 import ReactionsModal from "../../ReactionModal/ReactionsModal";
-import { usePost } from "../../PostContext";
+import DeletePostModal from "../../DeleteModal/DeletePostModal";
 
 const Reply = ({ commentId, reply }) => {
   const {
@@ -22,6 +23,7 @@ const Reply = ({ commentId, reply }) => {
 
   const [showReactions, setShowReactions] = useState(false);
   const [editorMode, setEditorMode] = useState(false);
+  const [showDeleteModal, setShowDeleteModal] = useState(false);
 
   const menuItems = [
     {
@@ -39,7 +41,7 @@ const Reply = ({ commentId, reply }) => {
     });
     menuItems.push({
       text: "Delete reply",
-      onClick: () => handleDeleteReplyToComment(commentId, reply.id),
+      onClick: () => setShowDeleteModal(true),
       icon: DeleteIcon,
     });
   }
@@ -114,9 +116,19 @@ const Reply = ({ commentId, reply }) => {
           </div>
           {showReactions && (
             <ReactionsModal
-              API_URL={`/posts/reactions/${reply.id}`}
+              API_URL={`/posts/${currentAuthorId}/reactions/${reply.id}`}
               setShowLikes={() => setShowReactions(false)}
               reactCounts={reply.reactCounts}
+            />
+          )}
+          {showDeleteModal && (
+            <DeletePostModal
+              closeModal={() => setShowDeleteModal(false)}
+              deleteFunc={async () => {
+                await handleDeleteReplyToComment(commentId, reply.id);
+                setShowDeleteModal(false);
+              }}
+              commentOrPost="Reply"
             />
           )}
         </>

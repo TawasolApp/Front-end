@@ -1,12 +1,19 @@
-// Update the mock implementation at the top
-import { describe, it, expect, beforeEach } from "vitest";
-import { render, screen, fireEvent } from "@testing-library/react";
-import { vi } from "vitest";
+import { describe, it, expect, beforeEach, vi } from "vitest";
+import { render, screen, fireEvent, waitFor } from "@testing-library/react";
 import React from "react";
-import FollowPage from "../pages/mynetworkpage/FollowPage";
+import FollowPage from "../pages/MyNetwork/FollowPage";
 import { axiosInstance } from "../apis/axios";
 
-// Mock axios instance with proper Promise-based functions
+// Mock IntersectionObserver
+const mockIntersectionObserver = vi.fn();
+mockIntersectionObserver.mockReturnValue({
+  observe: () => null,
+  unobserve: () => null,
+  disconnect: () => null,
+});
+window.IntersectionObserver = mockIntersectionObserver;
+
+// Mock axios instance
 vi.mock("../apis/axios", () => ({
   axiosInstance: {
     get: vi.fn(() => Promise.resolve({ data: [] })),
@@ -15,179 +22,138 @@ vi.mock("../apis/axios", () => ({
   },
 }));
 
+// Mock useNavigate
+const mockNavigate = vi.fn();
+vi.mock("react-router-dom", () => ({
+  useNavigate: () => mockNavigate,
+}));
+
 describe("FollowPage", () => {
+  const mockUser = {
+    userId: "1",
+    firstName: "John",
+    lastName: "Doe",
+    headline: "Software Developer",
+    profilePicture: null
+  };
+
   beforeEach(() => {
     vi.clearAllMocks();
+    axiosInstance.get.mockImplementation(() => Promise.resolve({ data: [] }));
+  });
+
+  it("should render the component with default tab", () => {
+    render(<FollowPage />);
+    expect(screen.getByText("My Network")).toBeInTheDocument();
+    expect(screen.getByText("Following").closest('button')).toHaveClass('border-b-2');
+    expect(screen.getByText("Followers").closest('button')).not.toHaveClass('border-b-2');
   });
 
   it("should fetch and display following users on mount", async () => {
-    const mockFollowing = [
-      { userId: "1", username: "user1", headline: "Test headline 1" },
-      { userId: "2", username: "user2", headline: "Test headline 2" },
-    ];
-
     axiosInstance.get.mockImplementationOnce(() =>
-      Promise.resolve({ data: mockFollowing }),
+      Promise.resolve({ data: [mockUser] }),
     );
 
     render(<FollowPage />);
-    expect(await screen.findByText("user1")).toBeTruthy();
-    expect(await screen.findByText("user2")).toBeTruthy();
+    expect(await screen.findByText("John Doe")).toBeInTheDocument();
+    expect(screen.getByText("Software Developer")).toBeInTheDocument();
   });
 
   it("should switch between following and followers tabs", async () => {
-    const mockFollowing = [{ userId: "1", username: "user1" }];
-    const mockFollowers = [{ userId: "2", username: "user2" }];
-
+    const mockFollowers = [{ ...mockUser, firstName: "Jane" }];
     axiosInstance.get
-      .mockImplementationOnce(() => Promise.resolve({ data: mockFollowing }))
+      .mockImplementationOnce(() => Promise.resolve({ data: [mockUser] }))
       .mockImplementationOnce(() => Promise.resolve({ data: mockFollowers }));
 
     render(<FollowPage />);
-    const followersTab = screen.getByText("Followers");
-    fireEvent.click(followersTab);
-
-    expect(axiosInstance.get).toHaveBeenCalledWith("/connections/followers");
+    
+    // Switch to followers tab
+    fireEvent.click(screen.getByText("Followers"));
+    
+    await waitFor(() => {
+      expect(axiosInstance.get).toHaveBeenCalledWith("/connections/followers", {
+        params: { page: 1, limit: 10 }
+      });
+      expect(screen.getByText("Followers").closest('button')).toHaveClass('border-b-2');
+    });
   });
 
-  it("should handle unfollow user flow", async () => {
-    const mockFollowing = [
-      { userId: "1", username: "user1", headline: "Test headline" },
-    ];
+  it("should show loading spinner when loading initial data", async () => {
+    axiosInstance.get.mockImplementationOnce(() => new Promise(() => {}));
+    
+    render(<FollowPage />);
+    expect(screen.getByTestId("loading-spinner")).toBeInTheDocument();
+  });
 
-    axiosInstance.get.mockImplementationOnce(() =>
-      Promise.resolve({ data: mockFollowing }),
-    );
-
-    axiosInstance.delete.mockImplementationOnce(async () =>
-      Promise.resolve({ status: 200 }),
-    );
+  it("should show loading spinner when loading more items", async () => {
+    axiosInstance.get.mockImplementationOnce(() => 
+      Promise.resolve({ data: Array(10).fill(mockUser) })
+      .mockImplementationOnce(() => new Promise(() => {})))
 
     render(<FollowPage />);
-    const FollowingButton = await screen.findByTestId("followingButton2");
-    await fireEvent.click(FollowingButton);
-
-    expect(screen.getByText("You are about to unfollow user1")).toBeTruthy();
-
-    const unfollowButton = await screen.findByTestId("unfollow2");
-    await fireEvent.click(unfollowButton);
-
-    expect(axiosInstance.delete).toHaveBeenCalledWith(
-      "/connections/unfollow/1",
-    );
+    await screen.findByText("John Doe");
+    
+    // Trigger loading more
+    axiosInstance.get.mockImplementationOnce(() => new Promise(() => {}));
+    setPage({ following: 2, followers: 1 });
+    
+    expect(screen.getByTestId("loading-spinner")).toBeInTheDocument();
   });
 
-  it("should handle network error when fetching users", async () => {
-    const consoleErrorSpy = vi
-      .spyOn(console, "error")
-      .mockImplementation(() => {});
-
+  it("should show error message and retry button when fetch fails", async () => {
     axiosInstance.get.mockImplementationOnce(() =>
       Promise.reject(new Error("Network error")),
     );
 
     render(<FollowPage />);
-    expect(screen.getByText("You're not following anyone yet.")).toBeTruthy();
-
-    consoleErrorSpy.mockRestore();
+    expect(await screen.findByText(/Failed to load following list/i)).toBeInTheDocument();
+    expect(screen.getByText("Retry")).toBeInTheDocument();
   });
-  // Add these tests to your FollowPage.test.jsx
 
-  it('should display "You\'re not following anyone yet" when following list is empty', async () => {
+  it("should show empty state when no following users", async () => {
     axiosInstance.get.mockImplementationOnce(() =>
       Promise.resolve({ data: [] }),
     );
 
     render(<FollowPage />);
-    expect(
-      await screen.findByText("You're not following anyone yet."),
-    ).toBeTruthy();
+    expect(await screen.findByText(/You're not following anyone yet/i)).toBeInTheDocument();
   });
 
-  it('should display "You don\'t have any followers yet" when followers list is empty', async () => {
+  it("should show empty state when no followers", async () => {
     axiosInstance.get
       .mockImplementationOnce(() => Promise.resolve({ data: [] }))
       .mockImplementationOnce(() => Promise.resolve({ data: [] }));
 
     render(<FollowPage />);
     fireEvent.click(screen.getByText("Followers"));
-    expect(
-      await screen.findByText("You don't have any followers yet."),
-    ).toBeTruthy();
+    expect(await screen.findByText(/You don't have any followers yet/i)).toBeInTheDocument();
   });
 
-  it("should close unfollow modal when cancel button is clicked", async () => {
-    const mockFollowing = [
-      { userId: "1", username: "user1", headline: "Test headline" },
-    ];
-
+  it("should show unfollow modal when clicking Following button", async () => {
     axiosInstance.get.mockImplementationOnce(() =>
-      Promise.resolve({ data: mockFollowing }),
+      Promise.resolve({ data: [mockUser] }),
     );
 
     render(<FollowPage />);
-    const followingButton = await screen.findByTestId("followingButton2");
+    const followingButton = await screen.findByText("Following");
     fireEvent.click(followingButton);
 
-    const cancelButton = screen.getByText("Cancel");
-    fireEvent.click(cancelButton);
-
-    expect(screen.queryByText("You are about to unfollow user1")).toBeNull();
+    expect(screen.getByText(/You are about to unfollow/i)).toBeInTheDocument();
+    expect(screen.getByText("John Doe")).toBeInTheDocument();
+    expect(screen.getByText("Cancel")).toBeInTheDocument();
+    expect(screen.getByText("Unfollow")).toBeInTheDocument();
   });
 
-  it("should handle follow user action", async () => {
-    const mockFollowers = [
-      { userId: "1", username: "user1", headline: "Test headline" },
-    ];
 
-    axiosInstance.get
-      .mockImplementationOnce(() => Promise.resolve({ data: [] })) // Initial following
-      .mockImplementationOnce(() => Promise.resolve({ data: mockFollowers })); // Followers
-
-    const mockResponse = {
-      data: { userId: "1", username: "user1", headline: "Test headline" },
-      status: 201,
-    };
-
-    axiosInstance.post.mockImplementationOnce(() =>
-      Promise.resolve(mockResponse),
+  it("should navigate to user profile when clicking user name", async () => {
+    axiosInstance.get.mockImplementationOnce(() =>
+      Promise.resolve({ data: [mockUser] }),
     );
 
     render(<FollowPage />);
-    fireEvent.click(screen.getByText("Followers"));
+    const userName = await screen.getByText("John Doe");
+    fireEvent.click(userName);
 
-    const followButton = await screen.findByText("Follow");
-    fireEvent.click(followButton);
-
-    expect(axiosInstance.post).toHaveBeenCalledWith(
-      "/connections/follow",
-      { userId: "1" },
-      { headers: { "Content-Type": "application/json" } },
-    );
-  });
-
-  it("should correctly identify if a user is being followed", async () => {
-    const mockFollowing = [
-      { userId: "1", username: "user1", headline: "Test headline" },
-    ];
-    const mockFollowers = [
-      { userId: "1", username: "user1", headline: "Test headline" },
-      { userId: "2", username: "user2", headline: "Test headline" },
-    ];
-
-    axiosInstance.get
-      .mockImplementationOnce(() => Promise.resolve({ data: mockFollowing }))
-      .mockImplementationOnce(() => Promise.resolve({ data: mockFollowers }));
-
-    render(<FollowPage />);
-    fireEvent.click(screen.getByText("Followers"));
-
-    // Wait for the followers to load
-    await screen.findByText("user1");
-
-    // User1 should show "Following" button
-    expect(screen.findByText("Following")).toBeTruthy();
-    // User2 should show "Follow" button
-    expect(screen.findByText("Follow")).toBeTruthy();
+    expect(mockNavigate).toHaveBeenCalledWith("/users/1");
   });
 });

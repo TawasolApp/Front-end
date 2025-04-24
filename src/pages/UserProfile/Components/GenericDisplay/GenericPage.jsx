@@ -27,14 +27,6 @@ function GenericPage({ title, type }) {
       setData(user[type]);
     }
   }, [user?.[type]]);
-  // if (isSaving) {
-  //   return (
-  //     <div className="flex justify-center items-center p-8">
-  //       <div className="w-6 h-6 border-4 border-gray-300 border-t-blue-500 rounded-full animate-spin"></div>
-  //       <span className="ml-3 text-sm text-text">Saving...</span>
-  //     </div>
-  //   );
-  // }
 
   const handleAdd = () => {
     setEditIndex(null);
@@ -70,12 +62,7 @@ function GenericPage({ title, type }) {
           `/profile/${endpointMap[type]}/${originalKey}`,
           updatedItem,
         );
-        //  faster
-        // const updated = [...data];
-        // updated[editIndex] = response.data;
-        // setData(updated);
 
-        // safer as replace only the updated item
         setData((prev) =>
           prev.map((item) => {
             const itemKey = type === "skills" ? item.skillName : item._id;
@@ -188,6 +175,7 @@ function GenericPage({ title, type }) {
             <button
               className="w-8 h-8 flex items-center justify-center rounded-full hover:bg-transition text-text"
               onClick={handleAdd}
+              aria-label="Add new experience"
             >
               +
             </button>
@@ -218,6 +206,7 @@ function GenericPage({ title, type }) {
                 <button
                   onClick={() => handleEdit(item, index)}
                   className="absolute top-2 right-2 text-gray-500 hover:text-blue-700 p-1 group-hover:visible"
+                  aria-label="Edit experience"
                 >
                   ✎
                 </button>

@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-
+import { usePost } from "../PostContext";
 import PostCardHeader from "./Header/PostCardHeader";
 import PostContent from "./Content/PostContent";
 import EngagementMetrics from "./Metrics/EngagementMetrics";
@@ -8,10 +8,9 @@ import CommentsContainer from "./Comments/CommentsContainer";
 import ReactionsModal from "../ReactionModal/ReactionsModal";
 import MediaCarousel from "./MediaCarousel/MediaCarousel";
 import SilentRepostHeader from "./Header/SilentRepostHeader";
-import { usePost } from "../PostContext";
 
 const PostModal = ({ mediaIndex, handleClosePostModal }) => {
-  const { post } = usePost();
+  const { post, currentAuthorId } = usePost();
 
   useEffect(() => {
     // Disable scrolling on the body when the modal opens
@@ -84,7 +83,7 @@ const PostModal = ({ mediaIndex, handleClosePostModal }) => {
 
             {showLikes && (
               <ReactionsModal
-                API_URL={`/posts/reactions/${post.id}`}
+                API_URL={`/posts/${currentAuthorId}/reactions/${post.id}`}
                 setShowLikes={() => setShowLikes(false)}
                 reactCounts={post.reactCounts}
               />

@@ -56,6 +56,7 @@ function SkillEndorsement({
   const shouldShowCount =
     isOwner || connectStatus === "Connection" || privacy === "public";
   const shouldShowButton = !isOwner && connectStatus === "Connection";
+
   return (
     <div>
       {shouldShowCount && endorsementCount > 0 && (

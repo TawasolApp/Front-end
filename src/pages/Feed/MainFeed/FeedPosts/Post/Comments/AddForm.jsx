@@ -1,8 +1,8 @@
 import { useState, useRef, useEffect } from "react";
 import { Avatar } from "@mui/material";
-import TextEditor from "../../../../GenericComponents/TextEditor";
+import CircularProgress from "@mui/material/CircularProgress";
 import { usePost } from "../../PostContext";
-import CircularProgress from "@mui/material/CircularProgress"; // For loading spinner
+import TextEditor from "../../../../GenericComponents/TextEditor";
 
 const AddForm = ({
   handleAddFunction,

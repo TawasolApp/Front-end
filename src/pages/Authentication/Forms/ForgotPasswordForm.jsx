@@ -9,6 +9,7 @@ import { setEmail } from "../../../store/authenticationSlice";
 const ForgotPasswordForm = () => {
   const [email, setEmailState] = useState("");
   const [error, setError] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
@@ -25,15 +26,18 @@ const ForgotPasswordForm = () => {
     }
 
     try {
+      setIsLoading(true);
       await axiosInstance.post("/auth/forgot-password", {
         email,
         isAndroid: false,
       });
       dispatch(setEmail(email));
+      setIsLoading(false);
       navigate("/auth/verification-pending", {
         state: { type: "forgotPassword" },
       });
     } catch (error) {
+      setIsLoading(false);
       if (error.response) {
         console.error("Forgot password error:", error.response.data);
         setError(
@@ -88,7 +92,7 @@ const ForgotPasswordForm = () => {
 
       {/* Buttons */}
       <div className="flex flex-col items-center justify-between space-y-4">
-        <BlueSubmitButton text="Next" />
+        <BlueSubmitButton text="Next" isLoading={isLoading} />
         <button
           type="button"
           onClick={handleBack}
