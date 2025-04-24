@@ -285,7 +285,10 @@ const TawasolNavbar = () => {
                     <div className="border-b border-cardBorder">
                       <div
                         className="p-4 flex gap-3 items-center hover:bg-buttonIconHover"
-                        onClick={() => navigate(`/users/${currentAuthorId}`)}
+                        onClick={() => {
+                          setIsMeOpen(false);
+                          navigate(`/users/${currentAuthorId}`)
+                        }}
                       >
                         <Avatar
                           src={currentAuthorPicture}
