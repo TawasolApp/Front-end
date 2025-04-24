@@ -116,7 +116,7 @@ const Reply = ({ commentId, reply }) => {
           </div>
           {showReactions && (
             <ReactionsModal
-              API_URL={`/posts/reactions/${reply.id}`}
+              API_URL={`/posts/${currentAuthorId}/reactions/${reply.id}`}
               setShowLikes={() => setShowReactions(false)}
               reactCounts={reply.reactCounts}
             />

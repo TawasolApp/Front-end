@@ -24,7 +24,7 @@ function PostsSlider() {
     setLoading(true);
 
     axiosInstance
-      .get(`/posts/user/${userId}`, {
+      .get(`/posts/${userId}/user/${userId}`, {
         params: { limit: 5 },
       })
       .then((response) => {
@@ -53,7 +53,7 @@ function PostsSlider() {
 
   const handlePostClick = (postId) => {
     console.log("Navigating to post:", postId);
-    navigate(`/post/${postId}`);
+    navigate(`/feed/${postId}`);
   };
 
   if (posts.length === 0) {

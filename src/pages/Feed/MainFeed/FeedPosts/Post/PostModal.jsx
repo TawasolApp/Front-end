@@ -10,7 +10,7 @@ import MediaCarousel from "./MediaCarousel/MediaCarousel";
 import SilentRepostHeader from "./Header/SilentRepostHeader";
 
 const PostModal = ({ mediaIndex, handleClosePostModal }) => {
-  const { post } = usePost();
+  const { post, currentAuthorId } = usePost();
 
   useEffect(() => {
     // Disable scrolling on the body when the modal opens
@@ -83,7 +83,7 @@ const PostModal = ({ mediaIndex, handleClosePostModal }) => {
 
             {showLikes && (
               <ReactionsModal
-                API_URL={`/posts/reactions/${post.id}`}
+                API_URL={`/posts/${currentAuthorId}/reactions/${post.id}`}
                 setShowLikes={() => setShowLikes(false)}
                 reactCounts={post.reactCounts}
               />
