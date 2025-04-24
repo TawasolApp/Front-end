@@ -1,18 +1,24 @@
 import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
+import { useSelector } from "react-redux";
 import { axiosInstance } from "../../apis/axios";
 import PostContainer from "./MainFeed/FeedPosts/PostContainer";
-import { useSelector } from "react-redux";
 
 const SinglePost = () => {
   const { id } = useParams();
   const navigate = useNavigate();
   const [post, setPost] = useState(null);
 
+  const currentAuthorId = useSelector((state) => state.authentication.userId);
+  const currentAuthorName = `${useSelector((state) => state.authentication.firstName)} ${useSelector((state) => state.authentication.lastName)}`;
+  const currentAuthorPicture = useSelector(
+    (state) => state.authentication.profilePicture,
+  );
+
   useEffect(() => {
     const fetchPost = async () => {
       try {
-        const response = await axiosInstance.get(`posts/${id}`);
+        const response = await axiosInstance.get(`/posts/${currentAuthorId}/${id}`);
         setPost(response.data);
       } catch (e) {
         navigate("/error-404");
@@ -52,12 +58,6 @@ const SinglePost = () => {
       console.log(e.message);
     }
   };
-
-  const currentAuthorId = useSelector((state) => state.authentication.userId);
-  const currentAuthorName = `${useSelector((state) => state.authentication.firstName)} ${useSelector((state) => state.authentication.lastName)}`;
-  const currentAuthorPicture = useSelector(
-    (state) => state.authentication.profilePicture,
-  );
 
   return (
     <div className="min-h-screen bg-mainBackground">

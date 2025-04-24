@@ -1,7 +1,7 @@
 import { useState, useMemo } from "react";
+import CircularProgress from "@mui/material/CircularProgress";
 import reactionIcons from "../../../../GenericComponents/reactionIcons";
 import ReactionPicker from "../../../../GenericComponents/ReactionPicker";
-import CircularProgress from "@mui/material/CircularProgress";
 import "./ActivitiesHolder.css";
 
 const ActivitiesHolder = ({

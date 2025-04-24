@@ -1,5 +1,5 @@
-import TextViewer from "../../../../../GenericComponents/TextViewer";
 import { usePost } from "../../../PostContext";
+import TextViewer from "../../../../../GenericComponents/TextViewer";
 
 const TextContent = ({ reposted }) => {
   const { post } = usePost();

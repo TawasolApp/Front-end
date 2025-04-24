@@ -1,9 +1,9 @@
 import { useState } from "react";
+import CircularProgress from "@mui/material/CircularProgress";
 import ThumbUpOffAltIcon from "@mui/icons-material/ThumbUpOffAlt";
+import { usePost } from "../../PostContext";
 import reactionIcons from "../../../../GenericComponents/reactionIcons";
 import ReactionPicker from "../../../../GenericComponents/ReactionPicker";
-import { usePost } from "../../PostContext";
-import CircularProgress from "@mui/material/CircularProgress";
 import "./LikeButton.css";
 
 const LikeButton = () => {

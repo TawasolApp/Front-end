@@ -1,8 +1,8 @@
+import { Link } from "react-router-dom";
 import { Avatar } from "@mui/material";
 import PublicIcon from "@mui/icons-material/Public";
 import PeopleIcon from "@mui/icons-material/People";
 import { formatDate } from "../../../utils";
-import { Link } from "react-router-dom";
 
 const ActorHeader = ({
   authorId,

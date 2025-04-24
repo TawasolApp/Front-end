@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
-import { usePost } from "../../PostContext";
 import OpenInFullIcon from "@mui/icons-material/OpenInFull";
+import { usePost } from "../../PostContext";
 import CommentThreadWrapper from "./CommentThreadWrapper";
 import AddForm from "./AddForm";
 import Reply from "./Reply";
