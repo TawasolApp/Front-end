@@ -34,6 +34,8 @@ import TawasolNavbar from "../layouts/TawasolNavbar";
 import ThemeSettings from "../pages/Settings/ThemeSettings.jsx";
 import DeleteAccount from "../pages/Settings/DeleteAccount.jsx";
 
+import BlockedUsersPage from "../pages/Settings/BlockedUsersPage.jsx";
+import ProfileVisibilityPage from "../pages/Settings/ProfileVisibilityPage.jsx";
 const RenderWithNavbar = (component) => {
   return (
     <>
@@ -56,9 +58,21 @@ const ProtectedRoutes = () => {
       />
 
       <Route path="/settings" element={RenderWithNavbar(<ThemeSettings />)} />
+      <Route
+        path="/mypreferences/manage-by-blocked-list"
+        element={RenderWithNavbar(<BlockedUsersPage />)}
+      />
+
+      <Route
+        path="/mypreferences/profile-visibility"
+        element={RenderWithNavbar(<ProfileVisibilityPage />)}
+      />
 
       <Route path="/users" element={RenderWithNavbar(<ProfileLayout />)} />
-      <Route path="/users/:profileSlug" element={RenderWithNavbar(<ProfileLayout />)}>
+      <Route
+        path="/users/:profileSlug"
+        element={RenderWithNavbar(<ProfileLayout />)}
+      >
         <Route index element={<ProfilePage />} />
         <Route path="education" element={<EducationPage />} />
         <Route path="workExperience" element={<ExperiencePage />} />

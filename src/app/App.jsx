@@ -20,7 +20,6 @@ import VerificationPendingPage from "../pages/Authentication/VerificationPending
 import NewPasswordPage from "../pages/Authentication/NewPasswordPage";
 
 const App = () => {
-
   const googleClientId = import.meta.env.VITE_GOOGLE_CLIENT_ID;
   console.log(googleClientId);
 
