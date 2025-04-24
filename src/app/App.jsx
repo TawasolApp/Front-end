@@ -21,7 +21,6 @@ import NewMessageModal from "../pages/Messaging/New Message Modal/NewMessageModa
 
 const App = () => {
   const googleClientId = import.meta.env.VITE_GOOGLE_CLIENT_ID;
-  console.log(googleClientId);
   const theme = useSelector((state) => state.theme.theme);
 
   return (
