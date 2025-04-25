@@ -40,6 +40,10 @@ const JobDescription = ({ jobId, enableReturn }) => {
         autoClose: 3000,
       });
     }
+    setJob((prevJob) => ({
+      ...prevJob,
+      isSaved: !prevJob.isSaved,
+    }));
   };
 
   const menuItems = [
