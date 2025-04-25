@@ -1,30 +1,58 @@
 import React from 'react';
+import BookmarkBorderIcon from "@mui/icons-material/BookmarkBorder";
+import BookmarkIcon from "@mui/icons-material/Bookmark";
+import { axiosInstance } from '../../../../apis/axios';
 
 const JobItem = ({ job, isSelected }) => {
+
+  const handleSaveJob = async () => {
+
+    if (job.isSaved) {
+      await axiosInstance.delete(`/jobs/${job.jobId}/unsave`);
+      // add toast here
+    } else {
+      await axiosInstance.post(`/jobs/${job.jobId}/save`);
+      // add toast here
+    }
+  }
+
   return (
-    <div className={`flex items-start p-4 border-b border-gray-200 ${isSelected ? 'bg-blue-50' : ''}`}>
-      <div className="mr-3">
+    <div 
+      className={`group flex items-start gap-3 cursor-pointer ${
+        isSelected 
+          ? 'border-l-2 border-selectedBorder bg-selectedBackground' 
+          : ''
+      }`}
+    >
+      {/* Company Logo */}
+      <div className="shrink-0">
         <img 
-          src={job.companyLogo} 
-          alt={`${job.companyName} logo`} 
-          className="w-12 h-12 rounded"
+          src={job.companyLogo}
+          alt={`${job.companyName} logo`}
+          className="w-12 h-12 object-cover mt-2"
         />
       </div>
-      <div className="flex-1">
-        <h3 className="text-lg font-medium text-blue-600">{job.position}</h3>
-        <div className="mt-1 text-gray-700">{job.companyName}</div>
-        <div className="text-gray-500">{job.companyLocation}</div>
-      </div>
-      {isSelected && (
-        <div className="ml-2">
-          <button className="text-gray-500">
-            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="w-5 h-5">
-              <line x1="18" y1="6" x2="6" y2="18"></line>
-              <line x1="6" y1="6" x2="18" y2="18"></line>
-            </svg>
-          </button>
+
+      {/* Text Content */}
+      <div className={`flex-1 ${
+        !isSelected ? 'border-b border-cardBorder pb-4' : ''
+      }`}>
+        <h3 className="text-lg font-medium text-blue-600 transition-all duration-300 group-hover:underline">
+          {job.position}
+        </h3>
+        <div className="mt-1 text-textContent">{job.companyName}</div>
+        <div className="text-textPlaceholder">
+          {job.location} · ({job.locationType})
         </div>
-      )}
+      </div>
+
+      <button className="shrink-0 text-textActivity transition-colors hover:text-textActivityHover">
+        {job.isSaved ? (
+          <BookmarkIcon className="!w-6 !h-6" />
+        ) : (
+          <BookmarkBorderIcon className="!w-6 !h-6" />
+        )}
+      </button>
     </div>
   );
 };

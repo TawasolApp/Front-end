@@ -99,7 +99,12 @@ const JobListing = ({ API_URL, filters }) => {
 
   return (
     <div className={`container mx-auto px-4 py-6 md:flex ${selectedJob && !isMobile ? 'md:gap-4' : ''}`}>
-      <div className={`${selectedJob && !isMobile ? 'md:w-1/2 lg:w-1/3' : 'w-full'}`}>
+      {/* Listings container with background */}
+      <div 
+        className={`bg-cardBackground rounded-lg shadow-sm ${
+          selectedJob && !isMobile ? 'md:w-1/2 lg:w-1/3' : 'w-full'
+        }`}
+      >
         {error && (
           <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded mb-4">
             {error}
@@ -112,12 +117,12 @@ const JobListing = ({ API_URL, filters }) => {
             <p className="text-gray-400">Try adjusting your filters.</p>
           </div>
         ) : (
-          <div className="space-y-4">
+          <div className={`w-full`}>
             {jobs.map((job, index) => (
               <div 
                 ref={index === jobs.length - 1 ? lastJobElementRef : null}
                 key={job.jobId}
-                className={isMobile ? 'p-0' : 'px-4 py-2'}
+                className="p-2"
                 onClick={() => handleJobClick(job.jobId)}
               >
                 <JobItem 
@@ -127,27 +132,33 @@ const JobListing = ({ API_URL, filters }) => {
                 />
               </div>
             ))}
+            {!isMobile && (
+              <div className={`md :w-1/2 lg:w-2/3 ${selectedJob ? '' : 'hidden'}`}>
+                {selectedJob ? (
+                  <JobDescription jobId={selectedJob} />
+                ) : (
+                  <div className="h-full bg-cardBackground rounded-lg shadow-sm flex items-center justify-center">
+                    <p className="text-gray-500">Select a job to view details</p>
+                  </div>
+                )}
+              </div>
+            )}
           </div>
         )}
-
+  
+        {/* Loading and end indicators */}
         {loading && (
           <div className="flex justify-center my-6">
             <div className="animate-spin rounded-full h-10 w-10 border-b-2 border-primary"></div>
           </div>
         )}
-
         {!hasMore && jobs.length > 0 && (
           <div className="text-center py-6 text-gray-500">
             No more jobs to show
           </div>
         )}
       </div>
-
-      {!isMobile && selectedJob && (
-        <div className="md:w-1/2 lg:w-2/3">
-          <JobDescription jobId={selectedJob} />
-        </div>
-      )}
+      
     </div>
   );
 };

@@ -53,7 +53,10 @@ const MainJobs = ({ API_URL, enableFilter }) => {
                 <label htmlFor="salary-range" className="block text-sm font-medium text-textActivity mb-1">
                   Salary Range (Annual)
                 </label>
-                <div className="flex items-center gap-2 bg-cardBackground border border-cardBorder rounded-md p-2 hover:border-primary transition-all">
+                <div
+                  className="flex items-center gap-2 bg-cardBackground border border-cardBorder rounded-md p-2 hover:border-primary transition-all"
+                  id="salary-range"
+                >
                   <span className="text-textActivity text-lg">$</span>
                   <input
                     id="min-salary"
