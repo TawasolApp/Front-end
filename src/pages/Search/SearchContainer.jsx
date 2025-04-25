@@ -42,7 +42,7 @@ const SearchContainer = () => {
               </button>
 
               {isDropdownOpen && (
-                <div className="absolute left-0 mt-2 w-48 rounded-md shadow-lg bg-cardBackground border border-cardBorder z-20">
+                <div className="absolute left-0 mt-2 w-48 rounded-md shadow-lg bg-cardBackground border border-cardBorder z-50">
                   <div className="py-1" role="menu" aria-orientation="vertical">
                     {["Posts", "People", "Companies", "Jobs"].map((filter) => (
                       <button

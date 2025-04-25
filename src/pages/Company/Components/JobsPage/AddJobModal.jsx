@@ -1,16 +1,22 @@
 import React, { useEffect, useState } from "react";
 import { axiosInstance } from "../../../../apis/axios";
+import CloseIcon from "@mui/icons-material/Close";
+import WorkOutlineIcon from "@mui/icons-material/WorkOutline";
+import BusinessIcon from "@mui/icons-material/Business";
+import LocationOnIcon from "@mui/icons-material/LocationOn";
+import AttachMoneyIcon from "@mui/icons-material/AttachMoney";
+import DescriptionIcon from "@mui/icons-material/Description";
 
 function AddJobModal({ onClose, companyId, onJobAdded }) {
   const [formData, setFormData] = useState({
     position: "",
-    industry: "",
     description: "",
     location: "",
     salary: "",
-    employmentType: "Full-time",
-    locationType: "On-site",
+    applicationLink: "",
     experienceLevel: "Internship",
+    locationType: "On-site",
+    employmentType: "Full-time",
   });
 
   useEffect(() => {
@@ -30,7 +36,7 @@ function AddJobModal({ onClose, companyId, onJobAdded }) {
 
     const cleanedFormData = {
       ...formData,
-      salary: formData.salary ? Number(formData.salary) : undefined, // backend expects a number
+      salary: formData.salary ? Number(formData.salary) : undefined,
     };
 
     // Remove empty optional fields (if backend doesn't allow them)
@@ -39,8 +45,6 @@ function AddJobModal({ onClose, companyId, onJobAdded }) {
         delete cleanedFormData[key];
       }
     });
-
-    console.log("Submitting job with data:", cleanedFormData);
 
     try {
       const response = await axiosInstance.post(
@@ -55,7 +59,6 @@ function AddJobModal({ onClose, companyId, onJobAdded }) {
       // Reset form
       setFormData({
         position: "",
-        industry: "",
         description: "",
         location: "",
         salary: "",
@@ -73,83 +76,87 @@ function AddJobModal({ onClose, companyId, onJobAdded }) {
   };
 
   return (
-    <div className="fixed inset-0 bg-modalbackground z-50 flex items-center justify-center px-4">
-      <div className="bg-boxbackground p-6 rounded-xl w-full max-w-2xl max-h-[90vh] overflow-y-auto shadow-lg relative">
+    <div className="fixed inset-0 bg-modalBackground/50 backdrop-blur-sm z-50 flex items-center justify-center px-4">
+      <div className="bg-cardBackground p-6 rounded-xl w-full max-w-2xl max-h-[90vh] overflow-y-auto shadow-lg relative border border-cardBorder">
         <button
           onClick={onClose}
-          className="absolute top-3 right-4 text-gray-400 hover:text-white text-xl font-bold"
+          className="absolute top-4 right-4 text-textPlaceholder hover:text-textContent transition-colors"
         >
-          ✖
+          <CloseIcon className="w-6 h-6" />
         </button>
 
-        <h3 className="text-xl font-semibold mb-6 text-text">
+        <h3 className="text-xl font-semibold mb-6 text-header flex items-center gap-2">
+          <WorkOutlineIcon className="text-primary" />
           Add Job Opening
         </h3>
 
-        <form className="space-y-4 text-text" onSubmit={handleSubmit}>
+        <form className="space-y-4 text-textContent" onSubmit={handleSubmit}>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            {/* Position Field */}
             <div>
-              <label className="block text-sm mb-1">Position*</label>
-              <input
-                data-testid="position-input"
-                type="text"
-                name="position"
-                placeholder="FrontEnd Developer"
-                value={formData.position}
-                onChange={handleChange}
-                required
-                className="w-full p-2 border rounded bg-boxbackground text-text"
-              />
+              <label className="block text-sm mb-1">
+                Position<span className="text-red-500 animate-pulse">*</span>
+              </label>
+              <div className="relative">
+                <input
+                  type="text"
+                  name="position"
+                  placeholder="Senior Software Engineer"
+                  value={formData.position}
+                  onChange={handleChange}
+                  required
+                  className="w-full pl-8 pr-3 py-2 border border-cardBorder rounded-lg bg-transparent focus:ring-1 focus:ring-primary"
+                />
+                <WorkOutlineIcon className="absolute left-2 top-2.5 text-textPlaceholder w-4 h-4" />
+              </div>
             </div>
 
+            {/* Location Field */}
             <div>
-              <label className="block text-sm mb-1">Industry</label>
-              <input
-                data-testid="industry-input"
-                type="text"
-                name="industry"
-                value={formData.industry}
-                placeholder="Computer"
-                onChange={handleChange}
-                className="w-full p-2 border rounded bg-boxbackground text-text"
-              />
+              <label className="block text-sm mb-1">
+                Location<span className="text-red-500 animate-pulse">*</span>
+              </label>
+              <div className="relative">
+                <input
+                  type="text"
+                  name="location"
+                  placeholder="City, Country (e.g., Cairo, Egypt)"
+                  value={formData.location}
+                  onChange={handleChange}
+                  required
+                  className="w-full pl-8 pr-3 py-2 border border-cardBorder rounded-lg bg-transparent"
+                />
+                <LocationOnIcon className="absolute left-2 top-2.5 text-textPlaceholder w-4 h-4" />
+              </div>
             </div>
 
-            <div>
-              <label className="block text-sm mb-1">Location*</label>
-              <input
-                data-testid="location-input"
-                type="text"
-                name="location"
-                placeholder="Cairo,Egypt"
-                value={formData.location}
-                onChange={handleChange}
-                required
-                className="w-full p-2 border rounded bg-boxbackground text-text"
-              />
-            </div>
-
+            {/* Salary Field */}
             <div>
               <label className="block text-sm mb-1">Salary</label>
-              <input
-                data-testid="salary-input"
-                type="number"
-                name="salary"
-                value={formData.salary}
-                onChange={handleChange}
-                className="w-full p-2 border rounded bg-boxbackground text-text"
-              />
+              <div className="relative">
+                <input
+                  type="number"
+                  name="salary"
+                  value={formData.salary}
+                  onChange={handleChange}
+                  placeholder="Annual salary in USD"
+                  className="w-full pl-8 pr-3 py-2 border border-cardBorder rounded-lg bg-transparent"
+                />
+                <AttachMoneyIcon className="absolute left-2 top-2.5 text-textPlaceholder w-4 h-4" />
+              </div>
             </div>
 
+            {/* Existing select fields remain similar but with updated styling */}
             <div>
-              <label className="block text-sm mb-1">Employment Type*</label>
+              <label className="block text-sm mb-1">
+                Employment Type<span className="text-red-500 animate-pulse">*</span>
+              </label>
               <select
-                data-testid="employment-type-select"
                 name="employmentType"
                 value={formData.employmentType}
                 onChange={handleChange}
                 required
-                className="w-full p-2 border rounded bg-boxbackground text-text"
+                className="w-full py-2 border border-cardBorder rounded-lg bg-transparent"
               >
                 <option>Full-time</option>
                 <option>Part-time</option>
@@ -160,28 +167,34 @@ function AddJobModal({ onClose, companyId, onJobAdded }) {
             </div>
 
             <div>
-              <label className="block text-sm mb-1">Location Type*</label>
+              <label className="block text-sm mb-1">
+                Location Type<span className="text-red-500 animate-pulse">*</span>
+              </label>
               <select
                 data-testid="location-type-select"
                 name="locationType"
                 value={formData.locationType}
                 onChange={handleChange}
                 required
-                className="w-full p-2 border rounded bg-boxbackground text-text"
+                className="w-full py-2 border border-cardBorder rounded-lg bg-transparent"
               >
                 <option>On-site</option>
                 <option>Hybrid</option>
                 <option>Remote</option>
               </select>
             </div>
+
             <div>
-              <label className="block text-sm mb-1">Experience Level</label>
+              <label className="block text-sm mb-1">
+                Experience Level
+              </label>
               <select
                 data-testid="experience-level-select"
                 name="experienceLevel"
                 value={formData.experienceLevel}
                 onChange={handleChange}
-                className="w-full p-2 border rounded bg-boxbackground text-text"
+                required
+                className="w-full py-2 border border-cardBorder rounded-lg bg-transparent"
               >
                 <option value="">Select experience level</option>
                 <option value="Internship">Internship</option>
@@ -196,25 +209,28 @@ function AddJobModal({ onClose, companyId, onJobAdded }) {
             </div>
           </div>
 
+          {/* Description Field */}
           <div>
-            <label className="block text-sm mb-1">Description</label>
+            <label className="text-sm mb-1 flex items-center gap-1">
+              <DescriptionIcon className="text-textPlaceholder w-4 h-4" />
+              Description
+            </label>
             <textarea
-              data-testid="description-textarea"
               name="description"
               value={formData.description}
               onChange={handleChange}
               rows="6"
-              className="w-full p-2 border rounded bg-boxbackground text-text"
+              placeholder="Describe the role, responsibilities, and requirements..."
+              className="w-full p-3 border border-cardBorder rounded-lg bg-transparent focus:ring-1 focus:ring-primary"
             />
           </div>
 
           <div className="pt-4">
             <button
-              data-testid="submit-button"
               type="submit"
-              className="bg-blue-600 text-white px-6 py-2 rounded hover:bg-blue-700"
+              className="bg-buttonSubmitEnable text-buttonSubmitText px-6 py-2 rounded-lg hover:bg-buttonSubmitEnableHover transition-colors font-medium"
             >
-              Submit
+              Post Job Opening
             </button>
           </div>
         </form>

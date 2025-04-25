@@ -6,7 +6,7 @@ const SearchJobs = ({ keyword, industry, location }) => {
     <div className="min-w-screen min-h-screen bg-mainBackground gap-0">
       <MainJobs
         API_URL="/jobs"
-        enableFilter={true}
+        enableFilter={false}
         keyword={keyword}
         industry={industry}
         location={location}
