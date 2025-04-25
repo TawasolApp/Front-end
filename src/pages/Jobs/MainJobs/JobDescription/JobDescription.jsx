@@ -10,6 +10,89 @@ import MoreHorizIcon from "@mui/icons-material/MoreHoriz";
 import FlagIcon from "@mui/icons-material/Flag";
 import DropdownMenu from "../../../Feed/GenericComponents/DropdownMenu";
 
+
+const SkeletonLoader = () => (
+  <div className="animate-pulse p-6 border border-cardBorder bg-cardBackground space-y-4">
+    {/* Header Skeleton */}
+    <div className="flex justify-between items-center mb-6">
+      <div className="flex items-center gap-3">
+        <div className="w-8 h-8 rounded-full bg-gray-200" />
+        <div className="h-4 bg-gray-200 rounded w-32" />
+      </div>
+      <div className="w-8 h-8 bg-gray-200 rounded-full" />
+    </div>
+
+    {/* Title Skeleton */}
+    <div className="h-6 bg-gray-200 rounded w-3/4 mb-4" />
+
+    {/* Info Skeleton */}
+    <div className="flex gap-2">
+      <div className="h-4 bg-gray-200 rounded w-24" />
+      <div className="h-4 bg-gray-200 rounded w-4" />
+      <div className="h-4 bg-gray-200 rounded w-32" />
+      <div className="h-4 bg-gray-200 rounded w-4" />
+      <div className="h-4 bg-gray-200 rounded w-24" />
+    </div>
+
+    {/* Employment Box Skeleton */}
+    <div className="bg-gray-100 p-4 rounded-lg space-y-3">
+      <div className="flex gap-4">
+        <div className="space-y-2">
+          <div className="h-3 bg-gray-200 rounded w-16" />
+          <div className="h-4 bg-gray-200 rounded w-24" />
+        </div>
+        <div className="space-y-2">
+          <div className="h-3 bg-gray-200 rounded w-16" />
+          <div className="h-4 bg-gray-200 rounded w-24" />
+        </div>
+      </div>
+    </div>
+
+    {/* Button Skeleton */}
+    <div className="flex gap-3">
+      <div className="h-10 bg-gray-200 rounded-full w-24" />
+      <div className="h-10 bg-gray-200 rounded-full w-20" />
+    </div>
+
+    {/* Content Skeleton */}
+    <div className="space-y-2">
+      <div className="h-4 bg-gray-200 rounded w-full" />
+      <div className="h-4 bg-gray-200 rounded w-5/6" />
+      <div className="h-4 bg-gray-200 rounded w-4/5" />
+    </div>
+  </div>
+);
+
+const ErrorDisplay = ({ error, onRetry }) => (
+  <div className="border border-red-200 bg-red-50/20 rounded-lg p-6 text-center">
+    <div className="mb-4 flex justify-center">
+      <svg 
+        className="w-12 h-12 text-red-500" 
+        fill="none" 
+        stroke="currentColor" 
+        viewBox="0 0 24 24"
+      >
+        <path 
+          strokeLinecap="round" 
+          strokeLinejoin="round" 
+          strokeWidth={2} 
+          d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" 
+        />
+      </svg>
+    </div>
+    <h3 className="text-xl font-semibold text-red-600 mb-2">
+      Oops! Something went wrong
+    </h3>
+    <p className="text-red-500 mb-4">{error}</p>
+    <button
+      onClick={onRetry}
+      className="bg-red-500 text-white px-6 py-2 rounded-full hover:bg-red-600 transition-colors"
+    >
+      Try Again
+    </button>
+  </div>
+);
+
 const JobDescription = ({ jobId, enableReturn }) => {
   const [job, setJob] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -59,26 +142,26 @@ const JobDescription = ({ jobId, enableReturn }) => {
     },
   ];
 
-  useEffect(() => {
-    const fetchJob = async () => {
-      setLoading(true);
-      setError(null);
-      try {
-        const response = await axiosInstance.get(`/jobs/${jobId}`);
-        setJob(response.data);
-      } catch (err) {
-        setError(err.message || "Failed to fetch job details");
-      } finally {
-        setLoading(false);
-      }
-    };
+  const fetchJob = async () => {
+    setLoading(true);
+    setError(null);
+    try {
+      const response = await axiosInstance.get(`/jobs/${jobId}`);
+      setJob(response.data);
+    } catch (err) {
+      setError(err.message || "Failed to fetch job details");
+    } finally {
+      setLoading(false);
+    }
+  };
 
+  useEffect(() => {
     fetchJob();
   }, [jobId]);
 
-  if (loading) return <div className="p-4">Loading...</div>;
-  if (error) return <div className="p-4 text-red-500">{error}</div>;
-  if (!job) return null;
+  if (loading) return <SkeletonLoader />;
+  if (error) return <ErrorDisplay error={error} onRetry={fetchJob} />;
+  if (!job) return <ErrorDisplay error="Job not found" onRetry={fetchJob} />;
 
   return (
     <div className="relative p-6 border border-cardBorder bg-cardBackground">
