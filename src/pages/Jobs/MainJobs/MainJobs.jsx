@@ -1,5 +1,4 @@
-import { useState, useEffect } from 'react';
-import { axiosInstance } from '../../../apis/axios';
+import { useState } from 'react';
 import JobListing from './JobsListing/JobsListing';
 
 const MainJobs = ({ API_URL, enableFilter }) => {
@@ -8,47 +7,9 @@ const MainJobs = ({ API_URL, enableFilter }) => {
     salaryRange: [0, 0],
     company: ''
   });
-  const [page, setPage] = useState(1);
-  const [jobs, setJobs] = useState([]);
-  const [loading, setLoading] = useState(false);
-  const [hasMore, setHasMore] = useState(true);
-  const [error, setError] = useState(null);
-
-  // Fetch jobs with pagination and filters
-  const fetchJobs = async () => {
-    if (!hasMore || loading) return;
-    
-    setLoading(true);
-    try {
-      const params = {
-        page,
-        limit: 20,
-        experience_level: filters.experienceLevel,
-        min_salary: filters.salaryRange[0],
-        max_salary: filters.salaryRange[1],
-        company: filters.company
-      };
-
-      const response = await axiosInstance.get(API_URL, { params });
-      const newJobs = response.data;
-
-      setJobs(prev => page === 1 ? newJobs : [...prev, ...newJobs]);
-      setHasMore(response.data.length > 0);
-      setError(null);
-    } catch (err) {
-      setError(err.message);
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  useEffect(() => {
-    fetchJobs();
-  }, [page, filters]);
 
   const handleFilterChange = (name, value) => {
     setFilters(prev => ({ ...prev, [name]: value }));
-    setPage(1); // Reset to first page when filters change
   };
 
   const handleSalaryChange = (type, value) => {
@@ -58,7 +19,6 @@ const MainJobs = ({ API_URL, enableFilter }) => {
         ? [value, prev.salaryRange[1]] 
         : [prev.salaryRange[0], value]
     }));
-    setPage(1);
   };
 
   return (
@@ -89,7 +49,7 @@ const MainJobs = ({ API_URL, enableFilter }) => {
               </div>
 
               {/* Salary Range */}
-              <div className="flex-1">
+              <div className="flex-1 max-w-sm">
                 <label htmlFor="salary-range" className="block text-sm font-medium text-textActivity mb-1">
                   Salary Range (Annual)
                 </label>
@@ -119,7 +79,7 @@ const MainJobs = ({ API_URL, enableFilter }) => {
               </div>
 
               {/* Company Search */}
-              <div className="flex-1">
+              <div className="flex-1 min-w-[200px]">
                 <label htmlFor="company-search" className="block text-sm font-medium text-textActivity mb-1">
                   Company
                 </label>
@@ -137,7 +97,10 @@ const MainJobs = ({ API_URL, enableFilter }) => {
         </div>
       )}
 
-      <JobListing jobs={jobs} />
+      <JobListing 
+        API_URL={API_URL}
+        filters={filters}
+      />
     </div>
   );
 };
