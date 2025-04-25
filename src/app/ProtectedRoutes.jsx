@@ -37,6 +37,8 @@ import ThemeSettings from "../pages/Settings/ThemeSettings.jsx";
 import DeleteAccount from "../pages/Settings/DeleteAccount.jsx";
 import Error404 from "../pages/Error/Error404.jsx";
 import SingleJob from "../pages/Jobs/SingleJob.jsx";
+import SavedJobsContainer from "../pages/Saved/SavedJobsContainer.jsx";
+import AppliedJobContainer from "../pages/Saved/AppliedJobsContainer.jsx";
 
 const RenderWithNavbar = (component) => {
   return (
@@ -95,6 +97,14 @@ const ProtectedRoutes = () => {
       <Route
         path="/my-items/saved-posts"
         element={RenderWithNavbar(<SavedPostsContainer />)}
+      />
+      <Route
+        path="/my-items/saved-jobs"
+        element={RenderWithNavbar(<SavedJobsContainer />)}
+      />
+      <Route
+        path="/my-items/applied-jobs"
+        element={RenderWithNavbar(<AppliedJobContainer />)}
       />
 
       <Route path="/company" element={RenderWithNavbar(<CompanyLayout />)} />
