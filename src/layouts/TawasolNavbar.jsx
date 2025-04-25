@@ -5,7 +5,7 @@ import HomeIcon from "@mui/icons-material/Home";
 import CottageIcon from "@mui/icons-material/Cottage";
 import GroupIcon from "@mui/icons-material/Group";
 import WorkIcon from "@mui/icons-material/Work";
-import CasesIcon from "@mui/icons-material/Cases";
+import BusinessCenterIcon from '@mui/icons-material/BusinessCenter';
 import ChatBubbleIcon from "@mui/icons-material/ChatBubble";
 import ForumIcon from "@mui/icons-material/Forum";
 import NotificationsIcon from "@mui/icons-material/Notifications";
@@ -56,7 +56,7 @@ const TawasolNavbar = () => {
     {
       name: "Jobs",
       path: "/jobs",
-      icon: currentPath === "/jobs" ? <CasesIcon /> : <WorkIcon />,
+      icon: currentPath === "/jobs" ? <BusinessCenterIcon /> : <WorkIcon />,
       active: currentPath === "/jobs",
     },
     {
@@ -285,7 +285,10 @@ const TawasolNavbar = () => {
                     <div className="border-b border-cardBorder">
                       <div
                         className="p-4 flex gap-3 items-center hover:bg-buttonIconHover"
-                        onClick={() => navigate(`/users/${currentAuthorId}`)}
+                        onClick={() => {
+                          setIsMeOpen(false);
+                          navigate(`/users/${currentAuthorId}`)
+                        }}
                       >
                         <Avatar
                           src={currentAuthorPicture}

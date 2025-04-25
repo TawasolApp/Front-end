@@ -29,7 +29,7 @@ const SinglePost = () => {
 
   const handleDeletePost = async () => {
     try {
-      await axiosInstance.delete(`/delete/${id}`);
+      await axiosInstance.delete(`/posts/${currentAuthorId}/${id}`);
       navigate("/feed");
     } catch (e) {
       console.log(e.message);
@@ -45,7 +45,7 @@ const SinglePost = () => {
     silentRepost = false,
   ) => {
     try {
-      await axiosInstance.post("posts", {
+      await axiosInstance.post(`/posts/${currentAuthorId}`, {
         content: text,
         media: media,
         taggedUsers: taggedUsers,

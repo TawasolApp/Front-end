@@ -16,7 +16,7 @@ export const PostProvider = ({
   children,
   initialPost,
   handleSharePost,
-  handleDeletePost,
+  handleDeletePostExternal,
   currentAuthorId,
   currentAuthorName,
   currentAuthorPicture,
@@ -71,6 +71,10 @@ export const PostProvider = ({
         autoClose: 3000,
       });
     }
+  };
+
+  const handleDeletePost = async () => {
+    handleDeletePostExternal(post.headerData ? post.headerData.postId : post.id);
   };
 
   const handleReactOnPost = async (reactionTypeAdd, reactionTypeRemove) => {

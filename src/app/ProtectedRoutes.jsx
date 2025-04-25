@@ -26,14 +26,20 @@ import NetworkBox from "../pages/MyNetwork/NetworkBox.jsx";
 
 import FeedContainer from "../pages/Feed/FeedContainer";
 import SinglePost from "../pages/Feed/SinglePost";
-import SavedPostsContainer from "../pages/SavedPosts/SavedPostsContainer";
+import SavedPostsContainer from "../pages/Saved/SavedPostsContainer";
 import RepostsContainer from "../pages/Feed/RepostsContainer";
+
+import JobsContainer from "../pages/Jobs/JobsContainer";
 
 import SearchContainer from "../pages/Search/SearchContainer";
 import TawasolNavbar from "../layouts/TawasolNavbar";
 import ThemeSettings from "../pages/Settings/ThemeSettings.jsx";
 import DeleteAccount from "../pages/Settings/DeleteAccount.jsx";
 import Error404 from "../pages/Error/Error404.jsx";
+import SingleJob from "../pages/Jobs/SingleJob.jsx";
+import SavedJobsContainer from "../pages/Saved/SavedJobsContainer.jsx";
+import AppliedJobContainer from "../pages/Saved/AppliedJobsContainer.jsx";
+import JobsCompanyContainer from "../pages/Jobs/JobsCompanyContainer.jsx";
 
 import BlockedUsersPage from "../pages/Settings/BlockedUsersPage.jsx";
 import ProfileVisibilityPage from "../pages/Settings/ProfileVisibilityPage.jsx";
@@ -104,6 +110,14 @@ const ProtectedRoutes = () => {
         path="/my-items/saved-posts"
         element={RenderWithNavbar(<SavedPostsContainer />)}
       />
+      <Route
+        path="/my-items/saved-jobs"
+        element={RenderWithNavbar(<SavedJobsContainer />)}
+      />
+      <Route
+        path="/my-items/applied-jobs"
+        element={RenderWithNavbar(<AppliedJobContainer />)}
+      />
 
       <Route path="/company" element={RenderWithNavbar(<CompanyLayout />)} />
       <Route
@@ -120,6 +134,13 @@ const ProtectedRoutes = () => {
         path="/company/setup/new"
         element={RenderWithNavbar(<CreateCompanyPage />)}
       />
+
+      <Route path="/jobs" element={RenderWithNavbar(<JobsContainer />)} />
+      <Route
+        path="/jobs/:id"
+        element={RenderWithNavbar(<SingleJob />)}
+      />
+      <Route path="/jobs/company/:companyId/:isAdmin" element={RenderWithNavbar(<JobsCompanyContainer />)} />
 
       <Route path="error-404" element={<Error404 />} />
       <Route path="*" element={<Error404 />} />
