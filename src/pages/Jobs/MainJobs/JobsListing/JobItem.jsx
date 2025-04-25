@@ -2,17 +2,24 @@ import React from 'react';
 import BookmarkBorderIcon from "@mui/icons-material/BookmarkBorder";
 import BookmarkIcon from "@mui/icons-material/Bookmark";
 import { axiosInstance } from '../../../../apis/axios';
+import { toast } from "react-toastify";
 
 const JobItem = ({ job, isSelected }) => {
-  const handleSaveJob = async () => {
-    if (job.isSaved) {
-      await axiosInstance.delete(`/jobs/${job.jobId}/unsave`);
-      // add toast here
-    } else {
-      await axiosInstance.post(`/jobs/${job.jobId}/save`);
-      // add toast here
+    const handleSaveJob = async () => {
+      if (job.isSaved) {
+        await axiosInstance.delete(`/jobs/${job.jobId}/unsave`);
+        toast.success("Job unsaved.", {
+            position: "bottom-left",
+            autoClose: 3000,
+        });
+      } else {
+        await axiosInstance.post(`/jobs/${job.jobId}/save`);
+        toast.success("Job saved.", {
+            position: "bottom-left",
+            autoClose: 3000,
+        });
+      }
     }
-  }
 
   return (
     <div 
@@ -45,7 +52,10 @@ const JobItem = ({ job, isSelected }) => {
         </div>
       </div>
 
-      <button className="shrink-0 text-textActivity transition-colors hover:text-textActivityHover self-start">
+      <button
+        className="shrink-0 text-textActivity transition-colors hover:text-textActivityHover self-start"
+        onClick={() => handleSaveJob()}
+      >
         {job.isSaved ? (
           <BookmarkIcon className="!w-6 !h-6" />
         ) : (

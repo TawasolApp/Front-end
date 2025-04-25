@@ -36,6 +36,7 @@ import TawasolNavbar from "../layouts/TawasolNavbar";
 import ThemeSettings from "../pages/Settings/ThemeSettings.jsx";
 import DeleteAccount from "../pages/Settings/DeleteAccount.jsx";
 import Error404 from "../pages/Error/Error404.jsx";
+import SingleJob from "../pages/Jobs/SingleJob.jsx";
 
 const RenderWithNavbar = (component) => {
   return (
@@ -113,6 +114,10 @@ const ProtectedRoutes = () => {
       />
 
       <Route path="/jobs" element={RenderWithNavbar(<JobsContainer />)} />
+      <Route
+        path="/jobs/:id"
+        element={RenderWithNavbar(<SingleJob />)}
+      />
 
       <Route path="error-404" element={<Error404 />} />
       <Route path="*" element={<Error404 />} />

@@ -42,11 +42,11 @@ const JobListing = ({ API_URL, filters }) => {
     return () => window.removeEventListener('resize', handleResize);
   }, [selectedJob]);
 
-  const handleJobClick = (jobId) => {
+  const handleJobClick = (job) => {
     if (isMobile) {
-      navigate(`/jobs/${jobId}/description`);
+      navigate(`/jobs/${job.jobId}`);
     } else {
-      setSelectedJob(jobId);
+      setSelectedJob(job.jobId);
     }
   };
 
@@ -153,7 +153,7 @@ const JobListing = ({ API_URL, filters }) => {
                 <div 
                   ref={index === jobs.length - 1 ? lastJobElementRef : null}
                   key={job.jobId}
-                  onClick={() => handleJobClick(job.jobId)}
+                  onClick={() => handleJobClick(job)}
                   className="cursor-pointer"
                 >
                   <JobItem 
@@ -182,7 +182,7 @@ const JobListing = ({ API_URL, filters }) => {
         {!isMobile && (
           <div className="hidden md:block flex-1 bg-cardBackground rounded-r-lg shadow-sm">
             {selectedJob ? (
-              <JobDescription jobId={selectedJob} />
+              <JobDescription jobId={selectedJob} enableReturn={false} />
             ) : (
               <div className="h-full flex flex-col items-center justify-center p-8 text-center border border-cardBorder">
                 <div className="mb-4 w-16 h-16 bg-mainBackground rounded-full flex items-center justify-center">
