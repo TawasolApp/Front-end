@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { axiosInstance } from "../../../../apis/axios";
 import JobItem from "./JobItem";
 import JobDescription from "../JobDescription/JobDescription";
+import ApplicantsList from "../ApplicantsList/ApplicantsList";
 
 const SkeletonLoader = () => (
   <div className="animate-pulse p-4 border-b border-cardBorder">
@@ -17,7 +18,7 @@ const SkeletonLoader = () => (
   </div>
 );
 
-const JobListing = ({ API_URL, filters }) => {
+const JobListing = ({ API_URL, filters, isAdmin = false }) => {
   const [jobs, setJobs] = useState([]);
   const [loading, setLoading] = useState(false);
   const [hasMore, setHasMore] = useState(true);
@@ -34,7 +35,8 @@ const JobListing = ({ API_URL, filters }) => {
     const handleResize = () => {
       setIsMobile(window.innerWidth < 768);
       if (window.innerWidth <= 768 && selectedJob) {
-        navigate(`/jobs/${selectedJob}`, { replace: true }); // Cleanup mobile URL
+        !isAdmin && navigate(`/jobs/${selectedJob}`, { replace: true }); // Cleanup mobile URL
+        isAdmin && navigate(`/applicants/${selectedJob}`, { replace: true }); // Cleanup mobile URL
       }
     };
 
@@ -44,7 +46,8 @@ const JobListing = ({ API_URL, filters }) => {
 
   const handleJobClick = (job) => {
     if (isMobile) {
-      navigate(`/jobs/${job.jobId}`);
+      !isAdmin && navigate(`/jobs/${job.jobId}`);
+      isAdmin && navigate(`/applicants/${job.jobId}`);
     } else {
       setSelectedJob(job.jobId);
     }
@@ -186,6 +189,7 @@ const JobListing = ({ API_URL, filters }) => {
                     job={job}
                     isSelected={job.jobId === selectedJob}
                     isMobile={isMobile}
+                    isAdmin={isAdmin}
                   />
                 </div>
               ))
@@ -208,7 +212,11 @@ const JobListing = ({ API_URL, filters }) => {
         {!isMobile && (
           <div className="hidden md:block flex-1 bg-cardBackground rounded-r-lg shadow-sm">
             {selectedJob ? (
-              <JobDescription jobId={selectedJob} enableReturn={false} />
+              isAdmin ? (
+                <ApplicantsList jobId={selectedJob} enableReturn={false} />
+              ) : (
+                <JobDescription jobId={selectedJob} enableReturn={false} />
+              )
             ) : (
               <div className="h-full flex flex-col items-center justify-center p-8 text-center border border-cardBorder">
                 <div className="mb-4 w-16 h-16 bg-mainBackground rounded-full flex items-center justify-center">

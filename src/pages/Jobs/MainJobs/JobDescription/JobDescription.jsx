@@ -165,7 +165,7 @@ const JobDescription = ({ jobId, enableReturn }) => {
   if (!job) return <ErrorDisplay error="Job not found" onRetry={fetchJob} />;
 
   return (
-    <div className="relative p-6 border border-cardBorder bg-cardBackground">
+    <div className="relative p-6 border border-cardBorder bg-cardBackground h-full">
       {/* Back button */}
       {enableReturn && (
         <button

@@ -1,6 +1,23 @@
 import React from "react";
+import DeleteIcon from '@mui/icons-material/Delete';
+import { axiosInstance } from "../../../../apis/axios";
+import { toast } from "react-toastify";
 
-const JobItem = ({ job, isSelected }) => {
+const JobItem = ({ job, isSelected, isAdmin, onDelete }) => {
+  const handleDelete = async (e) => {
+    e.stopPropagation();
+    try {
+      await axiosInstance.delete(`/jobs/${job.jobId}`);
+      toast.success("Job deleted successfully", {
+        position: "bottom-left",
+        autoClose: 3000,
+      });
+      if (onDelete) onDelete(job.jobId);
+    } catch (err) {
+      toast.error(err.response?.data?.message || "Failed to delete job");
+    }
+  };
+
   return (
     <div
       className={`group flex items-start gap-3 cursor-pointer p-2 relative ${
@@ -30,6 +47,17 @@ const JobItem = ({ job, isSelected }) => {
             {job.location} · ({job.locationType})
           </div>
         </div>
+
+        {/* Admin Delete Button */}
+        {isAdmin && (
+          <button 
+            onClick={handleDelete}
+            className="absolute right-2 top-1/2 -translate-y-1/2 text-red-500 hover:text-red-700 transition-colors p-1"
+            aria-label="Delete job"
+          >
+            <DeleteIcon className="w-5 h-5" />
+          </button>
+        )}
       </div>
     </div>
   );
