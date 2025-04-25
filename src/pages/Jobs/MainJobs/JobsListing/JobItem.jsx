@@ -38,7 +38,7 @@ const JobItem = ({ job, isSelected }) => {
           <h3 className="text-lg font-medium text-blue-600 transition-all duration-300 group-hover:underline">
             {job.position}
           </h3>
-          <div className="mt-1 text-textContent">{job.companyName}</div>
+          <div className="text-textContent">{job.companyName}</div>
           <div className="text-textPlaceholder">
             {job.location} · ({job.locationType})
           </div>

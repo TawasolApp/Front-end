@@ -117,7 +117,7 @@ const JobListing = ({ API_URL, filters }) => {
         {/* Listings Container */}
         <div className="bg-cardBackground shadow-sm md:w-1/2 lg:w-1/3 border border-cardBorder">
           <div className="px-4 pt-4 pb-2 border-b border-cardBorder">
-            <h2 className="text-xl font-semibold text-textHeavyTitle">
+            <h2 className="text-xl font-semibold text-header">
               Top job picks for you
             </h2>
             <p className="text-sm text-gray-500 mt-1">
@@ -138,13 +138,13 @@ const JobListing = ({ API_URL, filters }) => {
             ) : jobs.length === 0 ? (
               // Enhanced Empty State
               <div className="text-center py-12 px-4">
-                <div className="mx-auto mb-6 w-24 h-24 bg-gray-100 rounded-full flex items-center justify-center">
-                  <svg className="w-12 h-12 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <div className="mx-auto mb-6 w-24 h-24 bg-mainBackground rounded-full flex items-center justify-center">
+                  <svg className="w-12 h-12 text-textActivity" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
                   </svg>
                 </div>
-                <h3 className="text-lg font-medium text-gray-900">No jobs found</h3>
-                <p className="mt-2 text-gray-500 max-w-md mx-auto">
+                <h3 className="text-lg font-medium text-header">No jobs found</h3>
+                <p className="mt-2 text-textPlaceholder max-w-md mx-auto">
                   Try adjusting your filters or search terms. We'll update results as new jobs come in.
                 </p>
               </div>
@@ -184,14 +184,14 @@ const JobListing = ({ API_URL, filters }) => {
             {selectedJob ? (
               <JobDescription jobId={selectedJob} />
             ) : (
-              <div className="h-full flex flex-col items-center justify-center p-8 text-center">
-                <div className="mb-4 w-16 h-16 bg-gray-100 rounded-full flex items-center justify-center">
-                  <svg className="w-8 h-8 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <div className="h-full flex flex-col items-center justify-center p-8 text-center border border-cardBorder">
+                <div className="mb-4 w-16 h-16 bg-mainBackground rounded-full flex items-center justify-center">
+                  <svg className="w-8 h-8 text-textActivity" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 15l-2 5L9 9l11 4-5 2zm0 0l5 5M7.188 2.239l.777 2.897M5.136 7.965l-2.898-.777M13.95 4.05l-2.122 2.122m-5.657 5.656l-2.12 2.122" />
                   </svg>
                 </div>
-                <h3 className="text-lg font-medium text-gray-900">Select a job to view details</h3>
-                <p className="mt-2 text-gray-500 max-w-md mx-auto">
+                <h3 className="text-lg font-medium text-header">Select a job to view details</h3>
+                <p className="mt-2 text-textPlaceholder max-w-md mx-auto">
                   Click on any job listing to see full description, requirements, and application details
                 </p>
               </div>
