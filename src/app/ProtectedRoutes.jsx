@@ -29,6 +29,8 @@ import SinglePost from "../pages/Feed/SinglePost";
 import SavedPostsContainer from "../pages/Saved/SavedPostsContainer";
 import RepostsContainer from "../pages/Feed/RepostsContainer";
 
+import JobsContainer from "../pages/Jobs/JobsContainer";
+
 import SearchContainer from "../pages/Search/SearchContainer";
 import TawasolNavbar from "../layouts/TawasolNavbar";
 import ThemeSettings from "../pages/Settings/ThemeSettings.jsx";
@@ -109,6 +111,8 @@ const ProtectedRoutes = () => {
         path="/company/setup/new"
         element={RenderWithNavbar(<CreateCompanyPage />)}
       />
+
+      <Route path="/jobs" element={RenderWithNavbar(<JobsContainer />)} />
 
       <Route path="error-404" element={<Error404 />} />
       <Route path="*" element={<Error404 />} />
