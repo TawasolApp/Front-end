@@ -9,7 +9,7 @@ import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import MoreHorizIcon from "@mui/icons-material/MoreHoriz";
 import FlagIcon from "@mui/icons-material/Flag";
 import DropdownMenu from "../../../Feed/GenericComponents/DropdownMenu";
-
+import JobApplyModal from "../Apply/JobApplyModal";
 
 const SkeletonLoader = () => (
   <div className="animate-pulse p-6 border border-cardBorder bg-cardBackground space-y-4">
@@ -97,6 +97,7 @@ const JobDescription = ({ jobId, enableReturn }) => {
   const [job, setJob] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [showApplyModal, setShowApplyModal] = useState(false);
   const navigate = useNavigate();
 
   const handleCopyJobLink = async () => {
@@ -232,7 +233,10 @@ const JobDescription = ({ jobId, enableReturn }) => {
 
       {/* Action Buttons */}
       <div className="flex gap-3 mb-8">
-        <button className="bg-buttonSubmitEnable hover:bg-buttonSubmitEnableHover text-buttonSubmitText px-6 py-2 rounded-full transition-colors font-semibold text-base flex items-center gap-2">
+        <button
+          className="bg-buttonSubmitEnable hover:bg-buttonSubmitEnableHover text-buttonSubmitText px-6 py-2 rounded-full transition-colors font-semibold text-base flex items-center gap-2"
+          onClick={() => setShowApplyModal(true)}
+        >
           <>
             Apply
             <FaExternalLinkAlt className="w-4 h-4" />
@@ -255,6 +259,15 @@ const JobDescription = ({ jobId, enableReturn }) => {
           {job.description}
         </p>
       </div>
+
+      {showApplyModal && (
+        <JobApplyModal
+          isOpen={showApplyModal}
+          onClose={() => setShowApplyModal(false)}
+          jobId={jobId}
+          companyName={job.companyName}
+        />
+      )}
     </div>
   );
 };
