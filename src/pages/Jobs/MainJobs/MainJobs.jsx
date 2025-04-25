@@ -1,23 +1,24 @@
-import { useState } from 'react';
-import JobListing from './JobsListing/JobsListing';
+import { useState } from "react";
+import JobListing from "./JobsListing/JobsListing";
 
 const MainJobs = ({ API_URL, enableFilter }) => {
   const [filters, setFilters] = useState({
-    experienceLevel: '',
+    experienceLevel: "",
     salaryRange: [0, 0],
-    company: ''
+    company: "",
   });
 
   const handleFilterChange = (name, value) => {
-    setFilters(prev => ({ ...prev, [name]: value }));
+    setFilters((prev) => ({ ...prev, [name]: value }));
   };
 
   const handleSalaryChange = (type, value) => {
-    setFilters(prev => ({
+    setFilters((prev) => ({
       ...prev,
-      salaryRange: type === 'min' 
-        ? [value, prev.salaryRange[1]] 
-        : [prev.salaryRange[0], value]
+      salaryRange:
+        type === "min"
+          ? [value, prev.salaryRange[1]]
+          : [prev.salaryRange[0], value],
     }));
   };
 
@@ -29,13 +30,18 @@ const MainJobs = ({ API_URL, enableFilter }) => {
             <div className="flex items-center gap-6 flex-wrap">
               {/* Experience Level Dropdown */}
               <div className="relative">
-                <label htmlFor="experience-level" className="block text-sm font-medium text-textActivity mb-1">
+                <label
+                  htmlFor="experience-level"
+                  className="block text-sm font-medium text-textActivity mb-1"
+                >
                   Experience Level
                 </label>
                 <select
                   id="experience-level"
                   value={filters.experienceLevel}
-                  onChange={(e) => handleFilterChange('experienceLevel', e.target.value)}
+                  onChange={(e) =>
+                    handleFilterChange("experienceLevel", e.target.value)
+                  }
                   className="bg-cardBackground border border-cardBorder text-textActivity rounded-md px-3 py-2 pr-8 appearance-none hover:border-primary transition-all w-40"
                 >
                   <option value="">Any Level</option>
@@ -50,7 +56,10 @@ const MainJobs = ({ API_URL, enableFilter }) => {
 
               {/* Salary Range */}
               <div className="flex-1 max-w-sm">
-                <label htmlFor="salary-range" className="block text-sm font-medium text-textActivity mb-1">
+                <label
+                  htmlFor="salary-range"
+                  className="block text-sm font-medium text-textActivity mb-1"
+                >
                   Salary Range (Annual)
                 </label>
                 <div
@@ -63,8 +72,8 @@ const MainJobs = ({ API_URL, enableFilter }) => {
                     type="number"
                     placeholder="Min"
                     min="0"
-                    value={filters.salaryRange[0] || ''}
-                    onChange={(e) => handleSalaryChange('min', e.target.value)}
+                    value={filters.salaryRange[0] || ""}
+                    onChange={(e) => handleSalaryChange("min", e.target.value)}
                     className="bg-transparent border-none text-textActivity w-24 focus:outline-none"
                   />
                   <span className="text-textActivity font-medium">to</span>
@@ -74,8 +83,8 @@ const MainJobs = ({ API_URL, enableFilter }) => {
                     type="number"
                     placeholder="Max"
                     min="0"
-                    value={filters.salaryRange[1] || ''}
-                    onChange={(e) => handleSalaryChange('max', e.target.value)}
+                    value={filters.salaryRange[1] || ""}
+                    onChange={(e) => handleSalaryChange("max", e.target.value)}
                     className="bg-transparent border-none text-textActivity w-24 focus:outline-none"
                   />
                 </div>
@@ -83,7 +92,10 @@ const MainJobs = ({ API_URL, enableFilter }) => {
 
               {/* Company Search */}
               <div className="flex-1 min-w-[200px]">
-                <label htmlFor="company-search" className="block text-sm font-medium text-textActivity mb-1">
+                <label
+                  htmlFor="company-search"
+                  className="block text-sm font-medium text-textActivity mb-1"
+                >
                   Company
                 </label>
                 <input
@@ -91,7 +103,9 @@ const MainJobs = ({ API_URL, enableFilter }) => {
                   type="text"
                   placeholder="Search by company name"
                   value={filters.company}
-                  onChange={(e) => handleFilterChange('company', e.target.value)}
+                  onChange={(e) =>
+                    handleFilterChange("company", e.target.value)
+                  }
                   className="bg-cardBackground border border-cardBorder text-textActivity rounded-md px-3 py-2 w-full hover:border-primary transition-all"
                 />
               </div>
@@ -100,10 +114,7 @@ const MainJobs = ({ API_URL, enableFilter }) => {
         </div>
       )}
 
-      <JobListing 
-        API_URL={API_URL}
-        filters={filters}
-      />
+      <JobListing API_URL={API_URL} filters={filters} />
     </div>
   );
 };

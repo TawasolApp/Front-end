@@ -1,8 +1,8 @@
-import { useState, useEffect, useRef, useCallback } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { axiosInstance } from '../../../../apis/axios';
-import JobItem from './JobItem';
-import JobDescription from '../JobDescription/JobDescription';
+import { useState, useEffect, useRef, useCallback } from "react";
+import { useNavigate } from "react-router-dom";
+import { axiosInstance } from "../../../../apis/axios";
+import JobItem from "./JobItem";
+import JobDescription from "../JobDescription/JobDescription";
 
 const SkeletonLoader = () => (
   <div className="animate-pulse p-4 border-b border-cardBorder">
@@ -38,8 +38,8 @@ const JobListing = ({ API_URL, filters }) => {
       }
     };
 
-    window.addEventListener('resize', handleResize);
-    return () => window.removeEventListener('resize', handleResize);
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
   }, [selectedJob]);
 
   const handleJobClick = (job) => {
@@ -50,56 +50,62 @@ const JobListing = ({ API_URL, filters }) => {
     }
   };
 
-  const fetchJobs = useCallback(async (isNewFilter = false) => {
-    if (!hasMore && !isNewFilter) return;
-    
-    setLoading(true);
-    try {
-      if (isNewFilter) setJobs([]); // Clear jobs immediately for new filters
-      const currentPage = isNewFilter ? 1 : page;
-      
-      const params = {
-        page: currentPage,
-        limit: limit,
-        experienceLevel: filters.experienceLevel || undefined,
-        minSalary: Number(filters.salaryRange[0]) || undefined,
-        maxSalary: Number(filters.salaryRange[1]) || undefined,
-        company: filters.company || undefined
-      };
+  const fetchJobs = useCallback(
+    async (isNewFilter = false) => {
+      if (!hasMore && !isNewFilter) return;
 
-      Object.keys(params).forEach(key => 
-        params[key] === undefined && delete params[key]
-      );
+      setLoading(true);
+      try {
+        if (isNewFilter) setJobs([]); // Clear jobs immediately for new filters
+        const currentPage = isNewFilter ? 1 : page;
 
-      const response = await axiosInstance.get(API_URL, { params });
-      const newJobs = response.data;
-      console.log(newJobs)
+        const params = {
+          page: currentPage,
+          limit: limit,
+          experienceLevel: filters.experienceLevel || undefined,
+          minSalary: Number(filters.salaryRange[0]) || undefined,
+          maxSalary: Number(filters.salaryRange[1]) || undefined,
+          company: filters.company || undefined,
+        };
 
-      setJobs(prev => isNewFilter ? newJobs : [...prev, ...newJobs]);
-      setHasMore(newJobs.length === limit);
-      setError(null);
-      
-      if (isNewFilter) setPage(1);
-    } catch (err) {
-      setError(err.message || 'Failed to fetch jobs');
-    } finally {
-      setLoading(false);
-    }
-  }, [API_URL, filters, page, hasMore]);
+        Object.keys(params).forEach(
+          (key) => params[key] === undefined && delete params[key],
+        );
+
+        const response = await axiosInstance.get(API_URL, { params });
+        const newJobs = response.data;
+        console.log(newJobs);
+
+        setJobs((prev) => (isNewFilter ? newJobs : [...prev, ...newJobs]));
+        setHasMore(newJobs.length === limit);
+        setError(null);
+
+        if (isNewFilter) setPage(1);
+      } catch (err) {
+        setError(err.message || "Failed to fetch jobs");
+      } finally {
+        setLoading(false);
+      }
+    },
+    [API_URL, filters, page, hasMore],
+  );
 
   // Infinite scroll observer
-  const lastJobElementRef = useCallback(node => {
-    if (loading) return;
-    if (observer.current) observer.current.disconnect();
-    
-    observer.current = new IntersectionObserver(entries => {
-      if (entries[0].isIntersecting && hasMore) {
-        setPage(prevPage => prevPage + 1);
-      }
-    });
+  const lastJobElementRef = useCallback(
+    (node) => {
+      if (loading) return;
+      if (observer.current) observer.current.disconnect();
 
-    if (node) observer.current.observe(node);
-  }, [loading, hasMore]);
+      observer.current = new IntersectionObserver((entries) => {
+        if (entries[0].isIntersecting && hasMore) {
+          setPage((prevPage) => prevPage + 1);
+        }
+      });
+
+      if (node) observer.current.observe(node);
+    },
+    [loading, hasMore],
+  );
 
   // Initial load and filter changes
   useEffect(() => {
@@ -121,7 +127,9 @@ const JobListing = ({ API_URL, filters }) => {
               Top job picks for you
             </h2>
             <p className="text-sm text-gray-500 mt-1">
-              {jobs.length > 0 ? `${jobs.length} results` : 'Based on your profile and activity'}
+              {jobs.length > 0
+                ? `${jobs.length} results`
+                : "Based on your profile and activity"}
             </p>
           </div>
 
@@ -134,29 +142,44 @@ const JobListing = ({ API_URL, filters }) => {
           <div className="overflow-y-auto max-h-[calc(100vh-200px)]">
             {loading ? (
               // Skeleton Loaders
-              Array(3).fill().map((_, i) => <SkeletonLoader key={i} />)
+              Array(3)
+                .fill()
+                .map((_, i) => <SkeletonLoader key={i} />)
             ) : jobs.length === 0 ? (
               // Enhanced Empty State
               <div className="text-center py-12 px-4">
                 <div className="mx-auto mb-6 w-24 h-24 bg-mainBackground rounded-full flex items-center justify-center">
-                  <svg className="w-12 h-12 text-textActivity" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+                  <svg
+                    className="w-12 h-12 text-textActivity"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={2}
+                      d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
+                    />
                   </svg>
                 </div>
-                <h3 className="text-lg font-medium text-header">No jobs found</h3>
+                <h3 className="text-lg font-medium text-header">
+                  No jobs found
+                </h3>
                 <p className="mt-2 text-textPlaceholder max-w-md mx-auto">
-                  Try adjusting your filters or search terms. We'll update results as new jobs come in.
+                  Try adjusting your filters or search terms. We'll update
+                  results as new jobs come in.
                 </p>
               </div>
             ) : (
               jobs.map((job, index) => (
-                <div 
+                <div
                   ref={index === jobs.length - 1 ? lastJobElementRef : null}
                   key={job.jobId}
                   onClick={() => handleJobClick(job)}
                   className="cursor-pointer"
                 >
-                  <JobItem 
+                  <JobItem
                     job={job}
                     isSelected={job.jobId === selectedJob}
                     isMobile={isMobile}
@@ -186,13 +209,26 @@ const JobListing = ({ API_URL, filters }) => {
             ) : (
               <div className="h-full flex flex-col items-center justify-center p-8 text-center border border-cardBorder">
                 <div className="mb-4 w-16 h-16 bg-mainBackground rounded-full flex items-center justify-center">
-                  <svg className="w-8 h-8 text-textActivity" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 15l-2 5L9 9l11 4-5 2zm0 0l5 5M7.188 2.239l.777 2.897M5.136 7.965l-2.898-.777M13.95 4.05l-2.122 2.122m-5.657 5.656l-2.12 2.122" />
+                  <svg
+                    className="w-8 h-8 text-textActivity"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={2}
+                      d="M15 15l-2 5L9 9l11 4-5 2zm0 0l5 5M7.188 2.239l.777 2.897M5.136 7.965l-2.898-.777M13.95 4.05l-2.122 2.122m-5.657 5.656l-2.12 2.122"
+                    />
                   </svg>
                 </div>
-                <h3 className="text-lg font-medium text-header">Select a job to view details</h3>
+                <h3 className="text-lg font-medium text-header">
+                  Select a job to view details
+                </h3>
                 <p className="mt-2 text-textPlaceholder max-w-md mx-auto">
-                  Click on any job listing to see full description, requirements, and application details
+                  Click on any job listing to see full description,
+                  requirements, and application details
                 </p>
               </div>
             )}

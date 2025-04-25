@@ -1,37 +1,37 @@
-import React from 'react';
+import React from "react";
 import BookmarkBorderIcon from "@mui/icons-material/BookmarkBorder";
 import BookmarkIcon from "@mui/icons-material/Bookmark";
-import { axiosInstance } from '../../../../apis/axios';
+import { axiosInstance } from "../../../../apis/axios";
 import { toast } from "react-toastify";
 
 const JobItem = ({ job, isSelected }) => {
-    const handleSaveJob = async () => {
-      if (job.isSaved) {
-        await axiosInstance.delete(`/jobs/${job.jobId}/unsave`);
-        toast.success("Job unsaved.", {
-            position: "bottom-left",
-            autoClose: 3000,
-        });
-      } else {
-        await axiosInstance.post(`/jobs/${job.jobId}/save`);
-        toast.success("Job saved.", {
-            position: "bottom-left",
-            autoClose: 3000,
-        });
-      }
+  const handleSaveJob = async () => {
+    if (job.isSaved) {
+      await axiosInstance.delete(`/jobs/${job.jobId}/unsave`);
+      toast.success("Job unsaved.", {
+        position: "bottom-left",
+        autoClose: 3000,
+      });
+    } else {
+      await axiosInstance.post(`/jobs/${job.jobId}/save`);
+      toast.success("Job saved.", {
+        position: "bottom-left",
+        autoClose: 3000,
+      });
     }
+  };
 
   return (
-    <div 
+    <div
       className={`group flex items-start gap-3 cursor-pointer p-2 relative ${
-        isSelected 
-          ? 'border-l-2 border-selectedBorder bg-selectedBackground' 
-          : ''
+        isSelected
+          ? "border-l-2 border-selectedBorder bg-selectedBackground"
+          : ""
       }`}
     >
       {/* Company Logo */}
       <div className="shrink-0">
-        <img 
+        <img
           src={job.companyLogo}
           alt={`${job.companyName} logo`}
           className="w-12 h-12 object-cover mt-2"
