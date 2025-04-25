@@ -62,6 +62,9 @@ const JobListing = ({ API_URL, filters }) => {
         const params = {
           page: currentPage,
           limit: limit,
+          keyword: filters.keyword === "" ? undefined : filters.keyword,
+          location: filters.location === "" ? undefined : filters.location,
+          industry: filters.industry === "" ? undefined : filters.industry,
           experienceLevel: filters.experienceLevel || undefined,
           minSalary: Number(filters.salaryRange[0]) || undefined,
           maxSalary: Number(filters.salaryRange[1]) || undefined,
