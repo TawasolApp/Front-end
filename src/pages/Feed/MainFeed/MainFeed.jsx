@@ -4,6 +4,7 @@ import { toast } from "react-toastify";
 import { axiosInstance } from "../../../apis/axios";
 import SharePost from "./SharePost/SharePost";
 import FeedPosts from "./FeedPosts/FeedPosts";
+import LoadingPage from "../../LoadingScreen/LoadingPage";
 
 const MainFeed = ({
   API_ROUTE = `/posts/${useSelector((state) => state.authentication.userId)}`,
@@ -173,6 +174,12 @@ const MainFeed = ({
       console.log(e.message);
     }
   };
+
+  if (loading && posts.length === 0) {
+    return (
+      <LoadingPage />
+    );
+  }
 
   return (
     <>
