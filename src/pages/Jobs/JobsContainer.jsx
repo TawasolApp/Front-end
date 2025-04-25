@@ -1,8 +1,13 @@
+import MainJobs from "./MainJobs/MainJobs";
+
 const JobsContainer = () => {
 
     return (
-        <div>
-            <h1>Jobs</h1>
+        <div className="min-w-screen min-h-screen bg-mainBackground gap-0">
+            <MainJobs
+                API_URL="/jobs"
+                enableFilter={true}
+            />
         </div>
     );
 };
