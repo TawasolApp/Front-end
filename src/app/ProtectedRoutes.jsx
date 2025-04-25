@@ -39,6 +39,7 @@ import Error404 from "../pages/Error/Error404.jsx";
 import SingleJob from "../pages/Jobs/SingleJob.jsx";
 import SavedJobsContainer from "../pages/Saved/SavedJobsContainer.jsx";
 import AppliedJobContainer from "../pages/Saved/AppliedJobsContainer.jsx";
+import JobsCompanyContainer from "../pages/Jobs/JobsCompanyContainer.jsx";
 
 const RenderWithNavbar = (component) => {
   return (
@@ -128,6 +129,7 @@ const ProtectedRoutes = () => {
         path="/jobs/:id"
         element={RenderWithNavbar(<SingleJob />)}
       />
+      <Route path="/jobs/company/:companyId" element={RenderWithNavbar(<JobsCompanyContainer />)} />
 
       <Route path="error-404" element={<Error404 />} />
       <Route path="*" element={<Error404 />} />
