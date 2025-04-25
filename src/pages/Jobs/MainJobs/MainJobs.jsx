@@ -39,9 +39,9 @@ const MainJobs = ({ API_URL, enableFilter }) => {
                   className="bg-cardBackground border border-cardBorder text-textActivity rounded-md px-3 py-2 pr-8 appearance-none hover:border-primary transition-all w-40"
                 >
                   <option value="">Any Level</option>
-                  <option value="entry">Entry</option>
-                  <option value="mid">Mid</option>
-                  <option value="senior">Senior</option>
+                  <option value="Entry">Entry</option>
+                  <option value="Mid">Mid</option>
+                  <option value="Senior">Senior</option>
                 </select>
                 <div className="absolute bottom-2 right-0 flex items-center pr-2 pointer-events-none">
                   <span className="text-xs text-textActivity">▼</span>

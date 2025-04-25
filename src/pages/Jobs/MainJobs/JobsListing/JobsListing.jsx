@@ -1,6 +1,8 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef, useCallback } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { axiosInstance } from '../../../../apis/axios';
 import JobItem from './JobItem';
+import JobDescription from '../JobDescription/JobDescription';
 
 const JobListing = ({ API_URL, filters }) => {
   const [jobs, setJobs] = useState([]);
@@ -8,9 +10,34 @@ const JobListing = ({ API_URL, filters }) => {
   const [hasMore, setHasMore] = useState(true);
   const [error, setError] = useState(null);
   const [page, setPage] = useState(1);
+  const [selectedJob, setSelectedJob] = useState(null);
+  const [isMobile, setIsMobile] = useState(window.innerWidth < 768);
+  const observer = useRef();
+  const limit = 5;
+  const navigate = useNavigate();
 
-  // Fetch jobs with pagination and filters
-  const fetchJobs = async (isNewFilter = false) => {
+  // Screen size detection
+  useEffect(() => {
+    const handleResize = () => {
+      setIsMobile(window.innerWidth < 768);
+      if (window.innerWidth >= 768 && selectedJob) {
+        navigate(`/jobs/${selectedJob}`, { replace: true }); // Cleanup mobile URL
+      }
+    };
+
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, [selectedJob]);
+
+  const handleJobClick = (jobId) => {
+    if (isMobile) {
+      navigate(`/jobs/${jobId}/description`);
+    } else {
+      setSelectedJob(jobId);
+    }
+  };
+
+  const fetchJobs = useCallback(async (isNewFilter = false) => {
     if (!hasMore && !isNewFilter) return;
     
     setLoading(true);
@@ -19,87 +46,106 @@ const JobListing = ({ API_URL, filters }) => {
       
       const params = {
         page: currentPage,
-        limit: 20,
+        limit: limit,
         experienceLevel: filters.experienceLevel || undefined,
-        minSalary: filters.salaryRange[0] || undefined,
-        maxSalary: filters.salaryRange[1] || undefined,
+        minSalary: Number(filters.salaryRange[0]) || undefined,
+        maxSalary: Number(filters.salaryRange[1]) || undefined,
         company: filters.company || undefined
       };
-      
-      // Remove undefined values
+
       Object.keys(params).forEach(key => 
         params[key] === undefined && delete params[key]
       );
 
       const response = await axiosInstance.get(API_URL, { params });
       const newJobs = response.data;
+      console.log(newJobs)
 
       setJobs(prev => isNewFilter ? newJobs : [...prev, ...newJobs]);
-      setHasMore(newJobs.length === params.limit);
+      setHasMore(newJobs.length === limit);
       setError(null);
       
-      if (isNewFilter) {
-        setPage(1);
-      }
+      if (isNewFilter) setPage(1);
     } catch (err) {
       setError(err.message || 'Failed to fetch jobs');
     } finally {
       setLoading(false);
     }
-  };
+  }, [API_URL, filters, page, hasMore]);
 
-  // Load more jobs when user clicks the load more button
-  const loadMoreJobs = () => {
-    setPage(prevPage => prevPage + 1);
-  };
+  // Infinite scroll observer
+  const lastJobElementRef = useCallback(node => {
+    if (loading) return;
+    if (observer.current) observer.current.disconnect();
+    
+    observer.current = new IntersectionObserver(entries => {
+      if (entries[0].isIntersecting && hasMore) {
+        setPage(prevPage => prevPage + 1);
+      }
+    });
 
-  // Initial load and when filters change
+    if (node) observer.current.observe(node);
+  }, [loading, hasMore]);
+
+  // Initial load and filter changes
   useEffect(() => {
     fetchJobs(true);
   }, [filters]);
 
-  // When page changes (load more)
+  // Page changes
   useEffect(() => {
-    if (page > 1) {
-      fetchJobs();
-    }
+    if (page > 1) fetchJobs();
   }, [page]);
 
   return (
-    <div className="container mx-auto px-4 py-6">
-      {error && (
-        <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded mb-4">
-          {error}
-        </div>
-      )}
-      
-      {jobs.length === 0 && !loading ? (
-        <div className="text-center py-12">
-          <p className="text-lg text-gray-500">No job listings match your search criteria.</p>
-          <p className="text-gray-400">Try adjusting your filters.</p>
-        </div>
-      ) : (
-        <div className="space-y-4">
-          {jobs.map(job => (
-            <JobItem key={job.id} job={job} />
-          ))}
-        </div>
-      )}
+    <div className={`container mx-auto px-4 py-6 md:flex ${selectedJob && !isMobile ? 'md:gap-4' : ''}`}>
+      <div className={`${selectedJob && !isMobile ? 'md:w-1/2 lg:w-1/3' : 'w-full'}`}>
+        {error && (
+          <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded mb-4">
+            {error}
+          </div>
+        )}
+        
+        {jobs.length === 0 && !loading ? (
+          <div className="text-center py-12">
+            <p className="text-lg text-gray-500">No job listings match your search criteria.</p>
+            <p className="text-gray-400">Try adjusting your filters.</p>
+          </div>
+        ) : (
+          <div className="space-y-4">
+            {jobs.map((job, index) => (
+              <div 
+                ref={index === jobs.length - 1 ? lastJobElementRef : null}
+                key={job.jobId}
+                className={isMobile ? 'p-0' : 'px-4 py-2'}
+                onClick={() => handleJobClick(job.jobId)}
+              >
+                <JobItem 
+                  job={job}
+                  isSelected={job.jobId === selectedJob}
+                  isMobile={isMobile}
+                />
+              </div>
+            ))}
+          </div>
+        )}
 
-      {loading && (
-        <div className="flex justify-center my-6">
-          <div className="animate-spin rounded-full h-10 w-10 border-b-2 border-primary"></div>
-        </div>
-      )}
+        {loading && (
+          <div className="flex justify-center my-6">
+            <div className="animate-spin rounded-full h-10 w-10 border-b-2 border-primary"></div>
+          </div>
+        )}
 
-      {hasMore && !loading && jobs.length > 0 && (
-        <div className="text-center mt-8">
-          <button
-            onClick={loadMoreJobs}
-            className="inline-flex items-center gap-2 px-6 py-3 bg-cardBackground border border-cardBorder text-textActivity rounded-lg hover:bg-gray-100 transition-all"
-          >
-            Load More Jobs
-          </button>
+        {!hasMore && jobs.length > 0 && (
+          <div className="text-center py-6 text-gray-500">
+            No more jobs to show
+          </div>
+        )}
+      </div>
+
+      {!isMobile && selectedJob && (
+        <div className="md:w-1/2 lg:w-2/3">
+          <JobDescription jobId={selectedJob} />
         </div>
       )}
     </div>
