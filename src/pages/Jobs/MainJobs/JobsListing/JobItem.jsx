@@ -1,5 +1,5 @@
 import React from "react";
-import DeleteIcon from '@mui/icons-material/Delete';
+import DeleteIcon from "@mui/icons-material/Delete";
 import { axiosInstance } from "../../../../apis/axios";
 import { toast } from "react-toastify";
 
@@ -50,7 +50,7 @@ const JobItem = ({ job, isSelected, isAdmin, onDelete }) => {
 
         {/* Admin Delete Button */}
         {isAdmin && (
-          <button 
+          <button
             onClick={handleDelete}
             className="absolute right-2 top-1/2 -translate-y-1/2 text-red-500 hover:text-red-700 transition-colors p-1"
             aria-label="Delete job"

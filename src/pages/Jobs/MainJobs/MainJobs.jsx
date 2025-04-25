@@ -1,7 +1,14 @@
 import { useState } from "react";
 import JobListing from "./JobsListing/JobsListing";
 
-const MainJobs = ({ API_URL, enableFilter, keyword = "", location = "", industry = "", isAdmin = false }) => {
+const MainJobs = ({
+  API_URL,
+  enableFilter,
+  keyword = "",
+  location = "",
+  industry = "",
+  isAdmin = false,
+}) => {
   const [filters, setFilters] = useState({
     experienceLevel: "",
     salaryRange: [0, 0],
@@ -114,7 +121,11 @@ const MainJobs = ({ API_URL, enableFilter, keyword = "", location = "", industry
         </div>
       )}
 
-      <JobListing API_URL={API_URL} filters={{ ...filters, keyword, location, industry }} isAdmin={isAdmin} />
+      <JobListing
+        API_URL={API_URL}
+        filters={{ ...filters, keyword, location, industry }}
+        isAdmin={isAdmin}
+      />
     </div>
   );
 };

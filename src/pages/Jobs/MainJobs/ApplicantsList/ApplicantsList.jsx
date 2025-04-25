@@ -1,9 +1,9 @@
-import { useState, useEffect } from 'react';
-import { axiosInstance } from '../../../../apis/axios';
-import { formatDate } from '../../../../utils/dates';
-import { CircularProgress } from '@mui/material';
-import CheckCircleOutlineIcon from '@mui/icons-material/CheckCircleOutline';
-import HighlightOffIcon from '@mui/icons-material/HighlightOff';
+import { useState, useEffect } from "react";
+import { axiosInstance } from "../../../../apis/axios";
+import { formatDate } from "../../../../utils/dates";
+import { CircularProgress } from "@mui/material";
+import CheckCircleOutlineIcon from "@mui/icons-material/CheckCircleOutline";
+import HighlightOffIcon from "@mui/icons-material/HighlightOff";
 
 const ApplicantsList = ({ jobId, enableReturn }) => {
   const [applicants, setApplicants] = useState([]);
@@ -17,14 +17,14 @@ const ApplicantsList = ({ jobId, enableReturn }) => {
     try {
       setLoading(true);
       const response = await axiosInstance.get(`/jobs/${jobId}/applications`, {
-        params: { page, limit }
+        params: { page, limit },
       });
-      
-      setApplicants(prev => [...prev, ...response.data]);
+
+      setApplicants((prev) => [...prev, ...response.data]);
       setHasMore(response.data.length === limit);
       setError(null);
     } catch (err) {
-      setError(err.response?.data?.message || 'Failed to fetch applicants');
+      setError(err.response?.data?.message || "Failed to fetch applicants");
     } finally {
       setLoading(false);
     }
@@ -37,35 +37,41 @@ const ApplicantsList = ({ jobId, enableReturn }) => {
   const handleStatusUpdate = async (applicationId, newStatus) => {
     try {
       await axiosInstance.patch(`/application/${applicationId}/status`, {
-        status: newStatus
+        status: newStatus,
       });
 
-      setApplicants(prev => prev.map(app => 
-        app.applicationId === applicationId 
-          ? { ...app, status: newStatus } 
-          : app
-      ));
-      
+      setApplicants((prev) =>
+        prev.map((app) =>
+          app.applicationId === applicationId
+            ? { ...app, status: newStatus }
+            : app,
+        ),
+      );
+
       toast.success(`Application ${newStatus.toLowerCase()}`);
     } catch (err) {
       toast.error(`Failed to update status: ${err.response?.data?.message}`);
     }
   };
 
-  if (loading && applicants.length === 0) return <div className="p-6">Loading applicants...</div>;
+  if (loading && applicants.length === 0)
+    return <div className="p-6">Loading applicants...</div>;
   if (error) return <div className="p-6 text-red-500">{error}</div>;
 
   return (
     <div className="p-6 border border-cardBorder bg-cardBackground h-full">
       <h2 className="text-2xl font-semibold text-header mb-6">Applications</h2>
-      
+
       <div className="space-y-4">
-        {applicants.map(applicant => (
-          <div key={applicant.applicationId} className="border border-cardBorder rounded-lg p-4">
+        {applicants.map((applicant) => (
+          <div
+            key={applicant.applicationId}
+            className="border border-cardBorder rounded-lg p-4"
+          >
             <div className="flex items-start justify-between">
               <div className="flex items-start gap-4">
-                <img 
-                  src={applicant.applicantPicture} 
+                <img
+                  src={applicant.applicantPicture}
                   alt={applicant.applicantName}
                   className="w-12 h-12 rounded-full object-cover"
                 />
@@ -82,25 +88,29 @@ const ApplicantsList = ({ jobId, enableReturn }) => {
 
               <div className="flex gap-2">
                 <button
-                  onClick={() => handleStatusUpdate(applicant.applicationId, 'Accepted')}
+                  onClick={() =>
+                    handleStatusUpdate(applicant.applicationId, "Accepted")
+                  }
                   className={`px-4 py-2 rounded-full flex items-center gap-1 ${
-                    applicant.status === 'Accepted' 
-                      ? 'bg-green-100 text-green-700' 
-                      : 'hover:bg-green-50 text-green-600'
+                    applicant.status === "Accepted"
+                      ? "bg-green-100 text-green-700"
+                      : "hover:bg-green-50 text-green-600"
                   }`}
-                  disabled={applicant.status === 'Accepted'}
+                  disabled={applicant.status === "Accepted"}
                 >
                   <CheckCircleOutlineIcon fontSize="small" />
                   Accept
                 </button>
                 <button
-                  onClick={() => handleStatusUpdate(applicant.applicationId, 'Rejected')}
+                  onClick={() =>
+                    handleStatusUpdate(applicant.applicationId, "Rejected")
+                  }
                   className={`px-4 py-2 rounded-full flex items-center gap-1 ${
-                    applicant.status === 'Rejected' 
-                      ? 'bg-red-100 text-red-700' 
-                      : 'hover:bg-red-50 text-red-600'
+                    applicant.status === "Rejected"
+                      ? "bg-red-100 text-red-700"
+                      : "hover:bg-red-50 text-red-600"
                   }`}
-                  disabled={applicant.status === 'Rejected'}
+                  disabled={applicant.status === "Rejected"}
                 >
                   <HighlightOffIcon fontSize="small" />
                   Reject
@@ -136,7 +146,7 @@ const ApplicantsList = ({ jobId, enableReturn }) => {
 
       {!loading && hasMore && (
         <button
-          onClick={() => setPage(prev => prev + 1)}
+          onClick={() => setPage((prev) => prev + 1)}
           className="w-full mt-4 py-2 text-primary hover:bg-cardBackgroundHover rounded-lg"
         >
           Load More Applications

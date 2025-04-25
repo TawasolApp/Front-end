@@ -1,7 +1,6 @@
 import MainJobs from "../Jobs/MainJobs/MainJobs";
 
 const SearchJobs = ({ keyword, industry, location }) => {
-  
   return (
     <div className="min-w-screen min-h-screen bg-mainBackground gap-0">
       <MainJobs

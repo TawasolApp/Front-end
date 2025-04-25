@@ -2,7 +2,6 @@ import { useSelector } from "react-redux";
 import MainFeed from "../Feed/MainFeed/MainFeed";
 
 const SearchPosts = ({ searchText, network, timeframe }) => {
-
   const currentAuthorId = useSelector((state) => state.authentication.userId);
 
   return (

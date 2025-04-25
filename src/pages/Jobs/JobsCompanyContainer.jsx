@@ -7,7 +7,11 @@ const JobsCompanyContainer = () => {
 
   return (
     <div className="min-w-screen min-h-screen bg-mainBackground gap-0">
-      <MainJobs API_URL={`/companies/${companyId}/jobs`} enableFilter={true} isAdmin={isAdmin} />
+      <MainJobs
+        API_URL={`/companies/${companyId}/jobs`}
+        enableFilter={true}
+        isAdmin={isAdmin}
+      />
     </div>
   );
 };
