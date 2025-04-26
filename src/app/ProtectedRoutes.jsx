@@ -34,6 +34,8 @@ import TawasolNavbar from "../layouts/TawasolNavbar";
 import ThemeSettings from "../pages/Settings/ThemeSettings.jsx";
 import DeleteAccount from "../pages/Settings/DeleteAccount.jsx";
 
+import AdminPanel from "../pages/AdminPanel/AdminPanel.jsx";
+
 const RenderWithNavbar = (component) => {
   return (
     <>
@@ -92,7 +94,7 @@ const ProtectedRoutes = () => {
         path="/my-items/saved-posts"
         element={RenderWithNavbar(<SavedPostsContainer />)}
       />
-
+      <Route path="/AdminPanel" element={RenderWithNavbar(<AdminPanel />)} />
       <Route path="/company" element={RenderWithNavbar(<CompanyLayout />)} />
       <Route
         path="/company/:companyId/*"
