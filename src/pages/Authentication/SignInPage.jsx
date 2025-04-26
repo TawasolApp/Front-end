@@ -48,9 +48,9 @@ const SignInPage = () => {
         dispatch(setIsSocialLogin(isSocialLogin));
         dispatch(setRole(role));
 
-        console.log(role);
         if (role === "admin") {
           navigate("/AdminPanel");
+          return;
         }
 
         try {
