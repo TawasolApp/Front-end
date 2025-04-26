@@ -16,6 +16,7 @@ import {
   setUserId,
   setCoverPhoto,
   setIsSocialLogin,
+  setRole,
 } from "../../store/authenticationSlice";
 import { Link, useNavigate } from "react-router-dom";
 import AuthenticationHeader from "./GenericComponents/AuthenticationHeader";
@@ -39,12 +40,17 @@ const SignInPage = () => {
       });
 
       if (userResponse.status === 201) {
-        const { token, refreshToken, is_social_login: isSocialLogin } = userResponse.data;
+        const { token, refreshToken, is_social_login: isSocialLogin, role } = userResponse.data;
 
         dispatch(setEmail(formData.email));
         dispatch(setToken(token));
         dispatch(setRefreshToken(refreshToken));
         dispatch(setIsSocialLogin(isSocialLogin));
+        dispatch(setRole(role));
+
+        if (role === "admin") {
+          navigate("AdminPanel");
+        }
 
         try {
           const profileResponse = await axiosInstance.get("/profile");
