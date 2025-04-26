@@ -21,7 +21,7 @@ const VerifySignUpPage = () => {
       .then((res) => {
         setStatus("Email verified! Redirecting...");
         setTimeout(() => {
-          navigate("/auth/signup/location");
+          navigate("/auth/signin");
         }, 1500);
       })
       .catch((err) => {
