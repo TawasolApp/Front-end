@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
-import { usePost } from "../../PostContext";
 import OpenInFullIcon from "@mui/icons-material/OpenInFull";
+import { usePost } from "../../PostContext";
 import CommentThreadWrapper from "./CommentThreadWrapper";
 import AddForm from "./AddForm";
 import Reply from "./Reply";
@@ -41,7 +41,7 @@ const ReplyContainer = ({ commentId }) => {
         </CommentThreadWrapper>
       )}
 
-      {isLoading && (
+      {isLoading && hasMoreReplies && (
         <CommentThreadWrapper hasReplies={true}>
           <div className="pl-2 pt-2 space-y-4 animate-pulse">
             {[...Array(1)].map((_, idx) => (

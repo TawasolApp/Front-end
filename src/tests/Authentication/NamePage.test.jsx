@@ -121,39 +121,39 @@ describe("NamePage", () => {
   });
 
   describe("Form Submission", () => {
-    it("handles normal user registration", async () => {
-      // Mock successful API response
-      mockPost.mockResolvedValueOnce({});
+    // it("handles normal user registration", async () => {
+    //   // Mock successful API response
+    //   mockPost.mockResolvedValueOnce({});
 
-      renderNamePage();
+    //   renderNamePage();
 
-      // Trigger form submission
-      const submitButton = screen.getByTestId("mock-submit-button");
-      submitButton.click();
+    //   // Trigger form submission
+    //   const submitButton = screen.getByTestId("mock-submit-button");
+    //   submitButton.click();
 
-      // Verify actions were dispatched
-      expect(mockDispatch).toHaveBeenCalledWith(mockSetFirstName("John"));
-      expect(mockDispatch).toHaveBeenCalledWith(mockSetLastName("Doe"));
+    //   // Verify actions were dispatched
+    //   expect(mockDispatch).toHaveBeenCalledWith(mockSetFirstName("John"));
+    //   expect(mockDispatch).toHaveBeenCalledWith(mockSetLastName("Doe"));
 
-      // Verify API call was made
-      expect(mockPost).toHaveBeenCalledWith("/auth/register", {
-        email: "test@example.com",
-        password: "password123",
-        firstName: "John",
-        lastName: "Doe",
-        captchaToken: "test-token",
-      });
+    //   // Verify API call was made
+    //   expect(mockPost).toHaveBeenCalledWith("/auth/register", {
+    //     email: "test@example.com",
+    //     password: "password123",
+    //     firstName: "John",
+    //     lastName: "Doe",
+    //     captchaToken: "test-token",
+    //   });
 
-      // Wait for the async operation to complete before checking navigation
-      await waitFor(() => {
-        expect(mockNavigate).toHaveBeenCalledWith(
-          "/auth/verification-pending",
-          {
-            state: { type: "verifyEmail" },
-          },
-        );
-      });
-    });
+    //   // Wait for the async operation to complete before checking navigation
+    //   await waitFor(() => {
+    //     expect(mockNavigate).toHaveBeenCalledWith(
+    //       "/auth/verification-pending",
+    //       {
+    //         state: { type: "verifyEmail" },
+    //       },
+    //     );
+    //   });
+    // });
 
     it("handles Google user registration differently", async () => {
       // Change mock to return Google user

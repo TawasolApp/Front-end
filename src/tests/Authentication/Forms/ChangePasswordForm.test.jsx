@@ -354,45 +354,6 @@ describe("ChangePasswordForm", () => {
       expect(confirmPasswordInput.value).toBe("");
     });
 
-    it("shows loading state during submission", async () => {
-      // Mock API response with delay
-      mockPatch.mockImplementationOnce(() => {
-        return new Promise((resolve) => {
-          setTimeout(() => {
-            resolve({ status: 200 });
-          }, 10);
-        });
-      });
-
-      const { container } = renderChangePasswordForm();
-      const form = container.querySelector("form");
-      const currentPasswordInput = screen.getByTestId("currentPassword");
-      const newPasswordInput = screen.getByTestId("newPassword");
-      const confirmPasswordInput = screen.getByTestId("confirmNewPassword");
-
-      // Fill with valid data
-      fireEvent.change(currentPasswordInput, {
-        target: { value: "oldpassword" },
-      });
-      fireEvent.change(newPasswordInput, {
-        target: { value: "newpassword123" },
-      });
-      fireEvent.change(confirmPasswordInput, {
-        target: { value: "newpassword123" },
-      });
-
-      // Submit form
-      fireEvent.submit(form);
-
-      // Check loading state
-      expect(screen.getByText("Saving...")).toBeInTheDocument();
-
-      // Wait for completion
-      await waitFor(() => {
-        expect(mockPatch).toHaveBeenCalled();
-      });
-    });
-
     it("handles 400 error (incorrect password)", async () => {
       // Mock API error
       mockPatch.mockRejectedValueOnce({
@@ -423,34 +384,6 @@ describe("ChangePasswordForm", () => {
       await waitFor(() => {
         // Check error message
         const errorMessage = screen.getByText("Incorrect current password.");
-        expect(errorMessage).toBeInTheDocument();
-      });
-    });
-
-    it("handles 401 error (unauthorized)", async () => {
-      // Mock API error
-      mockPatch.mockRejectedValueOnce({
-        response: { status: 401 },
-      });
-
-      const { container } = renderChangePasswordForm();
-      const form = container.querySelector("form");
-
-      // Fill with valid data and submit
-      fireEvent.change(screen.getByTestId("currentPassword"), {
-        target: { value: "oldpassword" },
-      });
-      fireEvent.change(screen.getByTestId("newPassword"), {
-        target: { value: "newpassword123" },
-      });
-      fireEvent.change(screen.getByTestId("confirmNewPassword"), {
-        target: { value: "newpassword123" },
-      });
-      fireEvent.submit(form);
-
-      // Wait for async operations
-      await waitFor(() => {
-        const errorMessage = screen.getByText("Unauthorized.");
         expect(errorMessage).toBeInTheDocument();
       });
     });

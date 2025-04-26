@@ -1,12 +1,13 @@
 import { useState, useEffect, useRef, useCallback } from "react";
+import { useSelector } from "react-redux";
 import { toast } from "react-toastify";
+import { axiosInstance } from "../../../apis/axios";
 import SharePost from "./SharePost/SharePost";
 import FeedPosts from "./FeedPosts/FeedPosts";
-import { axiosInstance } from "../../../apis/axios";
-import { useSelector } from "react-redux";
+import LoadingPage from "../../LoadingScreen/LoadingPage";
 
 const MainFeed = ({
-  API_ROUTE = "posts",
+  API_ROUTE = `/posts/${useSelector((state) => state.authentication.userId)}`,
   q = null,
   timeframe = null,
   network = null,
@@ -77,6 +78,7 @@ const MainFeed = ({
               ...post.parentPost, // Take the parent post as the display
               isSilentRepost: true,
               headerData: {
+                postId: post.id,
                 authorId: post.authorId,
                 authorPicture: post.authorPicture,
                 authorName: post.authorName,
@@ -138,7 +140,7 @@ const MainFeed = ({
     silentRepost = false,
   ) => {
     try {
-      await axiosInstance.post("posts", {
+      await axiosInstance.post(`posts/${currentAuthorId}`, {
         content: text,
         media: media,
         taggedUsers: taggedUsers,
@@ -158,8 +160,12 @@ const MainFeed = ({
 
   const handleDeletePost = async (postId) => {
     try {
-      await axiosInstance.delete(`/posts/${postId}`);
-      setPosts((prevPosts) => prevPosts.filter((post) => post.id !== postId));
+      await axiosInstance.delete(`/posts/${currentAuthorId}/${postId}`);
+      setPosts((prevPosts) =>
+        prevPosts.filter((post) =>
+          post.headerData ? post.headerData.postId !== postId : post.id !== postId
+        )
+      );
       toast.success("Post deleted successfully.", {
         position: "bottom-left",
         autoClose: 3000,
@@ -168,6 +174,12 @@ const MainFeed = ({
       console.log(e.message);
     }
   };
+
+  if (loading && posts.length === 0) {
+    return (
+      <LoadingPage />
+    );
+  }
 
   return (
     <>

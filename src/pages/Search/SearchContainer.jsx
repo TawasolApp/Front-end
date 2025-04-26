@@ -3,6 +3,7 @@ import { useParams } from "react-router-dom";
 import SearchPosts from "./SearchPosts";
 import PeopleSearch from "./SearchPeople";
 import CompanySearch from "./SearchCompany";
+import SearchJobs from "./SearchJobs";
 
 const SearchContainer = () => {
   const { searchText } = useParams();
@@ -14,6 +15,7 @@ const SearchContainer = () => {
   const [isWithinNetwork, setIsWithinNetwork] = useState(false);
   const [companyFilter, setCompanyFilter] = useState("");
   const [industryFilter, setIndustryFilter] = useState("");
+  const [locationFilter, setLocationFilter] = useState("");
 
   const handleFilterChange = (filter) => {
     setSelectedFilter(filter);
@@ -40,9 +42,9 @@ const SearchContainer = () => {
               </button>
 
               {isDropdownOpen && (
-                <div className="absolute left-0 mt-2 w-48 rounded-md shadow-lg bg-cardBackground border border-cardBorder z-20">
+                <div className="absolute left-0 mt-2 w-48 rounded-md shadow-lg bg-cardBackground border border-cardBorder z-50">
                   <div className="py-1" role="menu" aria-orientation="vertical">
-                    {["Posts", "People", "Companies"].map((filter) => (
+                    {["Posts", "People", "Companies", "Jobs"].map((filter) => (
                       <button
                         key={filter}
                         onClick={() => handleFilterChange(filter)}
@@ -114,6 +116,25 @@ const SearchContainer = () => {
                 />
               </div>
             )}
+
+            {selectedFilter === "Jobs" && (
+              <div className="relative">
+                <input
+                  type="text"
+                  value={industryFilter}
+                  onChange={(e) => setIndustryFilter(e.target.value)}
+                  placeholder="Industry"
+                  className="bg-navbarSearch border border-cardBorder hover:border-2 text-navbarIconsNormal rounded-md px-3 py-2 w-48 transition-all focus:outline-none"
+                />
+                <input
+                  type="text"
+                  value={locationFilter}
+                  onChange={(e) => seLocationFilter(e.target.value)}
+                  placeholder="Location"
+                  className="bg-navbarSearch border border-cardBorder hover:border-2 text-navbarIconsNormal rounded-md px-3 py-2 w-48 transition-all focus:outline-none"
+                />
+              </div>
+            )}
           </div>
         </div>
       </div>
@@ -134,6 +155,14 @@ const SearchContainer = () => {
 
       {selectedFilter === "Companies" && (
         <CompanySearch searchText={searchText} industry={industryFilter} />
+      )}
+
+      {selectedFilter === "Jobs" && (
+        <SearchJobs
+          keyword={searchText}
+          industry={industryFilter}
+          location={locationFilter}
+        />
       )}
     </div>
   );

@@ -28,13 +28,10 @@ const LeftSideBar = () => {
     const checkPosition = () => {
       setIsTopPosition(window.innerWidth < 768); // md breakpoint
     };
-
     // Initial check
     checkPosition();
-
     // Add resize listener
     window.addEventListener("resize", checkPosition);
-
     // Cleanup
     return () => window.removeEventListener("resize", checkPosition);
   }, []);

@@ -4,9 +4,8 @@ import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
-import SignUpPage from "../pages/Authentication/SignUpPage";
+import RegisterPage from "../pages/Authentication/RegisterPage";
 import SignInPage from "../pages/Authentication/SignInPage";
-import NamePage from "../pages/Authentication/NamePage";
 import LocationPage from "../pages/Authentication/LocationPage";
 import ExperienceAuthPage from "../pages/Authentication/ExperiencePage";
 import WelcomePage from "../pages/Authentication/WelcomePage";
@@ -18,10 +17,10 @@ import ProtectedRoute from "../apis/ProtectedRoute";
 import ProtectedRoutes from "./ProtectedRoutes";
 import VerificationPendingPage from "../pages/Authentication/VerificationPendingPage";
 import NewPasswordPage from "../pages/Authentication/NewPasswordPage";
+import NewMessageModal from "../pages/Messaging/New Message Modal/NewMessageModal";
 
 const App = () => {
   const googleClientId = import.meta.env.VITE_GOOGLE_CLIENT_ID;
-  console.log(googleClientId);
   const theme = useSelector((state) => state.theme.theme);
 
   return (
@@ -30,8 +29,7 @@ const App = () => {
         {/* Public Routes */}
         <Route path="/" element={<WelcomePage />} />
         <Route path="/auth/signin" element={<SignInPage />} />
-        <Route path="/auth/signup" element={<SignUpPage />} />
-        <Route path="/auth/signup/name" element={<NamePage />} />
+        <Route path="/auth/signup/*" element={<RegisterPage />} />
         <Route path="/auth/signup/location" element={<LocationPage />} />
         <Route
           path="/auth/signup/experience"

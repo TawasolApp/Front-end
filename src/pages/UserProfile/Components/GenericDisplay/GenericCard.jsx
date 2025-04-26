@@ -61,9 +61,23 @@ function GenericCard({
           ) : (
             item.company
           )}
-          {item.employmentType && (
+          {/* {item.employmentType && (
             <span className="ml-1 text-companysubheader">
               · {item.employmentType}
+            </span>
+          )} */}
+          {item.employmentType && (
+            <span className="ml-1 text-companysubheader">
+              ·{" "}
+              {{
+                full_time: "Full-time",
+                part_time: "Part-time",
+                self_employed: "Self-employed",
+                freelance: "Freelance",
+                contract: "Contract",
+                internship: "Internship",
+                apprenticeship: "Apprenticeship",
+              }[item.employmentType] || item.employmentType}
             </span>
           )}
         </div>
@@ -161,14 +175,16 @@ function GenericCard({
       {item.position && (
         <p className="text-companyheader text-sm">{item.position}</p>
       )}
-      {!isOwner && connectStatus === "Connection" && (
-        <SkillEndorsement
-          userId={user._id} // profile owner
-          skillName={item.skillName}
-          endorsements={item.endorsements || []}
-          viewerId={viewerId} // logged-in user
-        />
-      )}
+      {/* {!isOwner && connectStatus === "Connection" && ( */}
+      <SkillEndorsement
+        userId={user._id} // profile owner
+        skillName={item.skillName}
+        endorsements={item.endorsements || []}
+        viewerId={viewerId} // logged-in user
+        isOwner={isOwner}
+        connectStatus={connectStatus}
+        privacy={user.visibility}
+      />
     </div>
   );
 
