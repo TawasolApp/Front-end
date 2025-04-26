@@ -41,8 +41,10 @@ import SavedJobsContainer from "../pages/Saved/SavedJobsContainer.jsx";
 import AppliedJobContainer from "../pages/Saved/AppliedJobsContainer.jsx";
 import JobsCompanyContainer from "../pages/Jobs/JobsCompanyContainer.jsx";
 
+import AdminPanel from "../pages/AdminPanel/AdminPanel.jsx";
 import BlockedUsersPage from "../pages/Settings/BlockedUsersPage.jsx";
 import ProfileVisibilityPage from "../pages/Settings/ProfileVisibilityPage.jsx";
+
 const RenderWithNavbar = (component) => {
   return (
     <>
@@ -110,6 +112,9 @@ const ProtectedRoutes = () => {
         path="/my-items/saved-posts"
         element={RenderWithNavbar(<SavedPostsContainer />)}
       />
+      
+      <Route path="/AdminPanel" element={RenderWithNavbar(<AdminPanel />)} />
+
       <Route
         path="/my-items/saved-jobs"
         element={RenderWithNavbar(<SavedJobsContainer />)}
