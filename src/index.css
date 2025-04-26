@@ -65,6 +65,10 @@
   --amber-dark-hover: 124, 45, 18;
   --amber-text-light: 146, 64, 14;
   --amber-text-dark: 253, 230, 138;
+  --chat-you-background: 230, 244, 255;
+  --chat-you-text: 0, 37, 77;
+  --chat-them-background: 240, 240, 240;
+  --chat-them-text: 25, 25, 25;
 }
 
 .dark {
@@ -130,4 +134,8 @@
   --amber-dark-hover: 92, 33, 13;
   --amber-text-light: 253, 230, 138;
   --amber-text-dark: 254, 243, 199;
+  --chat-you-background: 34, 105, 160;
+  --chat-you-text: 255, 255, 255;
+  --chat-them-background: 45, 45, 45;
+  --chat-them-text: 230, 230, 230;
 }

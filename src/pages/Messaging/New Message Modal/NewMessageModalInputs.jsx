@@ -4,7 +4,6 @@ import EmojiPicker from "emoji-picker-react";
 
 const NewMessageModalInputs = ({ isMinimized }) => {
   const [message, setMessage] = useState("");
-  const [subject, setSubject] = useState("");
   const [isTextareaFocused, setIsTextareaFocused] = useState(false);
   const [showEmojiPicker, setShowEmojiPicker] = useState(false);
   const fileInputRef = useRef(null);
@@ -54,23 +53,11 @@ const NewMessageModalInputs = ({ isMinimized }) => {
     if (!message.trim()) return;
 
     // TODO: complete this logic
-    console.log("Sending:", { subject, message });
+    console.log("Sending:", { message });
   };
 
   return (
     <div>
-      {/* Subject Input */}
-      <div className="bg-cardBackground px-3 py-2">
-        <input
-          type="text"
-          id="subject"
-          className="w-full p-2 border border-textContent rounded-lg hover:outline-none hover:ring-1 hover:ring-textContent"
-          placeholder="Subject (optional)"
-          value={subject}
-          onChange={(e) => setSubject(e.target.value)}
-        />
-      </div>
-
       {/* Message Textarea */}
       <div className="relative p-3 bg-cardBackground">
         {/* Animated border */}
@@ -80,7 +67,7 @@ const NewMessageModalInputs = ({ isMinimized }) => {
           }`}
         />
         <textarea
-          className={`w-full bg-mainBackground rounded-lg p-2 focus:outline-none transition-all duration-300 ${
+          className={`w-full bg-mainBackground text-textContent rounded-lg p-2 focus:outline-none transition-all duration-300 ${
             isMinimized
               ? "min-h-[4.5rem] max-h-[4.5rem]"
               : "min-h-[16rem] max-h-[24rem]"

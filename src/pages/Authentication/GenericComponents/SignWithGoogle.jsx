@@ -47,8 +47,13 @@ const SignWithGoogle = () => {
               );
 
               if (response.status === 201) {
-                const { token, refreshToken, email, isNewUser, is_social_login: isSocialLogin } =
-                  response.data;
+                const {
+                  token,
+                  refreshToken,
+                  email,
+                  isNewUser,
+                  is_social_login: isSocialLogin,
+                } = response.data;
 
                 dispatch(setToken(token));
                 dispatch(setRefreshToken(refreshToken));
@@ -138,15 +143,14 @@ const SignWithGoogle = () => {
       onClick={handleGoogleLogin}
       type="button"
       disabled={isLoading}
-      className={`
-        w-full flex items-center justify-center gap-3
-        py-3 sm:py-4 px-4 rounded-full border-2 border-itemBorder
-        text-lg sm:text-xl font-medium
-        bg-cardBackground text-textContent hover:bg-cardBackgroundHover
-        focus:outline-none focus:border-itemBorderFocus
-        transition-all duration-200 ease-in-out
-        ${isLoading && "opacity-70 cursor-not-allowed"}
-      `}
+      className={`w-full flex items-center justify-center gap-2.5
+              py-2.5 sm:py-3.5 px-4 rounded-full border-2 border-itemBorder
+              text-base sm:text-lg font-medium
+              bg-cardBackground text-textContent hover:bg-cardBackgroundHover
+              focus:outline-none focus:border-itemBorderFocus
+              transition-all duration-200 ease-in-out
+              ${isLoading ? "opacity-70 cursor-not-allowed" : ""}
+  `}
     >
       {isLoading ? (
         <span className="flex items-center justify-center gap-1">
@@ -169,7 +173,7 @@ const SignWithGoogle = () => {
         </span>
       ) : (
         <>
-          <GoogleGIcon className="w-6 h-6 sm:w-7 sm:h-7" />
+          <GoogleGIcon className="w-5 h-5 sm:w-6 sm:h-6" />
           <span>Sign in with Google</span>
         </>
       )}
