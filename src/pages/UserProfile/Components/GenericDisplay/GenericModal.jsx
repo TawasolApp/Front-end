@@ -31,8 +31,8 @@ function GenericModal({
   type,
   initialData = {},
   editMode = false,
-  existingItems = [], // 👈 Accept the prop here
-  isSaving, // ✅ Add this
+  existingItems = [],
+  isSaving,
 }) {
   const [formData, setFormData] = useState(initialData);
   const [errors, setErrors] = useState({});
@@ -41,7 +41,7 @@ function GenericModal({
   const [initialFormData, setInitialFormData] = useState({});
   const startYears = getStartYears();
 
-  // ✅ THIS is the correct dynamic generation of endYears
+  // THIS is the correct dynamic generation of endYears
   const endYears = Array.from(
     {
       length:

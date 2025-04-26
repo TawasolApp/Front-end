@@ -1,14 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { axiosInstance as axios } from "../../../../apis/axios";
-import { ArrowForwardOutlined } from "@mui/icons-material";
 
-const REASONS = [
-  "This person is impersonating someone",
-  "This account has been hacked",
-  "This account is not a real person",
-];
-
-const ReportUserModal = ({ isOpen, onClose, userId, fullName }) => {
+const ReportModal = ({ isOpen, onClose, targetId, type }) => {
   const [selectedReason, setSelectedReason] = useState("");
   const [submitting, setSubmitting] = useState(false);
 
@@ -18,19 +11,47 @@ const ReportUserModal = ({ isOpen, onClose, userId, fullName }) => {
     return () => document.body.classList.remove("overflow-hidden");
   }, [isOpen]);
 
+  const REASONS =
+    type === "user"
+      ? [
+          "This person is impersonating someone",
+          "This account has been hacked",
+          "This account is fake",
+          "Harassment or abusive behavior",
+        ]
+      : [
+          "Spam or scam",
+          "Sexually inappropriate content",
+          "Hate speech or symbols",
+          "Misinformation",
+          "Violent or graphic content",
+        ];
+
   const handleSubmit = async () => {
     if (!selectedReason) return;
-
     setSubmitting(true);
+
     try {
-      await axios.post("/privacy/report/user", {
-        userId,
-        reason: selectedReason,
-        details: selectedReason, // Can customize if needed
-      });
-      onClose(); // Close after submission
-    } catch (error) {
-      console.error("Failed to report user:", error);
+      const endpoint =
+        type === "user" ? "/privacy/report/user" : "/privacy/report/post";
+
+      const payload =
+        type === "user"
+          ? {
+              userId: targetId,
+              reason: selectedReason,
+              details: selectedReason,
+            }
+          : {
+              postId: targetId,
+              reason: selectedReason,
+              details: selectedReason,
+            };
+
+      await axios.post(endpoint, payload);
+      onClose();
+    } catch (err) {
+      console.error("Failed to report:", err);
     } finally {
       setSubmitting(false);
     }
@@ -49,11 +70,9 @@ const ReportUserModal = ({ isOpen, onClose, userId, fullName }) => {
         </button>
 
         <h2 className="text-xl font-bold text-header mb-4">
-          Report this profile
+          Report {type === "user" ? "this profile" : "this post"}
         </h2>
-        <p className="text-sm text-textContent mb-4">
-          Select an option that applies
-        </p>
+        <p className="text-sm text-textContent mb-4">Select a reason:</p>
 
         <div className="space-y-2">
           {REASONS.map((reason) => (
@@ -74,19 +93,12 @@ const ReportUserModal = ({ isOpen, onClose, userId, fullName }) => {
           ))}
         </div>
 
-        {/* <div className="mt-4 text-sm text-textPlaceholder">
-          If you believe this person is no longer with us, you can{" "}
-          <span className="text-blue-600 cursor-pointer hover:underline">
-            let us know this person is deceased
-          </span>
-        </div> */}
-
         <div className="flex justify-end gap-3 mt-6">
           <button
             className="px-4 py-2 border border-blue-500 text-blue-500 rounded-full hover:bg-blue-50 transition"
             onClick={onClose}
           >
-            Back
+            Cancel
           </button>
           <button
             disabled={!selectedReason || submitting}
@@ -105,4 +117,4 @@ const ReportUserModal = ({ isOpen, onClose, userId, fullName }) => {
   );
 };
 
-export default ReportUserModal;
+export default ReportModal;

@@ -2,7 +2,8 @@ import React, { useEffect, useState } from "react";
 import { ArrowForwardOutlined } from "@mui/icons-material";
 import ConfirmModal from "../ReusableModals/ConfirmModal";
 import { axiosInstance as axios } from "../../../../apis/axios";
-import ReportUserModal from "./ReportUserModal";
+import ReportUserModal from "./ReportModal";
+
 const ReportBlockModal = ({ isOpen, onClose, fullName, userId }) => {
   const [showBlockConfirm, setShowBlockConfirm] = useState(false);
   const [showReportModal, setShowReportModal] = useState(false);
@@ -84,8 +85,8 @@ const ReportBlockModal = ({ isOpen, onClose, fullName, userId }) => {
         <ReportUserModal
           isOpen={showReportModal}
           onClose={() => setShowReportModal(false)}
-          fullName={fullName}
-          userId={userId} // Pass it down
+          targetId={userId}
+          type="user"
         />
       )}
     </>

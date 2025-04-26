@@ -3,6 +3,7 @@ import { axiosInstance as axios } from "../../../../apis/axios.js";
 import ConfirmModal from "../ReusableModals/ConfirmModal.jsx";
 import ReportBlockModal from "../ReportAndBlockModals/ReportBlockModal.jsx";
 import NewMessageModal from "../../../Messaging/New Message Modal/NewMessageModal.jsx";
+import FlagIcon from "@mui/icons-material/Flag";
 
 function ViewerView({
   user,
@@ -178,7 +179,7 @@ function ViewerView({
       className=" flex gap-2 flex-wrap sm:flex-nowrap"
     >
       <button
-        className="px-4 py-2 bg-blue-600 text-boxbackground   rounded-full text-sm"
+        className="px-4 py-0 h-8 bg-blue-600 text-boxbackground   rounded-full text-sm"
         onClick={handleMessage}
         aria-label="Send message"
       >
@@ -186,7 +187,7 @@ function ViewerView({
       </button>
 
       <button
-        className={`px-4 py-2 border rounded-full text-sm capitalize transition-all duration-300 ease-in-out ${
+        className={`px-4 py-0 h-8 border rounded-full text-sm capitalize transition-all duration-300 ease-in-out ${
           ["Connection", "Pending", "Request"].includes(connectStatus)
             ? "bg-blue-600 text-boxbackground  "
             : "text-blue-600 border-blue-600"
@@ -212,7 +213,7 @@ function ViewerView({
       {/* More dropdown */}
       <div className="relative" ref={dropdownRef}>
         <button
-          className="px-4 py-2 border border-black text-black rounded-full text-sm outline outline-0 hover:outline-2 hover:outline-black transition-all duration-200"
+          className="h-8 py-0 px-4 text-sm border border-black text-black rounded-full hover:outline hover:outline-1 hover:outline-black transition duration-200"
           onClick={() => setDropdownOpen((prev) => !prev)}
           aria-haspopup="true"
           aria-expanded={dropdownOpen}
@@ -233,13 +234,14 @@ function ViewerView({
               {isFollowing ? "Unfollow" : "Follow"}
             </button>
             <button
-              className="w-full text-left px-4 py-2 hover:bg-gray-100 text-sm text-red-600"
+              className="w-full text-left px-4 py-2 hover:bg-gray-100 text-sm flex items-center gap-2"
               onClick={() => {
                 setDropdownOpen(false);
-                setShowReportModal(true); // open the modal
+                setShowReportModal(true);
               }}
               aria-label="Report or block this user"
             >
+              <FlagIcon fontSize="small" />
               Report / Block
             </button>
           </div>

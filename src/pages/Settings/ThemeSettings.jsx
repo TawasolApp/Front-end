@@ -207,6 +207,32 @@ const ThemeSettings = () => {
             </div>
           </div>
         </div>
+        {/* Data Privacy Section */}
+        <div className="mt-12 mb-8">
+          <h2 className="text-2xl font-bold text-header mb-6">Data Privacy</h2>
+
+          <div className="bg-cardBackground rounded-xl shadow-lg border border-cardBorder">
+            {/* Who Can Reach You */}
+            <div
+              className="p-6 cursor-pointer hover:bg-itemHoverBackground transition-colors"
+              onClick={() => navigate("/mypreferences/receive-invitations")}
+            >
+              <div className="flex flex-row items-center justify-between gap-4">
+                <div>
+                  <h3 className="text-lg font-semibold text-textContent">
+                    Who can reach you
+                  </h3>
+                  <p className="text-sm text-textPlaceholder mt-1">
+                    Control who can send you invitations to connect
+                  </p>
+                </div>
+                <button type="button">
+                  <ArrowForwardOutlined className="text-textPlaceholder" />
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
 
         <p className="mt-6 text-sm text-textPlaceholder">
           Changes will be applied immediately

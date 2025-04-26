@@ -74,7 +74,7 @@ function EditProfileModal({ user, isOpen, onClose, onSave }) {
         } catch (err) {
           console.error(
             "Failed to update profile:",
-            err.response?.data || err.message,
+            err.response?.data || err.message
           );
         }
 
@@ -199,6 +199,26 @@ function EditProfileModal({ user, isOpen, onClose, onSave }) {
             {errors.lastName}
           </p>
         )}
+        <label
+          htmlFor="headline"
+          className="block text-sm font-medium text-normaltext"
+        >
+          Headline
+        </label>
+        <input
+          id="headline"
+          type="text"
+          name="headline"
+          maxLength={220}
+          autoComplete="off"
+          value={editedUser.headline || ""}
+          onChange={handleChange}
+          className="border p-2 w-full mb-1 bg-boxbackground text-companysubheader"
+        />
+        <p className="text-right text-gray-500 text-sm mb-2">
+          {editedUser.headline?.length || 0}/220
+        </p>
+
         <label
           htmlFor="location"
           className="block text-sm font-medium text-normaltext"

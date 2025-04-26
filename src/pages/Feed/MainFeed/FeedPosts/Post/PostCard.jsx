@@ -15,13 +15,14 @@ import ReactionsModal from "../ReactionModal/ReactionsModal";
 import TextModal from "../../SharePost/TextModal";
 import DeletePostModal from "../DeleteModal/DeletePostModal";
 import SilentRepostHeader from "./Header/SilentRepostHeader";
-
+import ReportPostModal from "../../../../../pages/UserProfile/Components/ReportAndBlockModals/ReportModal";
 const PostCard = ({ setShowPostModal, setMediaIndex }) => {
   // MODALS
   const [showLikes, setShowLikes] = useState(false);
   const [showComments, setShowComments] = useState(false);
   const [showEditModal, setShowEditModal] = useState(false);
   const [showDeleteModal, setShowDeleteModal] = useState(false);
+  const [showReportModal, setShowReportModal] = useState(false);
 
   const {
     currentAuthorId,
@@ -43,7 +44,7 @@ const PostCard = ({ setShowPostModal, setMediaIndex }) => {
     },
     {
       text: "Report post",
-      onClick: () => console.log("Reported post"), // TODO: when reporting is implemented
+      onClick: () => setShowReportModal(true), // TODO: when reporting is implemented
       icon: FlagIcon,
     },
     {
@@ -150,6 +151,14 @@ const PostCard = ({ setShowPostModal, setMediaIndex }) => {
             setShowDeleteModal(false);
           }}
           commentOrPost="Post"
+        />
+      )}
+      {showReportModal && (
+        <ReportPostModal
+          isOpen={showReportModal}
+          onClose={() => setShowReportModal(false)}
+          targetId={post.id}
+          type="post"
         />
       )}
     </div>
