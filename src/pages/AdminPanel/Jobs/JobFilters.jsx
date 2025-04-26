@@ -1,6 +1,6 @@
 import React from "react";
 
-const tabs = ["all", "active", "pending review", "inactive", "flagged"];
+const tabs = ["All", "Flagged"];
 
 function JobFilters({ current, onChange }) {
   return (
@@ -9,7 +9,7 @@ function JobFilters({ current, onChange }) {
         <button
           key={tab}
           onClick={() => onChange(tab)}
-          className={`pb-2 border-b-2 transition capitalize ${
+          className={`pb-2 border-b-2 transition ${
             current === tab
               ? "border-buttonSubmitEnable text-buttonSubmitEnable"
               : "border-transparent"

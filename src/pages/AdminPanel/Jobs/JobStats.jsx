@@ -1,28 +1,18 @@
 import React from "react";
-import { FiCheckCircle, FiAlertCircle, FiTrash2, FiFlag } from "react-icons/fi";
+import { FiCheckCircle, FiFlag } from "react-icons/fi";
 
-function JobStats({ jobs }) {
+function JobStats({ jobs, totalItems }) {
   const count = (status) => jobs.filter((j) => j.status === status).length;
-  const flagged = jobs.filter((j) => j.flagged).length;
+  const flagged = jobs.filter((j) => j.isFlagged).length;
 
   return (
-    <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 mt-6">
+    <div className="grid grid-cols-2 md:grid-cols-2 lg:grid-cols-2 gap-6 mt-6 w-full">
+      <StatCard icon={<FiCheckCircle />} label="All Jobs" count={totalItems} />
       <StatCard
-        icon={<FiCheckCircle />}
-        label="Active Jobs"
-        count={count("Active")}
+        icon={<FiFlag />}
+        label="Flagged Jobs"
+        count={jobs.filter((j) => j.isFlagged).length}
       />
-      <StatCard
-        icon={<FiAlertCircle />}
-        label="Pending Review"
-        count={count("Pending Review")}
-      />
-      <StatCard
-        icon={<FiTrash2 />}
-        label="Inactive Jobs"
-        count={count("Inactive")}
-      />
-      <StatCard icon={<FiFlag />} label="Flagged Jobs" count={flagged} />
     </div>
   );
 }
