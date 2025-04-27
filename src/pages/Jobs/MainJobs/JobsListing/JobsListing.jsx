@@ -123,7 +123,7 @@ const JobListing = ({ API_URL, filters, isAdmin = false }) => {
   }, [page]);
 
   return (
-    <div className="container mx-auto px-4 py-6 md:flex md:justify-center">
+    <div className="container mx-auto px-0 md:px-4 py-6 md:flex md:justify-center">
       <div className="md:flex md:max-w-7xl md:w-full md:gap-0">
         {/* Listings Container */}
         <div className="bg-cardBackground shadow-sm md:w-1/2 lg:w-1/3 border border-cardBorder">
