@@ -127,7 +127,7 @@ const JobDescription = ({ jobId, enableReturn }) => {
       const response = await axiosInstance.get(`/jobs/${jobId}`);
       setJob(response.data);
     } catch (err) {
-      setError(err.message || "Failed to fetch job details");
+      navigate("/error-404");
     } finally {
       setLoading(false);
     }

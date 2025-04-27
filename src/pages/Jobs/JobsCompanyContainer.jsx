@@ -1,10 +1,13 @@
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import MainJobs from "./MainJobs/MainJobs";
 import { useEffect, useState } from "react";
 import { axiosInstance } from "../../apis/axios";
 
 const JobsCompanyContainer = () => {
   const {companyId} = useParams();
+  const navigate = useNavigate();
+  if (!companyId) navigate("/error-404");
+
   const [isAdmin, setIsAdmin] = useState(false);
 
   useEffect(() => {
