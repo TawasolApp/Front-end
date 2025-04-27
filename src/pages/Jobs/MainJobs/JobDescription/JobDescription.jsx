@@ -93,55 +93,32 @@ const ErrorDisplay = ({ error, onRetry }) => (
   </div>
 );
 
+const StatusBadge = ({ status }) => {
+  const statusConfig = {
+    Pending: { color: "bg-yellow-100 text-yellow-800", label: "Under Review", dot: "fill-yellow-500" },
+    Accepted: { color: "bg-green-100 text-green-800", label: "Accepted", dot: "fill-green-500" },
+    Rejected: { color: "bg-red-100 text-red-800", label: "Not Selected", dot: "fill-red-500" }
+  };
+
+  const config = statusConfig[status] || { color: "bg-gray-100 text-gray-800", label: status, dot: "fill-gray-500" };
+
+  return (
+    <div className={`inline-flex items-center px-3 py-1 rounded-full text-sm font-medium ${config.color}`}>
+      <svg className={`w-2 h-2 mr-2 ${config.dot}`} viewBox="0 0 8 8">
+        <circle cx="4" cy="4" r="3" />
+      </svg>
+      {config.label}
+    </div>
+  );
+};
+
 const JobDescription = ({ jobId, enableReturn }) => {
   const [job, setJob] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [showApplyModal, setShowApplyModal] = useState(false);
+  const [saving, setSaving] = useState(false);
   const navigate = useNavigate();
-
-  const handleCopyJobLink = async () => {
-    await navigator.clipboard.writeText(
-      `${window.location.origin}/jobs/${jobId}`,
-    );
-    toast.success("Link copied to clipboard.", {
-      position: "bottom-left",
-      autoClose: 3000,
-    });
-  };
-
-  const handleSaveJob = async () => {
-    if (job.isSaved) {
-      await axiosInstance.delete(`/jobs/${job.jobId}/unsave`);
-      toast.success("Job unsaved.", {
-        position: "bottom-left",
-        autoClose: 3000,
-      });
-    } else {
-      await axiosInstance.post(`/jobs/${job.jobId}/save`);
-      toast.success("Job saved.", {
-        position: "bottom-left",
-        autoClose: 3000,
-      });
-    }
-    setJob((prevJob) => ({
-      ...prevJob,
-      isSaved: !prevJob.isSaved,
-    }));
-  };
-
-  const menuItems = [
-    {
-      text: "Copy link to post",
-      onClick: () => handleCopyJobLink(),
-      icon: LinkIcon,
-    },
-    {
-      text: "Flag job",
-      onClick: () => console.log("Flag job"),
-      icon: FlagIcon,
-    },
-  ];
 
   const fetchJob = async () => {
     setLoading(true);
@@ -156,9 +133,50 @@ const JobDescription = ({ jobId, enableReturn }) => {
     }
   };
 
+  const handleCopyJob = async () => {
+    await navigator.clipboard.writeText(
+      `${window.location.origin}/jobs/${jobId}`,
+    );
+    toast.success("Link copied to clipboard.", {
+      position: "bottom-left",
+      autoClose: 3000,
+    });
+  };
+
+  const handleSaveJob = async () => {
+    try {
+      setSaving(true);
+      if (job.isSaved) {
+        await axiosInstance.delete(`/jobs/${job.jobId}/unsave`);
+        toast.success("Job unsaved");
+      } else {
+        await axiosInstance.post(`/jobs/${job.jobId}/save`);
+        toast.success("Job saved");
+      }
+      setJob(prev => ({ ...prev, isSaved: !prev.isSaved }));
+    } catch (err) {
+      toast.error("Failed to save job, please try again.");
+    } finally {
+      setSaving(false);
+    }
+  };
+
   useEffect(() => {
     fetchJob();
   }, [jobId]);
+
+  const menuItems = [
+    {
+      text: "Copy link to post",
+      onClick: () => handleCopyJob(),
+      icon: LinkIcon,
+    },
+    {
+      text: "Flag job",
+      onClick: () => console.log("Flag job"),
+      icon: FlagIcon,
+    },
+  ];
 
   if (loading) return <SkeletonLoader />;
   if (error) return <ErrorDisplay error={error} onRetry={fetchJob} />;
@@ -176,21 +194,24 @@ const JobDescription = ({ jobId, enableReturn }) => {
         </button>
       )}
 
-      {/* Company Header */}
-      <div className="flex items-center justify-between mb-6">
-        <Link
-          to={`/company/${job.companyId}`}
-          className="flex items-center gap-3 group"
-        >
-          <img
-            src={job.companyLogo}
-            alt={job.companyName}
-            className="w-8 h-8"
-          />
-          <span className="text-sm font-semibold text-header group-hover:underline">
-            {job.companyName}
-          </span>
-        </Link>
+      {/* Company Header with Status */}
+      <div className="flex items-center justify-between mb-2">
+        <div className="flex items-center gap-3">
+          <Link
+            to={`/company/${job.companyId}`}
+            className="flex items-center gap-3 group"
+          >
+            <img
+              src={job.companyLogo}
+              alt={job.companyName}
+              className="w-8 h-8"
+            />
+            <span className="text-sm font-semibold text-header group-hover:underline">
+              {job.companyName}
+            </span>
+          </Link>
+          {job.status && <StatusBadge status={job.status} />}
+        </div>
 
         <DropdownMenu menuItems={menuItems} position="right-0">
           <button className="hover:bg-buttonIconHover rounded-full p-1">
@@ -204,20 +225,26 @@ const JobDescription = ({ jobId, enableReturn }) => {
         {job.position}
       </h1>
 
-      {/* Location and Applicants */}
+      {/* Job Details */}
       <div className="flex items-center gap-2 mb-4 text-sm font-normal">
-        <span className="text-textPlaceholder">{job.companyLocation}</span>
-        <span className="text-textPlaceholder">·</span>
-        <span className="text-textPlaceholder">
-          Reposted {formatDate(job.postedAt)} ago
-        </span>
-        <span className="text-textPlaceholder">·</span>
-        <span className="text-green-600 font-bold">
-          {job.applicants} clicked apply
-        </span>
+        {job.companyLocation && (
+          <>
+            <span className="text-textPlaceholder">{job.companyLocation}</span>
+            <span className="text-textPlaceholder">·</span>
+          </>
+        )}
+        {job.postedAt && (
+          <>
+            <span className="text-textPlaceholder">
+              Reposted {formatDate(job.postedAt)} ago
+            </span>
+            <span className="text-textPlaceholder">·</span>
+          </>
+        )}
+        <span className="text-green-600 font-bold">{job.applicants} clicked apply</span>
       </div>
 
-      {/* Employment Type Box */}
+      {/* Employment Details */}
       <div className="bg-cardBackground rounded-lg p-4 mb-6 border border-cardBorder">
         <div className="flex gap-4">
           <div>
@@ -234,31 +261,45 @@ const JobDescription = ({ jobId, enableReturn }) => {
       {/* Action Buttons */}
       <div className="flex gap-3 mb-8">
         <button
-          className="bg-buttonSubmitEnable hover:bg-buttonSubmitEnableHover text-buttonSubmitText px-6 py-2 rounded-full transition-colors font-semibold text-base flex items-center gap-2"
+          className={`${job.status ? "bg-buttonSubmitDisable cursor-not-allowed" : "bg-buttonSubmitEnable hover:bg-buttonSubmitEnableHover"} text-buttonSubmitText
+                    px-6 py-2 rounded-full transition-colors font-semibold text-base flex items-center gap-2`}
+          disabled={job.status}
           onClick={() => setShowApplyModal(true)}
         >
-          <>
-            Apply
-            <FaExternalLinkAlt className="w-4 h-4" />
-          </>
+          <FaExternalLinkAlt className="w-4 h-4" />
+          Apply
         </button>
+        
         <button
-          className="border border-buttonSubmitEnable hover:border-buttonSubmitEnableHover text-buttonSubmitEnable hover:text-buttonSubmitEnableHover px-6 py-2 rounded-full transition-colors"
+          className="border border-buttonSubmitEnable hover:border-buttonSubmitEnableHover
+                   text-buttonSubmitEnable hover:text-buttonSubmitEnableHover
+                   bg-cardBackground hover:bg-cardBackgroundHover
+                   px-6 py-2 rounded-full transition-colors flex items-center justify-center gap-2
+                   disabled:opacity-50 disabled:cursor-not-allowed min-w-[100px]"
           onClick={handleSaveJob}
+          disabled={saving}
         >
-          {job.isSaved ? <>Unsave</> : <>Save</>}
+          {saving ? (
+            <>
+              <svg className="animate-spin h-5 w-5" viewBox="0 0 24 24">
+                <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" fill="none"/>
+                <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"/>
+              </svg>
+              {job.isSaved ? "Unsaving..." : "Saving..."}
+            </>
+          ) : (
+            job.isSaved ? "Unsave" : "Save"
+          )}
         </button>
       </div>
 
-      {/* About the Job */}
-      <div className="mb-6">
-        <h2 className="text-xl font-semibold text-header mb-4">
-          About the job
-        </h2>
-        <p className="text-textContent whitespace-pre-wrap">
-          {job.description}
-        </p>
-      </div>
+      {/* Job Description */}
+      {job.description && (
+        <div className="mb-6">
+          <h2 className="text-xl font-semibold text-header mb-4">About the job</h2>
+          <p className="text-textContent whitespace-pre-wrap">{job.description}</p>
+        </div>
+      )}
 
       {showApplyModal && (
         <JobApplyModal
