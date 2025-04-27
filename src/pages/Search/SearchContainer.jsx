@@ -129,9 +129,9 @@ const SearchContainer = () => {
                 <input
                   type="text"
                   value={locationFilter}
-                  onChange={(e) => seLocationFilter(e.target.value)}
+                  onChange={(e) => setLocationFilter(e.target.value)}
                   placeholder="Location"
-                  className="bg-navbarSearch border border-cardBorder hover:border-2 text-navbarIconsNormal rounded-md px-3 py-2 w-48 transition-all focus:outline-none"
+                  className="bg-navbarSearch border border-cardBorder hover:border-2 text-navbarIconsNormal rounded-md ml-2 px-3 py-2 w-48 transition-all focus:outline-none"
                 />
               </div>
             )}
