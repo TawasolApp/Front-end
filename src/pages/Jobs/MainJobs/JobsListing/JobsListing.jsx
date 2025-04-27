@@ -182,7 +182,10 @@ const JobListing = ({ API_URL, filters, isAdmin = false }) => {
                     <JobItem
                       job={job}
                       isSelected={job.jobId === selectedJob}
-                      isMobile={isMobile}
+                      onDelete={() => {
+                        setJobs((prev) => prev.filter((j) => j.jobId !== job.jobId));
+                        if (job.jobId === selectedJob) setSelectedJob(null);
+                      }}
                       isAdmin={isAdmin}
                     />
                   </div>
