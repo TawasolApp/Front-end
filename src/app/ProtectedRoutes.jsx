@@ -45,6 +45,15 @@ import AdminPanel from "../pages/AdminPanel/AdminPanel.jsx";
 import BlockedUsersPage from "../pages/Settings/BlockedUsersPage.jsx";
 import ProfileVisibilityPage from "../pages/Settings/ProfileVisibilityPage.jsx";
 
+import NotificationsPage from "../pages/Notifications/NotificationsPage.jsx";
+
+import PremiumPlan from "../pages/PremiumPlan/PremiumPlan.jsx";
+import CheckoutPage from "../pages/PremiumPlan/checkout.jsx";
+import CurrentPlanPage from "../pages/PremiumPlan/CurrentPlanPage.jsx";
+
+
+
+
 const RenderWithNavbar = (component) => {
   return (
     <>
@@ -88,6 +97,8 @@ const ProtectedRoutes = () => {
         <Route path="certification" element={<CertificationsPage />} />
         <Route path="skills" element={<SkillsPage />} />
         <Route path="posts" element={<UserPostsPage />} />
+
+
       </Route>
 
       <Route
@@ -101,6 +112,13 @@ const ProtectedRoutes = () => {
         element={RenderWithNavbar(<ManageConnections />)}
       />
       <Route path="/network-box" element={RenderWithNavbar(<NetworkBox />)} />
+      <Route path="/notifications" element={RenderWithNavbar(<NotificationsPage />)} />
+
+      <Route path="/premium" element={<PremiumPlan />} />
+      <Route path="/checkout" element={<CheckoutPage />} />
+      <Route path="/current-plan" element={<CurrentPlanPage />} />
+
+
 
       <Route path="/feed/:id" element={RenderWithNavbar(<SinglePost />)} />
       <Route path="/feed" element={RenderWithNavbar(<FeedContainer />)} />

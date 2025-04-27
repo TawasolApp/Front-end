@@ -288,7 +288,10 @@ const NetworkBox = () => {
             <p className="text-textPlaceholder mb-4">
               Millions of members use Premium
             </p>
-            <button className="px-4 py-2 bg-amberLight hover:bg-amberLightHover text-amberTextLight dark:text-amberTextDark font-medium rounded-lg transition-colors">
+            <button 
+              onClick={() => navigate("/premium")} 
+              className="px-4 py-2 bg-amberLight hover:bg-amberLightHover text-amberTextLight dark:text-amberTextDark font-medium rounded-lg transition-colors"
+            >
               Try Premium for EGPO
             </button>
             <p className="text-textPlaceholder mt-3 text-sm">
