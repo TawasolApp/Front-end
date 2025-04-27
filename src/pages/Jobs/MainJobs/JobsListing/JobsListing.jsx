@@ -77,7 +77,7 @@ const JobListing = ({ API_URL, filters, isAdmin = false }) => {
         );
 
         const response = await axiosInstance.get(API_URL, { params });
-        const newJobs = response.data.jobs;
+        const newJobs = response.data.jobs ? response.data.jobs : response.data;
 
         setJobs((prev) => 
           isNewFilter ? newJobs : [...prev, ...newJobs]
@@ -132,7 +132,7 @@ const JobListing = ({ API_URL, filters, isAdmin = false }) => {
               Top job picks for you
             </h2>
             <p className="text-sm text-gray-500 mt-1">
-              {jobs.length > 0
+              {jobs && jobs.length > 0
                 ? `${jobs.length} results`
                 : "Based on your profile and activity"}
             </p>
@@ -145,7 +145,7 @@ const JobListing = ({ API_URL, filters, isAdmin = false }) => {
               </div>
             )}
 
-            {jobs.length === 0 && !loading ? (
+            {jobs && jobs.length === 0 && !loading ? (
               <div className="text-center py-12 px-4">
                 <div className="mx-auto mb-6 w-24 h-24 bg-mainBackground rounded-full flex items-center justify-center">
                   <svg
@@ -172,7 +172,7 @@ const JobListing = ({ API_URL, filters, isAdmin = false }) => {
               </div>
             ) : (
               <>
-                {jobs.map((job, index) => (
+                {jobs && jobs.map((job, index) => (
                   <div
                     ref={index === jobs.length - 1 ? lastJobElementRef : null}
                     key={job.jobId}

@@ -140,7 +140,7 @@ const ProtectedRoutes = () => {
         path="/jobs/:id"
         element={RenderWithNavbar(<SingleJob />)}
       />
-      <Route path="/jobs/company/:companyId/:isAdmin" element={RenderWithNavbar(<JobsCompanyContainer />)} />
+      <Route path="/jobs/company/:companyId" element={RenderWithNavbar(<JobsCompanyContainer />)} />
 
       <Route path="error-404" element={<Error404 />} />
       <Route path="*" element={<Error404 />} />
