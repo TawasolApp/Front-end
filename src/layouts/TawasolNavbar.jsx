@@ -1,6 +1,8 @@
-import { useState, useRef, useEffect } from "react";
+import { useState, useRef, useEffect, useCallback } from "react";
 import { useNavigate } from "react-router-dom";
 import { useSelector } from "react-redux";
+import { axiosInstance } from "../apis/axios";
+import { io } from "socket.io-client";
 import HomeIcon from "@mui/icons-material/Home";
 import CottageIcon from "@mui/icons-material/Cottage";
 import GroupIcon from "@mui/icons-material/Group";
@@ -13,6 +15,7 @@ import NotificationsActiveIcon from "@mui/icons-material/NotificationsActive";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import Avatar from "@mui/material/Avatar";
 import SearchIcon from "@mui/icons-material/Search";
+import Badge from "@mui/material/Badge";
 import { getIconComponent } from "../utils";
 
 const TawasolNavbar = () => {
@@ -21,20 +24,172 @@ const TawasolNavbar = () => {
   const [isSearchFocused, setIsSearchFocused] = useState(false);
   const [searchText, setSearchText] = useState("");
   const [windowWidth, setWindowWidth] = useState(window.innerWidth);
+  const [unseenCount, setUnseenCount] = useState(0);
   const searchRef = useRef(null);
   const searchContainerRef = useRef(null);
   const searchIconRef = useRef(null);
   const meDropdownRef = useRef(null);
   const navbarRef = useRef(null);
+  const socketRef = useRef(null);
+  const audioContextRef = useRef(null);
+  const audioInitializedRef = useRef(false);
   const navigate = useNavigate();
 
   const currentAuthorId = useSelector((state) => state.authentication.userId);
+  const companyId = useSelector((state) => state.authentication.companyId);
   const currentAuthorName = `${useSelector((state) => state.authentication.firstName)} ${useSelector((state) => state.authentication.lastName)}`;
   const currentAuthorPicture = useSelector(
     (state) => state.authentication.profilePicture,
   );
   const currentAuthorBio = useSelector((state) => state.authentication.bio);
 
+  const BASE_URL = String(import.meta.env.VITE_APP_BASE_URL || "").trim();
+
+  // Initialize audio context and setup user interaction
+  const initializeAudio = useCallback(async () => {
+    if (audioInitializedRef.current) return true;
+    
+    try {
+      const AudioContext = window.AudioContext || window.webkitAudioContext;
+      if (!AudioContext) {
+        console.warn("Web Audio API not supported");
+        return false;
+      }
+  
+      audioContextRef.current = new AudioContext();
+      
+      if (audioContextRef.current.state === 'suspended') {
+        await audioContextRef.current.resume();
+      }
+      
+      audioInitializedRef.current = true;
+      return true;
+    } catch (error) {
+      console.error("Audio initialization failed:", error);
+      return false;
+    }
+  }, []);
+  
+  // Play beep sound when new notification arrives
+  const playBeep = useCallback(async () => {
+    if (!audioInitializedRef.current) {
+      const initialized = await initializeAudio();
+      if (!initialized) return;
+    }
+  
+    try {
+      const oscillator = audioContextRef.current.createOscillator();
+      const gainNode = audioContextRef.current.createGain();
+      
+      oscillator.type = 'sine';
+      oscillator.frequency.value = 1200;
+      gainNode.gain.value = 0.5;
+      
+      oscillator.connect(gainNode);
+      gainNode.connect(audioContextRef.current.destination);
+      
+      oscillator.start();
+      
+      setTimeout(() => {
+        oscillator.stop();
+      }, 300);
+    } catch (error) {
+      console.error("Beep playback failed:", error);
+    }
+  }, [initializeAudio]);
+
+  // Fetch initial unseen notifications count
+  const fetchUnseenCount = useCallback(async () => {
+    try {
+      const response = await axiosInstance.get(`/notifications/${companyId || currentAuthorId}/unseen`);
+      setUnseenCount(response.data.unseenCount);
+    } catch (error) {
+      console.error("Failed to fetch unseen count:", error);
+    }
+  }, [companyId, currentAuthorId]);
+
+  // Setup user interaction for audio
+  useEffect(() => {
+    const handleUserInteraction = async () => {
+      await initializeAudio();
+      window.removeEventListener('click', handleUserInteraction);
+      window.removeEventListener('keydown', handleUserInteraction);
+      window.removeEventListener('touchstart', handleUserInteraction);
+      document.removeEventListener('click', handleUserInteraction);
+    };
+  
+    window.addEventListener('click', handleUserInteraction, { once: true });
+    window.addEventListener('keydown', handleUserInteraction, { once: true });
+    window.addEventListener('touchstart', handleUserInteraction, { once: true });
+    document.addEventListener('click', handleUserInteraction, { once: true });
+  
+    return () => {
+      window.removeEventListener('click', handleUserInteraction);
+      window.removeEventListener('keydown', handleUserInteraction);
+      window.removeEventListener('touchstart', handleUserInteraction);
+      document.removeEventListener('click', handleUserInteraction);
+    };
+  }, [initializeAudio]);
+
+  // Setup socket connection and event listeners
+  useEffect(() => {
+    if (!currentAuthorId) return;
+
+    // Initialize WebSocket connection
+    if (socketRef.current) {
+      socketRef.current.disconnect();
+    }
+
+    socketRef.current = io('wss://tawasolapp.me', {
+      transports: ['websocket'],
+      query: { userId: currentAuthorId },
+      withCredentials: true,
+      reconnection: true,
+      reconnectionAttempts: 5,
+      reconnectionDelay: 1000,
+    });
+
+    socketRef.current.on("connect", () => {
+      console.log("Connected to notifications socket");
+      fetchUnseenCount();
+    });
+
+    socketRef.current.on("connect_error", (err) => {
+      console.error("Socket connection error:", err);
+    });
+
+    socketRef.current.on("newNotification", (newNotification) => {
+      // Only increment if not on notifications page
+      if (currentPath !== "/notifications") {
+        setUnseenCount(prev => prev + 1);
+        playBeep();
+      }
+    });
+
+    socketRef.current.on("notificationsSeen", ({ count }) => {
+      setUnseenCount(count);
+    });
+
+    socketRef.current.on("notificationCountUpdate", ({ count }) => {
+      setUnseenCount(count);
+    });
+
+    return () => {
+      if (socketRef.current) {
+        socketRef.current.disconnect();
+      }
+    };
+  }, [currentAuthorId, BASE_URL, fetchUnseenCount, playBeep, currentPath]);
+
+  // Handle notification click
+  const handleNotificationClick = () => {
+    if (currentPath !== "/notifications") {
+      setUnseenCount(0);
+    }
+    navigate("/notifications");
+  };
+
+  // Nav items with notification badge
   const navItems = [
     {
       name: "Home",
@@ -68,21 +223,27 @@ const TawasolNavbar = () => {
     {
       name: "Notifications",
       path: "/notifications",
-      icon:
-        currentPath === "/notifications" ? (
-          <NotificationsActiveIcon />
-        ) : (
+      icon: currentPath === "/notifications" ? (
+        <NotificationsActiveIcon />
+      ) : (
+        <Badge 
+          badgeContent={unseenCount} 
+          color="error" 
+          max={99}
+          overlap="circular"
+        >
           <NotificationsIcon />
-        ),
+        </Badge>
+      ),
       active: currentPath === "/notifications",
     },
   ];
 
   const Icon = getIconComponent("tawasol-icon");
 
+  // Existing click outside handlers
   useEffect(() => {
     function handleClickOutside(event) {
-      // Handle search focus
       if (
         searchContainerRef.current &&
         !searchContainerRef.current.contains(event.target) &&
@@ -92,7 +253,6 @@ const TawasolNavbar = () => {
         setIsSearchFocused(false);
       }
 
-      // Handle me dropdown
       if (
         meDropdownRef.current &&
         !meDropdownRef.current.contains(event.target)
@@ -104,6 +264,7 @@ const TawasolNavbar = () => {
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
 
+  // Window resize handler
   useEffect(() => {
     function handleResize() {
       setWindowWidth(window.innerWidth);
@@ -114,6 +275,7 @@ const TawasolNavbar = () => {
 
   const isMobile = windowWidth < 768;
 
+  // Search handlers
   const toggleSearch = () => {
     setIsSearchFocused(true);
   };
@@ -248,7 +410,7 @@ const TawasolNavbar = () => {
                     ${item.active ? "text-navbarIconsSelected" : "text-navbarIconsNormal"}
                     ${item.active ? "border-b-2 border-navbarIconsSelected" : ""}
                     hover:text-navbarIconsSelected`}
-                  onClick={() => navigate(item.path)}
+                  onClick={item.name === "Notifications" ? handleNotificationClick : () => navigate(item.path)}
                 >
                   <span className="text-lg">{item.icon}</span>
                   <span className={`text-xs ${isMobile ? "hidden" : "block"}`}>

@@ -183,103 +183,127 @@ const PremiumPlan = () => {
   };
 
   return (
-    <div className="min-h-screen bg-mainBackground p-4 flex justify-center items-start">
+    <div className="min-h-screen bg-mainBackground dark:bg-darkMainBackground p-4 flex justify-center items-start">
       <div className="w-full max-w-[600px]">
-        <div className="bg-white p-6 rounded-lg shadow-sm border border-gray-200">
+        <div className="bg-cardBackground dark:bg-darkCardBackground p-6 rounded-lg shadow-sm border border-cardBorder dark:border-darkCardBorder">
           {/* Header Section - Always visible */}
           <div className="mb-4 text-center">
-            <h1 className="text-[24px] font-bold text-gray-900 mb-1 leading-[28px]">
+            <h1 className="text-[24px] font-bold text-textHeavyTitle dark:text-darkTextHeavyTitle mb-1 leading-[28px]">
               Achieve your goals faster with Premium.
             </h1>
-            <p className="text-[14px] text-gray-600 mb-2">
+            <p className="text-[14px] text-textActivity dark:text-darkTextActivity mb-2">
               Millions of members use Premium
             </p>
-            <p className="text-[12px] text-gray-800 mb-4">
+            <p className="text-[12px] text-textContent dark:text-darkTextContent mb-4">
               Claim your 1-month free trial today. Cancel anytime. We'll send you a reminder 7 days before your trial ends.
             </p>
           </div>
 
           {/* Divider */}
-          <div className="border-t border-gray-200 my-4"></div>
+          <div className="border-t border-cardBorder dark:border-darkCardBorder my-4"></div>
 
           {/* Progress Section */}
           <div className="mb-6">
             <div className="flex justify-between items-center mb-1">
-              <span className="text-[12px] text-gray-600">Plan recommendation</span>
-              <span className="text-[12px] font-medium text-gray-900">{progress}%</span>
+              <span className="text-[12px] text-textActivity dark:text-darkTextActivity">Plan recommendation</span>
+              <span className="text-[12px] font-medium text-textHeavyTitle dark:text-darkTextHeavyTitle">{progress}%</span>
             </div>
-            <div className="h-[3px] bg-gray-200 rounded-full w-full">
+            <div className="h-[3px] bg-gray-200 dark:bg-gray-700 rounded-full w-full">
               <div 
-                className="h-[3px] bg-blue-500 rounded-full transition-all duration-200" 
+                className="h-[3px] bg-listSelected dark:bg-darkListSelected rounded-full transition-all duration-200" 
                 style={{ width: `${progress}%` }}
               ></div>
             </div>
           </div>
 
           {/* Divider */}
-          <div className="border-t border-gray-200 my-4"></div>
+          <div className="border-t border-cardBorder dark:border-darkCardBorder my-4"></div>
 
           {/* Options Section */}
           <div className="mt-6">
             {step === 1 ? (
               <>
-                <h3 className="text-[16px] font-semibold text-gray-900 mb-1">
+                <h3 className="text-[16px] font-semibold text-textHeavyTitle dark:text-darkTextHeavyTitle mb-1">
                   {firstName}, which of these best describes your primary goal for using Premium?
                 </h3>
-                <p className="text-[14px] text-gray-800 mb-4">
+                <p className="text-[14px] text-textContent dark:text-darkTextContent mb-4">
                   We'll recommend the right plan for you.
                 </p>
 
                 <div className="space-y-2 mb-6">
                   <div 
-                    className={`p-3 rounded-lg cursor-pointer transition-colors ${selectedOptions.personal ? 'bg-green-50' : 'hover:bg-gray-50'}`}
+                    className={`p-3 rounded-lg cursor-pointer transition-colors ${
+                      selectedOptions.personal 
+                        ? 'bg-green-100 dark:bg-green-900' 
+                        : 'hover:bg-cardBackgroundHover dark:hover:bg-darkCardBackgroundHover'
+                    }`}
                     onClick={() => handleOptionChange('personal')}
                   >
                     <div className="flex items-center">
-                      <div className={`mr-2 h-4 w-4 rounded border ${selectedOptions.personal ? 'bg-green-500 border-green-500 flex items-center justify-center' : 'bg-white border-gray-300'}`}>
+                      <div className={`mr-2 h-4 w-4 rounded border ${
+                        selectedOptions.personal 
+                          ? 'bg-green-500 border-green-500 dark:bg-green-600 dark:border-green-600 flex items-center justify-center' 
+                          : 'bg-white dark:bg-gray-700 border-gray-300 dark:border-gray-600'
+                      }`}>
                         {selectedOptions.personal && (
                           <svg className="w-2.5 h-2.5 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M5 13l4 4L19 7" />
                           </svg>
                         )}
                       </div>
-                      <label className="text-[14px] text-gray-900 font-medium">
+                      <label className="text-[14px] text-textHeavyTitle dark:text-darkTextHeavyTitle font-medium">
                         I'd use Premium for my personal goals
                       </label>
                     </div>
                   </div>
 
                   <div 
-                    className={`p-3 rounded-lg cursor-pointer transition-colors ${selectedOptions.job ? 'bg-green-50' : 'hover:bg-gray-50'}`}
+                    className={`p-3 rounded-lg cursor-pointer transition-colors ${
+                      selectedOptions.job 
+                        ? 'bg-green-100 dark:bg-green-900' 
+                        : 'hover:bg-cardBackgroundHover dark:hover:bg-darkCardBackgroundHover'
+                    }`}
                     onClick={() => handleOptionChange('job')}
                   >
                     <div className="flex items-center">
-                      <div className={`mr-2 h-4 w-4 rounded border ${selectedOptions.job ? 'bg-green-500 border-green-500 flex items-center justify-center' : 'bg-white border-gray-300'}`}>
+                      <div className={`mr-2 h-4 w-4 rounded border ${
+                        selectedOptions.job 
+                          ? 'bg-green-500 border-green-500 dark:bg-green-600 dark:border-green-600 flex items-center justify-center' 
+                          : 'bg-white dark:bg-gray-700 border-gray-300 dark:border-gray-600'
+                      }`}>
                         {selectedOptions.job && (
                           <svg className="w-2.5 h-2.5 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M5 13l4 4L19 7" />
                           </svg>
                         )}
                       </div>
-                      <label className="text-[14px] text-gray-900 font-medium">
+                      <label className="text-[14px] text-textHeavyTitle dark:text-darkTextHeavyTitle font-medium">
                         I'd use Premium as part of my job
                       </label>
                     </div>
                   </div>
 
                   <div 
-                    className={`p-3 rounded-lg cursor-pointer transition-colors ${selectedOptions.other ? 'bg-green-50' : 'hover:bg-gray-50'}`}
+                    className={`p-3 rounded-lg cursor-pointer transition-colors ${
+                      selectedOptions.other 
+                        ? 'bg-green-100 dark:bg-green-900' 
+                        : 'hover:bg-cardBackgroundHover dark:hover:bg-darkCardBackgroundHover'
+                    }`}
                     onClick={() => handleOptionChange('other')}
                   >
                     <div className="flex items-center">
-                      <div className={`mr-2 h-4 w-4 rounded border ${selectedOptions.other ? 'bg-green-500 border-green-500 flex items-center justify-center' : 'bg-white border-gray-300'}`}>
+                      <div className={`mr-2 h-4 w-4 rounded border ${
+                        selectedOptions.other 
+                          ? 'bg-green-500 border-green-500 dark:bg-green-600 dark:border-green-600 flex items-center justify-center' 
+                          : 'bg-white dark:bg-gray-700 border-gray-300 dark:border-gray-600'
+                      }`}>
                         {selectedOptions.other && (
                           <svg className="w-2.5 h-2.5 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M5 13l4 4L19 7" />
                           </svg>
                         )}
                       </div>
-                      <label className="text-[14px] text-gray-900 font-medium">
+                      <label className="text-[14px] text-textHeavyTitle dark:text-darkTextHeavyTitle font-medium">
                         Other
                       </label>
                     </div>
@@ -288,10 +312,10 @@ const PremiumPlan = () => {
               </>
             ) : step === 2 ? (
               <>
-                <h3 className="text-[16px] font-semibold text-gray-900 mb-1">
+                <h3 className="text-[16px] font-semibold text-textHeavyTitle dark:text-darkTextHeavyTitle mb-1">
                   You're 2.6x more likely to get hired with Premium. What's key to your job search?
                 </h3>
-                <p className="text-[14px] text-gray-800 mb-4">
+                <p className="text-[14px] text-textContent dark:text-darkTextContent mb-4">
                   We'll recommend the right plan for you.
                 </p>
 
@@ -306,18 +330,26 @@ const PremiumPlan = () => {
                   ].map((option) => (
                     <div 
                       key={option.id}
-                      className={`p-3 rounded-lg cursor-pointer transition-colors border ${selectedOptions[option.id] ? 'border-green-500 bg-green-50' : 'border-gray-200 hover:bg-gray-50'}`}
+                      className={`p-3 rounded-lg cursor-pointer transition-colors border ${
+                        selectedOptions[option.id] 
+                          ? 'border-green-500 dark:border-green-600 bg-green-100 dark:bg-green-900' 
+                          : 'border-cardBorder dark:border-darkCardBorder hover:bg-cardBackgroundHover dark:hover:bg-darkCardBackgroundHover'
+                      }`}
                       onClick={() => handleOptionChange(option.id)}
                     >
                       <div className="flex items-center">
-                        <div className={`mr-3 flex items-center justify-center h-5 w-5 rounded border-2 ${selectedOptions[option.id] ? 'border-green-500 bg-green-500' : 'border-gray-300 bg-white'}`}>
+                        <div className={`mr-3 flex items-center justify-center h-5 w-5 rounded border-2 ${
+                          selectedOptions[option.id] 
+                            ? 'border-green-500 dark:border-green-600 bg-green-500 dark:bg-green-600' 
+                            : 'border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700'
+                        }`}>
                           {selectedOptions[option.id] && (
                             <svg className="w-3 h-3 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M5 13l4 4L19 7" />
                             </svg>
                           )}
                         </div>
-                        <label className="text-[14px] text-gray-900 font-medium">
+                        <label className="text-[14px] text-textHeavyTitle dark:text-darkTextHeavyTitle font-medium">
                           {option.label}
                         </label>
                       </div>
@@ -327,13 +359,13 @@ const PremiumPlan = () => {
               </>
             ) : step === 3 ? (
               <>
-                <h3 className="text-[16px] font-semibold text-gray-900 mb-1">
+                <h3 className="text-[16px] font-semibold text-textHeavyTitle dark:text-darkTextHeavyTitle mb-1">
                   {firstName}, how would you like Premium to help?
                 </h3>
-                <p className="text-[14px] text-gray-800 mb-4">
+                <p className="text-[14px] text-textContent dark:text-darkTextContent mb-4">
                   We'll recommend the right plan for you.
                 </p>
-                <p className="text-[12px] text-gray-600 mb-2 font-medium">Required</p>
+                <p className="text-[12px] text-textPlaceholder dark:text-darkTextPlaceholder mb-2 font-medium">Required</p>
 
                 <div className="space-y-2 mb-6">
                   {[
@@ -346,18 +378,26 @@ const PremiumPlan = () => {
                   ].map((option) => (
                     <div 
                       key={option.id}
-                      className={`p-3 rounded-lg cursor-pointer transition-colors border ${selectedOptions[option.id] ? 'border-green-500 bg-green-50' : 'border-gray-200 hover:bg-gray-50'}`}
+                      className={`p-3 rounded-lg cursor-pointer transition-colors border ${
+                        selectedOptions[option.id] 
+                          ? 'border-green-500 dark:border-green-600 bg-green-100 dark:bg-green-900' 
+                          : 'border-cardBorder dark:border-darkCardBorder hover:bg-cardBackgroundHover dark:hover:bg-darkCardBackgroundHover'
+                      }`}
                       onClick={() => handleOptionChange(option.id)}
                     >
                       <div className="flex items-center">
-                        <div className={`mr-3 flex items-center justify-center h-5 w-5 rounded border-2 ${selectedOptions[option.id] ? 'border-green-500 bg-green-500' : 'border-gray-300 bg-white'}`}>
+                        <div className={`mr-3 flex items-center justify-center h-5 w-5 rounded border-2 ${
+                          selectedOptions[option.id] 
+                            ? 'border-green-500 dark:border-green-600 bg-green-500 dark:bg-green-600' 
+                            : 'border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700'
+                        }`}>
                           {selectedOptions[option.id] && (
                             <svg className="w-3 h-3 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M5 13l4 4L19 7" />
                             </svg>
                           )}
                         </div>
-                        <label className="text-[14px] text-gray-900 font-medium">
+                        <label className="text-[14px] text-textHeavyTitle dark:text-darkTextHeavyTitle font-medium">
                           {option.label}
                         </label>
                       </div>
@@ -367,13 +407,13 @@ const PremiumPlan = () => {
               </>
             ) : step === 4 ? (
               <>
-                <h3 className="text-[16px] font-semibold text-gray-900 mb-1">
+                <h3 className="text-[16px] font-semibold text-textHeavyTitle dark:text-darkTextHeavyTitle mb-1">
                   What is most important for you in developing your skills?
                 </h3>
-                <p className="text-[14px] text-gray-800 mb-4">
+                <p className="text-[14px] text-textContent dark:text-darkTextContent mb-4">
                   We'll recommend the right plan for you.
                 </p>
-                <p className="text-[12px] text-gray-600 mb-2 font-medium">Required</p>
+                <p className="text-[12px] text-textPlaceholder dark:text-darkTextPlaceholder mb-2 font-medium">Required</p>
 
                 <div className="space-y-2 mb-6">
                   {[
@@ -386,18 +426,26 @@ const PremiumPlan = () => {
                   ].map((option) => (
                     <div 
                       key={option.id}
-                      className={`p-3 rounded-lg cursor-pointer transition-colors border ${selectedOptions[option.id] ? 'border-green-500 bg-green-50' : 'border-gray-200 hover:bg-gray-50'}`}
+                      className={`p-3 rounded-lg cursor-pointer transition-colors border ${
+                        selectedOptions[option.id] 
+                          ? 'border-green-500 dark:border-green-600 bg-green-100 dark:bg-green-900' 
+                          : 'border-cardBorder dark:border-darkCardBorder hover:bg-cardBackgroundHover dark:hover:bg-darkCardBackgroundHover'
+                      }`}
                       onClick={() => handleOptionChange(option.id)}
                     >
                       <div className="flex items-center">
-                        <div className={`mr-3 flex items-center justify-center h-5 w-5 rounded border-2 ${selectedOptions[option.id] ? 'border-green-500 bg-green-500' : 'border-gray-300 bg-white'}`}>
+                        <div className={`mr-3 flex items-center justify-center h-5 w-5 rounded border-2 ${
+                          selectedOptions[option.id] 
+                            ? 'border-green-500 dark:border-green-600 bg-green-500 dark:bg-green-600' 
+                            : 'border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700'
+                        }`}>
                           {selectedOptions[option.id] && (
                             <svg className="w-3 h-3 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M5 13l4 4L19 7" />
                             </svg>
                           )}
                         </div>
-                        <label className="text-[14px] text-gray-900 font-medium">
+                        <label className="text-[14px] text-textHeavyTitle dark:text-darkTextHeavyTitle font-medium">
                           {option.label}
                         </label>
                       </div>
@@ -407,13 +455,13 @@ const PremiumPlan = () => {
               </>
             ) : step === 5 ? (
               <>
-                <h3 className="text-[16px] font-semibold text-gray-900 mb-1">
+                <h3 className="text-[16px] font-semibold text-textHeavyTitle dark:text-darkTextHeavyTitle mb-1">
                   Reach up to 3.4x more candidates with Recruiter Lite. What are your top hiring goals?
                 </h3>
-                <p className="text-[14px] text-gray-800 mb-4">
+                <p className="text-[14px] text-textContent dark:text-darkTextContent mb-4">
                   We'll recommend the right plan for you.
                 </p>
-                <p className="text-[12px] text-gray-600 mb-2 font-medium">Required</p>
+                <p className="text-[12px] text-textPlaceholder dark:text-darkTextPlaceholder mb-2 font-medium">Required</p>
 
                 <div className="space-y-2 mb-6">
                   {[
@@ -425,18 +473,26 @@ const PremiumPlan = () => {
                   ].map((option) => (
                     <div 
                       key={option.id}
-                      className={`p-3 rounded-lg cursor-pointer transition-colors border ${selectedOptions[option.id] ? 'border-green-500 bg-green-50' : 'border-gray-200 hover:bg-gray-50'}`}
+                      className={`p-3 rounded-lg cursor-pointer transition-colors border ${
+                        selectedOptions[option.id] 
+                          ? 'border-green-500 dark:border-green-600 bg-green-100 dark:bg-green-900' 
+                          : 'border-cardBorder dark:border-darkCardBorder hover:bg-cardBackgroundHover dark:hover:bg-darkCardBackgroundHover'
+                      }`}
                       onClick={() => handleOptionChange(option.id)}
                     >
                       <div className="flex items-center">
-                        <div className={`mr-3 flex items-center justify-center h-5 w-5 rounded border-2 ${selectedOptions[option.id] ? 'border-green-500 bg-green-500' : 'border-gray-300 bg-white'}`}>
+                        <div className={`mr-3 flex items-center justify-center h-5 w-5 rounded border-2 ${
+                          selectedOptions[option.id] 
+                            ? 'border-green-500 dark:border-green-600 bg-green-500 dark:bg-green-600' 
+                            : 'border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700'
+                        }`}>
                           {selectedOptions[option.id] && (
                             <svg className="w-3 h-3 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M5 13l4 4L19 7" />
                             </svg>
                           )}
                         </div>
-                        <label className="text-[14px] text-gray-900 font-medium">
+                        <label className="text-[14px] text-textHeavyTitle dark:text-darkTextHeavyTitle font-medium">
                           {option.label}
                         </label>
                       </div>
@@ -448,32 +504,32 @@ const PremiumPlan = () => {
               // Final Step (Step 6)
               <>
                 <div className="text-center mb-6">
-                  <h3 className="text-[20px] font-bold text-gray-900 mb-2">Premium Plan Recommendation</h3>
-                  <p className="text-[14px] text-gray-600 mb-4">Based on your selections, we recommend:</p>
+                  <h3 className="text-[20px] font-bold text-textHeavyTitle dark:text-darkTextHeavyTitle mb-2">Premium Plan Recommendation</h3>
+                  <p className="text-[14px] text-textActivity dark:text-darkTextActivity mb-4">Based on your selections, we recommend:</p>
                   
-                  <div className="bg-blue-50 p-4 rounded-lg border border-blue-200 mb-4">
-                    <h4 className="text-[18px] font-semibold text-blue-800 mb-2">LinkedIn Premium Career</h4>
-                    <p className="text-[14px] text-gray-700">Best for job seekers and career growth</p>
+                  <div className="bg-blue-100 dark:bg-blue-900 p-4 rounded-lg border border-blue-200 dark:border-blue-700 mb-4">
+                    <h4 className="text-[18px] font-semibold text-blue-800 dark:text-blue-300 mb-2">LinkedIn Premium Career</h4>
+                    <p className="text-[14px] text-textContent dark:text-darkTextContent">Best for job seekers and career growth</p>
                   </div>
 
-                  <div className="border-t border-gray-200 my-4"></div>
+                  <div className="border-t border-cardBorder dark:border-darkCardBorder my-4"></div>
 
                   <div className="text-left mb-6">
-                    <p className="text-[16px] font-medium text-gray-900 mb-2">
+                    <p className="text-[16px] font-medium text-textHeavyTitle dark:text-darkTextHeavyTitle mb-2">
                       Price: <span className="line-through">EGP5,499.99</span>* 1-month free trial
                     </p>
-                    <p className="text-[14px] text-gray-700 mb-4">
+                    <p className="text-[14px] text-textContent dark:text-darkTextContent mb-4">
                       After your free month, pay as little as <span className="line-through">EGP5,499.99</span> EGP4,599.00* / month (save 16%) when billed annually. Cancel anytime. We'll remind you 7 days before your trial ends.
                     </p>
                   </div>
 
                   <button
                     onClick={() => navigate('/checkout')}
-                    className="w-full py-3 px-6 bg-green-600 hover:bg-green-700 text-white font-medium rounded-full transition-colors text-[16px]"
+                    className="w-full py-3 px-6 bg-buttonSubmitEnable hover:bg-buttonSubmitEnableHover text-white font-medium rounded-full transition-colors text-[16px]"
                   >
                     Start free trial
                   </button>
-                  <p className="text-[12px] text-gray-500 mt-2">Secure checkout</p>
+                  <p className="text-[12px] text-textPlaceholder dark:text-darkTextPlaceholder mt-2">Secure checkout</p>
                 </div>
               </>
             )}
@@ -484,7 +540,7 @@ const PremiumPlan = () => {
                 {step > 1 && (
                   <button
                     onClick={handleBack}
-                    className="py-2 px-4 font-medium rounded-full transition-colors text-[14px] text-gray-700 hover:bg-gray-100"
+                    className="py-2 px-4 font-medium rounded-full transition-colors text-[14px] text-textActivity dark:text-darkTextActivity hover:bg-cardBackgroundHover dark:hover:bg-darkCardBackgroundHover"
                   >
                     Back
                   </button>
@@ -494,11 +550,11 @@ const PremiumPlan = () => {
                   disabled={isNextDisabled() || isAnimating}
                   className={`py-2 px-4 font-medium rounded-full transition-colors text-[14px] ml-auto ${
                     isNextDisabled() || isAnimating
-                      ? 'bg-gray-200 text-gray-500 cursor-not-allowed' 
-                      : 'bg-blue-600 hover:bg-blue-700 text-white'
+                      ? 'bg-gray-200 dark:bg-gray-700 text-gray-500 dark:text-gray-400 cursor-not-allowed' 
+                      : 'bg-buttonSubmitEnable hover:bg-buttonSubmitEnableHover text-white'
                   }`}
                 >
-                    Next
+                  Next
                 </button>
               </div>
             )}
