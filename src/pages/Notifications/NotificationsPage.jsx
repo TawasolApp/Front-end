@@ -195,7 +195,7 @@ const NotificationsPage = () => {
       switch (notification.type) {
         case "React":
         case "Comment":
-          navigate(`/post/${notification.rootItemId}`);
+          navigate(`/feed/${notification.rootItemId}`);
           break;
         case "Connection":
           navigate(`/profile/${notification.referenceId}`);
