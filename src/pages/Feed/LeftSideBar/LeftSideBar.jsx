@@ -22,6 +22,7 @@ const LeftSideBar = () => {
   const currentAuthorbackgroundImage = useSelector(
     (state) => state.authentication.coverPhoto,
   );
+  const currentAuthorType = useSelector((state) => state.authentication.type);
 
   // Effect to check if we're in top position (mobile/tablet) based on screen width
   useEffect(() => {
@@ -52,13 +53,17 @@ const LeftSideBar = () => {
           <Avatar
             src={currentAuthorPicture}
             alt={currentAuthorName}
-            sx={{ width: 64, height: 64 }}
+            sx={{
+              width: 64,
+              height: 64,
+              borderRadius: currentAuthorType === "Company" ? "0px" : "50%",
+            }}
             className="border-2 border-white cursor-pointer"
           />
         </div>
       </div>
 
-      <Link to={`/users/${currentAuthorId}`}>
+      <Link to={`/${currentAuthorType === "Company" ? "company" : "users"}/${currentAuthorId}`}>
         <div className="pt-10 pb-4 text-center px-2">
           <h2 className="font-semibold text-base text-authorName">
             {currentAuthorName}

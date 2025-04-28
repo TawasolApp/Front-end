@@ -48,7 +48,7 @@ const ActorHeader = ({
               }
               className="block max-w-full"
             >
-              <h3 className="font-medium text-sm text-authorName hover:text-authorNameHover hover:underline truncate">
+              <h3 className="font-medium text-sm text-authorName hover:text-authorNameHover hover:underline">
                 {authorName}
               </h3>
               <p className="text-xs font-semibold text-authorBio mt-px truncate max-w-full">
