@@ -198,13 +198,13 @@ const NotificationsPage = () => {
           navigate(`/feed/${notification.rootItemId}`);
           break;
         case "Connection":
-          navigate(`/profile/${notification.referenceId}`);
+          navigate(`/users/${notification.referenceId}`);
           break;
         default:
           if (notification.rootItemId) {
-            navigate(`/post/${notification.rootItemId}`);
+            navigate(`/feed/${notification.rootItemId}`);
           } else if (notification.referenceId) {
-            navigate(`/profile/${notification.referenceId}`);
+            navigate(`/users/${notification.referenceId}`);
           }
       }
     }
