@@ -9,7 +9,7 @@ import EducationPage from "../pages/UserProfile/Components/Pages/EducationPage";
 import ExperiencePage from "../pages/UserProfile/Components/Pages/ExperiencePage";
 import CertificationsPage from "../pages/UserProfile/Components/Pages/CertificationsPage";
 import SkillsPage from "../pages/UserProfile/Components/Pages/SkillsPage";
-import UserPostsPage from "../pages/UserProfile/Components/UserPostsSlider/UserPostsPage.jsx";
+import UserPostsPage from "../pages/UserProfile/Components/UserPostsSlider/UserPostsPage";
 
 import CompanyLayout from "../pages/Company/CompanyLayout";
 import PostsPage from "../pages/Company/Components/Pages/PostsPage";
@@ -22,7 +22,7 @@ import ConnectionPage from "../pages/MyNetwork/Connections/ConnectionPage";
 import BlockedPage from "../pages/MyNetwork/BlockedPage";
 import FollowPage from "../pages/MyNetwork/FollowPage";
 import ManageConnections from "../pages/MyNetwork/ManageConnections";
-import NetworkBox from "../pages/MyNetwork/NetworkBox.jsx";
+import NetworkBox from "../pages/MyNetwork/NetworkBox";
 
 import FeedContainer from "../pages/Feed/FeedContainer";
 import SinglePost from "../pages/Feed/SinglePost";
@@ -30,29 +30,26 @@ import SavedPostsContainer from "../pages/Saved/SavedPostsContainer";
 import RepostsContainer from "../pages/Feed/RepostsContainer";
 
 import JobsContainer from "../pages/Jobs/JobsContainer";
+import SavedJobsContainer from "../pages/Saved/SavedJobsContainer";
+import AppliedJobContainer from "../pages/Saved/AppliedJobsContainer";
+import JobsCompanyContainer from "../pages/Jobs/JobsCompanyContainer";
+import SingleJob from "../pages/Jobs/SingleJob";
 
 import SearchContainer from "../pages/Search/SearchContainer";
 import TawasolNavbar from "../layouts/TawasolNavbar";
-import ThemeSettings from "../pages/Settings/ThemeSettings.jsx";
-import DeleteAccount from "../pages/Settings/DeleteAccount.jsx";
-import Error404 from "../pages/Error/Error404.jsx";
-import SingleJob from "../pages/Jobs/SingleJob.jsx";
-import SavedJobsContainer from "../pages/Saved/SavedJobsContainer.jsx";
-import AppliedJobContainer from "../pages/Saved/AppliedJobsContainer.jsx";
-import JobsCompanyContainer from "../pages/Jobs/JobsCompanyContainer.jsx";
+import ThemeSettings from "../pages/Settings/ThemeSettings";
+import DeleteAccount from "../pages/Settings/DeleteAccount";
+import Error404 from "../pages/Error/Error404";
 
-import AdminPanel from "../pages/AdminPanel/AdminPanel.jsx";
-import BlockedUsersPage from "../pages/Settings/BlockedUsersPage.jsx";
-import ProfileVisibilityPage from "../pages/Settings/ProfileVisibilityPage.jsx";
+import AdminPanel from "../pages/AdminPanel/AdminPanel";
+import BlockedUsersPage from "../pages/Settings/BlockedUsersPage";
+import ProfileVisibilityPage from "../pages/Settings/ProfileVisibilityPage";
 
-import NotificationsPage from "../pages/Notifications/NotificationsPage.jsx";
+import NotificationsPage from "../pages/Notifications/NotificationsPage";
 
-import PremiumPlan from "../pages/PremiumPlan/PremiumPlan.jsx";
-import CheckoutPage from "../pages/PremiumPlan/checkout.jsx";
-import CurrentPlanPage from "../pages/PremiumPlan/CurrentPlanPage.jsx";
-
-
-
+import PremiumPlan from "../pages/PremiumPlan/PremiumPlan";
+import CheckoutPage from "../pages/PremiumPlan/checkout";
+import CurrentPlanPage from "../pages/PremiumPlan/CurrentPlanPage";
 
 const RenderWithNavbar = (component) => {
   return (
@@ -114,9 +111,9 @@ const ProtectedRoutes = () => {
       <Route path="/network-box" element={RenderWithNavbar(<NetworkBox />)} />
       <Route path="/notifications" element={RenderWithNavbar(<NotificationsPage />)} />
 
-      <Route path="/premium" element={<PremiumPlan />} />
-      <Route path="/checkout" element={<CheckoutPage />} />
-      <Route path="/current-plan" element={<CurrentPlanPage />} />
+      <Route path="/premium" element={RenderWithNavbar(<PremiumPlan />)} />
+      <Route path="/checkout" element={RenderWithNavbar(<CheckoutPage />)} />
+      <Route path="/current-plan" element={RenderWithNavbar(<CurrentPlanPage />)} />
 
 
 
