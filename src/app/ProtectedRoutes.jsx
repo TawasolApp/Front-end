@@ -52,6 +52,7 @@ import PremiumPlan from "../pages/PremiumPlan/PremiumPlan";
 import CheckoutPage from "../pages/PremiumPlan/checkout";
 import CurrentPlanPage from "../pages/PremiumPlan/CurrentPlanPage";
 import ChangeState from "../pages/Settings/ChangeState";
+import LoadingPage from "../pages/LoadingScreen/LoadingPage";
 
 
 const RenderWithNavbar = (component) => {
@@ -119,8 +120,6 @@ const ProtectedRoutes = () => {
       <Route path="/checkout" element={RenderWithNavbar(<CheckoutPage />)} />
       <Route path="/current-plan" element={RenderWithNavbar(<CurrentPlanPage />)} />
 
-
-
       <Route path="/feed/:id" element={RenderWithNavbar(<SinglePost />)} />
       <Route path="/feed" element={RenderWithNavbar(<FeedContainer />)} />
       <Route
@@ -171,6 +170,7 @@ const ProtectedRoutes = () => {
       <Route path="/jobs/company/:companyId" element={RenderWithNavbar(<JobsCompanyContainer />)} />
 
       <Route path="error-404" element={<Error404 />} />
+      <Route path="/loadertest" element={<LoadingPage />} />
       <Route path="*" element={<Error404 />} />
     </Routes>
   );

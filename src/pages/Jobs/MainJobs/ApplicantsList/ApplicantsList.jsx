@@ -70,7 +70,7 @@ const ApplicantsList = ({ jobId, enableReturn }) => {
   const handleStatusUpdate = async (applicationId, newStatus) => {
     try {
       setUpdatingStatus(applicationId);
-      await axiosInstance.patch(`/application/${applicationId}/status`, {
+      await axiosInstance.patch(`/jobs/applications/${applicationId}/status`, {
         status: newStatus,
       });
 
