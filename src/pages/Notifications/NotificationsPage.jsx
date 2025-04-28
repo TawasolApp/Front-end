@@ -189,7 +189,7 @@ const NotificationsPage = () => {
       if (notification.type === "React" || notification.type === "Comment") {
         navigate(`/post/${notification.rootItemId}?highlight=${notification.referenceId}`);
       } else if (notification.type === "Connection") {
-        navigate(`/profile/${notification.referenceId}`);
+        navigate(`/users/${notification.referenceId}`);
       }
     } else {
       switch (notification.type) {
