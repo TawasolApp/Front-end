@@ -1,13 +1,13 @@
 import { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { axiosInstance } from "../../../../apis/axios";
-import { formatDate } from "../../../../utils/dates";
-import { FaExternalLinkAlt } from "react-icons/fa";
 import { toast } from "react-toastify";
+import { FaExternalLinkAlt } from "react-icons/fa";
 import LinkIcon from "@mui/icons-material/Link";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import MoreHorizIcon from "@mui/icons-material/MoreHoriz";
 import FlagIcon from "@mui/icons-material/Flag";
+import { axiosInstance } from "../../../../apis/axios";
+import { formatDate } from "../../../../utils/dates";
 import DropdownMenu from "../../../Feed/GenericComponents/DropdownMenu";
 import JobApplyModal from "../Apply/JobApplyModal";
 
@@ -95,15 +95,33 @@ const ErrorDisplay = ({ error, onRetry }) => (
 
 const StatusBadge = ({ status }) => {
   const statusConfig = {
-    Pending: { color: "bg-yellow-100 text-yellow-800", label: "Under Review", dot: "fill-yellow-500" },
-    Accepted: { color: "bg-green-100 text-green-800", label: "Accepted", dot: "fill-green-500" },
-    Rejected: { color: "bg-red-100 text-red-800", label: "Not Selected", dot: "fill-red-500" }
+    Pending: {
+      color: "bg-yellow-100 text-yellow-800",
+      label: "Under Review",
+      dot: "fill-yellow-500",
+    },
+    Accepted: {
+      color: "bg-green-100 text-green-800",
+      label: "Accepted",
+      dot: "fill-green-500",
+    },
+    Rejected: {
+      color: "bg-red-100 text-red-800",
+      label: "Not Selected",
+      dot: "fill-red-500",
+    },
   };
 
-  const config = statusConfig[status] || { color: "bg-gray-100 text-gray-800", label: status, dot: "fill-gray-500" };
+  const config = statusConfig[status] || {
+    color: "bg-gray-100 text-gray-800",
+    label: status,
+    dot: "fill-gray-500",
+  };
 
   return (
-    <div className={`inline-flex items-center px-3 py-1 rounded-full text-sm font-medium ${config.color}`}>
+    <div
+      className={`inline-flex items-center px-3 py-1 rounded-full text-sm font-medium ${config.color}`}
+    >
       <svg className={`w-2 h-2 mr-2 ${config.dot}`} viewBox="0 0 8 8">
         <circle cx="4" cy="4" r="3" />
       </svg>
@@ -153,7 +171,7 @@ const JobDescription = ({ jobId, enableReturn }) => {
         await axiosInstance.patch(`/jobs/${job.jobId}/save`);
         toast.success("Job saved");
       }
-      setJob(prev => ({ ...prev, isSaved: !prev.isSaved }));
+      setJob((prev) => ({ ...prev, isSaved: !prev.isSaved }));
     } catch (err) {
       toast.error("Failed to save job, please try again.");
     } finally {
@@ -241,7 +259,9 @@ const JobDescription = ({ jobId, enableReturn }) => {
             <span className="text-textPlaceholder">·</span>
           </>
         )}
-        <span className="text-green-600 font-bold">{job.applicants} clicked apply</span>
+        <span className="text-green-600 font-bold">
+          {job.applicants} clicked apply
+        </span>
       </div>
 
       {/* Employment Details */}
@@ -261,7 +281,7 @@ const JobDescription = ({ jobId, enableReturn }) => {
       {/* Action Buttons */}
       <div className="flex gap-3 mb-8">
         <button
-          className={`${job.status ? "bg-buttonSubmitDisable cursor-not-allowed" : "bg-buttonSubmitEnable hover:bg-buttonSubmitEnableHover"} text-buttonSubmitText
+          className={`${job.status ? "bg-buttonSubmitDisable cursor-not-allowed" : "bg-buttonSubmitEnable hover:bg-buttonSubmitEnableHover text-buttonSubmitText"} 
                     px-6 py-2 rounded-full transition-colors font-semibold text-base flex items-center gap-2`}
           disabled={job.status}
           onClick={() => setShowApplyModal(true)}
@@ -269,7 +289,7 @@ const JobDescription = ({ jobId, enableReturn }) => {
           <FaExternalLinkAlt className="w-4 h-4" />
           Apply
         </button>
-        
+
         <button
           className="border border-buttonSubmitEnable hover:border-buttonSubmitEnableHover
                    text-buttonSubmitEnable hover:text-buttonSubmitEnableHover
@@ -282,13 +302,27 @@ const JobDescription = ({ jobId, enableReturn }) => {
           {saving ? (
             <>
               <svg className="animate-spin h-5 w-5" viewBox="0 0 24 24">
-                <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" fill="none"/>
-                <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"/>
+                <circle
+                  className="opacity-25"
+                  cx="12"
+                  cy="12"
+                  r="10"
+                  stroke="currentColor"
+                  strokeWidth="4"
+                  fill="none"
+                />
+                <path
+                  className="opacity-75"
+                  fill="currentColor"
+                  d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+                />
               </svg>
               {job.isSaved ? "Unsaving..." : "Saving..."}
             </>
+          ) : job.isSaved ? (
+            "Unsave"
           ) : (
-            job.isSaved ? "Unsave" : "Save"
+            "Save"
           )}
         </button>
       </div>
@@ -296,17 +330,23 @@ const JobDescription = ({ jobId, enableReturn }) => {
       {/* Job Description */}
       {job.description && (
         <div className="mb-6">
-          <h2 className="text-xl font-semibold text-header mb-4">About the job</h2>
-          <p className="text-textContent whitespace-pre-wrap">{job.description}</p>
+          <h2 className="text-xl font-semibold text-header mb-4">
+            About the job
+          </h2>
+          <p className="text-textContent whitespace-pre-wrap">
+            {job.description}
+          </p>
         </div>
       )}
 
       {showApplyModal && (
         <JobApplyModal
-          isOpen={showApplyModal}
           onClose={() => setShowApplyModal(false)}
           jobId={jobId}
           companyName={job.companyName}
+          onApply={() => {
+            fetchJob(); // Refresh job data after applying
+          }}
         />
       )}
     </div>

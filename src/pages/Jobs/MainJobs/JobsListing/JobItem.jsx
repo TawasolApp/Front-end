@@ -1,7 +1,7 @@
 import React from "react";
+import { toast } from "react-toastify";
 import DeleteIcon from "@mui/icons-material/Delete";
 import { axiosInstance } from "../../../../apis/axios";
-import { toast } from "react-toastify";
 
 const JobItem = ({ job, isSelected, isAdmin, onDelete }) => {
   const handleDelete = async (e) => {
