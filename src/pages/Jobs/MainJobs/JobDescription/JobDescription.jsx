@@ -1,13 +1,13 @@
 import { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { axiosInstance } from "../../../../apis/axios";
-import { formatDate } from "../../../../utils/dates";
-import { FaExternalLinkAlt } from "react-icons/fa";
 import { toast } from "react-toastify";
+import { FaExternalLinkAlt } from "react-icons/fa";
 import LinkIcon from "@mui/icons-material/Link";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import MoreHorizIcon from "@mui/icons-material/MoreHoriz";
 import FlagIcon from "@mui/icons-material/Flag";
+import { axiosInstance } from "../../../../apis/axios";
+import { formatDate } from "../../../../utils/dates";
 import DropdownMenu from "../../../Feed/GenericComponents/DropdownMenu";
 import JobApplyModal from "../Apply/JobApplyModal";
 

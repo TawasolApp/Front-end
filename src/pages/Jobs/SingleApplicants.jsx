@@ -1,5 +1,5 @@
-import ApplicantsList from "./MainJobs/ApplicantsList/ApplicantsList";
 import { useParams } from "react-router-dom";
+import ApplicantsList from "./MainJobs/ApplicantsList/ApplicantsList";
 
 const SingleApplicants = () => {
   const { id } = useParams();

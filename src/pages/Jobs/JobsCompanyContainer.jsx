@@ -1,7 +1,7 @@
-import { useNavigate, useParams } from "react-router-dom";
-import MainJobs from "./MainJobs/MainJobs";
 import { useEffect, useState } from "react";
+import { useNavigate, useParams } from "react-router-dom";
 import { axiosInstance } from "../../apis/axios";
+import MainJobs from "./MainJobs/MainJobs";
 
 const JobsCompanyContainer = () => {
   const {companyId} = useParams();

@@ -1,6 +1,6 @@
 import { useState } from "react";
-import { axiosInstance } from "../../../../apis/axios";
 import { toast } from "react-toastify";
+import { axiosInstance } from "../../../../apis/axios";
 import CloseIcon from "@mui/icons-material/Close";
 
 const JobApplyModal = ({ jobId, companyName, onClose, onApply }) => {
