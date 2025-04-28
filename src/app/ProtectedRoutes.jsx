@@ -34,6 +34,7 @@ import SavedJobsContainer from "../pages/Saved/SavedJobsContainer";
 import AppliedJobContainer from "../pages/Saved/AppliedJobsContainer";
 import JobsCompanyContainer from "../pages/Jobs/JobsCompanyContainer";
 import SingleJob from "../pages/Jobs/SingleJob";
+import SingleApplicants from "../pages/Jobs/SingleApplicants";
 
 import SearchContainer from "../pages/Search/SearchContainer";
 import TawasolNavbar from "../layouts/TawasolNavbar";
@@ -50,6 +51,7 @@ import NotificationsPage from "../pages/Notifications/NotificationsPage";
 import PremiumPlan from "../pages/PremiumPlan/PremiumPlan";
 import CheckoutPage from "../pages/PremiumPlan/checkout";
 import CurrentPlanPage from "../pages/PremiumPlan/CurrentPlanPage";
+
 
 const RenderWithNavbar = (component) => {
   return (
@@ -159,6 +161,10 @@ const ProtectedRoutes = () => {
       <Route
         path="/jobs/:id"
         element={RenderWithNavbar(<SingleJob />)}
+      />
+      <Route
+        path="/applicants/:id"
+        element={RenderWithNavbar(<SingleApplicants />)}
       />
       <Route path="/jobs/company/:companyId" element={RenderWithNavbar(<JobsCompanyContainer />)} />
 
