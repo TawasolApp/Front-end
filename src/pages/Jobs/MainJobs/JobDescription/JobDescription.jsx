@@ -261,7 +261,7 @@ const JobDescription = ({ jobId, enableReturn }) => {
       {/* Action Buttons */}
       <div className="flex gap-3 mb-8">
         <button
-          className={`${job.status ? "bg-buttonSubmitDisable cursor-not-allowed" : "bg-buttonSubmitEnable hover:bg-buttonSubmitEnableHover"} text-buttonSubmitText
+          className={`${job.status ? "bg-buttonSubmitDisable cursor-not-allowed" : "bg-buttonSubmitEnable hover:bg-buttonSubmitEnableHover text-buttonSubmitText"} 
                     px-6 py-2 rounded-full transition-colors font-semibold text-base flex items-center gap-2`}
           disabled={job.status}
           onClick={() => setShowApplyModal(true)}

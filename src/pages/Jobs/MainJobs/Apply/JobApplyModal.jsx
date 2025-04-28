@@ -19,10 +19,10 @@ const JobApplyModal = ({ jobId, companyName, onClose, isOpen }) => {
 
     try {
       setLoading(true);
-      await axiosInstance.post("/job/apply", {
+      await axiosInstance.post("/jobs/apply", {
         jobId: jobId,
         phoneNumber: phoneNumber,
-        resumeURL: "",
+        resumeURL: "https://example.com/resume.pdf", // TODO: Replace with actual resume URL
       });
 
       toast.success("Application submitted successfully.", {
