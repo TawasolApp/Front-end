@@ -303,10 +303,12 @@ const JobDescription = ({ jobId, enableReturn }) => {
 
       {showApplyModal && (
         <JobApplyModal
-          isOpen={showApplyModal}
           onClose={() => setShowApplyModal(false)}
           jobId={jobId}
           companyName={job.companyName}
+          onApply={() => {
+            fetchJob(); // Refresh job data after applying
+          }}
         />
       )}
     </div>

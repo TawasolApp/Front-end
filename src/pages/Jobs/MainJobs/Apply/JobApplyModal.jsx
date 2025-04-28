@@ -3,7 +3,7 @@ import { axiosInstance } from "../../../../apis/axios";
 import { toast } from "react-toastify";
 import CloseIcon from "@mui/icons-material/Close";
 
-const JobApplyModal = ({ jobId, companyName, onClose, isOpen }) => {
+const JobApplyModal = ({ jobId, companyName, onClose, onApply }) => {
   const [phoneNumber, setPhoneNumber] = useState("");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
@@ -29,6 +29,7 @@ const JobApplyModal = ({ jobId, companyName, onClose, isOpen }) => {
         position: "bottom-left",
         autoClose: 3000,
       });
+      onApply();
       onClose();
     } catch (err) {
       setError(err.response?.data?.message || "Failed to submit application");
@@ -36,8 +37,6 @@ const JobApplyModal = ({ jobId, companyName, onClose, isOpen }) => {
       setLoading(false);
     }
   };
-
-  if (!isOpen) return null;
 
   return (
     <div className="fixed inset-0 z-50 overflow-hidden">
