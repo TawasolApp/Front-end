@@ -73,15 +73,13 @@ const JobListing = ({ API_URL, filters, isAdmin = false }) => {
         };
 
         Object.keys(params).forEach(
-          (key) => params[key] === undefined && delete params[key]
+          (key) => params[key] === undefined && delete params[key],
         );
 
         const response = await axiosInstance.get(API_URL, { params });
         const newJobs = response.data.jobs ? response.data.jobs : response.data;
 
-        setJobs((prev) => 
-          isNewFilter ? newJobs : [...prev, ...newJobs]
-        );
+        setJobs((prev) => (isNewFilter ? newJobs : [...prev, ...newJobs]));
         setHasMore(newJobs.length === limit);
         setError(null);
 
@@ -92,7 +90,7 @@ const JobListing = ({ API_URL, filters, isAdmin = false }) => {
         setLoading(false);
       }
     },
-    [API_URL, filters, page, hasMore]
+    [API_URL, filters, page, hasMore],
   );
 
   // Infinite scroll observer
@@ -109,7 +107,7 @@ const JobListing = ({ API_URL, filters, isAdmin = false }) => {
 
       if (node) observer.current.observe(node);
     },
-    [loading, hasMore]
+    [loading, hasMore],
   );
 
   // Initial load and filter changes
@@ -172,30 +170,32 @@ const JobListing = ({ API_URL, filters, isAdmin = false }) => {
               </div>
             ) : (
               <>
-                {jobs && jobs.map((job, index) => (
-                  <div
-                    ref={index === jobs.length - 1 ? lastJobElementRef : null}
-                    key={job.jobId}
-                    onClick={() => handleJobClick(job)}
-                    className="cursor-pointer"
-                  >
-                    <JobItem
-                      job={job}
-                      isSelected={job.jobId === selectedJob}
-                      onDelete={() => {
-                        setJobs((prev) => prev.filter((j) => j.jobId !== job.jobId));
-                        if (job.jobId === selectedJob) setSelectedJob(null);
-                      }}
-                      isAdmin={isAdmin}
-                    />
-                  </div>
-                ))}
+                {jobs &&
+                  jobs.map((job, index) => (
+                    <div
+                      ref={index === jobs.length - 1 ? lastJobElementRef : null}
+                      key={job.jobId}
+                      onClick={() => handleJobClick(job)}
+                      className="cursor-pointer"
+                    >
+                      <JobItem
+                        job={job}
+                        isSelected={job.jobId === selectedJob}
+                        onDelete={() => {
+                          setJobs((prev) =>
+                            prev.filter((j) => j.jobId !== job.jobId),
+                          );
+                          if (job.jobId === selectedJob) setSelectedJob(null);
+                        }}
+                        isAdmin={isAdmin}
+                      />
+                    </div>
+                  ))}
 
-                {loading && (
+                {loading &&
                   Array(3)
                     .fill()
-                    .map((_, i) => <SkeletonLoader key={`skeleton-${i}`} />)
-                )}
+                    .map((_, i) => <SkeletonLoader key={`skeleton-${i}`} />)}
 
                 {!hasMore && jobs.length > 0 && (
                   <div className="relative p-4 flex justify-center items-center">

@@ -14,11 +14,13 @@ const StatusBadge = ({ status }) => {
   const statusConfig = {
     Pending: { color: "bg-yellow-100 text-yellow-800", label: "Under Review" },
     Accepted: { color: "bg-green-100 text-green-800", label: "Accepted" },
-    Rejected: { color: "bg-red-100 text-red-800", label: "Rejected" }
+    Rejected: { color: "bg-red-100 text-red-800", label: "Rejected" },
   };
 
   return (
-    <span className={`px-2 py-1 text-sm rounded-full ${statusConfig[status]?.color || 'bg-gray-100'}`}>
+    <span
+      className={`px-2 py-1 text-sm rounded-full ${statusConfig[status]?.color || "bg-gray-100"}`}
+    >
       {statusConfig[status]?.label || status}
     </span>
   );
@@ -50,16 +52,16 @@ const ApplicantsList = ({ jobId, enableReturn }) => {
     try {
       setLoading(true);
       const response = await axiosInstance.get(`/jobs/${jobId}/applicants`, {
-        params: { page, limit }
+        params: { page, limit },
       });
 
       if (newJob) setApplicants(response.data.applications);
-      else setApplicants(prev => [...prev, ...response.data.applications]);
+      else setApplicants((prev) => [...prev, ...response.data.applications]);
 
       setHasMore(response.data.applications.length === limit);
       setError(null);
     } catch (err) {
-      setError(err.response?.data?.message || 'Failed to fetch applicants');
+      setError(err.response?.data?.message || "Failed to fetch applicants");
     } finally {
       setLoading(false);
     }
@@ -69,14 +71,16 @@ const ApplicantsList = ({ jobId, enableReturn }) => {
     try {
       setUpdatingStatus(applicationId);
       await axiosInstance.patch(`/application/${applicationId}/status`, {
-        status: newStatus
+        status: newStatus,
       });
 
-      setApplicants(prev => prev.map(app =>
-        app.applicationId === applicationId
-          ? { ...app, status: newStatus }
-          : app
-      ));
+      setApplicants((prev) =>
+        prev.map((app) =>
+          app.applicationId === applicationId
+            ? { ...app, status: newStatus }
+            : app,
+        ),
+      );
 
       toast.success(`Application ${newStatus.toLowerCase()}`);
     } catch (err) {
@@ -129,7 +133,7 @@ const ApplicantsList = ({ jobId, enableReturn }) => {
 
       {/* Applicants */}
       <div className="space-y-4">
-        {applicants.map(applicant => (
+        {applicants.map((applicant) => (
           <div
             key={applicant.applicationId}
             className="border border-cardBorder rounded-lg p-4 transition-all hover:shadow-md"
@@ -159,13 +163,20 @@ const ApplicantsList = ({ jobId, enableReturn }) => {
               {/* Actions */}
               <div className="flex flex-col gap-2">
                 <button
-                  onClick={() => handleStatusUpdate(applicant.applicationId, 'Accepted')}
-                  disabled={applicant.status === 'Accepted' || updatingStatus === applicant.applicationId}
+                  onClick={() =>
+                    handleStatusUpdate(applicant.applicationId, "Accepted")
+                  }
+                  disabled={
+                    applicant.status === "Accepted" ||
+                    updatingStatus === applicant.applicationId
+                  }
                   className={`px-4 py-2 rounded-full flex items-center gap-2 text-sm
-                    ${applicant.status === 'Accepted'
-                      ? 'bg-green-100 text-green-700 cursor-not-allowed'
-                      : 'hover:bg-green-200 dark:hover:bg-green-900 text-green-600'} 
-                    ${updatingStatus === applicant.applicationId ? 'opacity-50' : ''}`}
+                    ${
+                      applicant.status === "Accepted"
+                        ? "bg-green-100 text-green-700 cursor-not-allowed"
+                        : "hover:bg-green-200 dark:hover:bg-green-900 text-green-600"
+                    } 
+                    ${updatingStatus === applicant.applicationId ? "opacity-50" : ""}`}
                 >
                   {updatingStatus === applicant.applicationId ? (
                     <CircularProgress size={16} />
@@ -176,13 +187,20 @@ const ApplicantsList = ({ jobId, enableReturn }) => {
                 </button>
 
                 <button
-                  onClick={() => handleStatusUpdate(applicant.applicationId, 'Rejected')}
-                  disabled={applicant.status === 'Rejected' || updatingStatus === applicant.applicationId}
+                  onClick={() =>
+                    handleStatusUpdate(applicant.applicationId, "Rejected")
+                  }
+                  disabled={
+                    applicant.status === "Rejected" ||
+                    updatingStatus === applicant.applicationId
+                  }
                   className={`px-4 py-2 rounded-full flex items-center gap-2 text-sm
-                    ${applicant.status === 'Rejected'
-                      ? 'bg-red-100 text-red-700 cursor-not-allowed'
-                      : 'hover:bg-red-200 dark:hover:bg-red-900 text-red-600'} 
-                    ${updatingStatus === applicant.applicationId ? 'opacity-50' : ''}`}
+                    ${
+                      applicant.status === "Rejected"
+                        ? "bg-red-100 text-red-700 cursor-not-allowed"
+                        : "hover:bg-red-200 dark:hover:bg-red-900 text-red-600"
+                    } 
+                    ${updatingStatus === applicant.applicationId ? "opacity-50" : ""}`}
                 >
                   {updatingStatus === applicant.applicationId ? (
                     <CircularProgress size={16} />
@@ -197,7 +215,9 @@ const ApplicantsList = ({ jobId, enableReturn }) => {
             {/* Extra Info */}
             <div className="mt-4 pl-16 border-t border-cardBorder pt-4">
               {applicant.applicantHeadline && (
-                <p className="text-textContent">{applicant.applicantHeadline}</p>
+                <p className="text-textContent">
+                  {applicant.applicantHeadline}
+                </p>
               )}
               <div className="mt-2 text-sm">
                 <p className="text-textPlaceholder">
@@ -230,7 +250,7 @@ const ApplicantsList = ({ jobId, enableReturn }) => {
 
         {!loading && hasMore && (
           <button
-            onClick={() => setPage(prev => prev + 1)}
+            onClick={() => setPage((prev) => prev + 1)}
             className="w-full py-3 text-primary hover:bg-cardBackgroundHover rounded-lg border border-cardBorder transition-colors"
           >
             Load More Applications
