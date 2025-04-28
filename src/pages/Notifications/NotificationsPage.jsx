@@ -1,13 +1,16 @@
 import React, { useState, useEffect, useRef, useCallback } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useSearchParams } from "react-router-dom";
 import { axiosInstance } from "../../apis/axios";
 import { io } from "socket.io-client";
 import CircleNotificationsIcon from "@mui/icons-material/CircleNotifications";
+import Badge from "@mui/material/Badge";
 import defaultProfilePicture from "../../assets/images/defaultProfilePicture.png";
 import { useSelector } from "react-redux";
 
 const NotificationsPage = () => {
   const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
+  const filter = searchParams.get('filter');
   const [notifications, setNotifications] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -16,53 +19,99 @@ const NotificationsPage = () => {
     limit: 10,
   });
   const [hasMore, setHasMore] = useState(true);
+  const [unseenCount, setUnseenCount] = useState(0);
   const { userId, companyId } = useSelector((state) => state.authentication);
   const socketRef = useRef(null);
   const observer = useRef();
   const BASE_URL = String(import.meta.env.VITE_APP_BASE_URL || "").trim();
+  const [userInteracted, setUserInteracted] = useState(false);
+  const audioContextRef = useRef(null);
+  const audioInitializedRef = useRef(false);
 
-  // Beep sound function
-  const playBeep = () => {
+  // Fetch unseen notifications count
+  const fetchUnseenCount = useCallback(async () => {
     try {
-      const AudioContext = window.AudioContext || 
-                          window.webkitAudioContext || 
-                          window.mozAudioContext || 
-                          window.msAudioContext;
-  
+      const response = await axiosInstance.get(`/notifications/${companyId || userId}/unseen`);
+      setUnseenCount(response.data.unseenCount);
+    } catch (error) {
+      console.error("Failed to fetch unseen count:", error);
+    }
+  }, [companyId, userId]);
+
+  const initializeAudio = useCallback(async () => {
+    if (audioInitializedRef.current) return true;
+    
+    try {
+      const AudioContext = window.AudioContext || window.webkitAudioContext;
       if (!AudioContext) {
-        console.warn("Web Audio API not supported in this browser");
-        return;
+        console.warn("Web Audio API not supported");
+        return false;
       }
   
-      const audioContext = new AudioContext();
-      const oscillator = audioContext.createOscillator();
-      const gainNode = audioContext.createGain();
+      audioContextRef.current = new AudioContext();
+      
+      if (audioContextRef.current.state === 'suspended') {
+        await audioContextRef.current.resume();
+      }
+      
+      audioInitializedRef.current = true;
+      setUserInteracted(true);
+      return true;
+    } catch (error) {
+      console.error("Audio initialization failed:", error);
+      return false;
+    }
+  }, []);
+  
+  const playBeep = useCallback(async () => {
+    if (!audioInitializedRef.current) {
+      const initialized = await initializeAudio();
+      if (!initialized) return;
+    }
+  
+    try {
+      const oscillator = audioContextRef.current.createOscillator();
+      const gainNode = audioContextRef.current.createGain();
       
       oscillator.type = 'sine';
-      oscillator.frequency.value = 800;
-      gainNode.gain.value = 0.1;
+      oscillator.frequency.value = 1200;
+      gainNode.gain.value = 0.5;
       
       oscillator.connect(gainNode);
-      gainNode.connect(audioContext.destination);
+      gainNode.connect(audioContextRef.current.destination);
       
       oscillator.start();
       
       setTimeout(() => {
         oscillator.stop();
-        oscillator.disconnect();
-        gainNode.disconnect();
-        
-        if (audioContext.state !== 'closed') {
-          audioContext.close();
-        }
-      }, 200);
-      
+      }, 300);
     } catch (error) {
-      console.warn("Couldn't play beep sound:", error);
+      console.error("Beep playback failed:", error);
     }
-  };
+  }, [initializeAudio]);
 
-  // Fetch notifications from API
+  useEffect(() => {
+    const handleUserInteraction = async () => {
+      await initializeAudio();
+      window.removeEventListener('click', handleUserInteraction);
+      window.removeEventListener('keydown', handleUserInteraction);
+      window.removeEventListener('touchstart', handleUserInteraction);
+      document.removeEventListener('click', handleUserInteraction);
+    };
+  
+    window.addEventListener('click', handleUserInteraction, { once: true });
+    window.addEventListener('keydown', handleUserInteraction, { once: true });
+    window.addEventListener('touchstart', handleUserInteraction, { once: true });
+    document.addEventListener('click', handleUserInteraction, { once: true });
+  
+    return () => {
+      window.removeEventListener('click', handleUserInteraction);
+      window.removeEventListener('keydown', handleUserInteraction);
+      window.removeEventListener('touchstart', handleUserInteraction);
+      document.removeEventListener('click', handleUserInteraction);
+    };
+  }, [initializeAudio]);
+
   const fetchNotifications = async () => {
     setLoading(true);
     try {
@@ -70,15 +119,19 @@ const NotificationsPage = () => {
         params: {
           page: pagination.page,
           limit: pagination.limit,
+          filter: filter === 'unread' ? 'unread' : undefined
         },
       });
       
-      // Sort notifications by timestamp (newest first)
       const sortedNotifications = [...response.data].sort((a, b) => 
         new Date(b.timestamp) - new Date(a.timestamp)
       );
       
-      setNotifications(prev => [...prev, ...sortedNotifications]);
+      setNotifications(prev => 
+        pagination.page === 1 
+          ? sortedNotifications 
+          : [...prev, ...sortedNotifications]
+      );
       setHasMore(response.data.length === pagination.limit);
     } catch (err) {
       setError("Failed to load notifications.");
@@ -87,7 +140,6 @@ const NotificationsPage = () => {
     }
   };
 
-  // Infinite scroll observer
   const lastElementRef = useCallback(
     (node) => {
       if (loading) return;
@@ -107,7 +159,6 @@ const NotificationsPage = () => {
     [loading, hasMore],
   );
 
-  // Mark notification as read
   const markAsRead = async (notificationId) => {
     try {
       await axiosInstance.patch(`/notifications/${companyId || userId}/${notificationId}/read`);
@@ -119,6 +170,8 @@ const NotificationsPage = () => {
             : notification
         )
       );
+      
+      setUnseenCount(prev => prev > 0 ? prev - 1 : 0);
     } catch (error) {
       console.error(
         "Failed to mark notification as read:",
@@ -127,7 +180,6 @@ const NotificationsPage = () => {
     }
   };
 
-  // Handle click on notification
   const handleNotificationClick = (notification, elementClicked) => {
     if (!notification.isRead) {
       markAsRead(notification.notificationId);
@@ -158,13 +210,11 @@ const NotificationsPage = () => {
     }
   };
 
-  // Format notification content with clickable parts
   const formatNotificationContent = (notification) => {
     switch (notification.type) {
       case "React":
         return (
           <span>
-            {notification.userName}{' '}
             <span 
               className="text-blue-500 hover:underline cursor-pointer"
               onClick={(e) => {
@@ -180,7 +230,6 @@ const NotificationsPage = () => {
       case "Comment":
         return (
           <span>
-            {notification.userName}{' '}
             <span 
               className="text-blue-500 hover:underline cursor-pointer"
               onClick={(e) => {
@@ -200,7 +249,6 @@ const NotificationsPage = () => {
     }
   };
 
-  // Format timestamp
   const formatTimestamp = (timestamp) => {
     const now = new Date();
     const notificationDate = new Date(timestamp);
@@ -212,16 +260,14 @@ const NotificationsPage = () => {
     return `${Math.floor(diffInSeconds / 86400)}d ago`;
   };
 
-  // Initialize Socket.io connection
   useEffect(() => {
     if (!userId) return;
 
-    // Disconnect existing socket if any
     if (socketRef.current) {
       socketRef.current.disconnect();
     }
 
-    socketRef.current = io(BASE_URL, {
+    socketRef.current = io('wss://tawasolapp.me', {
       transports: ['websocket'],
       query: { userId },
       withCredentials: true,
@@ -239,8 +285,8 @@ const NotificationsPage = () => {
     });
 
     socketRef.current.on("newNotification", (newNotification) => {
-      // Add new notification at the top of the list
       setNotifications(prev => [newNotification, ...prev]);
+      setUnseenCount(prev => prev + 1);
       playBeep();
     });
 
@@ -249,35 +295,59 @@ const NotificationsPage = () => {
         socketRef.current.disconnect();
       }
     };
-  }, [userId, BASE_URL]);
+  }, [userId, BASE_URL, playBeep]);
 
-  // Fetch notifications when pagination changes
+  useEffect(() => {
+    setPagination(prev => ({ ...prev, page: 1 }));
+    fetchNotifications();
+    fetchUnseenCount();
+  }, [filter]);
+
   useEffect(() => {
     fetchNotifications();
   }, [pagination.page, pagination.limit]);
 
+  const filteredNotifications = filter === 'unread' 
+    ? notifications.filter(notification => !notification.isRead)
+    : notifications;
+
   return (
-    <div className="min-h-screen bg-mainBackground p-8 flex justify-center">
-      <div className="flex flex-col md:flex-row gap-6 w-full max-w-6xl">
-        <div className="bg-cardBackground p-6 rounded-lg shadow-md border border-cardBorder w-full sm:w-[360px] h-fit">
-          <h2 className="text-xl font-bold mb-6 text-textHeavyTitle">
+    <div className="min-h-screen bg-mainBackground p-4 md:p-8 flex justify-center">
+      <div className="flex flex-col md:flex-row gap-4 md:gap-6 w-full max-w-6xl">
+        <div className="bg-cardBackground p-4 md:p-6 rounded-lg shadow-md border border-cardBorder w-full sm:w-[360px] h-fit">
+          <h2 className="text-xl font-bold mb-4 text-textHeavyTitle">
             Notifications
           </h2>
 
-          <div className="space-y-2">
+          <div className="space-y-1">
             <div
               onClick={() => navigate("/notifications")}
-              className="flex items-center p-4 hover:bg-cardBackgroundHover rounded-lg cursor-pointer transition-colors"
+              className={`flex items-center p-3 hover:bg-cardBackgroundHover rounded-lg cursor-pointer transition-colors ${
+                filter !== 'unread' ? 'bg-cardBackgroundHover' : ''
+              }`}
             >
-              <CircleNotificationsIcon className="text-textActivity text-2xl mr-4" />
-              <span className="text-textActivity font-medium">All Notifications</span>
+              <CircleNotificationsIcon className="text-textActivity text-2xl mr-3" />
+              <div className="flex items-center">
+                <span className="text-textActivity font-medium">All Notifications</span>
+                {unseenCount > 0 && (
+                  <Badge 
+                    badgeContent={unseenCount} 
+                    color="error" 
+                    overlap="circular"
+                    max={99}
+                    className="ml-5"
+                  />
+                )}
+              </div>
             </div>
 
             <div
               onClick={() => navigate("/notifications?filter=unread")}
-              className="flex items-center p-4 hover:bg-cardBackgroundHover rounded-lg cursor-pointer transition-colors"
+              className={`flex items-center p-3 hover:bg-cardBackgroundHover rounded-lg cursor-pointer transition-colors ${
+                filter === 'unread' ? 'bg-cardBackgroundHover' : ''
+              }`}
             >
-              <div className="w-6 h-6 mr-4 flex items-center justify-center">
+              <div className="w-6 h-6 mr-3 flex items-center justify-center">
                 <div className="w-2 h-2 bg-blue-500 rounded-full"></div>
               </div>
               <span className="text-textActivity font-medium">Unread</span>
@@ -285,11 +355,11 @@ const NotificationsPage = () => {
           </div>
         </div>
 
-        <div className="flex-1 space-y-6">
+        <div className="flex-1 space-y-4 md:space-y-6">
           <div className="bg-cardBackground rounded-lg shadow-md border border-cardBorder overflow-hidden">
-            <div className="p-6 border-b border-cardBorder">
+            <div className="p-4 md:p-6 border-b border-cardBorder">
               <h2 className="text-xl font-semibold text-textHeavyTitle">
-                Notifications
+                {filter === 'unread' ? 'Unread Notifications' : 'All Notifications'}
               </h2>
             </div>
 
@@ -299,35 +369,35 @@ const NotificationsPage = () => {
               </div>
             ) : error ? (
               <div className="p-6 text-center text-error">{error}</div>
-            ) : notifications.length > 0 ? (
+            ) : filteredNotifications.length > 0 ? (
               <div className="divide-y divide-cardBorder">
-                {notifications.map((notification, index) => {
-                  const isLast = index === notifications.length - 1;
+                {filteredNotifications.map((notification, index) => {
+                  const isLast = index === filteredNotifications.length - 1;
                   return (
                     <div
                       key={notification.notificationId}
-                      className={`p-6 hover:bg-cardBackgroundHover cursor-pointer transition-colors ${
-                        !notification.isRead ? "bg-blue-50" : ""
+                      className={`p-3 md:p-4 hover:bg-cardBackgroundHover cursor-pointer transition-colors ${
+                        !notification.isRead ? "bg-blue-50 dark:bg-gray-800" : ""
                       }`}
                       onClick={() => handleNotificationClick(notification, 'box')}
                       ref={isLast ? lastElementRef : null}
                     >
-                      <div className="flex items-start space-x-4">
+                      <div className="flex items-start space-x-3">
                         <img
                           src={notification.profilePicture || defaultProfilePicture}
                           alt={notification.userName}
-                          className="w-12 h-12 rounded-full object-cover"
+                          className="w-10 h-10 rounded-full object-cover"
                         />
-                        <div className="flex-1">
+                        <div className="flex-1 min-w-0">
                           <div className="flex justify-between items-start">
-                            <h3 className="font-semibold text-textHeavyTitle">
+                            <h3 className="font-semibold text-textHeavyTitle truncate">
                               {notification.userName}
                             </h3>
                             {!notification.isRead && (
-                              <div className="w-2 h-2 bg-blue-500 rounded-full"></div>
+                              <div className="w-2 h-2 bg-blue-500 rounded-full ml-2 flex-shrink-0"></div>
                             )}
                           </div>
-                          <p className="text-textContent">
+                          <p className="text-sm text-textContent break-words">
                             {formatNotificationContent(notification)}
                           </p>
                           <p className="text-xs text-textPlaceholder mt-1">
@@ -339,26 +409,26 @@ const NotificationsPage = () => {
                   );
                 })}
                 {loading && (
-                  <div className="p-6 text-center text-textPlaceholder">
+                  <div className="p-4 text-center text-textPlaceholder">
                     Loading more notifications...
                   </div>
                 )}
               </div>
             ) : (
               <div className="p-6 text-center text-textPlaceholder">
-                No notifications yet
+                {filter === 'unread' ? 'No unread notifications' : 'No notifications yet'}
               </div>
             )}
           </div>
 
-          <div className="bg-cardBackground rounded-lg shadow-md border border-cardBorder p-6">
-            <h2 className="text-xl font-bold mb-3 text-textHeavyTitle">
+          <div className="bg-cardBackground rounded-lg shadow-md border border-cardBorder p-4 md:p-6">
+            <h2 className="text-lg md:text-xl font-bold mb-2 md:mb-3 text-textHeavyTitle">
               Stay updated with notifications
             </h2>
-            <p className="text-textContent mb-3">
+            <p className="text-sm md:text-base text-textContent mb-2 md:mb-3">
               Turn on notifications to never miss important updates from your network.
             </p>
-            <button className="px-4 py-2 bg-buttonSubmitEnable hover:bg-buttonSubmitEnableHover text-white font-medium rounded-lg transition-colors">
+            <button className="px-3 py-1.5 md:px-4 md:py-2 bg-buttonSubmitEnable hover:bg-buttonSubmitEnableHover text-white font-medium rounded-lg transition-colors text-sm md:text-base">
               Notification Settings
             </button>
           </div>
