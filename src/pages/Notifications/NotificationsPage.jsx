@@ -184,29 +184,24 @@ const NotificationsPage = () => {
     if (!notification.isRead) {
       markAsRead(notification.notificationId);
     }
-
-    if (elementClicked === 'content') {
-      if (notification.type === "React" || notification.type === "Comment") {
-        navigate(`/post/${notification.rootItemId}?highlight=${notification.referenceId}`);
-      } else if (notification.type === "Connection") {
-        navigate(`/users/${notification.referenceId}`);
+  
+    // Connection notifications always go to user profile
+    if (notification.type === "Connection") {
+      const userId = notification.rootItemId || notification.referenceId;
+      navigate(`/users/${userId}`);
+      return;
+    }
+  
+    // Other notification types
+    if (notification.type === "React" || notification.type === "Comment") {
+      if (elementClicked === 'content') {
+        navigate(`/feed/${notification.rootItemId}?highlight=${notification.referenceId}`);
+      } else {
+        navigate(`/feed/${notification.rootItemId}`);
       }
-    } else {
-      switch (notification.type) {
-        case "React":
-        case "Comment":
-          navigate(`/feed/${notification.rootItemId}`);
-          break;
-        case "Connection":
-          navigate(`/users/${notification.referenceId}`);
-          break;
-        default:
-          if (notification.rootItemId) {
-            navigate(`/feed/${notification.rootItemId}`);
-          } else if (notification.referenceId) {
-            navigate(`/users/${notification.referenceId}`);
-          }
-      }
+    } else if (notification.rootItemId) {
+      // Default fallback
+      navigate(`/users/${notification.referenceId}`);
     }
   };
 
