@@ -63,11 +63,15 @@ const App = () => {
       {/* Toast Container for the toasts */}
       <ToastContainer
         position="bottom-left"
-        autoClose={5000}
-        newestOnTop={false}
-        closeOnClick={true}
-        rtl={false}
+        autoClose={3000}
+        hideProgressBar={true}
+        newestOnTop={true}
+        closeOnClick
+        pauseOnFocusLoss={false}
+        pauseOnHover
+        draggable
         theme={theme}
+        limit={3}
       />
     </Router>
   );

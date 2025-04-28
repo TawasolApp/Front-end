@@ -23,7 +23,7 @@ const JobItem = ({ job, isSelected, isAdmin, onDelete }) => {
       className={`group flex items-start gap-3 cursor-pointer p-2 relative ${
         isSelected
           ? "border-l-2 border-selectedBorder bg-selectedBackground"
-          : ""
+          : "border-y border-cardBorder"
       }`}
     >
       {/* Company Logo */}
@@ -36,7 +36,7 @@ const JobItem = ({ job, isSelected, isAdmin, onDelete }) => {
       </div>
 
       {/* Content Wrapper with top border */}
-      <div className="flex-1 relative after:content-[''] after:absolute after:left-0 after:right-0 after:top-0 after:border-t after:border-cardBorder after:ml-[-3rem] after:pl-[3rem]">
+      <div className="flex-1 relative">
         {/* Text Content */}
         <div>
           <h3 className="text-lg font-medium text-blue-600 transition-all duration-300 group-hover:underline">

@@ -27,7 +27,7 @@ const JobListing = ({ API_URL, filters, isAdmin = false }) => {
   const [selectedJob, setSelectedJob] = useState(null);
   const [isMobile, setIsMobile] = useState(window.innerWidth < 768);
   const observer = useRef();
-  const limit = 5;
+  const limit = 10;
   const navigate = useNavigate();
 
   // Screen size detection
@@ -35,8 +35,8 @@ const JobListing = ({ API_URL, filters, isAdmin = false }) => {
     const handleResize = () => {
       setIsMobile(window.innerWidth < 768);
       if (window.innerWidth <= 768 && selectedJob) {
-        !isAdmin && navigate(`/jobs/${selectedJob}`, { replace: true }); // Cleanup mobile URL
-        isAdmin && navigate(`/applicants/${selectedJob}`, { replace: true }); // Cleanup mobile URL
+        !isAdmin && navigate(`/jobs/${selectedJob}`, { replace: true });
+        isAdmin && navigate(`/applicants/${selectedJob}`, { replace: true });
       }
     };
 
@@ -59,15 +59,13 @@ const JobListing = ({ API_URL, filters, isAdmin = false }) => {
 
       setLoading(true);
       try {
-        if (isNewFilter) setJobs([]); // Clear jobs immediately for new filters
         const currentPage = isNewFilter ? 1 : page;
-
         const params = {
           page: currentPage,
-          limit: limit,
-          keyword: filters.keyword === "" ? undefined : filters.keyword,
-          location: filters.location === "" ? undefined : filters.location,
-          industry: filters.industry === "" ? undefined : filters.industry,
+          limit,
+          keyword: filters.keyword || undefined,
+          location: filters.location || undefined,
+          industry: filters.industry || undefined,
           experienceLevel: filters.experienceLevel || undefined,
           minSalary: Number(filters.salaryRange[0]) || undefined,
           maxSalary: Number(filters.salaryRange[1]) || undefined,
@@ -75,14 +73,15 @@ const JobListing = ({ API_URL, filters, isAdmin = false }) => {
         };
 
         Object.keys(params).forEach(
-          (key) => params[key] === undefined && delete params[key],
+          (key) => params[key] === undefined && delete params[key]
         );
 
         const response = await axiosInstance.get(API_URL, { params });
-        const newJobs = response.data;
-        console.log(newJobs);
+        const newJobs = response.data.jobs ? response.data.jobs : response.data;
 
-        setJobs((prev) => (isNewFilter ? newJobs : [...prev, ...newJobs]));
+        setJobs((prev) => 
+          isNewFilter ? newJobs : [...prev, ...newJobs]
+        );
         setHasMore(newJobs.length === limit);
         setError(null);
 
@@ -93,7 +92,7 @@ const JobListing = ({ API_URL, filters, isAdmin = false }) => {
         setLoading(false);
       }
     },
-    [API_URL, filters, page, hasMore],
+    [API_URL, filters, page, hasMore]
   );
 
   // Infinite scroll observer
@@ -104,13 +103,13 @@ const JobListing = ({ API_URL, filters, isAdmin = false }) => {
 
       observer.current = new IntersectionObserver((entries) => {
         if (entries[0].isIntersecting && hasMore) {
-          setPage((prevPage) => prevPage + 1);
+          setPage((prev) => prev + 1);
         }
       });
 
       if (node) observer.current.observe(node);
     },
-    [loading, hasMore],
+    [loading, hasMore]
   );
 
   // Initial load and filter changes
@@ -124,7 +123,7 @@ const JobListing = ({ API_URL, filters, isAdmin = false }) => {
   }, [page]);
 
   return (
-    <div className="container mx-auto px-4 py-6 md:flex md:justify-center">
+    <div className="container mx-auto px-0 md:px-4 py-6 md:flex md:justify-center">
       <div className="md:flex md:max-w-7xl md:w-full md:gap-0">
         {/* Listings Container */}
         <div className="bg-cardBackground shadow-sm md:w-1/2 lg:w-1/3 border border-cardBorder">
@@ -133,26 +132,20 @@ const JobListing = ({ API_URL, filters, isAdmin = false }) => {
               Top job picks for you
             </h2>
             <p className="text-sm text-gray-500 mt-1">
-              {jobs.length > 0
+              {jobs && jobs.length > 0
                 ? `${jobs.length} results`
                 : "Based on your profile and activity"}
             </p>
           </div>
 
-          {error && (
-            <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded m-4">
-              {error}
-            </div>
-          )}
-
           <div className="overflow-y-auto max-h-[calc(100vh-200px)]">
-            {loading ? (
-              // Skeleton Loaders
-              Array(3)
-                .fill()
-                .map((_, i) => <SkeletonLoader key={i} />)
-            ) : jobs.length === 0 ? (
-              // Enhanced Empty State
+            {error && (
+              <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded m-4">
+                {error}
+              </div>
+            )}
+
+            {jobs && jobs.length === 0 && !loading ? (
               <div className="text-center py-12 px-4">
                 <div className="mx-auto mb-6 w-24 h-24 bg-mainBackground rounded-full flex items-center justify-center">
                   <svg
@@ -178,37 +171,46 @@ const JobListing = ({ API_URL, filters, isAdmin = false }) => {
                 </p>
               </div>
             ) : (
-              jobs.map((job, index) => (
-                <div
-                  ref={index === jobs.length - 1 ? lastJobElementRef : null}
-                  key={job.jobId}
-                  onClick={() => handleJobClick(job)}
-                  className="cursor-pointer"
-                >
-                  <JobItem
-                    job={job}
-                    isSelected={job.jobId === selectedJob}
-                    isMobile={isMobile}
-                    isAdmin={isAdmin}
-                  />
-                </div>
-              ))
-            )}
+              <>
+                {jobs && jobs.map((job, index) => (
+                  <div
+                    ref={index === jobs.length - 1 ? lastJobElementRef : null}
+                    key={job.jobId}
+                    onClick={() => handleJobClick(job)}
+                    className="cursor-pointer"
+                  >
+                    <JobItem
+                      job={job}
+                      isSelected={job.jobId === selectedJob}
+                      onDelete={() => {
+                        setJobs((prev) => prev.filter((j) => j.jobId !== job.jobId));
+                        if (job.jobId === selectedJob) setSelectedJob(null);
+                      }}
+                      isAdmin={isAdmin}
+                    />
+                  </div>
+                ))}
 
-            {!hasMore && jobs.length > 0 && (
-              <div className="relative p-4 flex justify-center items-center">
-                <div className="relative z-10 bg-cardBackground px-6 py-3 rounded-full shadow-md text-sm text-gray-600 font-medium border border-transparent hover:border-blue-400 transition-colors duration-300">
-                  🎉 You've reached the end!
-                </div>
+                {loading && (
+                  Array(3)
+                    .fill()
+                    .map((_, i) => <SkeletonLoader key={`skeleton-${i}`} />)
+                )}
 
-                {/* Glowing ring effect */}
-                <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[240px] h-[60px] rounded-full bg-gradient-to-r from-blue-400/20 via-purple-400/20 to-pink-400/20 blur-2xl opacity-60 pointer-events-none"></div>
-              </div>
+                {!hasMore && jobs.length > 0 && (
+                  <div className="relative p-4 flex justify-center items-center">
+                    <div className="relative z-10 bg-cardBackground px-6 py-3 rounded-full shadow-md text-sm text-gray-600 font-medium border border-transparent hover:border-blue-400 transition-colors duration-300">
+                      🎉 You've reached the end!
+                    </div>
+                    <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[240px] h-[60px] rounded-full bg-gradient-to-r from-blue-400/20 via-purple-400/20 to-pink-400/20 blur-2xl opacity-60 pointer-events-none"></div>
+                  </div>
+                )}
+              </>
             )}
           </div>
         </div>
 
-        {/* Job Description Panel */}
+        {/* Right Panel */}
         {!isMobile && (
           <div className="hidden md:block flex-1 bg-cardBackground rounded-r-lg shadow-sm">
             {selectedJob ? (

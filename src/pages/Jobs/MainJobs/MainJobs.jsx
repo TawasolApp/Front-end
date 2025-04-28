@@ -64,15 +64,12 @@ const MainJobs = ({
               {/* Salary Range */}
               <div className="flex-1 max-w-sm">
                 <label
-                  htmlFor="salary-range"
+                  htmlFor="min-salary"
                   className="block text-sm font-medium text-textActivity mb-1"
                 >
                   Salary Range (Annual)
                 </label>
-                <div
-                  className="flex items-center gap-2 bg-cardBackground border border-cardBorder rounded-md p-2 hover:border-primary transition-all"
-                  id="salary-range"
-                >
+                <div className="flex items-center gap-2 bg-cardBackground border border-cardBorder rounded-md p-2 hover:border-primary transition-all">
                   <span className="text-textActivity text-lg">$</span>
                   <input
                     id="min-salary"

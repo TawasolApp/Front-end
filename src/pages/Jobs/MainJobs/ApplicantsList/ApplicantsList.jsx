@@ -16,11 +16,13 @@ const ApplicantsList = ({ jobId, enableReturn }) => {
   const fetchApplicants = async () => {
     try {
       setLoading(true);
-      const response = await axiosInstance.get(`/jobs/${jobId}/applications`, {
-        params: { page, limit },
+      const response = await axiosInstance.get(`/companies/jobs/${jobId}/applicants`, {
+        params: { page: page, limit: 10 },
       });
 
-      setApplicants((prev) => [...prev, ...response.data]);
+      setApplicants((prev) => [...prev, ...response.data.applicantions]);
+      console.log(response.data);
+      console.log(response.data.applicantions);
       setHasMore(response.data.length === limit);
       setError(null);
     } catch (err) {

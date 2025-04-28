@@ -21,7 +21,7 @@ const JobsList = ({ jobs, companyId, isAdmin }) => {
 
       <div className="border-t border-cardBorder">
         <Link 
-          to={`/jobs/company/${companyId}/${isAdmin}`}
+          to={`/jobs/company/${companyId}`}
           className="flex items-center justify-center gap-2 text-textPlaceholder text-base font-semibold py-4"
         >
           <span>Show all jobs</span>
