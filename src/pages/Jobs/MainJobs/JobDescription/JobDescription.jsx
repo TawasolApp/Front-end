@@ -150,7 +150,7 @@ const JobDescription = ({ jobId, enableReturn }) => {
         await axiosInstance.delete(`/jobs/${job.jobId}/unsave`);
         toast.success("Job unsaved");
       } else {
-        await axiosInstance.post(`/jobs/${job.jobId}/save`);
+        await axiosInstance.patch(`/jobs/${job.jobId}/save`);
         toast.success("Job saved");
       }
       setJob(prev => ({ ...prev, isSaved: !prev.isSaved }));
