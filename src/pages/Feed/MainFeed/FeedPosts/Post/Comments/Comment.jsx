@@ -74,6 +74,7 @@ const Comment = ({ comment }) => {
               authorName={comment.authorName}
               authorBio={comment.authorBio}
               authorPicture={comment.authorPicture}
+              authorType={comment.authorType}
               iconSize={32}
             />
             <div className="ml-auto flex items-center gap-2">
