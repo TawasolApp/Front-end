@@ -51,6 +51,7 @@ import NotificationsPage from "../pages/Notifications/NotificationsPage";
 import PremiumPlan from "../pages/PremiumPlan/PremiumPlan";
 import CheckoutPage from "../pages/PremiumPlan/checkout";
 import CurrentPlanPage from "../pages/PremiumPlan/CurrentPlanPage";
+import ChangeState from "../pages/Settings/ChangeState";
 
 
 const RenderWithNavbar = (component) => {
@@ -75,6 +76,7 @@ const ProtectedRoutes = () => {
       />
 
       <Route path="/settings" element={RenderWithNavbar(<ThemeSettings />)} />
+      <Route path="/change-state" element={RenderWithNavbar(<ChangeState />)}/>
       <Route
         path="/mypreferences/manage-by-blocked-list"
         element={RenderWithNavbar(<BlockedUsersPage />)}

@@ -461,7 +461,7 @@ const TawasolNavbar = () => {
                             {currentAuthorName}
                           </h3>
                           <p className="text-sm text-authorBio">
-                            {currentAuthorBio.length > 50
+                            {currentAuthorBio && currentAuthorBio.length > 50
                               ? currentAuthorBio.slice(0, 48) + ".."
                               : currentAuthorBio}
                           </p>
