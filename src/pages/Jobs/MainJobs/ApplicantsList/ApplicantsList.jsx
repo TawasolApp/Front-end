@@ -1,23 +1,24 @@
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { axiosInstance } from "../../../../apis/axios";
-import { formatDate } from "../../../../utils/dates";
+import { toast } from "react-toastify";
 import { CircularProgress, Skeleton } from "@mui/material";
 import CheckCircleOutlineIcon from "@mui/icons-material/CheckCircleOutline";
 import HighlightOffIcon from "@mui/icons-material/HighlightOff";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import DescriptionIcon from "@mui/icons-material/Description";
-import { toast } from "react-toastify";
+import SentimentDissatisfiedIcon from "@mui/icons-material/SentimentDissatisfied";
+import { axiosInstance } from "../../../../apis/axios";
+import { formatDate } from "../../../../utils/dates";
 
 const StatusBadge = ({ status }) => {
   const statusConfig = {
-    Pending: { color: "bg-yellow-100 text-yellow-800 dark:bg-yellow-200 dark:text-yellow-900", label: "Under Review" },
-    Accepted: { color: "bg-green-100 text-green-800 dark:bg-green-200 dark:text-green-900", label: "Accepted" },
-    Rejected: { color: "bg-red-100 text-red-800 dark:bg-red-200 dark:text-red-900", label: "Rejected" }
+    Pending: { color: "bg-yellow-100 text-yellow-800", label: "Under Review" },
+    Accepted: { color: "bg-green-100 text-green-800", label: "Accepted" },
+    Rejected: { color: "bg-red-100 text-red-800", label: "Rejected" }
   };
 
   return (
-    <span className={`px-2 py-1 text-sm rounded-full ${statusConfig[status]?.color || 'bg-gray-100 dark:bg-gray-700'}`}>
+    <span className={`px-2 py-1 text-sm rounded-full ${statusConfig[status]?.color || 'bg-gray-100'}`}>
       {statusConfig[status]?.label || status}
     </span>
   );
@@ -40,7 +41,9 @@ const ApplicantsList = ({ jobId, enableReturn }) => {
   }, [jobId]);
 
   useEffect(() => {
-    if (page > 1) fetchApplicants();
+    if (page !== 1) {
+      fetchApplicants(false);
+    }
   }, [page]);
 
   const fetchApplicants = async (newJob = false) => {
@@ -49,9 +52,10 @@ const ApplicantsList = ({ jobId, enableReturn }) => {
       const response = await axiosInstance.get(`/jobs/${jobId}/applicants`, {
         params: { page, limit }
       });
-      
+
       if (newJob) setApplicants(response.data.applications);
       else setApplicants(prev => [...prev, ...response.data.applications]);
+
       setHasMore(response.data.applications.length === limit);
       setError(null);
     } catch (err) {
@@ -68,12 +72,12 @@ const ApplicantsList = ({ jobId, enableReturn }) => {
         status: newStatus
       });
 
-      setApplicants(prev => prev.map(app => 
-        app.applicationId === applicationId 
-          ? { ...app, status: newStatus } 
+      setApplicants(prev => prev.map(app =>
+        app.applicationId === applicationId
+          ? { ...app, status: newStatus }
           : app
       ));
-      
+
       toast.success(`Application ${newStatus.toLowerCase()}`);
     } catch (err) {
       toast.error(`Failed to update status: ${err.response?.data?.message}`);
@@ -82,35 +86,32 @@ const ApplicantsList = ({ jobId, enableReturn }) => {
     }
   };
 
-  const renderSkeletons = () => (
-    <div className="space-y-4">
-      {Array.from({ length: 3 }).map((_, idx) => (
-        <div key={idx} className="border border-cardBorder rounded-lg p-4">
-          <div className="flex items-center gap-4">
-            <Skeleton variant="circular" width={48} height={48} />
-            <div className="flex-1">
-              <Skeleton width="50%" height={20} />
-              <Skeleton width="30%" height={15} className="mt-2" />
-              <Skeleton width="40%" height={15} className="mt-2" />
+  if (loading && applicants.length === 0) {
+    return (
+      <div className="p-6 space-y-4">
+        {Array.from({ length: 5 }).map((_, idx) => (
+          <div key={idx} className="border border-cardBorder rounded-lg p-4">
+            <div className="flex items-start gap-4">
+              <Skeleton variant="circular" width={48} height={48} />
+              <div className="flex-1 space-y-2">
+                <Skeleton variant="text" width="60%" />
+                <Skeleton variant="text" width="40%" />
+                <Skeleton variant="text" width="30%" />
+              </div>
             </div>
           </div>
-          <Skeleton width="100%" height={10} className="mt-4" />
-        </div>
-      ))}
-    </div>
-  );
+        ))}
+      </div>
+    );
+  }
 
-  if (loading && applicants.length === 0) return (
-    <div className="p-6">
-      {renderSkeletons()}
-    </div>
-  );
-
-  if (error) return <div className="p-6 text-red-500">{error}</div>;
+  if (error) {
+    return <div className="p-6 text-red-500">{error}</div>;
+  }
 
   return (
     <div className="p-6 border border-cardBorder bg-cardBackground h-full">
-      {/* Header Section */}
+      {/* Header */}
       <div className="mb-6">
         {enableReturn && (
           <button
@@ -126,23 +127,23 @@ const ApplicantsList = ({ jobId, enableReturn }) => {
         </p>
       </div>
 
-      {/* Applicants List */}
+      {/* Applicants */}
       <div className="space-y-4">
         {applicants.map(applicant => (
-          <div 
+          <div
             key={applicant.applicationId}
             className="border border-cardBorder rounded-lg p-4 transition-all hover:shadow-md"
           >
             <div className="flex items-start justify-between gap-4">
-              {/* Applicant Info */}
+              {/* Info */}
               <div className="flex items-start gap-4 flex-1">
-                <img 
-                  src={applicant.applicantPicture} 
+                <img
+                  src={applicant.applicantPicture}
                   alt={applicant.applicantName}
                   className="w-12 h-12 rounded-full object-cover"
                 />
                 <div className="flex-1">
-                  <div className="flex items-center gap-3 flex-wrap">
+                  <div className="flex items-center gap-3">
                     <h3 className="text-lg font-semibold text-header">
                       {applicant.applicantName}
                     </h3>
@@ -155,15 +156,15 @@ const ApplicantsList = ({ jobId, enableReturn }) => {
                 </div>
               </div>
 
-              {/* Action Buttons */}
+              {/* Actions */}
               <div className="flex flex-col gap-2">
                 <button
                   onClick={() => handleStatusUpdate(applicant.applicationId, 'Accepted')}
                   disabled={applicant.status === 'Accepted' || updatingStatus === applicant.applicationId}
-                  className={`px-4 py-2 rounded-full flex items-center gap-2 text-sm transition-colors
-                    ${applicant.status === 'Accepted' 
-                      ? 'bg-green-100 text-green-700 cursor-not-allowed dark:bg-green-200 dark:text-green-900' 
-                      : 'hover:bg-green-200 dark:hover:bg-green-900 text-green-600 dark:text-green-300'} 
+                  className={`px-4 py-2 rounded-full flex items-center gap-2 text-sm
+                    ${applicant.status === 'Accepted'
+                      ? 'bg-green-100 text-green-700 cursor-not-allowed'
+                      : 'hover:bg-green-200 dark:hover:bg-green-900 text-green-600'} 
                     ${updatingStatus === applicant.applicationId ? 'opacity-50' : ''}`}
                 >
                   {updatingStatus === applicant.applicationId ? (
@@ -173,14 +174,14 @@ const ApplicantsList = ({ jobId, enableReturn }) => {
                   )}
                   Accept
                 </button>
-                
+
                 <button
                   onClick={() => handleStatusUpdate(applicant.applicationId, 'Rejected')}
                   disabled={applicant.status === 'Rejected' || updatingStatus === applicant.applicationId}
-                  className={`px-4 py-2 rounded-full flex items-center gap-2 text-sm transition-colors
-                    ${applicant.status === 'Rejected' 
-                      ? 'bg-red-100 text-red-700 cursor-not-allowed dark:bg-red-200 dark:text-red-900' 
-                      : 'hover:bg-red-200 dark:hover:bg-red-900 text-red-600 dark:text-red-300'} 
+                  className={`px-4 py-2 rounded-full flex items-center gap-2 text-sm
+                    ${applicant.status === 'Rejected'
+                      ? 'bg-red-100 text-red-700 cursor-not-allowed'
+                      : 'hover:bg-red-200 dark:hover:bg-red-900 text-red-600'} 
                     ${updatingStatus === applicant.applicationId ? 'opacity-50' : ''}`}
                 >
                   {updatingStatus === applicant.applicationId ? (
@@ -193,12 +194,12 @@ const ApplicantsList = ({ jobId, enableReturn }) => {
               </div>
             </div>
 
-            {/* Additional Info */}
+            {/* Extra Info */}
             <div className="mt-4 pl-16 border-t border-cardBorder pt-4">
               {applicant.applicantHeadline && (
                 <p className="text-textContent">{applicant.applicantHeadline}</p>
               )}
-              <div className="mt-2 text-sm flex items-center gap-2">
+              <div className="mt-2 text-sm">
                 <p className="text-textPlaceholder">
                   Phone: {applicant.applicantPhoneNumber}
                 </p>
@@ -207,7 +208,7 @@ const ApplicantsList = ({ jobId, enableReturn }) => {
                     href={applicant.resumeURL}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="text-textContent hover:underline flex items-center gap-1"
+                    className="text-textContent hover:underline mt-1 inline-flex items-center gap-1"
                   >
                     <DescriptionIcon fontSize="small" />
                     View Resume
@@ -219,7 +220,7 @@ const ApplicantsList = ({ jobId, enableReturn }) => {
         ))}
       </div>
 
-      {/* Loading and Load More */}
+      {/* Load More & End */}
       <div className="mt-6">
         {loading && (
           <div className="flex justify-center">
@@ -236,9 +237,10 @@ const ApplicantsList = ({ jobId, enableReturn }) => {
           </button>
         )}
 
-        {!hasMore && applicants.length > 0 && (
-          <div className="text-center text-textPlaceholder mt-6">
-            🎉 You've reviewed all applicants!
+        {!loading && !hasMore && applicants.length > 0 && (
+          <div className="flex flex-col items-center justify-center mt-6 text-textPlaceholder">
+            <SentimentDissatisfiedIcon fontSize="large" />
+            <p className="mt-2">No more applications to show</p>
           </div>
         )}
       </div>
