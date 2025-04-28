@@ -1,5 +1,6 @@
 import { usePost } from "../../../PostContext";
 import MediaItem from "./MediaItem";
+import PdfViewer from "./PdfViewer";
 
 const MediaDisplay = ({ handleOpenPostModal, reposted }) => {
   const { post } = usePost();
@@ -27,7 +28,7 @@ const MediaDisplay = ({ handleOpenPostModal, reposted }) => {
 
   // Helper functions to check media types
   const isVideo = (url) => url?.match(/\.(mp4|mov|avi|webm|video)$/i);
-  const isPdf = (url) => url?.match(/\.pdf$/i);
+  const isPdf = (url) => url?.match(/.*(\/raw\/).*/i);
 
   return (
     <div
@@ -50,7 +51,7 @@ const MediaDisplay = ({ handleOpenPostModal, reposted }) => {
             {isPdfDocument ? (
               // PDF viewer - not clickable for modal
               <div className="w-full h-full">
-                <MediaItem url={url} disabled={isDisabledVideo} />
+                <PdfViewer url={url} />
               </div>
             ) : (
               // All other media - clickable for modal
