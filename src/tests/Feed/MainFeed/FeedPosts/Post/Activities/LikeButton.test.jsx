@@ -1,9 +1,17 @@
 import { describe, it, expect, vi, beforeEach } from "vitest";
 import { render, screen, fireEvent, waitFor } from "@testing-library/react";
-import React from "react";
+import * as React from 'react';
 import LikeButton from "../../../../../../pages/Feed/MainFeed/FeedPosts/Post/Activities/LikeButton";
 
 // Mock dependencies
+vi.mock('react', async () => {
+  const actual = await vi.importActual('react');
+  return {
+    ...actual,
+    useState: vi.fn()
+  };
+});
+
 vi.mock("@mui/icons-material/ThumbUpOffAlt", () => ({
   default: (props) => (
     <span data-testid="thumb-up-icon" className={props.className}>
@@ -258,12 +266,12 @@ describe("LikeButton Component", () => {
   }, 10000);
 
   it("disables button during loading state", () => {
-    // Setup loading state
+    // Setup loading state using the existing mock pattern
     isLoadingState = true;
-
+    
     render(<LikeButton />);
-
+    
     // Button should be disabled
     expect(screen.getByTestId("main-like-button")).toBeDisabled();
-  }, 10000); // Increase timeout
+  });
 });

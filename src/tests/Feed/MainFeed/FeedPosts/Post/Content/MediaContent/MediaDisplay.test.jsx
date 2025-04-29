@@ -27,6 +27,17 @@ vi.mock(
   }),
 );
 
+vi.mock(
+  "../../../../../../../pages/Feed/MainFeed/FeedPosts/Post/Content/MediaContent/PdfViewer",
+  () => ({
+    default: ({ url }) => (
+      <div data-testid="pdf-viewer" data-url={url}>
+        PDF Viewer
+      </div>
+    ),
+  }),
+);
+
 describe("MediaDisplay Component", () => {
   const mockHandleOpenPostModal = vi.fn();
 
@@ -118,19 +129,19 @@ describe("MediaDisplay Component", () => {
   it("handles PDF documents without making them clickable for modal", () => {
     usePost.mockReturnValue({
       post: {
-        media: ["document.pdf"],
+        media: ["https://example.com/raw/document.pdf"],
       },
     });
-
+  
     render(<MediaDisplay handleOpenPostModal={mockHandleOpenPostModal} />);
-
+  
     // No buttons should be rendered for PDFs
     expect(screen.queryByRole("button")).not.toBeInTheDocument();
-
-    // Media item should still be rendered
-    const mediaItem = screen.getByTestId("media-item");
-    expect(mediaItem).toBeInTheDocument();
-    expect(mediaItem).toHaveAttribute("data-url", "document.pdf");
+  
+    // PdfViewer should be rendered instead of MediaItem
+    const pdfViewer = screen.getByTestId("pdf-viewer");
+    expect(pdfViewer).toBeInTheDocument();
+    expect(pdfViewer).toHaveAttribute("data-url", "https://example.com/raw/document.pdf");
   });
 
   it("handles single video without opening the modal", () => {
@@ -227,16 +238,23 @@ describe("MediaDisplay Component", () => {
         media: ["image1.jpg"],
       },
     });
-
+  
     // Should not throw when handleOpenPostModal is not provided
     expect(() => {
       render(<MediaDisplay />);
     }).not.toThrow();
-
-    // Click should not throw error
+  
     const button = screen.getByRole("button");
+    
+    // Provide a mock console.error to catch potential error logging
+    const originalError = console.error;
+    console.error = vi.fn();
+    
+    // Click should not throw error
     expect(() => {
       fireEvent.click(button);
     }).not.toThrow();
+    
+    console.error = originalError;
   });
 });
