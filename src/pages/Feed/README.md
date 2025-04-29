@@ -149,47 +149,44 @@ src/pages/Feed/
 - **Editor:** `<TextEditor initialText=... initialMedia=... onSubmit={submitPost} />`
 - **submitPost:** calls `POST /posts`, returns saved post, closes modal, triggers parent callback.
 
-
 ## GenericComponents
 
 | Component         | Responsibility                                                                                 |
-|-||
-| ActorHeader.jsx   | Displays avatar, name → user/company route, timestamp via `date-fns`.                            |
-| DropdownMenu.jsx  | Accepts `items: { icon, text, onClick }[]`, renders popover list.                                |
-| DropdownUsers.jsx | Searchable list of users (tags) via `GET /users?search=`, highlights match.                      |
-| ReactionPicker.jsx| On hover over child, shows emoji row; selects reaction → invokes context action.              |
-| TextEditor.jsx    | Rich-text + markdown-like tagging; exposes `value` and `onChange` hooks.                         |
+|-------------------|------------------------------------------------------------------------------------------------|
+| ActorHeader.jsx   | Displays avatar, name → user/company route, timestamp via `date-fns`.                          |
+| DropdownMenu.jsx  | Accepts `items: { icon, text, onClick }[]`, renders popover list.                              |
+| DropdownUsers.jsx | Searchable list of users (tags) via `GET /users?search=`, highlights match.                    |
+| ReactionPicker.jsx| On hover over child, shows emoji row; selects reaction → invokes context action.               |
+| TextEditor.jsx    | Rich-text + markdown-like tagging; exposes `value` and `onChange` hooks.                       |
 | TextViewer.jsx    | Renders stored markup (e.g. `@[userId]`) into links; truncates long text with "…more/less".    |
-| reactionIcons.js  | Exports mapping of reaction names → { Icon, color, label } adjusted for dark/light mode.        |
+| reactionIcons.js  | Exports mapping of reaction names → { Icon, color, label } adjusted for dark/light mode.       |
 
 
 ## Data Flow & Lifecycle
 
 ```mermaid
 flowchart TB
-  subgraph FetchSequence
-    MF[MainFeed] -->|GET /posts| API[Backend API]
-    API -->|posts[]| MF
-  end
+  MF[MainFeed]
+  API[Backend API]
+  FP[FeedPosts]
+  PC[PostContainer]
+  M[PostCard & PostModal]
 
-  subgraph RenderSequence
-    MF --> FP[FeedPosts]
-    FP --> PC[PostContainer]
-    PC --> M[PostCard & PostModal]
-  end
+  MF -->|GET /posts| API
+  API -->|posts[]| MF
+  MF --> FP
+  FP --> PC
+  PC --> M
 
-  subgraph InteractionSequence
-    M -->|like/comment/delete| PC
-    PC -->|POST /comments| API
-    PC -->|PATCH /posts/:id/reaction| API
-    API --> PC
-  end
+  M -->|like/comment/delete| PC
+  PC -->|POST /comments| API
+  PC -->|PATCH /posts/:id/reaction| API
+  API --> PC
 ```
 
 1. **Initialization**: `MainFeed` fetches posts.
 2. **Render**: Posts list flows through `FeedPosts` → `PostContainer` → `PostCard`.
 3. **Interaction**: UI events call `PostContext.actions` → API calls → context updates → UI re-renders only that post.
-
 
 ## Testing & Coverage
 - Each component under `src/pages/Feed/` has corresponding Vitest tests in `src/tests/Feed/...` covering:
@@ -197,9 +194,7 @@ flowchart TB
   - Interactive behaviors (hover, click)
   - API-mocking via MSW for `axios` calls
 
-
 ## Extension Points
 - **Theme Integration**: reactionIcons adapts to dark/light mode on `root` class.
 - **Filtering**: `MainFeed` can accept additional filter props (e.g., hashtags).
 - **Pagination**: Swap infinite scroll for page-numbered nav via toggling a prop.
-

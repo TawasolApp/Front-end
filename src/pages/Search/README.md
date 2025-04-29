@@ -93,13 +93,18 @@ All subviews receive `results` array via props or React Router’s `useOutletCon
 ## Data Flow & Lifecycle
 ```mermaid
 flowchart TB
-  SC[SearchContainer] -->|GET /search/{tab}?q=| API[/search endpoints]
-  API --> SC{search results}
-  SC --> SC[TabNav & SearchBar]
-  SC -->|pass| Subview[Active Tab Component]
-  Subview -->|render| Card/List
-  List -->|action| API (e.g., follow, apply, react)
-  API --> Subview (update local state)
+  SC[SearchContainer]
+  API[Backend /search endpoint]
+  UI[TabNav and SearchBar]
+  SV[Active Tab Component]
+  CARD[Result Cards (CompanyCard, UserCard, etc.)]
+
+  SC -->|GET /search/:tab?q=...| API
+  API -->|results[]| SC
+  SC --> UI
+  SC -->|pass results| SV
+  SV --> CARD
+  CARD -->|action| API
 ```
 1. **User input** updates `query` state.
 2. **Debounced effect** triggers `performSearch()`.

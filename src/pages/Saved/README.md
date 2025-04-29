@@ -113,31 +113,24 @@ src/pages/Saved/
 ## Data Flow & State Diagram
 ```mermaid
 flowchart TB
-  subgraph SavedJobsFlow
-    SJC[SavedJobsContainer] -->|GET saved jobs| API
-    API -->|jobs[]| SJC
-    SJC --> JSL[JobsListing]
-    JSL --> JI[JobItem]
-    JI -->|toggleSave| API
-    API --> SJC
-  end
+  SJC[SavedJobsContainer] -->|GET /saved/jobs| API[Backend API]
+  API -->|jobs[]| SJC
+  SJC --> JSL[JobsListing]
+  JSL --> JI[JobItem]
+  JI -->|toggleSave| API
 
-  subgraph AppliedJobsFlow
-    AJC[AppliedJobsContainer] -->|GET applied jobs| API
-    API --> AJC --> JSL
-  end
+  AJC[AppliedJobsContainer] -->|GET /applied/jobs| API
+  AJC --> AJL[JobsListing]
 
-  subgraph SavedPostsFlow
-    SPC[SavedPostsContainer] -->|GET saved posts| API
-    API --> SPC --> FP[FeedPosts]
-    FP --> PC[PostContainer]
-    PC -->|toggleUnsave| API
-    API --> SPC
-  end
+  SPC[SavedPostsContainer] -->|GET /saved/posts| API
+  API --> SPC
+  SPC --> FP[FeedPosts]
+  FP --> PC[PostContainer]
+  PC -->|toggleUnsave| API
 
-  SavedBar --> SavedJobsContainer
-  SavedBar --> AppliedJobsContainer
-  SavedBar --> SavedPostsContainer
+  SavedBar --> SJC
+  SavedBar --> AJC
+  SavedBar --> SPC
 ```
 
 ## Testing & Coverage
