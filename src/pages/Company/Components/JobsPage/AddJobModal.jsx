@@ -197,14 +197,9 @@ function AddJobModal({ onClose, companyId, onJobAdded }) {
                 className="w-full py-2 border border-cardBorder rounded-lg bg-transparent"
               >
                 <option value="">Select experience level</option>
-                <option value="Internship">Internship</option>
-                <option value="Mid Level">Mid Level</option>
-                <option value="Director">Director</option>
-                <option value="Executive">Executive</option>
-                <option value="Manager">Manager</option>
-                <option value="Junior">Junior</option>
-                <option value="Senior">Senior</option>
-                <option value="Lead">Lead</option>
+                <option value="Entry">Entry Level</option>
+                <option value="Mid">Mid Level</option>
+                <option value="Senior">Senior Level</option>
               </select>
             </div>
           </div>

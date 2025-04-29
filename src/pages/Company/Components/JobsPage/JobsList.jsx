@@ -2,11 +2,11 @@ import React from "react";
 import JobCard from "./JobCard";
 import { Link } from "react-router-dom";
 
-const JobsList = ({ jobs, companyId, isAdmin }) => {
+const JobsList = ({ jobs, companyId }) => {
   return (
     <div className="border border-cardBorder rounded-lg bg-cardBackground shadow-sm">
       <div className="p-4">
-        <h2 className="font-normal text-lg text-header">Recently posted jobs</h2>
+        <h2 className="font-semibold text-lg text-header">Recently Posted Jobs</h2>
       </div>
       
       <div className="px-6 py-4">
