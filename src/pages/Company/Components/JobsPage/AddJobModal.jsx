@@ -14,7 +14,7 @@ function AddJobModal({ onClose, companyId, onJobAdded }) {
     location: "",
     salary: "",
     applicationLink: "",
-    experienceLevel: "Internship",
+    experienceLevel: "",
     locationType: "On-site",
     employmentType: "Full-time",
   });
@@ -64,7 +64,7 @@ function AddJobModal({ onClose, companyId, onJobAdded }) {
         salary: "",
         employmentType: "Full-time",
         locationType: "On-site",
-        experienceLevel: "Internship",
+        experienceLevel: "",
       });
 
       onClose();

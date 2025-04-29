@@ -1,92 +1,205 @@
-# Feed Component Documentation
+## Feed Module — In-Depth Documentation
 
-This directory contains the News Feed feature of the TawasolApp application, which handles displaying posts, interacting with content, and managing the overall feed experience.
+The **Feed** module is the heart of TawasolApp, responsible for presenting and interacting with posts across various contexts (main feed, saved feeds, user’s personal feed, company feed, search results, and repost stream). This document details every component, its responsibilities, data flow, and state management strategies.
 
-## 📁 Directory Structure
+### 📁 Directory Structure
 
+```text
+src/pages/Feed/
+├── FeedContainer.jsx           # Entry point: chooses between feed variants
+├── SinglePost.jsx              # Dedicated post view for shareable links
+├── RepostsContainer.jsx        # Filters feed to repost-only entries
+├── LeftSideBar/                # Profile summary & nav links
+│   └── LeftSideBar.jsx
+├── RightSideBar/               # Suggested content & promotions
+│   └── RightSideBar.jsx
+├── MainFeed/                   # Core feed mechanics & share UI
+│   ├── MainFeed.jsx            # Infinite scroll logic & state
+│   ├── FeedPosts/              # Post list rendering
+│   │   ├── FeedPosts.jsx       # Receives `posts[]`, maps to PostContainer
+│   │   ├── PostContainer.jsx   # Wraps each post with context
+│   │   ├── PostContext.jsx     # React Context: post data + action hooks
+│   │   ├── Post/               # Granular post display & interactions
+│   │   │   ├── Header/         # PostCardHeader.jsx, SilentRepostHeader.jsx
+│   │   │   ├── Content/        # PostContent.jsx (text), MediaContent (MediaItem, MediaDisplay, PdfViewer)
+│   │   │   ├── Activities/     # LikeButton.jsx, CommentButton.jsx, RepostButton.jsx, SendButton.jsx, ActivitiesHolder.jsx
+│   │   │   ├── Metrics/        # EngagementMetrics.jsx (counts, reaction summary)
+│   │   │   ├── PostCard.jsx    # Collapsed post view for feed
+│   │   │   └── PostModal.jsx   # Overlay with carousel, comments thread
+│   │   ├── ReactionModal/      # ReactionsModal.jsx: paginated reactors list
+│   │   └── DeleteModal/        # DeletePostModal.jsx: confirm deletion
+│   └── SharePost/              # Post-creation UI components
+│       ├── SharePost.jsx       # Input bar + media attachments
+│       └── TextModal.jsx       # Rich editor: text, tagging, media
+└── GenericComponents/          # Reusable UI across module
+    ├── ActorHeader.jsx         # Renders avatar + actor link + timestamp
+    ├── DropdownMenu.jsx        # Configurable action dropdown
+    ├── DropdownUsers.jsx       # User search dropdown for mentions
+    ├── ReactionPicker.jsx      # Hover-triggered emoji palette
+    ├── TextEditor.jsx          # Controlled editor for posts/comments
+    ├── TextViewer.jsx          # Parses markup, handles truncation
+    └── reactionIcons.js        # Reaction type → icon/color mapping
 ```
-Feed/
-├── FeedContainer.jsx               # Main container for the feed page
-├── MainFeed/                       # Core feed functionality
-│   ├── MainFeed.jsx                # Handles post fetching and infinite scrolling
-│   ├── FeedPosts/                  # Post display components
-│   │   ├── FeedPosts.jsx           # Renders the list of posts
-│   │   ├── PostContainer.jsx       # Context provider for individual posts
-│   │   ├── PostContext.jsx         # Context for post data and actions
-│   │   ├── Post/                   # Individual post components
-│   │   │   ├── PostCard.jsx        # Main post card component
-│   │   │   ├── PostModal.jsx       # Expanded post view
-│   │   │   ├── Content/            # Post content components (text, media)
-│   │   │   ├── Header/             # Post header components
-│   │   │   ├── Activities/         # Like, comment, repost buttons
-│   │   │   ├── Comments/           # Comment components and threads
-│   │   │   ├── Metrics/            # Engagement metrics display
-│   │   │   └── MediaCarousel/      # Media viewer components
-│   │   ├── ReactionModal/          # Displays post reactions
-│   │   └── DeleteModal/            # Confirms post deletion
-│   └── SharePost/                  # Post creation components
-├── LeftSideBar/                    # User profile and navigation sidebar
-├── RightSideBar/                   # Additional content sidebar
-├── SinglePost.jsx                  # Single post view page
-└── RepostsContainer.jsx            # Displays reposted content
+
+## Component Breakdown
+
+#### FeedContainer.jsx
+- **Role:** Wraps the entire page in layout grid: `LeftSideBar | Main Content | RightSideBar`.
+- **Logic:**
+  - Reads React Router params (e.g., `/feed`, `/feed/saved`, `/post/:id`, `/company/:id`, `/reposts`).
+  - Conditionally renders:
+    - `<MainFeed filter={...} />`
+    - `<SinglePost postId={id} />`
+    - `<RepostsContainer userId={...} />`
+- **Props passed:**
+  - `filter` object: `{ type: 'main' | 'saved' | 'company' | 'user', id?: string }`
+  - Pagination settings (pageSize, defaultPage)
+
+#### LeftSideBar/LeftSideBar.jsx
+- **Displays:**
+  - Current user’s avatar, name, headline (pulled from Redux store).
+  - Navigation links: "My Feed", "My Network", "Jobs", "Messaging", "Notifications".
+- **Data:** Uses `useSelector` to get user profile state.
+
+#### RightSideBar/RightSideBar.jsx
+- **Displays:**
+  - Suggested job listings, trending hashtags, sponsored posts.
+- **Fetches:** via `useEffect` on mount:
+  ```js
+  axios.get('/suggestions').then(setSuggestions)
+  ```
+- **Props:** optional `context` to vary sidebar (e.g., on `/company/:id`).
+
+#### MainFeed/MainFeed.jsx
+- **State:**
+  ```ts
+  interface MainFeedState {
+    posts: PostType[];
+    loading: boolean;
+    error: string | null;
+    hasMore: boolean;
+    page: number;
+  }
+  ```
+- **Effects:**
+  - On mount and when `filter` changes, resets `posts`, `page=1`, fetches first batch.
+  - Scroll listener (throttled) calls `loadMore()` when `window.innerHeight + scrollY >= document.body.offsetHeight - 200`.
+- **Methods:**
+  - `fetchPosts(page)`: `GET /posts?filterType=...&id=...&page=&pageSize=`
+  - `loadMore()`: if `hasMore && !loading` → increment `page` and fetch.
+- **Render:**
+  ```jsx
+  return (
+    <>  
+      <SharePost onPostCreated={prependToPosts} />
+      {posts.length === 0 && !loading ? <EmptyState /> : <FeedPosts posts={posts} />}
+      {loading && <Spinner />}
+      {!hasMore && <EndOfFeed />}  
+    </>
+  );
+  ```
+
+#### FeedPosts/FeedPosts.jsx
+- **Props:** `posts: PostType[]`
+- **Function:** Maps `posts.map(post => <PostContainer key={post.id} post={post} />)`.
+- **Edge Cases:** If no posts, propagates empty state.
+
+#### FeedPosts/PostContainer.jsx
+- **Props:** `post: PostType`
+- **Context Provider:** Wraps children in `<PostContext.Provider value={...}>`:
+  - `postData`, `comments`, `reactions`
+  - `actions`: `addComment`, `toggleReaction`, `deletePost`, `fetchComments`, etc.
+- **Render:**
+  ```jsx
+  <ActorHeader actor={post.author} />
+  <PostCard />
+  <PostModal />  
+  <DeleteModal />  
+  <ReactionModal />
+  ```
+
+#### FeedPosts/PostContext.jsx
+- Defines:
+  - `PostContext` using `createContext<PostContextType>(...)`
+  - `usePostContext()` hook for children.
+- On mount, preloads: `fetchReactions()`, `fetchComments()`.
+
+#### FeedPosts/Post/PostCard.jsx
+- **Collapsed display:**
+  - `Header`: `<PostCardHeader post={postData} />`
+  - `Content`: `<PostContent content={postData.content} media={postData.media} />`
+  - `Metrics`: `<EngagementMetrics meta={postData.meta} />`
+  - `Activities`: `<ActivitiesHolder actions={context.actions} meta={postData.meta} />`
+- **Interactions:** Clicking media opens `PostModal`; clicking metrics opens `ReactionModal`.
+
+#### FeedPosts/Post/PostModal.jsx
+- **Overlay:** Full-screen modal.
+- **Features:**
+  - `MediaCarousel`: `<MediaCarousel items={postData.media} />`
+  - `CommentsContainer`: nested `<Comment />` and `<Reply />` threads.
+  - Inline share metrics + activities bar.
+  - Close on backdrop click or ESC key.
+
+#### SharePost/SharePost.jsx
+- **UI:** Input bar with placeholder "Start a post"; icons for media types.
+- **Behavior:** Clicking triggers `TextModal open`.
+- **Callback:** `onPostCreated(newPost)` prepends to parent `posts`.
+
+#### SharePost/TextModal.jsx
+- **Editor:** `<TextEditor initialText=... initialMedia=... onSubmit={submitPost} />`
+- **submitPost:** calls `POST /posts`, returns saved post, closes modal, triggers parent callback.
+
+
+## GenericComponents
+
+| Component         | Responsibility                                                                                 |
+|-||
+| ActorHeader.jsx   | Displays avatar, name → user/company route, timestamp via `date-fns`.                            |
+| DropdownMenu.jsx  | Accepts `items: { icon, text, onClick }[]`, renders popover list.                                |
+| DropdownUsers.jsx | Searchable list of users (tags) via `GET /users?search=`, highlights match.                      |
+| ReactionPicker.jsx| On hover over child, shows emoji row; selects reaction → invokes context action.              |
+| TextEditor.jsx    | Rich-text + markdown-like tagging; exposes `value` and `onChange` hooks.                         |
+| TextViewer.jsx    | Renders stored markup (e.g. `@[userId]`) into links; truncates long text with "…more/less".    |
+| reactionIcons.js  | Exports mapping of reaction names → { Icon, color, label } adjusted for dark/light mode.        |
+
+
+## Data Flow & Lifecycle
+
+```mermaid
+flowchart TB
+  subgraph FetchSequence
+    MF[MainFeed] -->|GET /posts| API[Backend API]
+    API -->|posts[]| MF
+  end
+
+  subgraph RenderSequence
+    MF --> FP[FeedPosts]
+    FP --> PC[PostContainer]
+    PC --> M[PostCard & PostModal]
+  end
+
+  subgraph InteractionSequence
+    M -->|like/comment/delete| PC
+    PC -->|POST /comments| API
+    PC -->|PATCH /posts/:id/reaction| API
+    API --> PC
+  end
 ```
 
-## 🔍 Key Components
+1. **Initialization**: `MainFeed` fetches posts.
+2. **Render**: Posts list flows through `FeedPosts` → `PostContainer` → `PostCard`.
+3. **Interaction**: UI events call `PostContext.actions` → API calls → context updates → UI re-renders only that post.
 
-### Containers In General
 
-- FeedContainer
-- RepostContainer
-- SavedPostContainer
-  All are the main layout component that calls the MainFeed component which handles all types of the feed.
+## Testing & Coverage
+- Each component under `src/pages/Feed/` has corresponding Vitest tests in `src/tests/Feed/...` covering:
+  - Rendering under various props
+  - Interactive behaviors (hover, click)
+  - API-mocking via MSW for `axios` calls
 
-### MainFeed
 
-Contains both the feed display and share post display, also handles displaying all types of scenarios (no more pagination, no posts at all, loading..)
-This component is the main manipulator for the Feed, it can be manipulated by giving different parameters to be used anywhere, it is used in the main feed, the saved feed, the search feed, the reposts feed, the company feed and the user's feed
+## Extension Points
+- **Theme Integration**: reactionIcons adapts to dark/light mode on `root` class.
+- **Filtering**: `MainFeed` can accept additional filter props (e.g., hashtags).
+- **Pagination**: Swap infinite scroll for page-numbered nav via toggling a prop.
 
-### PostContainer, PostContext, PostCard and PostModal
-
-The post are propped down to post container, this container constructs the context of the post, and inside of it create 2 views for the post (card which appears by default on the feed, and modal which is shown after clicking on a media)
-PostContext provides the context for individual posts, it includes all API endpoints, and the general states (post, comments, replies)
-
-### Post Components
-
-Handle the display and interactions for individual posts:
-
-- **Header**: the header of any post and allows navigation to users and company, also silentRepostHeader which is shown if a silent repost was made
-- **Content**: both the text content and and the media display (all types)
-- **Metrics**: the metrics of the post (reactions, commentsCount, and replies)
-- **Activities**: Like, comment, repost, and share buttons
-- **Comments**: comments and replies
-- **Carousel**: used only in posts modal, it displays the media of the post in posts modal
-- **TextModal**: Created in share post, but it is a generic component for sharing, editing posts, it handles media adding and user tagging, takes initial text, and initial tagged users and initial media for editing
-
-### Generic Components
-
-- **ReactionsModal**: this modal takes the API and fetches the reactions and display them with pagination and filtering
-- **TextEditor**: Allows both posts, commenting and replying to have the same editor so adding markups for tagging could be in only one place and all other components use it
-- **TextViewer**: Takes the text, the tagged users, and maximum number of characters, removes the markups and create a hyperlink for any link or tagged users, while also slice the text if greater than max number of chars and shows "...more" or "...less"
-- **DropdownMenu**: a generic item that takes an array of a json that includes a text, icon and on click function, each json is then mapped, enables clean coding
-- **DropdownUsers**: Dropdown menu but for the users, used in tagging
-- **ReactionPicker**: a very generic component, it opens when the user hover on the children of this component, it is a list of reactions that reacts on clicking on any of them, handles its own logic (removed after not being on it for certain amount of time, the hovering reactions, etc..)
-- **ReactionIcons**: a json just to save the icons, colors and labels in one place
-
-## 🚀 Features
-
-- **Infinite Scrolling**: Automatically loads more posts as the user scrolls down
-- **Post Creation**: Create and share new posts with text, images, videos or documents
-- **Reactions**: Like/react to posts with various emoji reactions
-- **Comments**: Add, edit, delete comments and replies
-- **Media Support**: Display images, videos and PDF documents in posts
-- **User Mentions**: Tag other users in posts and comments
-- **Responsive Design**: Adapts to different screen sizes
-
-## 🔄 Data Flow
-
-1. `MainFeed` fetches posts from the API based on provided parameters
-2. `FeedPosts` renders the posts using `PostContainer` components
-3. Each `PostContainer` wraps a post in a `PostContext.Provider`
-4. User interactions trigger handlers defined in the `PostContext`
-
-The feed component has comprehensive test coverage, ensuring reliability and functionality.

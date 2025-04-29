@@ -112,11 +112,7 @@ const StatusBadge = ({ status }) => {
     },
   };
 
-  const config = statusConfig[status] || {
-    color: "bg-gray-100 text-gray-800",
-    label: status,
-    dot: "fill-gray-500",
-  };
+  const config = statusConfig[status];
 
   return (
     <div

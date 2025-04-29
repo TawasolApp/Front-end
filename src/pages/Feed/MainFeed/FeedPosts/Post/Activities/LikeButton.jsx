@@ -77,6 +77,7 @@ const LikeButton = () => {
     <>
       {isLoading ? (
         <button
+          data-testid="main-like-button"
           className="flex items-center gap-1 p-2 hover:bg-buttonIconHover hover:transition-all duration-200 w-full justify-center group"
           onClick={() => handleReactionInternal(initReactValue || "Like")}
           disabled={isLoading}
@@ -86,6 +87,7 @@ const LikeButton = () => {
       ) : (
         <ReactionPicker onSelectReaction={handleReactionInternal}>
           <button
+            data-testid="main-like-button"
             className="flex items-center gap-1 p-2 hover:bg-buttonIconHover hover:transition-all duration-200 w-full justify-center group"
             onClick={() => handleReactionInternal(initReactValue || "Like")}
             disabled={isLoading}

@@ -164,7 +164,7 @@ describe("PostContext", () => {
       );
     });
 
-    expect(axiosInstance.patch).toHaveBeenCalledWith(`/posts/${mockPost.id}`, {
+    expect(axiosInstance.patch).toHaveBeenCalledWith(`/posts/user123/${mockPost.id}`, {
       content: "Updated text",
       media: ["image.jpg"],
       taggedUsers: ["user1"],
@@ -199,7 +199,7 @@ describe("PostContext", () => {
     });
 
     expect(axiosInstance.post).toHaveBeenCalledWith(
-      `posts/save/${mockPost.id}`,
+      `/posts/user123/save/${mockPost.id}`,
     );
     expect(testFn.mock.calls[1][0].post.isSaved).toBe(true);
     expect(toast.success).toHaveBeenCalledWith(
@@ -226,7 +226,7 @@ describe("PostContext", () => {
     });
 
     expect(axiosInstance.delete).toHaveBeenCalledWith(
-      `posts/save/${mockPost.id}`,
+      `/posts/user123/save/${mockPost.id}`,
     );
     expect(testFn.mock.calls[1][0].post.isSaved).toBe(false);
     expect(toast.success).toHaveBeenCalledWith(
@@ -253,7 +253,7 @@ describe("PostContext", () => {
     });
 
     expect(axiosInstance.post).toHaveBeenCalledWith(
-      `posts/react/${mockPost.id}`,
+      `/posts/user123/react/${mockPost.id}`,
       {
         reactions: { celebrate: 1, like: 0 },
         postType: "Post",
@@ -287,7 +287,7 @@ describe("PostContext", () => {
     });
 
     expect(axiosInstance.post).toHaveBeenCalledWith(
-      `posts/react/${mockPost.id}`,
+      `/posts/user123/react/${mockPost.id}`,
       {
         reactions: { celebrate: 1 },
         postType: "Post",
@@ -314,7 +314,7 @@ describe("PostContext", () => {
     });
 
     expect(axiosInstance.post).toHaveBeenCalledWith(
-      `posts/react/${mockPost.id}`,
+      `/posts/user123/react/${mockPost.id}`,
       {
         reactions: { like: 0 },
         postType: "Post",
@@ -383,7 +383,7 @@ describe("PostContext", () => {
     });
 
     expect(axiosInstance.get).toHaveBeenCalledWith(
-      `/posts/comments/${mockPost.id}`,
+      `/posts/user123/comments/${mockPost.id}`,
       expect.any(Object),
     );
     expect(testFn.mock.calls[1][0].comments).toEqual(mockComments);
@@ -527,7 +527,7 @@ describe("PostContext", () => {
     });
 
     expect(axiosInstance.post).toHaveBeenCalledWith(
-      `/posts/comment/${mockPost.id}`,
+      `/posts/user123/comment/${mockPost.id}`,
       {
         content: "New comment",
         taggedUsers: ["user1"],
@@ -577,7 +577,7 @@ describe("PostContext", () => {
     });
 
     expect(axiosInstance.patch).toHaveBeenCalledWith(
-      "/posts/comment/comment1",
+      "/posts/user123/comment/comment1",
       {
         content: "Updated comment",
         tagged: ["user2"],
@@ -622,7 +622,7 @@ describe("PostContext", () => {
     });
 
     expect(axiosInstance.delete).toHaveBeenCalledWith(
-      "/posts/comment/comment1",
+      "/posts/user123/comment/comment1",
     );
 
     const newContextValue = testFn.mock.calls[0][0];
@@ -666,7 +666,7 @@ describe("PostContext", () => {
       await contextValue.handleReactOnComment("comment1", "like", null);
     });
 
-    expect(axiosInstance.post).toHaveBeenCalledWith("posts/react/comment1", {
+    expect(axiosInstance.post).toHaveBeenCalledWith("/posts/user123/react/comment1", {
       reactions: { like: 1 },
       postType: "Comment",
     });
@@ -710,7 +710,7 @@ describe("PostContext", () => {
       await contextValue.handleReactOnComment("comment1", null, "like");
     });
 
-    expect(axiosInstance.post).toHaveBeenCalledWith("posts/react/comment1", {
+    expect(axiosInstance.post).toHaveBeenCalledWith("/posts/user123/react/comment1", {
       reactions: { like: 0 },
       postType: "Comment",
     });
