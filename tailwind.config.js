@@ -74,6 +74,10 @@ export default {
         amberDarkHover: "rgb(var(--amber-dark-hover))",
         amberTextLight: "rgb(var(--amber-text-light))",
         amberTextDark: "rgb(var(--amber-text-dark))",
+        chatYouBackground: "rgb(var(--chat-you-background))",
+        chatYouText: "rgb(var(--chat-you-text))",
+        chatThemBackground: "rgb(var(--chat-them-background))",
+        chatThemText: "rgb(var(--chat-them-text))",
       },
       animation: {
         'spin-slow': 'spin 8s linear infinite',

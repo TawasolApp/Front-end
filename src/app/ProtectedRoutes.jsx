@@ -29,6 +29,8 @@ import SinglePost from "../pages/Feed/SinglePost";
 import SavedPostsContainer from "../pages/Saved/SavedPostsContainer";
 import RepostsContainer from "../pages/Feed/RepostsContainer";
 
+import MessagingPage from "../pages/Messaging/MessagingPage/MessagingPage.jsx";
+
 import JobsContainer from "../pages/Jobs/JobsContainer";
 import SavedJobsContainer from "../pages/Saved/SavedJobsContainer";
 import AppliedJobContainer from "../pages/Saved/AppliedJobsContainer";
@@ -55,7 +57,6 @@ import SubscriptionFailedPage  from "../pages/PremiumPlan/FailedPremiumPlan";
 
 import ChangeState from "../pages/Settings/ChangeState";
 import LoadingPage from "../pages/LoadingScreen/LoadingPage";
-
 
 const RenderWithNavbar = (component) => {
   return (
@@ -133,6 +134,11 @@ const ProtectedRoutes = () => {
       <Route
         path="/my-items/saved-posts"
         element={RenderWithNavbar(<SavedPostsContainer />)}
+      />
+
+      <Route
+        path="/messaging"
+        element={RenderWithNavbar(<MessagingPage />)}
       />
       
       <Route path="/AdminPanel" element={RenderWithNavbar(<AdminPanel />)} />

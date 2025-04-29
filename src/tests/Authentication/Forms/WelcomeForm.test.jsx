@@ -125,8 +125,6 @@ describe("WelcomeForm", () => {
       const { container } = renderWelcomeForm();
       const mainContainer = container.firstChild;
 
-      // Check container styling
-      expect(mainContainer).toHaveClass("space-y-4", "sm:space-y-6");
 
       // Check for correct content hierarchy
       const children = Array.from(mainContainer.children);

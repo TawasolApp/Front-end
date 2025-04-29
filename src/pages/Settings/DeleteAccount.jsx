@@ -28,7 +28,7 @@ const DeleteAccount = () => {
     <div className="flex justify-center items-start min-h-screen bg-mainBackground px-4 py-10">
       <form
         onSubmit={handleSubmit}
-        className="w-full max-w-2xl bg-white rounded-xl shadow-md border border-gray-200 p-6 sm:p-8"
+        className="w-full max-w-2xl bg-cardBackground rounded-xl shadow-md border border-cardBorder p-6 sm:p-8"
       >
         {/* Back Button */}
         <button
