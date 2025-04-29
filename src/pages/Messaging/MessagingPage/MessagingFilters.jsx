@@ -1,13 +1,12 @@
 import { useState, useRef, useEffect } from "react";
 
-const MessagingFilters = () => {
-  const [activeFilter, setActiveFilter] = useState("All");
-  const [filters, setFilters] = useState(["All", "Unread", "My Connections", "Starred"]);
+const MessagingFilters = ({ activeFilter, setActiveFilter }) => {
+  const [filters, setFilters] = useState(["All", "Unread"]);
   const containerRef = useRef(null);
 
   const handleFilterClick = (filter) => {
     if (filter === activeFilter) {
-      setFilters(["All", "Unread", "My Connections", "Starred"]);
+      setFilters(["All", "Unread"]);
       setActiveFilter("All");
       return;
     }

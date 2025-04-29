@@ -2,14 +2,21 @@ import React, { useEffect } from "react";
 import WelcomeForm from "./Forms/WelcomeForm";
 import WelcomeImage from "../../assets/images/WelcomeImage.jpeg";
 import AuthenticationHeader from "./GenericComponents/AuthenticationHeader";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { logout } from "../../store/authenticationSlice";
+import { useNavigate } from "react-router-dom";
 
 const WelcomePage = () => {
   const dispatch = useDispatch();
+  const navigate = useNavigate();
+  const { token } = useSelector((state) => state.authentication);
 
   useEffect(() => {
-    dispatch(logout());
+    if (token) {
+      navigate("/feed");
+    } else {
+      dispatch(logout());
+    }
   }, [dispatch]);
 
   return (

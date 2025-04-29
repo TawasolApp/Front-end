@@ -1,10 +1,80 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { io } from "socket.io-client";
 import NewMessageModalHeader from "./NewMessageModalHeader";
 import ProfileCard from "./ProfileCard";
 import NewMessageModalInputs from "./NewMessageModalInputs";
+import { toast } from "react-toastify";
+import { useSelector } from "react-redux";
 
 const NewMessageModal = ({ recipient, onClose }) => {
   const [isMinimized, setIsMinimized] = useState(false);
+  const [socket, setSocket] = useState(null);
+  const userId = useSelector((state) => state.authentication.userId);
+
+  useEffect(() => {
+    // Replace with your actual Socket.io server URL
+    const newSocket = io("wss://tawasolapp.me", {
+      transports: ["websocket"],
+      query: { userId },
+      withCredentials: true,
+      reconnection: true,
+      reconnectionAttempts: 5,
+      reconnectionDelay: 1000,
+    });
+
+    setSocket(newSocket);
+
+    return () => {
+      if (newSocket) {
+        newSocket.disconnect();
+      }
+    };
+  }, []);
+
+  useEffect(() => {
+    const handleReceiveMessage = (message) => {
+      console.log("Received a message in MessageModal:", message);
+      // TODO: implement action later
+    };
+
+    socket?.on("receive_message", handleReceiveMessage);
+
+    return () => {
+      socket?.off("receive_message", handleReceiveMessage);
+    };
+  }, [socket]);
+
+
+  const handleSendMessage = (messageData) => {
+    if (!socket || !socket.connected) {
+      toast.error("Not connected to server", {
+        position: "top-right",
+        autoClose: 3000,
+      });
+      return;
+    }
+
+    const messagePayload = {
+      receiverId: recipient._id,
+      text: messageData.text,
+      media: messageData.media || [],
+      // TODO: handle attachments
+    };
+
+    socket.emit("send_message", messagePayload, (acknowledgement) => {
+      if (acknowledgement?.success) {
+        toast.success("Message sent successfully", {
+          position: "top-right",
+          autoClose: 3000,
+        });
+      } else {
+        toast.error("Failed to send message", {
+          position: "top-right",
+          autoClose: 3000,
+        });
+      }
+    });
+  };
 
   const onMinimize = () => {
     setIsMinimized(!isMinimized);
@@ -29,7 +99,10 @@ const NewMessageModal = ({ recipient, onClose }) => {
           onClose={onClose}
         />
         <ProfileCard recipient={recipient} />
-        <NewMessageModalInputs isMinimized={isMinimized} />
+        <NewMessageModalInputs
+          isMinimized={isMinimized}
+          onSend={handleSendMessage}
+        />
       </div>
     </div>
   );

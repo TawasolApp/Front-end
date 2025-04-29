@@ -33,6 +33,7 @@ import SearchContainer from "../pages/Search/SearchContainer";
 import TawasolNavbar from "../layouts/TawasolNavbar";
 import ThemeSettings from "../pages/Settings/ThemeSettings.jsx";
 import DeleteAccount from "../pages/Settings/DeleteAccount.jsx";
+import MessagingPage from "../pages/Messaging/MessagingPage/MessagingPage.jsx";
 
 const RenderWithNavbar = (component) => {
   return (
@@ -107,6 +108,11 @@ const ProtectedRoutes = () => {
       <Route
         path="/company/setup/new"
         element={RenderWithNavbar(<CreateCompanyPage />)}
+      />
+      
+      <Route
+        path="/messaging"
+        element={RenderWithNavbar(<MessagingPage />)}
       />
     </Routes>
   );

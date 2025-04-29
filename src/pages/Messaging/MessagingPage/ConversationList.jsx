@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Avatar from "@mui/material/Avatar";
 import CheckCircleOutlineIcon from "@mui/icons-material/CheckCircleOutline";
 import RadioButtonUncheckedIcon from "@mui/icons-material/RadioButtonUnchecked";
@@ -7,58 +7,106 @@ import MarkEmailUnreadOutlinedIcon from "@mui/icons-material/MarkEmailUnreadOutl
 import DeleteOutlineOutlinedIcon from "@mui/icons-material/DeleteOutlineOutlined";
 import Tooltip from "@mui/material/Tooltip";
 import IconButton from "@mui/material/IconButton";
+import { toast } from "react-toastify";
+import { useSelector } from "react-redux";
+import { axiosInstance } from "../../../apis/axios";
 
-const ConversationList = () => {
-  const [conversations, setConversations] = useState([
-    {
-      id: 1,
-      firstName: "Mohamed",
-      lastName: "Sobh",
-      lastMessage: "Message 1",
-      time: "1:31 PM",
-      unreadCount: 2,
-      isYou: true,
-      profilePicture: "/placeholder.svg",
-      isOnline: true,
-    },
-    {
-      id: 2,
-      firstName: "Mohamed",
-      lastName: "Sobh",
-      lastMessage: "Message 2",
-      time: "12:45 PM",
-      unreadCount: 0,
-      isYou: false,
-      profilePicture: "/placeholder.svg",
-      isOnline: false,
-    },
-    {
-      id: 3,
-      firstName: "Khalid",
-      lastName: "Ali",
-      lastMessage: "Message 3",
-      time: "Yesterday",
-      unreadCount: 5,
-      isYou: false,
-      profilePicture: "/placeholder.svg",
-      isOnline: true,
-    },
-    {
-      id: 4,
-      firstName: "Khalid",
-      lastName: "Ali",
-      lastMessage: "Message 3",
-      time: "Yesterday",
-      unreadCount: 0,
-      isYou: false,
-      profilePicture: "/placeholder.svg",
-      isOnline: true,
-    },
-  ]);
-
+const ConversationList = ({ activeFilter, onConversationSelect }) => {
+  const [conversations, setConversations] = useState([]);
+  const [filteredConversations, setFilteredConversations] = useState([]);
+  const [loading, setLoading] = useState(true);
   const [selectedConversation, setSelectedConversation] = useState(null);
   const [hoveredId, setHoveredId] = useState(null);
   const [selectedForAction, setSelectedForAction] = useState([]);
+  const [pagination, setPagination] = useState({
+    currentPage: 1,
+    totalPages: 1,
+    totalItems: 0,
+    itemsPerPage: 10,
+  });
+  const userId = useSelector((state) => state.authentication.userId);
+
+  const fetchConversations = async (page = 1, limit = 10) => {
+    try {
+      setLoading(true);
+      const response = await axiosInstance.get("/messages/conversations", {
+        params: { page, limit },
+      });
+
+      const formattedConversations = response.data.data.map((convo) => ({
+        id: convo._id,
+        participant: convo.otherParticipant,
+        lastMessage: convo.lastMessage?.text || "No messages yet",
+        time: formatTime(convo.lastMessage?.sentAt),
+        unreadCount: convo.unseenCount,
+        isYou: convo.lastMessage?.senderId === userId,
+        isOnline: false, // TODO: implement presence
+      }));
+
+      setConversations((prev) =>
+        page === 1
+          ? formattedConversations
+          : [...prev, ...formattedConversations]
+      );
+      setPagination(response.data.pagination);
+    } catch (err) {
+      console.error("Couldn't fetch conversations.");
+      toast.error("Couldn't fetch conversations.", {
+        position: "top-right",
+        autoClose: 3000,
+      });
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    fetchConversations();
+  }, []);
+
+  useEffect(() => {
+    filterConversations();
+  }, [conversations, activeFilter]);
+
+  // useEffect(() => {
+  //   const handleScroll = () => {
+  //     if (
+  //       window.innerHeight + document.documentElement.scrollTop !==
+  //         document.documentElement.offsetHeight ||
+  //       loading ||
+  //       pagination.currentPage >= pagination.totalPages
+  //     ) {
+  //       return;
+  //     }
+  //     loadMoreConversations();
+  //   };
+
+  //   window.addEventListener("scroll", handleScroll);
+  //   return () => window.removeEventListener("scroll", handleScroll);
+  // }, [loading, pagination]);
+
+  const loadMoreConversations = () => {
+    if (pagination.currentPage < pagination.totalPages) {
+      fetchConversations(pagination.currentPage + 1, pagination.itemsPerPage);
+    }
+  };
+
+  const filterConversations = () => {
+    setFilteredConversations(
+      conversations.filter((convo) => {
+        if (activeFilter === "All") return true;
+        if (activeFilter === "Unread")
+          return convo.unreadCount > 0 && !convo.isYou;
+        return true;
+      })
+    );
+  };
+
+  const formatTime = (dateString) => {
+    if (!dateString) return "";
+    const date = new Date(dateString);
+    return date.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" });
+  };
 
   // Selection mode is ON if at least one convo is selected
   const isSelectionMode = selectedForAction.length > 0;
@@ -73,7 +121,7 @@ const ConversationList = () => {
 
   const allSelectedAreRead = selectedForAction.every((id) => {
     const convo = conversations.find((c) => c.id === id);
-    return convo && !convo.unreadCount;
+    return convo && (!convo.unreadCount || convo.isYou);
   });
 
   return (
@@ -107,9 +155,15 @@ const ConversationList = () => {
                 className="p-2 rounded-full hover:bg-cardBackgroundHover transition-colors"
               >
                 {allSelectedAreRead ? (
-                  <MarkEmailUnreadOutlinedIcon fontSize="small" className="text-textActivity hover:text-textContent" />
+                  <MarkEmailUnreadOutlinedIcon
+                    fontSize="small"
+                    className="text-textActivity hover:text-textContent"
+                  />
                 ) : (
-                  <MarkEmailReadOutlinedIcon fontSize="small" className="text-textActivity hover:text-textContent" />
+                  <MarkEmailReadOutlinedIcon
+                    fontSize="small"
+                    className="text-textActivity hover:text-textContent"
+                  />
                 )}
               </IconButton>
             </Tooltip>
@@ -120,7 +174,10 @@ const ConversationList = () => {
                 size="small"
                 className="p-2 rounded-full hover:bg-cardBackgroundHover transition-colors"
               >
-                <DeleteOutlineOutlinedIcon fontSize="small" className="text-textActivity hover:text-red-600" />
+                <DeleteOutlineOutlinedIcon
+                  fontSize="small"
+                  className="text-textActivity hover:text-red-600"
+                />
               </IconButton>
             </Tooltip>
           </div>
@@ -128,115 +185,146 @@ const ConversationList = () => {
       )}
 
       {/* Conversation List */}
-      {conversations.map((convo, index) => {
-        const isSelected = selectedConversation === convo.id;
-        const isHovered = hoveredId === convo.id;
-        const isChecked = selectedForAction.includes(convo.id);
-        const recipient = convo;
+      {loading ? (
+        <div className="flex justify-center items-center h-64">
+          <p className="text-textContent">Loading conversations...</p>
+        </div>
+      ) : filteredConversations.length === 0 ? (
+        <div className="flex flex-col items-center justify-center h-64 p-4 text-center">
+          <div className="w-16 h-16 bg-mainBackground rounded-full flex items-center justify-center mb-4">
+            <MarkEmailReadOutlinedIcon className="text-textPlaceholder" />
+          </div>
+          <h3 className="text-lg font-medium text-textContent mb-2">
+            No conversations yet
+          </h3>
+          <p className="text-sm text-textActivity max-w-md">
+            Start a new conversation by searching for users or wait for someone
+            to message you.
+          </p>
+        </div>
+      ) : (
+        filteredConversations.map((convo, index) => {
+          const isSelected = selectedConversation === convo.id;
+          const isHovered = hoveredId === convo.id;
+          const isChecked = selectedForAction.includes(convo.id);
+          const recipient = convo.participant;
 
-        return (
-          <div key={convo.id}>
-            <div
-              onClick={() => {
-                if (isSelectionMode) {
-                  toggleSelect(convo.id);
-                } else {
-                  setSelectedConversation(convo.id);
-                }
-              }}
-              className={`flex items-start p-3 cursor-pointer hover:bg-cardBackgroundHover transition-colors ${
-                isSelected
-                  ? "border-l-4 border-green-500 !bg-chatYouBackground"
-                  : "border-l-4 border-transparent"
-              }`}
-            >
-              {/* Avatar + Status or Checkbox */}
+          return (
+            <div key={convo.id}>
               <div
-                className="mr-3 relative flex-shrink-0 w-14 h-14"
-                onMouseEnter={() => setHoveredId(convo.id)}
-                onMouseLeave={() => setHoveredId(null)}
+                onClick={() => {
+                  if (isSelectionMode) {
+                    toggleSelect(convo.id);
+                  } else {
+                    setSelectedConversation(convo.id);
+                    onConversationSelect(convo);
+                  }
+                }}
+                className={`flex items-start p-3 cursor-pointer hover:bg-cardBackgroundHover transition-colors ${
+                  isSelected
+                    ? "border-l-4 border-green-500 !bg-chatYouBackground"
+                    : "border-l-4 border-transparent"
+                }`}
               >
-                {isSelectionMode || isHovered ? (
-                  <button
-                    className="absolute inset-0 z-10 flex items-center justify-center rounded-full bg-white dark:bg-[#1e1e1e]"
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      toggleSelect(convo.id);
-                    }}
-                  >
-                    {isChecked ? (
-                      <CheckCircleOutlineIcon
-                        className="text-green-500"
-                        fontSize="medium"
-                      />
-                    ) : (
-                      <RadioButtonUncheckedIcon
-                        className="text-gray-400"
-                        fontSize="medium"
-                      />
-                    )}
-                  </button>
-                ) : (
-                  <>
-                    <Avatar
-                      src={recipient.profilePicture || "/placeholder.svg"}
-                      alt={`${recipient.firstName} ${recipient.lastName}`}
-                      sx={{ width: 56, height: 56 }}
-                    />
-                    <span
-                      className={`absolute bottom-0 right-0 w-3 h-3 rounded-full border-2 border-white ${
-                        recipient.isOnline ? "bg-green-500" : "bg-gray-400"
-                      }`}
-                    />
-                  </>
-                )}
-              </div>
-
-              {/* Conversation content */}
-              <div className="flex-1">
-                <div className="flex justify-between">
-                  {/* Left side: name + message */}
-                  <div className="py-1">
-                    <h3 className="font-medium text-textContent">
-                      {recipient.firstName} {recipient.lastName}
-                    </h3>
-                    <p
-                      className={`text-sm ${
-                        convo.unreadCount
-                          ? "font-semibold text-textContent"
-                          : "text-textContent"
-                      }`}
+                {/* Avatar + Status or Checkbox */}
+                <div
+                  className="mr-3 relative flex-shrink-0 w-14 h-14"
+                  onMouseEnter={() => setHoveredId(convo.id)}
+                  onMouseLeave={() => setHoveredId(null)}
+                >
+                  {isSelectionMode || isHovered ? (
+                    <button
+                      className="absolute inset-0 z-10 flex items-center justify-center rounded-full bg-white dark:bg-[#1e1e1e]"
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        toggleSelect(convo.id);
+                      }}
                     >
-                      {convo.isYou ? "You: " : ""}
-                      {convo.lastMessage}
-                    </p>
-                  </div>
+                      {isChecked ? (
+                        <CheckCircleOutlineIcon
+                          className="text-green-500"
+                          fontSize="medium"
+                        />
+                      ) : (
+                        <RadioButtonUncheckedIcon
+                          className="text-gray-400"
+                          fontSize="medium"
+                        />
+                      )}
+                    </button>
+                  ) : (
+                    <>
+                      <Avatar
+                        src={recipient.profilePicture || "/placeholder.svg"}
+                        alt={`${recipient.firstName} ${recipient.lastName}`}
+                        sx={{ width: 56, height: 56 }}
+                      />
+                      <span
+                        className={`absolute bottom-0 right-0 w-3 h-3 rounded-full border-2 border-white ${
+                          recipient.isOnline ? "bg-green-500" : "bg-gray-400"
+                        }`}
+                      />
+                    </>
+                  )}
+                </div>
 
-                  {/* Right side: time + unread badge */}
-                  <div className="flex flex-col items-end space-y-1">
-                    {/* Time */}
-                    <span className="text-xs text-textActivity">
-                      {convo.time}
-                    </span>
+                {/* Conversation content */}
+                <div className="flex-1">
+                  <div className="flex justify-between">
+                    {/* Left side: name + message */}
+                    <div className="py-1">
+                      <h3 className="font-medium text-textContent">
+                        {recipient.firstName} {recipient.lastName}
+                      </h3>
+                      <p
+                        className={`text-sm ${
+                          convo.unreadCount
+                            ? "font-semibold text-textContent"
+                            : "text-textContent"
+                        }`}
+                      >
+                        {convo.isYou ? "You: " : ""}
+                        {convo.lastMessage}
+                      </p>
+                    </div>
 
-                    {/* Unread badge */}
-                    {convo.unreadCount > 0 && (
-                      <span className="flex items-center justify-center min-w-[20px] h-[20px] text-[11px] font-bold bg-blue-500 text-white rounded-full px-1">
-                        {convo.unreadCount}
+                    {/* Right side: time + unread badge */}
+                    <div className="flex flex-col items-end space-y-1">
+                      {/* Time */}
+                      <span className="text-xs text-textActivity">
+                        {convo.time}
                       </span>
-                    )}
+
+                      {/* Unread badge */}
+                      {convo.unreadCount > 0 && !convo.isYou && (
+                        <span className="flex items-center justify-center min-w-[20px] h-[20px] text-[11px] font-bold bg-blue-500 text-white rounded-full px-1">
+                          {convo.unreadCount}
+                        </span>
+                      )}
+                    </div>
                   </div>
                 </div>
               </div>
-            </div>
 
-            {/* Custom bottom border */}
-            {index < conversations.length && (
-              <div className="border-t border-cardBorder" />
-            )}
-          </div>
-        );
-      })}
+              {/* Custom bottom border */}
+              {index < conversations.length && (
+                <div className="border-t border-cardBorder" />
+              )}
+            </div>
+          );
+        })
+      )}
+      {/* Load More Button */}
+      {!loading && pagination.currentPage < pagination.totalPages && (
+        <div className="flex justify-center p-4">
+          <button
+            onClick={loadMoreConversations}
+            className="px-4 py-2 text-sm text-textContent bg-cardBackgroundHover rounded-lg hover:bg-cardBackgroundHover"
+          >
+            Load More
+          </button>
+        </div>
+      )}
     </div>
   );
 };
