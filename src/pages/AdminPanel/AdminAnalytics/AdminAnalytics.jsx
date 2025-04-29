@@ -2,7 +2,8 @@ import React, { useState, useEffect } from "react";
 import UserAnalytics from "./UserAnalytics";
 import PostAnalytics from "./PostAnalytics";
 import JobAnalytics from "./JobAnalytics";
-import { axiosInstance as axios } from "../../../apis/axios"; // adjust if needed
+import { axiosInstance as axios } from "../../../apis/axios";
+import LoadingPage from "../../LoadingScreen/LoadingPage";
 
 function AdminAnalytics() {
   const [userAnalytics, setUserAnalytics] = useState(null);
@@ -35,7 +36,7 @@ function AdminAnalytics() {
   if (loading || !userAnalytics || !postAnalytics || !jobAnalytics) {
     return (
       <div className="text-center py-10 text-lg text-gray-600">
-        Loading analytics...
+        <LoadingPage />
       </div>
     );
   }

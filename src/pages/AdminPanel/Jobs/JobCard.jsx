@@ -2,13 +2,6 @@ import React, { useState } from "react";
 import { FiTrash2, FiFlag } from "react-icons/fi";
 import { axiosInstance as axios } from "../../../apis/axios";
 
-const statusStyles = {
-  Pending: "bg-yellow-100 text-yellow-800",
-  Viewed: "bg-blue-100 text-blue-700",
-  Rejected: "bg-red-100 text-red-700",
-  Accepted: "bg-green-100 text-green-700",
-};
-
 function JobCard({ job, onDelete }) {
   const [stillFlagged, setStillFlagged] = useState(job.isFlagged);
   const [ignoreLoading, setIgnoreLoading] = useState(false);

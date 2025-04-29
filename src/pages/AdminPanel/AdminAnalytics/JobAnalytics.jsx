@@ -44,7 +44,7 @@ function JobAnalytics({ jobAnalytics }) {
     <section className="bg-white border border-gray-200 rounded-xl shadow-md p-6 space-y-6">
       {/* Header */}
       <div className="flex items-center justify-between">
-        <h3 className="text-2xl font-semibold text-gray-800 flex items-center gap-2">
+        <h3 className="text-xl font-semibold text-gray-800 flex items-center gap-2">
           <FaBriefcase className="text-purple-600" />
           Job Analytics
         </h3>
