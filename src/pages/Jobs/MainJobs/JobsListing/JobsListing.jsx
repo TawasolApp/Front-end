@@ -19,6 +19,7 @@ const SkeletonLoader = () => (
 );
 
 const JobListing = ({ API_URL, filters, isAdmin = false }) => {
+
   const [jobs, setJobs] = useState([]);
   const [loading, setLoading] = useState(false);
   const [hasMore, setHasMore] = useState(true);
@@ -27,6 +28,8 @@ const JobListing = ({ API_URL, filters, isAdmin = false }) => {
   const [selectedJob, setSelectedJob] = useState(null);
   const [isMobile, setIsMobile] = useState(window.innerWidth < 768);
   const observer = useRef();
+  const timeoutRef = useRef();
+  const fetchJobsRef = useRef(null);
   const limit = 10;
   const navigate = useNavigate();
 
@@ -57,6 +60,7 @@ const JobListing = ({ API_URL, filters, isAdmin = false }) => {
     async (isNewFilter = false) => {
       if (!hasMore && !isNewFilter) return;
 
+      if (isNewFilter) setJobs([]);
       setLoading(true);
       try {
         const currentPage = isNewFilter ? 1 : page;
@@ -93,6 +97,31 @@ const JobListing = ({ API_URL, filters, isAdmin = false }) => {
     [API_URL, filters, page, hasMore],
   );
 
+  // Update fetchJobs ref
+  useEffect(() => {
+    fetchJobsRef.current = fetchJobs;
+  }, [fetchJobs]);
+
+  // Debounced filter changes
+  useEffect(() => {
+    // Clear previous timeout
+    if (timeoutRef.current) {
+      clearTimeout(timeoutRef.current);
+    }
+
+    // Set new timeout with latest fetchJobs
+    timeoutRef.current = setTimeout(() => {
+      fetchJobsRef.current(true);
+    }, 500);
+
+    // Cleanup timeout
+    return () => {
+      if (timeoutRef.current) {
+        clearTimeout(timeoutRef.current);
+      }
+    };
+  }, [filters]); // Triggered when filters change
+
   // Infinite scroll observer
   const lastJobElementRef = useCallback(
     (node) => {
@@ -110,14 +139,11 @@ const JobListing = ({ API_URL, filters, isAdmin = false }) => {
     [loading, hasMore],
   );
 
-  // Initial load and filter changes
+  // Handle page changes
   useEffect(() => {
-    fetchJobs(true);
-  }, [filters]);
-
-  // Page changes
-  useEffect(() => {
-    if (page > 1) fetchJobs();
+    if (page > 1) {
+      fetchJobsRef.current();
+    }
   }, [page]);
 
   return (
