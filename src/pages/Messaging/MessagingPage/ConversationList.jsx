@@ -104,8 +104,25 @@ const ConversationList = ({ activeFilter, onConversationSelect }) => {
 
   const formatTime = (dateString) => {
     if (!dateString) return "";
+    
+    const now = new Date();
     const date = new Date(dateString);
-    return date.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" });
+    const isToday = now.toDateString() === date.toDateString();
+    const isYesterday = new Date(now.setDate(now.getDate() - 1)).toDateString() === date.toDateString();
+  
+    if (isToday) {
+      // Show time for today's messages
+      return date.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" });
+    } else if (isYesterday) {
+      // Show "Yesterday" for yesterday's messages
+      return "Yesterday";
+    } else {
+      // Show date for older messages
+      return date.toLocaleDateString([], { month: "short", day: "numeric" });
+      // Alternative formats you could use:
+      // return date.toLocaleDateString(); // "MM/DD/YYYY"
+      // return date.toLocaleDateString([], { month: "short", day: "numeric", year: "numeric" }); // "MMM DD, YYYY"
+    }
   };
 
   // Selection mode is ON if at least one convo is selected
