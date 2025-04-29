@@ -36,25 +36,19 @@ npm install
 
 1. First you need to add a .env file containing all the needed env variables
 
-```bash
-VITE_APP_BASE_URL=https://tawasolapp.me/api/
-VITE_APP_RECAPTCHA_SITE_KEY=6LdMDv0qAAAAAC935jMxhIW2ZSMaei6Hs1YU2PyR
-VITE_GOOGLE_CLIENT_ID=255166583275-q52g6235gpjiq68u9o23doqcs2sdi9h2.apps.googleusercontent.com
-```
-
-2. Then you can normally run vite project:
+2. Then you can normally run vite project in development mode:
 
 ```bash
 npm run dev
 ```
+Then Open your browser and navigate to http://localhost:5173.
 
-#### Or to run with a mock server:
+or, you can run vite project in build mode:
 
 ```bash
-npm run mock
+npm run build
+npm run preview
 ```
-
-Then Open your browser and navigate to http://localhost:5173.
 
 ## 🧪 Testing
 
@@ -81,26 +75,30 @@ Each commit message should follow this format:
 ### 🔖 Commit Types
 
 Use the following types to categorize your commits:
-| Type | Description |
+| Type       | Description                                                                 |
 |------------|-----------------------------------------------------------------------------|
-| feat | A new feature or functionality. |
-| fix | A bug fix. |
-| refactor | Code changes that neither fix a bug nor add a feature (e.g., code cleanup). |
-| test | Adding or updating tests. |
-| docs | Documentation changes (e.g., README, comments, or project documentation). |
-| revert | Reverting a previous commit. |
+| feat       | A new feature or functionality.                                             |
+| fix        | A bug fix.                                                                  |
+| refactor   | Code changes that neither fix a bug nor add a feature (e.g., code cleanup). |
+| test       | Adding or updating tests.                                                   |
+| docs       | Documentation changes (e.g., README, comments, or project documentation).   |
+| revert     | Reverting a previous commit.                                                |
 
 ## 🌳 Branch Naming Convention
 
 Use the following to name your created branch
-| Branch Name | Description |
-|--------------------------|-------------------------------------------------------|
-| main | Deployment branch. |
-| develop | Latest development branch with all merged features. |
-| feature/{feature-name} | New feature implementation. |
-| bugfix/{bug-name} | Fix bug before merging into develop. |
+| Branch Name            | Description                                         |
+|------------------------|-----------------------------------------------------|
+| main                   | Deployment branch.                                  |
+| develop                | Latest development branch with all merged features. |
+| feature/{feature-name} | New feature implementation.                         |
+| bugfix/{bug-name}      | Fix bug before merging into develop.                |
 
 ➡️ **Pull Requests** must be created in the `develop` branch for review and testing before merging into main
+
+## 🗂️ Frontend Architecture Overview
+
+![Frontend Architecture](./public/images/frontend-architecture.png)
 
 ## 📂 Project Directories Structure
 
