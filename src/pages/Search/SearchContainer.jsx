@@ -40,7 +40,7 @@ const SearchContainer = () => {
     <div className="min-h-screen bg-mainBackground">
       <div className="sticky top-0 z-10 border-b border-cardBorder bg-cardBackground">
         <div className="max-w-6xl mx-auto px-4">
-          <div className="flex items-center h-14">
+          <div className="flex flex-wrap items-center gap-3 py-2 h-auto min-h-14">
             <div className="relative mr-4">
               <button
                 onClick={() => setIsDropdownOpen(!isDropdownOpen)}
@@ -124,22 +124,22 @@ const SearchContainer = () => {
             )}
 
             {selectedFilter === "Jobs" && (
-              <div className="relative">
-                <input
-                  type="text"
-                  value={industryInput}
-                  onChange={(e) => setIndustryInput(e.target.value)}
-                  placeholder="Industry"
-                  className="bg-navbarSearch border border-cardBorder hover:border-2 text-navbarIconsNormal rounded-md px-3 py-2 w-48 transition-all focus:outline-none"
-                />
-                <input
-                  type="text"
-                  value={locationInput}
-                  onChange={(e) => setLocationInput(e.target.value)}
-                  placeholder="Location"
-                  className="bg-navbarSearch border border-cardBorder hover:border-2 text-navbarIconsNormal rounded-md ml-2 px-3 py-2 w-48 transition-all focus:outline-none"
-                />
-              </div>
+              <div className="flex flex-col md:flex-row gap-2 w-full">
+               <input
+                 type="text"
+                 value={industryInput}
+                 onChange={(e) => setIndustryInput(e.target.value)}
+                 placeholder="Industry"
+                 className="bg-navbarSearch border border-cardBorder hover:border-2 text-navbarIconsNormal rounded-md px-3 py-2 w-full md:w-48 transition-all focus:outline-none text-sm md:text-base"
+               />
+               <input
+                 type="text"
+                 value={locationInput}
+                 onChange={(e) => setLocationInput(e.target.value)}
+                 placeholder="Location"
+                 className="bg-navbarSearch border border-cardBorder hover:border-2 text-navbarIconsNormal rounded-md px-3 py-2 w-full md:w-48 transition-all focus:outline-none text-sm md:text-base"
+               />
+             </div>
             )}
           </div>
         </div>
