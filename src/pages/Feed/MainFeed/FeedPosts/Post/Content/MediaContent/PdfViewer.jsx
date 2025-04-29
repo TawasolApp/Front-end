@@ -65,6 +65,7 @@ const PdfViewer = ({ url }) => {
     }
   }, [numPages, pageNumber]);
 
+  console.log(url);
   return (
     <div
       className={`w-full h-full flex flex-col ${isFullScreen ? "fixed inset-0 bg-white z-50" : ""}`}
