@@ -51,6 +51,8 @@ import NotificationsPage from "../pages/Notifications/NotificationsPage";
 import PremiumPlan from "../pages/PremiumPlan/PremiumPlan";
 import CheckoutPage from "../pages/PremiumPlan/checkout";
 import CurrentPlanPage from "../pages/PremiumPlan/CurrentPlanPage";
+import SubscriptionFailedPage  from "../pages/PremiumPlan/FailedPremiumPlan";
+
 import ChangeState from "../pages/Settings/ChangeState";
 import LoadingPage from "../pages/LoadingScreen/LoadingPage";
 
@@ -119,6 +121,8 @@ const ProtectedRoutes = () => {
       <Route path="/premium" element={RenderWithNavbar(<PremiumPlan />)} />
       <Route path="/checkout" element={RenderWithNavbar(<CheckoutPage />)} />
       <Route path="/current-plan" element={RenderWithNavbar(<CurrentPlanPage />)} />
+      <Route path="/rejected-plan" element={RenderWithNavbar(<SubscriptionFailedPage />)} />
+
 
       <Route path="/feed/:id" element={RenderWithNavbar(<SinglePost />)} />
       <Route path="/feed" element={RenderWithNavbar(<FeedContainer />)} />
