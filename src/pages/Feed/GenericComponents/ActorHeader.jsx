@@ -1,8 +1,8 @@
+import { Link } from "react-router-dom";
 import { Avatar } from "@mui/material";
 import PublicIcon from "@mui/icons-material/Public";
 import PeopleIcon from "@mui/icons-material/People";
 import { formatDate } from "../../../utils";
-import { Link } from "react-router-dom";
 
 const ActorHeader = ({
   authorId,
@@ -48,7 +48,7 @@ const ActorHeader = ({
               }
               className="block max-w-full"
             >
-              <h3 className="font-medium text-sm text-authorName hover:text-authorNameHover hover:underline truncate">
+              <h3 className="font-medium text-sm text-authorName hover:text-authorNameHover hover:underline">
                 {authorName}
               </h3>
               <p className="text-xs font-semibold text-authorBio mt-px truncate max-w-full">

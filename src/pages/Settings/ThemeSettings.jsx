@@ -155,6 +155,86 @@ const ThemeSettings = () => {
           </div>
         </div>
 
+        {/* Visibility Preferences Section */}
+        <div className="mt-12 mb-8">
+          <h2 className="text-2xl font-bold text-header mb-6">
+            Visibility of your profile & network
+          </h2>
+
+          <div className="bg-cardBackground rounded-xl shadow-lg border border-cardBorder">
+            {/* Profile Visibility */}
+            <div
+              className="p-6 cursor-pointer hover:bg-itemHoverBackground transition-colors"
+              onClick={() => navigate("/mypreferences/profile-visibility")}
+            >
+              <div className="flex flex-row items-center justify-between gap-4">
+                <div>
+                  <h3 className="text-lg font-semibold text-textContent">
+                    Profile visibility
+                  </h3>
+                  <p className="text-sm text-textPlaceholder mt-1">
+                    Control who can see your profile
+                  </p>
+                </div>
+                <button type="button">
+                  <ArrowForwardOutlined className="text-textPlaceholder" />
+                </button>
+              </div>
+            </div>
+
+            {/* Divider */}
+            <div className="border-t border-itemBorder mx-6"></div>
+
+            {/* Blocking List */}
+            <div
+              className="p-6 cursor-pointer hover:bg-itemHoverBackground transition-colors"
+              onClick={() => navigate("/mypreferences/manage-by-blocked-list")}
+            >
+              <div className="flex flex-row items-center justify-between gap-4">
+                <div>
+                  <h3 className="text-lg font-semibold text-textContent">
+                    Blocking list
+                  </h3>
+                  <p className="text-sm text-textPlaceholder mt-1">
+                    Review and manage individuals you have blocked from
+                    accessing your profile
+                  </p>
+                </div>
+                <button type="button">
+                  <ArrowForwardOutlined className="text-textPlaceholder" />
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div className="mt-12 mb-8">
+          <h2 className="text-2xl font-bold text-header mb-6">
+            Profile Context
+          </h2>
+
+          <div className="bg-cardBackground rounded-xl shadow-lg border border-cardBorder">
+            <div
+              className="p-6 cursor-pointer hover:bg-itemHoverBackground transition-colors"
+              onClick={() => navigate("/change-state")}
+            >
+              <div className="flex flex-row items-center justify-between gap-4">
+                <div>
+                  <h3 className="text-lg font-semibold text-textContent">
+                    Switch Profile Context
+                  </h3>
+                  <p className="text-sm text-textPlaceholder mt-1">
+                    Choose between personal profile or company profile
+                  </p>
+                </div>
+                <button type="button">
+                  <ArrowForwardOutlined className="text-textPlaceholder" />
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+
         <p className="mt-6 text-sm text-textPlaceholder">
           Changes will be applied immediately
         </p>

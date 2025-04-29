@@ -116,7 +116,6 @@ function CompanyHeader({
               </button>
             )}
           </div>
-
           <p className="text-companyheader1 font-semibold">
             {company.description}
           </p>

@@ -1,8 +1,8 @@
 import { useState, useEffect } from "react";
 import OpenInFullIcon from "@mui/icons-material/OpenInFull";
+import { usePost } from "../../PostContext";
 import AddForm from "./AddForm";
 import Comment from "./Comment";
-import { usePost } from "../../PostContext";
 
 const CommentsContainer = () => {
   const { post, hasMoreComments, comments, fetchComments, handleAddComment } =

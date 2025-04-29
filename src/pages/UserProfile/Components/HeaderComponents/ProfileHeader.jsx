@@ -10,7 +10,6 @@ import ImageUploadModal from "./ImageUploadModal";
 import ImageEnlarge from "./ImageEnlarge";
 import ViewerView from "./ViewerView";
 import ContactInfoModal from "./ContactInfoModal";
-import VisibilityModal from "./VisibilityModal";
 import { axiosInstance as axios } from "../../../../apis/axios.js";
 
 function ProfileHeader({
@@ -28,8 +27,6 @@ function ProfileHeader({
   const [uploadType, setUploadType] = useState(null);
   const navigate = useNavigate();
   const [isContactOpen, setIsContactOpen] = useState(false);
-  const [isMenuOpen, setIsMenuOpen] = useState(false);
-  const [isVisibilityModalOpen, setIsVisibilityModalOpen] = useState(false);
   const { userId } = useSelector((state) => state.authentication);
   const viewerId = userId;
   if (!editedUser) return null;
@@ -110,38 +107,6 @@ function ProfileHeader({
           onImageClick={handleImageClick}
           onUpload={() => openUploadModal("cover")}
         />
-        {isOwner && (
-          <button
-            className="text-text absolute w-8 h-8 top-35 right-8  p-1 rounded-full hover:bg-sliderbutton"
-            onClick={() => setIsEditing(true)}
-          >
-            ✎
-          </button>
-        )}
-        {/* 3 dots  */}
-        {isOwner && (
-          <div className=" text-text absolute right-0 top-35 z-10 ">
-            <button
-              className="w-8 h-8 rounded-full font-bold hover:bg-sliderbutton flex items-center justify-center text-l"
-              onClick={() => setIsMenuOpen(!isMenuOpen)}
-            >
-              ⋮
-            </button>
-            {isMenuOpen && (
-              <div className="absolute right-0 mt-2 w-48 bg-boxbackgroun border rounded shadow z-50">
-                <button
-                  className="text-w-full right-8 text-left px-4 py-2 text-sm text-normaltext hover:font-semibold"
-                  onClick={() => {
-                    setIsVisibilityModalOpen(true);
-                    setIsMenuOpen(false);
-                  }}
-                >
-                  Edit profile visibility
-                </button>
-              </div>
-            )}
-          </div>
-        )}
       </div>
 
       <div className="flex justify-start px-6 -mt-14 sm:-mt-16">
@@ -249,22 +214,6 @@ function ProfileHeader({
           setEditedUser(updatedUser);
           onSave?.(updatedUser);
           axios.patch(`/profile`, updatedFields);
-        }}
-      />
-      <VisibilityModal
-        isOpen={isVisibilityModalOpen}
-        onClose={() => setIsVisibilityModalOpen(false)}
-        currentVisibility={editedUser.visibility}
-        onSave={async (newVisibility) => {
-          try {
-            await axios.patch("/profile", { visibility: newVisibility });
-            const updated = { ...editedUser, visibility: newVisibility };
-            setEditedUser(updated);
-            onSave?.(updated);
-            setIsVisibilityModalOpen(false);
-          } catch (err) {
-            console.error("Failed to update visibility", err);
-          }
         }}
       />
     </div>

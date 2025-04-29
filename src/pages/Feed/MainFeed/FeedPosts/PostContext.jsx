@@ -16,7 +16,7 @@ export const PostProvider = ({
   children,
   initialPost,
   handleSharePost,
-  handleDeletePost,
+  handleDeletePostExternal,
   currentAuthorId,
   currentAuthorName,
   currentAuthorPicture,
@@ -34,7 +34,7 @@ export const PostProvider = ({
   }, [initialPost]);
 
   const handleEditPost = async (text, media, visibility, taggedUsers) => {
-    await axiosInstance.patch(`/posts/${post.id}`, {
+    await axiosInstance.patch(`/posts/${currentAuthorId}/${post.id}`, {
       content: text,
       media: media,
       taggedUsers: taggedUsers,
@@ -53,7 +53,7 @@ export const PostProvider = ({
 
   const handleSavePost = async () => {
     if (post.isSaved) {
-      await axiosInstance.delete(`posts/save/${post.id}`);
+      await axiosInstance.delete(`/posts/${currentAuthorId}/save/${post.id}`);
       setPost((prev) => {
         return { ...prev, isSaved: false };
       });
@@ -62,7 +62,7 @@ export const PostProvider = ({
         autoClose: 3000,
       });
     } else {
-      await axiosInstance.post(`posts/save/${post.id}`);
+      await axiosInstance.post(`/posts/${currentAuthorId}/save/${post.id}`);
       setPost((prev) => {
         return { ...prev, isSaved: true };
       });
@@ -73,13 +73,17 @@ export const PostProvider = ({
     }
   };
 
+  const handleDeletePost = async () => {
+    handleDeletePostExternal(post.headerData ? post.headerData.postId : post.id);
+  };
+
   const handleReactOnPost = async (reactionTypeAdd, reactionTypeRemove) => {
     // initialize json with the agreed format
     let reacts = {};
     if (reactionTypeAdd) reacts[reactionTypeAdd] = 1;
     if (reactionTypeRemove) reacts[reactionTypeRemove] = 0;
 
-    await axiosInstance.post(`posts/react/${post.id}`, {
+    await axiosInstance.post(`/posts/${currentAuthorId}/react/${post.id}`, {
       reactions: reacts,
       postType: "Post",
     });
@@ -117,7 +121,7 @@ export const PostProvider = ({
       const controller = new AbortController();
       abortControllerRef.current = controller;
 
-      const response = await axiosInstance.get(`/posts/comments/${post.id}`, {
+      const response = await axiosInstance.get(`/posts/${currentAuthorId}/comments/${post.id}`, {
         params: {
           page: commentPage,
           limit: 2,
@@ -154,7 +158,7 @@ export const PostProvider = ({
   };
 
   const handleAddComment = async (text, taggedUsers) => {
-    const response = await axiosInstance.post(`/posts/comment/${post.id}`, {
+    const response = await axiosInstance.post(`/posts/${currentAuthorId}/comment/${post.id}`, {
       content: text,
       taggedUsers: taggedUsers,
       isReply: false,
@@ -169,7 +173,7 @@ export const PostProvider = ({
   };
 
   const handleEditComment = async (commentId, text, taggedUsers) => {
-    await axiosInstance.patch(`/posts/comment/${commentId}`, {
+    await axiosInstance.patch(`/posts/${currentAuthorId}/comment/${commentId}`, {
       content: text,
       tagged: taggedUsers,
       isReply: false,
@@ -184,7 +188,7 @@ export const PostProvider = ({
   };
 
   const handleDeleteComment = async (commentId) => {
-    await axiosInstance.delete(`/posts/comment/${commentId}`);
+    await axiosInstance.delete(`/posts/${currentAuthorId}/comment/${commentId}`);
 
     setPost((prev) => ({
       ...prev,
@@ -206,7 +210,7 @@ export const PostProvider = ({
     let reacts = {};
     if (reactionTypeAdd) reacts[reactionTypeAdd] = 1;
     if (reactionTypeRemove) reacts[reactionTypeRemove] = 0;
-    await axiosInstance.post(`posts/react/${commentId}`, {
+    await axiosInstance.post(`/posts/${currentAuthorId}/react/${commentId}`, {
       reactions: reacts,
       postType: "Comment",
     });
@@ -242,7 +246,7 @@ export const PostProvider = ({
       abortControllerRef.current = controller;
 
       const currentPage = replies[commentId]?.replyPage || 1;
-      const response = await axiosInstance.get(`/posts/comments/${commentId}`, {
+      const response = await axiosInstance.get(`/posts/${currentAuthorId}comments/${commentId}`, {
         params: {
           page: currentPage,
           limit: 2,
@@ -291,7 +295,7 @@ export const PostProvider = ({
   };
 
   const handleAddReplyToComment = async (commentId, text, taggedUsers) => {
-    const response = await axiosInstance.post(`/posts/comment/${commentId}`, {
+    const response = await axiosInstance.post(`/posts/${currentAuthorId}/comment/${commentId}`, {
       content: text,
       taggedUsers: taggedUsers,
       isReply: true,
@@ -323,7 +327,7 @@ export const PostProvider = ({
     text,
     taggedUsers,
   ) => {
-    await axiosInstance.patch(`/posts/comment/${replyId}`, {
+    await axiosInstance.patch(`/posts/${currentAuthorId}/comment/${replyId}`, {
       content: text,
       taggedUsers: taggedUsers,
       isReply: true,
@@ -343,7 +347,7 @@ export const PostProvider = ({
   };
 
   const handleDeleteReplyToComment = async (commentId, replyId) => {
-    await axiosInstance.delete(`/posts/comment/${replyId}`);
+    await axiosInstance.delete(`/posts/${currentAuthorId}/comment/${replyId}`);
 
     setReplies((prevReplies) => {
       const existingReplies = prevReplies[commentId]?.data || [];
@@ -384,7 +388,7 @@ export const PostProvider = ({
     let reacts = {};
     if (reactionTypeAdd) reacts[reactionTypeAdd] = 1;
     if (reactionTypeRemove) reacts[reactionTypeRemove] = 0;
-    await axiosInstance.post(`posts/react/${replyId}`, {
+    await axiosInstance.post(`/posts/${currentAuthorId}/react/${replyId}`, {
       reactions: reacts,
       postType: "Comment",
     });
