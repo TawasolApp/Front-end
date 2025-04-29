@@ -2,11 +2,23 @@ import React, { useEffect, useState } from "react";
 import { ArrowForwardOutlined } from "@mui/icons-material";
 import ConfirmModal from "../ReusableModals/ConfirmModal";
 import { axiosInstance as axios } from "../../../../apis/axios";
+import { toast } from "react-toastify";
 import ReportUserModal from "./ReportModal";
+import { useDispatch } from "react-redux";
+import { addBlockedUser } from "../../../../store/authenticationSlice";
 
-const ReportBlockModal = ({ isOpen, onClose, fullName, userId }) => {
+const ReportBlockModal = ({
+  isOpen,
+  onClose,
+  fullName,
+  userId, // the profile being viewed (target)
+  viewerId, // logged-in user (block initiator)
+  initialConnectStatus,
+  initialFollowStatus,
+}) => {
   const [showBlockConfirm, setShowBlockConfirm] = useState(false);
   const [showReportModal, setShowReportModal] = useState(false);
+  const dispatch = useDispatch();
 
   useEffect(() => {
     document.body.classList.toggle("overflow-hidden", isOpen);
@@ -16,8 +28,97 @@ const ReportBlockModal = ({ isOpen, onClose, fullName, userId }) => {
   const handleBlockUser = async () => {
     try {
       await axios.post("/privacy/block/user", { userId });
-      onClose(); // close modal after success
+
+      const cleanupTasks = [];
+
+      // 1. Remove connection if exists
+      if (["Connection", "Pending", "Request"].includes(initialConnectStatus)) {
+        cleanupTasks.push(
+          axios.delete(`/connections/${userId}`).catch((err) => {
+            if (err.response?.status !== 404) {
+              console.warn("Failed to remove connection:", err);
+            }
+          })
+        );
+      }
+
+      // 2. Unfollow if following
+      if (
+        initialFollowStatus === "Following" ||
+        initialConnectStatus === "Connection"
+      ) {
+        cleanupTasks.push(
+          axios.delete(`/connections/unfollow/${userId}`).catch((err) => {
+            if (err.response?.status !== 404) {
+              console.warn("Failed to unfollow:", err);
+            }
+          })
+        );
+      }
+
+      // 3. Remove viewer's endorsements on target user
+      try {
+        const res = await axios.get(`/profile/skill-endorsements/${userId}`);
+        const theirSkills = res.data || [];
+        const skillsEndorsedByViewer = theirSkills.filter((skill) =>
+          skill.endorsers.includes(viewerId)
+        );
+        for (const skill of skillsEndorsedByViewer) {
+          cleanupTasks.push(
+            axios
+              .delete(`/connections/${userId}/endorsement/${skill.name}`)
+              .catch((err) => {
+                if (err.response?.status !== 404) {
+                  console.warn(
+                    `Unendorsing ${skill.name} on their profile failed`,
+                    err
+                  );
+                }
+              })
+          );
+        }
+      } catch (err) {
+        console.warn(
+          "Failed to fetch their skills:",
+          err.response?.data || err.message
+        );
+      }
+
+      // 4. Remove their endorsements on viewer
+      try {
+        const res = await axios.get(`/profile/skill-endorsements/${viewerId}`);
+        const viewerSkills = res.data || [];
+        const skillsEndorsedByThem = viewerSkills.filter((skill) =>
+          skill.endorsers.includes(userId)
+        );
+        for (const skill of skillsEndorsedByThem) {
+          cleanupTasks.push(
+            axios
+              .delete(`/connections/${viewerId}/endorsement/${skill.name}`)
+              .catch((err) => {
+                if (err.response?.status !== 404) {
+                  console.warn(
+                    `Removing ${skill.name} from your profile failed`,
+                    err
+                  );
+                }
+              })
+          );
+        }
+      } catch (err) {
+        console.warn(
+          "Failed to fetch your skills:",
+          err.response?.data || err.message
+        );
+      }
+
+      await Promise.all(cleanupTasks);
+      dispatch(addBlockedUser(userId));
+      toast.success(`${fullName} has been blocked successfully.`);
+      onClose(); // Close the modal after cleanup
     } catch (err) {
+      toast.error("Failed to block user.");
+
       console.error("Block failed:", err.response?.data || err.message);
     }
   };
@@ -81,6 +182,8 @@ const ReportBlockModal = ({ isOpen, onClose, fullName, userId }) => {
           onCancel={() => setShowBlockConfirm(false)}
         />
       )}
+
+      {/* Report Modal */}
       {showReportModal && (
         <ReportUserModal
           isOpen={showReportModal}

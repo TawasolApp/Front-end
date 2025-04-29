@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { axiosInstance as axios } from "../../../../apis/axios";
-
+import { toast } from "react-toastify";
 const ReportModal = ({ isOpen, onClose, targetId, type }) => {
   const [selectedReason, setSelectedReason] = useState("");
   const [submitting, setSubmitting] = useState(false);
@@ -49,9 +49,12 @@ const ReportModal = ({ isOpen, onClose, targetId, type }) => {
             };
 
       await axios.post(endpoint, payload);
+      toast.success(`Report submitted successfully.`);
+
       onClose();
     } catch (err) {
       console.error("Failed to report:", err);
+      toast.error("Failed to submit report. Please try again.");
     } finally {
       setSubmitting(false);
     }

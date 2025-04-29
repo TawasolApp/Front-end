@@ -14,6 +14,7 @@ const initialState = {
   coverPhoto: localStorage.getItem("cover") || null,
   headline: localStorage.getItem("headline") || "",
   isSocialLogin: localStorage.getItem("isSocialLogin") || false,
+  blockedUsers: JSON.parse(localStorage.getItem("blockedUsers")) || [],
 };
 
 export const authenticationSlice = createSlice({
@@ -76,6 +77,22 @@ export const authenticationSlice = createSlice({
       state.isSocialLogin = action.payload;
       localStorage.setItem("isSocialLogin", action.payload);
     },
+
+    setBlockedUsers: (state, action) => {
+      state.blockedUsers = action.payload;
+      localStorage.setItem("blockedUsers", JSON.stringify(action.payload));
+    },
+    addBlockedUser: (state, action) => {
+      const updated = [...state.blockedUsers, action.payload];
+      state.blockedUsers = updated;
+      localStorage.setItem("blockedUsers", JSON.stringify(updated));
+    },
+    removeBlockedUser: (state, action) => {
+      const updated = state.blockedUsers.filter((id) => id !== action.payload);
+      state.blockedUsers = updated;
+      localStorage.setItem("blockedUsers", JSON.stringify(updated));
+    },
+
     logout: (state) => {
       state.userId = "";
       state.email = "";
@@ -90,6 +107,8 @@ export const authenticationSlice = createSlice({
       state.coverPhoto = "";
       state.isNewGoogleUser = false;
       state.isSocialLogin = false;
+      state.blockedUsers = [];
+
       localStorage.removeItem("userId");
       localStorage.removeItem("email");
       localStorage.removeItem("firstName");
@@ -102,6 +121,7 @@ export const authenticationSlice = createSlice({
       localStorage.removeItem("profilePicture");
       localStorage.removeItem("coverPhoto");
       localStorage.removeItem("isSocialLogin");
+      localStorage.removeItem("blockedUsers");
     },
   },
 });
@@ -121,6 +141,9 @@ export const {
   setHeadline,
   setIsNewGoogleUser,
   setIsSocialLogin,
+  setBlockedUsers,
+  addBlockedUser,
+  removeBlockedUser,
   logout,
 } = authenticationSlice.actions;
 

@@ -272,7 +272,7 @@ function ViewerView({
           cancelLabel="Cancel"
         />
       )}
-      <ReportBlockModal
+      {/* <ReportBlockModal
         isOpen={showReportModal}
         onClose={() => setShowReportModal(false)}
         onBlock={() => {
@@ -284,7 +284,17 @@ function ViewerView({
           setShowReportModal(false);
         }}
         fullName={`${user.firstName} ${user.lastName}`}
+      /> */}
+      <ReportBlockModal
+        isOpen={showReportModal}
+        onClose={() => setShowReportModal(false)}
+        fullName={`${user.firstName} ${user.lastName}`}
+        userId={user._id} // the user being viewed (target)
+        viewerId={viewerId} // logged-in user
+        initialConnectStatus={connectStatus}
+        initialFollowStatus={isFollowing ? "Following" : "No Follow"}
       />
+
       {showMessageModal && (
         <NewMessageModal
           recipient={user}

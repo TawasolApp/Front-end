@@ -74,10 +74,10 @@ const ConnectionRequestsManagement = () => {
 
   return (
     <div className="min-h-screen p-6 bg-mainBackground">
-      <div className="max-w-2xl mx-auto">
+      <div className="max-w-3xl mx-auto">
         {/* Header */}
         <div className="flex items-center gap-2 mb-6">
-          <IconButton onClick={() => navigate(-1)}>
+          <IconButton onClick={() => navigate(-1)} aria-label="Go back">
             <ArrowBack className="text-textContent" />
           </IconButton>
           <h1 className="text-2xl font-bold text-header">
@@ -91,15 +91,11 @@ const ConnectionRequestsManagement = () => {
             Who can send you invitations to connect?
           </p>
 
-          <div className="space-y-3 text-text">
+          <div className="space-y-5 text-text">
             {CONNECTION_OPTIONS.map((option) => (
               <label
                 key={option.value}
-                className={`block cursor-pointer p-4 rounded-lg border transition-colors ${
-                  currentOption === option.value
-                    ? "border-blue-500 bg-itemHoverBackground"
-                    : "border-itemBorder hover:bg-itemHoverBackground"
-                }`}
+                className="flex items-start gap-4 cursor-pointer hover:bg-itemHoverBackground rounded-lg p-2 transition"
                 onClick={() => setCurrentOption(option.value)}
               >
                 <div className="flex items-center gap-4">
@@ -109,7 +105,8 @@ const ConnectionRequestsManagement = () => {
                     value={option.value}
                     checked={currentOption === option.value}
                     onChange={() => setCurrentOption(option.value)}
-                    className="w-5 h-5 accent-blue-500"
+                    className=" mt-1 w-5 h-5 accent-blue-600"
+                    aria-label={`Set connection request setting to ${option.label}`}
                   />
                   <div>
                     <h3 className="text-base font-semibold text-textContent">
