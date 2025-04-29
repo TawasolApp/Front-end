@@ -17,7 +17,6 @@ export default defineConfig({
     provider: "v8",
     coverage: {
       all: true,
-      include: ["src/pages/Feed/**"],
       exclude: [
         // MAIN ITEMS FOR EXCLUSIONS
         "**/tests/**",
