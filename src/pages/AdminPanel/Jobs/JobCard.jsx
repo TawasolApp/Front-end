@@ -1,6 +1,6 @@
 import React from "react";
 import { FiTrash2, FiFlag } from "react-icons/fi";
-import { axiosInstance as axios } from "../../../apis/axios"; // adjust if needed
+import { axiosInstance as axios } from "../../../apis/axios";
 
 const statusStyles = {
   Pending: "bg-yellow-100 text-yellow-800",
