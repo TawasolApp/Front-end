@@ -1,37 +1,46 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
 import SearchPosts from "./SearchPosts";
 import PeopleSearch from "./SearchPeople";
 import CompanySearch from "./SearchCompany";
 import SearchJobs from "./SearchJobs";
 
+const useDebounce = (value, delay) => {
+  const [debouncedValue, setDebouncedValue] = useState(value);
+  useEffect(() => {
+    const handler = setTimeout(() => setDebouncedValue(value), delay);
+    return () => clearTimeout(handler);
+  }, [value, delay]);
+  return debouncedValue;
+};
+
 const SearchContainer = () => {
   const { searchText } = useParams();
-
-  // Default filter states
   const [selectedFilter, setSelectedFilter] = useState("Posts");
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const [selectedTimeFrame, setSelectedTimeFrame] = useState("all");
   const [isWithinNetwork, setIsWithinNetwork] = useState(false);
-  const [companyFilter, setCompanyFilter] = useState("");
-  const [industryFilter, setIndustryFilter] = useState("");
-  const [locationFilter, setLocationFilter] = useState("");
+  
+  const [companyInput, setCompanyInput] = useState("");
+  const [industryInput, setIndustryInput] = useState("");
+  const [locationInput, setLocationInput] = useState("");
+  
+  const companyFilter = useDebounce(companyInput, 500);
+  const industryFilter = useDebounce(industryInput, 500);
+  const locationFilter = useDebounce(locationInput, 500);
 
   const handleFilterChange = (filter) => {
     setSelectedFilter(filter);
     setIsDropdownOpen(false);
   };
 
-  // force re-render
   const searchPostsKey = `posts-${selectedTimeFrame}-${isWithinNetwork}-${searchText}`;
 
   return (
     <div className="min-h-screen bg-mainBackground">
-      {/* Secondary Navbar - Sticky */}
       <div className="sticky top-0 z-10 border-b border-cardBorder bg-cardBackground">
         <div className="max-w-6xl mx-auto px-4">
           <div className="flex items-center h-14">
-            {/* Filter Type Dropdown - Custom green button */}
             <div className="relative mr-4">
               <button
                 onClick={() => setIsDropdownOpen(!isDropdownOpen)}
@@ -61,10 +70,8 @@ const SearchContainer = () => {
               )}
             </div>
 
-            {/* Secondary Filters based on selected filter type */}
             {selectedFilter === "Posts" && (
               <div className="flex items-center space-x-4">
-                {/* Time Frame Filter */}
                 <div className="relative">
                   <select
                     value={selectedTimeFrame}
@@ -80,7 +87,6 @@ const SearchContainer = () => {
                   </div>
                 </div>
 
-                {/* Within Network Toggle */}
                 <label className="flex items-center space-x-2 text-textActivity hover:text-textActivityHover cursor-pointer">
                   <input
                     type="checkbox"
@@ -97,8 +103,8 @@ const SearchContainer = () => {
               <div className="relative">
                 <input
                   type="text"
-                  value={companyFilter}
-                  onChange={(e) => setCompanyFilter(e.target.value)}
+                  value={companyInput}
+                  onChange={(e) => setCompanyInput(e.target.value)}
                   placeholder="Company"
                   className="bg-navbarSearch border border-cardBorder hover:border-2 text-navbarIconsNormal rounded-md px-3 py-2 w-48 transition-all focus:outline-none"
                 />
@@ -109,8 +115,8 @@ const SearchContainer = () => {
               <div className="relative">
                 <input
                   type="text"
-                  value={industryFilter}
-                  onChange={(e) => setIndustryFilter(e.target.value)}
+                  value={industryInput}
+                  onChange={(e) => setIndustryInput(e.target.value)}
                   placeholder="Industry"
                   className="bg-navbarSearch border border-cardBorder hover:border-2 text-navbarIconsNormal rounded-md px-3 py-2 w-48 transition-all focus:outline-none"
                 />
@@ -121,15 +127,15 @@ const SearchContainer = () => {
               <div className="relative">
                 <input
                   type="text"
-                  value={industryFilter}
-                  onChange={(e) => setIndustryFilter(e.target.value)}
+                  value={industryInput}
+                  onChange={(e) => setIndustryInput(e.target.value)}
                   placeholder="Industry"
                   className="bg-navbarSearch border border-cardBorder hover:border-2 text-navbarIconsNormal rounded-md px-3 py-2 w-48 transition-all focus:outline-none"
                 />
                 <input
                   type="text"
-                  value={locationFilter}
-                  onChange={(e) => setLocationFilter(e.target.value)}
+                  value={locationInput}
+                  onChange={(e) => setLocationInput(e.target.value)}
                   placeholder="Location"
                   className="bg-navbarSearch border border-cardBorder hover:border-2 text-navbarIconsNormal rounded-md ml-2 px-3 py-2 w-48 transition-all focus:outline-none"
                 />
@@ -139,7 +145,6 @@ const SearchContainer = () => {
         </div>
       </div>
 
-      {/* Render the appropriate component based on the selected filter */}
       {selectedFilter === "Posts" && (
         <SearchPosts
           key={searchPostsKey}
