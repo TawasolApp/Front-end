@@ -11,12 +11,10 @@ import {
 } from "recharts";
 import { FaUsers } from "react-icons/fa";
 import { axiosInstance as axios } from "../../../apis/axios";
-import LoadingPage from "../../../pages/LoadingScreen/LoadingPage";
 
 function UsersAnalytics({ userAnalytics }) {
   const [activeProfiles, setActiveProfiles] = useState([]);
   const [reportedUserProfile, setReportedUserProfile] = useState(null);
-  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const fetchProfiles = async () => {
@@ -44,15 +42,11 @@ function UsersAnalytics({ userAnalytics }) {
         }
       } catch (error) {
         console.error("Failed to fetch user profiles:", error);
-      } finally {
-        setLoading(false);
       }
     };
 
     fetchProfiles();
   }, [userAnalytics]);
-
-  if (loading) return <LoadingPage />;
 
   return (
     <div className="bg-boxbackground border border-itemBorder rounded-2xl p-6 shadow-md space-y-6">
@@ -105,25 +99,27 @@ function UsersAnalytics({ userAnalytics }) {
             </h4>
             <div className="bg-boxbackground p-4 rounded-lg border border-itemBorder shadow">
               {reportedUserProfile ? (
-                <div className="flex items-start gap-4">
-                  <img
-                    src={reportedUserProfile.profilePicture}
-                    alt="profile"
-                    className="w-16 h-16 rounded-full object-cover"
-                  />
-                  <div>
-                    <p className="text-base font-semibold text-blue-600">
-                      {reportedUserProfile.firstName}{" "}
-                      {reportedUserProfile.lastName}
-                    </p>
-                    <p className="text-sm text-textContent italic mt-1">
-                      {reportedUserProfile.bio || "No bio available"}
-                    </p>
-                    <p className="mt-2">
-                      <span className="font-medium">Reports Received:</span>{" "}
-                      {userAnalytics.userReportedCount ?? 0}
-                    </p>
+                <div>
+                  <div className="flex items-start gap-4">
+                    <img
+                      src={reportedUserProfile.profilePicture}
+                      alt="profile"
+                      className="w-16 h-16 rounded-full object-cover"
+                    />
+                    <div>
+                      <p className="text-base font-semibold text-blue-600">
+                        {reportedUserProfile.firstName}{" "}
+                        {reportedUserProfile.lastName}
+                      </p>
+                      <p className="text-sm text-textContent italic mt-1">
+                        {reportedUserProfile.bio || "No bio available"}
+                      </p>
+                    </div>
                   </div>
+                  <p className="mt-2">
+                    <span className="font-medium">Reports Received:</span>{" "}
+                    {userAnalytics.userReportedCount ?? 0}
+                  </p>
                 </div>
               ) : (
                 <p className="italic text-textContent">No reported user data</p>

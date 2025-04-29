@@ -21,6 +21,7 @@ function AdminAnalytics() {
         setUserAnalytics(userRes.data);
         setPostAnalytics(postRes.data);
         setJobAnalytics(jobRes.data);
+        console.log("Job Analytics API Response:", jobRes.data);
       } catch (error) {
         console.error("Failed to fetch analytics:", error);
       } finally {

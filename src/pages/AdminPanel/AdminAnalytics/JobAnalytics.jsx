@@ -7,6 +7,8 @@ function JobAnalytics({ jobAnalytics }) {
   const job = jobAnalytics.mostAppliedJob;
   const [mostAppliedCompanyDetails, setMostAppliedCompanyDetails] =
     useState(null);
+  const [mostAppliedJobCompanyDetails, setMostAppliedJobCompanyDetails] =
+    useState(null);
 
   const formatDate = (timestamp) =>
     new Date(timestamp).toLocaleDateString(undefined, {
@@ -15,20 +17,27 @@ function JobAnalytics({ jobAnalytics }) {
       day: "numeric",
     });
   useEffect(() => {
-    const fetchCompany = async () => {
+    const fetchCompanies = async () => {
       try {
-        const res = await axios.get(
-          `/companies/${jobAnalytics.mostAppliedCompany._id}`
-        );
-        setMostAppliedCompanyDetails(res.data);
+        // Fetch most applied company details
+        if (jobAnalytics.mostAppliedCompany?._id) {
+          const res = await axios.get(
+            `/companies/${jobAnalytics.mostAppliedCompany._id}`
+          );
+          setMostAppliedCompanyDetails(res.data);
+        }
+
+        // Fetch company details for most applied job
+        if (job?.company_id) {
+          const jobCompanyRes = await axios.get(`/companies/${job.company_id}`);
+          setMostAppliedJobCompanyDetails(jobCompanyRes.data);
+        }
       } catch (err) {
         console.error("Failed to fetch company details:", err);
       }
     };
 
-    if (jobAnalytics.mostAppliedCompany?._id) {
-      fetchCompany();
-    }
+    fetchCompanies();
   }, [jobAnalytics]);
 
   return (
@@ -82,26 +91,40 @@ function JobAnalytics({ jobAnalytics }) {
         {job ? (
           <div className="bg-boxbackground border border-itemBorder rounded-xl p-4 shadow-md space-y-2">
             <div className="flex items-center gap-4">
-              <img
-                src={job.companyLogo}
-                alt="company logo"
-                className="w-12 h-12 rounded-lg object-cover"
-              />
-              <div>
-                <p className="font-semibold text-text">{job.companyName}</p>
-                <p className="text-xs text-gray-500">{job.companyLocation}</p>
-              </div>
+              {mostAppliedJobCompanyDetails ? (
+                <>
+                  <img
+                    src={
+                      mostAppliedJobCompanyDetails.logo || "/default-logo.png"
+                    }
+                    alt="company logo"
+                    className="w-12 h-12 rounded-lg object-cover"
+                  />
+                  <div>
+                    <p className="font-semibold text-text">
+                      {mostAppliedJobCompanyDetails.name}
+                    </p>
+                    <p className="text-xs text-gray-500">
+                      {mostAppliedJobCompanyDetails.description}
+                    </p>
+                  </div>
+                </>
+              ) : (
+                <p className="text-sm italic text-gray-500">
+                  Loading job company info...
+                </p>
+              )}
             </div>
             <p className="text-sm font-medium text-textContent">
-              {job.position} • {job.experienceLevel} • {job.employmentType}
+              {job.position} • {job.experience_level} • {job.employment_type}
             </p>
             <p className="text-sm text-gray-600 whitespace-pre-line">
               {job.description}
             </p>
-            <p className="text-xs text-gray-500">
-              Posted at: {formatDate(job.postedAt)}
+            <p className="text-sm text-gray-500">
+              Posted at: {formatDate(job.posted_at)}
             </p>
-            <p className="text-xs text-purple-600">
+            <p className="text-sm text-purple-600">
               Applications: {job.applicants}
             </p>
           </div>
