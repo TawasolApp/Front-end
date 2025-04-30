@@ -42,6 +42,13 @@ const ConversationView = ({ conversation }) => {
           }
         }, 0);
         markConversationAsRead();
+
+        const scrollContainer = scrollContainerRef.current;
+        if (scrollContainer) {
+          requestAnimationFrame(() => {
+            scrollContainer.scrollTop = scrollContainer.scrollHeight;
+          });
+        }
       }
     };
 

@@ -10,6 +10,7 @@ import IconButton from "@mui/material/IconButton";
 import { toast } from "react-toastify";
 import { useSelector } from "react-redux";
 import { axiosInstance } from "../../../apis/axios";
+import { useSocket } from "../../../hooks/SocketContext";
 
 const ConversationList = ({ activeFilter, onConversationSelect }) => {
   const [conversations, setConversations] = useState([]);
@@ -25,10 +26,11 @@ const ConversationList = ({ activeFilter, onConversationSelect }) => {
     itemsPerPage: 10,
   });
   const userId = useSelector((state) => state.authentication.userId);
+  const socket = useSocket();
 
-  const fetchConversations = async (page = 1, limit = 10) => {
+  const fetchConversations = async (load = true, page = 1, limit = 10) => {
     try {
-      setLoading(true);
+      setLoading(load);
       const response = await axiosInstance.get("/messages/conversations", {
         params: { page, limit },
       });
@@ -65,25 +67,22 @@ const ConversationList = ({ activeFilter, onConversationSelect }) => {
   }, []);
 
   useEffect(() => {
+    if (!socket) return;
+
+    const handleIncomingMessage = (message) => {
+      fetchConversations(false);
+    };
+
+    socket.on("receive_message", handleIncomingMessage);
+
+    return () => {
+      socket.off("receive_message", handleIncomingMessage);
+    };
+  }, [socket]);
+
+  useEffect(() => {
     filterConversations();
   }, [conversations, activeFilter]);
-
-  // useEffect(() => {
-  //   const handleScroll = () => {
-  //     if (
-  //       window.innerHeight + document.documentElement.scrollTop !==
-  //         document.documentElement.offsetHeight ||
-  //       loading ||
-  //       pagination.currentPage >= pagination.totalPages
-  //     ) {
-  //       return;
-  //     }
-  //     loadMoreConversations();
-  //   };
-
-  //   window.addEventListener("scroll", handleScroll);
-  //   return () => window.removeEventListener("scroll", handleScroll);
-  // }, [loading, pagination]);
 
   const loadMoreConversations = () => {
     if (pagination.currentPage < pagination.totalPages) {
@@ -104,15 +103,20 @@ const ConversationList = ({ activeFilter, onConversationSelect }) => {
 
   const formatTime = (dateString) => {
     if (!dateString) return "";
-    
+
     const now = new Date();
     const date = new Date(dateString);
     const isToday = now.toDateString() === date.toDateString();
-    const isYesterday = new Date(now.setDate(now.getDate() - 1)).toDateString() === date.toDateString();
-  
+    const isYesterday =
+      new Date(now.setDate(now.getDate() - 1)).toDateString() ===
+      date.toDateString();
+
     if (isToday) {
       // Show time for today's messages
-      return date.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" });
+      return date.toLocaleTimeString([], {
+        hour: "2-digit",
+        minute: "2-digit",
+      });
     } else if (isYesterday) {
       // Show "Yesterday" for yesterday's messages
       return "Yesterday";
@@ -135,6 +139,42 @@ const ConversationList = ({ activeFilter, onConversationSelect }) => {
   };
 
   const clearSelection = () => setSelectedForAction([]);
+
+  const markAsRead = async () => {
+    try {
+      await Promise.all(
+        selectedForAction.map((id) =>
+          axiosInstance.patch(`/messages/conversations/${id}/mark-as-read`)
+        )
+      );
+      clearSelection();
+      fetchConversations(false);
+    } catch (error) {
+      console.error("Error marking as read", error);
+      toast.error("Failed to mark as read", {
+        position: "top-right",
+        autoClose: 3000,
+      });
+    }
+  };
+
+  const markAsUnread = async () => {
+    try {
+      await Promise.all(
+        selectedForAction.map((id) =>
+          axiosInstance.patch(`/messages/conversations/${id}/mark-as-unread`)
+        )
+      );
+      clearSelection();
+      fetchConversations(false);
+    } catch (error) {
+      console.error("Error marking as unread", error);
+      toast.error("Failed to mark as unread", {
+        position: "top-right",
+        autoClose: 3000,
+      });
+    }
+  };
 
   const allSelectedAreRead = selectedForAction.every((id) => {
     const convo = conversations.find((c) => c.id === id);
@@ -170,6 +210,7 @@ const ConversationList = ({ activeFilter, onConversationSelect }) => {
               <IconButton
                 size="small"
                 className="p-2 rounded-full hover:bg-cardBackgroundHover transition-colors"
+                onClick={allSelectedAreRead ? markAsUnread : markAsRead}
               >
                 {allSelectedAreRead ? (
                   <MarkEmailUnreadOutlinedIcon
