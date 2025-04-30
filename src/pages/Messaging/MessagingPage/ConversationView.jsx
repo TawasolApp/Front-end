@@ -1,5 +1,7 @@
 import { useEffect, useState, useRef, useLayoutEffect } from "react";
-import MoreHorizIcon from "@mui/icons-material/MoreHoriz";
+import BlockIcon from "@mui/icons-material/Block";
+import IconButton from "@mui/material/IconButton";
+import Tooltip from "@mui/material/Tooltip";
 import NewMessageModalInputs from "../New Message Modal/NewMessageModalInputs";
 import ProfileCard from "../New Message Modal/ProfileCard";
 import { axiosInstance } from "../../../apis/axios";
@@ -153,7 +155,7 @@ const ConversationView = ({ conversation }) => {
         }
       );
 
-      const latestMessages = response.data.data.reverse(); // latest at bottom
+      const latestMessages = response.data.data.reverse();
 
       setMessages((prev) => {
         const latestIds = new Set(latestMessages.map((msg) => msg._id));
@@ -214,7 +216,7 @@ const ConversationView = ({ conversation }) => {
           autoClose: 3000,
         });
       }
-      
+
       setTimeout(() => {
         refreshRecentMessages();
       }, 300);
@@ -232,6 +234,24 @@ const ConversationView = ({ conversation }) => {
     if (!dateString) return "";
     const date = new Date(dateString);
     return date.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" });
+  };
+
+  const handleBlock = async () => {
+    try {
+      await axiosInstance.put("/messages/block", {
+        participantId: conversation.participant._id,
+      });
+      toast.success("User has been blocked", {
+        position: "top-right",
+        autoClose: 3000,
+      });
+    } catch (error) {
+      console.error("Failed to block user:", error);
+      toast.error("Failed to block user", {
+        position: "top-right",
+        autoClose: 3000,
+      });
+    }
   };
 
   return (
@@ -252,12 +272,18 @@ const ConversationView = ({ conversation }) => {
           <div className="text-sm text-green-600">● Online</div>
         </div>
         <div className="flex gap-2 items-center">
-          <button
-            className="p-2 rounded-full hover:bg-cardBackgroundHover transition-colors"
-            title="More options"
-          >
-            <MoreHorizIcon className="text-icon" fontSize="medium" />
-          </button>
+          <Tooltip title="Block User" placement="bottom-start" arrow>
+            <IconButton
+              size="small"
+              className="p-2 rounded-full hover:bg-cardBackgroundHover transition-colors"
+              onClick={handleBlock}
+            >
+              <BlockIcon
+                fontSize="small"
+                className="text-textActivity hover:text-red-600"
+              />
+            </IconButton>
+          </Tooltip>
         </div>
       </div>
 

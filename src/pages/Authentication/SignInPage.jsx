@@ -17,6 +17,7 @@ import {
   setCoverPhoto,
   setIsSocialLogin,
   setRole,
+  setIsPremium,
 } from "../../store/authenticationSlice";
 import { Link, useNavigate } from "react-router-dom";
 import AuthenticationHeader from "./GenericComponents/AuthenticationHeader";
@@ -40,7 +41,12 @@ const SignInPage = () => {
       });
 
       if (userResponse.status === 201) {
-        const { token, refreshToken, is_social_login: isSocialLogin, role } = userResponse.data;
+        const {
+          token,
+          refreshToken,
+          is_social_login: isSocialLogin,
+          role,
+        } = userResponse.data;
 
         dispatch(setEmail(formData.email));
         dispatch(setToken(token));
@@ -65,6 +71,7 @@ const SignInPage = () => {
               headline,
               profilePicture,
               coverPhoto,
+              isPremium,
             } = profileResponse.data;
 
             dispatch(setType("User"));
@@ -75,6 +82,7 @@ const SignInPage = () => {
             if (headline) dispatch(setBio(headline));
             if (profilePicture) dispatch(setProfilePicture(profilePicture));
             if (coverPhoto) dispatch(setCoverPhoto(coverPhoto));
+            if (isPremium) dispatch(setIsPremium(isPremium));
 
             setIsLoading(false);
             navigate("/feed");
@@ -99,7 +107,13 @@ const SignInPage = () => {
       ) {
         setCredentialsError("Invalid email or password.");
       } else if (error.response && error.response.status === 403) {
-        setCredentialsError("Email not verified.");
+        if (
+          error.message === "Your account is suspended. Please try again later."
+        ) {
+          setCredentialsError("Account suspended.");
+        } else {
+          setCredentialsError("Email not verified.");
+        }
       } else {
         console.error("Login failed", error);
         toast.error("Login failed, please try again.", {

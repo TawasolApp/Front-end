@@ -14,6 +14,7 @@ const initialState = {
   coverPhoto: localStorage.getItem("cover") || null,
   isSocialLogin: localStorage.getItem("isSocialLogin") || false,
   role: localStorage.getItem("role") || "",
+  isPremium: localStorage.getItem("isPremium") || false,
 };
 
 export const authenticationSlice = createSlice({
@@ -75,6 +76,10 @@ export const authenticationSlice = createSlice({
       state.role = action.payload;
       localStorage.setItem("role", action.payload);
     },
+    setIsPremium: (state, action) => {
+      state.isPremium = action.payload;
+      localStorage.setItem("isPremium", action.payload);
+    },
     logout: (state) => {
       state.userId = "";
       state.email = "";
@@ -90,6 +95,7 @@ export const authenticationSlice = createSlice({
       state.isNewGoogleUser = false;
       state.isSocialLogin = false;
       state.role = "";
+      state.isPremium = false;
       localStorage.removeItem("userId");
       localStorage.removeItem("email");
       localStorage.removeItem("firstName");
@@ -103,6 +109,7 @@ export const authenticationSlice = createSlice({
       localStorage.removeItem("coverPhoto");
       localStorage.removeItem("isSocialLogin");
       localStorage.removeItem("role");
+      localStorage.removeItem("isPremium");
     },
   },
 });
@@ -122,6 +129,7 @@ export const {
   setIsNewGoogleUser,
   setIsSocialLogin,
   setRole,
+  setIsPremium,
   logout,
 } = authenticationSlice.actions;
 

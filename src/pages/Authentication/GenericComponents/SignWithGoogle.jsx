@@ -16,6 +16,7 @@ import {
   setCoverPhoto,
   setEmail,
   setIsSocialLogin,
+  setIsPremium,
 } from "../../../store/authenticationSlice";
 import { axiosInstance } from "../../../apis/axios";
 import { toast } from "react-toastify";
@@ -80,6 +81,7 @@ const SignWithGoogle = () => {
                       headline,
                       profilePicture,
                       coverPhoto,
+                      isPremium,
                     } = profileResponse.data;
 
                     dispatch(setType("User"));
@@ -103,6 +105,9 @@ const SignWithGoogle = () => {
                     }
                     if (coverPhoto) {
                       dispatch(setCoverPhoto(coverPhoto));
+                    }
+                    if (isPremium) {
+                      dispatch(setIsPremium(isPremium));
                     }
 
                     navigate("/feed");
