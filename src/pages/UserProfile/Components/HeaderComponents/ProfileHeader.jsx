@@ -19,7 +19,7 @@ import {
   setLocation,
   setProfilePicture,
   setCoverPhoto,
-  setHeadline,
+  setBio,
 } from "../../../../store/authenticationSlice.js";
 
 function ProfileHeader({
@@ -109,7 +109,7 @@ function ProfileHeader({
       location: setLocation,
       profilePicture: setProfilePicture,
       coverPhoto: setCoverPhoto,
-      headline: setHeadline,
+      headline: setBio,
     };
 
     Object.entries(fieldsToUpdate).forEach(([key, action]) => {

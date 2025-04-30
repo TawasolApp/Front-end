@@ -15,6 +15,7 @@ const ReportBlockModal = ({
   viewerId, // logged-in user (block initiator)
   initialConnectStatus,
   initialFollowStatus,
+  onBlocked,
 }) => {
   const [showBlockConfirm, setShowBlockConfirm] = useState(false);
   const [showReportModal, setShowReportModal] = useState(false);
@@ -27,7 +28,7 @@ const ReportBlockModal = ({
 
   const handleBlockUser = async () => {
     try {
-      await axios.post("/privacy/block/user", { userId });
+      await axios.post(`/privacy/block/${userId}`);
 
       const cleanupTasks = [];
 
@@ -115,7 +116,13 @@ const ReportBlockModal = ({
       await Promise.all(cleanupTasks);
       dispatch(addBlockedUser(userId));
       toast.success(`${fullName} has been blocked successfully.`);
-      onClose(); // Close the modal after cleanup
+      // onClose(); // Close the modal after cleanup
+      setTimeout(() => {
+        onClose(); // Close modal
+        if (typeof onBlocked === "function") {
+          onBlocked(); // For example, navigate to feed
+        }
+      }, 800);
     } catch (err) {
       toast.error("Failed to block user.");
 

@@ -12,7 +12,6 @@ const initialState = {
   type: localStorage.getItem("type") || "",
   profilePicture: localStorage.getItem("profilePicture") || null,
   coverPhoto: localStorage.getItem("cover") || null,
-  headline: localStorage.getItem("headline") || "",
   isSocialLogin: localStorage.getItem("isSocialLogin") || false,
   blockedUsers: JSON.parse(localStorage.getItem("blockedUsers")) || [],
 };
@@ -65,11 +64,6 @@ export const authenticationSlice = createSlice({
       state.coverPhoto = action.payload;
       localStorage.setItem("cover", action.payload);
     },
-    setHeadline: (state, action) => {
-      state.headline = action.payload;
-      localStorage.setItem("headline", action.payload);
-    },
-
     setIsNewGoogleUser: (state, action) => {
       state.isNewGoogleUser = action.payload;
     },
@@ -138,7 +132,6 @@ export const {
   setType,
   setProfilePicture,
   setCoverPhoto,
-  setHeadline,
   setIsNewGoogleUser,
   setIsSocialLogin,
   setBlockedUsers,

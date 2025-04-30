@@ -1,16 +1,24 @@
 import React, { useState, useEffect, useRef } from "react";
+import { useNavigate } from "react-router-dom";
+
 import { axiosInstance as axios } from "../../../../apis/axios.js";
 import ConfirmModal from "../ReusableModals/ConfirmModal.jsx";
 import ReportBlockModal from "../ReportAndBlockModals/ReportBlockModal.jsx";
 import NewMessageModal from "../../../Messaging/New Message Modal/NewMessageModal.jsx";
 import FlagIcon from "@mui/icons-material/Flag";
-
+import LoadingPage from "../../../LoadingScreen/LoadingPage.jsx";
 function ViewerView({
   user,
   viewerId,
   initialConnectStatus,
   initialFollowStatus,
 }) {
+  const navigate = useNavigate();
+  const [isBlocking, setIsBlocking] = useState(false);
+  if (isBlocking) {
+    return <LoadingPage message="Redirecting to feed..." />;
+  }
+
   const [connectStatus, setConnectStatus] = useState(initialConnectStatus);
   const [isFollowing, setIsFollowing] = useState(
     initialFollowStatus === "Following" || initialConnectStatus === "Connection"
@@ -23,6 +31,7 @@ function ViewerView({
   const dropdownRef = useRef(null);
 
   const [showMessageModal, setShowMessageModal] = useState(false);
+
   useEffect(() => {
     if (connectStatus === "Connection") {
       setIsFollowing(true);
@@ -293,6 +302,10 @@ function ViewerView({
         viewerId={viewerId} // logged-in user
         initialConnectStatus={connectStatus}
         initialFollowStatus={isFollowing ? "Following" : "No Follow"}
+        onBlocked={() => {
+          setIsBlocking(true); // show loading first
+          setTimeout(() => navigate("/feed"), 1000); // then redirect
+        }}
       />
 
       {showMessageModal && (
