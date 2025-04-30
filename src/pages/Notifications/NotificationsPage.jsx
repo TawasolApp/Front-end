@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef, useCallback } from "react";
-import { useNavigate, useSearchParams } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { axiosInstance } from "../../apis/axios";
 import { io } from "socket.io-client";
 import CircleNotificationsIcon from "@mui/icons-material/CircleNotifications";
@@ -9,8 +9,6 @@ import { useSelector } from "react-redux";
 
 const NotificationsPage = () => {
   const navigate = useNavigate();
-  const [searchParams] = useSearchParams();
-  const filter = searchParams.get('filter');
   const [notifications, setNotifications] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -20,11 +18,11 @@ const NotificationsPage = () => {
   });
   const [hasMore, setHasMore] = useState(true);
   const [unseenCount, setUnseenCount] = useState(0);
+  const [showUnreadOnly, setShowUnreadOnly] = useState(false);
   const { userId, companyId } = useSelector((state) => state.authentication);
   const socketRef = useRef(null);
   const observer = useRef();
   const BASE_URL = String(import.meta.env.VITE_APP_BASE_URL || "").trim();
-  const [userInteracted, setUserInteracted] = useState(false);
   const audioContextRef = useRef(null);
   const audioInitializedRef = useRef(false);
 
@@ -55,7 +53,6 @@ const NotificationsPage = () => {
       }
       
       audioInitializedRef.current = true;
-      setUserInteracted(true);
       return true;
     } catch (error) {
       console.error("Audio initialization failed:", error);
@@ -115,11 +112,14 @@ const NotificationsPage = () => {
   const fetchNotifications = async () => {
     setLoading(true);
     try {
-      const response = await axiosInstance.get(`/notifications/${companyId || userId}`, {
+      const endpoint = showUnreadOnly 
+        ? `/notifications/${companyId || userId}/unread`
+        : `/notifications/${companyId || userId}`;
+      
+      const response = await axiosInstance.get(endpoint, {
         params: {
           page: pagination.page,
           limit: pagination.limit,
-          filter: filter === 'unread' ? 'unread' : undefined
         },
       });
       
@@ -211,7 +211,6 @@ const NotificationsPage = () => {
         return (
           <span>
             <span 
-              className="text-blue-500 hover:underline cursor-pointer"
               onClick={(e) => {
                 e.stopPropagation();
                 handleNotificationClick(notification, 'content');
@@ -226,7 +225,6 @@ const NotificationsPage = () => {
         return (
           <span>
             <span 
-              className="text-blue-500 hover:underline cursor-pointer"
               onClick={(e) => {
                 e.stopPropagation();
                 handleNotificationClick(notification, 'content');
@@ -296,15 +294,11 @@ const NotificationsPage = () => {
     setPagination(prev => ({ ...prev, page: 1 }));
     fetchNotifications();
     fetchUnseenCount();
-  }, [filter]);
+  }, [showUnreadOnly]);
 
   useEffect(() => {
     fetchNotifications();
   }, [pagination.page, pagination.limit]);
-
-  const filteredNotifications = filter === 'unread' 
-    ? notifications.filter(notification => !notification.isRead)
-    : notifications;
 
   return (
     <div className="min-h-screen bg-mainBackground p-4 md:p-8 flex justify-center">
@@ -316,9 +310,9 @@ const NotificationsPage = () => {
 
           <div className="space-y-1">
             <div
-              onClick={() => navigate("/notifications")}
+              onClick={() => setShowUnreadOnly(false)}
               className={`flex items-center p-3 hover:bg-cardBackgroundHover rounded-lg cursor-pointer transition-colors ${
-                filter !== 'unread' ? 'bg-cardBackgroundHover' : ''
+                !showUnreadOnly ? 'bg-cardBackgroundHover' : ''
               }`}
             >
               <CircleNotificationsIcon className="text-textActivity text-2xl mr-3" />
@@ -337,9 +331,9 @@ const NotificationsPage = () => {
             </div>
 
             <div
-              onClick={() => navigate("/notifications?filter=unread")}
+              onClick={() => setShowUnreadOnly(true)}
               className={`flex items-center p-3 hover:bg-cardBackgroundHover rounded-lg cursor-pointer transition-colors ${
-                filter === 'unread' ? 'bg-cardBackgroundHover' : ''
+                showUnreadOnly ? 'bg-cardBackgroundHover' : ''
               }`}
             >
               <div className="w-6 h-6 mr-3 flex items-center justify-center">
@@ -354,7 +348,7 @@ const NotificationsPage = () => {
           <div className="bg-cardBackground rounded-lg shadow-md border border-cardBorder overflow-hidden">
             <div className="p-4 md:p-6 border-b border-cardBorder">
               <h2 className="text-xl font-semibold text-textHeavyTitle">
-                {filter === 'unread' ? 'Unread Notifications' : 'All Notifications'}
+                {showUnreadOnly ? 'Unread Notifications' : 'All Notifications'}
               </h2>
             </div>
 
@@ -364,10 +358,10 @@ const NotificationsPage = () => {
               </div>
             ) : error ? (
               <div className="p-6 text-center text-error">{error}</div>
-            ) : filteredNotifications.length > 0 ? (
+            ) : notifications.length > 0 ? (
               <div className="divide-y divide-cardBorder">
-                {filteredNotifications.map((notification, index) => {
-                  const isLast = index === filteredNotifications.length - 1;
+                {notifications.map((notification, index) => {
+                  const isLast = index === notifications.length - 1;
                   return (
                     <div
                       key={notification.notificationId}
@@ -381,7 +375,9 @@ const NotificationsPage = () => {
                         <img
                           src={notification.profilePicture || defaultProfilePicture}
                           alt={notification.userName}
-                          className="w-10 h-10 rounded-full object-cover"
+                          className={`w-10 h-10 object-cover ${
+                            notification.senderType === "Company" ? "rounded-lg" : "rounded-full"
+                          }`}
                         />
                         <div className="flex-1 min-w-0">
                           <div className="flex justify-between items-start">
@@ -411,7 +407,7 @@ const NotificationsPage = () => {
               </div>
             ) : (
               <div className="p-6 text-center text-textPlaceholder">
-                {filter === 'unread' ? 'No unread notifications' : 'No notifications yet'}
+                {showUnreadOnly ? 'No unread notifications' : 'No notifications yet'}
               </div>
             )}
           </div>

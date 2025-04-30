@@ -18,7 +18,7 @@ const NetworkBox = () => {
     page: 1,
     limit: 5,
   });
-  const { userId } = useSelector((state) => state.authentication);
+  const { userId, isPremium } = useSelector((state) => state.authentication);
   const [hasMore, setHasMore] = useState(true);
   const observer = useRef();
   const lastElementRef = useCallback(
@@ -150,6 +150,14 @@ const NetworkBox = () => {
           ? [...prev, { userId }]
           : prev.filter((request) => request.userId !== userId),
       );
+    }
+  };
+
+  const handlePremiumClick = () => {
+    if (isPremium) {
+      navigate('/current-plan');
+    } else {
+      navigate('/premium');
     }
   };
 
@@ -289,7 +297,7 @@ const NetworkBox = () => {
               Millions of members use Premium
             </p>
             <button 
-              onClick={() => navigate("/premium")} 
+              onClick={handlePremiumClick} 
               className="px-4 py-2 bg-amberLight hover:bg-amberLightHover text-amberTextLight dark:text-amberTextDark font-medium rounded-lg transition-colors"
             >
               Try Premium for EGPO
