@@ -5,12 +5,13 @@ import ProfileCard from "../New Message Modal/ProfileCard";
 import { axiosInstance } from "../../../apis/axios";
 import { toast } from "react-toastify";
 import { useNavigate } from "react-router-dom";
-import { io } from "socket.io-client";
 import { useSelector } from "react-redux";
 import { Done, DoneAll } from "@mui/icons-material";
+import { useSocket } from "../../../hooks/SocketContext";
 
 const ConversationView = ({ conversation }) => {
   const currentUserId = useSelector((state) => state.authentication.userId);
+  const socket = useSocket();
   const [messages, setMessages] = useState([]);
   const [loading, setLoading] = useState(false);
   const [pagination, setPagination] = useState({
@@ -22,35 +23,15 @@ const ConversationView = ({ conversation }) => {
   const scrollContainerRef = useRef(null);
   const navigate = useNavigate();
   const initialLoadComplete = useRef(false);
-  const [socket, setSocket] = useState(null);
-  const userId = useSelector((state) => state.authentication.userId);
 
-  // Setup socket connection
-  useEffect(() => {
-    const newSocket = io("wss://tawasolapp.me", {
-      transports: ["websocket"],
-      query: { userId },
-      withCredentials: true,
-      reconnection: true,
-      reconnectionAttempts: 5,
-      reconnectionDelay: 1000,
-    });
-
-    setSocket(newSocket);
-
-    return () => {
-      if (newSocket) newSocket.disconnect();
-    };
-  }, []);
-
-  // Mark conversation as read
   const markConversationAsRead = () => {
     if (!socket || !conversation.id) return;
     socket.emit("messages_read", { conversationId: conversation.id });
   };
 
-  // Listen for incoming messages
   useEffect(() => {
+    if (!socket) return;
+
     const handleReceiveMessage = (message) => {
       if (message.senderId === conversation.participant._id) {
         setMessages((prev) => [...prev, message]);
@@ -64,13 +45,12 @@ const ConversationView = ({ conversation }) => {
       }
     };
 
-    socket?.on("receive_message", handleReceiveMessage);
+    socket.on("receive_message", handleReceiveMessage);
     return () => {
-      socket?.off("receive_message", handleReceiveMessage);
+      socket.off("receive_message", handleReceiveMessage);
     };
-  }, [socket, conversation.participant._id]);
+  }, [socket, conversation.participant._id, conversation.id]);
 
-  // Fetch messages when conversation changes
   useEffect(() => {
     if (conversation.id) {
       setMessages([]);
@@ -85,7 +65,6 @@ const ConversationView = ({ conversation }) => {
     }
   }, [conversation.id]);
 
-  // Scroll to bottom on initial load
   useLayoutEffect(() => {
     if (
       scrollContainerRef.current &&
@@ -137,8 +116,7 @@ const ConversationView = ({ conversation }) => {
         }, 50);
       }
 
-      // If last message is not sent by current user, mark as read
-      const lastMsg = newMessages[newMessages.length - 1];
+      const lastMsg = newMessages[0];
       if (reset && lastMsg?.senderId !== currentUserId) {
         markConversationAsRead();
       }
@@ -182,6 +160,7 @@ const ConversationView = ({ conversation }) => {
         media: messageData.media || [],
         senderId: currentUserId,
         sentAt: new Date().toISOString(),
+        status: "Sent",
       },
     ]);
 
@@ -199,6 +178,13 @@ const ConversationView = ({ conversation }) => {
         });
       }
     });
+
+    const scrollContainer = scrollContainerRef.current;
+    if (scrollContainer) {
+      requestAnimationFrame(() => {
+        scrollContainer.scrollTop = scrollContainer.scrollHeight;
+      });
+    }
   };
 
   const formatTime = (dateString) => {
@@ -284,15 +270,8 @@ const ConversationView = ({ conversation }) => {
                 )}
                 <div className="flex justify-end items-center gap-2 mt-1 text-xs text-textContent">
                   <span>{formatTime(msg.sentAt)}</span>
-                  {msg.status && (
+                  {msg.status && msg.senderId === currentUserId && (
                     <span
-                      className={`${
-                        msg.status === "read"
-                          ? "text-blue-500"
-                          : msg.status === "delivered"
-                            ? "text-green-500"
-                            : "text-gray-400"
-                      }`}
                       title={
                         msg.status.charAt(0).toUpperCase() + msg.status.slice(1)
                       }

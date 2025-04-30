@@ -7,7 +7,7 @@ import HomeIcon from "@mui/icons-material/Home";
 import CottageIcon from "@mui/icons-material/Cottage";
 import GroupIcon from "@mui/icons-material/Group";
 import WorkIcon from "@mui/icons-material/Work";
-import BusinessCenterIcon from '@mui/icons-material/BusinessCenter';
+import BusinessCenterIcon from "@mui/icons-material/BusinessCenter";
 import ChatBubbleIcon from "@mui/icons-material/ChatBubble";
 import ForumIcon from "@mui/icons-material/Forum";
 import NotificationsIcon from "@mui/icons-material/Notifications";
@@ -39,7 +39,7 @@ const TawasolNavbar = () => {
   const companyId = useSelector((state) => state.authentication.companyId);
   const currentAuthorName = `${useSelector((state) => state.authentication.firstName)} ${useSelector((state) => state.authentication.lastName)}`;
   const currentAuthorPicture = useSelector(
-    (state) => state.authentication.profilePicture,
+    (state) => state.authentication.profilePicture
   );
   const currentAuthorBio = useSelector((state) => state.authentication.bio);
 
@@ -48,20 +48,20 @@ const TawasolNavbar = () => {
   // Initialize audio context and setup user interaction
   const initializeAudio = useCallback(async () => {
     if (audioInitializedRef.current) return true;
-    
+
     try {
       const AudioContext = window.AudioContext || window.webkitAudioContext;
       if (!AudioContext) {
         console.warn("Web Audio API not supported");
         return false;
       }
-  
+
       audioContextRef.current = new AudioContext();
-      
-      if (audioContextRef.current.state === 'suspended') {
+
+      if (audioContextRef.current.state === "suspended") {
         await audioContextRef.current.resume();
       }
-      
+
       audioInitializedRef.current = true;
       return true;
     } catch (error) {
@@ -69,27 +69,27 @@ const TawasolNavbar = () => {
       return false;
     }
   }, []);
-  
+
   // Play beep sound when new notification arrives
   const playBeep = useCallback(async () => {
     if (!audioInitializedRef.current) {
       const initialized = await initializeAudio();
       if (!initialized) return;
     }
-  
+
     try {
       const oscillator = audioContextRef.current.createOscillator();
       const gainNode = audioContextRef.current.createGain();
-      
-      oscillator.type = 'sine';
+
+      oscillator.type = "sine";
       oscillator.frequency.value = 1200;
       gainNode.gain.value = 0.5;
-      
+
       oscillator.connect(gainNode);
       gainNode.connect(audioContextRef.current.destination);
-      
+
       oscillator.start();
-      
+
       setTimeout(() => {
         oscillator.stop();
       }, 300);
@@ -101,7 +101,9 @@ const TawasolNavbar = () => {
   // Fetch initial unseen notifications count
   const fetchUnseenCount = useCallback(async () => {
     try {
-      const response = await axiosInstance.get(`/notifications/${companyId || currentAuthorId}/unseen`);
+      const response = await axiosInstance.get(
+        `/notifications/${companyId || currentAuthorId}/unseen`
+      );
       setUnseenCount(response.data.unseenCount);
     } catch (error) {
       console.error("Failed to fetch unseen count:", error);
@@ -112,22 +114,24 @@ const TawasolNavbar = () => {
   useEffect(() => {
     const handleUserInteraction = async () => {
       await initializeAudio();
-      window.removeEventListener('click', handleUserInteraction);
-      window.removeEventListener('keydown', handleUserInteraction);
-      window.removeEventListener('touchstart', handleUserInteraction);
-      document.removeEventListener('click', handleUserInteraction);
+      window.removeEventListener("click", handleUserInteraction);
+      window.removeEventListener("keydown", handleUserInteraction);
+      window.removeEventListener("touchstart", handleUserInteraction);
+      document.removeEventListener("click", handleUserInteraction);
     };
-  
-    window.addEventListener('click', handleUserInteraction, { once: true });
-    window.addEventListener('keydown', handleUserInteraction, { once: true });
-    window.addEventListener('touchstart', handleUserInteraction, { once: true });
-    document.addEventListener('click', handleUserInteraction, { once: true });
-  
+
+    window.addEventListener("click", handleUserInteraction, { once: true });
+    window.addEventListener("keydown", handleUserInteraction, { once: true });
+    window.addEventListener("touchstart", handleUserInteraction, {
+      once: true,
+    });
+    document.addEventListener("click", handleUserInteraction, { once: true });
+
     return () => {
-      window.removeEventListener('click', handleUserInteraction);
-      window.removeEventListener('keydown', handleUserInteraction);
-      window.removeEventListener('touchstart', handleUserInteraction);
-      document.removeEventListener('click', handleUserInteraction);
+      window.removeEventListener("click", handleUserInteraction);
+      window.removeEventListener("keydown", handleUserInteraction);
+      window.removeEventListener("touchstart", handleUserInteraction);
+      document.removeEventListener("click", handleUserInteraction);
     };
   }, [initializeAudio]);
 
@@ -140,8 +144,8 @@ const TawasolNavbar = () => {
       socketRef.current.disconnect();
     }
 
-    socketRef.current = io('wss://tawasolapp.me', {
-      transports: ['websocket'],
+    socketRef.current = io("wss://tawasolapp.me", {
+      transports: ["websocket"],
       query: { userId: currentAuthorId },
       withCredentials: true,
       reconnection: true,
@@ -161,7 +165,7 @@ const TawasolNavbar = () => {
     socketRef.current.on("newNotification", (newNotification) => {
       // Only increment if not on notifications page
       if (currentPath !== "/notifications") {
-        setUnseenCount(prev => prev + 1);
+        setUnseenCount((prev) => prev + 1);
         playBeep();
       }
     });
@@ -172,6 +176,13 @@ const TawasolNavbar = () => {
 
     socketRef.current.on("notificationCountUpdate", ({ count }) => {
       setUnseenCount(count);
+    });
+
+    socketRef.current.on("receive_message", (message) => {
+      console.log("Received message:", message);
+
+      // Acknowledge message delivery with empty body
+      socketRef.current.emit("messages_delivered", {});
     });
 
     return () => {
@@ -223,18 +234,19 @@ const TawasolNavbar = () => {
     {
       name: "Notifications",
       path: "/notifications",
-      icon: currentPath === "/notifications" ? (
-        <NotificationsActiveIcon />
-      ) : (
-        <Badge 
-          badgeContent={unseenCount} 
-          color="error" 
-          max={99}
-          overlap="circular"
-        >
-          <NotificationsIcon />
-        </Badge>
-      ),
+      icon:
+        currentPath === "/notifications" ? (
+          <NotificationsActiveIcon />
+        ) : (
+          <Badge
+            badgeContent={unseenCount}
+            color="error"
+            max={99}
+            overlap="circular"
+          >
+            <NotificationsIcon />
+          </Badge>
+        ),
       active: currentPath === "/notifications",
     },
   ];
@@ -410,7 +422,11 @@ const TawasolNavbar = () => {
                     ${item.active ? "text-navbarIconsSelected" : "text-navbarIconsNormal"}
                     ${item.active ? "border-b-2 border-navbarIconsSelected" : ""}
                     hover:text-navbarIconsSelected`}
-                  onClick={item.name === "Notifications" ? handleNotificationClick : () => navigate(item.path)}
+                  onClick={
+                    item.name === "Notifications"
+                      ? handleNotificationClick
+                      : () => navigate(item.path)
+                  }
                 >
                   <span className="text-lg">{item.icon}</span>
                   <span className={`text-xs ${isMobile ? "hidden" : "block"}`}>
@@ -449,7 +465,7 @@ const TawasolNavbar = () => {
                         className="p-4 flex gap-3 items-center hover:bg-buttonIconHover"
                         onClick={() => {
                           setIsMeOpen(false);
-                          navigate(`/users/${currentAuthorId}`)
+                          navigate(`/users/${currentAuthorId}`);
                         }}
                       >
                         <Avatar

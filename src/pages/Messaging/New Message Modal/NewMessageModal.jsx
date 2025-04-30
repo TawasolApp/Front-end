@@ -1,48 +1,26 @@
 import { useEffect, useState } from "react";
-import { io } from "socket.io-client";
 import NewMessageModalHeader from "./NewMessageModalHeader";
 import ProfileCard from "./ProfileCard";
 import NewMessageModalInputs from "./NewMessageModalInputs";
 import { toast } from "react-toastify";
-import { useSelector } from "react-redux";
+import { useSocket } from "../../../hooks/SocketContext";
 
 const NewMessageModal = ({ recipient, onClose }) => {
   const [isMinimized, setIsMinimized] = useState(false);
-  const [socket, setSocket] = useState(null);
-  const userId = useSelector((state) => state.authentication.userId);
+  const socket = useSocket();
 
-  useEffect(() => {
-    // Replace with your actual Socket.io server URL
-    const newSocket = io("wss://tawasolapp.me", {
-      transports: ["websocket"],
-      query: { userId },
-      withCredentials: true,
-      reconnection: true,
-      reconnectionAttempts: 5,
-      reconnectionDelay: 1000,
-    });
+  // useEffect(() => {
+  //   const handleReceiveMessage = (message) => {
+  //     console.log("Received a message in MessageModal:", message);
+  //     // TODO: implement action later
+  //   };
 
-    setSocket(newSocket);
+  //   socket?.on("receive_message", handleReceiveMessage);
 
-    return () => {
-      if (newSocket) {
-        newSocket.disconnect();
-      }
-    };
-  }, []);
-
-  useEffect(() => {
-    const handleReceiveMessage = (message) => {
-      console.log("Received a message in MessageModal:", message);
-      // TODO: implement action later
-    };
-
-    socket?.on("receive_message", handleReceiveMessage);
-
-    return () => {
-      socket?.off("receive_message", handleReceiveMessage);
-    };
-  }, [socket]);
+  //   return () => {
+  //     socket?.off("receive_message", handleReceiveMessage);
+  //   };
+  // }, [socket]);
 
 
   const handleSendMessage = (messageData) => {
