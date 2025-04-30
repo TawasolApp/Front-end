@@ -14,6 +14,7 @@ const WelcomePage = () => {
   useEffect(() => {
     if (token) {
       navigate("/feed");
+      return;
     } else {
       dispatch(logout());
     }

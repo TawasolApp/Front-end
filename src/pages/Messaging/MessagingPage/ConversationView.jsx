@@ -7,6 +7,7 @@ import { toast } from "react-toastify";
 import { useNavigate } from "react-router-dom";
 import { io } from "socket.io-client";
 import { useSelector } from "react-redux";
+import { Done, DoneAll } from "@mui/icons-material";
 
 const ConversationView = ({ conversation }) => {
   const currentUserId = useSelector((state) => state.authentication.userId);
@@ -42,6 +43,12 @@ const ConversationView = ({ conversation }) => {
     };
   }, []);
 
+  // Mark conversation as read
+  const markConversationAsRead = () => {
+    if (!socket || !conversation.id) return;
+    socket.emit("messages_read", { conversationId: conversation.id });
+  };
+
   // Listen for incoming messages
   useEffect(() => {
     const handleReceiveMessage = (message) => {
@@ -53,6 +60,7 @@ const ConversationView = ({ conversation }) => {
               scrollContainerRef.current.scrollHeight;
           }
         }, 0);
+        markConversationAsRead();
       }
     };
 
@@ -123,11 +131,16 @@ const ConversationView = ({ conversation }) => {
       });
 
       if (!reset && scrollContainer) {
-        // Delay the scrollTop update until after DOM updates
         setTimeout(() => {
           const newScrollHeight = scrollContainer.scrollHeight;
           scrollContainer.scrollTop = newScrollHeight - previousScrollHeight;
         }, 50);
+      }
+
+      // If last message is not sent by current user, mark as read
+      const lastMsg = newMessages[newMessages.length - 1];
+      if (reset && lastMsg?.senderId !== currentUserId) {
+        markConversationAsRead();
       }
     } catch (err) {
       console.error("Failed to fetch messages:", err);
@@ -164,7 +177,7 @@ const ConversationView = ({ conversation }) => {
     setMessages((prev) => [
       ...prev,
       {
-        _id: Date.now().toString(), // Temporary local ID
+        _id: Date.now().toString(),
         text: messageData.text,
         media: messageData.media || [],
         senderId: currentUserId,
@@ -269,8 +282,39 @@ const ConversationView = ({ conversation }) => {
                     ))}
                   </div>
                 )}
-                <div className="text-xs text-right mt-1 text-textContent">
-                  {formatTime(msg.sentAt)}
+                <div className="flex justify-end items-center gap-2 mt-1 text-xs text-textContent">
+                  <span>{formatTime(msg.sentAt)}</span>
+                  {msg.status && (
+                    <span
+                      className={`${
+                        msg.status === "read"
+                          ? "text-blue-500"
+                          : msg.status === "delivered"
+                            ? "text-green-500"
+                            : "text-gray-400"
+                      }`}
+                      title={
+                        msg.status.charAt(0).toUpperCase() + msg.status.slice(1)
+                      }
+                    >
+                      {msg.status === "Read" ? (
+                        <DoneAll
+                          className="text-buttonSubmitEnable"
+                          fontSize="small"
+                        />
+                      ) : msg.status === "Delivered" ? (
+                        <DoneAll
+                          className="text-textPlaceholder"
+                          fontSize="small"
+                        />
+                      ) : (
+                        <Done
+                          className="text-textPlaceholder"
+                          fontSize="small"
+                        />
+                      )}
+                    </span>
+                  )}
                 </div>
               </div>
             ))}
