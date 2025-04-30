@@ -41,7 +41,11 @@ const ConversationView = ({ conversation }) => {
               scrollContainerRef.current.scrollHeight;
           }
         }, 0);
+
         markConversationAsRead();
+        setTimeout(() => {
+          refreshRecentMessages();
+        }, 300);
 
         const scrollContainer = scrollContainerRef.current;
         if (scrollContainer) {
@@ -138,6 +142,32 @@ const ConversationView = ({ conversation }) => {
     }
   };
 
+  const refreshRecentMessages = async () => {
+    if (!conversation.id || loading) return;
+
+    try {
+      const response = await axiosInstance.get(
+        `/messages/conversations/${conversation.id}`,
+        {
+          params: { page: 1, limit: 10 },
+        }
+      );
+
+      const latestMessages = response.data.data.reverse(); // latest at bottom
+
+      setMessages((prev) => {
+        const latestIds = new Set(latestMessages.map((msg) => msg._id));
+        // Remove any old versions of these messages
+        const filteredOldMessages = prev.filter(
+          (msg) => !latestIds.has(msg._id)
+        );
+        return [...filteredOldMessages, ...latestMessages];
+      });
+    } catch (err) {
+      console.error("Failed to refresh recent messages", err);
+    }
+  };
+
   const handleScroll = () => {
     const container = scrollContainerRef.current;
     if (
@@ -184,6 +214,10 @@ const ConversationView = ({ conversation }) => {
           autoClose: 3000,
         });
       }
+      
+      setTimeout(() => {
+        refreshRecentMessages();
+      }, 300);
     });
 
     const scrollContainer = scrollContainerRef.current;
