@@ -1,10 +1,11 @@
 import React, { useState } from 'react';
-import { useSelector } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
 import { axiosInstance } from "../../apis/axios";
-
+import { setIsPremium } from '../../store/authenticationSlice';
 
 const CheckoutPage = () => {
-  const { firstName } = useSelector((state) => state.authentication);
+  const dispatch = useDispatch();
+  const { firstName, isPremium } = useSelector((state) => state.authentication);
   const [billingCycle, setBillingCycle] = useState('Yearly');
   const [paymentType, setPaymentType] = useState('subscription');
   const [isLoading, setIsLoading] = useState(false);
@@ -40,11 +41,14 @@ const CheckoutPage = () => {
       );
   
       if (response.data && response.data.checkoutSessionUrl) {
+        // Dispatch action to set isPremium to true
+        dispatch(setIsPremium(true));
+        
+        // Redirect to payment page
         window.location.href = response.data.checkoutSessionUrl;
       } else {
         throw new Error('Invalid response from server');
       }
-  
     } catch (err) {
       // Handle different error cases
       if (err.response) {
