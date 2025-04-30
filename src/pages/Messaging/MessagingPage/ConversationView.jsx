@@ -5,11 +5,13 @@ import ProfileCard from "../New Message Modal/ProfileCard";
 import { axiosInstance } from "../../../apis/axios";
 import { toast } from "react-toastify";
 import { useNavigate } from "react-router-dom";
-import { io } from "socket.io-client";
 import { useSelector } from "react-redux";
+import { Done, DoneAll } from "@mui/icons-material";
+import { useSocket } from "../../../hooks/SocketContext";
 
 const ConversationView = ({ conversation }) => {
   const currentUserId = useSelector((state) => state.authentication.userId);
+  const socket = useSocket();
   const [messages, setMessages] = useState([]);
   const [loading, setLoading] = useState(false);
   const [pagination, setPagination] = useState({
@@ -21,29 +23,15 @@ const ConversationView = ({ conversation }) => {
   const scrollContainerRef = useRef(null);
   const navigate = useNavigate();
   const initialLoadComplete = useRef(false);
-  const [socket, setSocket] = useState(null);
-  const userId = useSelector((state) => state.authentication.userId);
 
-  // Setup socket connection
+  const markConversationAsRead = () => {
+    if (!socket || !conversation.id) return;
+    socket.emit("messages_read", { conversationId: conversation.id });
+  };
+
   useEffect(() => {
-    const newSocket = io("wss://tawasolapp.me", {
-      transports: ["websocket"],
-      query: { userId },
-      withCredentials: true,
-      reconnection: true,
-      reconnectionAttempts: 5,
-      reconnectionDelay: 1000,
-    });
+    if (!socket) return;
 
-    setSocket(newSocket);
-
-    return () => {
-      if (newSocket) newSocket.disconnect();
-    };
-  }, []);
-
-  // Listen for incoming messages
-  useEffect(() => {
     const handleReceiveMessage = (message) => {
       if (message.senderId === conversation.participant._id) {
         setMessages((prev) => [...prev, message]);
@@ -53,16 +41,16 @@ const ConversationView = ({ conversation }) => {
               scrollContainerRef.current.scrollHeight;
           }
         }, 0);
+        markConversationAsRead();
       }
     };
 
-    socket?.on("receive_message", handleReceiveMessage);
+    socket.on("receive_message", handleReceiveMessage);
     return () => {
-      socket?.off("receive_message", handleReceiveMessage);
+      socket.off("receive_message", handleReceiveMessage);
     };
-  }, [socket, conversation.participant._id]);
+  }, [socket, conversation.participant._id, conversation.id]);
 
-  // Fetch messages when conversation changes
   useEffect(() => {
     if (conversation.id) {
       setMessages([]);
@@ -77,7 +65,6 @@ const ConversationView = ({ conversation }) => {
     }
   }, [conversation.id]);
 
-  // Scroll to bottom on initial load
   useLayoutEffect(() => {
     if (
       scrollContainerRef.current &&
@@ -123,11 +110,15 @@ const ConversationView = ({ conversation }) => {
       });
 
       if (!reset && scrollContainer) {
-        // Delay the scrollTop update until after DOM updates
         setTimeout(() => {
           const newScrollHeight = scrollContainer.scrollHeight;
           scrollContainer.scrollTop = newScrollHeight - previousScrollHeight;
         }, 50);
+      }
+
+      const lastMsg = newMessages[0];
+      if (reset && lastMsg?.senderId !== currentUserId) {
+        markConversationAsRead();
       }
     } catch (err) {
       console.error("Failed to fetch messages:", err);
@@ -164,11 +155,12 @@ const ConversationView = ({ conversation }) => {
     setMessages((prev) => [
       ...prev,
       {
-        _id: Date.now().toString(), // Temporary local ID
+        _id: Date.now().toString(),
         text: messageData.text,
         media: messageData.media || [],
         senderId: currentUserId,
         sentAt: new Date().toISOString(),
+        status: "Sent",
       },
     ]);
 
@@ -186,6 +178,13 @@ const ConversationView = ({ conversation }) => {
         });
       }
     });
+
+    const scrollContainer = scrollContainerRef.current;
+    if (scrollContainer) {
+      requestAnimationFrame(() => {
+        scrollContainer.scrollTop = scrollContainer.scrollHeight;
+      });
+    }
   };
 
   const formatTime = (dateString) => {
@@ -269,8 +268,32 @@ const ConversationView = ({ conversation }) => {
                     ))}
                   </div>
                 )}
-                <div className="text-xs text-right mt-1 text-textContent">
-                  {formatTime(msg.sentAt)}
+                <div className="flex justify-end items-center gap-2 mt-1 text-xs text-textContent">
+                  <span>{formatTime(msg.sentAt)}</span>
+                  {msg.status && msg.senderId === currentUserId && (
+                    <span
+                      title={
+                        msg.status.charAt(0).toUpperCase() + msg.status.slice(1)
+                      }
+                    >
+                      {msg.status === "Read" ? (
+                        <DoneAll
+                          className="text-buttonSubmitEnable"
+                          fontSize="small"
+                        />
+                      ) : msg.status === "Delivered" ? (
+                        <DoneAll
+                          className="text-textPlaceholder"
+                          fontSize="small"
+                        />
+                      ) : (
+                        <Done
+                          className="text-textPlaceholder"
+                          fontSize="small"
+                        />
+                      )}
+                    </span>
+                  )}
                 </div>
               </div>
             ))}
