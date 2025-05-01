@@ -2,11 +2,61 @@ import { useState } from "react";
 import { toast } from "react-toastify";
 import { axiosInstance } from "../../../../apis/axios";
 import CloseIcon from "@mui/icons-material/Close";
+import UploadFileIcon from "@mui/icons-material/UploadFile";
+import DescriptionIcon from "@mui/icons-material/Description";
 
 const JobApplyModal = ({ jobId, companyName, onClose, onApply }) => {
   const [phoneNumber, setPhoneNumber] = useState("");
+  const [resumeFile, setResumeFile] = useState(null);
+  const [resumeURL, setResumeURL] = useState("");
+  const [uploadProgress, setUploadProgress] = useState(0);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
+
+  const handleFileUpload = async (file) => {
+    const formData = new FormData();
+    formData.append("file", file);
+    
+    try {
+      setLoading(true);
+      setError("");
+      
+      const response = await axiosInstance.post("/media", formData, {
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
+        onUploadProgress: (progressEvent) => {
+          const percentCompleted = Math.round(
+            (progressEvent.loaded * 100) / progressEvent.total
+          );
+          setUploadProgress(percentCompleted);
+        },
+      });
+
+      setResumeURL(response.data.url);
+      console.log(response.data.url);
+      toast.success("Resume uploaded successfully");
+    } catch (err) {
+      setError(err.response?.data?.message || "Failed to upload resume");
+      setResumeFile(null);
+      setResumeURL("");
+    } finally {
+      setLoading(false);
+      setUploadProgress(0);
+    }
+  };
+
+  const handleFileChange = (e) => {
+    const file = e.target.files[0];
+    if (file) {
+      if (file.type === "application/pdf") {
+        setResumeFile(file);
+        handleFileUpload(file);
+      } else {
+        setError("Only PDF files are allowed");
+      }
+    }
+  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -17,12 +67,17 @@ const JobApplyModal = ({ jobId, companyName, onClose, onApply }) => {
       return;
     }
 
+    if (!resumeURL) {
+      setError("Please upload your resume first");
+      return;
+    }
+
     try {
       setLoading(true);
       await axiosInstance.post("/jobs/apply", {
         jobId: jobId,
         phoneNumber: phoneNumber,
-        resumeURL: "https://example.com/resume.pdf", // TODO: Replace with actual resume URL
+        resumeURL: resumeURL,
       });
 
       toast.success("Application submitted successfully.", {
@@ -64,7 +119,51 @@ const JobApplyModal = ({ jobId, companyName, onClose, onApply }) => {
 
           {/* Form */}
           <form onSubmit={handleSubmit} className="p-6">
-            <div className="mb-4">
+            {/* Resume Upload Section */}
+            <div className="mb-6">
+              <label className="block text-sm text-textPlaceholder mb-2">
+                Resume (PDF only)<span className="text-red-700">*</span>
+              </label>
+              
+              <div className="relative border-2 border-dashed border-cardBorder rounded-lg p-4 text-center hover:border-primary transition-colors">
+                <input
+                  type="file"
+                  accept=".pdf"
+                  onChange={handleFileChange}
+                  className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
+                  disabled={loading}
+                />
+                
+                <div className="flex flex-col items-center justify-center space-y-2">
+                  <UploadFileIcon className="w-8 h-8 text-textPlaceholder" />
+                  <p className="text-sm text-textContent">
+                    {resumeFile ? resumeFile.name : "Click to upload resume"}
+                  </p>
+                  <p className="text-xs text-textPlaceholder">
+                    PDF files only, max 10MB
+                  </p>
+                </div>
+              </div>
+
+              {uploadProgress > 0 && (
+                <div className="mt-2 bg-cardBackgroundHover rounded-full h-2">
+                  <div
+                    className="bg-primary rounded-full h-2 transition-all duration-300"
+                    style={{ width: `${uploadProgress}%` }}
+                  />
+                </div>
+              )}
+
+              {resumeURL && (
+                <div className="mt-2 flex items-center text-green-500 text-sm">
+                  <DescriptionIcon className="w-4 h-4 mr-1" />
+                  Resume uploaded successfully
+                </div>
+              )}
+            </div>
+
+            {/* Phone Number Input */}
+            <div className="mb-6">
               <label className="block text-sm text-textPlaceholder mb-2">
                 Phone Number<span className="text-red-700">*</span>
               </label>
@@ -75,6 +174,7 @@ const JobApplyModal = ({ jobId, companyName, onClose, onApply }) => {
                 onChange={(e) => setPhoneNumber(e.target.value)}
                 className="w-full px-3 py-2 border border-cardBorder rounded-md bg-transparent text-textContent focus:outline-none focus:ring-1 focus:ring-primary"
                 placeholder="Enter your phone number"
+                disabled={loading}
               />
             </div>
 
@@ -82,8 +182,8 @@ const JobApplyModal = ({ jobId, companyName, onClose, onApply }) => {
 
             <button
               type="submit"
-              disabled={loading}
-              className="w-full bg-buttonSubmitEnable text-buttonSubmitText py-2 px-4 rounded-md hover:bg-buttonSubmitEnableHover transition-colors disabled:opacity-50"
+              disabled={loading || !resumeURL}
+              className="w-full bg-buttonSubmitEnable text-buttonSubmitText py-2 px-4 rounded-md hover:bg-buttonSubmitEnableHover transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
             >
               {loading ? "Submitting..." : "Submit Application"}
             </button>
