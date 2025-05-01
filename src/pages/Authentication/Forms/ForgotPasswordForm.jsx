@@ -46,7 +46,7 @@ const ForgotPasswordForm = () => {
         }
 
         axiosInstance
-          .post(`/auth/reset-password`, { verifyToken })
+          .post(`/auth/reset-password`, { token: verifyToken })
           .then((res) => {
             console.log("Token verified! Redirecting to reset password page...");
             setTimeout(() => {
