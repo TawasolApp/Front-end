@@ -9,9 +9,7 @@ import { toast } from "react-toastify";
 
 const NamePage = ({ email, password }) => {
   const dispatch = useDispatch();
-  const { isNewGoogleUser } = useSelector(
-    (state) => state.authentication
-  );
+  const { isNewGoogleUser } = useSelector((state) => state.authentication);
   const navigate = useNavigate();
   const [isLoading, setIsLoading] = useState(false);
 
@@ -33,13 +31,42 @@ const NamePage = ({ email, password }) => {
 
     try {
       setIsLoading(true);
-      await axiosInstance.post("/auth/register", {
+      const response = await axiosInstance.post("/auth/register", {
         email,
         password,
         firstName: formData.firstName,
         lastName: formData.lastName,
         captchaToken: "test-token",
       });
+      const { verifyToken } = response.data;
+
+      if (String(import.meta.env.VITE_ENVIRONMENT || "").trim() === "test") {
+        setIsLoading(false);
+
+        if (!verifyToken) {
+          console.log("Invalid verification link.");
+          return;
+        }
+
+        axiosInstance
+          .get(`/auth/verify-email?token=${verifyToken}`)
+          .then((res) => {
+            console.log("Email verified! Redirecting...");
+            setTimeout(() => {
+              navigate("/auth/signin");
+            }, 1500);
+            return;
+          })
+          .catch((err) => {
+            console.error(err);
+            if (err.response?.status === 400) {
+              console.log("Invalid or expired token.");
+            } else {
+              console.log("Something went wrong. Please try again later.");
+            }
+            return;
+          });
+      }
 
       setIsLoading(false);
       navigate("/auth/verification-pending", {

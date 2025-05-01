@@ -58,7 +58,7 @@ const NameForm = ({ onSubmit, isLoading = false }) => {
 
     const captchaToken = await recaptchaRef.current.getValue();
 
-    if (!captchaToken) {
+    if (!captchaToken && String(import.meta.env.VITE_ENVIRONMENT || "").trim() !== "test") {
       setCaptchaError("Please complete the CAPTCHA.");
       return;
     }
