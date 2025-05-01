@@ -5,8 +5,8 @@ function ReportStats({ reports }) {
     reports.filter((r) => r.status === status).length;
 
   return (
-    <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 mt-4">
-      {["Pending", "Reviewed", "Actioned", "Dismissed"].map((status) => (
+    <div className="grid grid-cols-2 sm:grid-cols-3 gap-4 mt-4">
+      {["Pending", "Actioned", "Dismissed"].map((status) => (
         <div
           key={status}
           className="bg-boxbackground p-4 rounded-md border border-itemBorder text-center"
