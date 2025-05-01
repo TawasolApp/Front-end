@@ -8,7 +8,7 @@ import { axiosInstance } from "../../../apis/axios";
 import { toast } from "react-toastify";
 import { useNavigate } from "react-router-dom";
 import { useSelector } from "react-redux";
-import { Done, DoneAll } from "@mui/icons-material";
+import { AccessTime, Done, DoneAll } from "@mui/icons-material";
 import { useSocket } from "../../../hooks/SocketContext";
 
 const ConversationView = ({ conversation }) => {
@@ -63,6 +63,48 @@ const ConversationView = ({ conversation }) => {
       socket.off("receive_message", handleReceiveMessage);
     };
   }, [socket, conversation.participant._id, conversation.id]);
+
+  useEffect(() => {
+    if (!socket) return;
+
+    const handleErrorMessage = (error) => {
+      if (error.type === "LIMIT_REACHED") {
+        setMessages((prev) => prev.slice(0, prev.length - 1));
+        toast.error(
+          "Your daily message limit has been reached. Upgrade to Premium for unlimited messaging.",
+          {
+            position: "top-right",
+            autoClose: 3000,
+          }
+        );
+      } else if (error.type === "ACK") {
+        setMessages((prev) => {
+          const updated = [...prev];
+          const start = Math.max(updated.length - 10, 0);
+
+          for (let i = updated.length - 1; i >= start; i--) {
+            if (updated[i].status === "Sending") {
+              updated[i] = { ...updated[i], status: "Sent" };
+            }
+          }
+
+          return updated;
+        });
+      } else {
+        console.error("Unexpected error message from error_message");
+      }
+
+      setTimeout(() => {
+        refreshRecentMessages();
+      }, 300);
+    };
+
+    socket.on("error_message", handleErrorMessage);
+
+    return () => {
+      socket.off("error_message", handleErrorMessage);
+    };
+  }, [socket]);
 
   useEffect(() => {
     if (conversation.id) {
@@ -161,7 +203,7 @@ const ConversationView = ({ conversation }) => {
         const latestIds = new Set(latestMessages.map((msg) => msg._id));
         // Remove any old versions of these messages
         const filteredOldMessages = prev.filter(
-          (msg) => !latestIds.has(msg._id)
+          (msg) => !latestIds.has(msg._id) && msg.status !== "Sending"
         );
         return [...filteredOldMessages, ...latestMessages];
       });
@@ -199,7 +241,7 @@ const ConversationView = ({ conversation }) => {
         media: messageData.media || [],
         senderId: currentUserId,
         sentAt: new Date().toISOString(),
-        status: "Sent",
+        status: "Sending",
       },
     ]);
 
@@ -209,6 +251,10 @@ const ConversationView = ({ conversation }) => {
       media: messageData.media || [],
     };
 
+    setTimeout(() => {
+      refreshRecentMessages();
+    }, 300);
+
     socket.emit("send_message", messagePayload, (ack) => {
       if (!ack?.success) {
         toast.error("Failed to send message", {
@@ -216,10 +262,6 @@ const ConversationView = ({ conversation }) => {
           autoClose: 3000,
         });
       }
-
-      setTimeout(() => {
-        refreshRecentMessages();
-      }, 300);
     });
 
     const scrollContainer = scrollContainerRef.current;
@@ -353,8 +395,13 @@ const ConversationView = ({ conversation }) => {
                           className="text-textPlaceholder"
                           fontSize="small"
                         />
-                      ) : (
+                      ) : msg.status === "Sent" ? (
                         <Done
+                          className="text-textPlaceholder"
+                          fontSize="small"
+                        />
+                      ) : (
+                        <AccessTime
                           className="text-textPlaceholder"
                           fontSize="small"
                         />

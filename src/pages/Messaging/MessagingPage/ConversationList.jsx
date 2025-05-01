@@ -43,6 +43,7 @@ const ConversationList = ({ activeFilter, onConversationSelect }) => {
         unreadCount: convo.unseenCount,
         isYou: convo.lastMessage?.senderId === userId,
         isOnline: false, // TODO: implement presence
+        markedAsUnread: convo.markedAsUnread,
       }));
 
       setConversations((prev) =>
@@ -138,16 +139,35 @@ const ConversationList = ({ activeFilter, onConversationSelect }) => {
     );
   };
 
-  const clearSelection = () => setSelectedForAction([]);
+  const clearSelection = () => {
+    setSelectedForAction([]);
+    setHoveredId(null);
+  };
 
   const markAsRead = async () => {
+    // Optimistic update
+    setConversations((prevConversations) =>
+      prevConversations.map((convo) =>
+        selectedForAction.includes(convo.id)
+          ? { ...convo, markedAsUnread: false }
+          : convo
+      )
+    );
+
+    clearSelection();
+
     try {
       await Promise.all(
-        selectedForAction.map((id) =>
-          axiosInstance.patch(`/messages/conversations/${id}/mark-as-read`)
-        )
+        selectedForAction.map((id) => {
+          if (socket) {
+            socket.emit("messages_read", { conversationId: id });
+          }
+
+          return axiosInstance.patch(
+            `/messages/conversations/${id}/mark-as-read`
+          );
+        })
       );
-      clearSelection();
       fetchConversations(false);
     } catch (error) {
       console.error("Error marking as read", error);
@@ -159,6 +179,17 @@ const ConversationList = ({ activeFilter, onConversationSelect }) => {
   };
 
   const markAsUnread = async () => {
+    // Optimistic update
+    setConversations((prevConversations) =>
+      prevConversations.map((convo) =>
+        selectedForAction.includes(convo.id)
+          ? { ...convo, markedAsUnread: true }
+          : convo
+      )
+    );
+
+    clearSelection();
+
     try {
       await Promise.all(
         selectedForAction.map((id) =>
@@ -178,7 +209,9 @@ const ConversationList = ({ activeFilter, onConversationSelect }) => {
 
   const allSelectedAreRead = selectedForAction.every((id) => {
     const convo = conversations.find((c) => c.id === id);
-    return convo && (!convo.unreadCount || convo.isYou);
+    return (
+      convo && !convo.markedAsUnread && (!convo.unreadCount || convo.isYou)
+    );
   });
 
   return (
@@ -354,10 +387,15 @@ const ConversationList = ({ activeFilter, onConversationSelect }) => {
                       </span>
 
                       {/* Unread badge */}
-                      {convo.unreadCount > 0 && !convo.isYou && (
-                        <span className="flex items-center justify-center min-w-[20px] h-[20px] text-[11px] font-bold bg-blue-500 text-white rounded-full px-1">
-                          {convo.unreadCount}
-                        </span>
+                      {convo.markedAsUnread ? (
+                        <span className="flex items-center justify-center min-w-[20px] h-[20px] text-[11px] font-bold bg-blue-500 text-white rounded-full px-1"></span>
+                      ) : (
+                        convo.unreadCount > 0 &&
+                        !convo.isYou && (
+                          <span className="flex items-center justify-center min-w-[20px] h-[20px] text-[11px] font-bold bg-blue-500 text-white rounded-full px-1">
+                            {convo.unreadCount}
+                          </span>
+                        )
                       )}
                     </div>
                   </div>
