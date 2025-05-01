@@ -1,11 +1,11 @@
 import React, { useState, useEffect, useRef, useCallback } from "react";
 import { useNavigate } from "react-router-dom";
 import { axiosInstance } from "../../apis/axios";
-import { io } from "socket.io-client";
 import CircleNotificationsIcon from "@mui/icons-material/CircleNotifications";
 import Badge from "@mui/material/Badge";
 import defaultProfilePicture from "../../assets/images/defaultProfilePicture.png";
 import { useSelector } from "react-redux";
+import { useSocket } from "../../hooks/SocketContext";
 
 const NotificationsPage = () => {
   const navigate = useNavigate();
@@ -20,9 +20,8 @@ const NotificationsPage = () => {
   const [unseenCount, setUnseenCount] = useState(0);
   const [showUnreadOnly, setShowUnreadOnly] = useState(false);
   const { userId, companyId } = useSelector((state) => state.authentication);
-  const socketRef = useRef(null);
+  const socket = useSocket();
   const observer = useRef();
-  const BASE_URL = String(import.meta.env.VITE_APP_BASE_URL || "").trim();
   const audioContextRef = useRef(null);
   const audioInitializedRef = useRef(false);
 
@@ -253,42 +252,22 @@ const NotificationsPage = () => {
     return `${Math.floor(diffInSeconds / 86400)}d ago`;
   };
 
+  // Setup socket event listeners
   useEffect(() => {
-    if (!userId) return;
+    if (!socket || !userId) return;
 
-    if (socketRef.current) {
-      socketRef.current.disconnect();
-    }
-
-    socketRef.current = io('wss://tawasolapp.me', {
-      transports: ['websocket'],
-      query: { userId },
-      withCredentials: true,
-      reconnection: true,
-      reconnectionAttempts: 5,
-      reconnectionDelay: 1000,
-    });
-
-    socketRef.current.on("connect", () => {
-      console.log("Connected to notifications socket");
-    });
-
-    socketRef.current.on("connect_error", (err) => {
-      console.error("Socket connection error:", err);
-    });
-
-    socketRef.current.on("newNotification", (newNotification) => {
+    const handleNewNotification = (newNotification) => {
       setNotifications(prev => [newNotification, ...prev]);
       setUnseenCount(prev => prev + 1);
       playBeep();
-    });
+    };
+
+    socket.on("newNotification", handleNewNotification);
 
     return () => {
-      if (socketRef.current) {
-        socketRef.current.disconnect();
-      }
+      socket.off("newNotification", handleNewNotification);
     };
-  }, [userId, BASE_URL, playBeep]);
+  }, [socket, userId, playBeep]);
 
   useEffect(() => {
     setPagination(prev => ({ ...prev, page: 1 }));
