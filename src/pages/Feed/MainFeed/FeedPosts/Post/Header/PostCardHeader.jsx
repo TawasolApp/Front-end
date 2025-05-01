@@ -1,8 +1,8 @@
 import MoreHorizIcon from "@mui/icons-material/MoreHoriz";
 import CloseIcon from "@mui/icons-material/Close";
+import { usePost } from "../../PostContext";
 import ActorHeader from "../../../../GenericComponents/ActorHeader";
 import DropdownMenu from "../../../../GenericComponents/DropdownMenu";
-import { usePost } from "../../PostContext";
 
 const PostCardHeader = ({
   menuItems,

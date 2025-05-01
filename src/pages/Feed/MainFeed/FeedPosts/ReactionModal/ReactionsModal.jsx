@@ -1,11 +1,11 @@
 import { useState, useEffect, useMemo, useCallback, memo, useRef } from "react";
+import { Link } from "react-router-dom";
 import CloseIcon from "@mui/icons-material/Close";
 import ArrowDropDownIcon from "@mui/icons-material/ArrowDropDown";
+import { Avatar } from "@mui/material";
+import { axiosInstance } from "../../../../../apis/axios";
 import reactionIcons from "../../../GenericComponents/reactionIcons";
 import DropdownMenu from "../../../GenericComponents/DropdownMenu";
-import { Link } from "react-router-dom";
-import { axiosInstance } from "../../../../../apis/axios";
-import { Avatar } from "@mui/material";
 
 const capitalizeFirstLetter = (string) => {
   if (!string) return "";
@@ -206,7 +206,7 @@ const ReactionsModal = ({ API_URL, setShowLikes, reactCounts }) => {
                 const IconComponent = reactionIcons[reaction.type]?.Icon;
                 return (
                   <Link
-                    to={`/users/${reaction.authorId}`}
+                    to={reaction.authorType === "User" ? `/users/${reaction.authorId}` : `/company/${reaction.authorId}`}
                     key={reaction.likeId}
                     className="flex items-center gap-3 hover:bg-buttonIconHover rounded-lg relative p-2 hover:cursor-pointer"
                   >
@@ -216,7 +216,7 @@ const ReactionsModal = ({ API_URL, setShowLikes, reactCounts }) => {
                         sx={{
                           width: 56,
                           height: 56,
-                          borderRadius: "50%",
+                          borderRadius: reaction.authorType === "Company" ? "0px" : "50%",
                         }}
                       />
                       {IconComponent && (

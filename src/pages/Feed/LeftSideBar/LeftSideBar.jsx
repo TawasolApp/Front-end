@@ -22,19 +22,17 @@ const LeftSideBar = () => {
   const currentAuthorbackgroundImage = useSelector(
     (state) => state.authentication.coverPhoto,
   );
+  const currentAuthorType = useSelector((state) => state.authentication.type);
 
   // Effect to check if we're in top position (mobile/tablet) based on screen width
   useEffect(() => {
     const checkPosition = () => {
       setIsTopPosition(window.innerWidth < 768); // md breakpoint
     };
-
     // Initial check
     checkPosition();
-
     // Add resize listener
     window.addEventListener("resize", checkPosition);
-
     // Cleanup
     return () => window.removeEventListener("resize", checkPosition);
   }, []);
@@ -55,13 +53,17 @@ const LeftSideBar = () => {
           <Avatar
             src={currentAuthorPicture}
             alt={currentAuthorName}
-            sx={{ width: 64, height: 64 }}
+            sx={{
+              width: 64,
+              height: 64,
+              borderRadius: currentAuthorType === "Company" ? "0px" : "50%",
+            }}
             className="border-2 border-white cursor-pointer"
           />
         </div>
       </div>
 
-      <Link to={`/users/${currentAuthorId}`}>
+      <Link to={`/${currentAuthorType === "Company" ? "company" : "users"}/${currentAuthorId}`}>
         <div className="pt-10 pb-4 text-center px-2">
           <h2 data-testid="LeftSideBarName" className="font-semibold text-base text-authorName">
             {currentAuthorName}
@@ -78,12 +80,14 @@ const LeftSideBar = () => {
       <div
         className={`py-2 ${isTopPosition && !showMore ? "hidden" : "block"}`}
       >
-        <div className="flex items-center px-3 py-2 text-sm hover:bg-buttonIconHover cursor-pointer group transition-all">
-          <WorkIcon className="text-yellow-600 mr-2 text-base" />
-          <span data-testid="LeftSideBarPremium" className="text-xs font-semibold text-textHeavyTitle group-hover:text-textHeavyTitleHover">
-            Try Premium for EGP0
-          </span>
-        </div>
+        <Link to="/premium">
+          <div className="flex items-center px-3 py-2 text-sm hover:bg-buttonIconHover cursor-pointer group transition-all">
+            <WorkIcon className="text-yellow-600 mr-2 text-base" />
+            <span className="text-xs font-semibold text-textHeavyTitle group-hover:text-textHeavyTitleHover">
+              Try Premium for EGP0
+            </span>
+          </div>
+        </Link>
 
         <Link to="/my-items/saved-posts">
           <div className="flex items-center px-3 py-2 text-sm hover:bg-buttonIconHover cursor-pointer group transition-all">

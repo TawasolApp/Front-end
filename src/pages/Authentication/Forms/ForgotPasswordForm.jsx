@@ -9,6 +9,7 @@ import { setEmail } from "../../../store/authenticationSlice";
 const ForgotPasswordForm = () => {
   const [email, setEmailState] = useState("");
   const [error, setError] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
@@ -25,20 +26,58 @@ const ForgotPasswordForm = () => {
     }
 
     try {
-      await axiosInstance.post("/auth/forgot-password", {
-        email,
-        isAndroid: false,
-      });
+      setIsLoading(true);
+      const response = await axiosInstance.post(
+        "/auth/forgot-password",
+        {
+          email,
+          isAndroid: false,
+        }
+      );
+      const {verifyToken} = response.data;
       dispatch(setEmail(email));
+
+      if (String(import.meta.env.VITE_ENVIRONMENT || "").trim() === "test") {
+        setIsLoading(false);
+
+        if (!verifyToken) {
+          console.log("Invalid verification link.");
+          return;
+        }
+
+        axiosInstance
+          .post(`/auth/reset-password`, { verifyToken })
+          .then((res) => {
+            console.log("Token verified! Redirecting to reset password page...");
+            setTimeout(() => {
+              navigate("/auth/new-password");
+            }, 1500);
+            return;
+          })
+          .catch((err) => {
+            console.error(err);
+            if (err.response?.status === 400) {
+              console.log(
+                "Invalid or expired token. Please request a new reset email."
+              );
+            } else {
+              console.log("Something went wrong. Please try again later.");
+            }
+            return;
+          });
+      }
+
+      setIsLoading(false);
       navigate("/auth/verification-pending", {
         state: { type: "forgotPassword" },
       });
     } catch (error) {
+      setIsLoading(false);
       if (error.response) {
         console.error("Forgot password error:", error.response.data);
         setError(
           error.response.data.message ||
-            "Failed to send reset email. Please try again.",
+            "Failed to send reset email. Please try again."
         );
       } else if (error.request) {
         console.error("No response received:", error.request);
@@ -88,7 +127,7 @@ const ForgotPasswordForm = () => {
 
       {/* Buttons */}
       <div className="flex flex-col items-center justify-between space-y-4">
-        <BlueSubmitButton text="Next" />
+        <BlueSubmitButton text="Next" isLoading={isLoading} />
         <button
           type="button"
           onClick={handleBack}

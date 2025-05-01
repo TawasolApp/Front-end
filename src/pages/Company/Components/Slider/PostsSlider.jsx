@@ -18,7 +18,7 @@ function PostsSlider() {
     setLoading(true);
 
     axiosInstance
-      .get(`/posts/user/${companyId}`, {
+      .get(`/posts/${companyId}/user/${companyId}`, {
         params: { limit: 5 },
       })
       .then((response) => {

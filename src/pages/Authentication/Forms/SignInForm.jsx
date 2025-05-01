@@ -5,7 +5,7 @@ import Divider from "../GenericComponents//Divider";
 import BlueSubmitButton from "../GenericComponents//BlueSubmitButton";
 import { Link } from "react-router-dom";
 
-const SignInForm = ({ onSubmit }) => {
+const SignInForm = ({ onSubmit, isLoading = false }) => {
   const [formData, setFormData] = useState({
     email: "",
     password: "",
@@ -66,8 +66,8 @@ const SignInForm = ({ onSubmit }) => {
   };
 
   return (
-    <form onSubmit={handleSubmit} className="space-y-4 sm:space-y-6">
-      <h1 className="text-3xl sm:text-4xl md:text-5xl font-semibold mb-6 sm:mb-8 text-textHeavyTitle">
+    <form onSubmit={handleSubmit} className="space-y-2 sm:space-y-4">
+      <h1 className="text-xl sm:text-2xl md:text-3xl font-semibold mb-4 sm:mb-6 text-textHeavyTitle">
         Sign in
       </h1>
 
@@ -105,21 +105,21 @@ const SignInForm = ({ onSubmit }) => {
       />
 
       {credentialsError && (
-        <p className="text-red-500 text-base sm:text-lg mt-2">
+        <p className="text-red-500 text-xs sm:text-sm mt-1">
           {credentialsError}
         </p>
       )}
 
-      <div className="mb-4 sm:mb-6">
+      <div className="mb-2 sm:mb-4">
         <Link
           to="/auth/forgot-password"
-          className="font-medium text-buttonSubmitEnable hover:underline text-base sm:text-lg"
+          className="font-medium text-buttonSubmitEnable hover:underline text-xs sm:text-sm"
         >
           Forgot password?
         </Link>
       </div>
 
-      <BlueSubmitButton text="Sign in" />
+      <BlueSubmitButton text="Sign in" isLoading={isLoading} />
     </form>
   );
 };

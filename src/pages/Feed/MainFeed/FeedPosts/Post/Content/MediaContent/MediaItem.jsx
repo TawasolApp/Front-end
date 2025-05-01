@@ -4,7 +4,6 @@ import PdfViewer from "./PdfViewer";
 const MediaItem = ({ url, disabled = false }) => {
   const mediaType = useMemo(() => {
     if (url?.match(/\.(mp4)$/i)) return "video";
-    if (url?.match(/\.(document)$/i)) return "pdf";
     return "image";
   }, [url]);
 

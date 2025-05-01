@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import defaultProfilePicture from "../../../assets/images/defaultProfilePicture.png";
+import NewMessageModal from "../../Messaging/New Message Modal/NewMessageModal";
 
 const ConnectionCard = ({
   imageUrl,
@@ -14,6 +15,7 @@ const ConnectionCard = ({
   const navigate = useNavigate();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isConfirmationOpen, setIsConfirmationOpen] = useState(false);
+  const [showMessageModal, setShowMessageModal] = useState(false);
   const menuRef = useRef(null);
 
   const profilePicture = imageUrl || defaultProfilePicture;
@@ -78,7 +80,10 @@ const ConnectionCard = ({
 
         {/* Right Section */}
         <div className="flex items-center space-x-3">
-          <button className="px-3 py-1.5 bg-transparent font-semibold border border-buttonSubmitEnable text-buttonSubmitEnable rounded-full hover:bg-buttonSubmitEnableHover transition-colors text-sm">
+          <button
+            className="px-3 py-1.5 bg-transparent font-semibold border border-buttonSubmitEnable text-buttonSubmitEnable rounded-full hover:bg-buttonSubmitEnableHover transition-colors text-sm"
+            onClick={() => setShowMessageModal(true)}
+          >
             Message
           </button>
 
@@ -180,6 +185,18 @@ const ConnectionCard = ({
             </div>
           </div>
         </div>
+      )}
+      {showMessageModal && (
+        <NewMessageModal
+          recipient={{
+            _id: userId,
+            firstName,
+            lastName,
+            profilePicture: imageUrl,
+            headline: experience,
+          }}
+          onClose={() => setShowMessageModal(false)}
+        />
       )}
     </>
   );

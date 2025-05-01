@@ -1,4 +1,5 @@
 import NewspaperIcon from "@mui/icons-material/Newspaper";
+import { v4 as uuidv4 } from "uuid";
 import PostContainer from "./PostContainer";
 
 const FeedPosts = ({
@@ -30,9 +31,12 @@ const FeedPosts = ({
   return (
     <div className="w-full">
       {posts.map((post, index) => {
+        // Create a unique key for each post using uuidv4
+        const uniqueKey = uuidv4();
+          
         if (index === posts.length - 1) {
           return (
-            <div ref={lastPostRef} key={index}>
+            <div ref={lastPostRef} key={uniqueKey}>
               <PostContainer
                 post={post}
                 handleSharePost={handleSharePost}
@@ -47,7 +51,7 @@ const FeedPosts = ({
         }
         return (
           <PostContainer
-            key={index}
+            key={uniqueKey}
             post={post}
             handleSharePost={handleSharePost}
             handleDeletePost={handleDeletePost}

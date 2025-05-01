@@ -36,27 +36,22 @@ npm install
 
 1. First you need to add a .env file containing all the needed env variables
 
-```bash
-VITE_APP_BASE_URL=https://tawasolapp.me/api/
-VITE_APP_RECAPTCHA_SITE_KEY=6LdMDv0qAAAAAC935jMxhIW2ZSMaei6Hs1YU2PyR
-VITE_GOOGLE_CLIENT_ID=255166583275-q52g6235gpjiq68u9o23doqcs2sdi9h2.apps.googleusercontent.com
-```
-
-2. Then you can normally run vite project:
+2. Then you can normally run vite project in development mode:
 
 ```bash
 npm run dev
 ```
 
-#### Or to run with a mock server:
-
-```bash
-npm run mock
-```
-
 Then Open your browser and navigate to http://localhost:5173.
 
-## 🧪 Unit Testing
+or, you can run vite project in build mode:
+
+```bash
+npm run build
+npm run preview
+```
+
+## 🧪 Testing
 
 Run tests with Vitest:
 
@@ -110,14 +105,18 @@ Use the following types to categorize your commits:
 
 Use the following to name your created branch
 | Branch Name | Description |
-|--------------------------|-------------------------------------------------------|
+|------------------------|-----------------------------------------------------|
 | main | Deployment branch. |
 | develop | Latest development branch with all merged features. |
 | feature/{feature-name} | New feature implementation. |
 | bugfix/{bug-name} | Fix bug before merging into develop. |
-| test/{feature-name} | New E2E tests for feature. | 
+| e2e/{feature-name} | New e2e testing for feature. |
 
 ➡️ **Pull Requests** must be created in the `develop` branch for review and testing before merging into main
+
+## 🗂️ Frontend Architecture Overview
+
+![Frontend Architecture](./public/images/frontend-architecture.png)
 
 ## 📂 Project Directories Structure
 

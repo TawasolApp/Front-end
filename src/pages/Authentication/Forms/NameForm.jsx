@@ -3,7 +3,7 @@ import InputField from "../GenericComponents//InputField";
 import BlueSubmitButton from "../GenericComponents//BlueSubmitButton";
 import ReCAPTCHA from "react-google-recaptcha";
 
-const NameForm = ({ onSubmit }) => {
+const NameForm = ({ onSubmit, isLoading = false }) => {
   const [formData, setFormData] = useState({
     firstName: "",
     lastName: "",
@@ -58,10 +58,10 @@ const NameForm = ({ onSubmit }) => {
 
     const captchaToken = await recaptchaRef.current.getValue();
 
-    // if (!captchaToken) {
-    //   setCaptchaError("Please complete the CAPTCHA.");
-    //   return;
-    // }
+    if (!captchaToken && String(import.meta.env.VITE_ENVIRONMENT || "").trim() !== "test") {
+      setCaptchaError("Please complete the CAPTCHA.");
+      return;
+    }
     setCaptchaError("");
 
     onSubmit(formData, captchaToken);
@@ -108,7 +108,7 @@ const NameForm = ({ onSubmit }) => {
         )}
       </div>
 
-      <BlueSubmitButton text="Continue" />
+      <BlueSubmitButton text="Continue" isLoading={isLoading} />
     </form>
   );
 };

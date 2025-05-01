@@ -9,9 +9,9 @@ import VideoLibraryIcon from "@mui/icons-material/VideoLibrary";
 import PictureAsPdfIcon from "@mui/icons-material/PictureAsPdf";
 import CancelIcon from "@mui/icons-material/Cancel";
 import CircularProgress from "@mui/material/CircularProgress";
+import { axiosInstance } from "../../../../apis/axios";
 import DropdownMenu from "../../GenericComponents/DropdownMenu";
 import TextEditor from "../../GenericComponents/TextEditor";
-import { axiosInstance } from "../../../../apis/axios";
 
 const TextModal = ({
   currentAuthorName,

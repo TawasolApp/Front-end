@@ -1,11 +1,11 @@
 import React, { useState } from "react";
-import Divider from "../GenericComponents//Divider";
-import SignWithGoogle from "../GenericComponents//SignWithGoogle";
-import InputField from "../GenericComponents//InputField";
-import BlueSubmitButton from "../GenericComponents//BlueSubmitButton";
+import Divider from "../GenericComponents/Divider";
+import SignWithGoogle from "../GenericComponents/SignWithGoogle";
+import InputField from "../GenericComponents/InputField";
+import BlueSubmitButton from "../GenericComponents/BlueSubmitButton";
 import { Link } from "react-router-dom";
 
-const SignUpForm = ({ onSubmit }) => {
+const SignUpForm = ({ onSubmit, isLoading = false }) => {
   const [formData, setFormData] = useState({
     email: "",
     password: "",
@@ -65,7 +65,7 @@ const SignUpForm = ({ onSubmit }) => {
   };
 
   return (
-    <form onSubmit={handleSubmit} className="space-y-4 md:space-y-6">
+    <form onSubmit={handleSubmit} className="space-y-4">
       <InputField
         type="email"
         id="email"
@@ -93,10 +93,10 @@ const SignUpForm = ({ onSubmit }) => {
         showPassword={showPassword}
         error={passwordError}
       />
-      <BlueSubmitButton text="Join" />
+      <BlueSubmitButton text="Join" isLoading={isLoading} />
       <Divider />
       <SignWithGoogle />
-      <p className="mt-4 md:mt-6 text-center text-textContent text-base sm:text-lg md:text-xl">
+      <p className="mt-4 text-center text-textContent text-base">
         Already on Tawasol?{" "}
         <Link
           to="/auth/signin"

@@ -10,10 +10,12 @@ export default {
         navbarSearch: "rgb(var(--navbar-search))",
         navbarSearchBorder: "rgb(var(--navbar-search-border))",
         mainBackground: "rgb(var(--main-background))",
+        selectedBackground: "rgb(var(--selected-background))",
         cardBackground: "rgb(var(--card-background))",
         cardBackgroundHover: "rgb(var(--card-background-hover))",
         inputBackground: "rgb(var(--input-background))",
         inputBackgroundHover: "rgb(var(--input-background-hover))",
+        selectedBorder: "rgb(var(--selected-border))",
         cardBorder: "rgb(var(--card-border))",
         background: "rgb(var(--background))",
         boxbackground: "rgb(var(--boxbackground))",
@@ -72,7 +74,22 @@ export default {
         amberDarkHover: "rgb(var(--amber-dark-hover))",
         amberTextLight: "rgb(var(--amber-text-light))",
         amberTextDark: "rgb(var(--amber-text-dark))",
+        chatYouBackground: "rgb(var(--chat-you-background))",
+        chatYouText: "rgb(var(--chat-you-text))",
+        chatThemBackground: "rgb(var(--chat-them-background))",
+        chatThemText: "rgb(var(--chat-them-text))",
       },
+      animation: {
+        'spin-slow': 'spin 8s linear infinite',
+        'float': 'float 3s ease-in-out infinite',
+        'pulse': 'pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite'
+      },
+      keyframes: {
+        float: {
+          '0%, 100%': { transform: 'translateY(0)' },
+          '50%': { transform: 'translateY(-20px)' }
+        }
+      }
     },
   },
   plugins: [],

@@ -48,17 +48,6 @@ describe("MediaItem Component", () => {
     expect(source).toHaveAttribute("type", "video/mp4");
   });
 
-  it("renders a PDF viewer when given a document URL", () => {
-    renderComponent({ url: "https://example.com/file.document" });
-
-    const pdfViewer = screen.getByTestId("pdf-viewer");
-    expect(pdfViewer).toBeInTheDocument();
-    expect(pdfViewer).toHaveAttribute(
-      "data-url",
-      "https://example.com/file.document",
-    );
-  });
-
   it("disables controls on videos when disabled prop is true", () => {
     renderComponent({ url: "https://example.com/video.mp4", disabled: true });
 

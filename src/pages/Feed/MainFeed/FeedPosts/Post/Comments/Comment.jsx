@@ -3,17 +3,17 @@ import MoreHorizIcon from "@mui/icons-material/MoreHoriz";
 import FlagIcon from "@mui/icons-material/Flag";
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
-
+import { formatDate } from "../../../../../../utils";
+import { usePost } from "../../PostContext";
 import ActorHeader from "../../../../GenericComponents/ActorHeader";
 import DropdownMenu from "../../../../GenericComponents/DropdownMenu";
 import ActivitiesHolder from "./ActivitiesHolder";
 import CommentThreadWrapper from "./CommentThreadWrapper";
 import ReactionsModal from "../../ReactionModal/ReactionsModal";
 import AddForm from "./AddForm";
-import { formatDate } from "../../../../../../utils";
 import TextViewer from "../../../../GenericComponents/TextViewer";
-import { usePost } from "../../PostContext";
 import ReplyContainer from "./ReplyContainer";
+import DeletePostModal from "../../DeleteModal/DeletePostModal";
 
 const Comment = ({ comment }) => {
   const {
@@ -26,6 +26,7 @@ const Comment = ({ comment }) => {
   const [showReactions, setShowReactions] = useState(false);
   const [editorMode, setEditorMode] = useState(false);
   const [showReplies, setShowReplies] = useState(false);
+  const [showDeleteModal, setShowDeleteModal] = useState(false);
 
   let menuItems = [
     {
@@ -43,7 +44,7 @@ const Comment = ({ comment }) => {
     });
     menuItems.push({
       text: "Delete comment",
-      onClick: () => handleDeleteComment(comment.id),
+      onClick: () => setShowDeleteModal(true),
       icon: DeleteIcon,
     });
   }
@@ -67,16 +68,20 @@ const Comment = ({ comment }) => {
         </div>
       ) : (
         <article>
-          <div className="flex px-4 pt-1 pb-2">
-            <ActorHeader
-              authorId={comment.authorId}
-              authorName={comment.authorName}
-              authorBio={comment.authorBio}
-              authorPicture={comment.authorPicture}
-              iconSize={32}
-            />
-            <div className="ml-auto flex items-center gap-2">
-              <span className="text-xs text-textDate">
+          <div className="flex px-4 pt-1 pb-2 items-start justify-between gap-2">
+            <div className="min-w-0 flex-1">
+              <ActorHeader
+                authorId={comment.authorId}
+                authorName={comment.authorName}
+                authorBio={comment.authorBio}
+                authorPicture={comment.authorPicture}
+                authorType={comment.authorType}
+                iconSize={32}
+              />
+            </div>
+
+            <div className="flex-shrink-0 flex items-center gap-2">
+              <span className="text-xs text-textDate whitespace-nowrap">
                 {formatDate(comment.timestamp)}
               </span>
               <DropdownMenu menuItems={menuItems} position="right-0">
@@ -121,9 +126,19 @@ const Comment = ({ comment }) => {
 
           {showReactions && (
             <ReactionsModal
-              API_URL={`/posts/reactions/${comment.id}`}
+              API_URL={`/posts/${currentAuthorId}/reactions/${comment.id}`}
               setShowLikes={() => setShowReactions(false)}
               reactCounts={comment.reactCounts}
+            />
+          )}
+          {showDeleteModal && (
+            <DeletePostModal
+              closeModal={() => setShowDeleteModal(false)}
+              deleteFunc={async () => {
+                await handleDeleteComment(comment.id);
+                setShowDeleteModal(false);
+              }}
+              commentOrPost="Comment"
             />
           )}
         </article>

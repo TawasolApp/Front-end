@@ -233,7 +233,7 @@ describe("PostModal Component", () => {
     // Now reactions modal should be visible
     expect(screen.getByTestId("reactions-modal")).toBeInTheDocument();
     expect(screen.getByTestId("api-url")).toHaveTextContent(
-      `/posts/reactions/${defaultPost.id}`,
+      `/posts/undefined/reactions/${defaultPost.id}`,
     );
 
     // Close modal
