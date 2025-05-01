@@ -122,7 +122,10 @@ function UsersAnalytics({ userAnalytics }) {
                   </p>
                 </div>
               ) : (
-                <p className="italic text-textContent">No reported user data</p>
+                <p className="italic text-textContent">
+                  {/* No reported user data */}
+                  Loading reported user data
+                </p>
               )}
             </div>
           </div>

@@ -22,31 +22,44 @@ function PostAnalytics({ postAnalytics }) {
 
   const [mostInteractedPost, setMostInteractedPost] = useState(null);
   const [mostReportedPost, setMostReportedPost] = useState(null);
+  const [fetchedPostIds, setFetchedPostIds] = useState({
+    interacted: null,
+    reported: null,
+  });
+
   useEffect(() => {
+    const interactedId = postAnalytics?.postWithMostInteractions;
+    const reportedId = postAnalytics?.mostReportedPost;
+
     const fetchPosts = async () => {
       const companyId = "680e3213a0fd57504643a43c";
       try {
         const [interactedRes, reportedRes] = await Promise.all([
-          axios.get(
-            `/posts/${companyId}/${postAnalytics.postWithMostInteractions}`
-          ),
-          axios.get(`/posts/${companyId}/${postAnalytics.mostReportedPost}`),
+          axios.get(`/posts/${companyId}/${interactedId}`),
+          axios.get(`/posts/${companyId}/${reportedId}`),
         ]);
-
         setMostInteractedPost(interactedRes.data);
         setMostReportedPost(reportedRes.data);
+        setFetchedPostIds({ interacted: interactedId, reported: reportedId });
       } catch (err) {
-        console.error("Failed to fetch post details:", err);
+        console.error("❌ Failed to fetch post details:", err);
       }
     };
 
+    // Only fetch if both IDs are present AND they haven't already been fetched
     if (
-      postAnalytics.postWithMostInteractions &&
-      postAnalytics.mostReportedPost
+      typeof interactedId === "string" &&
+      typeof reportedId === "string" &&
+      (interactedId !== fetchedPostIds.interacted ||
+        reportedId !== fetchedPostIds.reported)
     ) {
       fetchPosts();
     }
-  }, [postAnalytics]);
+  }, [
+    postAnalytics?.postWithMostInteractions,
+    postAnalytics?.mostReportedPost,
+    fetchedPostIds,
+  ]);
 
   return (
     <section className="bg-white border border-gray-200 rounded-xl shadow-md p-6 space-y-8">
@@ -96,7 +109,8 @@ function PostAnalytics({ postAnalytics }) {
             <PostCard post={mostInteractedPost} />
           ) : (
             <p className="text-sm text-gray-500 italic">
-              Post ID: {postAnalytics.postWithMostInteractions}
+              {/* Post ID: {postAnalytics.postWithMostInteractions} */}
+              Loading Post
             </p>
           )}
         </div>
@@ -113,7 +127,8 @@ function PostAnalytics({ postAnalytics }) {
             />
           ) : (
             <p className="text-sm text-gray-500 italic">
-              Post ID: {postAnalytics.mostReportedPost}
+              {/* Post ID: {postAnalytics.mostReportedPost} */}
+              Loading Post
             </p>
           )}
         </div>

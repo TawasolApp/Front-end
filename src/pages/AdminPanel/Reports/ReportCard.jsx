@@ -22,27 +22,11 @@ function ReportCard({ report, onResolve }) {
       const res = await axios.get(`/admin/reports/posts`);
       const updated = res.data.find((r) => r.id === report.id);
       if (updated) {
-        setLocalReport(updated); // optional
-        onResolve(updated); // ✅ update parent
+        setLocalReport(updated);
+        onResolve(updated);
       }
     } catch (err) {
       console.error(`Failed to ${actionType} report`, err);
-    } finally {
-      setLoadingAction({ reportId: null, type: null });
-    }
-  };
-
-  const deletePost = async () => {
-    try {
-      setLoadingAction({ reportId: report.id, type: "delete_post" });
-      await axios.delete(`/posts/${companyId}/${report.id}`);
-
-      // Optional: fetch updated reports list here, or emit a callback to parent
-      const res = await axios.get("/admin/reports/posts");
-      const updated = res.data.find((r) => r.id === report.id);
-      if (updated) setLocalReport(updated);
-    } catch (err) {
-      console.error("Failed to delete post", err);
     } finally {
       setLoadingAction({ reportId: null, type: null });
     }
@@ -124,7 +108,7 @@ function ReportCard({ report, onResolve }) {
         {isPending && (
           <div className="space-y-2 pt-3">
             <button
-              onClick={deletePost}
+              onClick={() => resolveReport("delete_post")}
               disabled={
                 loadingAction.reportId === localReport.id &&
                 loadingAction.type === "delete_post"
