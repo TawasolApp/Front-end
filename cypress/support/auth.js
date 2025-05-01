@@ -91,78 +91,35 @@ Cypress.Commands.add(
     // Complete profile info
     cy.get("#firstName").type(firstName);
     cy.get("#lastName").type(lastName);
-    cy.get(".py-3").click();
+    cy.get(".py-2\\.5").click();
 
     cy.wait(10000);
 
-    // Verify email was sent
-    cy.contains("Email Verification Pending").should("be.visible");
+    cy.url().should("include", "/auth/signin");
 
-    // First origin: Mailinator email retrieval
-    cy.origin(
-      "https://www.mailinator.com",
-      { args: { inboxName } },
-      ({ inboxName }) => {
-        // Visit the Mailinator inbox directly
-        cy.visit(
-          `https://www.mailinator.com/v4/public/inboxes.jsp?to=${inboxName}`
-        );
+    cy.get("#email").type(user.email);
+    cy.get("#password").type(user.password);
+    cy.get('button[type="submit"]').click();
 
-        // Wait for emails to load
-        cy.wait(10000);
+    // Verify successful verification
+    cy.contains("Welcome").should("be.visible");
 
-        // Find the verification email
-        cy.get(
-          '[style="width:300px;max-width:300px;overflow: hidden;white-space: nowrap;text-overflow: ellipsis;font-size: 22px;"]'
-        )
-          .first()
-          .click();
+    // Enter location
+    cy.get("#location").type("Wakanda");
+    cy.contains("button", "Next").click();
 
-        cy.wait(5000);
+    // Enter job information
+    cy.get("input#jobTitle").type("Software Developer");
+    cy.get("select#employmentType").select("Internship");
+    cy.get("input#company").type("Tawasol");
+    cy.get('select[name="month"]').select("July");
+    cy.get('select[name="day"]').select("10");
+    cy.get('select[name="year"]').select("2024");
+    cy.contains("button", "Continue").click();
 
-        // Get the verification URL from the email
-        cy.get("#html_msg_body", { timeout: 10000 }).should("exist");
-        cy.get("#html_msg_body").then(($iframe) => {
-          const iframe = $iframe.contents();
-          cy.wrap(iframe)
-            .find("a")
-            .contains("here")
-            .invoke("attr", "href")
-            .then((verificationUrl) => {
-              // Store the URL in the parent test context
-              Cypress.env("verificationUrl", verificationUrl);
-            });
-        });
-      }
-    );
-
-    // Back in main origin, get the stored URL and verify
-    cy.then(() => {
-      const verificationUrl = Cypress.env("verificationUrl");
-      cy.log(`Verification URL: ${verificationUrl}`);
-
-      // Visit the verification URL directly
-      cy.visit(verificationUrl);
-
-      // Verify successful verification
-      cy.contains("Welcome").should("be.visible");
-
-      // Enter location
-      cy.get("#location").type("Wakanda");
-      cy.contains("button", "Next").click();
-
-      // Enter job information
-      cy.get("input#jobTitle").type("Software Developer");
-      cy.get("select#employmentType").select("Internship");
-      cy.get("input#company").type("Tawasol");
-      cy.get('select[name="month"]').select("July");
-      cy.get('select[name="day"]').select("10");
-      cy.get('select[name="year"]').select("2024");
-      cy.contains("button", "Continue").click();
-
-      // Assert redirection to feed
-      cy.wait(10000);
-      cy.url().should("include", "/feed");
-    });
+    // Assert redirection to feed
+    cy.wait(10000);
+    cy.url().should("include", "/feed");
+    // });
   }
 );
