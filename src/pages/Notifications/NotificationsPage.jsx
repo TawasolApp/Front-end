@@ -20,10 +20,8 @@ const NotificationsPage = () => {
   const [unseenCount, setUnseenCount] = useState(0);
   const [showUnreadOnly, setShowUnreadOnly] = useState(false);
   const { userId, companyId } = useSelector((state) => state.authentication);
-  const socket = useSocket(); // Get socket from context
+  const socket = useSocket();
   const observer = useRef();
-  const BASE_URL = String(import.meta.env.VITE_APP_BASE_URL || "").trim();
-  const [userInteracted, setUserInteracted] = useState(false);
   const audioContextRef = useRef(null);
   const audioInitializedRef = useRef(false);
 
