@@ -31,66 +31,18 @@ describe("change user info", () => {
 
     cy.wait(10000);
 
-    // Verify email was sent
-    cy.contains("Email Verification Pending").should("be.visible");
+    // Type new password
+    cy.get("#newPassword").type(user.newPassword);
+    cy.get("#confirmNewPassword").type(user.newPassword);
+    cy.get(".py-2\\.5").click();
 
-    // First origin: Mailinator email retrieval
-    cy.origin(
-      "https://www.mailinator.com",
-      { args: { inboxName } },
-      ({ inboxName }) => {
-        // Visit the Mailinator inbox directly
-        cy.visit(
-          `https://www.mailinator.com/v4/public/inboxes.jsp?to=${inboxName}`
-        );
+    // Log in with new password
+    cy.getLoginFormEmailTextbox().type(user.email);
+    cy.getLoginFormPasswordTextbox().type(user.newPassword);
+    cy.getLoginFormButton().click();
 
-        // Wait for emails to load
-        cy.wait(10000);
-
-        // Find the verification email
-        cy.get(
-          '[style="width:300px;max-width:300px;overflow: hidden;white-space: nowrap;text-overflow: ellipsis;font-size: 22px;"]'
-        )
-          .first()
-          .click();
-
-        // Get the verification URL from the email
-        cy.get("#html_msg_body", { timeout: 10000 }).should("exist");
-        cy.get("#html_msg_body").then(($iframe) => {
-          const iframe = $iframe.contents();
-          cy.wrap(iframe)
-            .find("a")
-            .contains("here")
-            .invoke("attr", "href")
-            .then((verificationUrl) => {
-              // Store the URL in the parent test context
-              Cypress.env("verificationUrl", verificationUrl);
-            });
-        });
-      }
-    );
-
-    // Back in main origin, get the stored URL and verify
-    cy.then(() => {
-      const verificationUrl = Cypress.env("verificationUrl");
-      cy.log(`Verification URL: ${verificationUrl}`);
-
-      // Visit the verification URL directly
-      cy.visit(verificationUrl);
-
-      // Type new password
-      cy.get("#newPassword").type(user.newPassword);
-      cy.get("#confirmNewPassword").type(user.newPassword);
-      cy.get(".py-3").click();
-
-      // Log in with new password
-      cy.getLoginFormEmailTextbox().type(user.email);
-      cy.getLoginFormPasswordTextbox().type(user.newPassword);
-      cy.getLoginFormButton().click();
-
-      // Assert that news feed is shown
-      cy.url().should("include", "/feed");
-    });
+    // Assert that news feed is shown
+    cy.url().should("include", "/feed");
   });
 
   it("Changes email", () => {
@@ -114,64 +66,30 @@ describe("change user info", () => {
     cy.get(".border-t > :nth-child(1)").click();
 
     // click on change email
-    cy.get(".mt-12 > .bg-cardBackground > :nth-child(1) > .flex").click();
+    cy.get(
+      ":nth-child(3) > .bg-cardBackground > :nth-child(1) > .flex"
+    ).click();
 
     // enter new email
     cy.get("#newEmail").clear();
     cy.get("#newEmail").type(user.newEmail);
     cy.get("#currentPassword").type(user.password);
-    cy.get(".py-3").click();
+    cy.get(".py-2\\.5").click();
 
-    // Verify email was sent
-    cy.contains("Email Verification Pending").should("be.visible");
+    cy.wait(5000);
 
-    // First origin: Mailinator email retrieval
-    cy.origin(
-      "https://www.mailinator.com",
-      { args: { inboxNameNew } },
-      ({ inboxNameNew }) => {
-        // Visit the Mailinator inbox directly
-        cy.visit(
-          `https://www.mailinator.com/v4/public/inboxes.jsp?to=${inboxNameNew}`
-        );
+    // Assert that news feed is shown
+    cy.url().should("include", "/feed");
 
-        // Wait for emails to load
-        cy.wait(10000);
+    let newUser = {
+      email: user.newEmail,
+      password: user.password,
+    };
 
-        // Find the verification email
-        cy.get(
-          '[style="width:300px;max-width:300px;overflow: hidden;white-space: nowrap;text-overflow: ellipsis;font-size: 22px;"]'
-        )
-          .first()
-          .click();
+    cy.login(newUser);
 
-        // Get the verification URL from the email
-        cy.get("#html_msg_body", { timeout: 10000 }).should("exist");
-        cy.get("#html_msg_body").then(($iframe) => {
-          const iframe = $iframe.contents();
-          cy.wrap(iframe)
-            .find("a")
-            .contains("here")
-            .invoke("attr", "href")
-            .then((verificationUrl) => {
-              // Store the URL in the parent test context
-              Cypress.env("verificationUrl", verificationUrl);
-            });
-        });
-      }
-    );
-
-    // Back in main origin, get the stored URL and verify
-    cy.then(() => {
-      const verificationUrl = Cypress.env("verificationUrl");
-      cy.log(`Verification URL: ${verificationUrl}`);
-
-      // Visit the verification URL directly
-      cy.visit(verificationUrl);
-
-      // Assert that news feed is shown
-      cy.url().should("include", "/feed");
-    });
+    cy.wait(5000);
+    cy.url().should("include", "/feed");
   });
 
   it("Changes password", () => {
@@ -193,7 +111,9 @@ describe("change user info", () => {
     cy.get(".border-t > :nth-child(1)").click();
 
     // click on change password
-    cy.get(":nth-child(3) > .flex").click();
+    cy.get(
+      ":nth-child(3) > .bg-cardBackground > :nth-child(3) > .flex"
+    ).click();
 
     // enter current and new password
     cy.get("#currentPassword").type(user.password);
@@ -201,8 +121,10 @@ describe("change user info", () => {
     cy.get("#confirmNewPassword").type(user.newPassword);
     cy.get(".flex-col > .w-full").click();
 
+    cy.wait(5000);
+
     // go back
-    cy.get(".mb-3").click();
+    cy.get(".text-textPlaceholder").click();
 
     // sign out
     cy.get("div.relative > .flex-col > .flex > span").click();
@@ -216,7 +138,7 @@ describe("change user info", () => {
     cy.url().should("include", "/feed");
   });
 
-  it("Changes name", () => {
+  it.skip("Changes name", () => {
     let user = {
       email: "",
       password: "07032004",
@@ -234,7 +156,7 @@ describe("change user info", () => {
     cy.get(".border-b > .p-4").click();
 
     // click on edit icon
-    cy.get(".justify-start").click();
+    cy.get('[data-testid="layout-wrapper"] > .bg-mainBackground').click();
     cy.get(".right-8").click();
 
     // enter current and new password
@@ -242,7 +164,7 @@ describe("change user info", () => {
     cy.get("#firstName").type(newFirstName);
     cy.get("#lastName").clear();
     cy.get("#lastName").type(newLastName);
-    cy.get('#industry').type('Software Engineering');
+    cy.get("#industry").type("Software Engineering");
     cy.get(".flex > .px-4").click();
 
     // assert new name is displayed

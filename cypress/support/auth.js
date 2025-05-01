@@ -51,7 +51,7 @@ Cypress.Commands.add("getLoginFormPasswordTextbox", () => {
 });
 
 Cypress.Commands.add("getLoginFormForgotPasswordLink", () => {
-  cy.get(".sm\\:mb-6 > .font-medium");
+  cy.get(".mb-2 > .font-medium");
 });
 
 Cypress.Commands.add("getLoginFormButton", () => {
