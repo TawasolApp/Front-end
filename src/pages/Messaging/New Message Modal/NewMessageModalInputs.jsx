@@ -49,7 +49,7 @@ const NewMessageModalInputs = ({ isMinimized, onSend }) => {
           headers: { "Content-Type": "multipart/form-data" },
         });
         console.log("Upload successful:", response.data);
-        return response.data.url; // Return the URL
+        return response.data.url.replace(".pdf", ""); // Return the URL
       } catch (error) {
         console.error("Upload failed:", error);
         return null; // Return null if upload fails
@@ -75,7 +75,9 @@ const NewMessageModalInputs = ({ isMinimized, onSend }) => {
           headers: { "Content-Type": "multipart/form-data" },
         });
         console.log("Upload successful:", response.data);
-        return response.data.url; // Return the URL
+        const res = response.data.url.replace(".pdf", ""); // Return the URL
+        console.log(res);
+        return res;
       } catch (error) {
         console.error("Upload failed:", error);
         return null; // Return null if upload fails
