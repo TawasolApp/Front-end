@@ -4,10 +4,10 @@ import { Link } from "react-router-dom";
 
 const JobCard = ({ job }) => {
   return (
-    <div className="bg-cardBackground rounded-lg border border-cardBorder shadow-sm hover:shadow-lg">
+    <div className="bg-cardBackground rounded-lg border border-cardBorder shadow-sm">
       <Link 
         to={`/jobs/${job.jobId}`}
-        className="block p-4 transition-colors"
+        className="block p-4 transition-shadow hover:shadow-lg dark:hover:[box-shadow:0_4px_10px_rgba(255,255,255,0.15)]"
       >
         <div className="gap-4">
           <img
@@ -20,11 +20,11 @@ const JobCard = ({ job }) => {
             <h3 className="text-base font-semibold text-header">
               {job.position}
             </h3>
-            <div className="mt-1 text-sm font-normal text-textTitle">
+            <div className="text-sm font-normal text-textHeavyTitle">
               {job.companyName}
             </div>
-            <div className="mt-0.5 text-sm font-normal text-textPlaceholder">
-              {job.location}
+            <div className="text-sm font-normal text-textPlaceholder">
+              Location: {job.location}
             </div>
             <p className="mt-2 text-xs font-normal text-textPlaceholder">
               {formatDate(job.postedAt)} ago

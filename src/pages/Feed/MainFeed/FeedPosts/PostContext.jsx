@@ -246,7 +246,7 @@ export const PostProvider = ({
       abortControllerRef.current = controller;
 
       const currentPage = replies[commentId]?.replyPage || 1;
-      const response = await axiosInstance.get(`/posts/${currentAuthorId}comments/${commentId}`, {
+      const response = await axiosInstance.get(`/posts/${currentAuthorId}/comments/${commentId}`, {
         params: {
           page: currentPage,
           limit: 2,

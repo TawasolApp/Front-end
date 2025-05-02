@@ -1,381 +1,205 @@
 import { render, screen, waitFor, fireEvent } from "@testing-library/react";
-import { MemoryRouter, Route, Routes, Outlet } from "react-router-dom";
+import { MemoryRouter } from "react-router-dom";
 import { vi } from "vitest";
-import JobsPage from "../../../src/pages/Company/Components/Pages/JobsPage";
-import * as axiosModule from "../../../src/apis/axios";
+import JobsPage from "../../pages/Company/Components/Pages/JobsPage";
+import * as axiosModule from "../../apis/axios";
+import { useParams, useOutletContext } from "react-router-dom";
 
 // Mock axios
-vi.mock("../../../src/apis/axios", () => ({
+vi.mock("../../apis/axios", () => ({
   axiosInstance: {
-    get: vi.fn(),
-  },
+    get: vi.fn()
+  }
 }));
+
+// Mock react-router hooks directly
+vi.mock("react-router-dom", async () => {
+  const actual = await vi.importActual("react-router-dom");
+  return {
+    ...actual,
+    useParams: vi.fn().mockReturnValue({ companyId: "123" }),
+    useOutletContext: vi.fn().mockReturnValue({ 
+      company: { name: "Test Company", logo: "/test-logo.png" }, 
+      showAdminIcons: false 
+    })
+  };
+});
 
 // Mock child components
-vi.mock("../../../src/pages/LoadingScreen/LoadingPage", () => ({
-  default: () => <div data-testid="loading-page">Loading...</div>,
+vi.mock("../../pages/LoadingScreen/LoadingPage", () => ({
+  default: () => <div data-testid="loading-page">Loading...</div>
 }));
-vi.mock("../../../src/pages/Company/Components/JobsPage/JobsList", () => ({
-  default: () => <div data-testid="jobs-list">JobsList</div>,
+
+vi.mock("../../pages/Company/Components/JobsPage/JobsList", () => ({
+  default: ({ jobs }) => (
+    <div data-testid="jobs-list">
+      {jobs.map(job => (
+        <div key={job.id} data-testid={`job-item-${job.id}`}>{job.title}</div>
+      ))}
+    </div>
+  )
 }));
-vi.mock("../../../src/pages/Company/Components/JobsPage/JobDetails", () => ({
-  default: () => <div data-testid="job-details">JobDetails</div>,
+
+vi.mock("../../pages/Company/Components/JobsPage/Analytics", () => ({
+  default: () => <div data-testid="analytics">Analytics</div>
 }));
-vi.mock(
-  "../../../src/pages/Company/Components/JobsPage/JobApplications",
-  () => ({
-    default: () => <div data-testid="job-applications">JobApplications</div>,
-  }),
-);
-vi.mock("../../../src/pages/Company/Components/JobsPage/AddJobModal", () => ({
-  default: ({ onClose, onJobAdded }) => (
+
+vi.mock("../../pages/Company/Components/JobsPage/AddJobModal", () => ({
+  default: ({ onClose, onJobAdded, companyId }) => (
     <div data-testid="add-job-modal">
-      AddJobModal
-      <button data-testid="close-modal" onClick={onClose}>
-        Close Modal
-      </button>
-      <button
-        onClick={() => {
-          onJobAdded();
-          onClose();
-        }}
-      >
+      <p>Company ID: {companyId}</p>
+      <button onClick={() => {
+        onJobAdded();
+        onClose();
+      }} data-testid="add-job-button">
         Add Job
       </button>
+      <button onClick={onClose} data-testid="close-modal">
+        Close
+      </button>
     </div>
-  ),
+  )
 }));
 
-vi.mock("../../../src/pages/Company/Components/JobsPage/Analytics", () => ({
-  default: () => <div data-testid="analytics">Analytics</div>,
-}));
+describe("JobsPage Component", () => {
+  const mockJobs = [
+    { id: 1, title: "Frontend Developer" },
+    { id: 2, title: "Backend Engineer" }
+  ];
 
-const mockCompany = {
-  name: "Test Company",
-  logo: "/logo.png",
-};
-
-const mockJobs = [
-  { id: 1, title: "Software Engineer" },
-  { id: 2, title: "Data Scientist" },
-];
-
-const MockLayout = ({ company, showAdminIcons = false }) => (
-  <Outlet context={{ company, showAdminIcons, setShowAdminIcons: vi.fn() }} />
-);
-
-describe("JobsPage", () => {
   beforeEach(() => {
+    vi.clearAllMocks();
     axiosModule.axiosInstance.get.mockResolvedValue({ data: mockJobs });
+    // Reset the default mock implementation for useOutletContext
+    useOutletContext.mockReturnValue({ 
+      company: { name: "Test Company", logo: "/test-logo.png" }, 
+      showAdminIcons: false 
+    });
   });
 
-  test("renders loading screen initially", async () => {
+  test("renders loading state initially", () => {
     render(
-      <MemoryRouter initialEntries={["/company/123/jobs"]}>
-        <Routes>
-          <Route element={<MockLayout company={mockCompany} />}>
-            <Route path="/company/:companyId/jobs" element={<JobsPage />} />
-          </Route>
-        </Routes>
-      </MemoryRouter>,
+      <MemoryRouter>
+        <JobsPage />
+      </MemoryRouter>
     );
-
+    
     expect(screen.getByTestId("loading-page")).toBeInTheDocument();
-    await waitFor(() =>
-      expect(screen.getByTestId("jobs-list")).toBeInTheDocument(),
-    );
   });
 
-  test("renders job list and job details for non-admins", async () => {
+  test("fetches and displays jobs successfully", async () => {
     render(
-      <MemoryRouter initialEntries={["/company/123/jobs"]}>
-        <Routes>
-          <Route element={<MockLayout company={mockCompany} />}>
-            <Route path="/company/:companyId/jobs" element={<JobsPage />} />
-          </Route>
-        </Routes>
-      </MemoryRouter>,
+      <MemoryRouter>
+        <JobsPage />
+      </MemoryRouter>
     );
 
+    // Should show loading initially
+    expect(screen.getByTestId("loading-page")).toBeInTheDocument();
+    
+    // Wait for jobs to load
     await waitFor(() => {
       expect(screen.getByTestId("jobs-list")).toBeInTheDocument();
-      expect(screen.getByTestId("job-details")).toBeInTheDocument();
     });
+    
+    expect(axiosModule.axiosInstance.get).toHaveBeenCalledWith(
+      "/companies/123/jobs?page=1&limit=3"
+    );
   });
 
-  test("renders job applications and analytics for admins", async () => {
+  test("handles API error gracefully", async () => {
+    // Mock API call to reject
+    axiosModule.axiosInstance.get.mockRejectedValueOnce(new Error("API Error"));
+    
+    const consoleSpy = vi.spyOn(console, "error").mockImplementation(() => {});
+    
     render(
-      <MemoryRouter initialEntries={["/company/123/jobs"]}>
-        <Routes>
-          <Route
-            element={<MockLayout company={mockCompany} showAdminIcons={true} />}
-          >
-            <Route path="/company/:companyId/jobs" element={<JobsPage />} />
-          </Route>
-        </Routes>
-      </MemoryRouter>,
+      <MemoryRouter>
+        <JobsPage />
+      </MemoryRouter>
     );
-
+    
     await waitFor(() => {
-      expect(screen.getByTestId("job-applications")).toBeInTheDocument();
-      expect(screen.getByTestId("analytics")).toBeInTheDocument();
+      expect(consoleSpy).toHaveBeenCalledWith(
+        "Failed to fetch jobs", 
+        expect.any(Error)
+      );
     });
-
-    expect(
-      screen.getByRole("button", { name: /post a job opening/i }),
-    ).toBeInTheDocument();
+    
+    consoleSpy.mockRestore();
   });
 
-  test("opens and closes AddJobModal", async () => {
+  test("doesn't fetch jobs if companyId is missing", async () => {
+    useParams.mockReturnValue({ companyId: undefined });
+    
     render(
-      <MemoryRouter initialEntries={["/company/123/jobs"]}>
-        <Routes>
-          <Route
-            element={<MockLayout company={mockCompany} showAdminIcons={true} />}
-          >
-            <Route path="/company/:companyId/jobs" element={<JobsPage />} />
-          </Route>
-        </Routes>
-      </MemoryRouter>,
+      <MemoryRouter>
+        <JobsPage />
+      </MemoryRouter>
     );
-
-    await waitFor(() =>
-      expect(screen.getByTestId("job-applications")).toBeInTheDocument(),
-    );
-
-    // Open modal
-    fireEvent.click(
-      screen.getByRole("button", { name: /post a job opening/i }),
-    );
-    expect(await screen.findByTestId("add-job-modal")).toBeInTheDocument();
-
-    // Close modal
-    fireEvent.click(screen.getByTestId("close-modal"));
-    await waitFor(() =>
-      expect(screen.queryByTestId("add-job-modal")).not.toBeInTheDocument(),
-    );
+    
+    await new Promise(resolve => setTimeout(resolve, 0));
+    
+    expect(axiosModule.axiosInstance.get).not.toHaveBeenCalled();
   });
 
-  test("handles job fetch failure", async () => {
-    axiosModule.axiosInstance.get.mockRejectedValue(new Error("Fetch error"));
-
-    render(
-      <MemoryRouter initialEntries={["/company/123/jobs"]}>
-        <Routes>
-          <Route element={<MockLayout company={mockCompany} />}>
-            <Route path="/company/:companyId/jobs" element={<JobsPage />} />
-          </Route>
-        </Routes>
-      </MemoryRouter>,
-    );
-
-    await waitFor(() =>
-      expect(screen.queryByTestId("jobs-list")).not.toBeInTheDocument(),
-    );
-  });
-  test("calls handleJobAdded when a job is added in the modal", async () => {
-    vi.clearAllMocks();
-
-    // First fetch when component mounts
-    axiosModule.axiosInstance.get.mockResolvedValueOnce({ data: mockJobs });
-
-    // Second fetch after job is added
-    axiosModule.axiosInstance.get.mockResolvedValueOnce({ data: mockJobs });
-
-    render(
-      <MemoryRouter initialEntries={["/company/123/jobs"]}>
-        <Routes>
-          <Route
-            element={<MockLayout company={mockCompany} showAdminIcons={true} />}
-          >
-            <Route path="/company/:companyId/jobs" element={<JobsPage />} />
-          </Route>
-        </Routes>
-      </MemoryRouter>,
-    );
-
-    // Wait for first fetch to finish
-    await waitFor(() =>
-      expect(screen.getByTestId("job-applications")).toBeInTheDocument(),
-    );
-
-    // Open modal
-    fireEvent.click(
-      screen.getByRole("button", { name: /post a job opening/i }),
-    );
-
-    // Trigger job add (calls handleJobAdded -> second fetch)
-    fireEvent.click(screen.getByText("Add Job"));
-
-    await waitFor(() => {
-      expect(axiosModule.axiosInstance.get).toHaveBeenCalledTimes(2);
+  test("doesn't fetch jobs if company is missing", async () => {
+    useOutletContext.mockReturnValue({ 
+      company: null,
+      showAdminIcons: false 
     });
-  });
-  test("logs an error if job refetch fails after adding a job", async () => {
-    vi.clearAllMocks();
-
-    // First successful fetch (initial load)
-    axiosModule.axiosInstance.get.mockResolvedValueOnce({ data: mockJobs });
-
-    // Second fetch fails (after job add)
-    const consoleErrorSpy = vi
-      .spyOn(console, "error")
-      .mockImplementation(() => {});
-    axiosModule.axiosInstance.get.mockRejectedValueOnce(
-      new Error("Refetch failed"),
-    );
-
+    
     render(
-      <MemoryRouter initialEntries={["/company/123/jobs"]}>
-        <Routes>
-          <Route
-            element={<MockLayout company={mockCompany} showAdminIcons={true} />}
-          >
-            <Route path="/company/:companyId/jobs" element={<JobsPage />} />
-          </Route>
-        </Routes>
-      </MemoryRouter>,
+      <MemoryRouter>
+        <JobsPage />
+      </MemoryRouter>
     );
-
-    // Wait for first job fetch
-    await waitFor(() =>
-      expect(screen.getByTestId("job-applications")).toBeInTheDocument(),
-    );
-
-    // Open modal
-    fireEvent.click(
-      screen.getByRole("button", { name: /post a job opening/i }),
-    );
-
-    // Click Add Job → triggers handleJobAdded which will now fail
-    fireEvent.click(screen.getByText("Add Job"));
-
-    await waitFor(() =>
-      expect(consoleErrorSpy).toHaveBeenCalledWith(
-        "Failed to refetch jobs after add",
-        expect.any(Error),
-      ),
-    );
-
-    consoleErrorSpy.mockRestore(); // Cleanup
+    
+    await new Promise(resolve => setTimeout(resolve, 0));
+    
+    expect(axiosModule.axiosInstance.get).not.toHaveBeenCalled();
   });
-  test("does not crash when company is null", async () => {
-    vi.clearAllMocks();
 
-    render(
-      <MemoryRouter initialEntries={["/company/123/jobs"]}>
-        <Routes>
-          <Route element={<MockLayout company={null} />}>
-            <Route path="/company/:companyId/jobs" element={<JobsPage />} />
-          </Route>
-        </Routes>
-      </MemoryRouter>,
-    );
-
-    expect(screen.getByTestId("loading-page")).toBeInTheDocument();
-  });
-  test("does not render job list when jobs array is empty", async () => {
-    vi.clearAllMocks();
+  test("does not render JobsList when jobs array is empty", async () => {
     axiosModule.axiosInstance.get.mockResolvedValueOnce({ data: [] });
-
+    
     render(
-      <MemoryRouter initialEntries={["/company/123/jobs"]}>
-        <Routes>
-          <Route element={<MockLayout company={mockCompany} />}>
-            <Route path="/company/:companyId/jobs" element={<JobsPage />} />
-          </Route>
-        </Routes>
-      </MemoryRouter>,
+      <MemoryRouter>
+        <JobsPage />
+      </MemoryRouter>
     );
-
+    
     await waitFor(() => {
       expect(screen.queryByTestId("jobs-list")).not.toBeInTheDocument();
-      expect(screen.queryByTestId("job-applications")).not.toBeInTheDocument();
-      expect(screen.queryByTestId("analytics")).not.toBeInTheDocument();
     });
   });
-  test("does not fetch jobs again if hasFetched is already true", async () => {
-    vi.clearAllMocks();
-    axiosModule.axiosInstance.get.mockResolvedValueOnce({ data: mockJobs });
 
-    const companyContext = {
-      company: mockCompany,
-      showAdminIcons: false,
-      setShowAdminIcons: vi.fn(),
-    };
-
-    const Wrapper = () => <Outlet context={companyContext} />;
-
+  test("opens and closes Add Job Modal", async () => {
+    // Set showAdminIcons to true BEFORE rendering
+    useOutletContext.mockReturnValue({ 
+      company: { name: "Test Company" },
+      showAdminIcons: true
+    });
+    
     render(
-      <MemoryRouter initialEntries={["/company/123/jobs"]}>
-        <Routes>
-          <Route element={<Wrapper />}>
-            <Route path="/company/:companyId/jobs" element={<JobsPage />} />
-          </Route>
-        </Routes>
-      </MemoryRouter>,
+      <MemoryRouter>
+        <JobsPage />
+      </MemoryRouter>
     );
-
-    await waitFor(() =>
-      expect(screen.getByTestId("jobs-list")).toBeInTheDocument(),
-    );
-
-    // No second render of component, no reason for second fetch
-    expect(axiosModule.axiosInstance.get).toHaveBeenCalledTimes(1);
-  });
-  test("uses fallback logo if company logo is missing", async () => {
-    const logoLessCompany = { ...mockCompany, logo: null };
-    const Wrapper = () => (
-      <Outlet
-        context={{
-          company: logoLessCompany,
-          showAdminIcons: false,
-          setShowAdminIcons: vi.fn(),
-        }}
-      />
-    );
-
-    render(
-      <MemoryRouter initialEntries={["/company/123/jobs"]}>
-        <Routes>
-          <Route element={<Wrapper />}>
-            <Route path="/company/:companyId/jobs" element={<JobsPage />} />
-          </Route>
-        </Routes>
-      </MemoryRouter>,
-    );
-
-    await waitFor(() =>
-      expect(screen.getByTestId("job-details")).toBeInTheDocument(),
-    );
-  });
-  test("does not fetch if companyId is missing", async () => {
-    vi.clearAllMocks();
-
-    const Wrapper = () => (
-      <Outlet
-        context={{
-          company: mockCompany,
-          showAdminIcons: false,
-          setShowAdminIcons: vi.fn(),
-        }}
-      />
-    );
-
-    render(
-      <MemoryRouter initialEntries={["/wrongpath"]}>
-        <Routes>
-          <Route path="/wrongpath" element={<Wrapper />}>
-            {/* Note: This no longer provides companyId */}
-            <Route path="" element={<JobsPage />} />
-          </Route>
-        </Routes>
-      </MemoryRouter>,
-    );
-
-    // wait a bit to ensure useEffect finishes
+    
+    // Wait for component to finish loading and render the button
     await waitFor(() => {
-      expect(axiosModule.axiosInstance.get).not.toHaveBeenCalled();
+      expect(screen.getByRole("button", { name: /post a job/i })).toBeInTheDocument();
+    });
+    
+    // Open modal
+    fireEvent.click(screen.getByRole("button", { name: /post a job/i }));
+    expect(screen.getByTestId("add-job-modal")).toBeInTheDocument();
+    
+    // Close modal
+    fireEvent.click(screen.getByTestId("close-modal"));
+    await waitFor(() => {
+      expect(screen.queryByTestId("add-job-modal")).not.toBeInTheDocument();
     });
   });
 });

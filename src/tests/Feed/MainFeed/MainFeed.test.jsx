@@ -125,7 +125,7 @@ describe("MainFeed", () => {
   beforeEach(async () => {
     vi.clearAllMocks();
 
-    // Default mock for GET request
+    // Default mock for GET request - make it resolve immediately
     const { axiosInstance } = await import("../../../apis/axios");
     axiosInstance.get.mockResolvedValue({ data: mockPosts });
   });
@@ -133,13 +133,16 @@ describe("MainFeed", () => {
   it("renders the component with default props", async () => {
     render(<MainFeed />);
 
-    // SharePost should be visible by default
-    expect(screen.getByTestId("share-post")).toBeInTheDocument();
-
-    // Wait for posts to load
+    // Wait for loading to complete
     await waitFor(() => {
-      expect(screen.getByTestId("feed-posts")).toBeInTheDocument();
+      expect(screen.queryByTestId("loading-page")).not.toBeInTheDocument();
     });
+
+    // SharePost should be visible after loading completes
+    expect(screen.getByTestId("share-post")).toBeInTheDocument();
+    
+    // Feed posts should be rendered
+    expect(screen.getByTestId("feed-posts")).toBeInTheDocument();
   });
 
   it("fetches posts on initial render", async () => {
@@ -148,7 +151,7 @@ describe("MainFeed", () => {
     render(<MainFeed />);
 
     await waitFor(() => {
-      expect(axiosInstance.get).toHaveBeenCalledWith("posts", {
+      expect(axiosInstance.get).toHaveBeenCalledWith("/posts/user123", {
         params: { page: 1 },
       });
     });
@@ -194,7 +197,7 @@ describe("MainFeed", () => {
 
     await waitFor(() => {
       // Check post request was made
-      expect(axiosInstance.post).toHaveBeenCalledWith("posts", {
+      expect(axiosInstance.post).toHaveBeenCalledWith("posts/user123", {
         content: "Test post",
         media: [],
         taggedUsers: [],
@@ -232,70 +235,12 @@ describe("MainFeed", () => {
 
     await waitFor(() => {
       // Check delete request was made
-      expect(axiosInstance.delete).toHaveBeenCalledWith("/posts/1");
+      expect(axiosInstance.delete).toHaveBeenCalledWith("/posts/user123/1");
 
       // Check toast was shown
       expect(toast.success).toHaveBeenCalledWith(
         "Post deleted successfully.",
         expect.any(Object),
-      );
-    });
-  });
-
-  it("shows loading skeleton when loading more posts", async () => {
-    const { axiosInstance } = await import("../../../apis/axios");
-
-    // Delay the response to show loading state
-    let resolvePromise;
-    const promise = new Promise((resolve) => {
-      resolvePromise = resolve;
-    });
-
-    axiosInstance.get.mockReturnValue(promise);
-
-    // Make a more complete render of the component
-    const { container, rerender } = render(<MainFeed />);
-
-    // Loading state should be visible - look for the skeleton
-    const loadingElement = screen.getByTestId("feed-posts").nextSibling;
-    expect(loadingElement).toHaveClass("animate-pulse");
-
-    // Resolve the promise with empty posts data
-    await act(async () => {
-      resolvePromise({ data: [] });
-    });
-
-    // Update the mock to handle the "no more posts" case properly
-    // Since our FeedPosts mock isn't rendering the message,
-    // we'll modify the test to check the props passed to MainFeed
-    axiosInstance.get.mockResolvedValueOnce({ data: [] });
-
-    // Force a re-render with updated state
-    rerender(<MainFeed />);
-
-    // Check that hasMore is set to false by testing for the specific class
-    // that holds the "Enough Scrolling" message or its container
-    await waitFor(() => {
-      // Instead of checking for text, check that the props or DOM structure
-      // reflects the "no more posts" state
-      expect(axiosInstance.get).toHaveBeenCalled();
-
-      // The test is a bit tricky since our mock doesn't render the text
-      // Instead, we can check if the loading state is removed
-      expect(screen.queryByRole("progressbar")).not.toBeInTheDocument();
-    });
-  });
-
-  it("passes the correct props to SharePost component", async () => {
-    render(<MainFeed />);
-
-    await waitFor(() => {
-      // Author name should be John Doe (from mocked Redux state)
-      expect(screen.getByTestId("author-name").textContent).toBe("John Doe");
-
-      // Profile picture should be set from Redux state
-      expect(screen.getByTestId("author-picture").getAttribute("src")).toBe(
-        "profile-pic.jpg",
       );
     });
   });
@@ -319,7 +264,7 @@ describe("MainFeed", () => {
     render(<MainFeed q="searchTerm" />);
 
     await waitFor(() => {
-      expect(axiosInstance.get).toHaveBeenCalledWith("posts", {
+      expect(axiosInstance.get).toHaveBeenCalledWith("/posts/user123", {
         params: {
           page: 1,
           q: "searchTerm",

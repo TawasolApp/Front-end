@@ -2,10 +2,16 @@ import { render, screen } from "@testing-library/react";
 import { describe, it, expect, vi } from "vitest";
 import { useParams } from "react-router-dom";
 import RepostsContainer from "../../pages/Feed/RepostsContainer";
+import { useSelector } from "react-redux";
 
 // Mock react-router-dom
 vi.mock("react-router-dom", () => ({
   useParams: vi.fn(),
+}));
+
+// Mock react-redux
+vi.mock("react-redux", () => ({
+  useSelector: vi.fn(),
 }));
 
 // Mock MainFeed component
@@ -25,6 +31,12 @@ describe("RepostsContainer", () => {
   beforeEach(() => {
     // Set up a default mock value for useParams
     useParams.mockReturnValue({ id: "123456" });
+    
+    // Set up a mock value for useSelector to return the userId
+    useSelector.mockImplementation(selector => 
+      // Mock the Redux state structure
+      selector({ authentication: { userId: "user123" } })
+    );
   });
 
   it("renders with correct structure and classes", () => {
@@ -59,8 +71,8 @@ describe("RepostsContainer", () => {
 
     const mainFeedElement = screen.getByTestId("main-feed");
 
-    // Check the API_ROUTE prop is correctly constructed with the id
-    expect(mainFeedElement.dataset.apiRoute).toBe("/posts/789/reposts");
+    // Check the API_ROUTE prop is correctly constructed with the id from params and userId from Redux
+    expect(mainFeedElement.dataset.apiRoute).toBe("/posts/user123/789/reposts");
 
     // Check that showShare is false
     expect(mainFeedElement.dataset.showShare).toBe("false");
@@ -71,7 +83,7 @@ describe("RepostsContainer", () => {
     const { rerender } = render(<RepostsContainer />);
 
     expect(screen.getByTestId("main-feed").dataset.apiRoute).toBe(
-      "/posts/123/reposts",
+      "/posts/user123/123/reposts",
     );
 
     // Update params and rerender to simulate navigation
@@ -79,7 +91,7 @@ describe("RepostsContainer", () => {
     rerender(<RepostsContainer />);
 
     expect(screen.getByTestId("main-feed").dataset.apiRoute).toBe(
-      "/posts/456/reposts",
+      "/posts/user123/456/reposts",
     );
   });
 

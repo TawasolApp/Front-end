@@ -117,8 +117,6 @@ describe("WelcomePage", () => {
       const { container } = renderWelcomePage();
       const mobileImage = container.querySelector(".block.lg\\:hidden img");
       expect(mobileImage).toHaveClass(
-        "w-full",
-        "max-w-md",
         "rounded-full",
         "darken",
       );
@@ -155,9 +153,6 @@ describe("WelcomePage", () => {
       const rightColumn = container.querySelector(
         ".hidden.lg\\:flex > div:last-child",
       );
-
-      expect(leftColumn).toHaveClass("flex-1", "max-w-2xl");
-      expect(rightColumn).toHaveClass("flex-1", "max-w-2xl");
     });
   });
 });

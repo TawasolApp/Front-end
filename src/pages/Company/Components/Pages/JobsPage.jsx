@@ -73,7 +73,6 @@ const JobsPage = () => {
           <JobsList
             jobs={jobs}
             companyId={companyId}
-            isAdmin={showAdminIcons}
           />
         </div>
       )}

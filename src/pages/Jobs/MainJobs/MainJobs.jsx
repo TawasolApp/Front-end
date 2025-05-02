@@ -52,9 +52,15 @@ const MainJobs = ({
                   className="bg-cardBackground border border-cardBorder text-textActivity rounded-md px-3 py-2 pr-8 appearance-none hover:border-primary transition-all w-40"
                 >
                   <option value="">Any Level</option>
-                  <option value="Entry">Entry</option>
-                  <option value="Mid">Mid</option>
+                  <option value="Internship">Internship</option>
+                  <option value="Entry Level">Entry Level</option>
+                  <option value="Junior">Junior</option>
+                  <option value="Mid Level">Mid Level</option>
                   <option value="Senior">Senior</option>
+                  <option value="Lead">Lead</option>
+                  <option value="Manager">Manager</option>
+                  <option value="Director">Director</option>
+                  <option value="Executive">Executive</option>
                 </select>
                 <div className="absolute bottom-2 right-0 flex items-center pr-2 pointer-events-none">
                   <span className="text-xs text-textActivity">▼</span>
@@ -62,38 +68,41 @@ const MainJobs = ({
               </div>
 
               {/* Salary Range */}
-              <div className="flex-1 max-w-sm">
+              <div className="flex-1">
                 <label
-                  htmlFor="salary-range"
+                  htmlFor="min-salary"
                   className="block text-sm font-medium text-textActivity mb-1"
                 >
                   Salary Range (Annual)
                 </label>
-                <div
-                  className="flex items-center gap-2 bg-cardBackground border border-cardBorder rounded-md p-2 hover:border-primary transition-all"
-                  id="salary-range"
-                >
-                  <span className="text-textActivity text-lg">$</span>
-                  <input
-                    id="min-salary"
-                    type="number"
-                    placeholder="Min"
-                    min="0"
-                    value={filters.salaryRange[0] || ""}
-                    onChange={(e) => handleSalaryChange("min", e.target.value)}
-                    className="bg-transparent border-none text-textActivity w-24 focus:outline-none"
-                  />
-                  <span className="text-textActivity font-medium">to</span>
-                  <span className="text-textActivity text-lg">$</span>
-                  <input
-                    id="max-salary"
-                    type="number"
-                    placeholder="Max"
-                    min="0"
-                    value={filters.salaryRange[1] || ""}
-                    onChange={(e) => handleSalaryChange("max", e.target.value)}
-                    className="bg-transparent border-none text-textActivity w-24 focus:outline-none"
-                  />
+                <div className="flex items-center gap-2 bg-cardBackground border border-cardBorder rounded-md p-2 hover:border-primary transition-all">
+                  <div className="flex items-center gap-1 flex-1">
+                    <span className="text-textActivity">$</span>
+                    <input
+                      id="min-salary"
+                      type="number"
+                      placeholder="Min"
+                      min="0"
+                      value={filters.salaryRange[0] || ""}
+                      onChange={(e) => handleSalaryChange("min", e.target.value)}
+                      className="bg-transparent border-none text-textActivity w-full focus:outline-none placeholder:text-textPlaceholder"
+                    />
+                  </div>
+                  
+                  <span className="text-textActivity font-medium min-w-[40px] text-center">to</span>
+                  
+                  <div className="flex items-center gap-1 flex-1">
+                    <span className="text-textActivity">$</span>
+                    <input
+                      id="max-salary"
+                      type="number"
+                      placeholder="Max"
+                      min="0"
+                      value={filters.salaryRange[1] || ""}
+                      onChange={(e) => handleSalaryChange("max", e.target.value)}
+                      className="bg-transparent border-none text-textActivity w-full focus:outline-none placeholder:text-textPlaceholder"
+                    />
+                  </div>
                 </div>
               </div>
 

@@ -1,5 +1,5 @@
-import JobDescription from "./MainJobs/JobDescription/JobDescription";
 import { useParams } from "react-router-dom";
+import JobDescription from "./MainJobs/JobDescription/JobDescription";
 
 const SingleJob = () => {
   const { id } = useParams();

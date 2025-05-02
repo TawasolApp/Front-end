@@ -27,7 +27,6 @@ const SignUpPage = ({ onSubmit }) => {
         setEmailError("");
         dispatch(setEmail(formData.email));
         onSubmit(formData.email, formData.password)
-
         setIsLoading(false);
         navigate("/auth/signup/name");
       }
@@ -54,13 +53,16 @@ const SignUpPage = ({ onSubmit }) => {
   };
 
   return (
-    <div className="min-h-screen flex flex-col items-center justify-center bg-mainBackground px-4 sm:px-6 lg:px-8">
+    <div className="min-h-screen flex flex-col items-center justify-center bg-mainBackground px-4 sm:px-6 lg:px-8 py-8">
       <AuthenticationHeader hideButtons={true} />
 
-      <h1 className="text-2xl sm:text-3xl md:text-4xl font-normal mb-4 sm:mb-6 md:mb-8 text-textHeavyTitle text-center">
-        Make the most of your professional life
-      </h1>
-      <div className="bg-cardBackground p-6 sm:p-8 md:p-10 rounded-lg shadow-lg w-full max-w-md sm:max-w-lg">
+      <div className="w-full max-w-md sm:max-w-lg text-center mb-6">
+        <h1 className="text-2xl sm:text-3xl md:text-3xl font-normal text-textHeavyTitle px-4">
+          Make the most of your professional life
+        </h1>
+      </div>
+
+      <div className="bg-cardBackground p-6 sm:p-8 rounded-lg shadow-lg w-full max-w-md sm:max-w-lg">
         <SignUpForm onSubmit={handleSignUp} isLoading={isLoading} />
       </div>
     </div>

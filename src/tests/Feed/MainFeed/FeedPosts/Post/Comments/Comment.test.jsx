@@ -175,6 +175,23 @@ vi.mock("../../../../../../pages/Feed/MainFeed/FeedPosts/PostContext", () => {
   };
 });
 
+vi.mock(
+  "../../../../../../pages/Feed/MainFeed/FeedPosts/DeleteModal/DeletePostModal",
+  () => ({
+    default: ({ closeModal, deleteFunc, commentOrPost }) => (
+      <div data-testid="delete-modal">
+        <div>{commentOrPost}</div>
+        <button onClick={deleteFunc} data-testid="confirm-delete">
+          Confirm Delete
+        </button>
+        <button onClick={closeModal} data-testid="cancel-delete">
+          Cancel
+        </button>
+      </div>
+    ),
+  }),
+);
+
 // Import PostProvider after mocking
 import { PostProvider } from "../../../../../../pages/Feed/MainFeed/FeedPosts/PostContext";
 
@@ -267,17 +284,28 @@ describe("Comment Component", () => {
     expect(getByText("Form Type: Edit Comment")).toBeInTheDocument();
   });
 
-  it("calls delete handler when delete option is clicked", () => {
+  it("calls delete handler when delete option is clicked and confirmed", async () => {
     customRender(<Comment comment={mockOwnComment} />);
-
+  
     // Click dropdown menu
     fireEvent.click(screen.getByTestId("more-icon"));
-
-    // Click delete option
+  
+    // Click delete option to open modal
     fireEvent.click(screen.getByText("Delete comment"));
-
-    // Delete handler should be called
+    
+    // Modal should be visible
+    expect(screen.getByTestId("delete-modal")).toBeInTheDocument();
+    
+    // Click confirm delete
+    fireEvent.click(screen.getByTestId("confirm-delete"));
+    
+    // Now the delete handler should be called
     expect(mockHandleDeleteComment).toHaveBeenCalledWith(mockOwnComment.id);
+    
+    // Modal should close after deletion
+    await waitFor(() => {
+      expect(screen.queryByTestId("delete-modal")).not.toBeInTheDocument();
+    });
   });
 
   it("submits edited comment correctly", async () => {

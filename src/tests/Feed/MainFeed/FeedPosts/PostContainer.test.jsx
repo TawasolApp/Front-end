@@ -114,16 +114,16 @@ describe("PostContainer Component", () => {
 
   it("passes correct props to PostProvider", () => {
     render(<PostContainer {...defaultProps} />);
-
+  
     // Check that props were captured
     expect(postProviderProps.length).toBe(1);
-
+  
     // Verify the props are correct
     expect(postProviderProps[0]).toEqual(
       expect.objectContaining({
         initialPost: defaultProps.post,
         handleSharePost: defaultProps.handleSharePost,
-        handleDeletePost: defaultProps.handleDeletePost,
+        handleDeletePostExternal: defaultProps.handleDeletePost, // Changed property name
         currentAuthorId: defaultProps.currentAuthorId,
         currentAuthorName: defaultProps.currentAuthorName,
         currentAuthorPicture: defaultProps.currentAuthorPicture,

@@ -4,6 +4,7 @@ import userEvent from "@testing-library/user-event";
 import { MemoryRouter, Route, Routes } from "react-router-dom";
 import SinglePost from "../../pages/Feed/SinglePost";
 import { axiosInstance } from "../../apis/axios";
+import { Provider } from "react-redux";
 
 // Mock navigate function
 const mockNavigate = vi.fn();
@@ -25,6 +26,26 @@ vi.mock("../../apis/axios", () => ({
     post: vi.fn(),
   },
 }));
+
+// Mock redux
+vi.mock("react-redux", async () => {
+  const actual = await vi.importActual("react-redux");
+  return {
+    ...actual,
+    useSelector: vi.fn((selector) => {
+      // Mock Redux state
+      const state = {
+        authentication: {
+          userId: "user123",
+          firstName: "John",
+          lastName: "Doe",
+          profilePicture: "profile.jpg",
+        },
+      };
+      return selector(state);
+    }),
+  };
+});
 
 // Mock PostContainer component
 vi.mock("../../pages/Feed/MainFeed/FeedPosts/PostContainer", () => ({
@@ -57,7 +78,7 @@ describe("SinglePost Component", () => {
           <Route path="/feed" element={<div>Feed Page</div>} />
           <Route path="/error-404" element={<div>Error 404 Page</div>} />
         </Routes>
-      </MemoryRouter>,
+      </MemoryRouter>
     );
   };
 
@@ -88,7 +109,7 @@ describe("SinglePost Component", () => {
     });
 
     // Verify API was called with correct parameters
-    expect(axiosInstance.get).toHaveBeenCalledWith("posts/123");
+    expect(axiosInstance.get).toHaveBeenCalledWith("/posts/user123/123");
   });
 
   it("should navigate to 404 page when post is not found", async () => {
@@ -122,7 +143,7 @@ describe("SinglePost Component", () => {
 
     // Check that deletion API was called and navigation happened
     await waitFor(() => {
-      expect(axiosInstance.delete).toHaveBeenCalledWith("/delete/123");
+      expect(axiosInstance.delete).toHaveBeenCalledWith("/posts/user123/123");
       expect(mockNavigate).toHaveBeenCalledWith("/feed");
     });
   });
@@ -146,7 +167,7 @@ describe("SinglePost Component", () => {
 
     // Check that share API was called with correct parameters
     await waitFor(() => {
-      expect(axiosInstance.post).toHaveBeenCalledWith("posts", {
+      expect(axiosInstance.post).toHaveBeenCalledWith("/posts/user123", {
         content: "Shared content",
         media: null,
         taggedUsers: [],
@@ -201,7 +222,7 @@ describe("SinglePost Component", () => {
         <Routes>
           <Route path="/posts/" element={<SinglePost />} />
         </Routes>
-      </MemoryRouter>,
+      </MemoryRouter>
     );
 
     // API should not be called

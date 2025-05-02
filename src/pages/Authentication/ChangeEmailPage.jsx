@@ -15,16 +15,52 @@ const ChangeEmailPage = () => {
     newEmail,
     currentPassword,
     setEmailError,
-    setCurrentPasswordError,
+    setCurrentPasswordError
   ) => {
     try {
       setIsLoading(true);
-      await axiosInstance.patch("/users/request-email-update", {
-        newEmail,
-        password: currentPassword,
-      });
+      const response = await axiosInstance.patch(
+        "/users/request-email-update",
+        {
+          newEmail,
+          password: currentPassword,
+        }
+      );
+      const { verifyToken } = response.data;
 
       dispatch(setEmail(newEmail));
+
+      if (String(import.meta.env.VITE_ENVIRONMENT || "").trim() === "test") {
+        setIsLoading(false);
+
+        if (!verifyToken) {
+          console.log("Invalid verification link.");
+          return;
+        }
+
+        axiosInstance
+          .get(`/users/confirm-email-change?token=${verifyToken}`)
+          .then((res) => {
+            console.log("Email updated successfully! Redirecting...");
+            setTimeout(() => {
+              navigate("/feed"); // Navigating to /feed
+            }, 1500);
+            return;
+          })
+          .catch((err) => {
+            console.error(err);
+            if (err.response?.status === 400) {
+              console.log(
+                "Invalid or expired token. Please request a new verification email."
+              );
+            } else if (err.response?.status === 404) {
+              console.log("User not found. Please contact support.");
+            } else {
+              console.log("Something went wrong. Please try again later.");
+            }
+            return;
+          });
+      }
 
       setIsLoading(false);
       navigate("/auth/verification-pending", {

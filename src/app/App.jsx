@@ -17,58 +17,67 @@ import ProtectedRoute from "../apis/ProtectedRoute";
 import ProtectedRoutes from "./ProtectedRoutes";
 import VerificationPendingPage from "../pages/Authentication/VerificationPendingPage";
 import NewPasswordPage from "../pages/Authentication/NewPasswordPage";
+import { SocketProvider } from "../hooks/SocketContext";
 
 const App = () => {
-  const googleClientId = import.meta.env.VITE_GOOGLE_CLIENT_ID;
   const theme = useSelector((state) => state.theme.theme);
 
   return (
     <Router>
-      <Routes>
-        {/* Public Routes */}
-        <Route path="/" element={<WelcomePage />} />
-        <Route path="/auth/signin" element={<SignInPage />} />
-        <Route path="/auth/signup/*" element={<RegisterPage />} />
-        <Route path="/auth/signup/location" element={<LocationPage />} />
-        <Route
-          path="/auth/signup/experience"
-          element={<ExperienceAuthPage />}
-        />
-        <Route path="/auth/forgot-password" element={<ForgotPasswordPage />} />
-        <Route
-          path="/users/confirm-email-change"
-          element={<VerifyChangeEmailPage />}
-        />
-        <Route path="/auth/verify-email" element={<VerifySignUpPage />} />
-        <Route
-          path="/auth/reset-password"
-          element={<VerifyResetPasswordPage />}
-        />
-        <Route
-          path="/auth/verification-pending"
-          element={<VerificationPendingPage />}
-        />
-        <Route path="/auth/new-password" element={<NewPasswordPage />} />
+      <SocketProvider>
+        <Routes>
+          {/* Public Routes */}
+          <Route path="/" element={<WelcomePage />} />
+          <Route path="/auth/signin" element={<SignInPage />} />
+          <Route path="/auth/signup/*" element={<RegisterPage />} />
+          <Route path="/auth/signup/location" element={<LocationPage />} />
+          <Route
+            path="/auth/signup/experience"
+            element={<ExperienceAuthPage />}
+          />
+          <Route
+            path="/auth/forgot-password"
+            element={<ForgotPasswordPage />}
+          />
+          <Route
+            path="/users/confirm-email-change"
+            element={<VerifyChangeEmailPage />}
+          />
+          <Route path="/auth/verify-email" element={<VerifySignUpPage />} />
+          <Route
+            path="/auth/reset-password"
+            element={<VerifyResetPasswordPage />}
+          />
+          <Route
+            path="/auth/verification-pending"
+            element={<VerificationPendingPage />}
+          />
+          <Route path="/auth/new-password" element={<NewPasswordPage />} />
 
-        {/* Protected Routes */}
-        <Route
-          path="/*"
-          element={
-            <ProtectedRoute>
-              <ProtectedRoutes />
-            </ProtectedRoute>
-          }
+          {/* Protected Routes */}
+          <Route
+            path="/*"
+            element={
+              <ProtectedRoute>
+                <ProtectedRoutes />
+              </ProtectedRoute>
+            }
+          />
+        </Routes>
+        {/* Toast Container for the toasts */}
+        <ToastContainer
+          position="bottom-left"
+          autoClose={3000}
+          hideProgressBar={true}
+          newestOnTop={true}
+          closeOnClick
+          pauseOnFocusLoss={false}
+          pauseOnHover
+          draggable
+          theme={theme}
+          limit={3}
         />
-      </Routes>
-      {/* Toast Container for the toasts */}
-      <ToastContainer
-        position="bottom-left"
-        autoClose={5000}
-        newestOnTop={false}
-        closeOnClick={true}
-        rtl={false}
-        theme={theme}
-      />
+      </SocketProvider>
     </Router>
   );
 };

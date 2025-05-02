@@ -2,7 +2,6 @@ import React, { useEffect, useState } from "react";
 import { axiosInstance } from "../../../../apis/axios";
 import CloseIcon from "@mui/icons-material/Close";
 import WorkOutlineIcon from "@mui/icons-material/WorkOutline";
-import BusinessIcon from "@mui/icons-material/Business";
 import LocationOnIcon from "@mui/icons-material/LocationOn";
 import AttachMoneyIcon from "@mui/icons-material/AttachMoney";
 import DescriptionIcon from "@mui/icons-material/Description";
@@ -14,7 +13,7 @@ function AddJobModal({ onClose, companyId, onJobAdded }) {
     location: "",
     salary: "",
     applicationLink: "",
-    experienceLevel: "Internship",
+    experienceLevel: "",
     locationType: "On-site",
     employmentType: "Full-time",
   });
@@ -64,7 +63,7 @@ function AddJobModal({ onClose, companyId, onJobAdded }) {
         salary: "",
         employmentType: "Full-time",
         locationType: "On-site",
-        experienceLevel: "Internship",
+        experienceLevel: "",
       });
 
       onClose();
@@ -86,7 +85,7 @@ function AddJobModal({ onClose, companyId, onJobAdded }) {
         </button>
 
         <h3 className="text-xl font-semibold mb-6 text-header flex items-center gap-2">
-          <WorkOutlineIcon className="text-primary" />
+          <WorkOutlineIcon />
           Add Job Opening
         </h3>
 
@@ -105,7 +104,7 @@ function AddJobModal({ onClose, companyId, onJobAdded }) {
                   value={formData.position}
                   onChange={handleChange}
                   required
-                  className="w-full pl-8 pr-3 py-2 border border-cardBorder rounded-lg bg-transparent focus:ring-1 focus:ring-primary"
+                  className="w-full pl-8 pr-3 py-2 border border-cardBorder rounded-lg bg-cardBackground focus:ring-1 focus:ring-primary"
                 />
                 <WorkOutlineIcon className="absolute left-2 top-2.5 text-textPlaceholder w-4 h-4" />
               </div>
@@ -124,7 +123,7 @@ function AddJobModal({ onClose, companyId, onJobAdded }) {
                   value={formData.location}
                   onChange={handleChange}
                   required
-                  className="w-full pl-8 pr-3 py-2 border border-cardBorder rounded-lg bg-transparent"
+                  className="w-full pl-8 pr-3 py-2 border border-cardBorder rounded-lg bg-cardBackground"
                 />
                 <LocationOnIcon className="absolute left-2 top-2.5 text-textPlaceholder w-4 h-4" />
               </div>
@@ -140,7 +139,7 @@ function AddJobModal({ onClose, companyId, onJobAdded }) {
                   value={formData.salary}
                   onChange={handleChange}
                   placeholder="Annual salary in USD"
-                  className="w-full pl-8 pr-3 py-2 border border-cardBorder rounded-lg bg-transparent"
+                  className="w-full pl-8 pr-3 py-2 border border-cardBorder rounded-lg bg-cardBackground"
                 />
                 <AttachMoneyIcon className="absolute left-2 top-2.5 text-textPlaceholder w-4 h-4" />
               </div>
@@ -156,7 +155,7 @@ function AddJobModal({ onClose, companyId, onJobAdded }) {
                 value={formData.employmentType}
                 onChange={handleChange}
                 required
-                className="w-full py-2 border border-cardBorder rounded-lg bg-transparent"
+                className="w-full py-2 border border-cardBorder bg-cardBackground rounded-lg"
               >
                 <option>Full-time</option>
                 <option>Part-time</option>
@@ -176,7 +175,7 @@ function AddJobModal({ onClose, companyId, onJobAdded }) {
                 value={formData.locationType}
                 onChange={handleChange}
                 required
-                className="w-full py-2 border border-cardBorder rounded-lg bg-transparent"
+                className="w-full py-2 border border-cardBorder rounded-lg bg-cardBackground"
               >
                 <option>On-site</option>
                 <option>Hybrid</option>
@@ -194,17 +193,18 @@ function AddJobModal({ onClose, companyId, onJobAdded }) {
                 value={formData.experienceLevel}
                 onChange={handleChange}
                 required
-                className="w-full py-2 border border-cardBorder rounded-lg bg-transparent"
+                className="w-full py-2 border border-cardBorder rounded-lg bg-cardBackground"
               >
                 <option value="">Select experience level</option>
                 <option value="Internship">Internship</option>
-                <option value="Mid Level">Mid Level</option>
-                <option value="Director">Director</option>
-                <option value="Executive">Executive</option>
-                <option value="Manager">Manager</option>
+                <option value="Entry Level">Entry Level</option>
                 <option value="Junior">Junior</option>
+                <option value="Mid Level">Mid Level</option>
                 <option value="Senior">Senior</option>
                 <option value="Lead">Lead</option>
+                <option value="Manager">Manager</option>
+                <option value="Director">Director</option>
+                <option value="Executive">Executive</option>
               </select>
             </div>
           </div>

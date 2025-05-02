@@ -16,7 +16,7 @@ const AppliedJobContainer = () => {
             </div>
           </div>
           <div className="min-w-screen min-h-screen bg-mainBackground gap-0">
-            <MainJobs API_URL="/applications/applied" enableFilter={false} />
+            <MainJobs API_URL="/jobs/applications/applied" enableFilter={false} />
           </div>
         </div>
       </div>
