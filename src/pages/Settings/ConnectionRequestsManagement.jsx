@@ -33,7 +33,7 @@ const ConnectionRequestsManagement = () => {
   // useEffect(() => {
   //   const fetchConnectionSetting = async () => {
   //     try {
-  //       const res = await axios.get("/privacy/connection-setting");
+  //       const res = await axios.get("/security/connection-setting");
   //       const normalized = (res.data?.toLowerCase?.() || "everyone").trim();
   //       setSavedOption(normalized);
   //       setCurrentOption(normalized);

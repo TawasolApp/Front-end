@@ -118,7 +118,7 @@ const ReportBlockModal = ({
   return (
     <>
       {/* Background Modal Overlay */}
-      <div className="fixed inset-0 z-50 bg-black/40 backdrop-blur-sm flex items-center justify-center">
+      <div className="fixed inset-0 z-50 bg-modalbackground flex items-center justify-center">
         {/* Modal Card */}
         <div className="bg-boxbackground rounded-xl p-6 shadow-lg border border-cardBorder w-full max-w-md mx-4 sm:mx-0 relative">
           {/* Close Button */}

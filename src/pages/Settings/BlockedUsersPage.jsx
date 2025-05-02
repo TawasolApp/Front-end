@@ -103,7 +103,7 @@ const BlockedUsersPage = () => {
                     </div>
                   </div>
                   <button
-                    className="text-blue-600 font-semibold hover:bg-blue-100 px-4 py-1 rounded-full transition"
+                    className="text-unblockText font-semibold hover:bg-unblockBg Hover px-4 py-1 rounded-full transition"
                     onClick={() => {
                       setSelectedUserId(user.userId);
                       setShowConfirm(true);

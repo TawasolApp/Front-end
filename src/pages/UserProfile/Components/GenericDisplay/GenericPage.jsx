@@ -99,6 +99,20 @@ function GenericPage({ title, type }) {
       onUserUpdate?.(refreshed.data);
     } catch (err) {
       console.error("Failed to save item:", err);
+
+      const message = err.response?.data?.message;
+
+      if (type === "skills" && err.response?.status === 409) {
+        toast.error(
+          typeof message === "string"
+            ? message
+            : Array.isArray(message)
+              ? message.join(", ")
+              : "This skill already exists. Please try another."
+        );
+      } else {
+        toast.error("Failed to save item. Please try again.");
+      }
     } finally {
       //finally happen no matter what: even if: The API fails PATCH/POST throws an error or return early
       setIsSaving(false);

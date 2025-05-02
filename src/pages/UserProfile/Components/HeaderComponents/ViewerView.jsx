@@ -234,7 +234,7 @@ function ViewerView({
       {/* More dropdown */}
       <div className="relative" ref={dropdownRef}>
         <button
-          className="h-8 py-0 px-4 text-sm border border-black text-black rounded-full hover:outline hover:outline-1 hover:outline-black transition duration-200"
+          className="h-8 py-0 px-4 text-sm border border-text text-hoverOutlineColor rounded-full hover:outline hover:outline-1 hover:outline-text hover:bg-moreHoverBg transition duration-200"
           onClick={() => setDropdownOpen((prev) => !prev)}
           aria-haspopup="true"
           aria-expanded={dropdownOpen}
