@@ -20,7 +20,6 @@ import NewPasswordPage from "../pages/Authentication/NewPasswordPage";
 import { SocketProvider } from "../hooks/SocketContext";
 
 const App = () => {
-  const googleClientId = import.meta.env.VITE_GOOGLE_CLIENT_ID;
   const theme = useSelector((state) => state.theme.theme);
 
   return (

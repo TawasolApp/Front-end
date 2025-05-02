@@ -1,11 +1,11 @@
 import React, { useState, useEffect, useRef, useCallback } from "react";
 import { useNavigate } from "react-router-dom";
 import { axiosInstance } from "../../apis/axios";
-import { io } from "socket.io-client";
 import CircleNotificationsIcon from "@mui/icons-material/CircleNotifications";
 import Badge from "@mui/material/Badge";
 import defaultProfilePicture from "../../assets/images/defaultProfilePicture.png";
 import { useSelector } from "react-redux";
+import { useSocket } from "../../hooks/SocketContext";
 
 const NotificationsPage = () => {
   const navigate = useNavigate();
@@ -20,9 +20,8 @@ const NotificationsPage = () => {
   const [unseenCount, setUnseenCount] = useState(0);
   const [showUnreadOnly, setShowUnreadOnly] = useState(false);
   const { userId, companyId } = useSelector((state) => state.authentication);
-  const socketRef = useRef(null);
+  const socket = useSocket();
   const observer = useRef();
-  const BASE_URL = String(import.meta.env.VITE_APP_BASE_URL || "").trim();
   const audioContextRef = useRef(null);
   const audioInitializedRef = useRef(false);
 
@@ -185,58 +184,67 @@ const NotificationsPage = () => {
       markAsRead(notification.notificationId);
     }
   
-    // Connection notifications always go to user profile
-    if (notification.type === "Connection") {
-      const userId = notification.rootItemId || notification.referenceId;
-      navigate(`/users/${userId}`);
-      return;
-    }
-  
-    // Other notification types
-    if (notification.type === "React" || notification.type === "Comment") {
-      if (elementClicked === 'content') {
-        navigate(`/feed/${notification.rootItemId}?highlight=${notification.referenceId}`);
-      } else {
-        navigate(`/feed/${notification.rootItemId}`);
-      }
-    } else if (notification.rootItemId) {
-      // Default fallback
-      navigate(`/users/${notification.referenceId}`);
+    // Handle different notification types
+    switch (notification.type) {
+      case "Connection":
+        navigate(`/users/${notification.referenceId}`);
+        break;
+      case "JobAccepted":
+      case "JobPosted":
+      case "CompanyUpdate":
+        // For company-related notifications, go to company profile
+        navigate(`/company/${notification.referenceId}`);
+        break;
+      case "React":
+      case "Comment":
+        if (elementClicked === 'content') {
+          navigate(`/feed/${notification.rootItemId}?highlight=${notification.referenceId}`);
+        } else {
+          navigate(`/feed/${notification.rootItemId}`);
+        }
+        break;
+      default:
+        // Default behavior based on sender type
+        if (notification.senderType === "Company") {
+          navigate(`/company/${notification.referenceId}`);
+        } else {
+          navigate(`/users/${notification.referenceId}`);
+        }
     }
   };
-
+  
   const formatNotificationContent = (notification) => {
     switch (notification.type) {
       case "React":
         return (
-          <span>
             <span 
               onClick={(e) => {
                 e.stopPropagation();
                 handleNotificationClick(notification, 'content');
               }}
             >
-              reacted
-            </span>{' '}
-            to your post
+              {notification.userName} reacted to your post
           </span>
         );
       case "Comment":
         return (
-          <span>
             <span 
               onClick={(e) => {
                 e.stopPropagation();
                 handleNotificationClick(notification, 'content');
               }}
             >
-              commented
-            </span>{' '}
-            on your post
+            {notification.userName} commented on your post
           </span>
         );
       case "Connection":
         return `${notification.userName} sent you a connection request`;
+      case "JobAccepted":
+        return `${notification.userName} accepted your job application`;
+      case "JobPosted":
+        return `${notification.userName} posted a new job`;
+      case "CompanyUpdate":
+        return `${notification.userName} updated their company profile`;
       default:
         return notification.content;
     }
@@ -253,42 +261,22 @@ const NotificationsPage = () => {
     return `${Math.floor(diffInSeconds / 86400)}d ago`;
   };
 
+  // Setup socket event listeners
   useEffect(() => {
-    if (!userId) return;
+    if (!socket || !userId) return;
 
-    if (socketRef.current) {
-      socketRef.current.disconnect();
-    }
-
-    socketRef.current = io('wss://tawasolapp.me', {
-      transports: ['websocket'],
-      query: { userId },
-      withCredentials: true,
-      reconnection: true,
-      reconnectionAttempts: 5,
-      reconnectionDelay: 1000,
-    });
-
-    socketRef.current.on("connect", () => {
-      console.log("Connected to notifications socket");
-    });
-
-    socketRef.current.on("connect_error", (err) => {
-      console.error("Socket connection error:", err);
-    });
-
-    socketRef.current.on("newNotification", (newNotification) => {
+    const handleNewNotification = (newNotification) => {
       setNotifications(prev => [newNotification, ...prev]);
       setUnseenCount(prev => prev + 1);
       playBeep();
-    });
+    };
+
+    socket.on("newNotification", handleNewNotification);
 
     return () => {
-      if (socketRef.current) {
-        socketRef.current.disconnect();
-      }
+      socket.off("newNotification", handleNewNotification);
     };
-  }, [userId, BASE_URL, playBeep]);
+  }, [socket, userId, playBeep]);
 
   useEffect(() => {
     setPagination(prev => ({ ...prev, page: 1 }));
@@ -410,18 +398,6 @@ const NotificationsPage = () => {
                 {showUnreadOnly ? 'No unread notifications' : 'No notifications yet'}
               </div>
             )}
-          </div>
-
-          <div className="bg-cardBackground rounded-lg shadow-md border border-cardBorder p-4 md:p-6">
-            <h2 className="text-lg md:text-xl font-bold mb-2 md:mb-3 text-textHeavyTitle">
-              Stay updated with notifications
-            </h2>
-            <p className="text-sm md:text-base text-textContent mb-2 md:mb-3">
-              Turn on notifications to never miss important updates from your network.
-            </p>
-            <button className="px-3 py-1.5 md:px-4 md:py-2 bg-buttonSubmitEnable hover:bg-buttonSubmitEnableHover text-white font-medium rounded-lg transition-colors text-sm md:text-base">
-              Notification Settings
-            </button>
           </div>
         </div>
       </div>

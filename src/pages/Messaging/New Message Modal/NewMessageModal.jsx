@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import NewMessageModalHeader from "./NewMessageModalHeader";
 import ProfileCard from "./ProfileCard";
 import NewMessageModalInputs from "./NewMessageModalInputs";
@@ -8,20 +8,6 @@ import { useSocket } from "../../../hooks/SocketContext";
 const NewMessageModal = ({ recipient, onClose }) => {
   const [isMinimized, setIsMinimized] = useState(false);
   const socket = useSocket();
-
-  // useEffect(() => {
-  //   const handleReceiveMessage = (message) => {
-  //     console.log("Received a message in MessageModal:", message);
-  //     // TODO: implement action later
-  //   };
-
-  //   socket?.on("receive_message", handleReceiveMessage);
-
-  //   return () => {
-  //     socket?.off("receive_message", handleReceiveMessage);
-  //   };
-  // }, [socket]);
-
 
   const handleSendMessage = (messageData) => {
     if (!socket || !socket.connected) {
@@ -40,12 +26,7 @@ const NewMessageModal = ({ recipient, onClose }) => {
     };
 
     socket.emit("send_message", messagePayload, (acknowledgement) => {
-      if (acknowledgement?.success) {
-        toast.success("Message sent successfully", {
-          position: "top-right",
-          autoClose: 3000,
-        });
-      } else {
+      if (!acknowledgement?.success) {
         toast.error("Failed to send message", {
           position: "top-right",
           autoClose: 3000,
@@ -80,6 +61,7 @@ const NewMessageModal = ({ recipient, onClose }) => {
         <NewMessageModalInputs
           isMinimized={isMinimized}
           onSend={handleSendMessage}
+          receiverId={recipient._id}
         />
       </div>
     </div>

@@ -25,6 +25,7 @@ const ConversationList = ({ activeFilter, onConversationSelect }) => {
     totalItems: 0,
     itemsPerPage: 10,
   });
+  const [typingConvoIds, setTypingConvoIds] = useState(new Set());
   const userId = useSelector((state) => state.authentication.userId);
   const socket = useSocket();
 
@@ -42,7 +43,6 @@ const ConversationList = ({ activeFilter, onConversationSelect }) => {
         time: formatTime(convo.lastMessage?.sentAt),
         unreadCount: convo.unseenCount,
         isYou: convo.lastMessage?.senderId === userId,
-        isOnline: false, // TODO: implement presence
         markedAsUnread: convo.markedAsUnread,
       }));
 
@@ -90,6 +90,36 @@ const ConversationList = ({ activeFilter, onConversationSelect }) => {
       fetchConversations(pagination.currentPage + 1, pagination.itemsPerPage);
     }
   };
+
+  useEffect(() => {
+    if (!socket) return;
+
+    const handleTyping = ({ senderId }) => {
+      const convo = conversations.find((c) => c.participant._id === senderId);
+
+      if (convo) {
+        setTypingConvoIds((prev) => {
+          const newSet = new Set(prev);
+          newSet.add(convo.id);
+          return newSet;
+        });
+
+        // Remove typing state after 2 seconds
+        setTimeout(() => {
+          setTypingConvoIds((prev) => {
+            const newSet = new Set(prev);
+            newSet.delete(convo.id);
+            return newSet;
+          });
+        }, 2000);
+      }
+    };
+
+    socket.on("typing", handleTyping);
+    return () => {
+      socket.off("typing", handleTyping);
+    };
+  }, [socket, conversations]);
 
   const filterConversations = () => {
     setFilteredConversations(
@@ -350,11 +380,6 @@ const ConversationList = ({ activeFilter, onConversationSelect }) => {
                         alt={`${recipient.firstName} ${recipient.lastName}`}
                         sx={{ width: 56, height: 56 }}
                       />
-                      <span
-                        className={`absolute bottom-0 right-0 w-3 h-3 rounded-full border-2 border-white ${
-                          recipient.isOnline ? "bg-green-500" : "bg-gray-400"
-                        }`}
-                      />
                     </>
                   )}
                 </div>
@@ -374,8 +399,16 @@ const ConversationList = ({ activeFilter, onConversationSelect }) => {
                             : "text-textContent"
                         }`}
                       >
-                        {convo.isYou ? "You: " : ""}
-                        {convo.lastMessage}
+                        {convo.isYou &&
+                          !typingConvoIds.has(convo.id) &&
+                          "You: "}
+                        {typingConvoIds.has(convo.id) ? (
+                          <span className="text-green-500 font-medium">
+                            Typing...
+                          </span>
+                        ) : (
+                          convo.lastMessage
+                        )}
                       </p>
                     </div>
 

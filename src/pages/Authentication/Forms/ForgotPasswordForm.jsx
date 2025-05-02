@@ -27,14 +27,11 @@ const ForgotPasswordForm = () => {
 
     try {
       setIsLoading(true);
-      const response = await axiosInstance.post(
-        "/auth/forgot-password",
-        {
-          email,
-          isAndroid: false,
-        }
-      );
-      const {verifyToken} = response.data;
+      const response = await axiosInstance.post("/auth/forgot-password", {
+        email,
+        isAndroid: false,
+      });
+      const { verifyToken } = response.data;
       dispatch(setEmail(email));
 
       if (String(import.meta.env.VITE_ENVIRONMENT || "").trim() === "test") {
@@ -48,7 +45,9 @@ const ForgotPasswordForm = () => {
         axiosInstance
           .post(`/auth/reset-password`, { token: verifyToken })
           .then((res) => {
-            console.log("Token verified! Redirecting to reset password page...");
+            console.log(
+              "Token verified! Redirecting to reset password page..."
+            );
             setTimeout(() => {
               navigate("/auth/new-password");
             }, 1500);

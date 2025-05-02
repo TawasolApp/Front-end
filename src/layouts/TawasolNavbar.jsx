@@ -2,7 +2,6 @@ import { useState, useRef, useEffect, useCallback } from "react";
 import { useNavigate } from "react-router-dom";
 import { useSelector } from "react-redux";
 import { axiosInstance } from "../apis/axios";
-import { io } from "socket.io-client";
 import HomeIcon from "@mui/icons-material/Home";
 import CottageIcon from "@mui/icons-material/Cottage";
 import GroupIcon from "@mui/icons-material/Group";
@@ -17,6 +16,7 @@ import Avatar from "@mui/material/Avatar";
 import SearchIcon from "@mui/icons-material/Search";
 import Badge from "@mui/material/Badge";
 import { getIconComponent } from "../utils";
+import { useSocket } from "../hooks/SocketContext";
 
 const TawasolNavbar = () => {
   const currentPath = window.location.pathname;
@@ -30,7 +30,6 @@ const TawasolNavbar = () => {
   const searchIconRef = useRef(null);
   const meDropdownRef = useRef(null);
   const navbarRef = useRef(null);
-  const socketRef = useRef(null);
   const audioContextRef = useRef(null);
   const audioInitializedRef = useRef(false);
   const navigate = useNavigate();
@@ -42,8 +41,7 @@ const TawasolNavbar = () => {
     (state) => state.authentication.profilePicture
   );
   const currentAuthorBio = useSelector((state) => state.authentication.bio);
-
-  const BASE_URL = String(import.meta.env.VITE_APP_BASE_URL || "").trim();
+  const socket = useSocket();
 
   // Initialize audio context and setup user interaction
   const initializeAudio = useCallback(async () => {
@@ -135,62 +133,57 @@ const TawasolNavbar = () => {
     };
   }, [initializeAudio]);
 
-  // Setup socket connection and event listeners
+  // Setup socket event listeners
   useEffect(() => {
-    if (!currentAuthorId) return;
+    if (!socket || !currentAuthorId) return;
 
-    // Initialize WebSocket connection
-    if (socketRef.current) {
-      socketRef.current.disconnect();
-    }
-
-    socketRef.current = io("wss://tawasolapp.me", {
-      transports: ["websocket"],
-      query: { userId: currentAuthorId },
-      withCredentials: true,
-      reconnection: true,
-      reconnectionAttempts: 5,
-      reconnectionDelay: 1000,
-    });
-
-    socketRef.current.on("connect", () => {
+    const handleConnect = () => {
       console.log("Connected to notifications socket");
       fetchUnseenCount();
-    });
+    };
 
-    socketRef.current.on("connect_error", (err) => {
+    const handleConnectError = (err) => {
       console.error("Socket connection error:", err);
-    });
+    };
 
-    socketRef.current.on("newNotification", (newNotification) => {
+    const handleNewNotification = (newNotification) => {
       // Only increment if not on notifications page
       if (currentPath !== "/notifications") {
         setUnseenCount((prev) => prev + 1);
         playBeep();
       }
-    });
+    };
 
-    socketRef.current.on("notificationsSeen", ({ count }) => {
+    const handleNotificationsSeen = ({ count }) => {
       setUnseenCount(count);
-    });
+    };
 
-    socketRef.current.on("notificationCountUpdate", ({ count }) => {
+    const handleNotificationCountUpdate = ({ count }) => {
       setUnseenCount(count);
-    });
+    };
 
-    socketRef.current.on("receive_message", (message) => {
+    const handleReceiveMessage = (message) => {
       console.log("Received message:", message);
-
       // Acknowledge message delivery with empty body
-      socketRef.current.emit("messages_delivered", {});
-    });
+      socket.emit("messages_delivered", {});
+    };
+
+    socket.on("connect", handleConnect);
+    socket.on("connect_error", handleConnectError);
+    socket.on("newNotification", handleNewNotification);
+    socket.on("notificationsSeen", handleNotificationsSeen);
+    socket.on("notificationCountUpdate", handleNotificationCountUpdate);
+    socket.on("receive_message", handleReceiveMessage);
 
     return () => {
-      if (socketRef.current) {
-        socketRef.current.disconnect();
-      }
+      socket.off("connect", handleConnect);
+      socket.off("connect_error", handleConnectError);
+      socket.off("newNotification", handleNewNotification);
+      socket.off("notificationsSeen", handleNotificationsSeen);
+      socket.off("notificationCountUpdate", handleNotificationCountUpdate);
+      socket.off("receive_message", handleReceiveMessage);
     };
-  }, [currentAuthorId, BASE_URL, fetchUnseenCount, playBeep, currentPath]);
+  }, [socket, currentAuthorId, fetchUnseenCount, playBeep, currentPath]);
 
   // Handle notification click
   const handleNotificationClick = () => {
