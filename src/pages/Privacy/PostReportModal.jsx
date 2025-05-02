@@ -114,10 +114,10 @@ const PostReportModal = ({ isOpen, onClose, targetId }) => {
               }
               rows={4}
               maxLength={300}
-              className="w-full border rounded-lg p-2 text-sm bg-boxbackground"
+              className="w-full border rounded-lg p-2 text-sm bg-boxbackground text-companyheader"
               placeholder="Describe the issue briefly (max 300 characters)"
             />
-            <p className="text-xs text-right text-gray-500 mt-1">
+            <p className="text-xs text-right text-companysubheader mt-1">
               {customReason.length} / 300
             </p>
 

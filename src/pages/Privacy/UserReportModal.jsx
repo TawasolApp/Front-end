@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { axiosInstance as axios } from "../../apis/axios.js";
 import { toast } from "react-toastify";
 
-const ReportModal = ({ isOpen, onClose, targetId }) => {
+const ReportModal = ({ isOpen, onClose, targetId, onSubmitComplete }) => {
   const [selectedReason, setSelectedReason] = useState("");
   const [isOtherReason, setIsOtherReason] = useState(false);
   const [customReason, setCustomReason] = useState("");
@@ -31,13 +31,17 @@ const ReportModal = ({ isOpen, onClose, targetId }) => {
       reason: reasonToSend,
     };
 
-    console.log("🟦 Reporting user payload:", payload);
+    console.log(" Reporting user payload:", payload);
 
     setSubmitting(true);
     try {
       await axios.post("/security/report", payload);
       toast.success("Report submitted successfully.");
-      handleClose();
+      if (onSubmitComplete) {
+        onSubmitComplete();
+      } else {
+        handleClose();
+      }
     } catch (err) {
       console.error("Failed to report:", err);
       toast.error("Failed to submit report. Please try again.");
@@ -110,7 +114,7 @@ const ReportModal = ({ isOpen, onClose, targetId }) => {
               }
               rows={4}
               maxLength={300}
-              className="w-full border rounded-lg p-2 text-sm bg-boxbackground"
+              className="w-full border rounded-lg p-2 text-sm bg-boxbackground text-companyheader"
               placeholder="Describe the issue briefly (max 300 characters)"
             />
             <p className="text-xs text-right text-gray-500 mt-1">

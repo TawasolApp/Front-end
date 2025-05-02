@@ -12,97 +12,39 @@ const ReportBlockModal = ({
   fullName,
   userId, // the profile being viewed (target)
   viewerId, // logged-in user (block initiator)
-
   onBlocked,
 }) => {
-  const [showBlockConfirm, setShowBlockConfirm] = useState(false);
-  const [showReportModal, setShowReportModal] = useState(false);
-  const dispatch = useDispatch();
+  // const [showBlockConfirm, setShowBlockConfirm] = useState(false);
+  // const [showReportModal, setShowReportModal] = useState(false);
+  const [modalStage, setModalStage] = useState("main"); // "main" | "blockConfirm" | "report"
+
   const [isBlocking, setIsBlocking] = useState(false);
+  useEffect(() => {
+    if (isOpen) {
+      setModalStage("main"); // reset modal view each time modal is opened
+    }
+  }, [isOpen]);
 
   useEffect(() => {
-    document.body.classList.toggle("overflow-hidden", isOpen);
+    const shouldLockScroll = isOpen && modalStage !== null;
+    document.body.classList.toggle("overflow-hidden", shouldLockScroll);
     return () => document.body.classList.remove("overflow-hidden");
-  }, [isOpen]);
+  }, [isOpen, modalStage]);
 
   const handleBlockUser = async () => {
     console.log("Blocking user:", userId);
 
     try {
       await axios.post(`/security/block/${userId}`);
-
-      // const cleanupTasks = [];
-
-      // // Remove viewer's endorsements on target user
-      // try {
-      //   const res = await axios.get(`/profile/skill-endorsements/${userId}`);
-      //   const theirSkills = res.data || [];
-      //   const skillsEndorsedByViewer = theirSkills.filter((skill) =>
-      //     skill.endorsers.includes(viewerId)
-      //   );
-      //   for (const skill of skillsEndorsedByViewer) {
-      //     cleanupTasks.push(
-      //       axios
-      //         .delete(`/connections/${userId}/endorsement/${skill.name}`)
-      //         .catch((err) => {
-      //           if (err.response?.status !== 404) {
-      //             console.warn(
-      //               `Unendorsing ${skill.name} on their profile failed`,
-      //               err
-      //             );
-      //           }
-      //         })
-      //     );
-      //   }
-      // } catch (err) {
-      //   console.warn(
-      //     "Failed to fetch their skills:",
-      //     err.response?.data || err.message
-      //   );
-      // }
-
-      // // 4. Remove their endorsements on viewer
-      // try {
-      //   const res = await axios.get(`/profile/skill-endorsements/${viewerId}`);
-      //   const viewerSkills = res.data || [];
-      //   const skillsEndorsedByThem = viewerSkills.filter((skill) =>
-      //     skill.endorsers.includes(userId)
-      //   );
-      //   for (const skill of skillsEndorsedByThem) {
-      //     cleanupTasks.push(
-      //       axios
-      //         .delete(`/connections/${viewerId}/endorsement/${skill.name}`)
-      //         .catch((err) => {
-      //           if (err.response?.status !== 404) {
-      //             console.warn(
-      //               `Removing ${skill.name} from your profile failed`,
-      //               err
-      //             );
-      //           }
-      //         })
-      //     );
-      //   }
-      // } catch (err) {
-      //   console.warn(
-      //     "Failed to fetch your skills:",
-      //     err.response?.data || err.message
-      //   );
-      // }
-
-      // await Promise.all(cleanupTasks);
-      // // dispatch(addBlockedUser(userId));
       toast.success(`${fullName} has been blocked successfully.`);
-      // onClose(); // Close the modal after cleanup
       setTimeout(() => {
-        onClose(); // Close modal
+        onClose();
         if (typeof onBlocked === "function") {
-          onBlocked(); // For example, navigate to feed
+          onBlocked();
         }
       }, 800);
     } catch (err) {
       toast.error("Failed to block user.");
-
-      // console.error("Block failed:", err.response?.data || err.message);
       console.error("Block failed:");
       console.error("Status:", err.response?.status);
       console.error("Message:", err.response?.data || err.message);
@@ -114,69 +56,83 @@ const ReportBlockModal = ({
   if (isBlocking) {
     return <LoadingPage message="Redirecting to feed..." />;
   }
+
   return (
     <>
-      {/* Background Modal Overlay */}
-      <div className="fixed inset-0 z-50 bg-modalbackground flex items-center justify-center">
-        {/* Modal Card */}
-        <div className="bg-boxbackground rounded-xl p-6 shadow-lg border border-cardBorder w-full max-w-md mx-4 sm:mx-0 relative">
-          {/* Close Button */}
-          <button
-            className="absolute top-3 right-3 text-text text-xl"
-            onClick={onClose}
-          >
-            &times;
-          </button>
-
-          {/* Header */}
-          <h2 className="text-xl font-bold text-header mb-2">
-            Report or block
-          </h2>
-          <p className="text-sm font-medium text-textContent mb-3">
-            Select an action
-          </p>
-
-          {/* Action List */}
-          <div className="space-y-1">
-            <div
-              className="group flex items-center justify-between p-4 rounded-lg cursor-pointer hover:bg-gray-200 transition"
-              onClick={() => setShowBlockConfirm(true)}
+      {/* MAIN MODAL */}
+      {modalStage === "main" && isOpen && (
+        <div className="fixed inset-0 z-50 bg-modalbackground flex items-center justify-center">
+          {/* Modal Card */}
+          <div className="bg-boxbackground rounded-xl p-6 shadow-lg border border-cardBorder w-full max-w-md mx-4 sm:mx-0 relative">
+            {/* Close Button */}
+            <button
+              className="absolute top-3 right-3 text-text text-xl"
+              onClick={onClose}
             >
-              <p className="text-textContent font-medium group-hover:text-black">
-                Block {fullName}
-              </p>
-              <ArrowForwardOutlined className="text-textPlaceholder group-hover:text-black" />
-            </div>
-            <div
-              className="group flex items-center justify-between p-4 rounded-lg cursor-pointer hover:bg-gray-200 transition"
-              onClick={() => setShowReportModal(true)}
-            >
-              <p className="text-textContent font-medium group-hover:text-black">
-                Report {fullName} or entire account
-              </p>
-              <ArrowForwardOutlined className="text-textPlaceholder group-hover:text-black" />
+              &times;
+            </button>
+
+            {/* Header */}
+            <h2 className="text-xl font-bold text-header mb-2">
+              Report or block
+            </h2>
+            <p className="text-sm font-medium text-textContent mb-3">
+              Select an action
+            </p>
+
+            {/* Action List */}
+            <div className="space-y-1">
+              <div
+                className="group flex items-center justify-between p-4 rounded-lg cursor-pointer hover:bg-moreHoverBg transition"
+                // onClick={() => setShowBlockConfirm(true)}
+                onClick={() => setModalStage("blockConfirm")}
+              >
+                <p className="text-textContent font-medium group-hover:text-text">
+                  Block {fullName}
+                </p>
+                <ArrowForwardOutlined className="text-textPlaceholder group-hover:text-text" />
+              </div>
+              <div
+                className="group flex items-center justify-between p-4 rounded-lg cursor-pointer hover:bg-moreHoverBg transition"
+                // onClick={() => setShowReportModal(true)}
+                onClick={() => setModalStage("report")}
+              >
+                <p className="text-textContent font-medium group-hover:text-text">
+                  Report {fullName} or entire account
+                </p>
+                <ArrowForwardOutlined className="text-textPlaceholder group-hover:text-text" />
+              </div>
             </div>
           </div>
         </div>
-      </div>
+      )}
 
       {/* Block Confirmation */}
-      {showBlockConfirm && (
+      {/* {showBlockConfirm && ( */}
+      {modalStage === "blockConfirm" && (
         <ConfirmModal
           title="Block"
           message={`You’re about to block ${fullName}\nYou’ll no longer be connected, and will lose any endorsements or recommendations from this person.`}
           confirmLabel="Block"
           cancelLabel="Back"
           onConfirm={handleBlockUser}
-          onCancel={() => setShowBlockConfirm(false)}
+          // onCancel={() => setShowBlockConfirm(false)}
+          onCancel={() => setModalStage("main")}
         />
       )}
 
       {/* Report Modal */}
-      {showReportModal && (
+      {/* {showReportModal && ( */}
+      {modalStage === "report" && (
         <ReportUserModal
-          isOpen={showReportModal}
-          onClose={() => setShowReportModal(false)}
+          // isOpen={showReportModal}
+          isOpen={true}
+          // onClose={() => setShowReportModal(false)}
+          onClose={() => setModalStage("main")}
+          onSubmitComplete={() => {
+            setModalStage(null); // close modalStage
+            onClose(); // close outer modal
+          }}
           targetId={userId}
           type="user"
         />
