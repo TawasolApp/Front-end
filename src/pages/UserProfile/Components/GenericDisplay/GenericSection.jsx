@@ -3,6 +3,7 @@ import GenericCard from "./GenericCard";
 import GenericModal from "./GenericModal";
 import { useNavigate } from "react-router-dom";
 import { axiosInstance as axios } from "../../../../apis/axios.js";
+import { toast } from "react-toastify";
 // import LoadingPage from "../../../LoadingScreen/LoadingPage.jsx";
 const singularMap = {
   skills: "skill",
@@ -62,7 +63,7 @@ function GenericSection({ title, type, items, isOwner, user, onUserUpdate }) {
         const newKey =
           type === "skills" ? response.data.skillName : response.data._id;
         const exists = data.some((item) =>
-          type === "skills" ? item.skillName === newKey : item._id === newKey,
+          type === "skills" ? item.skillName === newKey : item._id === newKey
         );
 
         if (!exists) {
@@ -74,10 +75,17 @@ function GenericSection({ title, type, items, isOwner, user, onUserUpdate }) {
       }
     } catch (err) {
       console.error("❌ Failed to save item:", err);
-      if (err.response) {
-        console.log("🧨 Error:", err.response.data.message?.join(", "));
+
+      const message = err.response?.data?.message;
+
+      if (type === "skills" && err.response?.status === 409) {
+        toast.error(
+          typeof message === "string"
+            ? message
+            : "This skill already exists. Please try another."
+        );
       } else {
-        console.log("❌ Network error or no server response.");
+        toast.error("Failed to save item. Please try again.");
       }
     } finally {
       setIsSaving(false);
@@ -100,7 +108,7 @@ function GenericSection({ title, type, items, isOwner, user, onUserUpdate }) {
       initialData={editData || {}}
       type={type}
       editMode={editIndex !== null}
-      isSaving={isSaving} // ✅ Add this line
+      isSaving={isSaving}
     />
   );
   // if (isSaving) return <LoadingPage />;

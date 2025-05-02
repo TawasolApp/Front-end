@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from "react";
 import { axiosInstance as axios } from "../../../../apis/axios.js";
 import ConfirmModal from "../ReusableModals/ConfirmModal.jsx";
+import { toast } from "react-toastify";
+
 function EditProfileModal({ user, isOpen, onClose, onSave }) {
   const [editedUser, setEditedUser] = useState({ ...user });
   const [errors, setErrors] = useState({});
@@ -70,12 +72,14 @@ function EditProfileModal({ user, isOpen, onClose, onSave }) {
             selectedExperienceIndex,
             selectedEducationIndex,
           });
+          toast.success("Profile updated successfully.");
           onClose();
         } catch (err) {
           console.error(
             "Failed to update profile:",
-            err.response?.data || err.message,
+            err.response?.data || err.message
           );
+          toast.error("Failed to update profile.");
         }
 
         setIsSaving(false); // Reset saving state
@@ -200,6 +204,26 @@ function EditProfileModal({ user, isOpen, onClose, onSave }) {
           </p>
         )}
         <label
+          htmlFor="headline"
+          className="block text-sm font-medium text-normaltext"
+        >
+          Headline
+        </label>
+        <input
+          id="headline"
+          type="text"
+          name="headline"
+          maxLength={220}
+          autoComplete="off"
+          value={editedUser.headline || ""}
+          onChange={handleChange}
+          className="border p-2 w-full mb-1 bg-boxbackground text-companysubheader"
+        />
+        <p className="text-right text-gray-500 text-sm mb-2">
+          {editedUser.headline?.length || 0}/220
+        </p>
+
+        <label
           htmlFor="location"
           className="block text-sm font-medium text-normaltext"
         >
@@ -305,12 +329,6 @@ function EditProfileModal({ user, isOpen, onClose, onSave }) {
           confirmLabel="Discard"
           cancelLabel="No thanks"
         />
-      )}
-      {isSaving && (
-        <div className="fixed inset-0 z-50 bg-boxheading bg-opacity-60 flex items-center justify-center">
-          <div className="w-8 h-8 border-4 border-gray-300 border-t-blue-500 rounded-full animate-spin"></div>
-          <span className="ml-3 text-text text-lg font-medium">Saving...</span>
-        </div>
       )}
     </div>
   );

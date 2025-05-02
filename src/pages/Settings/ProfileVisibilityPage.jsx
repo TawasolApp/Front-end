@@ -4,7 +4,7 @@ import { ArrowBack } from "@mui/icons-material";
 import { useNavigate } from "react-router-dom";
 import { axiosInstance as axios } from "../../apis/axios";
 import { toast } from "react-toastify";
-
+import LoadingPage from "../LoadingScreen/LoadingPage";
 const VISIBILITY_OPTIONS = [
   {
     value: "public",
@@ -44,6 +44,10 @@ const ProfileVisibilityPage = () => {
     fetchVisibility();
   }, []);
 
+  if (visibility === null) {
+    return <LoadingPage />;
+  }
+
   const handleSave = async () => {
     try {
       setSaving(true);
@@ -62,10 +66,10 @@ const ProfileVisibilityPage = () => {
 
   return (
     <div className="min-h-screen p-6 bg-mainBackground">
-      <div className="max-w-2xl mx-auto">
+      <div className="max-w-3xl mx-auto">
         {/* Header */}
         <div className="flex items-center gap-2 mb-6">
-          <IconButton onClick={() => navigate(-1)}>
+          <IconButton onClick={() => navigate(-1)} aria-label="Go back">
             <ArrowBack className="text-textContent" />
           </IconButton>
           <h1 className="text-2xl font-bold text-header">Profile Visibility</h1>
@@ -77,34 +81,27 @@ const ProfileVisibilityPage = () => {
             Choose who can view your profile on Tawasol.
           </p>
 
-          <div className="space-y-3 text-text">
+          <div className="space-y-5 text-text">
             {VISIBILITY_OPTIONS.map((option) => (
               <label
                 key={option.value}
-                className={`block cursor-pointer p-4 rounded-lg border transition-colors ${
-                  selectedVisibility === option.value
-                    ? "border-blue-500 bg-itemHoverBackground"
-                    : "border-itemBorder hover:bg-itemHoverBackground"
-                }`}
+                className="flex items-start gap-4 cursor-pointer"
                 onClick={() => setSelectedVisibility(option.value)}
               >
-                <div className="flex items-center gap-4">
-                  <input
-                    type="radio"
-                    name="visibility"
-                    value={option.value}
-                    checked={selectedVisibility === option.value}
-                    onChange={() => setSelectedVisibility(option.value)}
-                    className="w-5 h-5 accent-blue-500"
-                  />
-                  <div>
-                    <h3 className="text-base font-semibold text-textContent">
-                      {option.label}
-                    </h3>
-                    <p className="text-sm text-textPlaceholder mt-1">
-                      {option.description}
-                    </p>
-                  </div>
+                <input
+                  type="radio"
+                  name="visibility"
+                  value={option.value}
+                  checked={selectedVisibility === option.value}
+                  onChange={() => setSelectedVisibility(option.value)}
+                  className="mt-1 w-5 h-5 accent-blue-600"
+                  aria-label={`Set profile visibility to ${option.label}`}
+                />
+                <div>
+                  <p className="font-medium text-textContent">{option.label}</p>
+                  <p className="text-sm text-textPlaceholder">
+                    {option.description}
+                  </p>
                 </div>
               </label>
             ))}
@@ -120,6 +117,7 @@ const ProfileVisibilityPage = () => {
                   ? "bg-blue-600 hover:bg-blue-700"
                   : "bg-blue-400 opacity-60 cursor-not-allowed"
               }`}
+              aria-label="Save profile visibility settings"
             >
               {saving ? "Saving..." : "Save"}
             </button>

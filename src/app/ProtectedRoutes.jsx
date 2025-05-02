@@ -58,6 +58,10 @@ import SubscriptionFailedPage  from "../pages/PremiumPlan/FailedPremiumPlan";
 import ChangeState from "../pages/Settings/ChangeState";
 import LoadingPage from "../pages/LoadingScreen/LoadingPage";
 
+import BlockedUsersPage from "../pages/Settings/BlockedUsersPage.jsx";
+import ProfileVisibilityPage from "../pages/Settings/ProfileVisibilityPage.jsx";
+import ConnectionRequestsManagement from "../pages/Settings/ConnectionRequestsManagement.jsx";
+
 const RenderWithNavbar = (component) => {
   return (
     <>
@@ -89,6 +93,11 @@ const ProtectedRoutes = () => {
       <Route
         path="/mypreferences/profile-visibility"
         element={RenderWithNavbar(<ProfileVisibilityPage />)}
+      />
+
+      <Route
+        path="/mypreferences/receive-invitations"
+        element={<ConnectionRequestsManagement />}
       />
 
       <Route path="/users" element={RenderWithNavbar(<ProfileLayout />)} />
