@@ -36,7 +36,7 @@ const CurrentPlanPage = () => {
       });
 
       if (response.status === 204) {
-        dispatch(setIsPremium(false));
+        //dispatch(setIsPremium(false));
         setSuccess('Your premium plan has been cancelled successfully');
         
         setTimeout(() => {
@@ -58,12 +58,12 @@ const CurrentPlanPage = () => {
             setError('You have already cancelled your premium plan');
             break;
           default:
-            setError(err.response.data?.message || `Request failed with status ${err.response.status}`);
+            setError('An unexpected error occurred');
         }
       } else if (err.request) {
         setError('Network error. Please check your connection and try again.');
       } else {
-        setError(err.message || 'An unexpected error occurred');
+        setError('An unexpected error occurred');
       }
     } finally {
       setIsLoading(false);
