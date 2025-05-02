@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from "react";
 import JobCard from "./JobCard";
 import JobFilters from "./JobFilters";
-import JobStats from "./JobStats";
 import LoadingPage from "../../LoadingScreen/LoadingPage";
 import { axiosInstance as axios } from "../../../apis/axios";
 
@@ -18,7 +17,9 @@ function Jobs() {
 
   const handleDeleteJob = (deletedJobId) => {
     setJobs((prevJobs) => prevJobs.filter((job) => job.jobId !== deletedJobId));
+    setTotalItems((prevTotal) => prevTotal - 1);
   };
+
   useEffect(() => {
     async function fetchJobs() {
       if (page === 1) {
@@ -130,6 +131,7 @@ function Jobs() {
                 <svg
                   className="animate-spin h-5 w-5 text-white"
                   viewBox="0 0 24 24"
+                  data-testid="spinner"
                 >
                   <circle
                     className="opacity-25"
@@ -153,9 +155,6 @@ function Jobs() {
           </button>
         </div>
       )}
-
-      {/* Footer Stats
-      <JobStats jobs={jobs} totalItems={totalItems} /> */}
     </div>
   );
 }
