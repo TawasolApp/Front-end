@@ -38,6 +38,7 @@ const ConversationView = ({ conversation }) => {
 
     const handleReceiveMessage = (message) => {
       if (message.senderId === conversation.participant._id) {
+        message.status = "Sending";
         setMessages((prev) => [...prev, message]);
         setTimeout(() => {
           if (scrollContainerRef.current) {
@@ -69,9 +70,9 @@ const ConversationView = ({ conversation }) => {
   useEffect(() => {
     if (!socket) return;
 
-    const handleTyping = ({ receiverId }) => {
-      console.log(receiverId, conversation.participant._id);
-      if (receiverId === conversation.participant._id) {
+    const handleTyping = ({ senderId }) => {
+      console.log(senderId, conversation.participant._id);
+      if (senderId === conversation.participant._id) {
         setIsTyping(true);
         setTimeout(() => setIsTyping(false), 2000);
       }
@@ -332,7 +333,6 @@ const ConversationView = ({ conversation }) => {
               " " +
               conversation.participant.lastName}
           </div>
-          <div className="text-sm text-green-600">● Online</div>
         </div>
         <div className="flex gap-2 items-center">
           <Tooltip title="Block User" placement="bottom-start" arrow>
@@ -438,7 +438,7 @@ const ConversationView = ({ conversation }) => {
 
       {/* Typing Indicator */}
       {isTyping && (
-        <div className="px-4 pb-1 text-sm text-text animate-pulse">
+        <div className="px-4 pb-1 text-sm text-text animate-pulse bg-cardBackground">
           <span
             className="inline-block w-2 h-2 bg-text rounded-full mx-0.5 animate-bounce"
             style={{ animationDelay: "0s" }}
