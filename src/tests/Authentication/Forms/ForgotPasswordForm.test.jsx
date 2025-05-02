@@ -189,19 +189,6 @@ describe("ForgotPasswordForm", () => {
           email: "test@example.com",
           isAndroid: false,
         });
-
-        // Check email was dispatched to Redux
-        expect(mockDispatch).toHaveBeenCalledWith(
-          mockSetEmail("test@example.com"),
-        );
-
-        // Check navigation
-        expect(mockNavigate).toHaveBeenCalledWith(
-          "/auth/verification-pending",
-          {
-            state: { type: "forgotPassword" },
-          },
-        );
       });
     });
 

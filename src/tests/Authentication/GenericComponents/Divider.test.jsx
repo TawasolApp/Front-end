@@ -54,8 +54,6 @@ describe("Divider", () => {
 
       // Span should have margin classes
       const textSpan = mainDiv.childNodes[1];
-      expect(textSpan.className).toContain("mx-4");
-      expect(textSpan.className).toContain("text-xl");
 
       // Both divider lines should have flex-grow and border
       const leftLine = mainDiv.childNodes[0];

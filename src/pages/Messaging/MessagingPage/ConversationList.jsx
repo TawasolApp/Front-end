@@ -126,7 +126,7 @@ const ConversationList = ({ activeFilter, onConversationSelect }) => {
       conversations.filter((convo) => {
         if (activeFilter === "All") return true;
         if (activeFilter === "Unread")
-          return convo.unreadCount > 0 && !convo.isYou;
+          return (convo.unreadCount > 0 && !convo.isYou) || convo.markedAsUnread;
         return true;
       })
     );
