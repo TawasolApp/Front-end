@@ -15,6 +15,7 @@ const StatusBadge = ({ status }) => {
     Pending: { color: "bg-yellow-100 text-yellow-800", label: "Under Review" },
     Accepted: { color: "bg-green-100 text-green-800", label: "Accepted" },
     Rejected: { color: "bg-red-100 text-red-800", label: "Rejected" },
+    "In review": { color: "bg-blue-100 text-blue-800", label: "In Review" },
   };
 
   return (
@@ -167,7 +168,7 @@ const ApplicantsList = ({ jobId, enableReturn }) => {
               <button
                 onClick={() => handleStatusUpdate(applicant.applicationId, "Accepted")}
                 disabled={applicant.status === "Accepted" || updatingStatus === applicant.applicationId}
-                className={`flex-1 px-4 py-2 rounded-full flex items-center justify-center gap-2 text-sm
+                className={`flex-1 px-4 py-2 rounded-full flex items-center justify-center gap-2 text-sm border border-cardBorder
                   ${applicant.status === "Accepted" 
                     ? "bg-green-100 text-green-700 cursor-not-allowed" 
                     : "hover:bg-green-200 dark:hover:bg-green-900 text-green-600"}
@@ -184,7 +185,7 @@ const ApplicantsList = ({ jobId, enableReturn }) => {
               <button
                 onClick={() => handleStatusUpdate(applicant.applicationId, "Rejected")}
                 disabled={applicant.status === "Rejected" || updatingStatus === applicant.applicationId}
-                className={`flex-1 px-4 py-2 rounded-full flex items-center justify-center gap-2 text-sm
+                className={`flex-1 px-4 py-2 rounded-full flex items-center justify-center gap-2 text-sm border border-cardBorder
                   ${applicant.status === "Rejected" 
                     ? "bg-red-100 text-red-700 cursor-not-allowed" 
                     : "hover:bg-red-200 dark:hover:bg-red-900 text-red-600"}
@@ -212,10 +213,10 @@ const ApplicantsList = ({ jobId, enableReturn }) => {
                 </p>
                 {applicant.resumeURL && (
                   <a
-                    href={applicant.resumeURL}
+                    href={`https://drive.google.com/viewerng/viewer?embedded=true&url=${applicant.resumeURL}`.replace(".pdf", "")}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="text-xs md:text-sm text-textContent hover:underline inline-flex items-center gap-1"
+                    className="text-xs md:text-sm hover:underline inline-flex items-center gap-1 text-blue-600"
                   >
                     <DescriptionIcon fontSize="small" />
                     <span>View Resume</span>

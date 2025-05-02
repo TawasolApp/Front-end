@@ -71,7 +71,7 @@ const SearchContainer = () => {
             </div>
 
             {selectedFilter === "Posts" && (
-              <div className="flex items-center space-x-4">
+              <div className="flex items-center space-x-2">
                 <div className="relative">
                   <select
                     value={selectedTimeFrame}
@@ -87,7 +87,7 @@ const SearchContainer = () => {
                   </div>
                 </div>
 
-                <label className="flex items-center space-x-2 text-textActivity hover:text-textActivityHover cursor-pointer">
+                <label className="flex items-center gap-2 text-textActivity hover:text-textActivityHover cursor-pointer">
                   <input
                     type="checkbox"
                     checked={isWithinNetwork}
@@ -124,22 +124,22 @@ const SearchContainer = () => {
             )}
 
             {selectedFilter === "Jobs" && (
-              <div className="flex flex-col md:flex-row gap-2 w-full">
-               <input
-                 type="text"
-                 value={industryInput}
-                 onChange={(e) => setIndustryInput(e.target.value)}
-                 placeholder="Industry"
-                 className="bg-navbarSearch border border-cardBorder hover:border-2 text-navbarIconsNormal rounded-md px-3 py-2 w-full md:w-48 transition-all focus:outline-none text-sm md:text-base"
-               />
-               <input
-                 type="text"
-                 value={locationInput}
-                 onChange={(e) => setLocationInput(e.target.value)}
-                 placeholder="Location"
-                 className="bg-navbarSearch border border-cardBorder hover:border-2 text-navbarIconsNormal rounded-md px-3 py-2 w-full md:w-48 transition-all focus:outline-none text-sm md:text-base"
-               />
-             </div>
+              <div className="flex flex-1 gap-2">
+                <input
+                  type="text"
+                  value={industryInput}
+                  onChange={(e) => setIndustryInput(e.target.value)}
+                  placeholder="Industry"
+                  className="bg-navbarSearch border border-cardBorder hover:border-2 text-navbarIconsNormal rounded-md px-3 py-2 w-full md:min-w-[200px] transition-all focus:outline-none text-sm md:text-base"
+                />
+                <input
+                  type="text"
+                  value={locationInput}
+                  onChange={(e) => setLocationInput(e.target.value)}
+                  placeholder="Location"
+                  className="bg-navbarSearch border border-cardBorder hover:border-2 text-navbarIconsNormal rounded-md px-3 py-2 w-full md:min-w-[200px] transition-all focus:outline-none text-sm md:text-base"
+                />
+              </div>
             )}
           </div>
         </div>

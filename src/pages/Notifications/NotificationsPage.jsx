@@ -184,58 +184,67 @@ const NotificationsPage = () => {
       markAsRead(notification.notificationId);
     }
   
-    // Connection notifications always go to user profile
-    if (notification.type === "Connection") {
-      const userId = notification.rootItemId || notification.referenceId;
-      navigate(`/users/${userId}`);
-      return;
-    }
-  
-    // Other notification types
-    if (notification.type === "React" || notification.type === "Comment") {
-      if (elementClicked === 'content') {
-        navigate(`/feed/${notification.rootItemId}?highlight=${notification.referenceId}`);
-      } else {
-        navigate(`/feed/${notification.rootItemId}`);
-      }
-    } else if (notification.rootItemId) {
-      // Default fallback
-      navigate(`/users/${notification.referenceId}`);
+    // Handle different notification types
+    switch (notification.type) {
+      case "Connection":
+        navigate(`/users/${notification.referenceId}`);
+        break;
+      case "JobAccepted":
+      case "JobPosted":
+      case "CompanyUpdate":
+        // For company-related notifications, go to company profile
+        navigate(`/company/${notification.referenceId}`);
+        break;
+      case "React":
+      case "Comment":
+        if (elementClicked === 'content') {
+          navigate(`/feed/${notification.rootItemId}?highlight=${notification.referenceId}`);
+        } else {
+          navigate(`/feed/${notification.rootItemId}`);
+        }
+        break;
+      default:
+        // Default behavior based on sender type
+        if (notification.senderType === "Company") {
+          navigate(`/company/${notification.referenceId}`);
+        } else {
+          navigate(`/users/${notification.referenceId}`);
+        }
     }
   };
-
+  
   const formatNotificationContent = (notification) => {
     switch (notification.type) {
       case "React":
         return (
-          <span>
             <span 
               onClick={(e) => {
                 e.stopPropagation();
                 handleNotificationClick(notification, 'content');
               }}
             >
-              reacted
-            </span>{' '}
-            to your post
+              {notification.userName} reacted to your post
           </span>
         );
       case "Comment":
         return (
-          <span>
             <span 
               onClick={(e) => {
                 e.stopPropagation();
                 handleNotificationClick(notification, 'content');
               }}
             >
-              commented
-            </span>{' '}
-            on your post
+            {notification.userName} commented on your post
           </span>
         );
       case "Connection":
         return `${notification.userName} sent you a connection request`;
+      case "JobAccepted":
+        return `${notification.userName} accepted your job application`;
+      case "JobPosted":
+        return `${notification.userName} posted a new job`;
+      case "CompanyUpdate":
+        return `${notification.userName} updated their company profile`;
       default:
         return notification.content;
     }
@@ -389,18 +398,6 @@ const NotificationsPage = () => {
                 {showUnreadOnly ? 'No unread notifications' : 'No notifications yet'}
               </div>
             )}
-          </div>
-
-          <div className="bg-cardBackground rounded-lg shadow-md border border-cardBorder p-4 md:p-6">
-            <h2 className="text-lg md:text-xl font-bold mb-2 md:mb-3 text-textHeavyTitle">
-              Stay updated with notifications
-            </h2>
-            <p className="text-sm md:text-base text-textContent mb-2 md:mb-3">
-              Turn on notifications to never miss important updates from your network.
-            </p>
-            <button className="px-3 py-1.5 md:px-4 md:py-2 bg-buttonSubmitEnable hover:bg-buttonSubmitEnableHover text-white font-medium rounded-lg transition-colors text-sm md:text-base">
-              Notification Settings
-            </button>
           </div>
         </div>
       </div>
