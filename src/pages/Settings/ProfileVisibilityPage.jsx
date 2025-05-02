@@ -4,7 +4,7 @@ import { ArrowBack } from "@mui/icons-material";
 import { useNavigate } from "react-router-dom";
 import { axiosInstance as axios } from "../../apis/axios";
 import { toast } from "react-toastify";
-
+import LoadingPage from "../LoadingScreen/LoadingPage";
 const VISIBILITY_OPTIONS = [
   {
     value: "public",
@@ -43,6 +43,10 @@ const ProfileVisibilityPage = () => {
 
     fetchVisibility();
   }, []);
+
+  if (visibility === null) {
+    return <LoadingPage />;
+  }
 
   const handleSave = async () => {
     try {

@@ -5,7 +5,7 @@ import { ArrowBack, Block as BlockIcon } from "@mui/icons-material";
 import { axiosInstance as axios } from "../../apis/axios.js";
 import { toast } from "react-toastify";
 import ConfirmModal from "../UserProfile/Components/ReusableModals/ConfirmModal";
-
+import LoadingPage from "../LoadingScreen/LoadingPage.jsx";
 // TODO: uncomment the real apis and remove the mock data
 // check ziad return time ,, block count
 const BlockedUsersPage = () => {
@@ -20,12 +20,9 @@ const BlockedUsersPage = () => {
     const fetchBlockedUsers = async () => {
       try {
         const response = await axios.get("/security/blocked-users");
-        console.log("📦 Blocked Users API Response:", response.data); // ✅ LOG HERE
-
         setBlockedUsers(response.data);
       } catch (error) {
         console.error("Failed to fetch blocked users:", error);
-        // toast.error("Failed to load blocked users.");
       } finally {
         setLoading(false);
       }
@@ -39,21 +36,17 @@ const BlockedUsersPage = () => {
     console.log("Attempting to unblock userId:", userId); // 🔍 Log who you're trying to unblock
 
     try {
-      const response = await axios.post(`/security/unblock/${userId}`);
-      console.log("✅ Unblock API response:", response.data); // Log full response
-
+      await axios.post(`/security/unblock/${userId}`);
       setBlockedUsers((prev) => prev.filter((user) => user.userId !== userId));
       toast.success("User unblocked successfully.");
     } catch (err) {
       console.error("Failed to unblock user:", err);
-      console.error("🔸 Status:", err.response?.status);
-      console.error("🔸 Data:", err.response?.data);
-      console.error("🔸 Full Error:", err);
       toast.error("Failed to unblock user.");
     }
   };
 
   const selectedUser = blockedUsers.find((u) => u.userId === selectedUserId);
+  if (loading) return <LoadingPage />;
 
   return (
     <div className="min-h-screen p-6 bg-mainBackground">
@@ -66,12 +59,8 @@ const BlockedUsersPage = () => {
           <h1 className="text-2xl font-bold text-header">Blocking</h1>
         </div>
 
-        {/* Loading State */}
-        {loading ? (
-          <div className="flex justify-center mt-10">
-            <CircularProgress />
-          </div>
-        ) : blockedUsers.length === 0 ? (
+        {/* Empty or Filled State */}
+        {blockedUsers.length === 0 ? (
           <div className="bg-cardBackground p-6 rounded-xl shadow-lg border border-cardBorder">
             <p className="text-textContent mb-4">
               You’re currently not blocking anyone.
