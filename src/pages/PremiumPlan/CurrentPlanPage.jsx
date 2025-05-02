@@ -1,19 +1,26 @@
-import React, { useState } from 'react';
-import { useLocation, useNavigate } from 'react-router-dom';
+import React, { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
 import { axiosInstance } from "../../apis/axios";
 import { setIsPremium } from '../../store/authenticationSlice';
 
 const CurrentPlanPage = () => {
-  const location = useLocation();
   const navigate = useNavigate();
   const dispatch = useDispatch();
+  const isPremium = useSelector(state => state.authentication.isPremium);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState(null);
   const [success, setSuccess] = useState(null);
 
-  const handleRenew = () => {
-    navigate('/premium');
+  // Check premium status on component mount
+  useEffect(() => {
+    if (!isPremium) {
+      navigate('/premium');
+    }
+  }, [isPremium, navigate]);
+
+  const handleGoHome = () => {
+    navigate('/feed');
   };
 
   const handleCancel = async () => {
@@ -29,13 +36,11 @@ const CurrentPlanPage = () => {
       });
 
       if (response.status === 204) {
-        // Update Redux state
-        dispatch(setIsPremium(false));
+        //dispatch(setIsPremium(false));
         setSuccess('Your premium plan has been cancelled successfully');
         
-        // Optionally redirect after a delay
         setTimeout(() => {
-          navigate('/');
+          navigate('/feed');
         }, 2000);
       } else {
         throw new Error('Unexpected response from server');
@@ -53,27 +58,37 @@ const CurrentPlanPage = () => {
             setError('You have already cancelled your premium plan');
             break;
           default:
-            setError(err.response.data?.message || `Request failed with status ${err.response.status}`);
+            setError('An unexpected error occurred');
         }
       } else if (err.request) {
         setError('Network error. Please check your connection and try again.');
       } else {
-        setError(err.message || 'An unexpected error occurred');
+        setError('An unexpected error occurred');
       }
     } finally {
       setIsLoading(false);
     }
   };
 
+  // Don't render the page if user is not premium
+  if (!isPremium) {
+    return null;
+  }
+
   return (
-    <div className="min-h-screen bg-gray-50 p-4 flex justify-center items-start">
-      <div className="w-full max-w-2xl bg-white p-6 rounded-lg shadow-sm border border-gray-200">
-        <h1 className="text-2xl font-bold text-gray-900 mb-6">Your Current Plan</h1>
-        
-        <div className="border-b border-gray-200 pb-6 mb-6">
-          <h2 className="text-lg font-semibold text-gray-900 mb-2">Subscription Details</h2>
-          <div className="grid grid-cols-2 gap-4">
-            {/* Add your subscription details here */}
+    <div className="min-h-screen bg-mainBackground p-4 sm:p-6">
+      <div className="bg-cardBackground p-4 sm:p-6 rounded-lg shadow-md w-full mx-auto max-w-full sm:max-w-[900px] border border-cardBorder">
+        <div className="border-b border-cardBorder pb-4 mb-4">
+          <h1 className="text-xl font-semibold text-textHeavyTitle">
+            Your Current Plan
+          </h1>
+        </div>
+
+        <div className="border-b border-cardBorder pb-6 mb-6">
+          <h2 className="text-lg font-semibold text-textHeavyTitle mb-4">Your premium plan is:</h2>
+          <div className="bg-cardBackground p-4 rounded-md border border-cardBorder">
+            <h3 className="text-lg font-medium text-textHeavyTitle">LinkedIn Premium Career</h3>
+            <p className="text-textContent mt-1">Best for job seekers and career growth</p>
           </div>
         </div>
 
@@ -91,26 +106,24 @@ const CurrentPlanPage = () => {
           </div>
         )}
 
-        <div className="flex justify-between">
+        <div className="flex flex-col sm:flex-row justify-between gap-3">
           <button
-            onClick={handleRenew}
-            disabled={isLoading}
-            className={`bg-green-600 text-white py-2 px-6 rounded-md hover:bg-green-700 ${
-              isLoading ? 'opacity-50 cursor-not-allowed' : ''
-            }`}
+            onClick={handleGoHome}
+            className="px-4 py-2 text-sm font-semibold text-textActivity border-2 border-itemBorder hover:border-itemBorderHover rounded-full hover:bg-buttonIconHover hover:font-bold transition-all w-full sm:w-auto text-center"
           >
-            Renew Plan
+            Go to Home
           </button>
           <button
             onClick={handleCancel}
             disabled={isLoading}
-            className={`bg-red-600 text-white py-2 px-6 rounded-md hover:bg-red-700 ${
-              isLoading ? 'opacity-50 cursor-not-allowed' : ''
-            }`}
+            className={`px-4 py-2 text-sm font-semibold text-buttonSubmitText border-2 border-buttonSubmitEnable hover:border-buttonSubmitEnableHover rounded-full ${
+              isLoading ? 'opacity-50 cursor-not-allowed' : 'hover:bg-buttonSubmitEnableHover hover:font-bold'
+            } transition-all w-full sm:w-auto text-center bg-buttonSubmitEnable`}
           >
             {isLoading ? 'Cancelling...' : 'Cancel Plan'}
           </button>
         </div>
+        <p className="text-sm text-textPlaceholder mt-3 text-center">If you want to cancel the premium plan</p>
       </div>
     </div>
   );

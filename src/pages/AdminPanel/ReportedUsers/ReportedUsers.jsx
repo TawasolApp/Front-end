@@ -1,44 +1,50 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import ReportFilters from "../Reports/ReportFilters";
 import ReportStats from "../Reports/ReportStats";
-
-const mockUserReports = [
-  {
-    id: "u1",
-    status: "Pending",
-    reported_user: "Jake Ryan",
-    reported_user_role: "Product Designer",
-    reported_user_avatar: "/media/jake.png",
-    reported_by: "Lily Adams",
-    reporter_avatar: "/media/lily.png",
-    reason: "Inappropriate profile content",
-    report_detail: "Profile contains offensive language",
-    reported_at: "2025-04-22T14:25:00.000Z",
-  },
-  {
-    id: "u2",
-    status: "Reviewed",
-    reported_user: "Ava Brooks",
-    reported_user_role: "Team Lead",
-    reported_user_avatar: "/media/ava.png",
-    reported_by: "Noah Evans",
-    reporter_avatar: "/media/noah.png",
-    reason: "Impersonation",
-    report_detail: "Claiming to be someone they're not",
-    reported_at: "2025-04-20T10:45:00.000Z",
-  },
-];
+import { axiosInstance as axios } from "../../../apis/axios";
+import LoadingPage from "../../LoadingScreen/LoadingPage";
 
 function ReportedUsers() {
+  const [reports, setReports] = useState([]);
   const [filter, setFilter] = useState("All");
-  const [search, setSearch] = useState("");
+  const [loading, setLoading] = useState(true);
+  const [loadingAction, setLoadingAction] = useState({
+    reportId: null,
+    type: null,
+  });
 
-  const filteredReports = mockUserReports.filter((report) => {
-    const matchesStatus = filter === "All" || report.status === filter;
-    const matchesSearch = report.reported_user
-      .toLowerCase()
-      .includes(search.toLowerCase());
-    return matchesStatus && matchesSearch;
+  useEffect(() => {
+    const fetchReports = async () => {
+      try {
+        const res = await axios.get("/admin/reports/users");
+        setReports(res.data);
+      } catch (err) {
+        console.error("Failed to fetch reported users:", err);
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchReports();
+  }, []);
+  const resolveReport = async (reportId, action) => {
+    try {
+      setLoadingAction({ reportId, type: action });
+      await axios.patch(`/admin/reports/${reportId}/resolve`, {
+        action,
+        comment: "",
+      });
+
+      const res = await axios.get("/admin/reports/users");
+      setReports(res.data);
+    } catch (error) {
+      console.error(`Failed to ${action} report ${reportId}`, error);
+    } finally {
+      setLoadingAction({ reportId: null, type: null });
+    }
+  };
+
+  const filteredReports = reports.filter((report) => {
+    return filter === "All" || report.status === filter;
   });
 
   return (
@@ -52,98 +58,132 @@ function ReportedUsers() {
         </p>
       </div>
 
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-        <input
-          type="text"
-          placeholder="Search reported users..."
-          className="w-full sm:max-w-sm p-2 rounded-md border border-itemBorder text-text bg-inputBackground"
-          value={search}
-          onChange={(e) => setSearch(e.target.value)}
-        />
+      <div className="flex justify-end">
         <ReportFilters current={filter} onChange={setFilter} />
       </div>
 
       <p className="text-sm text-textContent">
-        Showing {filteredReports.length} of {mockUserReports.length} reports
+        Showing {filteredReports.length} of {reports.length} reports
       </p>
 
-      <div className="space-y-4">
-        {filteredReports.map((report) => (
-          <div
-            key={report.id}
-            className="bg-boxbackground border border-itemBorder rounded-xl p-4 shadow-sm flex flex-col md:flex-row md:items-start md:justify-between gap-6"
-          >
-            {/* Reported User Info */}
-            <div className="w-full md:w-[25%] space-y-2">
-              <h4 className="text-xs text-companysubheader uppercase">
-                Reported User
-              </h4>
-              <div className="flex items-center gap-3">
-                <img
-                  src={report.reported_user_avatar}
-                  alt="Reported User"
-                  className="w-10 h-10 rounded-full border border-itemBorder"
-                />
-                <div>
-                  <p className="text-sm font-semibold text-companyheader">
-                    {report.reported_user}
-                  </p>
-                  <p className="text-xs text-companysubheader">
-                    {report.reported_user_role}
-                  </p>
+      {loading ? (
+        <LoadingPage />
+      ) : (
+        <div className="space-y-4">
+          {filteredReports.map((report) => (
+            <div
+              key={report.id}
+              className="bg-boxbackground border border-itemBorder rounded-xl p-4 shadow-sm flex flex-col md:flex-row md:items-start md:justify-between gap-6"
+            >
+              {/* Reported User Info */}
+              <div className="w-full md:w-[25%] space-y-2">
+                <h4 className="text-xs text-companysubheader uppercase">
+                  Reported User
+                </h4>
+                <div className="flex items-center gap-3">
+                  <img
+                    src={report.reportedUserAvatar}
+                    alt="Reported User"
+                    className="w-10 h-10 rounded-full border border-itemBorder"
+                  />
+                  <div>
+                    <p className="text-sm font-semibold text-companyheader">
+                      {report.reportedUser}
+                    </p>
+                    <p className="text-xs text-companysubheader">
+                      {report.reportedUserRole}
+                    </p>
+                  </div>
                 </div>
               </div>
-            </div>
 
-            {/* Reporter Info */}
-            <div className="w-full md:w-[45%] space-y-2">
-              <h4 className="text-xs text-companysubheader uppercase">
-                Reported By
-              </h4>
-              <div className="flex items-center gap-3">
-                <img
-                  src={report.reporter_avatar}
-                  alt="Reporter"
-                  className="w-10 h-10 rounded-full border border-itemBorder"
-                />
-                <div>
+              {/* Reporter Info */}
+              <div className="w-full md:w-[45%] space-y-2">
+                <h4 className="text-xs text-companysubheader uppercase">
+                  Reported By
+                </h4>
+                <div className="flex items-center gap-3">
+                  <img
+                    src={report.reporterAvatar}
+                    alt="Reporter"
+                    className="w-10 h-10 rounded-full border border-itemBorder"
+                  />
+                  <div>
+                    <p className="text-sm font-medium text-text">
+                      {report.reportedBy}
+                    </p>
+                  </div>
+                </div>
+
+                <div className="pt-1">
+                  <h5 className="text-xs text-companysubheader uppercase">
+                    Reason
+                  </h5>
                   <p className="text-sm font-medium text-text">
-                    {report.reported_by}
+                    {report.reason}
                   </p>
                   <p className="text-xs text-companysubheader">
-                    Filed the report
+                    Reported at {new Date(report.reportedAt).toLocaleString()}
                   </p>
                 </div>
               </div>
 
-              <div className="pt-1">
-                <h5 className="text-xs text-companysubheader uppercase">
-                  Reason
-                </h5>
-                <p className="text-sm font-medium text-text">{report.reason}</p>
-                <p className="text-xs text-companysubheader">
-                  {report.report_detail}
-                </p>
+              {/* Actions + Status */}
+              <div className="w-full md:w-[25%] relative min-h-[160px]">
+                {/* Status badge at top-right */}
+                <span className="absolute top-2 right-2 text-sm bg-yellow-100 text-yellow-800 px-2 py-0.5 rounded-full font-medium z-10">
+                  {report.status}
+                </span>
+
+                {/* Action buttons pinned to bottom-right side */}
+                {report.status === "Pending" && (
+                  <div className="absolute bottom-2 left-2 right-2 space-y-2">
+                    <button
+                      onClick={() => resolveReport(report.id, "ignore")}
+                      disabled={
+                        loadingAction.reportId === report.id &&
+                        loadingAction.type === "ignore"
+                      }
+                      className={`w-full text-sm border border-itemBorder rounded-md px-3 py-1 text-text bg-gray-300 ${
+                        loadingAction.reportId === report.id &&
+                        loadingAction.type === "ignore"
+                          ? "opacity-50 cursor-not-allowed"
+                          : ""
+                      }`}
+                    >
+                      {loadingAction.reportId === report.id &&
+                      loadingAction.type === "ignore"
+                        ? "Ignoring..."
+                        : "Ignore"}
+                    </button>
+
+                    <button
+                      onClick={() => resolveReport(report.id, "suspend_user")}
+                      disabled={
+                        loadingAction.reportId === report.id &&
+                        loadingAction.type === "suspend_user"
+                      }
+                      className={`w-full text-sm text-white bg-red-600 hover:bg-red-700 transition rounded-md px-3 py-1 ${
+                        loadingAction.reportId === report.id &&
+                        loadingAction.type === "suspend_user"
+                          ? "opacity-50 cursor-not-allowed"
+                          : ""
+                      }`}
+                    >
+                      {loadingAction.reportId === report.id &&
+                      loadingAction.type === "suspend_user"
+                        ? "Suspending..."
+                        : "Suspend User"}
+                    </button>
+                  </div>
+                )}
               </div>
             </div>
+          ))}
+        </div>
+      )}
 
-            {/* Actions + Status */}
-            <div className="w-full md:w-[25%] space-y-2">
-              <span className="text-xs bg-yellow-100 text-yellow-800 px-2 py-0.5 rounded-full font-medium">
-                {report.status}
-              </span>
-              <button className="w-full text-sm text-white bg-buttonSubmitEnable hover:bg-blue-700 transition rounded-md px-3 py-1">
-                Suspend User
-              </button>
-              <button className="w-full text-sm border border-itemBorder rounded-md px-3 py-1 text-text">
-                Ignore
-              </button>
-            </div>
-          </div>
-        ))}
-      </div>
-
-      <ReportStats reports={mockUserReports} />
+      <ReportStats reports={reports} />
     </div>
   );
 }

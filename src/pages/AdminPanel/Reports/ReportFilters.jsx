@@ -1,6 +1,6 @@
 import React from "react";
 
-const tabs = ["All", "Pending", "Reviewed", "Actioned", "Dismissed"];
+const tabs = ["All", "Pending", "Actioned", "Dismissed"];
 
 function ReportFilters({ current, onChange }) {
   return (

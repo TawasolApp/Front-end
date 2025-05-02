@@ -5,20 +5,13 @@ const SubscriptionFailedPage = () => {
   const location = useLocation();
   const navigate = useNavigate();
 
-  const handleRetry = () => {
-    // Implement retry logic
-    console.log('Retrying subscription...');
-    // You might want to retry the payment process here
-  };
-
   const handleGoHome = () => {
-    // Navigate to home page
     navigate('/feed');
   };
 
   return (
-    <div className="min-h-screen bg-gray-50 p-4 flex justify-center items-start">
-      <div className="w-full max-w-2xl bg-white p-6 rounded-lg shadow-sm border border-gray-200">
+    <div className="min-h-screen bg-mainBackground p-4 sm:p-6 flex justify-center items-start">
+      <div className="bg-cardBackground p-4 sm:p-6 rounded-lg shadow-md w-full mx-auto max-w-full sm:max-w-[900px] border border-cardBorder">
         <div className="text-center mb-6">
           {/* Failure icon */}
           <div className="mx-auto flex items-center justify-center h-12 w-12 rounded-full bg-red-100 mb-4">
@@ -37,22 +30,16 @@ const SubscriptionFailedPage = () => {
             </svg>
           </div>
           
-          <h1 className="text-2xl font-bold text-gray-900 mb-2">Subscription Failed</h1>
-          <p className="text-gray-600">
+          <h1 className="text-xl font-semibold text-textHeavyTitle mb-2">Subscription Failed</h1>
+          <p className="text-textContent">
             We couldn't process your subscription. Please try again or contact support if the problem persists.
           </p>
         </div>
 
-        <div className="flex justify-center space-x-4">
-          <button
-            onClick={handleRetry}
-            className="bg-blue-600 text-white py-2 px-6 rounded-md hover:bg-blue-700"
-          >
-            Retry
-          </button>
+        <div className="flex justify-center">
           <button
             onClick={handleGoHome}
-            className="bg-gray-600 text-white py-2 px-6 rounded-md hover:bg-gray-700"
+            className="px-4 py-2 text-sm font-semibold text-buttonSubmitText border-2 border-buttonSubmitEnable hover:border-buttonSubmitEnableHover rounded-full hover:bg-buttonSubmitEnableHover hover:font-bold transition-all text-center bg-buttonSubmitEnable"
           >
             Go to Home Page
           </button>

@@ -1,4 +1,4 @@
-import React from "react";
+import { React, useState, useEffect } from "react";
 import {
   BarChart,
   Bar,
@@ -10,46 +10,80 @@ import {
   Legend,
 } from "recharts";
 import { FaFileAlt } from "react-icons/fa";
+import { axiosInstance as axios } from "../../../apis/axios";
+import PostCard from "./PostCard";
 
 function PostAnalytics({ postAnalytics }) {
   const postActivityData = [
-    {
-      name: "Active Posts",
-      count:
-        postAnalytics.total_posts - postAnalytics.most_reported_posts.length,
-    },
-    {
-      name: "Reported Posts",
-      count: postAnalytics.most_reported_posts.length,
-    },
+    { name: "Shares", count: postAnalytics.totalShares },
+    { name: "Comments", count: postAnalytics.totalComments },
+    { name: "Reacts", count: postAnalytics.totalReacts },
   ];
 
-  return (
-    <section className="bg-white border border-gray-200 rounded-xl shadow-md p-6">
-      <h3 className="text-2xl font-semibold text-gray-800 mb-6 flex items-center gap-2">
-        <FaFileAlt className="text-green-600" /> Post Analytics
-      </h3>
+  const [mostInteractedPost, setMostInteractedPost] = useState(null);
+  const [mostReportedPost, setMostReportedPost] = useState(null);
+  const [fetchedPostIds, setFetchedPostIds] = useState({
+    interacted: null,
+    reported: null,
+  });
 
-      {/* Post Count Summary */}
-      <div className="mb-6">
-        <p className="text-lg text-gray-700 font-semibold">
-          Total Posts:{" "}
-          <span className="text-green-600 font-bold">
-            {postAnalytics.total_posts.toLocaleString()}
-          </span>
+  useEffect(() => {
+    const interactedId = postAnalytics?.postWithMostInteractions;
+    const reportedId = postAnalytics?.mostReportedPost;
+
+    const fetchPosts = async () => {
+      const companyId = "680e3213a0fd57504643a43c";
+      try {
+        const [interactedRes, reportedRes] = await Promise.all([
+          axios.get(`/posts/${companyId}/${interactedId}`),
+          axios.get(`/posts/${companyId}/${reportedId}`),
+        ]);
+        setMostInteractedPost(interactedRes.data);
+        setMostReportedPost(reportedRes.data);
+        setFetchedPostIds({ interacted: interactedId, reported: reportedId });
+      } catch (err) {
+        console.error("❌ Failed to fetch post details:", err);
+      }
+    };
+
+    // Only fetch if both IDs are present AND they haven't already been fetched
+    if (
+      typeof interactedId === "string" &&
+      typeof reportedId === "string" &&
+      (interactedId !== fetchedPostIds.interacted ||
+        reportedId !== fetchedPostIds.reported)
+    ) {
+      fetchPosts();
+    }
+  }, [
+    postAnalytics?.postWithMostInteractions,
+    postAnalytics?.mostReportedPost,
+    fetchedPostIds,
+  ]);
+
+  return (
+    <section className="bg-white border border-gray-200 rounded-xl shadow-md p-6 space-y-8">
+      {/* Top Summary Card */}
+      <div className="flex items-center justify-between">
+        <h4 className="text-xl font-semibold text-companyheader flex items-center gap-2">
+          <FaFileAlt className="w-5 h-5 text-green-600" />
+          Post Analytics
+        </h4>
+        <p className="text-2xl font-bold text-green-600">
+          {postAnalytics.totalPosts?.toLocaleString() ?? "N/A"} Posts
         </p>
       </div>
 
-      {/* Horizontal Bar Chart */}
-      <div className="mb-10">
+      {/* Chart */}
+      <div>
         <h4 className="text-lg font-semibold mb-3 text-gray-700">
-          Post Activity
+          Posts Activity Overview
         </h4>
         <ResponsiveContainer width="100%" height={240}>
           <BarChart
             data={postActivityData}
             layout="vertical"
-            margin={{ top: 10, right: 30, left: 20, bottom: 5 }}
+            margin={{ top: 10, right: 30, left: 40, bottom: 5 }}
           >
             <CartesianGrid strokeDasharray="3 3" />
             <XAxis type="number" />
@@ -61,30 +95,42 @@ function PostAnalytics({ postAnalytics }) {
         </ResponsiveContainer>
       </div>
 
-      {/* Lists */}
+      {/* Divider */}
+      <hr className="border-t border-gray-300" />
+
+      {/* Details */}
       <div className="grid md:grid-cols-2 gap-6">
-        {/* Most Active Users */}
+        {/* Post With Most Interactions */}
         <div>
-          <h4 className="font-semibold text-gray-700 mb-2">
-            Most Active Users
+          <h4 className="text-lg font-semibold mb-3 text-gray-700">
+            Post With Most Interactions
           </h4>
-          <ul className="list-disc list-inside text-gray-600">
-            {postAnalytics.most_active_users.map((user, index) => (
-              <li key={index}>{user}</li>
-            ))}
-          </ul>
+          {mostInteractedPost ? (
+            <PostCard post={mostInteractedPost} />
+          ) : (
+            <p className="text-sm text-gray-500 italic">
+              {/* Post ID: {postAnalytics.postWithMostInteractions} */}
+              Loading Post
+            </p>
+          )}
         </div>
 
-        {/* Most Reported Posts */}
+        {/* Most Reported Post */}
         <div>
-          <h4 className="font-semibold text-gray-700 mb-2">
-            Most Reported Posts
+          <h4 className="text-lg font-semibold mb-3 text-gray-700">
+            Most Reported Post
           </h4>
-          <ul className="list-disc list-inside text-red-500">
-            {postAnalytics.most_reported_posts.map((post, index) => (
-              <li key={index}>{post}</li>
-            ))}
-          </ul>
+          {mostReportedPost ? (
+            <PostCard
+              post={mostReportedPost}
+              reportCount={postAnalytics.postReportedCount}
+            />
+          ) : (
+            <p className="text-sm text-gray-500 italic">
+              {/* Post ID: {postAnalytics.mostReportedPost} */}
+              Loading Post
+            </p>
+          )}
         </div>
       </div>
     </section>

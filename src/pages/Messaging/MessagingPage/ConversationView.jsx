@@ -16,6 +16,7 @@ const ConversationView = ({ conversation }) => {
   const socket = useSocket();
   const [messages, setMessages] = useState([]);
   const [loading, setLoading] = useState(false);
+  const [isTyping, setIsTyping] = useState(false);
   const [pagination, setPagination] = useState({
     currentPage: 1,
     totalPages: 1,
@@ -25,6 +26,7 @@ const ConversationView = ({ conversation }) => {
   const scrollContainerRef = useRef(null);
   const navigate = useNavigate();
   const initialLoadComplete = useRef(false);
+  const messagesRef = useRef([]);
 
   const markConversationAsRead = () => {
     if (!socket || !conversation.id) return;
@@ -36,6 +38,7 @@ const ConversationView = ({ conversation }) => {
 
     const handleReceiveMessage = (message) => {
       if (message.senderId === conversation.participant._id) {
+        message.status = "Sending";
         setMessages((prev) => [...prev, message]);
         setTimeout(() => {
           if (scrollContainerRef.current) {
@@ -67,7 +70,38 @@ const ConversationView = ({ conversation }) => {
   useEffect(() => {
     if (!socket) return;
 
+    const handleTyping = ({ senderId }) => {
+      console.log(senderId, conversation.participant._id);
+      if (senderId === conversation.participant._id) {
+        setIsTyping(true);
+        setTimeout(() => setIsTyping(false), 2000);
+      }
+    };
+
+    socket.on("typing", handleTyping);
+    return () => {
+      socket.off("typing", handleTyping);
+    };
+  }, [socket, currentUserId, conversation.participant._id]);
+
+  useEffect(() => {
+    messagesRef.current = messages;
+  }, [messages]);
+
+  useEffect(() => {
+    if (!socket) return;
+
     const handleErrorMessage = (error) => {
+      console.log("received something from error_message");
+      const currentMessages = messagesRef.current;
+
+      const hasSending = currentMessages.some(
+        (msg) => msg.status === "Sending"
+      );
+      if (!hasSending) {
+        console.log("no pending messages");
+        return;
+      }
       if (error.type === "LIMIT_REACHED") {
         setMessages((prev) => prev.slice(0, prev.length - 1));
         toast.error(
@@ -77,26 +111,14 @@ const ConversationView = ({ conversation }) => {
             autoClose: 3000,
           }
         );
-      } else if (error.type === "ACK") {
-        setMessages((prev) => {
-          const updated = [...prev];
-          const start = Math.max(updated.length - 10, 0);
-
-          for (let i = updated.length - 1; i >= start; i--) {
-            if (updated[i].status === "Sending") {
-              updated[i] = { ...updated[i], status: "Sent" };
-            }
-          }
-
-          return updated;
-        });
       } else {
         console.error("Unexpected error message from error_message");
       }
 
       setTimeout(() => {
         refreshRecentMessages();
-      }, 300);
+      }, 50);
+      refreshRecentMessages();
     };
 
     socket.on("error_message", handleErrorMessage);
@@ -120,17 +142,17 @@ const ConversationView = ({ conversation }) => {
     }
   }, [conversation.id]);
 
-  useLayoutEffect(() => {
-    if (
-      scrollContainerRef.current &&
-      messages.length > 0 &&
-      !initialLoadComplete.current
-    ) {
-      scrollContainerRef.current.scrollTop =
-        scrollContainerRef.current.scrollHeight;
-      initialLoadComplete.current = true;
-    }
-  }, [messages]);
+  // useLayoutEffect(() => {
+  //   if (
+  //     scrollContainerRef.current &&
+  //     messages.length > 0 &&
+  //     !initialLoadComplete.current
+  //   ) {
+  //     scrollContainerRef.current.scrollTop =
+  //       scrollContainerRef.current.scrollHeight;
+  //     initialLoadComplete.current = true;
+  //   }
+  // }, [messages]);
 
   const fetchMessages = async (pageNum = 1, reset = false) => {
     if (loading) return;
@@ -311,7 +333,6 @@ const ConversationView = ({ conversation }) => {
               " " +
               conversation.participant.lastName}
           </div>
-          <div className="text-sm text-green-600">● Online</div>
         </div>
         <div className="flex gap-2 items-center">
           <Tooltip title="Block User" placement="bottom-start" arrow>
@@ -415,8 +436,30 @@ const ConversationView = ({ conversation }) => {
         )}
       </div>
 
+      {/* Typing Indicator */}
+      {isTyping && (
+        <div className="px-4 pb-1 text-sm text-text animate-pulse bg-cardBackground">
+          <span
+            className="inline-block w-2 h-2 bg-text rounded-full mx-0.5 animate-bounce"
+            style={{ animationDelay: "0s" }}
+          ></span>
+          <span
+            className="inline-block w-2 h-2 bg-text rounded-full mx-0.5 animate-bounce"
+            style={{ animationDelay: "0.2s" }}
+          ></span>
+          <span
+            className="inline-block w-2 h-2 bg-text rounded-full mx-0.5 animate-bounce"
+            style={{ animationDelay: "0.4s" }}
+          ></span>
+        </div>
+      )}
+
       {/* Input */}
-      <NewMessageModalInputs isMinimized={true} onSend={handleSendMessage} />
+      <NewMessageModalInputs
+        isMinimized={true}
+        onSend={handleSendMessage}
+        receiverId={conversation.participant._id}
+      />
     </div>
   );
 };
