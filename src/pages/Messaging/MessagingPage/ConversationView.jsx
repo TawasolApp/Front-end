@@ -11,7 +11,7 @@ import { useSelector } from "react-redux";
 import { AccessTime, Done, DoneAll } from "@mui/icons-material";
 import { useSocket } from "../../../hooks/SocketContext";
 
-const ConversationView = ({ conversation }) => {
+const ConversationView = ({ conversation, onBlock }) => {
   const currentUserId = useSelector((state) => state.authentication.userId);
   const socket = useSocket();
   const [messages, setMessages] = useState([]);
@@ -71,7 +71,6 @@ const ConversationView = ({ conversation }) => {
     if (!socket) return;
 
     const handleTyping = ({ senderId }) => {
-      console.log(senderId, conversation.participant._id);
       if (senderId === conversation.participant._id) {
         setIsTyping(true);
         setTimeout(() => setIsTyping(false), 2000);
@@ -301,14 +300,14 @@ const ConversationView = ({ conversation }) => {
   };
 
   const handleBlock = async () => {
+    onBlock();
     try {
-      await axiosInstance.put("/messages/block", {
-        participantId: conversation.participant._id,
-      });
+      await axiosInstance.post(`/security/block/${conversation.participant._id}`);
       toast.success("User has been blocked", {
         position: "top-right",
         autoClose: 3000,
       });
+      window.location.reload();
     } catch (error) {
       console.error("Failed to block user:", error);
       toast.error("Failed to block user", {

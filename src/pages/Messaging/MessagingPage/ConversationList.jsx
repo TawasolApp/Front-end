@@ -35,7 +35,6 @@ const ConversationList = ({ activeFilter, onConversationSelect }) => {
       const response = await axiosInstance.get("/messages/conversations", {
         params: { page, limit },
       });
-      console.log(response.data.data);
 
       const formattedConversations = response.data.data.map((convo) => ({
         id: convo._id,
