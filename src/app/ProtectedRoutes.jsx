@@ -112,8 +112,8 @@ const ProtectedRoutes = () => {
         path="/my-items/saved-posts"
         element={RenderWithNavbar(<SavedPostsContainer />)}
       />
-      
-      <Route path="/AdminPanel" element={RenderWithNavbar(<AdminPanel />)} />
+
+      <Route path="/AdminPanel" element={<AdminPanel />} />
 
       <Route
         path="/my-items/saved-jobs"
@@ -141,11 +141,11 @@ const ProtectedRoutes = () => {
       />
 
       <Route path="/jobs" element={RenderWithNavbar(<JobsContainer />)} />
+      <Route path="/jobs/:id" element={RenderWithNavbar(<SingleJob />)} />
       <Route
-        path="/jobs/:id"
-        element={RenderWithNavbar(<SingleJob />)}
+        path="/jobs/company/:companyId/:isAdmin"
+        element={RenderWithNavbar(<JobsCompanyContainer />)}
       />
-      <Route path="/jobs/company/:companyId/:isAdmin" element={RenderWithNavbar(<JobsCompanyContainer />)} />
 
       <Route path="error-404" element={<Error404 />} />
       <Route path="*" element={<Error404 />} />
