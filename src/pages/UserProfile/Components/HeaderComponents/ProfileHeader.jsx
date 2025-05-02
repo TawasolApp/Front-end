@@ -11,6 +11,7 @@ import ImageEnlarge from "./ImageEnlarge";
 import ViewerView from "./ViewerView";
 import ContactInfoModal from "./ContactInfoModal";
 import ExpandableHeadline from "../ReusableModals/ExpandableText.jsx";
+import { toast } from "react-toastify";
 import { useDispatch } from "react-redux";
 import { axiosInstance as axios } from "../../../../apis/axios.js";
 import {
@@ -69,8 +70,14 @@ function ProfileHeader({
 
         // Set local UI to default (empty string)
         setEditedUser((prev) => ({ ...prev, [field]: "" }));
+        toast.success(
+          `${isProfile ? "Profile picture" : "Cover photo"} deleted.`
+        );
       } catch (err) {
         console.error(` Failed to delete ${field}:`, err);
+        toast.error(
+          `Failed to delete ${isProfile ? "profile picture" : "cover photo"}.`
+        );
       }
       return;
     }
@@ -91,8 +98,14 @@ function ProfileHeader({
 
       setEditedUser((prev) => ({ ...prev, [field]: imageUrl }));
       dispatch(setAction(imageUrl));
+      toast.success(
+        `${isProfile ? "Profile picture" : "Cover photo"} updated successfully.`
+      );
     } catch (err) {
       console.error(` Failed to upload ${field}:`, err);
+      toast.error(
+        `Failed to upload ${isProfile ? "profile picture" : "cover photo"}.`
+      );
     }
   }
 

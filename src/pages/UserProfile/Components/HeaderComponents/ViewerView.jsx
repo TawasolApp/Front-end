@@ -7,6 +7,8 @@ import ReportBlockModal from "../ReportAndBlockModals/ReportBlockModal.jsx";
 import NewMessageModal from "../../../Messaging/New Message Modal/NewMessageModal.jsx";
 import FlagIcon from "@mui/icons-material/Flag";
 import LoadingPage from "../../../LoadingScreen/LoadingPage.jsx";
+import { toast } from "react-toastify";
+
 function ViewerView({
   user,
   viewerId,
@@ -15,9 +17,6 @@ function ViewerView({
 }) {
   const navigate = useNavigate();
   const [isBlocking, setIsBlocking] = useState(false);
-  if (isBlocking) {
-    return <LoadingPage message="Redirecting to feed..." />;
-  }
 
   const [connectStatus, setConnectStatus] = useState(initialConnectStatus);
   const [isFollowing, setIsFollowing] = useState(
@@ -50,6 +49,9 @@ function ViewerView({
     document.addEventListener("mousedown", handleClickOutside);
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
+  // if (isBlocking) {
+  //   return <LoadingPage message="Redirecting to feed..." />;
+  // }
 
   const connectionStatusLabel = {
     Connection: "Connected",
@@ -65,9 +67,11 @@ function ViewerView({
           userId: user._id,
         });
         console.log("Followed successfully:", res.data);
+        // toast.success("You are now following this user.");
         setIsFollowing(true);
       } catch (err) {
         console.error("Follow error:", err.response?.data || err.message);
+        // toast.error("Failed to follow user.");
       }
     } else {
       setShowUnfollowModal(true);
@@ -78,9 +82,11 @@ function ViewerView({
     try {
       const res = await axios.delete(`/connections/unfollow/${user._id}`);
       console.log("Unfollowed successfully:", res.status);
+      toast.success("You have unfollowed this user.");
       setIsFollowing(false);
     } catch (err) {
       console.error("Unfollow error:", err.response?.data || err.message);
+      toast.error("Failed to unfollow user.");
     } finally {
       setShowUnfollowModal(false);
     }
@@ -91,6 +97,7 @@ function ViewerView({
         // Handle disconnection
         await axios.delete(`/connections/${user._id}`);
         setConnectStatus("No Connection"); // Update state immediately
+        toast.success("Connection removed.");
 
         // Try to unfollow after disconnecting, but ignore 404 errors
         try {
@@ -108,6 +115,8 @@ function ViewerView({
         });
         if (res.status === 201) {
           console.log("Connection request sent:", res.data);
+          toast.success("Connection request sent.");
+
           setConnectStatus("Pending"); // Update state immediately
         }
       } else if (connectStatus === "Request") {
@@ -117,6 +126,7 @@ function ViewerView({
         // Handle canceling a pending request
         await axios.delete(`/connections/${user._id}/pending`);
         setConnectStatus("No Connection"); // Update state immediately after successful deletion
+        toast.success("Your invitation to connect was withdrawn");
       }
     } catch (err) {
       console.error("Connection error:", err.response?.data || err.message);
@@ -161,6 +171,7 @@ function ViewerView({
       }
 
       console.log("Connection successfully accepted");
+      toast.success("Connection accepted.");
     } catch (err) {
       // Revert everything if connection acceptance fails
       setConnectStatus("Request");
@@ -169,6 +180,7 @@ function ViewerView({
         "Accept connection error:",
         err.response?.data || err.message
       );
+      toast.error("Failed to accept connection.");
 
       if (err.response?.status === 409) {
         alert("Connection already exists");
@@ -300,10 +312,8 @@ function ViewerView({
         fullName={`${user.firstName} ${user.lastName}`}
         userId={user._id} // the user being viewed (target)
         viewerId={viewerId} // logged-in user
-        initialConnectStatus={connectStatus}
-        initialFollowStatus={isFollowing ? "Following" : "No Follow"}
         onBlocked={() => {
-          setIsBlocking(true); // show loading first
+          // setIsBlocking(true); // show loading first
           setTimeout(() => navigate("/feed"), 1000); // then redirect
         }}
       />

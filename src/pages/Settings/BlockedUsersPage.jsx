@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { IconButton, CircularProgress } from "@mui/material";
 import { ArrowBack, Block as BlockIcon } from "@mui/icons-material";
-import { axiosInstance as axios } from "../../apis/axios";
+import { axiosInstance as axios } from "../../apis/axios.js";
 import { toast } from "react-toastify";
 import ConfirmModal from "../UserProfile/Components/ReusableModals/ConfirmModal";
 
@@ -16,74 +16,44 @@ const BlockedUsersPage = () => {
   const [selectedUserId, setSelectedUserId] = useState(null);
 
   ///////UNCOMMENT THIS LATER
-  // useEffect(() => {
-  //   const fetchBlockedUsers = async () => {
-  //     try {
-  //       const response = await axios.get("/privacy/blocked-users");
-  //       setBlockedUsers(response.data.blockedUsers);
-  //     } catch (error) {
-  //       console.error("Failed to fetch blocked users:", error);
-  //       // toast.error("Failed to load blocked users.");
-  //     } finally {
-  //       setLoading(false);
-  //     }
-  //   };
-
-  //   fetchBlockedUsers();
-  // }, []);
-
-  // TO BE REMOVED LATER
   useEffect(() => {
     const fetchBlockedUsers = async () => {
-      // Mocking a delayed response
-      setTimeout(() => {
-        setBlockedUsers([
-          {
-            userId: "1",
-            name: "Aisha Tawfik",
-            timeBlocked: "6 days ago",
-          },
-          {
-            userId: "2",
-            name: "Omar Fathy",
-            timeBlocked: "3 days ago",
-          },
-          {
-            userId: "3",
-            name: "Sara Mostafa",
-            timeBlocked: "yesterday",
-          },
-        ]);
+      try {
+        const response = await axios.get("/security/blocked-users");
+        console.log("📦 Blocked Users API Response:", response.data); // ✅ LOG HERE
+
+        setBlockedUsers(response.data);
+      } catch (error) {
+        console.error("Failed to fetch blocked users:", error);
+        // toast.error("Failed to load blocked users.");
+      } finally {
         setLoading(false);
-      }, 1000); // Simulate network delay
+      }
     };
 
     fetchBlockedUsers();
   }, []);
 
   /////TO BE UNCOMMENTED LATER
-  // const handleUnblock = async (userId) => {
-  //   try {
-  //     await axios.post(`/privacy/unblock/${userId}`);
-  //     setBlockedUsers((prev) => prev.filter((user) => user.userId !== userId));
-  //     toast.success("User unblocked successfully.");
-  //   } catch (err) {
-  //     console.error("Failed to unblock user:", err);
-  //     toast.error("Failed to unblock user.");
-  //   }
-  // };
+  const handleUnblock = async (userId) => {
+    console.log("Attempting to unblock userId:", userId); // 🔍 Log who you're trying to unblock
+
+    try {
+      const response = await axios.post(`/security/unblock/${userId}`);
+      console.log("✅ Unblock API response:", response.data); // Log full response
+
+      setBlockedUsers((prev) => prev.filter((user) => user.userId !== userId));
+      toast.success("User unblocked successfully.");
+    } catch (err) {
+      console.error("Failed to unblock user:", err);
+      console.error("🔸 Status:", err.response?.status);
+      console.error("🔸 Data:", err.response?.data);
+      console.error("🔸 Full Error:", err);
+      toast.error("Failed to unblock user.");
+    }
+  };
 
   const selectedUser = blockedUsers.find((u) => u.userId === selectedUserId);
-
-  ///// TO BE REMOVED LATER
-
-  const handleUnblock = async (userId) => {
-    // Simulate a short delay
-    setTimeout(() => {
-      setBlockedUsers((prev) => prev.filter((user) => user.userId !== userId));
-      toast.success("User unblocked (mock).");
-    }, 500);
-  };
 
   return (
     <div className="min-h-screen p-6 bg-mainBackground">
@@ -136,10 +106,10 @@ const BlockedUsersPage = () => {
                     />
                     <div>
                       <p className="text-textContent font-medium">
-                        {user.name}
+                        {user.firstName} {user.lastName}{" "}
                       </p>
                       <p className="text-sm text-textPlaceholder">
-                        {user.timeBlocked || "Blocked user"}
+                        Blocked user
                       </p>
                     </div>
                   </div>
@@ -161,7 +131,7 @@ const BlockedUsersPage = () => {
         {showConfirm && (
           <ConfirmModal
             title="Unblock member?"
-            message={`Are you sure you want to unblock ${selectedUser?.name || "this user"}? They will be able to interact with you again.`}
+            message={`Are you sure you want to unblock ${selectedUser?.firstName} ${selectedUser?.lastName}?`}
             confirmLabel="Unblock"
             cancelLabel="Cancel"
             onConfirm={() => {

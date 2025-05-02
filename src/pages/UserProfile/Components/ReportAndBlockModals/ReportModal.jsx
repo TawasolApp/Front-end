@@ -1,13 +1,15 @@
 import React, { useEffect, useState } from "react";
 import { axiosInstance as axios } from "../../../../apis/axios";
 import { toast } from "react-toastify";
+
 const ReportModal = ({ isOpen, onClose, targetId, type }) => {
   const [selectedReason, setSelectedReason] = useState("");
+  const [isOtherReason, setIsOtherReason] = useState(false);
+  const [customReason, setCustomReason] = useState("");
   const [submitting, setSubmitting] = useState(false);
 
   useEffect(() => {
-    if (isOpen) document.body.classList.add("overflow-hidden");
-    else document.body.classList.remove("overflow-hidden");
+    document.body.classList.toggle("overflow-hidden", isOpen);
     return () => document.body.classList.remove("overflow-hidden");
   }, [isOpen]);
 
@@ -28,30 +30,25 @@ const ReportModal = ({ isOpen, onClose, targetId, type }) => {
         ];
 
   const handleSubmit = async () => {
-    if (!selectedReason) return;
+    const reasonToSend = isOtherReason ? customReason.trim() : selectedReason;
+
+    if (!reasonToSend) return toast.error("Please provide a reason.");
+
     setSubmitting(true);
 
+    const payload = {
+      reportedId: targetId,
+      reportedType: type === "user" ? "Profile" : "Post",
+      reason: reasonToSend,
+    };
+
     try {
-      const endpoint =
-        type === "user" ? "/privacy/report/user" : "/privacy/report/post";
-
-      const payload =
-        type === "user"
-          ? {
-              userId: targetId,
-              reason: selectedReason,
-              details: selectedReason,
-            }
-          : {
-              postId: targetId,
-              reason: selectedReason,
-              details: selectedReason,
-            };
-
-      await axios.post(endpoint, payload);
-      toast.success(`Report submitted successfully.`);
-
+      await axios.post("/security/report", payload);
+      toast.success("Report submitted successfully.");
       onClose();
+      setSelectedReason("");
+      setCustomReason("");
+      setIsOtherReason(false);
     } catch (err) {
       console.error("Failed to report:", err);
       toast.error("Failed to submit report. Please try again.");
@@ -75,26 +72,66 @@ const ReportModal = ({ isOpen, onClose, targetId, type }) => {
         <h2 className="text-xl font-bold text-header mb-4">
           Report {type === "user" ? "this profile" : "this post"}
         </h2>
-        <p className="text-sm text-textContent mb-4">Select a reason:</p>
 
-        <div className="space-y-2">
-          {REASONS.map((reason) => (
-            <label
-              key={reason}
-              className="flex items-center gap-3 p-3 border rounded-lg cursor-pointer hover:bg-itemHoverBackground transition-colors"
+        {!isOtherReason ? (
+          <>
+            <p className="text-sm text-textContent mb-4">Select a reason:</p>
+            <div className="space-y-2">
+              {REASONS.map((reason) => (
+                <label
+                  key={reason}
+                  className="flex items-center gap-3 p-3 border rounded-lg cursor-pointer hover:bg-itemHoverBackground transition-colors"
+                >
+                  <input
+                    type="radio"
+                    name="report-reason"
+                    value={reason}
+                    checked={selectedReason === reason}
+                    onChange={() => setSelectedReason(reason)}
+                    className="accent-blue-600"
+                  />
+                  <span className="text-sm text-textContent">{reason}</span>
+                </label>
+              ))}
+              <button
+                className="text-sm text-blue-600 mt-3 hover:underline"
+                onClick={() => {
+                  setIsOtherReason(true);
+                  setSelectedReason("");
+                }}
+              >
+                Something else...
+              </button>
+            </div>
+          </>
+        ) : (
+          <>
+            <p className="text-sm text-textContent mb-4">Enter your reason:</p>
+            <textarea
+              value={customReason}
+              onChange={(e) =>
+                e.target.value.length <= 300 && setCustomReason(e.target.value)
+              }
+              rows={4}
+              maxLength={300}
+              className="w-full border rounded-lg p-2 text-sm"
+              placeholder="Describe the issue briefly (max 300 characters)"
+            />
+            <p className="text-xs text-right text-gray-500 mt-1">
+              {customReason.length} / 300
+            </p>
+
+            <button
+              className="text-xs text-gray-500 mt-2 hover:underline"
+              onClick={() => {
+                setIsOtherReason(false);
+                setCustomReason("");
+              }}
             >
-              <input
-                type="radio"
-                name="report-reason"
-                value={reason}
-                checked={selectedReason === reason}
-                onChange={() => setSelectedReason(reason)}
-                className="accent-blue-600"
-              />
-              <span className="text-sm text-textContent">{reason}</span>
-            </label>
-          ))}
-        </div>
+              ← Go back to predefined reasons
+            </button>
+          </>
+        )}
 
         <div className="flex justify-end gap-3 mt-6">
           <button
@@ -104,10 +141,15 @@ const ReportModal = ({ isOpen, onClose, targetId, type }) => {
             Cancel
           </button>
           <button
-            disabled={!selectedReason || submitting}
+            disabled={
+              submitting ||
+              (!isOtherReason && !selectedReason) ||
+              (isOtherReason && !customReason.trim())
+            }
             onClick={handleSubmit}
             className={`px-4 py-2 rounded-full text-white ${
-              selectedReason && !submitting
+              (!isOtherReason && selectedReason) ||
+              (isOtherReason && customReason.trim())
                 ? "bg-blue-600 hover:bg-blue-700"
                 : "bg-blue-400 opacity-60 cursor-not-allowed"
             }`}

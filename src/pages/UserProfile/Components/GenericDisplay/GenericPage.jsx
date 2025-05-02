@@ -4,6 +4,7 @@ import GenericCard from "./GenericCard";
 import GenericModal from "./GenericModal";
 // import LoadingPage from "../../../LoadingScreen/LoadingPage.jsx";
 import { axiosInstance as axios } from "../../../../apis/axios.js";
+import { toast } from "react-toastify";
 
 // Map for endpoint base path
 const endpointMap = {
@@ -60,14 +61,14 @@ function GenericPage({ title, type }) {
 
         response = await axios.patch(
           `/profile/${endpointMap[type]}/${originalKey}`,
-          updatedItem,
+          updatedItem
         );
 
         setData((prev) =>
           prev.map((item) => {
             const itemKey = type === "skills" ? item.skillName : item._id;
             return itemKey === originalKey ? response.data : item;
-          }),
+          })
         );
       }
 
@@ -75,7 +76,7 @@ function GenericPage({ title, type }) {
       else {
         response = await axios.post(
           `/profile/${endpointMap[type]}`,
-          updatedItem,
+          updatedItem
         );
         console.log("🧾 response.data after POST:", response.data);
 
@@ -84,7 +85,7 @@ function GenericPage({ title, type }) {
         const newKey =
           type === "skills" ? response.data.skillName : response.data._id;
         const exists = data.some((item) =>
-          type === "skills" ? item.skillName === newKey : item._id === newKey,
+          type === "skills" ? item.skillName === newKey : item._id === newKey
         );
 
         if (!exists) {
@@ -113,6 +114,7 @@ function GenericPage({ title, type }) {
     try {
       await axios.delete(`/profile/${endpointMap[type]}/${itemId}`);
       setData((prev) => prev.filter((_, i) => i !== editIndex));
+      toast.success("Deletion was successful.");
 
       closeModal();
 
