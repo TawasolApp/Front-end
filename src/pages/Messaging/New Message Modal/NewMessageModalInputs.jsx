@@ -2,8 +2,9 @@ import { useState, useRef, useEffect } from "react";
 import { AttachFile, InsertEmoticon, Image, Send } from "@mui/icons-material";
 import EmojiPicker from "emoji-picker-react";
 import { axiosInstance } from "../../../apis/axios";
+import { useSocket } from "../../../hooks/SocketContext";
 
-const NewMessageModalInputs = ({ isMinimized, onSend }) => {
+const NewMessageModalInputs = ({ isMinimized, onSend, receiverId = null }) => {
   const [message, setMessage] = useState("");
   const [images, setImages] = useState([]);
   const [files, setFiles] = useState([]);
@@ -16,13 +17,18 @@ const NewMessageModalInputs = ({ isMinimized, onSend }) => {
   const imageInputRef = useRef(null);
   const emojiPickerRef = useRef(null);
 
+  const socket = useSocket();
+
   const handleEmojiClick = (emojiData) => {
     setMessage((prev) => prev + emojiData.emoji);
   };
 
   useEffect(() => {
     const handleClickOutside = (event) => {
-      if (emojiPickerRef.current && !emojiPickerRef.current.contains(event.target)) {
+      if (
+        emojiPickerRef.current &&
+        !emojiPickerRef.current.contains(event.target)
+      ) {
         setShowEmojiPicker(false);
       }
     };
@@ -48,7 +54,6 @@ const NewMessageModalInputs = ({ isMinimized, onSend }) => {
         const response = await axiosInstance.post("/media", formData, {
           headers: { "Content-Type": "multipart/form-data" },
         });
-        console.log("Upload successful:", response.data);
         return response.data.url; // Return the URL
       } catch (error) {
         console.error("Upload failed:", error);
@@ -74,7 +79,6 @@ const NewMessageModalInputs = ({ isMinimized, onSend }) => {
         const response = await axiosInstance.post("/media", formData, {
           headers: { "Content-Type": "multipart/form-data" },
         });
-        console.log("Upload successful:", response.data);
         return response.data.url; // Return the URL
       } catch (error) {
         console.error("Upload failed:", error);
@@ -89,13 +93,13 @@ const NewMessageModalInputs = ({ isMinimized, onSend }) => {
   };
 
   const removeImage = (index) => {
-    setImages(prev => prev.filter((_, i) => i !== index));
-    setMedia(prev => prev.filter((_, i) => i !== index)); // Remove URL from media state as well
+    setImages((prev) => prev.filter((_, i) => i !== index));
+    setMedia((prev) => prev.filter((_, i) => i !== index)); // Remove URL from media state as well
   };
 
   const removeFile = (index) => {
-    setFiles(prev => prev.filter((_, i) => i !== index));
-    setMedia(prev => prev.filter((_, i) => i !== index)); // Remove URL from media state as well
+    setFiles((prev) => prev.filter((_, i) => i !== index));
+    setMedia((prev) => prev.filter((_, i) => i !== index)); // Remove URL from media state as well
   };
 
   const handleSend = () => {
@@ -176,7 +180,10 @@ const NewMessageModalInputs = ({ isMinimized, onSend }) => {
           }`}
           placeholder="Write a message..."
           value={message}
-          onChange={(e) => setMessage(e.target.value)}
+          onChange={(e) => {
+            setMessage(e.target.value);
+            socket.emit("typing", { receiverId });
+          }}
           onFocus={() => setIsTextareaFocused(true)}
           onBlur={() => setIsTextareaFocused(false)}
           onKeyDown={handleKeyDown}
@@ -229,7 +236,10 @@ const NewMessageModalInputs = ({ isMinimized, onSend }) => {
               <InsertEmoticon className="text-textActivity" fontSize="small" />
             </button>
             {showEmojiPicker && (
-              <div ref={emojiPickerRef} className="absolute bottom-12 left-0 z-10">
+              <div
+                ref={emojiPickerRef}
+                className="absolute bottom-12 left-0 z-10"
+              >
                 <EmojiPicker
                   onEmojiClick={handleEmojiClick}
                   width={300}
@@ -243,7 +253,9 @@ const NewMessageModalInputs = ({ isMinimized, onSend }) => {
         {/* Send Button */}
         <button
           onClick={handleSend}
-          disabled={!message.trim() && images.length === 0 && files.length === 0}
+          disabled={
+            !message.trim() && images.length === 0 && files.length === 0
+          }
           className={`px-3 py-1 rounded-full flex items-center gap-1 transition-colors ${
             message.trim() || images.length > 0 || files.length > 0
               ? "bg-buttonSubmitEnable hover:bg-buttonSubmitEnableHover text-buttonSubmitText shadow-sm hover:shadow-md"
