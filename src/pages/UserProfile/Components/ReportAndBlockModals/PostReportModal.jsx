@@ -40,7 +40,7 @@ const PostReportModal = ({ isOpen, onClose, targetId }) => {
       reason: reasonToSend,
     };
 
-    console.log("🔎 Final API Payload:", payload); // ✅ Console log
+    console.log("🔎 Final API Payload:", payload);
 
     setSubmitting(true);
     try {
@@ -48,7 +48,7 @@ const PostReportModal = ({ isOpen, onClose, targetId }) => {
       toast.success("Report submitted successfully.");
       handleClose();
     } catch (err) {
-      console.error("❌ Report Failed:", err.response?.data || err.message);
+      console.error(" Report Failed:", err.response?.data || err.message);
       toast.error("Failed to submit report. Please try again.");
     } finally {
       setSubmitting(false);

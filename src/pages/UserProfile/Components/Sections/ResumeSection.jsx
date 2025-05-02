@@ -110,9 +110,6 @@ function ResumeSection({ user, isOwner }) {
             >
               <FaEye />
             </a>
-            <a href={fullResumeUrl} download title="Download">
-              <FaDownload />
-            </a>
             {isOwner && (
               <button onClick={() => setShowDeleteModal(true)} title="Delete">
                 <FaTrash />
