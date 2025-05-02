@@ -1,11 +1,10 @@
 import React, { useEffect, useState } from "react";
 import { ArrowForwardOutlined } from "@mui/icons-material";
-import ConfirmModal from "../ReusableModals/ConfirmModal";
-import { axiosInstance as axios } from "../../../../apis/axios";
+import ConfirmModal from "../UserProfile/Components/ReusableModals/ConfirmModal";
+import { axiosInstance as axios } from "../../apis/axios";
 import { toast } from "react-toastify";
 import ReportUserModal from "./UserReportModal";
 import { useDispatch } from "react-redux";
-// import { addBlockedUser } from "../../../../store/authenticationSlice";
 
 const ReportBlockModal = ({
   isOpen,

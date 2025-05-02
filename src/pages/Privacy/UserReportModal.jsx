@@ -1,25 +1,8 @@
 import React, { useEffect, useState } from "react";
-import { axiosInstance as axios } from "../../../../apis/axios";
+import { axiosInstance as axios } from "../../apis/axios.js";
 import { toast } from "react-toastify";
 
-const POST_REASONS = [
-  "Harassment",
-  "Fraud or scam",
-  "Spam",
-  "Misinformation",
-  "Hateful speech",
-  "Threats or violence",
-  "Self-harm",
-  "Graphic content",
-  "Dangerous or extremist organizations",
-  "Sexual content",
-  "Fake account",
-  "Child exploitation",
-  "Illegal goods and services",
-  "Infringement",
-];
-
-const PostReportModal = ({ isOpen, onClose, targetId }) => {
+const ReportModal = ({ isOpen, onClose, targetId }) => {
   const [selectedReason, setSelectedReason] = useState("");
   const [isOtherReason, setIsOtherReason] = useState(false);
   const [customReason, setCustomReason] = useState("");
@@ -30,17 +13,25 @@ const PostReportModal = ({ isOpen, onClose, targetId }) => {
     return () => document.body.classList.remove("overflow-hidden");
   }, [isOpen]);
 
+  const USER_REASONS = [
+    "This person is impersonating someone",
+    "This account has been hacked",
+    "This account is fake",
+    "Harassment or abusive behavior",
+  ];
+
   const handleSubmit = async () => {
     const reasonToSend = isOtherReason ? customReason.trim() : selectedReason;
+
     if (!reasonToSend) return toast.error("Please provide a reason.");
 
     const payload = {
       reportedId: targetId,
-      reportedType: "Post",
+      reportedType: "Profile",
       reason: reasonToSend,
     };
 
-    console.log("🔎 Final API Payload:", payload);
+    console.log("🟦 Reporting user payload:", payload);
 
     setSubmitting(true);
     try {
@@ -48,7 +39,7 @@ const PostReportModal = ({ isOpen, onClose, targetId }) => {
       toast.success("Report submitted successfully.");
       handleClose();
     } catch (err) {
-      console.error(" Report Failed:", err.response?.data || err.message);
+      console.error("Failed to report:", err);
       toast.error("Failed to submit report. Please try again.");
     } finally {
       setSubmitting(false);
@@ -74,39 +65,44 @@ const PostReportModal = ({ isOpen, onClose, targetId }) => {
           &times;
         </button>
 
-        <h2 className="text-xl font-bold text-header mb-4">Report this post</h2>
+        <h2 className="text-xl font-bold text-header mb-4">
+          Report this profile
+        </h2>
 
         {!isOtherReason ? (
           <>
             <p className="text-sm text-textContent mb-4">Select a reason:</p>
-            <div className="flex flex-wrap gap-2 mb-6">
-              {POST_REASONS.map((reason) => (
-                <button
+            <div className="space-y-2">
+              {USER_REASONS.map((reason) => (
+                <label
                   key={reason}
-                  onClick={() => setSelectedReason(reason)}
-                  className={`px-3 py-1 rounded-full text-sm border transition ${
-                    selectedReason === reason
-                      ? "bg-blue-600 text-white"
-                      : "border border-gray-400 text-gray-800"
-                  }`}
+                  className="flex items-center gap-3 p-3 border rounded-lg cursor-pointer hover:bg-itemHoverBackground transition-colors"
                 >
-                  {reason}
-                </button>
+                  <input
+                    type="radio"
+                    name="report-reason"
+                    value={reason}
+                    checked={selectedReason === reason}
+                    onChange={() => setSelectedReason(reason)}
+                    className="accent-blue-600"
+                  />
+                  <span className="text-sm text-textContent">{reason}</span>
+                </label>
               ))}
+              <button
+                className="text-sm text-blue-600 mt-3 hover:underline"
+                onClick={() => {
+                  setIsOtherReason(true);
+                  setSelectedReason("");
+                }}
+              >
+                Something else...
+              </button>
             </div>
-            <button
-              className="text-sm text-blue-600 mt-1 hover:underline"
-              onClick={() => {
-                setIsOtherReason(true);
-                setSelectedReason("");
-              }}
-            >
-              Something else...
-            </button>
           </>
         ) : (
           <>
-            <p className="text-sm text-textContent mb-2">Enter your reason:</p>
+            <p className="text-sm text-textContent mb-4">Enter your reason:</p>
             <textarea
               value={customReason}
               onChange={(e) =>
@@ -114,7 +110,7 @@ const PostReportModal = ({ isOpen, onClose, targetId }) => {
               }
               rows={4}
               maxLength={300}
-              className="w-full border rounded-lg p-2 text-sm"
+              className="w-full border rounded-lg p-2 text-sm bg-boxbackground"
               placeholder="Describe the issue briefly (max 300 characters)"
             />
             <p className="text-xs text-right text-gray-500 mt-1">
@@ -135,7 +131,7 @@ const PostReportModal = ({ isOpen, onClose, targetId }) => {
 
         <div className="flex justify-end gap-3 mt-6">
           <button
-            className="px-4 py-2 border border-blue-500 text-blue-500 rounded-full hover:bg-blue-50 transition"
+            className="px-4 py-2 border border-blue-500 text-unblockText rounded-full hover:bg-unblockBg transition"
             onClick={handleClose}
           >
             Cancel
@@ -162,4 +158,4 @@ const PostReportModal = ({ isOpen, onClose, targetId }) => {
   );
 };
 
-export default PostReportModal;
+export default ReportModal;

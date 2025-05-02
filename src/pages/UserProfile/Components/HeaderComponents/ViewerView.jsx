@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 
 import { axiosInstance as axios } from "../../../../apis/axios.js";
 import ConfirmModal from "../ReusableModals/ConfirmModal.jsx";
-import ReportBlockModal from "../ReportAndBlockModals/ReportBlockModal.jsx";
+import ReportBlockModal from "../../../Privacy/ReportBlockModal.jsx";
 import NewMessageModal from "../../../Messaging/New Message Modal/NewMessageModal.jsx";
 import FlagIcon from "@mui/icons-material/Flag";
 import LoadingPage from "../../../LoadingScreen/LoadingPage.jsx";

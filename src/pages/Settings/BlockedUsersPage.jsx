@@ -6,8 +6,7 @@ import { axiosInstance as axios } from "../../apis/axios.js";
 import { toast } from "react-toastify";
 import ConfirmModal from "../UserProfile/Components/ReusableModals/ConfirmModal";
 import LoadingPage from "../LoadingScreen/LoadingPage.jsx";
-// TODO: uncomment the real apis and remove the mock data
-// check ziad return time ,, block count
+
 const BlockedUsersPage = () => {
   const navigate = useNavigate();
   const [blockedUsers, setBlockedUsers] = useState([]);
@@ -15,7 +14,6 @@ const BlockedUsersPage = () => {
   const [showConfirm, setShowConfirm] = useState(false);
   const [selectedUserId, setSelectedUserId] = useState(null);
 
-  ///////UNCOMMENT THIS LATER
   useEffect(() => {
     const fetchBlockedUsers = async () => {
       try {
@@ -31,9 +29,8 @@ const BlockedUsersPage = () => {
     fetchBlockedUsers();
   }, []);
 
-  /////TO BE UNCOMMENTED LATER
   const handleUnblock = async (userId) => {
-    console.log("Attempting to unblock userId:", userId); // 🔍 Log who you're trying to unblock
+    console.log("Attempting to unblock userId:", userId);
 
     try {
       await axios.post(`/security/unblock/${userId}`);

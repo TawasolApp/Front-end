@@ -114,8 +114,8 @@ const ProfileVisibilityPage = () => {
               disabled={!hasChanges || saving}
               className={`px-4 py-2 rounded-full text-white text-sm transition duration-200 ${
                 hasChanges
-                  ? "bg-blue-600 hover:bg-blue-700"
-                  : "bg-blue-400 opacity-60 cursor-not-allowed"
+                  ? "bg-buttonSaveEnabled hover:bg-buttonSaveEnabledHover"
+                  : "bg-buttonSaveDisabled cursor-not-allowed"
               }`}
               aria-label="Save profile visibility settings"
             >

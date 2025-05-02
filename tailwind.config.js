@@ -83,18 +83,23 @@ export default {
         chatYouText: "rgb(var(--chat-you-text))",
         chatThemBackground: "rgb(var(--chat-them-background))",
         chatThemText: "rgb(var(--chat-them-text))",
+        buttonSaveEnabled: "rgb(var(--btn-save-enabled))",
+        buttonSaveEnabledHover: "rgb(var(--btn-save-enabled-hover))",
+        buttonSaveText: "rgb(var(--btn-save-text))",
+        buttonSaveDisabled:
+          "rgba(var(--btn-save-disabled), var(--btn-save-disabled-opacity))",
       },
       animation: {
-        'spin-slow': 'spin 8s linear infinite',
-        'float': 'float 3s ease-in-out infinite',
-        'pulse': 'pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite'
+        "spin-slow": "spin 8s linear infinite",
+        float: "float 3s ease-in-out infinite",
+        pulse: "pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite",
       },
       keyframes: {
         float: {
-          '0%, 100%': { transform: 'translateY(0)' },
-          '50%': { transform: 'translateY(-20px)' }
-        }
-      }
+          "0%, 100%": { transform: "translateY(0)" },
+          "50%": { transform: "translateY(-20px)" },
+        },
+      },
     },
   },
   plugins: [],
