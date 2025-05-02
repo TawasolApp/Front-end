@@ -212,7 +212,7 @@ const ApplicantsList = ({ jobId, enableReturn }) => {
                 </p>
                 {applicant.resumeURL && (
                   <a
-                    href={`https://drive.google.com/viewerng/viewer?embedded=true&url=${encodeURIComponent(applicant.resumeURL)}`.replace(".pdf", "")}
+                    href={`https://drive.google.com/viewerng/viewer?embedded=true&url=${applicant.resumeURL}`.replace(".pdf", "")}
                     target="_blank"
                     rel="noopener noreferrer"
                     className="text-xs md:text-sm hover:underline inline-flex items-center gap-1 text-blue-600"
