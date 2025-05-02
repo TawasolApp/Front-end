@@ -40,9 +40,10 @@ function ReportCard({ report, onResolve }) {
           <img
             src={localReport.postAuthorAvatar}
             alt="Author"
-            className="w-10 h-10 rounded-full"
+            className={`w-10 h-10 ${isAuthorUser ? "rounded-full" : "rounded"}`}
           />
         )}
+
         <div className="space-y-1">
           <div className="text-sm text-companyheader font-semibold">
             {localReport.postAuthor}
