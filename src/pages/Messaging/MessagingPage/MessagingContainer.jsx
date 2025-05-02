@@ -40,7 +40,7 @@ const MessagingContainer = () => {
           {/* Conversation view - scrollable */}
           <div className="flex flex-col w-3/5">
             {selectedConversation ? (
-              <ConversationView conversation={selectedConversation} />
+              <ConversationView conversation={selectedConversation} onBlock={() => {setSelectedConversation(null)}} />
             ) : (
               <div className="flex items-center justify-center h-full bg-cardBackground">
                 <p className="text-textContent">Select a conversation to start chatting</p>
@@ -67,7 +67,7 @@ const MessagingContainer = () => {
               </div>
               {/* Conversation view */}
               <div className="flex-1 overflow-y-auto">
-                <ConversationView conversation={selectedConversation} />
+                <ConversationView conversation={selectedConversation} onBlock={() => {setSelectedConversation(null)}} />
               </div>
             </div>
           ) : (
