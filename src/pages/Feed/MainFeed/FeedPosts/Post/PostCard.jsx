@@ -15,7 +15,7 @@ import ReactionsModal from "../ReactionModal/ReactionsModal";
 import TextModal from "../../SharePost/TextModal";
 import DeletePostModal from "../DeleteModal/DeletePostModal";
 import SilentRepostHeader from "./Header/SilentRepostHeader";
-import ReportPostModal from "../../../../../pages/UserProfile/Components/ReportAndBlockModals/ReportModal";
+import ReportPostModal from "../../../../../pages/UserProfile/Components/ReportAndBlockModals/PostReportModal";
 const PostCard = ({ setShowPostModal, setMediaIndex }) => {
   // MODALS
   const [showLikes, setShowLikes] = useState(false);
@@ -158,7 +158,7 @@ const PostCard = ({ setShowPostModal, setMediaIndex }) => {
           isOpen={showReportModal}
           onClose={() => setShowReportModal(false)}
           targetId={post.id}
-          type="post"
+          // type="post"
         />
       )}
     </div>

@@ -2,7 +2,24 @@ import React, { useEffect, useState } from "react";
 import { axiosInstance as axios } from "../../../../apis/axios";
 import { toast } from "react-toastify";
 
-const ReportModal = ({ isOpen, onClose, targetId, type }) => {
+const POST_REASONS = [
+  "Harassment",
+  "Fraud or scam",
+  "Spam",
+  "Misinformation",
+  "Hateful speech",
+  "Threats or violence",
+  "Self-harm",
+  "Graphic content",
+  "Dangerous or extremist organizations",
+  "Sexual content",
+  "Fake account",
+  "Child exploitation",
+  "Illegal goods and services",
+  "Infringement",
+];
+
+const PostReportModal = ({ isOpen, onClose, targetId }) => {
   const [selectedReason, setSelectedReason] = useState("");
   const [isOtherReason, setIsOtherReason] = useState(false);
   const [customReason, setCustomReason] = useState("");
@@ -13,48 +30,36 @@ const ReportModal = ({ isOpen, onClose, targetId, type }) => {
     return () => document.body.classList.remove("overflow-hidden");
   }, [isOpen]);
 
-  const REASONS =
-    type === "user"
-      ? [
-          "This person is impersonating someone",
-          "This account has been hacked",
-          "This account is fake",
-          "Harassment or abusive behavior",
-        ]
-      : [
-          "Spam or scam",
-          "Sexually inappropriate content",
-          "Hate speech or symbols",
-          "Misinformation",
-          "Violent or graphic content",
-        ];
-
   const handleSubmit = async () => {
     const reasonToSend = isOtherReason ? customReason.trim() : selectedReason;
-
     if (!reasonToSend) return toast.error("Please provide a reason.");
-
-    setSubmitting(true);
 
     const payload = {
       reportedId: targetId,
-      reportedType: type === "user" ? "Profile" : "Post",
+      reportedType: "Post",
       reason: reasonToSend,
     };
 
+    console.log("🔎 Final API Payload:", payload); // ✅ Console log
+
+    setSubmitting(true);
     try {
       await axios.post("/security/report", payload);
       toast.success("Report submitted successfully.");
-      onClose();
-      setSelectedReason("");
-      setCustomReason("");
-      setIsOtherReason(false);
+      handleClose();
     } catch (err) {
-      console.error("Failed to report:", err);
+      console.error("❌ Report Failed:", err.response?.data || err.message);
       toast.error("Failed to submit report. Please try again.");
     } finally {
       setSubmitting(false);
     }
+  };
+
+  const handleClose = () => {
+    setSelectedReason("");
+    setCustomReason("");
+    setIsOtherReason(false);
+    onClose();
   };
 
   if (!isOpen) return null;
@@ -63,50 +68,45 @@ const ReportModal = ({ isOpen, onClose, targetId, type }) => {
     <div className="fixed inset-0 z-50 bg-black/40 backdrop-blur-sm flex items-center justify-center">
       <div className="bg-boxbackground rounded-xl p-6 shadow-lg border border-cardBorder w-full max-w-md mx-4 sm:mx-0 relative">
         <button
-          onClick={onClose}
+          onClick={handleClose}
           className="absolute top-3 right-3 text-text text-xl"
         >
           &times;
         </button>
 
-        <h2 className="text-xl font-bold text-header mb-4">
-          Report {type === "user" ? "this profile" : "this post"}
-        </h2>
+        <h2 className="text-xl font-bold text-header mb-4">Report this post</h2>
 
         {!isOtherReason ? (
           <>
             <p className="text-sm text-textContent mb-4">Select a reason:</p>
-            <div className="space-y-2">
-              {REASONS.map((reason) => (
-                <label
+            <div className="flex flex-wrap gap-2 mb-6">
+              {POST_REASONS.map((reason) => (
+                <button
                   key={reason}
-                  className="flex items-center gap-3 p-3 border rounded-lg cursor-pointer hover:bg-itemHoverBackground transition-colors"
+                  onClick={() => setSelectedReason(reason)}
+                  className={`px-3 py-1 rounded-full text-sm border transition ${
+                    selectedReason === reason
+                      ? "bg-blue-600 text-white"
+                      : "border border-gray-400 text-gray-800"
+                  }`}
                 >
-                  <input
-                    type="radio"
-                    name="report-reason"
-                    value={reason}
-                    checked={selectedReason === reason}
-                    onChange={() => setSelectedReason(reason)}
-                    className="accent-blue-600"
-                  />
-                  <span className="text-sm text-textContent">{reason}</span>
-                </label>
+                  {reason}
+                </button>
               ))}
-              <button
-                className="text-sm text-blue-600 mt-3 hover:underline"
-                onClick={() => {
-                  setIsOtherReason(true);
-                  setSelectedReason("");
-                }}
-              >
-                Something else...
-              </button>
             </div>
+            <button
+              className="text-sm text-blue-600 mt-1 hover:underline"
+              onClick={() => {
+                setIsOtherReason(true);
+                setSelectedReason("");
+              }}
+            >
+              Something else...
+            </button>
           </>
         ) : (
           <>
-            <p className="text-sm text-textContent mb-4">Enter your reason:</p>
+            <p className="text-sm text-textContent mb-2">Enter your reason:</p>
             <textarea
               value={customReason}
               onChange={(e) =>
@@ -122,7 +122,7 @@ const ReportModal = ({ isOpen, onClose, targetId, type }) => {
             </p>
 
             <button
-              className="text-xs text-gray-500 mt-2 hover:underline"
+              className="text-xs text-blue-600 mt-2 hover:underline"
               onClick={() => {
                 setIsOtherReason(false);
                 setCustomReason("");
@@ -136,7 +136,7 @@ const ReportModal = ({ isOpen, onClose, targetId, type }) => {
         <div className="flex justify-end gap-3 mt-6">
           <button
             className="px-4 py-2 border border-blue-500 text-blue-500 rounded-full hover:bg-blue-50 transition"
-            onClick={onClose}
+            onClick={handleClose}
           >
             Cancel
           </button>
@@ -162,4 +162,4 @@ const ReportModal = ({ isOpen, onClose, targetId, type }) => {
   );
 };
 
-export default ReportModal;
+export default PostReportModal;
