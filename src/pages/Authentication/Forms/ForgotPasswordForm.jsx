@@ -27,11 +27,45 @@ const ForgotPasswordForm = () => {
 
     try {
       setIsLoading(true);
-      await axiosInstance.post("/auth/forgot-password", {
+      const response = await axiosInstance.post("/auth/forgot-password", {
         email,
         isAndroid: false,
       });
+      const { verifyToken } = response.data;
       dispatch(setEmail(email));
+
+      if (String(import.meta.env.VITE_ENVIRONMENT || "").trim() === "test") {
+        setIsLoading(false);
+
+        if (!verifyToken) {
+          console.log("Invalid verification link.");
+          return;
+        }
+
+        axiosInstance
+          .post(`/auth/reset-password`, { token: verifyToken })
+          .then((res) => {
+            console.log(
+              "Token verified! Redirecting to reset password page..."
+            );
+            setTimeout(() => {
+              navigate("/auth/new-password");
+            }, 1500);
+            return;
+          })
+          .catch((err) => {
+            console.error(err);
+            if (err.response?.status === 400) {
+              console.log(
+                "Invalid or expired token. Please request a new reset email."
+              );
+            } else {
+              console.log("Something went wrong. Please try again later.");
+            }
+            return;
+          });
+      }
+
       setIsLoading(false);
       navigate("/auth/verification-pending", {
         state: { type: "forgotPassword" },
@@ -42,7 +76,7 @@ const ForgotPasswordForm = () => {
         console.error("Forgot password error:", error.response.data);
         setError(
           error.response.data.message ||
-            "Failed to send reset email. Please try again.",
+            "Failed to send reset email. Please try again."
         );
       } else if (error.request) {
         console.error("No response received:", error.request);

@@ -27,7 +27,7 @@ const Error404 = () => {
             This page doesn't exist
           </h2>
           <p className="text-textActivity text-base font-normal">
-            Please check your URL or return to LinkedIn home.
+            Please check your URL or return to Tawasol home.
           </p>
 
           <div className="flex flex-col space-y-4 items-center">

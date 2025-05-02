@@ -8,10 +8,12 @@
   --navbar-search: 242, 242, 242;
   --navbar-search-border: 0, 0, 0;
   --main-background: 244, 242, 238;
+  --selected-background: 248, 244, 244;
   --card-background: 255, 255, 255;
   --card-background-hover: 244, 242, 238;
   --input-background: 255, 255, 255;
   --input-background-hover: 248, 250, 252;
+  --selected-border: 0, 0, 0;
   --card-border: 224, 224, 224;
   --item-border: 178, 178, 178;
   --item-border-focus: 182, 182, 182;
@@ -70,6 +72,10 @@
   --unblock-hover: 191, 219, 254; /* blue-200 */
   --hover-outline-color: 0, 0, 0; /* Black */
   --more-hover-bg: 241, 245, 249; /* Tailwind slate-100 */
+  --chat-you-background: 230, 244, 255;
+  --chat-you-text: 0, 37, 77;
+  --chat-them-background: 240, 240, 240;
+  --chat-them-text: 25, 25, 25;
 }
 
 .dark {
@@ -78,10 +84,12 @@
   --navbar-search: 56, 67, 79;
   --navbar-search-border: 255, 255, 255;
   --main-background: 0, 0, 0;
+  --selected-background: 44, 47, 51;
   --card-background: 27, 31, 35;
   --card-background-hover: 44, 47, 51;
   --input-background: 39, 39, 42;
   --input-background-hover: 63, 63, 70;
+  --selected-border: 255, 255, 255;
   --card-border: 55, 58, 61;
   --item-border: 118, 121, 123;
   --item-border-focus: 117, 120, 122;
@@ -140,4 +148,8 @@
   --unblock-hover: 37, 99, 235; /* blue-600 */
   --hover-outline-color: 209, 213, 219; /* Tailwind gray-300 */
   --more-hover-bg: 55, 65, 81; /* darker hover */
+  --chat-you-background: 34, 105, 160;
+  --chat-you-text: 255, 255, 255;
+  --chat-them-background: 45, 45, 45;
+  --chat-them-text: 230, 230, 230;
 }

@@ -27,10 +27,10 @@ const ReplyContainer = ({ commentId }) => {
       {/* Fetch Replies */}
       {!isLoading && hasMoreReplies && (
         <CommentThreadWrapper hasReplies={true}>
-          <div className="my-2 flex items-center">
+          <div className="mt-2 flex items-center">
             <button
               onClick={() => handleFetchReplies(commentId)}
-              className="flex items-center p-1 rounded-xl hover:bg-buttonIconHover transition-colors"
+              className="flex items-center p-1 rounded-md hover:bg-buttonIconHover transition-colors"
             >
               <OpenInFullIcon className="text-icon" fontSize="small" />
               <span className="text-xs font-medium text-icon pl-1">

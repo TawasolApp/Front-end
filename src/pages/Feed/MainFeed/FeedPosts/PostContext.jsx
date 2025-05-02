@@ -16,7 +16,7 @@ export const PostProvider = ({
   children,
   initialPost,
   handleSharePost,
-  handleDeletePost,
+  handleDeletePostExternal,
   currentAuthorId,
   currentAuthorName,
   currentAuthorPicture,
@@ -71,6 +71,10 @@ export const PostProvider = ({
         autoClose: 3000,
       });
     }
+  };
+
+  const handleDeletePost = async () => {
+    handleDeletePostExternal(post.headerData ? post.headerData.postId : post.id);
   };
 
   const handleReactOnPost = async (reactionTypeAdd, reactionTypeRemove) => {
@@ -242,7 +246,7 @@ export const PostProvider = ({
       abortControllerRef.current = controller;
 
       const currentPage = replies[commentId]?.replyPage || 1;
-      const response = await axiosInstance.get(`/posts/${currentAuthorId}comments/${commentId}`, {
+      const response = await axiosInstance.get(`/posts/${currentAuthorId}/comments/${commentId}`, {
         params: {
           page: currentPage,
           limit: 2,

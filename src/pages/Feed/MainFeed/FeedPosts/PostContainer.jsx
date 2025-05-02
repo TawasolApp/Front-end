@@ -19,7 +19,7 @@ const PostContainer = ({
     <PostProvider
       initialPost={post}
       handleSharePost={handleSharePost}
-      handleDeletePost={handleDeletePost}
+      handleDeletePostExternal={handleDeletePost}
       currentAuthorId={currentAuthorId}
       currentAuthorName={currentAuthorName}
       currentAuthorPicture={currentAuthorPicture}

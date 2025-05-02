@@ -7,11 +7,8 @@ import {
   setBio,
   setCoverPhoto,
   setFirstName,
-  setIsSocialLogin,
   setLastName,
   setProfilePicture,
-  setRefreshToken,
-  setToken,
   setType,
   setUserId,
 } from "../../store/authenticationSlice";
@@ -19,7 +16,7 @@ import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 
 const ExperienceAuthPage = () => {
-  const { email, password, location, isNewGoogleUser } = useSelector(
+  const { location } = useSelector(
     (state) => state.authentication
   );
   const navigate = useNavigate();
@@ -53,51 +50,6 @@ const ExperienceAuthPage = () => {
     dispatch(setType("User"));
 
     setIsLoading(true);
-
-    if (!isNewGoogleUser) {
-      try {
-        const userResponse = await axiosInstance.post("/auth/login", {
-          email,
-          password,
-        });
-
-        if (userResponse.status === 201) {
-          const { token, refreshToken, is_social_login: isSocialLogin } = userResponse.data;
-
-          dispatch(setToken(token));
-          dispatch(setRefreshToken(refreshToken));
-          dispatch(setIsSocialLogin(isSocialLogin));
-        }
-      } catch (error) {
-        setIsLoading(false);
-        if (error.response && error.response.status === 400) {
-          console.error("Email not verified.");
-          toast.error("Email is not verified.", {
-            position: "top-right",
-            autoClose: 3000,
-          });
-        } else if (error.response && error.response.status === 401) {
-          console.error("Invalid email or password.");
-          toast.error("Invalid email or password.", {
-            position: "top-right",
-            autoClose: 3000,
-          });
-        } else if (error.response && error.response.status === 404) {
-          console.error("User not found.");
-          toast.error("User not found.", {
-            position: "top-right",
-            autoClose: 3000,
-          });
-        } else {
-          console.error("Login failed", error);
-          toast.error("An unexpected error occured, please try again.", {
-            position: "top-right",
-            autoClose: 3000,
-          });
-        }
-        return;
-      }
-    }
 
     try {
       await axiosInstance.post("/profile", profileData);
@@ -148,7 +100,7 @@ const ExperienceAuthPage = () => {
       }
 
       return;
-    } catch {
+    } catch (error) {
       setIsLoading(false);
       console.error("Error retreiving profile:", error);
       toast.error("An unexpected error occured, please try again.", {

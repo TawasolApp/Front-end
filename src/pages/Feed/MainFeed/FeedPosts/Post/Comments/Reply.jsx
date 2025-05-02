@@ -71,6 +71,7 @@ const Reply = ({ commentId, reply }) => {
                   authorName={reply.authorName}
                   authorBio={reply.authorBio}
                   authorPicture={reply.authorPicture}
+                  authorType={reply.authorType}
                   iconSize={32}
                   enableLink={false}
                 />

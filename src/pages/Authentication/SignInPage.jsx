@@ -16,6 +16,8 @@ import {
   setUserId,
   setCoverPhoto,
   setIsSocialLogin,
+  setRole,
+  setIsPremium,
 } from "../../store/authenticationSlice";
 import { Link, useNavigate } from "react-router-dom";
 import AuthenticationHeader from "./GenericComponents/AuthenticationHeader";
@@ -39,12 +41,23 @@ const SignInPage = () => {
       });
 
       if (userResponse.status === 201) {
-        const { token, refreshToken, is_social_login: isSocialLogin } = userResponse.data;
+        const {
+          token,
+          refreshToken,
+          is_social_login: isSocialLogin,
+          role,
+        } = userResponse.data;
 
         dispatch(setEmail(formData.email));
         dispatch(setToken(token));
         dispatch(setRefreshToken(refreshToken));
         dispatch(setIsSocialLogin(isSocialLogin));
+        dispatch(setRole(role));
+
+        if (role === "admin") {
+          navigate("/AdminPanel");
+          return;
+        }
 
         try {
           const profileResponse = await axiosInstance.get("/profile");
@@ -58,30 +71,18 @@ const SignInPage = () => {
               headline,
               profilePicture,
               coverPhoto,
+              isPremium,
             } = profileResponse.data;
 
             dispatch(setType("User"));
-            if (_id) {
-              dispatch(setUserId(_id));
-            }
-            if (firstName) {
-              dispatch(setFirstName(firstName));
-            }
-            if (lastName) {
-              dispatch(setLastName(lastName));
-            }
-            if (location) {
-              dispatch(setLocation(location));
-            }
-            if (headline) {
-              dispatch(setBio(headline));
-            }
-            if (profilePicture) {
-              dispatch(setProfilePicture(profilePicture));
-            }
-            if (coverPhoto) {
-              dispatch(setCoverPhoto(coverPhoto));
-            }
+            if (_id) dispatch(setUserId(_id));
+            if (firstName) dispatch(setFirstName(firstName));
+            if (lastName) dispatch(setLastName(lastName));
+            if (location) dispatch(setLocation(location));
+            if (headline) dispatch(setBio(headline));
+            if (profilePicture) dispatch(setProfilePicture(profilePicture));
+            if (coverPhoto) dispatch(setCoverPhoto(coverPhoto));
+            if (isPremium) dispatch(setIsPremium(isPremium));
 
             setIsLoading(false);
             navigate("/feed");
@@ -106,7 +107,13 @@ const SignInPage = () => {
       ) {
         setCredentialsError("Invalid email or password.");
       } else if (error.response && error.response.status === 403) {
-        setCredentialsError("Email not verified.");
+        if (
+          error.message === "Your account is suspended. Please try again later."
+        ) {
+          setCredentialsError("Account suspended.");
+        } else {
+          setCredentialsError("Email not verified.");
+        }
       } else {
         console.error("Login failed", error);
         toast.error("Login failed, please try again.", {
@@ -118,13 +125,14 @@ const SignInPage = () => {
   };
 
   return (
-    <div className="min-h-screen flex flex-col items-center justify-center bg-mainBackground px-4 sm:px-6">
+    <div className="min-h-screen flex flex-col items-center justify-center bg-mainBackground px-3 sm:px-5">
       <AuthenticationHeader hideButtons={true} />
 
-      <div className="bg-cardBackground p-6 sm:p-8 md:p-10 rounded-lg shadow-lg w-full max-w-md sm:max-w-lg">
+      <div className="bg-cardBackground p-5 sm:p-7 md:p-8 rounded-lg shadow-md w-full max-w-md sm:max-w-lg max-h-[90vh] overflow-y-auto">
         <SignInForm onSubmit={handleSignIn} isLoading={isLoading} />
       </div>
-      <p className="mt-4 sm:mt-6 text-center text-textContent text-base sm:text-lg md:text-xl">
+
+      <p className="mt-3 sm:mt-5 text-center text-textContent text-sm sm:text-base md:text-lg">
         New to Tawasol?{" "}
         <Link
           to="/auth/signup"

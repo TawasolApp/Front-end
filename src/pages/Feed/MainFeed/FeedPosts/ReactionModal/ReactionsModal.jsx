@@ -206,7 +206,7 @@ const ReactionsModal = ({ API_URL, setShowLikes, reactCounts }) => {
                 const IconComponent = reactionIcons[reaction.type]?.Icon;
                 return (
                   <Link
-                    to={`/users/${reaction.authorId}`}
+                    to={reaction.authorType === "User" ? `/users/${reaction.authorId}` : `/company/${reaction.authorId}`}
                     key={reaction.likeId}
                     className="flex items-center gap-3 hover:bg-buttonIconHover rounded-lg relative p-2 hover:cursor-pointer"
                   >
@@ -216,7 +216,7 @@ const ReactionsModal = ({ API_URL, setShowLikes, reactCounts }) => {
                         sx={{
                           width: 56,
                           height: 56,
-                          borderRadius: "50%",
+                          borderRadius: reaction.authorType === "Company" ? "0px" : "50%",
                         }}
                       />
                       {IconComponent && (

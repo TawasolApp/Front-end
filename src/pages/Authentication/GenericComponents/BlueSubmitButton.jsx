@@ -2,7 +2,7 @@ const BlueSubmitButton = ({ text, disabled = false, isLoading = false, loadingTe
   <button
     type="submit"
     className={`
-      w-full py-3 sm:py-4 px-4 rounded-full text-lg sm:text-xl font-medium
+      w-full py-2.5 sm:py-3.5 px-4 rounded-full text-base sm:text-lg font-medium
       focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-buttonSubmitEnable
       transition-all duration-200 ease-in-out
       ${

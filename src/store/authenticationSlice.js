@@ -13,7 +13,8 @@ const initialState = {
   profilePicture: localStorage.getItem("profilePicture") || null,
   coverPhoto: localStorage.getItem("cover") || null,
   isSocialLogin: localStorage.getItem("isSocialLogin") || false,
-  blockedUsers: JSON.parse(localStorage.getItem("blockedUsers")) || [],
+  role: localStorage.getItem("role") || "",
+  isPremium: localStorage.getItem("isPremium") || false,
 };
 
 export const authenticationSlice = createSlice({
@@ -71,22 +72,14 @@ export const authenticationSlice = createSlice({
       state.isSocialLogin = action.payload;
       localStorage.setItem("isSocialLogin", action.payload);
     },
-
-    setBlockedUsers: (state, action) => {
-      state.blockedUsers = action.payload;
-      localStorage.setItem("blockedUsers", JSON.stringify(action.payload));
+    setRole: (state, action) => {
+      state.role = action.payload;
+      localStorage.setItem("role", action.payload);
     },
-    addBlockedUser: (state, action) => {
-      const updated = [...state.blockedUsers, action.payload];
-      state.blockedUsers = updated;
-      localStorage.setItem("blockedUsers", JSON.stringify(updated));
+    setIsPremium: (state, action) => {
+      state.isPremium = action.payload;
+      localStorage.setItem("isPremium", action.payload);
     },
-    removeBlockedUser: (state, action) => {
-      const updated = state.blockedUsers.filter((id) => id !== action.payload);
-      state.blockedUsers = updated;
-      localStorage.setItem("blockedUsers", JSON.stringify(updated));
-    },
-
     logout: (state) => {
       state.userId = "";
       state.email = "";
@@ -101,8 +94,8 @@ export const authenticationSlice = createSlice({
       state.coverPhoto = "";
       state.isNewGoogleUser = false;
       state.isSocialLogin = false;
-      state.blockedUsers = [];
-
+      state.role = "";
+      state.isPremium = false;
       localStorage.removeItem("userId");
       localStorage.removeItem("email");
       localStorage.removeItem("firstName");
@@ -115,7 +108,8 @@ export const authenticationSlice = createSlice({
       localStorage.removeItem("profilePicture");
       localStorage.removeItem("coverPhoto");
       localStorage.removeItem("isSocialLogin");
-      localStorage.removeItem("blockedUsers");
+      localStorage.removeItem("role");
+      localStorage.removeItem("isPremium");
     },
   },
 });
@@ -134,9 +128,8 @@ export const {
   setCoverPhoto,
   setIsNewGoogleUser,
   setIsSocialLogin,
-  setBlockedUsers,
-  addBlockedUser,
-  removeBlockedUser,
+  setRole,
+  setIsPremium,
   logout,
 } = authenticationSlice.actions;
 
