@@ -110,10 +110,16 @@ const StatusBadge = ({ status }) => {
       label: "Not Selected",
       dot: "fill-red-500",
     },
+    "In review": {
+      color: "bg-blue-100 text-blue-800",
+      label: "In Review",
+      dot: "fill-blue-500",
+    }
   };
 
   const config = statusConfig[status];
 
+  if (!config) return null; // Return null if status is not recognized
   return (
     <div
       className={`inline-flex items-center px-3 py-1 rounded-full text-sm font-medium ${config.color}`}

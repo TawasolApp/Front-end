@@ -15,6 +15,7 @@ const StatusBadge = ({ status }) => {
     Pending: { color: "bg-yellow-100 text-yellow-800", label: "Under Review" },
     Accepted: { color: "bg-green-100 text-green-800", label: "Accepted" },
     Rejected: { color: "bg-red-100 text-red-800", label: "Rejected" },
+    "In review": { color: "bg-blue-100 text-blue-800", label: "In Review" },
   };
 
   return (
