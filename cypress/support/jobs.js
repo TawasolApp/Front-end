@@ -25,3 +25,23 @@ Cypress.Commands.add("getIndustryFilter", () => {
 Cypress.Commands.add("getLocationFilter", () => {
   return cy.get('[placeholder="Location"]');
 });
+
+Cypress.Commands.add("getJobsPage", () => {
+  return cy.get('[data-testid="navbar-Jobs"]');
+});
+
+Cypress.Commands.add("getExperienceLevelFilter", () => {
+  return cy.get("#experience-level");
+});
+
+Cypress.Commands.add("getMinSalaryFilter", () => {
+  return cy.get("#min-salary");
+});
+
+Cypress.Commands.add("getMaxSalaryFilter", () => {
+  return cy.get("#max-salary");
+});
+
+Cypress.Commands.add("getCompanyFilter", () => {
+  return cy.get("#company-search");
+});

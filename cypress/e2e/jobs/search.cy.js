@@ -81,4 +81,56 @@ describe("searches for jobs", () => {
       "Senior Applications Orchestrator"
     );
   });
+
+  it("Searches for job by experience level", () => {
+    cy.getJobsPage().click();
+
+    cy.wait(5000);
+
+    cy.getExperienceLevelFilter().select("Internship");
+
+    cy.wait(5000);
+
+    cy.getJobsSearchResults().should("have.length", 3);
+
+    cy.getJobsFirstSearchResult().should(
+      "contain",
+      "Senior Applications Orchestrator"
+    );
+  });
+
+  it("Searches for job by company", () => {
+    cy.getJobsPage().click();
+
+    cy.wait(5000);
+
+    cy.getCompanyFilter().type("Toy - Fritsch");
+
+    cy.wait(5000);
+
+    cy.getJobsSearchResults().should("have.length", 4);
+
+    cy.getJobsFirstSearchResult().should(
+      "contain",
+      "Senior Applications Orchestrator"
+    );
+  });
+
+  it("Searches for job by salary", () => {
+    cy.getJobsPage().click();
+
+    cy.wait(5000);
+
+    cy.getMinSalaryFilter().type("4109274686190554");
+    cy.getMaxSalaryFilter().type("4109274686190556");
+
+    cy.wait(5000);
+
+    cy.getJobsSearchResults().should("have.length", 1);
+
+    cy.getJobsFirstSearchResult().should(
+      "contain",
+      "Senior Applications Orchestrator"
+    );
+  });
 });
