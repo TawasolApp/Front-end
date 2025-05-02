@@ -45,3 +45,23 @@ Cypress.Commands.add("getMaxSalaryFilter", () => {
 Cypress.Commands.add("getCompanyFilter", () => {
   return cy.get("#company-search");
 });
+
+Cypress.Commands.add("getJobSaveButton", () => {
+  return cy.get('.mb-8 > .border');
+});
+
+Cypress.Commands.add("getHome", () => {
+  return cy.get('[data-testid="navbar-Home"]');
+});
+
+Cypress.Commands.add("getSavedItems", () => {
+  return cy.get('[data-testid="LeftSideBarSavedItems"]');
+});
+
+Cypress.Commands.add("getSavedJobs", () => {
+  return cy.get('[href="/my-items/saved-jobs"] > .flex > .text-xs');
+});
+
+Cypress.Commands.add("getFirstSavedJob", () => {
+  return cy.get('.group > .flex-1 > :nth-child(1) > .text-lg');
+});
