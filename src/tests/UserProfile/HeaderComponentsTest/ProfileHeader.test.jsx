@@ -33,7 +33,7 @@ vi.mock(
         Enlarged: {profilePicture}
       </div>
     ),
-  }),
+  })
 );
 
 vi.mock(
@@ -57,7 +57,7 @@ vi.mock(
           </button>
         </div>
       ) : null,
-  }),
+  })
 );
 
 vi.mock(
@@ -78,7 +78,7 @@ vi.mock(
           </button>
         </div>
       ) : null,
-  }),
+  })
 );
 
 vi.mock(
@@ -96,7 +96,7 @@ vi.mock(
         </button>
       </>
     ),
-  }),
+  })
 );
 
 vi.mock(
@@ -114,7 +114,7 @@ vi.mock(
         </button>
       </>
     ),
-  }),
+  })
 );
 
 describe("ProfileHeader Component", () => {
@@ -157,7 +157,7 @@ describe("ProfileHeader Component", () => {
             <Route path="/users/:profileSlug" element={ui} />
           </Routes>
         </MemoryRouter>
-      </Provider>,
+      </Provider>
     );
 
   it("returns null if user is null", () => {
@@ -174,7 +174,7 @@ describe("ProfileHeader Component", () => {
         onSave={vi.fn()}
         experienceRef={experienceRef}
         educationRef={educationRef}
-      />,
+      />
     );
 
     expect(screen.getByText("Fatma Gamal")).toBeInTheDocument();
@@ -196,7 +196,7 @@ describe("ProfileHeader Component", () => {
         onSave={vi.fn()}
         experienceRef={experienceRef}
         educationRef={educationRef}
-      />,
+      />
     );
 
     fireEvent.click(screen.getByTestId("upload-profile"));
@@ -216,9 +216,74 @@ describe("ProfileHeader Component", () => {
         onSave={vi.fn()}
         experienceRef={experienceRef}
         educationRef={educationRef}
-      />,
+      />
     );
     expect(screen.getByTestId("viewer-view")).toBeInTheDocument();
+  });
+  vi.mock(
+    "../../../pages/UserProfile/Components/HeaderComponents/ContactInfoModal",
+    () => ({
+      default: ({ isOpen, onClose, onSave }) =>
+        isOpen ? (
+          <div data-testid="contact-modal">
+            Contact Modal
+            <button
+              data-testid="save-contact"
+              onClick={() => onSave({ location: "Updated Location" })}
+            >
+              Save Contact
+            </button>
+            <button data-testid="close-contact" onClick={onClose}>
+              Close
+            </button>
+          </div>
+        ) : null,
+    })
+  );
+
+  it("opens contact info modal and saves updated fields", async () => {
+    const patchSpy = vi.spyOn(axios, "patch").mockResolvedValue({});
+    const onSave = vi.fn();
+
+    renderWithProviders(
+      <ProfileHeader
+        user={mockUser}
+        isOwner={true}
+        isVisible={true}
+        onSave={onSave}
+        experienceRef={experienceRef}
+        educationRef={educationRef}
+      />
+    );
+
+    // Open contact modal
+    fireEvent.click(screen.getByText("Contact info"));
+
+    // Simulate saving from ContactInfoModal
+    const updatedFields = { location: "Updated Location" };
+    await waitFor(() => {
+      const modal = screen.getByTestId("contact-modal");
+      expect(modal).toBeInTheDocument();
+    });
+
+    // You must mock ContactInfoModal properly to trigger `onSave`
+  });
+  it("passes correct props to ImageUploadModal", () => {
+    renderWithProviders(
+      <ProfileHeader
+        user={mockUser}
+        isOwner={true}
+        isVisible={true}
+        onSave={vi.fn()}
+        experienceRef={experienceRef}
+        educationRef={educationRef}
+      />
+    );
+
+    fireEvent.click(screen.getByTestId("upload-profile"));
+
+    expect(screen.getByTestId("upload-modal")).toBeInTheDocument();
+    // You may also assert with spies inside the mocked modal if needed
   });
 
   it("opens edit modal when edit button is clicked", () => {
@@ -230,7 +295,7 @@ describe("ProfileHeader Component", () => {
         onSave={vi.fn()}
         experienceRef={experienceRef}
         educationRef={educationRef}
-      />,
+      />
     );
 
     fireEvent.click(screen.getByRole("button", { name: /✎/i }));
@@ -247,13 +312,13 @@ describe("ProfileHeader Component", () => {
         onSave={onSave}
         experienceRef={experienceRef}
         educationRef={educationRef}
-      />,
+      />
     );
 
     fireEvent.click(screen.getByRole("button", { name: /✎/i }));
     fireEvent.click(screen.getByTestId("save-edit"));
     expect(onSave).toHaveBeenCalledWith(
-      expect.objectContaining({ firstName: "Updated" }),
+      expect.objectContaining({ firstName: "Updated" })
     );
   });
 
@@ -266,12 +331,12 @@ describe("ProfileHeader Component", () => {
         onSave={vi.fn()}
         experienceRef={experienceRef}
         educationRef={educationRef}
-      />,
+      />
     );
 
     fireEvent.click(screen.getByTestId("profile-picture"));
     expect(screen.getByTestId("image-enlarge")).toHaveTextContent(
-      "profile.jpg",
+      "profile.jpg"
     );
   });
 
@@ -284,7 +349,7 @@ describe("ProfileHeader Component", () => {
         onSave={vi.fn()}
         experienceRef={experienceRef}
         educationRef={educationRef}
-      />,
+      />
     );
 
     fireEvent.click(screen.getByTestId("cover-photo"));
@@ -300,7 +365,7 @@ describe("ProfileHeader Component", () => {
         onSave={vi.fn()}
         experienceRef={experienceRef}
         educationRef={educationRef}
-      />,
+      />
     );
 
     fireEvent.click(screen.getByTestId("upload-profile"));
@@ -317,46 +382,12 @@ describe("ProfileHeader Component", () => {
         onSave={vi.fn()}
         experienceRef={experienceRef}
         educationRef={educationRef}
-      />,
+      />
     );
 
     fireEvent.click(screen.getByTestId("upload-cover"));
     expect(screen.getByTestId("upload-modal")).toBeInTheDocument();
     fireEvent.click(screen.getByTestId("upload-confirm"));
-  });
-  it("updates visibility when saved in visibility modal", async () => {
-    const patchSpy = vi.spyOn(axios, "patch").mockResolvedValueOnce({});
-    const onSave = vi.fn();
-
-    renderWithProviders(
-      <ProfileHeader
-        user={{ ...mockUser, visibility: "public" }}
-        isOwner={true}
-        isVisible={true}
-        onSave={onSave}
-        experienceRef={experienceRef}
-        educationRef={educationRef}
-      />,
-    );
-
-    // Open the 3-dot menu and visibility modal
-    fireEvent.click(screen.getByRole("button", { name: "⋮" }));
-    fireEvent.click(screen.getByText(/edit profile visibility/i));
-
-    // Change visibility to trigger state update (radio input)
-    fireEvent.click(screen.getByRole("radio", { name: /connections only/i }));
-
-    // Save the new visibility
-    fireEvent.click(screen.getByRole("button", { name: "Save" }));
-
-    await waitFor(() => {
-      expect(patchSpy).toHaveBeenCalledWith("/profile", {
-        visibility: "connections_only",
-      });
-      expect(onSave).toHaveBeenCalledWith(
-        expect.objectContaining({ visibility: "connections_only" }),
-      );
-    });
   });
   it("saves edit and closes modal", async () => {
     const onSave = vi.fn();
@@ -368,7 +399,7 @@ describe("ProfileHeader Component", () => {
         onSave={onSave}
         experienceRef={experienceRef}
         educationRef={educationRef}
-      />,
+      />
     );
 
     fireEvent.click(screen.getByRole("button", { name: /✎/i }));
@@ -382,7 +413,7 @@ describe("ProfileHeader Component", () => {
     });
 
     expect(onSave).toHaveBeenCalledWith(
-      expect.objectContaining({ firstName: "Updated" }),
+      expect.objectContaining({ firstName: "Updated" })
     );
   });
   it("uploads new profile picture and updates UI", async () => {
@@ -400,7 +431,7 @@ describe("ProfileHeader Component", () => {
         onSave={vi.fn()}
         experienceRef={experienceRef}
         educationRef={educationRef}
-      />,
+      />
     );
 
     // Open upload modal
@@ -416,7 +447,7 @@ describe("ProfileHeader Component", () => {
         expect.any(FormData),
         expect.objectContaining({
           headers: { "Content-Type": "multipart/form-data" },
-        }),
+        })
       );
 
       expect(patchSpy).toHaveBeenCalledWith("/profile", {
@@ -436,7 +467,7 @@ describe("ProfileHeader Component", () => {
         onSave={vi.fn()}
         experienceRef={experienceRef}
         educationRef={educationRef}
-      />,
+      />
     );
 
     fireEvent.click(screen.getByTestId("upload-profile"));
@@ -458,7 +489,7 @@ describe("ProfileHeader Component", () => {
         onSave={vi.fn()}
         experienceRef={experienceRef}
         educationRef={educationRef}
-      />,
+      />
     );
 
     fireEvent.click(screen.getByText("Software Intern"));

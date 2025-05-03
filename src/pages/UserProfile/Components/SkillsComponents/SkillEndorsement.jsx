@@ -69,7 +69,7 @@ function SkillEndorsement({
           onClick={isEndorsed ? handleUnendorse : handleEndorse}
           disabled={loading}
           className={`mt-2 px-4 py-0 h-8 border rounded-full flex items-center justify-center gap-2 w-fit
-          ${isEndorsed ? "bg-modalbackground text-normaltext" : "bg-white text-normaltext"} 
+          ${isEndorsed ? "bg-modalbackground text-normaltext" : "bg-boxbackground text-normaltext"} 
           border-companyheader hover:bg-sliderbutton transition
           ${loading ? "opacity-50 cursor-not-allowed" : ""}`}
           title={

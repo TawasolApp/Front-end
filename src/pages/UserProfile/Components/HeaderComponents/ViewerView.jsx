@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 
 import { axiosInstance as axios } from "../../../../apis/axios.js";
 import ConfirmModal from "../ReusableModals/ConfirmModal.jsx";
-import ReportBlockModal from "../ReportAndBlockModals/ReportBlockModal.jsx";
+import ReportBlockModal from "../../../Privacy/ReportBlockModal.jsx";
 import NewMessageModal from "../../../Messaging/New Message Modal/NewMessageModal.jsx";
 import FlagIcon from "@mui/icons-material/Flag";
 import LoadingPage from "../../../LoadingScreen/LoadingPage.jsx";
@@ -49,14 +49,10 @@ function ViewerView({
     document.addEventListener("mousedown", handleClickOutside);
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
-  // if (isBlocking) {
-  //   return <LoadingPage message="Redirecting to feed..." />;
-  // }
-
   const connectionStatusLabel = {
     Connection: "Connected",
     Pending: "Pending",
-    Request: "Accept", // Changed from "Request" to "Accept" for better UX
+    Request: "Accept",
     "No Connection": "Connect",
   };
 
@@ -67,11 +63,10 @@ function ViewerView({
           userId: user._id,
         });
         console.log("Followed successfully:", res.data);
-        // toast.success("You are now following this user.");
+        toast.success("You are now following this user.");
         setIsFollowing(true);
       } catch (err) {
         console.error("Follow error:", err.response?.data || err.message);
-        // toast.error("Failed to follow user.");
       }
     } else {
       setShowUnfollowModal(true);
@@ -200,7 +195,7 @@ function ViewerView({
       className=" flex gap-2 flex-wrap sm:flex-nowrap"
     >
       <button
-        className="px-4 py-0 h-8 bg-blue-600 text-boxbackground   rounded-full text-sm"
+        className="px-4 py-0 h-8 text-sm rounded-full font-medium bg-buttonMessage text-boxbackground hover:bg-buttonMessageHover transition duration-200"
         onClick={handleMessage}
         aria-label="Send message"
       >
@@ -210,26 +205,14 @@ function ViewerView({
       <button
         className={`px-4 py-0 h-8 border rounded-full text-sm capitalize transition-all duration-300 ease-in-out ${
           ["Connection", "Pending", "Request"].includes(connectStatus)
-            ? "bg-blue-600 text-boxbackground  "
-            : "text-blue-600 border-blue-600"
-        } hover:bg-blue-100 hover:text-blue-700`}
+            ? "bg-buttonMessage text-boxbackground hover:bg-buttonMessageHover"
+            : "text-text border border-text hover:bg-moreHoverBg"
+        } hover:bg-buttonMessageHover `}
         onClick={handleConnect}
         aria-label={connectionStatusLabel[connectStatus] || "Connect"}
       >
         {connectionStatusLabel[connectStatus] || "Connect"}
       </button>
-
-      {/* <button
-        className={`px-4 py-2 border rounded-full text-sm transition-all duration-300 ease-in-out ${
-          isFollowing
-            ? "bg-blue-600 text-boxbackground  "
-            : "text-blue-600 border-blue-600"
-        } hover:bg-blue-100 hover:text-blue-700`}
-        onClick={handleFollow}
-        aria-label={isFollowing ? "Unfollow user" : "Follow user"}
-      >
-        {isFollowing ? "✓ Following" : "+ Follow"}
-      </button> */}
 
       {/* More dropdown */}
       <div className="relative" ref={dropdownRef}>
@@ -243,9 +226,9 @@ function ViewerView({
         </button>
 
         {dropdownOpen && (
-          <div className="absolute right-0 mt-2 w-48 bg-white border rounded shadow z-50">
+          <div className="absolute right-0 mt-2 w-48 bg-boxbackground border border-moreHoverBg rounded shadow z-50">
             <button
-              className="w-full text-left px-4 py-2 hover:bg-gray-100 text-sm"
+              className="w-full text-left text-text px-4 py-2 hover:bg-moreHoverBg text-sm"
               onClick={() => {
                 handleFollow();
                 setDropdownOpen(false);
@@ -255,7 +238,7 @@ function ViewerView({
               {isFollowing ? "Unfollow" : "Follow"}
             </button>
             <button
-              className="w-full text-left px-4 py-2 hover:bg-gray-100 text-sm flex items-center gap-2"
+              className="w-full text-left text-text px-4 py-2 hover:bg-moreHoverBg text-sm flex items-center gap-2"
               onClick={() => {
                 setDropdownOpen(false);
                 setShowReportModal(true);
@@ -293,19 +276,6 @@ function ViewerView({
           cancelLabel="Cancel"
         />
       )}
-      {/* <ReportBlockModal
-        isOpen={showReportModal}
-        onClose={() => setShowReportModal(false)}
-        onBlock={() => {
-          console.log("Block logic here");
-          setShowReportModal(false);
-        }}
-        onReport={() => {
-          console.log("Report logic here");
-          setShowReportModal(false);
-        }}
-        fullName={`${user.firstName} ${user.lastName}`}
-      /> */}
       <ReportBlockModal
         isOpen={showReportModal}
         onClose={() => setShowReportModal(false)}
