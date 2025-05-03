@@ -21,3 +21,11 @@ Cypress.Commands.add("getSearchDropDownPeople", () => {
   Cypress.Commands.add("getMessageSendButton", () => {
     return cy.get('.justify-between > .px-3');
   });
+
+  Cypress.Commands.add("getFirstChat", () => {
+    return cy.get('.w-2\\/5 > :nth-child(1) > :nth-child(1) > .items-start > .flex-1 > .justify-between > .py-1 > .font-medium');
+  });
+
+  Cypress.Commands.add("getMessageContent", () => {
+    return cy.get('.w-3\\/5 > .flex-col > .flex-1 > .max-w-xs > :nth-child(1)');
+  });

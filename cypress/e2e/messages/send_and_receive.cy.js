@@ -35,9 +35,7 @@ describe("sends and receives messages", () => {
       cy.register(user2, inboxName2, user2.firstName, user2.lastName);
     });
   
-    it("Sends a message", () => {
-      cy.getMessagesPage().click();
-      cy.wait(5000);
+    it("Sends a message and ensures its receipt on the other side", () => {
 
       cy.getSearchBar().type(user1.firstName);
       cy.getSearchBar().type("{enter}");
@@ -56,6 +54,26 @@ describe("sends and receives messages", () => {
       cy.getMessageAreaInput().type("Hello, this is a test message!");
       cy.getMessageSendButton().click();
       cy.wait(5000);
+
+      cy.getMessagesPage().click();
+      cy.wait(5000);
+
+      cy.getFirstChat().should("contain", user1.firstName);
+      cy.getFirstChat().click();
+      cy.wait(5000);
+
+      cy.getMessageContent().should("contain", "Hello, this is a test message!");
+      cy.wait(5000);
+
+      cy.login(user1);
+      cy.wait(5000);
+      cy.getMessagesPage().click();
+      cy.wait(5000);
+      cy.getFirstChat().should("contain", user2.firstName);
+      cy.getFirstChat().click();
+      cy.wait(5000);
+      cy.getMessageContent().should("contain", "Hello, this is a test message!");
+
     });
   });
   
