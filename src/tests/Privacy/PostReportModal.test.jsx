@@ -29,6 +29,33 @@ describe("PostReportModal", () => {
     fireEvent.click(screen.getByText("← Go back to predefined reasons"));
     expect(screen.getByText("Select a reason:")).toBeInTheDocument();
   });
+  it("logs fallback error message if err.response is undefined", async () => {
+    const { axiosInstance } = await import("../../apis/axios");
+    const consoleSpy = vi.spyOn(console, "error").mockImplementation(() => {});
+
+    axiosInstance.post.mockRejectedValueOnce({
+      message: "Network down",
+    });
+
+    render(
+      <PostReportModal isOpen={true} onClose={onClose} targetId="post123" />
+    );
+
+    fireEvent.click(screen.getByText("Spam"));
+    fireEvent.click(screen.getByText("Submit report"));
+
+    await waitFor(() => {
+      expect(consoleSpy).toHaveBeenCalledWith(
+        " Report Failed:",
+        "Network down"
+      );
+      expect(toast.error).toHaveBeenCalledWith(
+        "Failed to submit report. Please try again."
+      );
+    });
+
+    consoleSpy.mockRestore();
+  });
 
   it("submits with predefined reason", async () => {
     const { axiosInstance } = await import("../../apis/axios");
@@ -46,6 +73,7 @@ describe("PostReportModal", () => {
       expect(toast.success).toHaveBeenCalled();
     });
   });
+
   it("handles API failure gracefully", async () => {
     const { axiosInstance } = await import("../../apis/axios");
 

@@ -6,6 +6,11 @@ import {
   cleanup,
   waitFor,
 } from "@testing-library/react";
+import {
+  setProfilePicture,
+  setCoverPhoto,
+} from "../../../store/authenticationSlice.js";
+
 import { MemoryRouter, Route, Routes } from "react-router-dom";
 import { Provider } from "react-redux";
 import { configureStore } from "@reduxjs/toolkit";
@@ -164,6 +169,60 @@ describe("ProfileHeader Component", () => {
     const { container } = renderWithProviders(<ProfileHeader user={null} />);
     expect(container.firstChild).toBeNull();
   });
+  it("dispatches empty cover photo on deletion", async () => {
+    const deleteSpy = vi.spyOn(axios, "delete").mockResolvedValue({});
+    const dispatchSpy = vi.spyOn(mockStore, "dispatch");
+
+    renderWithProviders(
+      <ProfileHeader
+        user={mockUser}
+        isOwner={true}
+        isVisible={true}
+        onSave={vi.fn()}
+        experienceRef={experienceRef}
+        educationRef={educationRef}
+      />
+    );
+
+    fireEvent.click(screen.getByTestId("upload-cover"));
+    fireEvent.click(screen.getByTestId("upload-delete"));
+
+    await waitFor(() => {
+      expect(deleteSpy).toHaveBeenCalledWith("/profile/cover-photo");
+      expect(dispatchSpy).toHaveBeenCalledWith(setCoverPhoto(""));
+    });
+  });
+  it("patches and saves contact info correctly", async () => {
+    const patchSpy = vi.spyOn(axios, "patch").mockResolvedValue({});
+
+    const onSave = vi.fn();
+    renderWithProviders(
+      <ProfileHeader
+        user={mockUser}
+        isOwner={true}
+        isVisible={true}
+        onSave={onSave}
+        experienceRef={experienceRef}
+        educationRef={educationRef}
+      />
+    );
+
+    fireEvent.click(screen.getByText("Contact info"));
+    await waitFor(() => {
+      expect(screen.getByTestId("contact-modal")).toBeInTheDocument();
+    });
+
+    fireEvent.click(screen.getByTestId("save-contact"));
+
+    await waitFor(() => {
+      expect(patchSpy).toHaveBeenCalledWith("/profile", {
+        location: "Updated Location",
+      });
+      expect(onSave).toHaveBeenCalledWith(
+        expect.objectContaining({ location: "Updated Location" })
+      );
+    });
+  });
 
   it("renders profile info if user is owner", () => {
     renderWithProviders(
@@ -183,6 +242,29 @@ describe("ProfileHeader Component", () => {
     expect(screen.getByText("42 connections")).toBeInTheDocument();
     expect(screen.getByText("Software Intern")).toBeInTheDocument();
     expect(screen.getByText("Cairo University")).toBeInTheDocument();
+  });
+  it("dispatches empty profile picture on deletion", async () => {
+    const deleteSpy = vi.spyOn(axios, "delete").mockResolvedValue({});
+    const dispatchSpy = vi.spyOn(mockStore, "dispatch");
+
+    renderWithProviders(
+      <ProfileHeader
+        user={mockUser}
+        isOwner={true}
+        isVisible={true}
+        onSave={vi.fn()}
+        experienceRef={experienceRef}
+        educationRef={educationRef}
+      />
+    );
+
+    fireEvent.click(screen.getByTestId("upload-profile"));
+    fireEvent.click(screen.getByTestId("upload-delete"));
+
+    await waitFor(() => {
+      expect(deleteSpy).toHaveBeenCalledWith("/profile/profile-picture");
+      expect(dispatchSpy).toHaveBeenCalledWith(setProfilePicture(""));
+    });
   });
 
   it("handles deleting profile picture when fileOrNull is null", async () => {

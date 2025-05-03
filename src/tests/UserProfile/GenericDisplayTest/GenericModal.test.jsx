@@ -40,7 +40,7 @@ describe("GenericModal", () => {
     });
     fireEvent.click(screen.getByTestId("save-button"));
     expect(defaultProps.onSave).toHaveBeenCalledWith(
-      expect.objectContaining({ skillName: "React" }),
+      expect.objectContaining({ skillName: "React" })
     );
   });
 
@@ -52,7 +52,7 @@ describe("GenericModal", () => {
 
   it("shows discard confirmation modal if changes are made", () => {
     render(
-      <GenericModal {...defaultProps} initialData={{ skillName: "React" }} />,
+      <GenericModal {...defaultProps} initialData={{ skillName: "React" }} />
     );
     fireEvent.change(screen.getByLabelText(/skill/i), {
       target: { value: "Angular", name: "skillName" },
@@ -70,7 +70,7 @@ describe("GenericModal", () => {
 
   it("closes discard modal without confirming", async () => {
     render(
-      <GenericModal {...defaultProps} initialData={{ skillName: "JS" }} />,
+      <GenericModal {...defaultProps} initialData={{ skillName: "JS" }} />
     );
     fireEvent.change(screen.getByLabelText(/skill/i), {
       target: { value: "TS", name: "skillName" },
@@ -78,13 +78,13 @@ describe("GenericModal", () => {
     fireEvent.click(screen.getByLabelText("Close modal"));
     fireEvent.click(screen.getByText("Cancel"));
     await waitFor(() =>
-      expect(screen.queryByText(/discard changes/i)).not.toBeInTheDocument(),
+      expect(screen.queryByText(/discard changes/i)).not.toBeInTheDocument()
     );
   });
 
   it("closes discard modal after confirming", async () => {
     render(
-      <GenericModal {...defaultProps} initialData={{ skillName: "JS" }} />,
+      <GenericModal {...defaultProps} initialData={{ skillName: "JS" }} />
     );
     fireEvent.change(screen.getByLabelText(/skill/i), {
       target: { value: "TS", name: "skillName" },

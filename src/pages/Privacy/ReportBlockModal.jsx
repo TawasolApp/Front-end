@@ -58,7 +58,10 @@ const ReportBlockModal = ({
     <>
       {/* MAIN MODAL */}
       {modalStage === "main" && isOpen && (
-        <div className="fixed inset-0 z-50 bg-modalbackground flex items-center justify-center">
+        <div
+          className="fixed inset-0 z-50 bg-modalbackground flex items-center justify-center"
+          data-testid="report-block-modal"
+        >
           {/* Modal Card */}
           <div className="bg-boxbackground rounded-xl p-6 shadow-lg border border-cardBorder w-full max-w-md mx-4 sm:mx-0 relative">
             {/* Close Button */}

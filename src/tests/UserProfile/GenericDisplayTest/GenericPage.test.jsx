@@ -59,7 +59,7 @@ vi.mock(
           </div>
         ) : null,
     };
-  },
+  }
 );
 
 describe("GenericPage Component", () => {
@@ -98,7 +98,7 @@ describe("GenericPage Component", () => {
         <Provider store={store}>
           <GenericPage title="Experience" type="workExperience" />
         </Provider>
-      </MemoryRouter>,
+      </MemoryRouter>
     );
   }
 
@@ -116,6 +116,7 @@ describe("GenericPage Component", () => {
       expect(screen.getByTestId("generic-modal")).toBeInTheDocument();
     });
   });
+
   it("saves a new item via POST and updates data", async () => {
     const mockNewItem = {
       _id: "exp-2",
@@ -145,6 +146,7 @@ describe("GenericPage Component", () => {
       expect(screen.getByText("Backend Developer")).toBeInTheDocument();
     });
   });
+
   it("does not delete if editIndex is null", async () => {
     renderWithProviders();
     // Open modal normally first to trigger modal rendering
@@ -183,8 +185,6 @@ describe("GenericPage Component", () => {
     // Fast-forward the timeout
     vi.advanceTimersByTime(51); // 1ms more than 50ms delay
     vi.useRealTimers();
-
-    // No visible assertion, but no crash = setEditData cleared safely
   });
   it("saves a new item via POST and updates data", async () => {
     const mockNewItem = {
@@ -211,7 +211,7 @@ describe("GenericPage Component", () => {
       expect(screen.getByText("Backend Developer")).toBeInTheDocument();
       expect(axiosModule.axiosInstance.post).toHaveBeenCalledWith(
         "/profile/work-experience",
-        mockNewItem,
+        mockNewItem
       );
     });
   });
