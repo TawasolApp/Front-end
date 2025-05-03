@@ -97,11 +97,11 @@ flowchart TB
   API[Backend /search endpoint]
   UI[TabNav & SearchBar]
   SV[Active Tab Component]
-  CARD[Result Cards (CompanyCard, UserCard, etc.)]
+  CARD[Result Cards]
 
   UI --> SC
   SC -->|GET /search/:tab?q=...| API
-  API -->|results[]| SC
+  API -->|results| SV
   SC --> SV
   SV --> CARD
   CARD -->|action| API
