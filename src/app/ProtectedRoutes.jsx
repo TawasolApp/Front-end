@@ -147,7 +147,7 @@ const ProtectedRoutes = () => {
         element={RenderWithNavbar(<SavedPostsContainer />)}
       />
 
-      <Route path="/AdminPanel" element={<AdminPanel />} />
+      <Route path="/AdminPanel" element={RenderWithNavbar(<AdminPanel />)} />
 
       <Route path="/messaging" element={RenderWithNavbar(<MessagingPage />)} />
 

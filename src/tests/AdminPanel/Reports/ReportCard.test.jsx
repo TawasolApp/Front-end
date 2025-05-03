@@ -61,11 +61,11 @@ describe("ReportCard", () => {
   });
 
   test("calls onResolve after resolving report (delete_post)", async () => {
-    const mockUpdated = { ...baseReport, status: "Resolved" };
+    const mockDeleted = { ...baseReport, status: "Deleted" };
     const mockOnResolve = vi.fn();
 
     axios.patch.mockResolvedValueOnce({});
-    axios.get.mockResolvedValueOnce({ data: [mockUpdated] });
+    axios.get.mockResolvedValueOnce({ data: [mockDeleted] });
 
     render(<ReportCard report={baseReport} onResolve={mockOnResolve} />);
 
@@ -76,7 +76,7 @@ describe("ReportCard", () => {
         action: "delete_post",
         comment: "",
       });
-      expect(mockOnResolve).toHaveBeenCalledWith(mockUpdated);
+      expect(mockOnResolve).toHaveBeenCalledWith(mockDeleted);
     });
   });
 
