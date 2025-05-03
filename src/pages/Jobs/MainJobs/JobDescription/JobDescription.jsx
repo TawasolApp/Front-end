@@ -10,7 +10,7 @@ import { axiosInstance } from "../../../../apis/axios";
 import { formatDate } from "../../../../utils/dates";
 import DropdownMenu from "../../../Feed/GenericComponents/DropdownMenu";
 import JobApplyModal from "../Apply/JobApplyModal";
-
+import ReportJobModal from "../../../Privacy/ReportJobModal";
 const SkeletonLoader = () => (
   <div className="animate-pulse p-6 border border-cardBorder bg-cardBackground space-y-4">
     {/* Header Skeleton */}
@@ -114,7 +114,7 @@ const StatusBadge = ({ status }) => {
       color: "bg-blue-100 text-blue-800",
       label: "In Review",
       dot: "fill-blue-500",
-    }
+    },
   };
 
   const config = statusConfig[status];
@@ -138,6 +138,7 @@ const JobDescription = ({ jobId, enableReturn }) => {
   const [error, setError] = useState(null);
   const [showApplyModal, setShowApplyModal] = useState(false);
   const [saving, setSaving] = useState(false);
+  const [showFlagModal, setShowFlagModal] = useState(false);
   const navigate = useNavigate();
 
   const fetchJob = async () => {
@@ -155,7 +156,7 @@ const JobDescription = ({ jobId, enableReturn }) => {
 
   const handleCopyJob = async () => {
     await navigator.clipboard.writeText(
-      `${window.location.origin}/jobs/${jobId}`,
+      `${window.location.origin}/jobs/${jobId}`
     );
     toast.success("Link copied to clipboard.", {
       position: "bottom-left",
@@ -193,7 +194,7 @@ const JobDescription = ({ jobId, enableReturn }) => {
     },
     {
       text: "Flag job",
-      onClick: () => console.log("Flag job"),
+      onClick: () => setShowFlagModal(true),
       icon: FlagIcon,
     },
   ];
@@ -348,6 +349,16 @@ const JobDescription = ({ jobId, enableReturn }) => {
           companyName={job.companyName}
           onApply={() => {
             fetchJob(); // Refresh job data after applying
+          }}
+        />
+      )}
+      {showFlagModal && (
+        <ReportJobModal
+          isOpen={showFlagModal}
+          onClose={() => setShowFlagModal(false)}
+          jobId={jobId}
+          onSubmitComplete={() => {
+            setShowFlagModal(false);
           }}
         />
       )}
