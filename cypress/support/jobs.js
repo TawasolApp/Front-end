@@ -65,3 +65,19 @@ Cypress.Commands.add("getSavedJobs", () => {
 Cypress.Commands.add("getFirstSavedJob", () => {
   return cy.get('.group > .flex-1 > :nth-child(1) > .text-lg');
 });
+
+Cypress.Commands.add("getJobApplyButton", () => {
+  return cy.get('.bg-buttonSubmitEnable');
+});
+
+Cypress.Commands.add("getResumeUploadInput", () => {
+  return cy.get('.p-6 > :nth-child(1) > .relative > .absolute');
+});
+
+Cypress.Commands.add("getPhoneNumberInput", () => {
+  return cy.get('.p-6 > :nth-child(2) > .w-full');
+});
+
+Cypress.Commands.add("getSubmitApplicationButton", () => {
+  return cy.get('.p-6 > .bg-buttonSubmitEnable');
+});
