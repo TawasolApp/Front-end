@@ -1,12 +1,16 @@
 ---
+#  UserProfile Module — Tawasol Platform
+
+The `UserProfile` module is a core part of the Tawasol frontend. It enables users to manage and showcase their profile with dynamic sections such as experience, education, skills, certifications, and posts. It also includes functionality for editing personal information, controlling profile visibility, and interacting socially (via endorsements, messages, or connections).
+---
 
 ## File and Folder Descriptions
 
 ### `profileLayout.jsx`
+
 - **Purpose**: Acts as the layout wrapper for the user profile pages.
 - **Functionality**:
   - Fetches user data based on the `userId` from the URL.
-  - Handles loading states and redirects if the user is not found.
   - Passes user data and ownership status to child components via React Router's `Outlet`.
 
 ---
@@ -51,9 +55,15 @@
   - Displays the user's profile picture, name, and other header details.
   - Includes modals for editing profile details, visibility, and contact info.
 - **ProfilePicture.jsx**:
+
   - Component for displaying and editing the user's profile picture.
-- **VisibilityModal.jsx**:
-  - Modal for managing the visibility settings of the user's profile.
+
+#### **RestrictedProfilevisibility/**
+
+**RestrictedProfilevisibility.jsx**:
+
+- Renders a lock message when a user without permission tries to view a private profile.
+- Displays suggestions like sending a connection request if not connected.
 
 #### **ModalFields/**
 
@@ -83,12 +93,24 @@
 #### **SkillsComponents/**
 
 - Contains components related to skills, such as endorsements.
+- **SkillEndorsement.jsx**:
+  - Displays current endorsement count for a skill.
+  - Allows viewers to endorse skills (except their own).
+  - Updates count via POST request and shows confirmation.
+- **SkillEndorsersModal.jsx**:
+  - Modal listing users who endorsed a skill with avatars and names.
+  - Opens when clicking the endorsement count on a skill card.
 
 #### **UserPostsSlider/**
 
-- **UserPostsPage.jsx**:
-  - Displays a feed of the user's posts.
-  - Uses the `MainFeed` component to fetch and render posts.
+- **UserPostsSlider.jsx**:
+
+  - Displays a horizontal slider with up to 5 recent posts by the user.
+  - Includes a “Show all posts” link that navigates to the full post page.
+
+- **UserPostsPage.jsx**: _(Already mentioned, but you can expand it slightly)_
+  - Fetches all posts made by the user using `MainFeed`.
+  - Renders the full list with filtering/sorting capabilities.
 
 ---
 
@@ -128,16 +150,5 @@
 - **Modular Design**: Reusable components like `GenericCard`, `GenericModal`, and `GenericSection` make it easy to add or modify sections.
 - **Dynamic Data**: Fetches and displays user data dynamically based on the logged-in user or the profile being viewed.
 - **Editable Sections**: Users can edit their profile details, including experience, education, skills, and certifications.
-- **Visibility Control**: Users can manage the visibility of their profile using the `VisibilityModal`.
 
 ---
-
-## Future Improvements
-
-- Add unit tests for all components to ensure reliability.
-- Optimize API calls to reduce loading times.
-- Enhance the UI for better responsiveness on mobile devices.
-
----
-
-This `README.md` provides an overview of the `UserProfile` module, its structure, and its functionality. Let me know if you need further details or modifications!

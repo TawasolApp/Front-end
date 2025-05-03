@@ -28,10 +28,6 @@ function GenericSection({ title, type, items, isOwner, user, onUserUpdate }) {
   const [isSaving, setIsSaving] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
 
-  // useEffect(() => {
-  //   setData(items || []);
-  // }, [items]);
-
   useEffect(() => {
     if (items) {
       setData(items);
@@ -74,7 +70,7 @@ function GenericSection({ title, type, items, isOwner, user, onUserUpdate }) {
         onUserUpdate?.(updatedUser.data);
       }
     } catch (err) {
-      console.error("❌ Failed to save item:", err);
+      console.error(" Failed to save item:", err);
 
       const message = err.response?.data?.message;
 
@@ -111,7 +107,6 @@ function GenericSection({ title, type, items, isOwner, user, onUserUpdate }) {
       isSaving={isSaving}
     />
   );
-  // if (isSaving) return <LoadingPage />;
   if (isLoading) {
     return (
       <div className="text-center text-gray-500 p-4">Loading {title}...</div>
@@ -166,7 +161,6 @@ function GenericSection({ title, type, items, isOwner, user, onUserUpdate }) {
                 isOwner={isOwner}
                 showEditIcons={false}
                 user={user}
-                // connectionStatus={user.status}
                 connectStatus={user.connectStatus}
               />
             </div>

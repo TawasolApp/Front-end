@@ -17,7 +17,6 @@ export default defineConfig({
     provider: "v8",
     coverage: {
       all: true,
-      include: ["src/pages/Privacy/**/*.{js,jsx}"],
       exclude: [
         // MAIN ITEMS FOR EXCLUSIONS
         "**/tests/**",
@@ -43,6 +42,7 @@ export default defineConfig({
         "src/pages/Company/Components/Slider/PostsSlider.jsx",
         "src/pages/Company/Components/Pages/PostsPage.jsx",
         "src/pages/Settings/ConnectionRequestsManagement.jsx",
+        "src/Pages/Settings/ChangeState.jsx",
       ],
     },
     setupFiles: "./src/setupTests.js",
