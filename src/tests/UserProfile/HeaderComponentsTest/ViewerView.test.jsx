@@ -19,20 +19,23 @@ const mockUser = {
   firstName: "John",
   lastName: "Doe",
 };
+import { MemoryRouter } from "react-router-dom";
+
+const renderWithRouter = (ui) => render(<MemoryRouter>{ui}</MemoryRouter>);
 
 describe("ViewerView", () => {
   beforeEach(() => {
     vi.clearAllMocks();
   });
 
-  it("renders all action buttons", () => {
-    render(
+  it("renderWithRouters all action buttons", () => {
+    renderWithRouter(
       <ViewerView
         user={mockUser}
         viewerId="viewer123"
         initialConnectStatus="No Connection"
         initialFollowStatus="None"
-      />,
+      />
     );
 
     expect(screen.getByLabelText("Send message")).toBeInTheDocument();
@@ -43,13 +46,13 @@ describe("ViewerView", () => {
   it("sends follow request and updates button", async () => {
     axios.post.mockResolvedValueOnce({ data: {} });
 
-    render(
+    renderWithRouter(
       <ViewerView
         user={mockUser}
         viewerId="viewer123"
         initialConnectStatus="No Connection"
         initialFollowStatus="None"
-      />,
+      />
     );
 
     fireEvent.click(screen.getByLabelText("Follow user"));
@@ -57,20 +60,20 @@ describe("ViewerView", () => {
     await waitFor(() =>
       expect(axios.post).toHaveBeenCalledWith("/connections/follow", {
         userId: "user123",
-      }),
+      })
     );
 
     expect(screen.getByText("✓ Following")).toBeInTheDocument();
   });
 
   it("shows unfollow modal when already following", async () => {
-    render(
+    renderWithRouter(
       <ViewerView
         user={mockUser}
         viewerId="viewer123"
         initialConnectStatus="Connection"
         initialFollowStatus="Following"
-      />,
+      />
     );
 
     fireEvent.click(screen.getByText("✓ Following"));
@@ -80,22 +83,20 @@ describe("ViewerView", () => {
   it("confirms unfollow request", async () => {
     axios.delete.mockResolvedValueOnce({ status: 200 });
 
-    render(
+    renderWithRouter(
       <ViewerView
         user={mockUser}
         viewerId="viewer123"
         initialConnectStatus="Connection"
         initialFollowStatus="Following"
-      />,
+      />
     );
 
     fireEvent.click(screen.getByText("✓ Following"));
     fireEvent.click(await screen.findByText("Unfollow"));
 
     await waitFor(() =>
-      expect(axios.delete).toHaveBeenCalledWith(
-        "/connections/unfollow/user123",
-      ),
+      expect(axios.delete).toHaveBeenCalledWith("/connections/unfollow/user123")
     );
 
     expect(screen.getByText("+ Follow")).toBeInTheDocument();
@@ -104,20 +105,20 @@ describe("ViewerView", () => {
   it("sends connection request", async () => {
     axios.post.mockResolvedValueOnce({ status: 201, data: {} });
 
-    render(
+    renderWithRouter(
       <ViewerView
         user={mockUser}
         viewerId="viewer123"
         initialConnectStatus="No Connection"
         initialFollowStatus="None"
-      />,
+      />
     );
 
     fireEvent.click(screen.getByLabelText("Connect"));
     await waitFor(() =>
       expect(axios.post).toHaveBeenCalledWith("/connections", {
         userId: "user123",
-      }),
+      })
     );
     expect(screen.getByText("Pending")).toBeInTheDocument();
   });
@@ -125,20 +126,20 @@ describe("ViewerView", () => {
   it("disconnects and unfollows when clicking Connected", async () => {
     axios.delete.mockResolvedValue({}); // both delete calls
 
-    render(
+    renderWithRouter(
       <ViewerView
         user={mockUser}
         viewerId="viewer123"
         initialConnectStatus="Connection"
         initialFollowStatus="Following"
-      />,
+      />
     );
 
     fireEvent.click(screen.getByText("Connected"));
     await waitFor(() => {
       expect(axios.delete).toHaveBeenCalledWith("/connections/user123");
       expect(axios.delete).toHaveBeenCalledWith(
-        "/connections/unfollow/user123",
+        "/connections/unfollow/user123"
       );
     });
 
@@ -147,31 +148,31 @@ describe("ViewerView", () => {
   });
 
   it("shows accept modal for incoming request", () => {
-    render(
+    renderWithRouter(
       <ViewerView
         user={mockUser}
         viewerId="viewer123"
         initialConnectStatus="Request"
         initialFollowStatus="None"
-      />,
+      />
     );
 
     fireEvent.click(screen.getByText("Accept"));
     expect(
-      screen.getByText(/Accept Connection Request from John Doe/),
+      screen.getByText(/Accept Connection Request from John Doe/)
     ).toBeInTheDocument();
   });
   it("logs successful follow response", async () => {
     const consoleLogSpy = vi.spyOn(console, "log").mockImplementation(() => {});
     axios.post.mockResolvedValueOnce({ data: { message: "Followed" } });
 
-    render(
+    renderWithRouter(
       <ViewerView
         user={mockUser}
         viewerId="viewer123"
         initialConnectStatus="No Connection"
         initialFollowStatus="None"
-      />,
+      />
     );
 
     fireEvent.click(screen.getByLabelText("Follow user"));
@@ -179,7 +180,7 @@ describe("ViewerView", () => {
     await waitFor(() =>
       expect(consoleLogSpy).toHaveBeenCalledWith("Followed successfully:", {
         message: "Followed",
-      }),
+      })
     );
 
     consoleLogSpy.mockRestore();
@@ -189,13 +190,13 @@ describe("ViewerView", () => {
     axios.post.mockRejectedValueOnce(error);
     const consoleSpy = vi.spyOn(console, "error").mockImplementation(() => {});
 
-    render(
+    renderWithRouter(
       <ViewerView
         user={mockUser}
         viewerId="viewer123"
         initialConnectStatus="No Connection"
         initialFollowStatus="None"
-      />,
+      />
     );
 
     fireEvent.click(screen.getByLabelText("Follow user"));
@@ -208,13 +209,13 @@ describe("ViewerView", () => {
   });
   it("logs message click", () => {
     const consoleSpy = vi.spyOn(console, "log").mockImplementation(() => {});
-    render(
+    renderWithRouter(
       <ViewerView
         user={mockUser}
         viewerId="viewer123"
         initialConnectStatus="No Connection"
         initialFollowStatus="None"
-      />,
+      />
     );
 
     fireEvent.click(screen.getByLabelText("Send message"));
@@ -229,33 +230,33 @@ describe("ViewerView", () => {
       response: { status: 409, data: "Connection exists" },
     });
 
-    render(
+    renderWithRouter(
       <ViewerView
         user={mockUser}
         viewerId="viewer123"
         initialConnectStatus="No Connection"
         initialFollowStatus="None"
-      />,
+      />
     );
 
     fireEvent.click(screen.getByLabelText("Connect"));
 
     await waitFor(() =>
       expect(alertMock).toHaveBeenCalledWith(
-        "Connection request already exists",
-      ),
+        "Connection request already exists"
+      )
     );
   });
   it("handles canceling a pending request", async () => {
     axios.delete.mockResolvedValueOnce({});
 
-    render(
+    renderWithRouter(
       <ViewerView
         user={mockUser}
         viewerId="viewer123"
         initialConnectStatus="Pending"
         initialFollowStatus="None"
-      />,
+      />
     );
 
     fireEvent.click(screen.getByLabelText("Pending"));
@@ -270,13 +271,13 @@ describe("ViewerView", () => {
     axios.patch.mockResolvedValueOnce({ status: 200 });
     axios.post.mockRejectedValueOnce({ message: "Follow failed" });
 
-    render(
+    renderWithRouter(
       <ViewerView
         user={mockUser}
         viewerId="viewer123"
         initialConnectStatus="Request"
         initialFollowStatus="None"
-      />,
+      />
     );
 
     fireEvent.click(screen.getByText("Accept"));
@@ -293,20 +294,20 @@ describe("ViewerView", () => {
 
     axios.patch.mockRejectedValueOnce({ response: { status: 409 } });
 
-    render(
+    renderWithRouter(
       <ViewerView
         user={mockUser}
         viewerId="viewer123"
         initialConnectStatus="Request"
         initialFollowStatus="None"
-      />,
+      />
     );
 
     fireEvent.click(screen.getByText("Accept"));
     fireEvent.click(screen.getByTestId("confirm-modal"));
 
     await waitFor(() =>
-      expect(alertMock).toHaveBeenCalledWith("Connection already exists"),
+      expect(alertMock).toHaveBeenCalledWith("Connection already exists")
     );
   });
 
@@ -316,37 +317,37 @@ describe("ViewerView", () => {
 
     axios.patch.mockRejectedValueOnce({ message: "Unexpected error" });
 
-    render(
+    renderWithRouter(
       <ViewerView
         user={mockUser}
         viewerId="viewer123"
         initialConnectStatus="Request"
         initialFollowStatus="None"
-      />,
+      />
     );
 
     fireEvent.click(screen.getByText("Accept"));
     fireEvent.click(screen.getByTestId("confirm-modal"));
 
     await waitFor(() =>
-      expect(alertMock).toHaveBeenCalledWith("Failed to accept connection"),
+      expect(alertMock).toHaveBeenCalledWith("Failed to accept connection")
     );
   });
   it("updates isFollowing to false when disconnecting", async () => {
     axios.delete.mockResolvedValue({});
-    render(
+    renderWithRouter(
       <ViewerView
         user={mockUser}
         viewerId="viewer123"
         initialConnectStatus="Connection"
         initialFollowStatus="Following"
-      />,
+      />
     );
 
     fireEvent.click(screen.getByText("Connected"));
 
     await waitFor(() =>
-      expect(screen.getByText("+ Follow")).toBeInTheDocument(),
+      expect(screen.getByText("+ Follow")).toBeInTheDocument()
     );
   });
   it("logs error if unfollow after disconnect fails with non-404", async () => {
@@ -356,31 +357,31 @@ describe("ViewerView", () => {
 
     const consoleSpy = vi.spyOn(console, "error").mockImplementation(() => {});
 
-    render(
+    renderWithRouter(
       <ViewerView
         user={mockUser}
         viewerId="viewer123"
         initialConnectStatus="Connection"
         initialFollowStatus="Following"
-      />,
+      />
     );
 
     fireEvent.click(screen.getByText("Connected"));
 
     await waitFor(() =>
-      expect(consoleSpy).toHaveBeenCalledWith("Unfollow error:", "Oops"),
+      expect(consoleSpy).toHaveBeenCalledWith("Unfollow error:", "Oops")
     );
 
     consoleSpy.mockRestore();
   });
   it("opens and cancels unfollow modal", async () => {
-    render(
+    renderWithRouter(
       <ViewerView
         user={mockUser}
         viewerId="viewer123"
         initialConnectStatus="Connection"
         initialFollowStatus="Following"
-      />,
+      />
     );
 
     fireEvent.click(screen.getByText("✓ Following"));
@@ -388,20 +389,20 @@ describe("ViewerView", () => {
     fireEvent.click(screen.getByText("Cancel"));
 
     await waitFor(() =>
-      expect(screen.queryByText(/Unfollow John Doe/)).not.toBeInTheDocument(),
+      expect(screen.queryByText(/Unfollow John Doe/)).not.toBeInTheDocument()
     );
   });
 
   it("accepts incoming connection request", async () => {
     axios.patch.mockResolvedValueOnce({ status: 200, data: {} });
 
-    render(
+    renderWithRouter(
       <ViewerView
         user={mockUser}
         viewerId="viewer123"
         initialConnectStatus="Request"
         initialFollowStatus="None"
-      />,
+      />
     );
 
     fireEvent.click(screen.getByText("Accept")); // open modal
@@ -410,7 +411,7 @@ describe("ViewerView", () => {
     await waitFor(() =>
       expect(axios.patch).toHaveBeenCalledWith("/connections/user123", {
         isAccept: true,
-      }),
+      })
     );
 
     expect(screen.getByText("Connected")).toBeInTheDocument();

@@ -31,6 +31,15 @@ function ExperienceFields({ formData, setFormData, handleChange, errors }) {
       .then((res) => setCompanies(res.data))
       .catch((err) => console.error("Error fetching companies:", err));
   }, []);
+  useEffect(() => {
+    if (formData.endMonth || formData.endYear) {
+      setCurrentlyWorking(false);
+      setFormData((prev) => ({
+        ...prev,
+        currentlyWorking: false,
+      }));
+    }
+  }, [formData.endMonth, formData.endYear]);
 
   useEffect(() => {
     setInputValue(formData.company || "");
@@ -58,12 +67,12 @@ function ExperienceFields({ formData, setFormData, handleChange, errors }) {
   const handleCurrentlyWorkingChange = (e) => {
     const checked = e.target.checked;
     setCurrentlyWorking(checked);
-    if (checked) {
-      setFormData((prev) => ({
-        ...prev,
-        endDate: "", // remove endDate if user is currently working
-      }));
-    }
+    setFormData((prev) => ({
+      ...prev,
+      currentlyWorking: checked,
+      endMonth: checked ? "" : prev.endMonth,
+      endYear: checked ? "" : prev.endYear,
+    }));
   };
   return (
     <>
@@ -191,7 +200,7 @@ function ExperienceFields({ formData, setFormData, handleChange, errors }) {
           type="checkbox"
           name="currentlyWorking"
           checked={currentlyWorking}
-          disabled={formData.endMonth || formData.endYear}
+          // disabled={formData.endMonth || formData.endYear}
           onChange={handleCurrentlyWorkingChange}
         />
 
