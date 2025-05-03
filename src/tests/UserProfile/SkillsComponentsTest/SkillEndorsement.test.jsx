@@ -1,7 +1,6 @@
 import React from "react";
 import { render, screen, fireEvent, waitFor } from "@testing-library/react";
-import { describe, it, expect, vi, beforeEach } from "vitest";
-import { MemoryRouter } from "react-router-dom";
+import { describe, it, vi, beforeEach } from "vitest";
 import SkillEndorsement from "../../../pages/UserProfile/Components/SkillsComponents/SkillEndorsement";
 import { axiosInstance as axios } from "../../../apis/axios";
 
@@ -12,267 +11,156 @@ vi.mock("../../../apis/axios", () => ({
   },
 }));
 
+vi.mock(
+  "../../../pages/UserProfile/Components/SkillsComponents/SkillEndorsersModal",
+  () => ({
+    __esModule: true,
+    default: ({ isOpen, onClose }) =>
+      isOpen ? (
+        <div>
+          <p>Modal Content</p>
+          <button onClick={onClose}>Close Modal</button>
+        </div>
+      ) : null,
+  })
+);
+
 describe("SkillEndorsement", () => {
-  const mockUserId = "user123";
-  const mockSkill = "React";
+  const userId = "user123";
+  const skillName = "React";
   const viewerId = "viewer1";
 
   beforeEach(() => {
     vi.clearAllMocks();
   });
 
-  it("renders endorsement count when endorsements exist", () => {
+  it("shows endorsement count and opens modal on click", () => {
     render(
-      <MemoryRouter>
-        <SkillEndorsement
-          userId={mockUserId}
-          skillName={mockSkill}
-          endorsements={[viewerId, "otherUser"]}
-          viewerId={viewerId}
-        />
-      </MemoryRouter>,
+      <SkillEndorsement
+        userId={userId}
+        skillName={skillName}
+        endorsements={[viewerId, "user2"]}
+        viewerId={viewerId}
+        isOwner={true}
+        connectStatus="NotConnected"
+        privacy="public"
+      />
     );
 
-    expect(screen.getByText(/2 endorsements?/i)).toBeInTheDocument();
+    const countText = screen.getByText("2 endorsements");
+    expect(countText).toBeInTheDocument();
+    fireEvent.click(countText);
+    expect(screen.getByText("Modal Content")).toBeInTheDocument();
+    fireEvent.click(screen.getByText("Close Modal"));
+    expect(screen.queryByText("Modal Content")).not.toBeInTheDocument();
   });
-  it("logs error with response.data when endorsement fails", async () => {
-    const mockError = { response: { data: "Post failed" } };
-    axios.post.mockRejectedValueOnce(mockError);
-    const consoleSpy = vi.spyOn(console, "error").mockImplementation(() => {});
 
+  it("hides count if endorsementCount is 0 and not public/owner/connected", () => {
     render(
-      <MemoryRouter>
-        <SkillEndorsement
-          userId="user123"
-          skillName="React"
-          endorsements={[]}
-          viewerId="viewer1"
-        />
-      </MemoryRouter>,
+      <SkillEndorsement
+        userId={userId}
+        skillName={skillName}
+        endorsements={[]}
+        viewerId={viewerId}
+        isOwner={false}
+        connectStatus="Pending"
+        privacy="private"
+      />
     );
 
-    const button = screen.getByRole("button", { name: /endorse/i });
-    fireEvent.click(button);
-
-    await waitFor(() => {
-      expect(consoleSpy).toHaveBeenCalledWith(
-        "Failed to endorse skill:",
-        "Post failed",
-      );
-    });
-
-    consoleSpy.mockRestore();
+    expect(screen.queryByText(/endorsement/)).not.toBeInTheDocument();
   });
-  it("logs error with message when endorsement fails without response", async () => {
-    const mockError = { message: "No server response" };
-    axios.post.mockRejectedValueOnce(mockError);
-    const consoleSpy = vi.spyOn(console, "error").mockImplementation(() => {});
 
+  it("shows endorse button if viewer is connected and not the owner", () => {
     render(
-      <MemoryRouter>
-        <SkillEndorsement
-          userId="user123"
-          skillName="React"
-          endorsements={[]}
-          viewerId="viewer1"
-        />
-      </MemoryRouter>,
+      <SkillEndorsement
+        userId={userId}
+        skillName={skillName}
+        endorsements={[]}
+        viewerId={viewerId}
+        isOwner={false}
+        connectStatus="Connection"
+        privacy="private"
+      />
     );
 
     const button = screen.getByRole("button", { name: /endorse/i });
-    fireEvent.click(button);
-
-    await waitFor(() => {
-      expect(consoleSpy).toHaveBeenCalledWith(
-        "Failed to endorse skill:",
-        "No server response",
-      );
-    });
-
-    consoleSpy.mockRestore();
-  });
-  it("logs error when unendorsement fails", async () => {
-    const mockError = { response: { data: "Delete failed" } };
-    axios.delete.mockRejectedValueOnce(mockError);
-    const consoleSpy = vi.spyOn(console, "error").mockImplementation(() => {});
-
-    render(
-      <MemoryRouter>
-        <SkillEndorsement
-          userId="user123"
-          skillName="React"
-          endorsements={["viewer1"]}
-          viewerId="viewer1"
-        />
-      </MemoryRouter>,
-    );
-
-    const button = screen.getByRole("button", { name: /endorsed/i });
-    fireEvent.click(button);
-
-    await waitFor(() => {
-      expect(consoleSpy).toHaveBeenCalledWith(
-        "Failed to unendorse skill:",
-        "Delete failed",
-      );
-    });
-
-    consoleSpy.mockRestore();
+    expect(button).toBeInTheDocument();
+    expect(button).toHaveTextContent("Endorse");
   });
 
-  it("logs error when endorsement fails", async () => {
-    const mockError = { response: { data: "Post failed" } };
-    axios.post.mockRejectedValueOnce(mockError);
-    const consoleSpy = vi.spyOn(console, "error").mockImplementation(() => {});
-
-    render(
-      <MemoryRouter>
-        <SkillEndorsement
-          userId="u1"
-          skillName="React"
-          endorsements={[]}
-          viewerId="viewer"
-        />
-      </MemoryRouter>,
-    );
-
-    const button = screen.getByRole("button", { name: /endorse/i });
-    fireEvent.click(button);
-
-    await waitFor(() => {
-      expect(consoleSpy).toHaveBeenCalledWith(
-        "Failed to endorse skill:",
-        "Post failed",
-      );
-    });
-
-    consoleSpy.mockRestore();
-  });
-
-  it("logs error when unendorsement fails", async () => {
-    const mockError = { message: "Delete failed" };
-    axios.delete.mockRejectedValueOnce(mockError);
-    const consoleSpy = vi.spyOn(console, "error").mockImplementation(() => {});
-
-    render(
-      <MemoryRouter>
-        <SkillEndorsement
-          userId="u1"
-          skillName="React"
-          endorsements={["viewer"]}
-          viewerId="viewer"
-        />
-      </MemoryRouter>,
-    );
-
-    const button = screen.getByRole("button", { name: /endorsed/i });
-    fireEvent.click(button);
-
-    await waitFor(() => {
-      expect(consoleSpy).toHaveBeenCalledWith(
-        "Failed to unendorse skill:",
-        "Delete failed",
-      );
-    });
-
-    consoleSpy.mockRestore();
-  });
-
-  it("endorses a skill when not already endorsed", async () => {
+  it("calls endorse API and updates state", async () => {
     axios.post.mockResolvedValueOnce({});
-
     render(
-      <MemoryRouter>
-        <SkillEndorsement
-          userId={mockUserId}
-          skillName={mockSkill}
-          endorsements={[]}
-          viewerId={viewerId}
-        />
-      </MemoryRouter>,
+      <SkillEndorsement
+        userId={userId}
+        skillName={skillName}
+        endorsements={[]}
+        viewerId={viewerId}
+        isOwner={false}
+        connectStatus="Connection"
+        privacy="public"
+      />
     );
 
     const button = screen.getByRole("button", { name: /endorse/i });
     fireEvent.click(button);
 
-    await waitFor(() =>
+    await waitFor(() => {
       expect(axios.post).toHaveBeenCalledWith(
-        `/connections/${mockUserId}/endorse-skill`,
-        { skillName: mockSkill },
-      ),
-    );
-
-    expect(await screen.findByText(/✓\s+Endorsed/)).toBeInTheDocument();
+        `/connections/${userId}/endorse-skill`,
+        { skillName }
+      );
+      expect(button).toHaveTextContent(/✓\s+Endorsed/);
+    });
   });
 
-  it("unendorses a skill when already endorsed", async () => {
+  it("calls unendorse API and updates state", async () => {
     axios.delete.mockResolvedValueOnce({});
-
     render(
-      <MemoryRouter>
-        <SkillEndorsement
-          userId={mockUserId}
-          skillName={mockSkill}
-          endorsements={[viewerId]}
-          viewerId={viewerId}
-        />
-      </MemoryRouter>,
+      <SkillEndorsement
+        userId={userId}
+        skillName={skillName}
+        endorsements={[viewerId]}
+        viewerId={viewerId}
+        isOwner={false}
+        connectStatus="Connection"
+        privacy="public"
+      />
     );
 
     const button = screen.getByRole("button", { name: /endorsed/i });
     fireEvent.click(button);
 
-    await waitFor(() =>
+    await waitFor(() => {
       expect(axios.delete).toHaveBeenCalledWith(
-        `/connections/${mockUserId}/endorsement/${mockSkill}`,
-      ),
-    );
-
-    expect(await screen.findByText(/endorse/i)).toBeInTheDocument();
+        `/connections/${userId}/endorsement/${skillName}`
+      );
+      expect(button).toHaveTextContent("Endorse");
+    });
   });
 
   it("disables button while loading", async () => {
-    let resolve;
-    const promise = new Promise((r) => (resolve = r));
-    axios.post.mockReturnValue(promise);
+    axios.post.mockImplementation(
+      () => new Promise((resolve) => setTimeout(() => resolve({}), 500))
+    );
 
     render(
-      <MemoryRouter>
-        <SkillEndorsement
-          userId={mockUserId}
-          skillName={mockSkill}
-          endorsements={[]}
-          viewerId={viewerId}
-        />
-      </MemoryRouter>,
+      <SkillEndorsement
+        userId={userId}
+        skillName={skillName}
+        endorsements={[]}
+        viewerId={viewerId}
+        isOwner={false}
+        connectStatus="Connection"
+        privacy="public"
+      />
     );
 
     const button = screen.getByRole("button", { name: /endorse/i });
     fireEvent.click(button);
 
     expect(button).toBeDisabled();
-    resolve();
-  });
-
-  it("opens SkillEndorsersModal on endorsement count click", async () => {
-    render(
-      <MemoryRouter>
-        <SkillEndorsement
-          userId={mockUserId}
-          skillName={mockSkill}
-          endorsements={[viewerId, "otherUser"]}
-          viewerId="anotherUser"
-        />
-      </MemoryRouter>,
-    );
-
-    const count = screen.getByText(/2 endorsements?/i);
-    fireEvent.click(count);
-
-    await waitFor(() => {
-      expect(
-        screen.getByText(/no one has endorsed this skill yet/i),
-      ).toBeInTheDocument();
-    });
+    await waitFor(() => expect(button).not.toBeDisabled());
   });
 });

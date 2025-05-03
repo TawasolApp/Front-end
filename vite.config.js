@@ -17,7 +17,7 @@ export default defineConfig({
     provider: "v8",
     coverage: {
       all: true,
-      include: ["src/pages/Privacy/**/*.{js,jsx}"],
+      include: ["src/pages/UserProfile/**/*.{js,jsx}"],
       exclude: [
         // MAIN ITEMS FOR EXCLUSIONS
         "**/tests/**",
@@ -42,8 +42,6 @@ export default defineConfig({
         "src/pages/Feed/GenericComponents/reactionIcons.js",
         "src/pages/Company/Components/Slider/PostsSlider.jsx",
         "src/pages/Company/Components/Pages/PostsPage.jsx",
-        "src/Pages/UserProfile/Components/Sections/ResumeSection.jsx",
-        "src/pages/UserProfile/Components/UserPostsSlider/UserPostsSlider.jsx",
         "src/pages/Settings/ConnectionRequestsManagement.jsx",
       ],
     },
