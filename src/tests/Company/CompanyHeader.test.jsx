@@ -48,7 +48,7 @@ const renderHeader = (props = {}) => {
         setShowAdminIcons={props.setShowAdminIcons ?? vi.fn()}
         isAdmin={props.isAdmin ?? false}
       />
-    </MemoryRouter>,
+    </MemoryRouter>
   );
 };
 
@@ -70,7 +70,7 @@ describe("CompanyHeader", () => {
     renderHeader();
     const moreBtn = await screen.findByLabelText("More options");
     fireEvent.click(moreBtn);
-    expect(screen.getByText(/Send in a message/i)).toBeInTheDocument();
+    expect(screen.getByText(/Share Page/i)).toBeInTheDocument();
     fireEvent.click(moreBtn);
     expect(screen.queryByText(/Send in a message/i)).not.toBeInTheDocument();
   });
@@ -102,7 +102,7 @@ describe("CompanyHeader", () => {
     const buttons = screen.getAllByText(/followers/i);
     fireEvent.click(buttons.find((btn) => btn.tagName === "BUTTON"));
     expect(
-      screen.getByRole("heading", { name: /followers/i }),
+      screen.getByRole("heading", { name: /followers/i })
     ).toBeInTheDocument();
   });
 
@@ -112,7 +112,7 @@ describe("CompanyHeader", () => {
       fireEvent.click(await screen.findByText(label));
       expect(mockNavigate).toHaveBeenCalledWith(
         `/company/${mockCompany.companyId}/${label.toLowerCase()}`,
-        expect.any(Object),
+        expect.any(Object)
       );
     });
   });
@@ -126,7 +126,7 @@ describe("CompanyHeader", () => {
           setShowAdminIcons={vi.fn()}
           isAdmin={false}
         />
-      </MemoryRouter>,
+      </MemoryRouter>
     );
 
     expect(screen.getByTestId("loading-page")).toBeInTheDocument();
@@ -138,7 +138,7 @@ describe("CompanyHeader", () => {
     fireEvent.click(followBtn);
 
     await waitFor(() =>
-      expect(screen.getByText("✓ Following")).toBeInTheDocument(),
+      expect(screen.getByText("✓ Following")).toBeInTheDocument()
     );
   });
   test("shows 'Show Admin View' button for admins when icons hidden", async () => {
@@ -176,7 +176,7 @@ describe("CompanyHeader", () => {
 
     // Check if modal is now visible
     expect(
-      screen.getByText(/are you sure you want to unfollow/i),
+      screen.getByText(/are you sure you want to unfollow/i)
     ).toBeInTheDocument();
   });
 
@@ -192,7 +192,7 @@ describe("CompanyHeader", () => {
 
     await waitFor(() => {
       expect(consoleSpy).toHaveBeenCalledWith(
-        "Already following this company.",
+        "Already following this company."
       );
     });
 
@@ -210,7 +210,7 @@ describe("CompanyHeader", () => {
     await waitFor(() => {
       expect(consoleSpy).toHaveBeenCalledWith(
         "Error following company:",
-        mockError,
+        mockError
       );
     });
 
@@ -232,7 +232,7 @@ describe("CompanyHeader", () => {
     // Modal should disappear
     await waitFor(() => {
       expect(
-        screen.queryByText(/Are you sure you want to unfollow/i),
+        screen.queryByText(/Are you sure you want to unfollow/i)
       ).not.toBeInTheDocument();
     });
   });
@@ -250,7 +250,7 @@ describe("CompanyHeader", () => {
 
     // Check that the modal heading is present
     expect(
-      screen.getByRole("heading", { name: /Add Manager/i }),
+      screen.getByRole("heading", { name: /Add Manager/i })
     ).toBeInTheDocument();
   });
 
@@ -274,7 +274,7 @@ describe("CompanyHeader", () => {
 
     // Assert modal is gone
     expect(
-      screen.queryByRole("dialog", { name: /enlarged image modal/i }),
+      screen.queryByRole("dialog", { name: /enlarged image modal/i })
     ).not.toBeInTheDocument();
   });
   test("closes EditAboutModal when onClose is triggered", async () => {
@@ -287,8 +287,8 @@ describe("CompanyHeader", () => {
 
     await waitFor(() =>
       expect(
-        screen.queryByText(/Edit Company Profile/i),
-      ).not.toBeInTheDocument(),
+        screen.queryByText(/Edit Company Profile/i)
+      ).not.toBeInTheDocument()
     );
   });
   test("closes AddManagerModal when onClose is called", async () => {
@@ -301,15 +301,15 @@ describe("CompanyHeader", () => {
 
     await waitFor(() =>
       expect(
-        screen.queryByRole("heading", { name: /add manager/i }),
-      ).not.toBeInTheDocument(),
+        screen.queryByRole("heading", { name: /add manager/i })
+      ).not.toBeInTheDocument()
     );
   });
   test("closes FollowersModal when onClose is called", async () => {
     renderHeader();
 
     fireEvent.click(
-      screen.getAllByText(/followers/i).find((btn) => btn.tagName === "BUTTON"),
+      screen.getAllByText(/followers/i).find((btn) => btn.tagName === "BUTTON")
     );
 
     const closeBtn = screen.getByLabelText("Close Followers Modal");
@@ -317,8 +317,8 @@ describe("CompanyHeader", () => {
 
     await waitFor(() =>
       expect(
-        screen.queryByRole("heading", { name: /followers/i }),
-      ).not.toBeInTheDocument(),
+        screen.queryByRole("heading", { name: /followers/i })
+      ).not.toBeInTheDocument()
     );
   });
 });

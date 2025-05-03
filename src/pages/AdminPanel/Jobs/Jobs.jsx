@@ -52,7 +52,7 @@ function Jobs() {
     }
 
     fetchJobs();
-  }, [page, limit, search]); // <-- re-fetch if page, limit, or search changes
+  }, [page, limit, search]); //re-fetch if page, limit, or search changes
 
   const filteredJobs = jobs.filter((job) => {
     const matchesFilter =
@@ -89,7 +89,7 @@ function Jobs() {
         className="w-full px-3 py-2 border border-itemBorder rounded-md bg-inputBackground text-text placeholder-textPlaceholder focus:outline-none focus:ring-2 focus:ring-buttonSubmitEnable"
         value={search}
         onChange={(e) => {
-          setPage(1); // <-- RESET page to 1 whenever search changes!
+          setPage(1); //RESET page to 1 whenever search changes
           setSearch(e.target.value);
         }}
       />
