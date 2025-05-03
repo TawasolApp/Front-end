@@ -11,7 +11,7 @@ export const SocketProvider = ({ children }) => {
   useEffect(() => {
     if (!userId) return;
 
-    const newSocket = io("wss://tawasolapp.me", {
+    const newSocket = io(String(import.meta.env.VITE_APP_SOCKET_URL).trim(), {
       transports: ["websocket"],
       query: { userId },
       withCredentials: true,

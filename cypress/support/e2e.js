@@ -20,3 +20,4 @@ import "./auth";
 import "./companies";
 import "./connections";
 import "./jobs";
+import "./messages";
