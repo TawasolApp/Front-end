@@ -67,7 +67,7 @@ function ViewerView({
           userId: user._id,
         });
         console.log("Followed successfully:", res.data);
-        // toast.success("You are now following this user.");
+        toast.success("You are now following this user.");
         setIsFollowing(true);
       } catch (err) {
         console.error("Follow error:", err.response?.data || err.message);
