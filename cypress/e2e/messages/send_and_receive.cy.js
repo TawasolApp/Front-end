@@ -127,43 +127,43 @@ describe("sends and receives messages", () => {
 
   });
 
-  // it.skip("Sends media and ensures its receipt on the other side", () => {
-  //   cy.getSearchBar().type(user1.firstName);
-  //   cy.getSearchBar().type("{enter}");
-  //   cy.wait(5000);
+  it.skip("Sends media and ensures its receipt on the other side", () => {
+    cy.getSearchBar().type(user1.firstName);
+    cy.getSearchBar().type("{enter}");
+    cy.wait(5000);
 
-  //   cy.getSearchDropDownMenu().click();
-  //   cy.getSearchDropDownPeople().click();
-  //   cy.wait(5000);
+    cy.getSearchDropDownMenu().click();
+    cy.getSearchDropDownPeople().click();
+    cy.wait(5000);
 
-  //   cy.getPeopleFirstSearchResult().click();
-  //   cy.wait(5000);
+    cy.getPeopleFirstSearchResult().click();
+    cy.wait(5000);
 
-  //   cy.getMessageUserButton().click();
-  //   cy.wait(5000);
+    cy.getMessageUserButton().click();
+    cy.wait(5000);
 
-  //   cy.getSendImageButton().selectFile("cypress/fixtures/imgs/polar_bear.png", { force: true });
-  //   cy.wait(10000);
-  //   cy.getMessageSendButton().click();
-  //   cy.wait(5000);
+    cy.getSendImageButton().selectFile("cypress/fixtures/imgs/polar_bear.png", { force: true });
+    cy.wait(10000);
+    cy.getMessageSendButton().click();
+    cy.wait(5000);
 
-  //   cy.getMessagesPage().click();
-  //   cy.wait(5000);
+    cy.getMessagesPage().click();
+    cy.wait(5000);
 
-  //   cy.getFirstChat().should("contain", user1.firstName);
-  //   cy.getFirstChat().click();
-  //   cy.wait(5000);
+    cy.getFirstChat().should("contain", user1.firstName);
+    cy.getFirstChat().click();
+    cy.wait(5000);
 
-  //   cy.getSentImageSrc().should("include", "polar_bear.png");
-  //   cy.wait(5000);
+    cy.getSentImageSrc().should("include", "polar_bear.png");
+    cy.wait(5000);
 
-  //   cy.login(user1);
-  //   cy.wait(5000);
-  //   cy.getMessagesPage().click();
-  //   cy.wait(5000);
-  //   cy.getFirstChat().should("contain", user2.firstName);
-  //   cy.getFirstChat().click();
-  //   cy.wait(5000);
-  //   cy.getSentImageSrc().should("include", "polar_bear.png");
-  // });
+    cy.login(user1);
+    cy.wait(5000);
+    cy.getMessagesPage().click();
+    cy.wait(5000);
+    cy.getFirstChat().should("contain", user2.firstName);
+    cy.getFirstChat().click();
+    cy.wait(5000);
+    cy.getSentImageSrc().should("include", "polar_bear.png");
+  });
 });
