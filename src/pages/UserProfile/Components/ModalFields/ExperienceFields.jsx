@@ -227,7 +227,7 @@ function ExperienceFields({ formData, setFormData, handleChange, errors }) {
         name="locationType"
         value={formData.locationType || ""}
         onChange={handleChange}
-        className="border p-2 w-full rounded-md mb-2 bg- text-companysubheader"
+        className="border p-2 w-full rounded-md mb-2 bg-boxbackground text-companysubheader"
       >
         <option value="">Please select</option>
         {locationOptions.map((opt) => (

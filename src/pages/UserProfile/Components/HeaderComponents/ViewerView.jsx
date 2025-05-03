@@ -200,7 +200,7 @@ function ViewerView({
       className=" flex gap-2 flex-wrap sm:flex-nowrap"
     >
       <button
-        className="px-4 py-0 h-8 bg-blue-600 text-boxbackground   rounded-full text-sm"
+        className="px-4 py-0 h-8 text-sm rounded-full font-medium bg-buttonMessage text-boxbackground hover:bg-buttonMessageHover transition duration-200"
         onClick={handleMessage}
         aria-label="Send message"
       >
@@ -210,9 +210,9 @@ function ViewerView({
       <button
         className={`px-4 py-0 h-8 border rounded-full text-sm capitalize transition-all duration-300 ease-in-out ${
           ["Connection", "Pending", "Request"].includes(connectStatus)
-            ? "bg-blue-600 text-boxbackground  "
-            : "text-blue-600 border-blue-600"
-        } hover:bg-blue-100 hover:text-blue-700`}
+            ? "bg-buttonMessage text-boxbackground hover:bg-buttonMessageHover"
+            : "text-text border border-text hover:bg-moreHoverBg"
+        } hover:bg-buttonMessageHover `}
         onClick={handleConnect}
         aria-label={connectionStatusLabel[connectStatus] || "Connect"}
       >
@@ -231,9 +231,9 @@ function ViewerView({
         </button>
 
         {dropdownOpen && (
-          <div className="absolute right-0 mt-2 w-48 bg-white border rounded shadow z-50">
+          <div className="absolute right-0 mt-2 w-48 bg-boxbackground border border-moreHoverBg rounded shadow z-50">
             <button
-              className="w-full text-left px-4 py-2 hover:bg-gray-100 text-sm"
+              className="w-full text-left text-text px-4 py-2 hover:bg-moreHoverBg text-sm"
               onClick={() => {
                 handleFollow();
                 setDropdownOpen(false);
@@ -243,7 +243,7 @@ function ViewerView({
               {isFollowing ? "Unfollow" : "Follow"}
             </button>
             <button
-              className="w-full text-left px-4 py-2 hover:bg-gray-100 text-sm flex items-center gap-2"
+              className="w-full text-left text-text px-4 py-2 hover:bg-moreHoverBg text-sm flex items-center gap-2"
               onClick={() => {
                 setDropdownOpen(false);
                 setShowReportModal(true);

@@ -88,6 +88,8 @@ export default {
         buttonSaveText: "rgb(var(--btn-save-text))",
         buttonSaveDisabled:
           "rgba(var(--btn-save-disabled), var(--btn-save-disabled-opacity))",
+        buttonMessage: "rgb(var(--btn-message))",
+        buttonMessageHover: "rgb(var(--btn-message-hover))",
       },
       animation: {
         "spin-slow": "spin 8s linear infinite",
