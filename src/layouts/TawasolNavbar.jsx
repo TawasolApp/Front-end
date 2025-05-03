@@ -25,6 +25,7 @@ const TawasolNavbar = () => {
   const [searchText, setSearchText] = useState("");
   const [windowWidth, setWindowWidth] = useState(window.innerWidth);
   const [unseenCount, setUnseenCount] = useState(0);
+  const [unseenMessagesCount, setUnseenMessagesCount] = useState(0);
   const searchRef = useRef(null);
   const searchContainerRef = useRef(null);
   const searchIconRef = useRef(null);
@@ -108,6 +109,18 @@ const TawasolNavbar = () => {
     }
   }, [companyId, currentAuthorId]);
 
+  const fetchUnseenMessagesCount = useCallback(async () => {
+    try {
+      const response = await axiosInstance.get(
+        `/notifications/${companyId || currentAuthorId}/unseen-messages`
+      );
+      console.log(response.data);
+      setUnseenMessagesCount(response.data.unseenCount);
+    } catch (error) {
+      console.error("Failed to fetch unseen count:", error);
+    }
+  }, [companyId, currentAuthorId]);
+
   // Setup user interaction for audio
   useEffect(() => {
     const handleUserInteraction = async () => {
@@ -140,6 +153,7 @@ const TawasolNavbar = () => {
     const handleConnect = () => {
       console.log("Connected to notifications socket");
       fetchUnseenCount();
+      fetchUnseenMessagesCount();
     };
 
     const handleConnectError = (err) => {
@@ -151,6 +165,7 @@ const TawasolNavbar = () => {
       if (currentPath !== "/notifications") {
         setUnseenCount((prev) => prev + 1);
         playBeep();
+        fetchUnseenMessagesCount();
       }
     };
 
@@ -164,6 +179,7 @@ const TawasolNavbar = () => {
 
     const handleReceiveMessage = (message) => {
       console.log("Received message:", message);
+      fetchUnseenMessagesCount();
       // Acknowledge message delivery with empty body
       socket.emit("messages_delivered", {});
     };
@@ -221,7 +237,19 @@ const TawasolNavbar = () => {
     {
       name: "Messaging",
       path: "/messaging",
-      icon: currentPath === "/messaging" ? <ForumIcon /> : <ChatBubbleIcon />,
+      icon:
+        currentPath === "/messaging" ? (
+          <ForumIcon />
+        ) : (
+          <Badge
+            badgeContent={unseenMessagesCount}
+            color="error"
+            max={99}
+            overlap="circular"
+          >
+            <ChatBubbleIcon />
+          </Badge>
+        ),
       active: currentPath === "/messaging",
     },
     {
