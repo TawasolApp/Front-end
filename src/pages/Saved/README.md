@@ -110,29 +110,6 @@ src/pages/Saved/
 - **Spinner**, **ErrorMessage**: common loading/error indicators.
 - **SavedBar**: tab navigation with accessible keyboard controls.
 
-## Data Flow & State Diagram
-```mermaid
-flowchart TB
-  SJC[SavedJobsContainer] -->|GET /saved/jobs| API[Backend API]
-  API -->|jobs[]| SJC
-  SJC --> JSL[JobsListing]
-  JSL --> JI[JobItem]
-  JI -->|toggleSave| API
-
-  AJC[AppliedJobsContainer] -->|GET /applied/jobs| API
-  AJC --> AJL[JobsListing]
-
-  SPC[SavedPostsContainer] -->|GET /saved/posts| API
-  API --> SPC
-  SPC --> FP[FeedPosts]
-  FP --> PC[PostContainer]
-  PC -->|toggleUnsave| API
-
-  SavedBar --> SJC
-  SavedBar --> AJC
-  SavedBar --> SPC
-```
-
 ## Testing & Coverage
 - **Vitest** tests in `src/tests/Saved/` cover:
   - Rendering each container under loading, empty, and populated states.
