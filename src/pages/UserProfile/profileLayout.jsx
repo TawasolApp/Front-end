@@ -37,6 +37,10 @@ function ProfileLayout() {
         }
       } catch (err) {
         console.error("Error loading profile:", err);
+        if (err?.response?.status === 403) {
+          navigate("/error-404"); // ✅ correct route match
+          return;
+        }
       } finally {
         setLoading(false);
       }

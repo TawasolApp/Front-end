@@ -10,9 +10,15 @@ function Reports() {
   const [filter, setFilter] = useState("All");
   const [loading, setLoading] = useState(true);
   const updateReport = (updatedReport) => {
-    setAllReports((prevReports) =>
-      prevReports.map((r) => (r.id === updatedReport.id ? updatedReport : r))
-    );
+    if (updatedReport.status === "Deleted") {
+      setAllReports((prevReports) =>
+        prevReports.filter((r) => r.id !== updatedReport.id)
+      );
+    } else {
+      setAllReports((prevReports) =>
+        prevReports.map((r) => (r.id === updatedReport.id ? updatedReport : r))
+      );
+    }
   };
 
   useEffect(() => {

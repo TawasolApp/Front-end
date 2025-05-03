@@ -18,12 +18,16 @@ function ReportCard({ report, onResolve }) {
         action: actionType,
         comment: "",
       });
-
-      const res = await axios.get(`/admin/reports/posts`);
-      const updated = res.data.find((r) => r.id === report.id);
-      if (updated) {
-        setLocalReport(updated);
-        onResolve(updated);
+      if (actionType === "delete_post") {
+        // Manually notify parent to remove the report
+        onResolve({ ...localReport, status: "Deleted" });
+      } else {
+        const res = await axios.get(`/admin/reports/posts`);
+        const updated = res.data.find((r) => r.id === report.id);
+        if (updated) {
+          setLocalReport(updated);
+          onResolve(updated);
+        }
       }
     } catch (err) {
       console.error(`Failed to ${actionType} report`, err);

@@ -48,11 +48,6 @@ function SkillEndorsement({
     }
   };
 
-  const handleViewEndorsers = () => {
-    // TODO: Replace this console.log with navigation when API is ready
-    console.log(`Navigate to: /users/${userId}/skills/${skillName}/endorsers`);
-  };
-
   const shouldShowCount =
     isOwner || connectStatus === "Connection" || privacy === "public";
   const shouldShowButton = !isOwner && connectStatus === "Connection";
@@ -73,7 +68,7 @@ function SkillEndorsement({
         <button
           onClick={isEndorsed ? handleUnendorse : handleEndorse}
           disabled={loading}
-          className={`mt-2 px-4 py-2 border rounded-full flex items-center justify-center gap-2 w-fit
+          className={`mt-2 px-4 py-0 h-8 border rounded-full flex items-center justify-center gap-2 w-fit
           ${isEndorsed ? "bg-modalbackground text-normaltext" : "bg-white text-normaltext"} 
           border-companyheader hover:bg-sliderbutton transition
           ${loading ? "opacity-50 cursor-not-allowed" : ""}`}

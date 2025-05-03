@@ -31,8 +31,8 @@ function GenericModal({
   type,
   initialData = {},
   editMode = false,
-  existingItems = [], // 👈 Accept the prop here
-  isSaving, // ✅ Add this
+  existingItems = [],
+  isSaving,
 }) {
   const [formData, setFormData] = useState(initialData);
   const [errors, setErrors] = useState({});
@@ -41,7 +41,7 @@ function GenericModal({
   const [initialFormData, setInitialFormData] = useState({});
   const startYears = getStartYears();
 
-  // ✅ THIS is the correct dynamic generation of endYears
+  // THIS is the correct dynamic generation of endYears
   const endYears = Array.from(
     {
       length:
@@ -148,6 +148,19 @@ function GenericModal({
       ) {
         newErrors.endMonth = "End month can't be before the start month";
       }
+      // Require both endMonth and endYear if either is provided
+      if (
+        (formData.endMonth && !formData.endYear) ||
+        (!formData.endMonth && formData.endYear)
+      ) {
+        if (formData.endMonth && !formData.endYear) {
+          newErrors.endYear = "Please select an end year ";
+        }
+        if (!formData.endMonth && formData.endYear) {
+          newErrors.endMonth = "Please select an end month";
+        }
+      }
+
       if (type === "education") {
         if (!formData.school) newErrors.school = "Please provide a school";
       }

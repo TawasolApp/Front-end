@@ -67,6 +67,11 @@
   --amber-dark-hover: 124, 45, 18;
   --amber-text-light: 146, 64, 14;
   --amber-text-dark: 253, 230, 138;
+  --unblock-bg: 219, 234, 254; /* blue-100 */
+  --unblock-text: 30, 64, 175; /* blue-800 */
+  --unblock-hover: 191, 219, 254; /* blue-200 */
+  --hover-outline-color: 0, 0, 0; /* Black */
+  --more-hover-bg: 241, 245, 249; /* Tailwind slate-100 */
   --chat-you-background: 230, 244, 255;
   --chat-you-text: 0, 37, 77;
   --chat-them-background: 240, 240, 240;
@@ -138,6 +143,11 @@
   --amber-dark-hover: 92, 33, 13;
   --amber-text-light: 253, 230, 138;
   --amber-text-dark: 254, 243, 199;
+  --unblock-bg: 30, 64, 175; /* blue-900 */
+  --unblock-text: 191, 219, 254; /* blue-200 */
+  --unblock-hover: 37, 99, 235; /* blue-600 */
+  --hover-outline-color: 209, 213, 219; /* Tailwind gray-300 */
+  --more-hover-bg: 55, 65, 81; /* darker hover */
   --chat-you-background: 34, 105, 160;
   --chat-you-text: 255, 255, 255;
   --chat-them-background: 45, 45, 45;
