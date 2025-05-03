@@ -13,7 +13,13 @@ vi.mock("../../../apis/axios.js", () => ({
 }));
 
 vi.mock("../../../Privacy/ReportBlockModal", () => ({
-  default: () => <div data-testid="report-block-modal" />,
+  default: ({ onBlocked }) => (
+    <div data-testid="report-block-modal">
+      <button data-testid="trigger-block" onClick={onBlocked}>
+        Block
+      </button>
+    </div>
+  ),
 }));
 
 vi.mock("../../../Messaging/New Message Modal/NewMessageModal", () => ({
@@ -59,6 +65,39 @@ describe("ViewerView - Actions", () => {
     expect(screen.getByLabelText("Send message")).toBeInTheDocument();
     expect(screen.getByLabelText("Connect")).toBeInTheDocument();
   });
+  it("warns if follow fails after accepting connection", async () => {
+    const warnSpy = vi.spyOn(console, "warn").mockImplementation(() => {});
+    axios.patch.mockResolvedValueOnce({ status: 200 }); // connection accepted
+    axios.post.mockRejectedValueOnce({
+      response: { data: "Follow failed" }, // follow fails
+    });
+
+    render(
+      <MemoryRouter>
+        <ViewerView
+          user={mockUser}
+          viewerId="viewer123"
+          initialConnectStatus="Request"
+          initialFollowStatus="Not Following"
+        />
+      </MemoryRouter>
+    );
+
+    fireEvent.click(screen.getByText("Accept"));
+    fireEvent.click(await screen.findByTestId("confirm-modal"));
+
+    await waitFor(() => {
+      expect(axios.patch).toHaveBeenCalled();
+      expect(axios.post).toHaveBeenCalled();
+      expect(warnSpy).toHaveBeenCalledWith(
+        "Follow failed but connection succeeded:",
+        "Follow failed"
+      );
+    });
+
+    warnSpy.mockRestore();
+  });
+
   it("closes dropdown when clicking outside", async () => {
     render(
       <MemoryRouter>
@@ -176,6 +215,34 @@ describe("ViewerView - Actions", () => {
       );
     });
   });
+  it("alerts if connection already exists (409)", async () => {
+    const alertSpy = vi.spyOn(window, "alert").mockImplementation(() => {});
+    axios.post.mockRejectedValueOnce({
+      response: { status: 409, data: "Connection already exists" },
+    });
+
+    render(
+      <MemoryRouter>
+        <ViewerView
+          user={mockUser}
+          viewerId="viewer123"
+          initialConnectStatus="No Connection"
+          initialFollowStatus="Not Following"
+        />
+      </MemoryRouter>
+    );
+
+    fireEvent.click(screen.getByText("Connect"));
+
+    await waitFor(() => {
+      expect(alertSpy).toHaveBeenCalledWith(
+        "Connection request already exists"
+      );
+    });
+
+    alertSpy.mockRestore();
+  });
+
   it("logs unfollow error if disconnect cleanup fails (not 404)", async () => {
     axios.delete
       .mockResolvedValueOnce({ status: 200 }) // main disconnect
@@ -265,7 +332,7 @@ describe("ViewerView - Actions", () => {
 
     expect(screen.getByTestId("report-block-modal")).toBeInTheDocument();
   });
-  it("opens message modal when Message button is clicked", () => {
+  it("opens message modal when Message button is clicked", async () => {
     render(
       <MemoryRouter>
         <ViewerView
@@ -278,8 +345,12 @@ describe("ViewerView - Actions", () => {
     );
 
     fireEvent.click(screen.getByLabelText("Send message"));
-    expect(screen.getByTestId("message-modal")).toBeInTheDocument();
+
+    await waitFor(() => {
+      expect(screen.getByTestId("message-modal")).toBeInTheDocument();
+    });
   });
+
   it("alerts on 409 connection conflict", async () => {
     window.alert = vi.fn();
     axios.post.mockRejectedValueOnce({
