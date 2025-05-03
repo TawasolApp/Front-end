@@ -54,7 +54,8 @@ const NewMessageModalInputs = ({ isMinimized, onSend, receiverId = null }) => {
         const response = await axiosInstance.post("/media", formData, {
           headers: { "Content-Type": "multipart/form-data" },
         });
-        return response.data.url; // Return the URL
+        console.log("Upload successful:", response.data);
+        return response.data.url.replace(".pdf", ""); // Return the URL
       } catch (error) {
         console.error("Upload failed:", error);
         return null; // Return null if upload fails
@@ -79,7 +80,10 @@ const NewMessageModalInputs = ({ isMinimized, onSend, receiverId = null }) => {
         const response = await axiosInstance.post("/media", formData, {
           headers: { "Content-Type": "multipart/form-data" },
         });
-        return response.data.url; // Return the URL
+        console.log("Upload successful:", response.data);
+        const res = response.data.url.replace(".pdf", ""); // Return the URL
+        console.log(res);
+        return res;
       } catch (error) {
         console.error("Upload failed:", error);
         return null; // Return null if upload fails

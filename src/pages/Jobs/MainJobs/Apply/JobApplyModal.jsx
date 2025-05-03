@@ -67,11 +67,6 @@ const JobApplyModal = ({ jobId, companyName, onClose, onApply }) => {
       return;
     }
 
-    if (!resumeURL) {
-      setError("Please upload your resume first");
-      return;
-    }
-
     try {
       setLoading(true);
       await axiosInstance.post("/jobs/apply", {
@@ -122,7 +117,7 @@ const JobApplyModal = ({ jobId, companyName, onClose, onApply }) => {
             {/* Resume Upload Section */}
             <div className="mb-6">
               <label className="block text-sm text-textPlaceholder mb-2">
-                Resume (PDF only)<span className="text-red-700">*</span>
+                Resume (PDF only)
               </label>
               
               <div className="relative border-2 border-dashed border-cardBorder rounded-lg p-4 text-center hover:border-primary transition-colors">
@@ -182,7 +177,7 @@ const JobApplyModal = ({ jobId, companyName, onClose, onApply }) => {
 
             <button
               type="submit"
-              disabled={loading || !resumeURL}
+              disabled={loading || !phoneNumber}
               className="w-full bg-buttonSubmitEnable text-buttonSubmitText py-2 px-4 rounded-md hover:bg-buttonSubmitEnableHover transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
             >
               {loading ? "Submitting..." : "Submit Application"}

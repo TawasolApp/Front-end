@@ -10,7 +10,18 @@ import ImageUploadModal from "./ImageUploadModal";
 import ImageEnlarge from "./ImageEnlarge";
 import ViewerView from "./ViewerView";
 import ContactInfoModal from "./ContactInfoModal";
+import ExpandableHeadline from "../ReusableModals/ExpandableText.jsx";
+import { toast } from "react-toastify";
+import { useDispatch } from "react-redux";
 import { axiosInstance as axios } from "../../../../apis/axios.js";
+import {
+  setFirstName,
+  setLastName,
+  setLocation,
+  setProfilePicture,
+  setCoverPhoto,
+  setBio,
+} from "../../../../store/authenticationSlice.js";
 
 function ProfileHeader({
   user,
@@ -29,6 +40,8 @@ function ProfileHeader({
   const [isContactOpen, setIsContactOpen] = useState(false);
   const { userId } = useSelector((state) => state.authentication);
   const viewerId = userId;
+  const dispatch = useDispatch();
+
   if (!editedUser) return null;
   console.log("editedUser", editedUser, "viewerId", viewerId);
   const experienceIndex = editedUser.selectedExperienceIndex ?? 0;
@@ -44,20 +57,27 @@ function ProfileHeader({
     setIsUploadOpen(true);
   }
   async function handleUpload(fileOrNull) {
-    const field = uploadType === "profile" ? "profilePicture" : "coverPhoto";
-    const deleteEndpoint =
-      uploadType === "profile"
-        ? "/profile/profile-picture"
-        : "/profile/cover-photo";
+    const isProfile = uploadType === "profile";
+    const field = isProfile ? "profilePicture" : "coverPhoto";
+    const deleteEndpoint = `/profile/${isProfile ? "profile-picture" : "cover-photo"}`;
+    const setAction = isProfile ? setProfilePicture : setCoverPhoto;
 
     if (fileOrNull === null) {
       try {
         await axios.delete(deleteEndpoint);
 
+        dispatch(setAction("")); // Todo: Update Redux state to remove the image and have null
+
         // Set local UI to default (empty string)
         setEditedUser((prev) => ({ ...prev, [field]: "" }));
+        toast.success(
+          `${isProfile ? "Profile picture" : "Cover photo"} deleted.`
+        );
       } catch (err) {
         console.error(` Failed to delete ${field}:`, err);
+        toast.error(
+          `Failed to delete ${isProfile ? "profile picture" : "cover photo"}.`
+        );
       }
       return;
     }
@@ -77,8 +97,15 @@ function ProfileHeader({
       await axios.patch(`/profile`, { [field]: imageUrl });
 
       setEditedUser((prev) => ({ ...prev, [field]: imageUrl }));
+      dispatch(setAction(imageUrl));
+      toast.success(
+        `${isProfile ? "Profile picture" : "Cover photo"} updated successfully.`
+      );
     } catch (err) {
       console.error(` Failed to upload ${field}:`, err);
+      toast.error(
+        `Failed to upload ${isProfile ? "profile picture" : "cover photo"}.`
+      );
     }
   }
 
@@ -89,6 +116,20 @@ function ProfileHeader({
   function handleSave(updatedUser) {
     setEditedUser(updatedUser);
     setIsEditing(false);
+    const fieldsToUpdate = {
+      firstName: setFirstName,
+      lastName: setLastName,
+      location: setLocation,
+      profilePicture: setProfilePicture,
+      coverPhoto: setCoverPhoto,
+      headline: setBio,
+    };
+
+    Object.entries(fieldsToUpdate).forEach(([key, action]) => {
+      if (updatedUser[key]) {
+        dispatch(action(updatedUser[key]));
+      }
+    });
     onSave?.(updatedUser);
   }
 
@@ -107,6 +148,15 @@ function ProfileHeader({
           onImageClick={handleImageClick}
           onUpload={() => openUploadModal("cover")}
         />
+
+        {isOwner && (
+          <button
+            className="text-text absolute w-8 h-8 top-35 right-2  p-1 rounded-full hover:bg-sliderbutton"
+            onClick={() => setIsEditing(true)}
+          >
+            ✎
+          </button>
+        )}
       </div>
 
       <div className="flex justify-start px-6 -mt-14 sm:-mt-16">
@@ -124,7 +174,11 @@ function ProfileHeader({
         </h1>
         {isVisible && (
           <>
-            <p className="text-sm text-normaltext">{editedUser.headline}</p>
+            <ExpandableHeadline
+              text={editedUser.headline}
+              maxLines={2}
+              className="text-normaltext text-sm"
+            />
             <p className="text-sm text-normaltext">
               {editedUser.location} ·{" "}
               <span

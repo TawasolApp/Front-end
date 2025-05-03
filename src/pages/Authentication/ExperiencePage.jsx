@@ -100,7 +100,7 @@ const ExperienceAuthPage = () => {
       }
 
       return;
-    } catch {
+    } catch (error) {
       setIsLoading(false);
       console.error("Error retreiving profile:", error);
       toast.error("An unexpected error occured, please try again.", {

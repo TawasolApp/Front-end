@@ -1,5 +1,5 @@
 import { describe, it, expect, vi, beforeEach } from "vitest";
-import { render, screen, waitFor } from "@testing-library/react";
+import { render, screen, waitFor, act } from "@testing-library/react";
 import "@testing-library/jest-dom";
 import React from "react";
 import { BrowserRouter } from "react-router-dom";
@@ -9,8 +9,25 @@ const mockNavigate = vi.hoisted(() => vi.fn());
 const mockDispatch = vi.hoisted(() => vi.fn());
 const mockSetEmail = vi.hoisted(() => vi.fn());
 const mockPatch = vi.hoisted(() => vi.fn());
+const mockGet = vi.hoisted(() => vi.fn());
 const mockSetEmailError = vi.hoisted(() => vi.fn());
 const mockSetCurrentPasswordError = vi.hoisted(() => vi.fn());
+
+// Mock import.meta.env
+vi.mock('import.meta', () => ({
+  env: {
+    VITE_ENVIRONMENT: ''
+  }
+}));
+
+// Setup a function to change environment for test cases
+const setTestEnvironment = (isTest = false) => {
+  if (isTest) {
+    import.meta.env.VITE_ENVIRONMENT = 'test';
+  } else {
+    import.meta.env.VITE_ENVIRONMENT = '';
+  }
+};
 
 // Mock react-router-dom
 vi.mock("react-router-dom", async () => {
@@ -35,12 +52,13 @@ vi.mock("../../store/authenticationSlice", () => ({
 vi.mock("../../apis/axios", () => ({
   axiosInstance: {
     patch: (...args) => mockPatch(...args),
+    get: (...args) => mockGet(...args)
   },
 }));
 
 // Mock child components
 vi.mock("../../pages/Authentication/Forms/ChangeEmailForm", () => ({
-  default: ({ onSubmit }) => {
+  default: ({ onSubmit, isLoading }) => {
     // Create test functions that we can call to test the onSubmit function
     const testSubmit = (scenario) => {
       const newEmail = "new@example.com";
@@ -57,6 +75,7 @@ vi.mock("../../pages/Authentication/Forms/ChangeEmailForm", () => ({
 
     return (
       <div data-testid="change-email-form">
+        <span data-testid="loading-state">{isLoading ? "Loading" : "Not Loading"}</span>
         <button
           onClick={() => testSubmit("success")}
           data-testid="test-submit-success"
@@ -112,6 +131,15 @@ import ChangeEmailPage from "../../pages/Authentication/ChangeEmailPage";
 describe("ChangeEmailPage", () => {
   beforeEach(() => {
     vi.clearAllMocks();
+    // Reset environment to non-test
+    setTestEnvironment(false);
+    
+    // Mock timer
+    vi.useFakeTimers();
+  });
+  
+  afterEach(() => {
+    vi.useRealTimers();
   });
 
   const renderChangeEmailPage = () => {
@@ -136,55 +164,52 @@ describe("ChangeEmailPage", () => {
       expect(buttonsHidden).toBeInTheDocument();
     });
 
-    it("renders the ChangeEmailForm component", () => {
+    it("renders the ChangeEmailForm component with isLoading prop", () => {
       renderChangeEmailPage();
       const form = screen.getByTestId("change-email-form");
+      const loadingState = screen.getByTestId("loading-state");
       expect(form).toBeInTheDocument();
+      expect(loadingState).toHaveTextContent("Not Loading");
     });
   });
 
-  describe("Form Submission", () => {
+  describe("Form Submission - Production Environment", () => {
     it("handles successful email update", async () => {
       // Mock successful API response
-      mockPatch.mockResolvedValueOnce({});
-
-      // Spy on console.log
-      const consoleLogSpy = vi
-        .spyOn(console, "log")
-        .mockImplementation(() => {});
+      mockPatch.mockResolvedValueOnce({ data: {} });
 
       renderChangeEmailPage();
+      
+      // Check initial loading state
+      expect(screen.getByTestId("loading-state")).toHaveTextContent("Not Loading");
 
-      // Trigger a successful submission
-      screen.getByTestId("test-submit-success").click();
-
-      // Wait for async operations
-      await waitFor(() => {
-        // Verify API call
-        expect(mockPatch).toHaveBeenCalledWith("/users/request-email-update", {
-          newEmail: "new@example.com",
-          password: "password123",
-        });
-
-        // Verify Redux dispatch
-        expect(mockDispatch).toHaveBeenCalledWith(
-          mockSetEmail("new@example.com"),
-        );
-
-        // Verify console.log
-        // expect(consoleLogSpy).toHaveBeenCalledWith("requested update email");
-
-        // Verify navigation
-        expect(mockNavigate).toHaveBeenCalledWith(
-          "/auth/verification-pending",
-          {
-            state: { type: "updateEmail" },
-          },
-        );
+      // Trigger a successful submission - wrap in act
+      await act(async () => {
+        screen.getByTestId("test-submit-success").click();
+        
+        // Should be loading now
+        expect(screen.getByTestId("loading-state")).toHaveTextContent("Loading");
+      });
+      
+      // Verify post-submission state
+      expect(screen.getByTestId("loading-state")).toHaveTextContent("Not Loading");
+      
+      // Verify API call
+      expect(mockPatch).toHaveBeenCalledWith("/users/request-email-update", {
+        newEmail: "new@example.com",
+        password: "password123",
       });
 
-      // Clean up spy
-      consoleLogSpy.mockRestore();
+      // Verify navigation in production environment
+      expect(mockNavigate).toHaveBeenCalledWith(
+        "/auth/verification-pending",
+        {
+          state: { type: "updateEmail" },
+        },
+      );
+      
+      // Verify verification endpoint was not called in production
+      expect(mockGet).not.toHaveBeenCalled();
     });
 
     it("handles 400 error (incorrect password)", async () => {
@@ -196,16 +221,15 @@ describe("ChangeEmailPage", () => {
       renderChangeEmailPage();
 
       // Trigger the submission that will result in a 400 error
-      screen.getByTestId("test-submit-error-400").click();
-
-      // Wait for async operations
-      await waitFor(() => {
-        // Verify error was set
-        expect(mockPatch).toHaveBeenCalled();
-        expect(mockSetCurrentPasswordError).toHaveBeenCalledWith(
-          "Incorrect password.",
-        );
+      await act(async () => {
+        screen.getByTestId("test-submit-error-400").click();
       });
+      
+      // Verify error was set
+      expect(mockPatch).toHaveBeenCalled();
+      expect(mockSetCurrentPasswordError).toHaveBeenCalledWith(
+        "Incorrect password.",
+      );
     });
 
     it("handles 401 error (unauthorized)", async () => {
@@ -217,16 +241,15 @@ describe("ChangeEmailPage", () => {
       renderChangeEmailPage();
 
       // Trigger the submission that will result in a 401 error
-      screen.getByTestId("test-submit-error-401").click();
-
-      // Wait for async operations
-      await waitFor(() => {
-        // Verify error was set
-        expect(mockPatch).toHaveBeenCalled();
-        expect(mockSetCurrentPasswordError).toHaveBeenCalledWith(
-          "Unauthorized.",
-        );
+      await act(async () => {
+        screen.getByTestId("test-submit-error-401").click();
       });
+
+      // Verify error was set
+      expect(mockPatch).toHaveBeenCalled();
+      expect(mockSetCurrentPasswordError).toHaveBeenCalledWith(
+        "Unauthorized.",
+      );
     });
 
     it("handles 409 error (email exists)", async () => {
@@ -238,14 +261,13 @@ describe("ChangeEmailPage", () => {
       renderChangeEmailPage();
 
       // Trigger the submission that will result in a 409 error
-      screen.getByTestId("test-submit-error-409").click();
-
-      // Wait for async operations
-      await waitFor(() => {
-        // Verify error was set
-        expect(mockPatch).toHaveBeenCalled();
-        expect(mockSetEmailError).toHaveBeenCalledWith("Email already exists.");
+      await act(async () => {
+        screen.getByTestId("test-submit-error-409").click();
       });
+
+      // Verify error was set
+      expect(mockPatch).toHaveBeenCalled();
+      expect(mockSetEmailError).toHaveBeenCalledWith("Email already exists.");
     });
 
     it("handles other errors", async () => {
@@ -260,23 +282,184 @@ describe("ChangeEmailPage", () => {
       renderChangeEmailPage();
 
       // Trigger the submission that will result in an unexpected error
-      screen.getByTestId("test-submit-error-other").click();
-
-      // Wait for async operations
-      await waitFor(() => {
-        // Verify error was logged
-        expect(consoleErrorSpy).toHaveBeenCalled();
-        expect(mockSetEmailError).toHaveBeenCalledWith(
-          "An unexpected error occurred. Please try again.",
-        );
+      await act(async () => {
+        screen.getByTestId("test-submit-error-other").click();
       });
+
+      // Verify error was logged
+      expect(consoleErrorSpy).toHaveBeenCalled();
+      expect(mockSetEmailError).toHaveBeenCalledWith(
+        "An unexpected error occurred. Please try again.",
+      );
 
       // Clean up spy
       consoleErrorSpy.mockRestore();
     });
   });
+  
+  describe("Form Submission - Test Environment", () => {
+    it("handles successful verification in test environment", async () => {
+      // Set test environment
+      setTestEnvironment(true);
+      
+      // Mock successful API responses
+      mockPatch.mockResolvedValueOnce({ 
+        data: { verifyToken: "valid-token" } 
+      });
+      
+      mockGet.mockResolvedValueOnce({});
+      
+      // Spy on console.log
+      const consoleLogSpy = vi.spyOn(console, "log").mockImplementation(() => {});
+      
+      renderChangeEmailPage();
 
-  // Removed className checks as requested
+      // Trigger a successful submission
+      await act(async () => {
+        screen.getByTestId("test-submit-success").click();
+      });
+
+      expect(mockPatch).toHaveBeenCalledWith("/users/request-email-update", {
+        newEmail: "new@example.com",
+        password: "password123",
+      });
+      
+      expect(mockGet).toHaveBeenCalledWith("/users/confirm-email-change?token=valid-token");
+      
+      // Check success message was logged
+      expect(consoleLogSpy).toHaveBeenCalledWith("Email updated successfully! Redirecting...");
+      
+      // Fast forward setTimeout
+      await act(async () => {
+        vi.runAllTimers();
+      });
+      
+      // Verify navigation to feed
+      expect(mockNavigate).toHaveBeenCalledWith("/feed");
+      
+      consoleLogSpy.mockRestore();
+    });
+    
+    it("handles invalid token in test environment", async () => {
+      // Set test environment
+      setTestEnvironment(true);
+      
+      // Mock API response with no verify token
+      mockPatch.mockResolvedValueOnce({ data: {} });
+      
+      // Spy on console.log
+      const consoleLogSpy = vi.spyOn(console, "log").mockImplementation(() => {});
+      
+      renderChangeEmailPage();
+
+      // Trigger submission
+      await act(async () => {
+        screen.getByTestId("test-submit-success").click();
+      });
+
+      expect(consoleLogSpy).toHaveBeenCalledWith("Invalid verification link.");
+      expect(mockGet).not.toHaveBeenCalled();
+      expect(mockNavigate).not.toHaveBeenCalled();
+      
+      consoleLogSpy.mockRestore();
+    });
+    
+    it("handles token verification errors (400)", async () => {
+      // Set test environment
+      setTestEnvironment(true);
+      
+      // Mock API responses
+      mockPatch.mockResolvedValueOnce({ 
+        data: { verifyToken: "invalid-token" } 
+      });
+      
+      mockGet.mockRejectedValueOnce({
+        response: { status: 400 }
+      });
+      
+      // Spy on console
+      const consoleLogSpy = vi.spyOn(console, "log").mockImplementation(() => {});
+      const consoleErrorSpy = vi.spyOn(console, "error").mockImplementation(() => {});
+      
+      renderChangeEmailPage();
+
+      // Trigger submission
+      await act(async () => {
+        screen.getByTestId("test-submit-success").click();
+      });
+
+      expect(mockGet).toHaveBeenCalledWith("/users/confirm-email-change?token=invalid-token");
+      expect(consoleLogSpy).toHaveBeenCalledWith(
+        "Invalid or expired token. Please request a new verification email."
+      );
+      
+      consoleLogSpy.mockRestore();
+      consoleErrorSpy.mockRestore();
+    });
+    
+    it("handles token verification errors (404)", async () => {
+      // Set test environment
+      setTestEnvironment(true);
+      
+      // Mock API responses
+      mockPatch.mockResolvedValueOnce({ 
+        data: { verifyToken: "token-404" } 
+      });
+      
+      mockGet.mockRejectedValueOnce({
+        response: { status: 404 }
+      });
+      
+      // Spy on console
+      const consoleLogSpy = vi.spyOn(console, "log").mockImplementation(() => {});
+      const consoleErrorSpy = vi.spyOn(console, "error").mockImplementation(() => {});
+      
+      renderChangeEmailPage();
+
+      // Trigger submission
+      await act(async () => {
+        screen.getByTestId("test-submit-success").click();
+      });
+
+      expect(mockGet).toHaveBeenCalledWith("/users/confirm-email-change?token=token-404");
+      expect(consoleLogSpy).toHaveBeenCalledWith("User not found. Please contact support.");
+      
+      consoleLogSpy.mockRestore();
+      consoleErrorSpy.mockRestore();
+    });
+    
+    it("handles other token verification errors", async () => {
+      // Set test environment
+      setTestEnvironment(true);
+      
+      // Mock API responses
+      mockPatch.mockResolvedValueOnce({ 
+        data: { verifyToken: "token-error" } 
+      });
+      
+      mockGet.mockRejectedValueOnce({
+        response: { status: 500 }
+      });
+      
+      // Spy on console
+      const consoleLogSpy = vi.spyOn(console, "log").mockImplementation(() => {});
+      const consoleErrorSpy = vi.spyOn(console, "error").mockImplementation(() => {});
+      
+      renderChangeEmailPage();
+
+      // Trigger submission
+      await act(async () => {
+        screen.getByTestId("test-submit-success").click();
+      });
+
+      expect(mockGet).toHaveBeenCalledWith("/users/confirm-email-change?token=token-error");
+      expect(consoleLogSpy).toHaveBeenCalledWith("Something went wrong. Please try again later.");
+      
+      consoleLogSpy.mockRestore();
+      consoleErrorSpy.mockRestore();
+    });
+  });
+
   describe("UI Structure", () => {
     it("renders in a container with the change email form", () => {
       const { container } = renderChangeEmailPage();

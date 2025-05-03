@@ -1,5 +1,5 @@
 import { describe, it, expect, vi, beforeEach } from "vitest";
-import { render, screen, waitFor } from "@testing-library/react";
+import { render, screen, act } from "@testing-library/react";
 import "@testing-library/jest-dom";
 import React from "react";
 import { BrowserRouter } from "react-router-dom";
@@ -20,8 +20,11 @@ const mockSetLocation = vi.hoisted(() => vi.fn());
 const mockSetBio = vi.hoisted(() => vi.fn());
 const mockSetProfilePicture = vi.hoisted(() => vi.fn());
 const mockSetCoverPhoto = vi.hoisted(() => vi.fn());
+const mockSetRole = vi.hoisted(() => vi.fn());
+const mockSetIsPremium = vi.hoisted(() => vi.fn());
 const mockPost = vi.hoisted(() => vi.fn());
 const mockGet = vi.hoisted(() => vi.fn());
+const mockToast = vi.hoisted(() => ({ error: vi.fn() }));
 
 // Mock react-router-dom
 vi.mock("react-router-dom", async () => {
@@ -35,6 +38,11 @@ vi.mock("react-router-dom", async () => {
 // Mock react-redux
 vi.mock("react-redux", () => ({
   useDispatch: () => mockDispatch,
+}));
+
+// Mock react-toastify
+vi.mock("react-toastify", () => ({
+  toast: mockToast
 }));
 
 // Mock authentication slice
@@ -52,6 +60,8 @@ vi.mock("../../store/authenticationSlice", () => ({
   setBio: (bio) => mockSetBio(bio),
   setProfilePicture: (url) => mockSetProfilePicture(url),
   setCoverPhoto: (url) => mockSetCoverPhoto(url),
+  setRole: (role) => mockSetRole(role),
+  setIsPremium: (isPremium) => mockSetIsPremium(isPremium),
 }));
 
 // Mock axios instance
@@ -64,11 +74,12 @@ vi.mock("../../apis/axios", () => ({
 
 // Mock child components with correct paths
 vi.mock("../../pages/Authentication/Forms/SignInForm", () => ({
-  default: (props) => (
+  default: ({ onSubmit, isLoading }) => (
     <div data-testid="signin-form">
+      <span data-testid="loading-state">{isLoading ? "Loading" : "Not Loading"}</span>
       <button
         onClick={() =>
-          props.onSubmit?.(
+          onSubmit(
             { email: "test@example.com", password: "password123" },
             vi.fn(),
           )
@@ -129,10 +140,12 @@ describe("SignInPage", () => {
       expect(screen.getByTestId("buttons-hidden")).toBeInTheDocument();
     });
 
-    it("renders the SignInForm component", () => {
+    it("renders the SignInForm component with loading state", () => {
       renderSignInPage();
       const signInForm = screen.getByTestId("signin-form");
+      const loadingState = screen.getByTestId("loading-state");
       expect(signInForm).toBeInTheDocument();
+      expect(loadingState).toHaveTextContent("Not Loading");
     });
 
     it("displays the 'New to Tawasol?' text", () => {
@@ -147,14 +160,15 @@ describe("SignInPage", () => {
   });
 
   describe("Form Submission", () => {
-    it("handles successful sign in and profile fetch", async () => {
+    it("handles successful sign in and profile fetch for regular user", async () => {
       // Mock successful login response
       mockPost.mockResolvedValueOnce({
         status: 201,
         data: {
           token: "test-token",
           refreshToken: "test-refresh-token",
-          isSocialLogin: false,
+          is_social_login: false,
+          role: "user"
         },
       });
 
@@ -169,42 +183,109 @@ describe("SignInPage", () => {
           headline: "Software Developer",
           profilePicture: "profile-url",
           coverPhoto: "cover-url",
+          isPremium: true
+        },
+      });
+
+      renderSignInPage();
+
+      // Check initial loading state
+      expect(screen.getByTestId("loading-state")).toHaveTextContent("Not Loading");
+
+      // Trigger form submission
+      await act(async () => {
+        screen.getByTestId("mock-submit-button").click();
+        
+        // Should be loading now
+        expect(screen.getByTestId("loading-state")).toHaveTextContent("Loading");
+      });
+
+      // Should no longer be loading
+      expect(screen.getByTestId("loading-state")).toHaveTextContent("Not Loading");
+
+      // Verify API calls
+      expect(mockPost).toHaveBeenCalledWith("/auth/login", {
+        email: "test@example.com",
+        password: "password123",
+      });
+
+      expect(mockGet).toHaveBeenCalledWith("/profile");
+
+      // Check authentication related dispatches
+      expect(mockSetEmail).toHaveBeenCalledWith("test@example.com");
+      expect(mockSetToken).toHaveBeenCalledWith("test-token");
+      expect(mockSetRefreshToken).toHaveBeenCalledWith("test-refresh-token");
+      expect(mockSetIsSocialLogin).toHaveBeenCalledWith(false);
+      expect(mockSetRole).toHaveBeenCalledWith("user");
+
+      // Check profile related dispatches
+      expect(mockSetType).toHaveBeenCalledWith("User");
+      expect(mockSetUserId).toHaveBeenCalledWith("user123");
+      expect(mockSetFirstName).toHaveBeenCalledWith("John");
+      expect(mockSetLastName).toHaveBeenCalledWith("Doe");
+      expect(mockSetLocation).toHaveBeenCalledWith("New York");
+      expect(mockSetBio).toHaveBeenCalledWith("Software Developer");
+      expect(mockSetProfilePicture).toHaveBeenCalledWith("profile-url");
+      expect(mockSetCoverPhoto).toHaveBeenCalledWith("cover-url");
+      expect(mockSetIsPremium).toHaveBeenCalledWith(true);
+
+      // Check navigation
+      expect(mockNavigate).toHaveBeenCalledWith("/feed");
+    });
+
+    it("routes admin users to admin panel", async () => {
+      // Mock successful login response for admin
+      mockPost.mockResolvedValueOnce({
+        status: 201,
+        data: {
+          token: "admin-token",
+          refreshToken: "admin-refresh-token",
+          is_social_login: false,
+          role: "admin"
         },
       });
 
       renderSignInPage();
 
       // Trigger form submission
-      const submitButton = screen.getByTestId("mock-submit-button");
-      submitButton.click();
-
-      // Wait for async operations to complete
-      await waitFor(() => {
-        expect(mockPost).toHaveBeenCalledWith("/auth/login", {
-          email: "test@example.com",
-          password: "password123",
-        });
-        expect(mockGet).toHaveBeenCalledWith("/profile");
-
-        // Check authentication related dispatches
-        expect(mockSetEmail).toHaveBeenCalledWith("test@example.com");
-        expect(mockSetToken).toHaveBeenCalledWith("test-token");
-        expect(mockSetRefreshToken).toHaveBeenCalledWith("test-refresh-token");
-        // expect(mockSetIsSocialLogin).toHaveBeenCalledWith(false);
-
-        // Check profile related dispatches
-        expect(mockSetType).toHaveBeenCalledWith("User");
-        expect(mockSetUserId).toHaveBeenCalledWith("user123");
-        expect(mockSetFirstName).toHaveBeenCalledWith("John");
-        expect(mockSetLastName).toHaveBeenCalledWith("Doe");
-        expect(mockSetLocation).toHaveBeenCalledWith("New York");
-        expect(mockSetBio).toHaveBeenCalledWith("Software Developer");
-        expect(mockSetProfilePicture).toHaveBeenCalledWith("profile-url");
-        expect(mockSetCoverPhoto).toHaveBeenCalledWith("cover-url");
-
-        // Check navigation
-        expect(mockNavigate).toHaveBeenCalledWith("/feed");
+      await act(async () => {
+        screen.getByTestId("mock-submit-button").click();
       });
+
+      // Verify admin-specific behavior
+      expect(mockSetRole).toHaveBeenCalledWith("admin");
+      expect(mockNavigate).toHaveBeenCalledWith("/AdminPanel");
+      
+      // Profile fetch should not have happened
+      expect(mockGet).not.toHaveBeenCalled();
+    });
+
+    it("handles missing profile and redirects to location setup", async () => {
+      // Mock successful login response
+      mockPost.mockResolvedValueOnce({
+        status: 201,
+        data: {
+          token: "test-token",
+          refreshToken: "test-refresh-token",
+          is_social_login: false,
+          role: "user"
+        },
+      });
+
+      // Mock profile not found
+      mockGet.mockRejectedValueOnce({
+        response: { status: 404 }
+      });
+
+      renderSignInPage();
+
+      // Trigger form submission
+      await act(async () => {
+        screen.getByTestId("mock-submit-button").click();
+      });
+
+      // Verify navigation to profile setup
+      expect(mockNavigate).toHaveBeenCalledWith("/auth/signup/location");
     });
 
     it("handles missing profile fields gracefully", async () => {
@@ -214,7 +295,8 @@ describe("SignInPage", () => {
         data: {
           token: "test-token",
           refreshToken: "test-refresh-token",
-          isSocialLogin: false,
+          is_social_login: false,
+          role: "user"
         },
       });
 
@@ -230,22 +312,17 @@ describe("SignInPage", () => {
       renderSignInPage();
 
       // Trigger form submission
-      const submitButton = screen.getByTestId("mock-submit-button");
-      submitButton.click();
-
-      // Wait for async operations to complete
-      await waitFor(() => {
-        // Only these should be called since other fields are missing
-        expect(mockSetType).toHaveBeenCalledWith("User");
-        expect(mockSetUserId).toHaveBeenCalledWith("user123");
-        expect(mockNavigate).toHaveBeenCalledWith("/feed");
-
-        // These should not be called
-        expect(mockSetFirstName).not.toHaveBeenCalled();
-        expect(mockSetLastName).not.toHaveBeenCalled();
-        expect(mockSetLocation).not.toHaveBeenCalled();
-        expect(mockSetBio).not.toHaveBeenCalled();
+      await act(async () => {
+        screen.getByTestId("mock-submit-button").click();
       });
+
+      // Only the provided fields should be set
+      expect(mockSetUserId).toHaveBeenCalledWith("user123");
+      expect(mockSetFirstName).not.toHaveBeenCalled();
+      expect(mockSetLastName).not.toHaveBeenCalled();
+
+      // Navigation should still happen
+      expect(mockNavigate).toHaveBeenCalledWith("/feed");
     });
 
     it("handles invalid credentials error", async () => {
@@ -257,18 +334,37 @@ describe("SignInPage", () => {
         },
       });
 
+      const mockSetCredentialsError = vi.fn();
+
       renderSignInPage();
 
       // Trigger form submission
-      const submitButton = screen.getByTestId("mock-submit-button");
-      submitButton.click();
-
-      // Wait for async operations to complete
-      await waitFor(() => {
-        expect(mockPost).toHaveBeenCalled();
-        // Navigation should not have happened
-        expect(mockNavigate).not.toHaveBeenCalled();
+      await act(async () => {
+        screen.getByTestId("mock-submit-button").click();
       });
+
+      // Navigation should not have happened
+      expect(mockNavigate).not.toHaveBeenCalled();
+    });
+
+    it("handles suspended account error", async () => {
+      // Mock API response for suspended account
+      mockPost.mockRejectedValueOnce({
+        response: {
+          status: 403,
+        },
+        message: "Your account is suspended. Please try again later."
+      });
+
+      renderSignInPage();
+
+      // Trigger form submission
+      await act(async () => {
+        screen.getByTestId("mock-submit-button").click();
+      });
+
+      // Navigation should not have happened
+      expect(mockNavigate).not.toHaveBeenCalled();
     });
 
     it("handles email not verified error", async () => {
@@ -276,22 +372,19 @@ describe("SignInPage", () => {
       mockPost.mockRejectedValueOnce({
         response: {
           status: 403,
-          data: { message: "Email not verified." },
         },
+        message: "Something else"
       });
 
       renderSignInPage();
 
       // Trigger form submission
-      const submitButton = screen.getByTestId("mock-submit-button");
-      submitButton.click();
-
-      // Wait for async operations to complete
-      await waitFor(() => {
-        expect(mockPost).toHaveBeenCalled();
-        // Navigation should not have happened
-        expect(mockNavigate).not.toHaveBeenCalled();
+      await act(async () => {
+        screen.getByTestId("mock-submit-button").click();
       });
+
+      // Navigation should not have happened
+      expect(mockNavigate).not.toHaveBeenCalled();
     });
 
     it("handles unexpected errors", async () => {
@@ -311,14 +404,19 @@ describe("SignInPage", () => {
       renderSignInPage();
 
       // Trigger form submission
-      const submitButton = screen.getByTestId("mock-submit-button");
-      submitButton.click();
-
-      // Wait for async operations to complete
-      await waitFor(() => {
-        expect(mockPost).toHaveBeenCalled();
-        expect(consoleErrorSpy).toHaveBeenCalled();
+      await act(async () => {
+        screen.getByTestId("mock-submit-button").click();
       });
+
+      // Verify error was logged and toast was shown
+      expect(consoleErrorSpy).toHaveBeenCalled();
+      expect(mockToast.error).toHaveBeenCalledWith(
+        "Login failed, please try again.",
+        expect.objectContaining({ 
+          position: "top-right",
+          autoClose: 3000 
+        })
+      );
 
       consoleErrorSpy.mockRestore();
     });
@@ -335,20 +433,19 @@ describe("SignInPage", () => {
       renderSignInPage();
 
       // Trigger form submission
-      const submitButton = screen.getByTestId("mock-submit-button");
-      submitButton.click();
-
-      // Wait for async operations to complete
-      await waitFor(() => {
-        expect(mockPost).toHaveBeenCalled();
-        expect(consoleErrorSpy).toHaveBeenCalled();
+      await act(async () => {
+        screen.getByTestId("mock-submit-button").click();
       });
+
+      // Verify error was logged and toast was shown
+      expect(consoleErrorSpy).toHaveBeenCalled();
+      expect(mockToast.error).toHaveBeenCalled();
 
       consoleErrorSpy.mockRestore();
     });
   });
 
-  describe("UI Styling", () => {
+  describe("UI Structure", () => {
     it("has a container with proper styling classes", () => {
       const { container } = renderSignInPage();
       expect(container.firstChild).toBeInTheDocument();

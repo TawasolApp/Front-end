@@ -1,8 +1,13 @@
 import React, { useState, useEffect, useRef } from "react";
+import { useNavigate } from "react-router-dom";
+
 import { axiosInstance as axios } from "../../../../apis/axios.js";
 import ConfirmModal from "../ReusableModals/ConfirmModal.jsx";
 import ReportBlockModal from "../ReportAndBlockModals/ReportBlockModal.jsx";
 import NewMessageModal from "../../../Messaging/New Message Modal/NewMessageModal.jsx";
+import FlagIcon from "@mui/icons-material/Flag";
+import LoadingPage from "../../../LoadingScreen/LoadingPage.jsx";
+import { toast } from "react-toastify";
 
 function ViewerView({
   user,
@@ -10,6 +15,9 @@ function ViewerView({
   initialConnectStatus,
   initialFollowStatus,
 }) {
+  const navigate = useNavigate();
+  const [isBlocking, setIsBlocking] = useState(false);
+
   const [connectStatus, setConnectStatus] = useState(initialConnectStatus);
   const [isFollowing, setIsFollowing] = useState(
     initialFollowStatus === "Following" || initialConnectStatus === "Connection"
@@ -22,6 +30,7 @@ function ViewerView({
   const dropdownRef = useRef(null);
 
   const [showMessageModal, setShowMessageModal] = useState(false);
+
   useEffect(() => {
     if (connectStatus === "Connection") {
       setIsFollowing(true);
@@ -40,6 +49,9 @@ function ViewerView({
     document.addEventListener("mousedown", handleClickOutside);
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
+  // if (isBlocking) {
+  //   return <LoadingPage message="Redirecting to feed..." />;
+  // }
 
   const connectionStatusLabel = {
     Connection: "Connected",
@@ -55,9 +67,11 @@ function ViewerView({
           userId: user._id,
         });
         console.log("Followed successfully:", res.data);
+        // toast.success("You are now following this user.");
         setIsFollowing(true);
       } catch (err) {
         console.error("Follow error:", err.response?.data || err.message);
+        // toast.error("Failed to follow user.");
       }
     } else {
       setShowUnfollowModal(true);
@@ -68,9 +82,11 @@ function ViewerView({
     try {
       const res = await axios.delete(`/connections/unfollow/${user._id}`);
       console.log("Unfollowed successfully:", res.status);
+      toast.success("You have unfollowed this user.");
       setIsFollowing(false);
     } catch (err) {
       console.error("Unfollow error:", err.response?.data || err.message);
+      toast.error("Failed to unfollow user.");
     } finally {
       setShowUnfollowModal(false);
     }
@@ -81,6 +97,7 @@ function ViewerView({
         // Handle disconnection
         await axios.delete(`/connections/${user._id}`);
         setConnectStatus("No Connection"); // Update state immediately
+        toast.success("Connection removed.");
 
         // Try to unfollow after disconnecting, but ignore 404 errors
         try {
@@ -98,6 +115,8 @@ function ViewerView({
         });
         if (res.status === 201) {
           console.log("Connection request sent:", res.data);
+          toast.success("Connection request sent.");
+
           setConnectStatus("Pending"); // Update state immediately
         }
       } else if (connectStatus === "Request") {
@@ -107,6 +126,7 @@ function ViewerView({
         // Handle canceling a pending request
         await axios.delete(`/connections/${user._id}/pending`);
         setConnectStatus("No Connection"); // Update state immediately after successful deletion
+        toast.success("Your invitation to connect was withdrawn");
       }
     } catch (err) {
       console.error("Connection error:", err.response?.data || err.message);
@@ -151,6 +171,7 @@ function ViewerView({
       }
 
       console.log("Connection successfully accepted");
+      toast.success("Connection accepted.");
     } catch (err) {
       // Revert everything if connection acceptance fails
       setConnectStatus("Request");
@@ -159,6 +180,7 @@ function ViewerView({
         "Accept connection error:",
         err.response?.data || err.message
       );
+      toast.error("Failed to accept connection.");
 
       if (err.response?.status === 409) {
         alert("Connection already exists");
@@ -178,7 +200,7 @@ function ViewerView({
       className=" flex gap-2 flex-wrap sm:flex-nowrap"
     >
       <button
-        className="px-4 py-2 bg-blue-600 text-boxbackground   rounded-full text-sm"
+        className="px-4 py-0 h-8 bg-blue-600 text-boxbackground   rounded-full text-sm"
         onClick={handleMessage}
         aria-label="Send message"
       >
@@ -186,8 +208,7 @@ function ViewerView({
       </button>
 
       <button
-        data-testid="connect-button"
-        className={`px-4 py-2 border rounded-full text-sm capitalize transition-all duration-300 ease-in-out ${
+        className={`px-4 py-0 h-8 border rounded-full text-sm capitalize transition-all duration-300 ease-in-out ${
           ["Connection", "Pending", "Request"].includes(connectStatus)
             ? "bg-blue-600 text-boxbackground  "
             : "text-blue-600 border-blue-600"
@@ -213,7 +234,7 @@ function ViewerView({
       {/* More dropdown */}
       <div className="relative" ref={dropdownRef}>
         <button
-          className="px-4 py-2 border border-black text-black rounded-full text-sm outline outline-0 hover:outline-2 hover:outline-black transition-all duration-200"
+          className="h-8 py-0 px-4 text-sm border border-text text-hoverOutlineColor rounded-full hover:outline hover:outline-1 hover:outline-text hover:bg-moreHoverBg transition duration-200"
           onClick={() => setDropdownOpen((prev) => !prev)}
           aria-haspopup="true"
           aria-expanded={dropdownOpen}
@@ -234,13 +255,14 @@ function ViewerView({
               {isFollowing ? "Unfollow" : "Follow"}
             </button>
             <button
-              className="w-full text-left px-4 py-2 hover:bg-gray-100 text-sm text-red-600"
+              className="w-full text-left px-4 py-2 hover:bg-gray-100 text-sm flex items-center gap-2"
               onClick={() => {
                 setDropdownOpen(false);
-                setShowReportModal(true); // open the modal
+                setShowReportModal(true);
               }}
               aria-label="Report or block this user"
             >
+              <FlagIcon fontSize="small" />
               Report / Block
             </button>
           </div>
@@ -271,7 +293,7 @@ function ViewerView({
           cancelLabel="Cancel"
         />
       )}
-      <ReportBlockModal
+      {/* <ReportBlockModal
         isOpen={showReportModal}
         onClose={() => setShowReportModal(false)}
         onBlock={() => {
@@ -283,7 +305,19 @@ function ViewerView({
           setShowReportModal(false);
         }}
         fullName={`${user.firstName} ${user.lastName}`}
+      /> */}
+      <ReportBlockModal
+        isOpen={showReportModal}
+        onClose={() => setShowReportModal(false)}
+        fullName={`${user.firstName} ${user.lastName}`}
+        userId={user._id} // the user being viewed (target)
+        viewerId={viewerId} // logged-in user
+        onBlocked={() => {
+          // setIsBlocking(true); // show loading first
+          setTimeout(() => navigate("/feed"), 1000); // then redirect
+        }}
       />
+
       {showMessageModal && (
         <NewMessageModal
           recipient={user}
