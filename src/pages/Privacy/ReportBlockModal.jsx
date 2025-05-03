@@ -14,10 +14,7 @@ const ReportBlockModal = ({
   viewerId, // logged-in user (block initiator)
   onBlocked,
 }) => {
-  // const [showBlockConfirm, setShowBlockConfirm] = useState(false);
-  // const [showReportModal, setShowReportModal] = useState(false);
   const [modalStage, setModalStage] = useState("main"); // "main" | "blockConfirm" | "report"
-
   const [isBlocking, setIsBlocking] = useState(false);
   useEffect(() => {
     if (isOpen) {
@@ -42,7 +39,7 @@ const ReportBlockModal = ({
         if (typeof onBlocked === "function") {
           onBlocked();
         }
-      }, 800);
+      }, 100);
     } catch (err) {
       toast.error("Failed to block user.");
       console.error("Block failed:");

@@ -17,7 +17,7 @@ export default defineConfig({
     provider: "v8",
     coverage: {
       all: true,
-      include: ["src/pages/Settings/**/*.{js,jsx}"],
+      include: ["src/pages/Privacy/**/*.{js,jsx}"],
       exclude: [
         // MAIN ITEMS FOR EXCLUSIONS
         "**/tests/**",

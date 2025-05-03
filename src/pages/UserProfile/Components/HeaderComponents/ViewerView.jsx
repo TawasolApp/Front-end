@@ -281,19 +281,6 @@ function ViewerView({
           cancelLabel="Cancel"
         />
       )}
-      {/* <ReportBlockModal
-        isOpen={showReportModal}
-        onClose={() => setShowReportModal(false)}
-        onBlock={() => {
-          console.log("Block logic here");
-          setShowReportModal(false);
-        }}
-        onReport={() => {
-          console.log("Report logic here");
-          setShowReportModal(false);
-        }}
-        fullName={`${user.firstName} ${user.lastName}`}
-      /> */}
       <ReportBlockModal
         isOpen={showReportModal}
         onClose={() => setShowReportModal(false)}

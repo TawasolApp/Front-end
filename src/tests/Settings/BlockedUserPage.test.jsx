@@ -28,7 +28,7 @@ describe("BlockedUsersPage", () => {
   it("renders loading state initially", async () => {
     mockAxios.axiosInstance.get.mockReturnValueOnce(new Promise(() => {}));
     render(renderWithRouter(<BlockedUsersPage />));
-    expect(await screen.findByText(/loading/i)).toBeTruthy(); // based on your LoadingPage
+    expect(await screen.findByTestId("loading-page")).toBeInTheDocument();
   });
 
   it("renders empty state when no blocked users", async () => {
@@ -56,7 +56,7 @@ describe("BlockedUsersPage", () => {
       await screen.findByText("You’re currently blocking 1 person.")
     ).toBeInTheDocument();
     expect(screen.getByText("Alice Johnson")).toBeInTheDocument();
-    expect(screen.getByText("Unblock")).toBeInTheDocument();
+    expect(screen.getByTestId("unblock-button-u1")).toBeInTheDocument();
   });
 
   it("unblocks a user after confirmation", async () => {
@@ -74,13 +74,14 @@ describe("BlockedUsersPage", () => {
 
     render(renderWithRouter(<BlockedUsersPage />));
 
-    // Wait for user to appear
     await screen.findByText("Alice Johnson");
 
-    // Click unblock and confirm
-    fireEvent.click(screen.getByText("Unblock"));
+    // Click the unblock button from the list
+    fireEvent.click(screen.getByTestId("unblock-button-u1"));
+
+    // Confirm modal appears
     await screen.findByText("Unblock member?");
-    fireEvent.click(screen.getByText("Unblock"));
+    fireEvent.click(screen.getByTestId("confirm-modal"));
 
     await waitFor(() => {
       expect(mockAxios.axiosInstance.post).toHaveBeenCalledWith(
@@ -89,6 +90,83 @@ describe("BlockedUsersPage", () => {
       expect(toast.success).toHaveBeenCalledWith(
         "User unblocked successfully."
       );
+    });
+  });
+  it("logs error to console if fetching blocked users fails", async () => {
+    const consoleSpy = vi.spyOn(console, "error").mockImplementation(() => {});
+    mockAxios.axiosInstance.get.mockRejectedValueOnce(
+      new Error("Network error")
+    );
+
+    render(renderWithRouter(<BlockedUsersPage />));
+
+    await waitFor(() => {
+      expect(consoleSpy).toHaveBeenCalledWith(
+        "Failed to fetch blocked users:",
+        expect.any(Error)
+      );
+    });
+
+    consoleSpy.mockRestore();
+  });
+  it("shows 'person' when blocking one user", async () => {
+    mockAxios.axiosInstance.get.mockResolvedValueOnce({
+      data: [
+        {
+          userId: "u1",
+          firstName: "Alice",
+          lastName: "Johnson",
+        },
+      ],
+    });
+
+    render(renderWithRouter(<BlockedUsersPage />));
+    expect(
+      await screen.findByText("You’re currently blocking 1 person.")
+    ).toBeInTheDocument();
+  });
+  it("shows 'people' when blocking multiple users", async () => {
+    mockAxios.axiosInstance.get.mockResolvedValueOnce({
+      data: [
+        { userId: "u1", firstName: "Alice", lastName: "Johnson" },
+        { userId: "u2", firstName: "Bob", lastName: "Smith" },
+      ],
+    });
+
+    render(renderWithRouter(<BlockedUsersPage />));
+    expect(
+      await screen.findByText("You’re currently blocking 2 people.")
+    ).toBeInTheDocument();
+  });
+
+  it("resets modal state on cancel (setShowConfirm and setSelectedUserId)", async () => {
+    mockAxios.axiosInstance.get.mockResolvedValueOnce({
+      data: [
+        {
+          userId: "u1",
+          firstName: "Alice",
+          lastName: "Johnson",
+        },
+      ],
+    });
+
+    render(renderWithRouter(<BlockedUsersPage />));
+
+    // Wait for user to load
+    await screen.findByText("Alice Johnson");
+
+    // Open the confirmation modal
+    fireEvent.click(screen.getByTestId("unblock-button-u1"));
+
+    // Ensure modal is shown
+    expect(await screen.findByText("Unblock member?")).toBeInTheDocument();
+
+    // Click cancel
+    fireEvent.click(screen.getByText("Cancel"));
+
+    // Confirm modal has closed and user deselected
+    await waitFor(() => {
+      expect(screen.queryByText("Unblock member?")).not.toBeInTheDocument();
     });
   });
 
@@ -110,9 +188,9 @@ describe("BlockedUsersPage", () => {
     render(renderWithRouter(<BlockedUsersPage />));
 
     await screen.findByText("Alice Johnson");
-    fireEvent.click(screen.getByText("Unblock"));
+    fireEvent.click(screen.getByTestId("unblock-button-u1"));
     await screen.findByText("Unblock member?");
-    fireEvent.click(screen.getByText("Unblock"));
+    fireEvent.click(screen.getByTestId("confirm-modal"));
 
     await waitFor(() => {
       expect(toast.error).toHaveBeenCalledWith("Failed to unblock user.");

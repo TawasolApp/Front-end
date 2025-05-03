@@ -101,6 +101,7 @@ const BlockedUsersPage = () => {
                   </div>
                   <button
                     className="text-unblockText font-semibold hover:bg-unblockBg hover px-4 py-1 rounded-full transition"
+                    data-testid={`unblock-button-${user.userId}`}
                     onClick={() => {
                       setSelectedUserId(user.userId);
                       setShowConfirm(true);

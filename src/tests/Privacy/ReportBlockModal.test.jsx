@@ -73,6 +73,27 @@ describe("ReportBlockModal", () => {
     fireEvent.click(screen.getByText("Block John Doe"));
     expect(screen.getByTestId("confirm-modal")).toBeInTheDocument();
   });
+  it("goes back to main modal on cancel in ConfirmModal", () => {
+    render(
+      <ReportBlockModal
+        isOpen={true}
+        onClose={onClose}
+        fullName="John Doe"
+        userId="user123"
+        viewerId="viewer123"
+      />
+    );
+
+    // Open block confirm modal
+    fireEvent.click(screen.getByText("Block John Doe"));
+    expect(screen.getByTestId("confirm-modal")).toBeInTheDocument();
+
+    // Click cancel button
+    fireEvent.click(screen.getByText("Cancel"));
+
+    // Main modal should reappear
+    expect(screen.getByText("Report or block")).toBeInTheDocument();
+  });
 
   it("renders report modal from main modal", () => {
     render(
