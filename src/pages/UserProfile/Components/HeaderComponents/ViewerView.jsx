@@ -49,14 +49,10 @@ function ViewerView({
     document.addEventListener("mousedown", handleClickOutside);
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
-  // if (isBlocking) {
-  //   return <LoadingPage message="Redirecting to feed..." />;
-  // }
-
   const connectionStatusLabel = {
     Connection: "Connected",
     Pending: "Pending",
-    Request: "Accept", // Changed from "Request" to "Accept" for better UX
+    Request: "Accept",
     "No Connection": "Connect",
   };
 
@@ -71,7 +67,6 @@ function ViewerView({
         setIsFollowing(true);
       } catch (err) {
         console.error("Follow error:", err.response?.data || err.message);
-        // toast.error("Failed to follow user.");
       }
     } else {
       setShowUnfollowModal(true);
