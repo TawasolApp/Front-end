@@ -18,6 +18,12 @@ vi.mock("../../pages/Search/SearchCompany", () => ({
   ),
 }));
 
+vi.mock("../../pages/Search/SearchJobs", () => ({
+  default: () => (
+    <div data-testid="search-jobs">Search jobs Component</div>
+  ),
+}));
+
 // Helper function to render the component with router context
 const renderWithRouter = (searchText = "test-query") => {
   return render(
@@ -200,5 +206,38 @@ describe("SearchContainer", () => {
 
     // Input should have the new value
     expect(industryInput.value).toBe("Technology");
+  });
+
+  it("renders jobs filter and handles industry/location input", () => {
+    renderWithRouter();
+  
+    // Open dropdown and select Jobs
+    fireEvent.click(screen.getByText("Posts"));
+    fireEvent.click(screen.getByRole("menuitem", { name: "Jobs" }));
+  
+    // Confirm filter text updated
+    expect(screen.getByText("Jobs")).toBeInTheDocument();
+  
+    // Check that both industry and location inputs are rendered
+    const industryInput = screen.getByPlaceholderText("Industry");
+    const locationInput = screen.getByPlaceholderText("Location");
+  
+    expect(industryInput).toBeInTheDocument();
+    expect(locationInput).toBeInTheDocument();
+  
+    // Type into the inputs
+    fireEvent.change(industryInput, { target: { value: "Software" } });
+    fireEvent.change(locationInput, { target: { value: "Cairo" } });
+  
+    expect(industryInput.value).toBe("Software");
+    expect(locationInput.value).toBe("Cairo");
+  
+    // Verify that SearchJobs component is rendered
+    expect(screen.getByTestId("search-jobs")).toBeInTheDocument();
+  
+    // Check that other filters/components are not rendered
+    expect(screen.queryByTestId("search-posts")).not.toBeInTheDocument();
+    expect(screen.queryByTestId("search-people")).not.toBeInTheDocument();
+    expect(screen.queryByTestId("search-companies")).not.toBeInTheDocument();
   });
 });
