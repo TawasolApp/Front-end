@@ -18,7 +18,7 @@ vi.mock(
       ) : null,
     displayDate: (date) =>
       typeof date === "string" ? date.split("T")[0] : "Date",
-  }),
+  })
 );
 
 // Mock Redux store with userId
@@ -33,7 +33,7 @@ const renderWithProvider = (ui) => {
   return render(
     <Provider store={mockStore}>
       <MemoryRouter>{ui}</MemoryRouter>
-    </Provider>,
+    </Provider>
   );
 };
 
@@ -53,7 +53,7 @@ describe("GenericCard Component", () => {
       description: "Worked on frontend and backend.",
     };
     renderWithProvider(
-      <GenericCard item={item} isOwner={true} type="workExperience" />,
+      <GenericCard item={item} isOwner={true} type="workExperience" />
     );
     expect(screen.getByText("Software Engineer")).toBeInTheDocument();
     expect(screen.getByText("Tech Corp")).toBeInTheDocument();
@@ -68,7 +68,7 @@ describe("GenericCard Component", () => {
       grade: "3.9 GPA",
     };
     renderWithProvider(
-      <GenericCard item={eduItem} isOwner={true} type="education" />,
+      <GenericCard item={eduItem} isOwner={true} type="education" />
     );
     expect(screen.getByTestId("school")).toHaveTextContent("Cairo University");
     expect(screen.getByTestId("grade")).toHaveTextContent("Grade: 3.9 GPA");
@@ -76,7 +76,7 @@ describe("GenericCard Component", () => {
   it("returns null for empty education item", () => {
     const emptyEdu = { school: "" };
     const { container } = renderWithProvider(
-      <GenericCard item={emptyEdu} isOwner={true} type="education" />,
+      <GenericCard item={emptyEdu} isOwner={true} type="education" />
     );
     expect(container.firstChild).toBeNull(); // Nothing rendered
   });
@@ -87,7 +87,7 @@ describe("GenericCard Component", () => {
       locationType: "on_site",
     };
     renderWithProvider(
-      <GenericCard item={item} isOwner={true} type="workExperience" />,
+      <GenericCard item={item} isOwner={true} type="workExperience" />
     );
     expect(screen.getByText("On-site")).toBeInTheDocument();
   });
@@ -99,7 +99,7 @@ describe("GenericCard Component", () => {
         isOwner={true}
         showEditIcons={true}
         type="education"
-      />,
+      />
     );
     fireEvent.click(screen.getByRole("button", { name: /✎/i }));
     expect(screen.getByTestId("generic-modal")).toBeInTheDocument();
@@ -107,7 +107,7 @@ describe("GenericCard Component", () => {
   it("returns null for empty workExperience", () => {
     const item = { company: "", title: "" };
     const { container } = renderWithProvider(
-      <GenericCard item={item} isOwner={true} type="workExperience" />,
+      <GenericCard item={item} isOwner={true} type="workExperience" />
     );
     expect(container.firstChild).toBeNull();
   });
@@ -115,7 +115,7 @@ describe("GenericCard Component", () => {
   it("returns null for empty skills", () => {
     const item = { skillName: "" };
     const { container } = renderWithProvider(
-      <GenericCard item={item} isOwner={true} type="skills" />,
+      <GenericCard item={item} isOwner={true} type="skills" />
     );
     expect(container.firstChild).toBeNull();
   });
@@ -123,7 +123,7 @@ describe("GenericCard Component", () => {
   it("returns null for empty certification", () => {
     const item = { name: "" };
     const { container } = renderWithProvider(
-      <GenericCard item={item} isOwner={true} type="certification" />,
+      <GenericCard item={item} isOwner={true} type="certification" />
     );
     expect(container.firstChild).toBeNull();
   });
@@ -131,14 +131,14 @@ describe("GenericCard Component", () => {
   it("returns false for unknown type (default branch)", () => {
     const item = { custom: "value" };
     const { container } = renderWithProvider(
-      <GenericCard item={item} isOwner={true} type="customType" />,
+      <GenericCard item={item} isOwner={true} type="customType" />
     );
     expect(container.firstChild).not.toBeNull(); // Should render something
   });
   it("returns null for empty workExperience", () => {
     const item = { company: "", title: "" };
     const { container } = renderWithProvider(
-      <GenericCard item={item} isOwner={true} type="workExperience" />,
+      <GenericCard item={item} isOwner={true} type="workExperience" />
     );
     expect(container.firstChild).toBeNull();
   });
@@ -146,7 +146,7 @@ describe("GenericCard Component", () => {
   it("returns null for empty skills", () => {
     const item = { skillName: "" };
     const { container } = renderWithProvider(
-      <GenericCard item={item} isOwner={true} type="skills" />,
+      <GenericCard item={item} isOwner={true} type="skills" />
     );
     expect(container.firstChild).toBeNull();
   });
@@ -154,7 +154,7 @@ describe("GenericCard Component", () => {
   it("returns null for empty certification", () => {
     const item = { name: "" };
     const { container } = renderWithProvider(
-      <GenericCard item={item} isOwner={true} type="certification" />,
+      <GenericCard item={item} isOwner={true} type="certification" />
     );
     expect(container.firstChild).toBeNull();
   });
@@ -162,7 +162,7 @@ describe("GenericCard Component", () => {
   it("returns false for unknown type (default branch)", () => {
     const item = { custom: "value" };
     const { container } = renderWithProvider(
-      <GenericCard item={item} isOwner={true} type="customType" />,
+      <GenericCard item={item} isOwner={true} type="customType" />
     );
     expect(container.firstChild).not.toBeNull(); // Should render something
   });
@@ -173,7 +173,7 @@ describe("GenericCard Component", () => {
       issueDate: "2023-01-01",
     };
     renderWithProvider(
-      <GenericCard item={item} isOwner={true} type="certification" />,
+      <GenericCard item={item} isOwner={true} type="certification" />
     );
     expect(screen.getByText("FreeCodeCamp")).toBeInTheDocument();
   });
@@ -184,7 +184,7 @@ describe("GenericCard Component", () => {
       issueDate: "2023-01-01",
     };
     renderWithProvider(
-      <GenericCard item={item} isOwner={true} type="certification" />,
+      <GenericCard item={item} isOwner={true} type="certification" />
     );
     expect(screen.getByText("No Company Cert")).toBeInTheDocument();
     expect(screen.queryByText(/FreeCodeCamp/)).not.toBeInTheDocument();
@@ -192,7 +192,7 @@ describe("GenericCard Component", () => {
   it("returns null for empty work experience item", () => {
     const item = { company: "", title: "" };
     const { container } = renderWithProvider(
-      <GenericCard item={item} isOwner={true} type="workExperience" />,
+      <GenericCard item={item} isOwner={true} type="workExperience" />
     );
     expect(container.firstChild).toBeNull();
   });
@@ -200,7 +200,7 @@ describe("GenericCard Component", () => {
   it("returns null for empty skill item", () => {
     const item = { skillName: "" };
     const { container } = renderWithProvider(
-      <GenericCard item={item} isOwner={true} type="skills" />,
+      <GenericCard item={item} isOwner={true} type="skills" />
     );
     expect(container.firstChild).toBeNull();
   });
@@ -208,7 +208,7 @@ describe("GenericCard Component", () => {
   it("returns null for empty certification item", () => {
     const item = { name: "" };
     const { container } = renderWithProvider(
-      <GenericCard item={item} isOwner={true} type="certification" />,
+      <GenericCard item={item} isOwner={true} type="certification" />
     );
     expect(container.firstChild).toBeNull();
   });
@@ -219,14 +219,14 @@ describe("GenericCard Component", () => {
       employmentType: "Full-time",
     };
     renderWithProvider(
-      <GenericCard item={item} isOwner={true} type="workExperience" />,
+      <GenericCard item={item} isOwner={true} type="workExperience" />
     );
     expect(screen.getByText("· Full-time")).toBeInTheDocument();
   });
   it("renders location only", () => {
     const item = { title: "Dev", company: "X", location: "Cairo" };
     renderWithProvider(
-      <GenericCard item={item} isOwner={true} type="workExperience" />,
+      <GenericCard item={item} isOwner={true} type="workExperience" />
     );
     expect(screen.getByText("Cairo")).toBeInTheDocument();
   });
@@ -239,7 +239,7 @@ describe("GenericCard Component", () => {
       locationType: "remote",
     };
     renderWithProvider(
-      <GenericCard item={item} isOwner={true} type="workExperience" />,
+      <GenericCard item={item} isOwner={true} type="workExperience" />
     );
     expect(screen.getByText("•")).toBeInTheDocument();
   });
@@ -248,18 +248,24 @@ describe("GenericCard Component", () => {
     it(`renders locationType: ${type}`, () => {
       const item = { title: "Dev", company: "X", locationType: type };
       renderWithProvider(
-        <GenericCard item={item} isOwner={true} type="workExperience" />,
+        <GenericCard item={item} isOwner={true} type="workExperience" />
       );
       expect(
-        screen.getByText(type.charAt(0).toUpperCase() + type.slice(1)),
+        screen.getByText(type.charAt(0).toUpperCase() + type.slice(1))
       ).toBeInTheDocument();
     });
   });
 
   it("renders skill card without endorsement for owner", () => {
     const skillItem = { skillName: "React" };
+    const user = { _id: "user123", visibility: "public" }; // Required prop
     renderWithProvider(
-      <GenericCard item={skillItem} isOwner={true} type="skills" />,
+      <GenericCard
+        item={skillItem}
+        isOwner={true}
+        type="skills"
+        user={user} // 👈 Fix: provide required prop
+      />
     );
     expect(screen.getByText("React")).toBeInTheDocument();
   });
@@ -274,7 +280,7 @@ describe("GenericCard Component", () => {
         showEditIcons={true}
         onEdit={onEdit}
         type="workExperience"
-      />,
+      />
     );
     fireEvent.click(screen.getByRole("button", { name: /✎/i }));
     expect(onEdit).toHaveBeenCalled();
@@ -288,10 +294,10 @@ describe("GenericCard Component", () => {
         isOwner={false}
         showEditIcons={true}
         type="workExperience"
-      />,
+      />
     );
     expect(
-      screen.queryByRole("button", { name: /✎/i }),
+      screen.queryByRole("button", { name: /✎/i })
     ).not.toBeInTheDocument();
   });
   it("renders certification card with full data", () => {
@@ -303,7 +309,7 @@ describe("GenericCard Component", () => {
       expiryDate: "2024-01-01",
     };
     renderWithProvider(
-      <GenericCard item={certItem} isOwner={true} type="certification" />,
+      <GenericCard item={certItem} isOwner={true} type="certification" />
     );
     expect(screen.getByText("Certified Developer")).toBeInTheDocument();
     expect(screen.getByText("Tech Academy")).toBeInTheDocument();
@@ -317,7 +323,7 @@ describe("GenericCard Component", () => {
         isOwner={true}
         showEditIcons={true}
         type="workExperience"
-      />,
+      />
     );
 
     fireEvent.click(screen.getByRole("button", { name: /✎/i }));
@@ -337,7 +343,7 @@ describe("GenericCard Component", () => {
         isOwner={true}
         showEditIcons={true}
         type="workExperience"
-      />,
+      />
     );
     fireEvent.click(screen.getByRole("button", { name: /✎/i }));
     expect(screen.getByTestId("generic-modal")).toBeInTheDocument();

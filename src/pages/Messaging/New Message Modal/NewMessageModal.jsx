@@ -41,6 +41,7 @@ const NewMessageModal = ({ recipient, onClose }) => {
 
   return (
     <div
+      data-testid="message-modal"
       className={`fixed bottom-4 right-4 z-50 transition-all duration-300 ${
         isMinimized ? "w-[20vw]" : "w-[30vw]"
       } min-w-[300px]`}

@@ -170,6 +170,62 @@ describe("ThemeSettings Component", () => {
 
     expect(screen.getByText("Delete your account")).toBeInTheDocument();
   });
+  test("navigates to profile visibility settings", () => {
+    reactRedux.useSelector.mockImplementation((selector) => {
+      return selector({
+        theme: { theme: "light" },
+        authentication: { email: "test@example.com", isSocialLogin: false },
+      });
+    });
+
+    render(<ThemeSettings />);
+
+    fireEvent.click(screen.getByText("Profile visibility").closest("div"));
+    expect(mockNavigate).toHaveBeenCalledWith(
+      "/mypreferences/profile-visibility"
+    );
+  });
+  test("navigates to blocking list page", () => {
+    reactRedux.useSelector.mockImplementation((selector) => {
+      return selector({
+        theme: { theme: "light" },
+        authentication: { email: "test@example.com", isSocialLogin: false },
+      });
+    });
+
+    render(<ThemeSettings />);
+
+    fireEvent.click(screen.getByText("Blocking list").closest("div"));
+    expect(mockNavigate).toHaveBeenCalledWith(
+      "/mypreferences/manage-by-blocked-list"
+    );
+  });
+  test("navigates to switch profile context", () => {
+    reactRedux.useSelector.mockImplementation((selector) => {
+      return selector({
+        theme: { theme: "light" },
+        authentication: { email: "test@example.com", isSocialLogin: false },
+      });
+    });
+
+    render(<ThemeSettings />);
+
+    fireEvent.click(screen.getByText("Switch Profile Context").closest("div"));
+    expect(mockNavigate).toHaveBeenCalledWith("/change-state");
+  });
+  test("displays footer note about changes", () => {
+    reactRedux.useSelector.mockImplementation((selector) => {
+      return selector({
+        theme: { theme: "light" },
+        authentication: { email: null, isSocialLogin: false },
+      });
+    });
+
+    render(<ThemeSettings />);
+    expect(
+      screen.getByText(/Changes will be applied immediately/i)
+    ).toBeInTheDocument();
+  });
 
   test("navigates to correct routes when options are clicked", () => {
     reactRedux.useSelector.mockImplementation((selector) => {

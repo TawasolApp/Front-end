@@ -38,11 +38,13 @@ export default defineConfig({
         "**/.gitignore",
 
         // ITEMS WITH SPECIFIC EXCLUSIONS
+        "src/pages/Error/Error404.jsx",
+        "src/pages/LoadingScreen/LoadingPage.jsx",
         "src/pages/Feed/GenericComponents/reactionIcons.js",
         "src/pages/Company/Components/Slider/PostsSlider.jsx",
         "src/pages/Company/Components/Pages/PostsPage.jsx",
-        "src/Pages/UserProfile/Components/Sections/ResumeSection.jsx",
-        "src/pages/UserProfile/Components/UserPostsSlider/UserPostsSlider.jsx",
+        "src/pages/Settings/ConnectionRequestsManagement.jsx",
+        "src/Pages/Settings/ChangeState.jsx",
       ],
     },
     setupFiles: "./src/setupTests.js",

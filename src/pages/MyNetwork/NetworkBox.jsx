@@ -37,7 +37,7 @@ const NetworkBox = () => {
 
       if (node) observer.current.observe(node);
     },
-    [loading, hasMore],
+    [loading, hasMore]
   );
 
   useEffect(() => {
@@ -78,12 +78,12 @@ const NetworkBox = () => {
         isAccept: true,
       });
       setPendingRequests((prevRequests) =>
-        prevRequests.filter((request) => request.userId !== userId),
+        prevRequests.filter((request) => request.userId !== userId)
       );
     } catch (error) {
       console.error(
         "Failed to accept connection:",
-        error.response?.data?.message || error.message,
+        error.response?.data?.message || error.message
       );
     }
   };
@@ -92,12 +92,12 @@ const NetworkBox = () => {
     try {
       await axiosInstance.patch(`/connections/${userId}`, { isAccept: false });
       setPendingRequests((prevRequests) =>
-        prevRequests.filter((request) => request.userId !== userId),
+        prevRequests.filter((request) => request.userId !== userId)
       );
     } catch (error) {
       console.error(
         "Failed to ignore connection:",
-        error.response?.data?.message || error.message,
+        error.response?.data?.message || error.message
       );
     }
   };
@@ -106,13 +106,13 @@ const NetworkBox = () => {
     try {
       // Check if request already sent
       const isAlreadySent = sentRequests.some(
-        (request) => request.userId === userId,
+        (request) => request.userId === userId
       );
 
       if (isAlreadySent) {
         // Immediately remove from UI
         setSentRequests((prev) =>
-          prev.filter((request) => request.userId !== userId),
+          prev.filter((request) => request.userId !== userId)
         );
         await axiosInstance.delete(`/connections/${userId}/pending`);
       } else {
@@ -142,22 +142,22 @@ const NetworkBox = () => {
     } catch (error) {
       console.error(
         "Failed to handle connection:",
-        error.response?.data?.message || error.message,
+        error.response?.data?.message || error.message
       );
       // Revert UI changes if request fails
       setSentRequests((prev) =>
         isAlreadySent
           ? [...prev, { userId }]
-          : prev.filter((request) => request.userId !== userId),
+          : prev.filter((request) => request.userId !== userId)
       );
     }
   };
 
   const handlePremiumClick = () => {
     if (isPremium) {
-      navigate('/current-plan');
+      navigate("/current-plan");
     } else {
-      navigate('/premium');
+      navigate("/premium");
     }
   };
 
@@ -191,8 +191,7 @@ const NetworkBox = () => {
             </div>
 
             <div
-              data-testid="blocked"
-              onClick={() => navigate("/blocked")}
+              onClick={() => navigate("/mypreferences/manage-by-blocked-list")}
               className="flex items-center p-4 hover:bg-cardBackgroundHover rounded-lg cursor-pointer transition-colors"
             >
               <BlockIcon className="text-textActivity text-2xl mr-4" />
@@ -299,8 +298,8 @@ const NetworkBox = () => {
             <p className="text-textPlaceholder mb-4">
               Millions of members use Premium
             </p>
-            <button 
-              onClick={handlePremiumClick} 
+            <button
+              onClick={handlePremiumClick}
               className="px-4 py-2 bg-amberLight hover:bg-amberLightHover text-amberTextLight dark:text-amberTextDark font-medium rounded-lg transition-colors"
             >
               Try Premium for EGPO

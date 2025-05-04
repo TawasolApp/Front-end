@@ -95,14 +95,14 @@ All subviews receive `results` array via props or React Router’s `useOutletCon
 flowchart TB
   SC[SearchContainer]
   API[Backend /search endpoint]
-  UI[TabNav and SearchBar]
+  UI[TabNav & SearchBar]
   SV[Active Tab Component]
-  CARD[Result Cards (CompanyCard, UserCard, etc.)]
+  CARD[Result Cards]
 
+  UI --> SC
   SC -->|GET /search/:tab?q=...| API
-  API -->|results[]| SC
-  SC --> UI
-  SC -->|pass results| SV
+  API -->|results| SV
+  SC --> SV
   SV --> CARD
   CARD -->|action| API
 ```

@@ -19,7 +19,6 @@ import JobsPage from "../pages/Company/Components/Pages/JobsPage";
 import CreateCompanyPage from "../pages/Company/Components/CreateCompanyPage/CreateCompanyPage";
 
 import ConnectionPage from "../pages/MyNetwork/Connections/ConnectionPage";
-import BlockedPage from "../pages/MyNetwork/BlockedPage";
 import FollowPage from "../pages/MyNetwork/FollowPage";
 import ManageConnections from "../pages/MyNetwork/ManageConnections";
 import NetworkBox from "../pages/MyNetwork/NetworkBox";
@@ -53,7 +52,7 @@ import NotificationsPage from "../pages/Notifications/NotificationsPage";
 import PremiumPlan from "../pages/PremiumPlan/PremiumPlan";
 import CheckoutPage from "../pages/PremiumPlan/checkout";
 import CurrentPlanPage from "../pages/PremiumPlan/CurrentPlanPage";
-import SubscriptionFailedPage  from "../pages/PremiumPlan/FailedPremiumPlan";
+import SubscriptionFailedPage from "../pages/PremiumPlan/FailedPremiumPlan";
 
 import ChangeState from "../pages/Settings/ChangeState";
 import LoadingPage from "../pages/LoadingScreen/LoadingPage";
@@ -82,7 +81,7 @@ const ProtectedRoutes = () => {
       />
 
       <Route path="/settings" element={RenderWithNavbar(<ThemeSettings />)} />
-      <Route path="/change-state" element={RenderWithNavbar(<ChangeState />)}/>
+      <Route path="/change-state" element={RenderWithNavbar(<ChangeState />)} />
       <Route
         path="/mypreferences/manage-by-blocked-list"
         element={RenderWithNavbar(<BlockedUsersPage />)}
@@ -109,28 +108,33 @@ const ProtectedRoutes = () => {
         <Route path="certification" element={<CertificationsPage />} />
         <Route path="skills" element={<SkillsPage />} />
         <Route path="posts" element={<UserPostsPage />} />
-
-
       </Route>
 
       <Route
         path="/connections/:userId"
         element={RenderWithNavbar(<ConnectionPage />)}
       />
-      <Route path="/blocked" element={RenderWithNavbar(<BlockedPage />)} />
       <Route path="/follow" element={RenderWithNavbar(<FollowPage />)} />
       <Route
         path="/manage-connections"
         element={RenderWithNavbar(<ManageConnections />)}
       />
       <Route path="/network-box" element={RenderWithNavbar(<NetworkBox />)} />
-      <Route path="/notifications" element={RenderWithNavbar(<NotificationsPage />)} />
+      <Route
+        path="/notifications"
+        element={RenderWithNavbar(<NotificationsPage />)}
+      />
 
       <Route path="/premium" element={RenderWithNavbar(<PremiumPlan />)} />
       <Route path="/checkout" element={RenderWithNavbar(<CheckoutPage />)} />
-      <Route path="/current-plan" element={RenderWithNavbar(<CurrentPlanPage />)} />
-      <Route path="/rejected-plan" element={RenderWithNavbar(<SubscriptionFailedPage />)} />
-
+      <Route
+        path="/current-plan"
+        element={RenderWithNavbar(<CurrentPlanPage />)}
+      />
+      <Route
+        path="/rejected-plan"
+        element={RenderWithNavbar(<SubscriptionFailedPage />)}
+      />
 
       <Route path="/feed/:id" element={RenderWithNavbar(<SinglePost />)} />
       <Route path="/feed" element={RenderWithNavbar(<FeedContainer />)} />
@@ -143,12 +147,9 @@ const ProtectedRoutes = () => {
         element={RenderWithNavbar(<SavedPostsContainer />)}
       />
 
-      <Route path="/AdminPanel" element={<AdminPanel />} />
+      <Route path="/AdminPanel" element={RenderWithNavbar(<AdminPanel />)} />
 
-      <Route
-        path="/messaging"
-        element={RenderWithNavbar(<MessagingPage />)}
-      />
+      <Route path="/messaging" element={RenderWithNavbar(<MessagingPage />)} />
 
       <Route
         path="/my-items/saved-jobs"
@@ -186,7 +187,10 @@ const ProtectedRoutes = () => {
         path="/applicants/:id"
         element={RenderWithNavbar(<SingleApplicants />)}
       />
-      <Route path="/jobs/company/:companyId" element={RenderWithNavbar(<JobsCompanyContainer />)} />
+      <Route
+        path="/jobs/company/:companyId"
+        element={RenderWithNavbar(<JobsCompanyContainer />)}
+      />
 
       <Route path="error-404" element={<Error404 />} />
       <Route path="/loadertest" element={<LoadingPage />} />

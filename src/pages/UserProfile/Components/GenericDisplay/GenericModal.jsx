@@ -363,6 +363,7 @@ function GenericModal({
                     name="endMonth"
                     value={formData.endMonth || ""}
                     onChange={handleChange}
+                    disabled={formData?.currentlyWorking}
                     className="border p-2 w-full rounded-md  bg-boxbackground text-text"
                   >
                     <option value="">Month</option>
@@ -392,6 +393,7 @@ function GenericModal({
                     name="endYear"
                     value={formData.endYear || ""}
                     onChange={handleChange}
+                    disabled={formData?.currentlyWorking}
                     className="border p-2 w-full rounded-md  bg-boxbackground text-text"
                   >
                     <option value="">Year</option>
