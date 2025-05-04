@@ -127,7 +127,7 @@ describe("sends and receives messages", () => {
 
   });
 
-  it.skip("Sends media and ensures its receipt on the other side", () => {
+  it("Sends media and ensures its receipt on the other side", () => {
     cy.getSearchBar().type(user1.firstName);
     cy.getSearchBar().type("{enter}");
     cy.wait(5000);
