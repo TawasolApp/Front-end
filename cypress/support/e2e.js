@@ -21,3 +21,4 @@ import "./companies";
 import "./connections";
 import "./jobs";
 import "./messages";
+import "./security";
