@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import InputField from "../GenericComponents//InputField";
 import BlueSubmitButton from "../GenericComponents//BlueSubmitButton";
 
-const ExperienceForm = ({ onSubmit }) => {
+const ExperienceForm = ({ onSubmit, isLoading = false }) => {
   // Employee fields
   const [jobTitle, setJobTitle] = useState("");
   const [employmentType, setEmploymentType] = useState("");
@@ -526,7 +526,7 @@ const ExperienceForm = ({ onSubmit }) => {
         </button>
       </div>
 
-      <BlueSubmitButton text="Continue" disabled={!isFormValid()} />
+      <BlueSubmitButton text="Continue" disabled={!isFormValid()} isLoading={isLoading} loadingText="Submitting" />
     </form>
   );
 };

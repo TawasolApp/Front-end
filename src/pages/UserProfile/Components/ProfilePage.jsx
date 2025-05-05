@@ -8,7 +8,7 @@ import CertificationsSection from "./Sections/CertificationsSection";
 import AboutSection from "./Sections/AboutSection";
 import RestrictedProfilevisibility from "./Profilevisibility/RestrictedProfilevisibility.jsx";
 import PostsSlider from "./UserPostsSlider/UserPostsSlider.jsx";
-
+import ResumeSection from "./Sections/ResumeSection.jsx";
 function ProfilePage() {
   const { user, isOwner, onUserUpdate } = useOutletContext();
   const educationRef = useRef(null);
@@ -52,6 +52,8 @@ function ProfilePage() {
             user={user}
             onUserUpdate={onUserUpdate}
           />
+          <ResumeSection isOwner={isOwner} user={user} />
+
           <PostsSlider />
         </>
       ) : (

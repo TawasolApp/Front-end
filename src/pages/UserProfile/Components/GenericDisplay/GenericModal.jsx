@@ -7,7 +7,7 @@ import ConfirmModal from "../ReusableModals/ConfirmModal";
 // Shared date utilities
 const getAllMonths = () =>
   [...Array(12)].map((_, i) =>
-    new Date(2000, i).toLocaleString("default", { month: "long" }),
+    new Date(2000, i).toLocaleString("default", { month: "long" })
   );
 
 const currentYear = new Date().getFullYear();
@@ -20,8 +20,8 @@ const getEndYears = () =>
 
 const months = getAllMonths();
 const currentMonthIndex = new Date().getMonth();
-const startYears = getStartYears();
-const endYears = getEndYears();
+// const startYears = getStartYears();
+// const endYears = getEndYears();
 
 function GenericModal({
   isOpen,
@@ -31,14 +31,24 @@ function GenericModal({
   type,
   initialData = {},
   editMode = false,
-  existingItems = [], // 👈 Accept the prop here
-  isSaving, // ✅ Add this
+  existingItems = [],
+  isSaving,
 }) {
   const [formData, setFormData] = useState(initialData);
   const [errors, setErrors] = useState({});
   const [showDiscardModal, setShowDiscardModal] = useState(false);
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [initialFormData, setInitialFormData] = useState({});
+  const startYears = getStartYears();
+
+  // THIS is the correct dynamic generation of endYears
+  const endYears = Array.from(
+    {
+      length:
+        (type === "workExperience" ? currentYear : nextTenYear) - 1925 + 1,
+    },
+    (_, i) => (type === "workExperience" ? currentYear : nextTenYear) - i
+  );
 
   useEffect(() => {
     if (isOpen) {
@@ -50,34 +60,6 @@ function GenericModal({
       document.body.style.overflow = "";
     };
   }, [isOpen]);
-
-  // useEffect(() => {
-  //   if (isOpen && initialData) {
-  //     const parseDate = (dateStr) => {
-  //       if (!dateStr) return { month: "", year: "" };
-  //       const date = new Date(dateStr);
-  //       const month = date.toLocaleString("default", { month: "long" });
-  //       const year = String(date.getFullYear());
-  //       return { month, year };
-  //     };
-
-  //     const { month: startMonth, year: startYear } = parseDate(
-  //       initialData.startDate
-  //     );
-  //     const { month: endMonth, year: endYear } = parseDate(initialData.endDate);
-
-  //     const updatedForm = {
-  //       ...initialData,
-  //       startMonth,
-  //       startYear,
-  //       endMonth,
-  //       endYear,
-  //     };
-
-  //     setFormData(updatedForm);
-  //     setInitialFormData(updatedForm); // ✅ Set initialFormData after parsing
-  //   }
-  // }, [isOpen, initialData]);
   useEffect(() => {
     if (isOpen && initialData) {
       const parseDate = (dateStr) => {
@@ -90,10 +72,10 @@ function GenericModal({
       };
 
       const { month: startMonth, year: startYear } = parseDate(
-        initialData.startDate || initialData.issueDate,
+        initialData.startDate || initialData.issueDate
       );
       const { month: endMonth, year: endYear } = parseDate(
-        initialData.endDate || initialData.expiryDate,
+        initialData.endDate || initialData.expiryDate
       );
 
       const updatedForm = {
@@ -166,6 +148,19 @@ function GenericModal({
       ) {
         newErrors.endMonth = "End month can't be before the start month";
       }
+      // Require both endMonth and endYear if either is provided
+      if (
+        (formData.endMonth && !formData.endYear) ||
+        (!formData.endMonth && formData.endYear)
+      ) {
+        if (formData.endMonth && !formData.endYear) {
+          newErrors.endYear = "Please select an end year ";
+        }
+        if (!formData.endMonth && formData.endYear) {
+          newErrors.endMonth = "Please select an end month";
+        }
+      }
+
       if (type === "education") {
         if (!formData.school) newErrors.school = "Please provide a school";
       }
@@ -276,7 +271,7 @@ function GenericModal({
               errors={errors}
               editMode={editMode} // wont show skillname if edit
               existingSkills={existingItems.map((item) =>
-                item.skillName.toLowerCase(),
+                item.skillName.toLowerCase()
               )}
             />
           )}
@@ -368,6 +363,7 @@ function GenericModal({
                     name="endMonth"
                     value={formData.endMonth || ""}
                     onChange={handleChange}
+                    disabled={formData?.currentlyWorking}
                     className="border p-2 w-full rounded-md  bg-boxbackground text-text"
                   >
                     <option value="">Month</option>
@@ -397,6 +393,7 @@ function GenericModal({
                     name="endYear"
                     value={formData.endYear || ""}
                     onChange={handleChange}
+                    disabled={formData?.currentlyWorking}
                     className="border p-2 w-full rounded-md  bg-boxbackground text-text"
                   >
                     <option value="">Year</option>

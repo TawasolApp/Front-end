@@ -4,6 +4,7 @@ import GenericCard from "./GenericCard";
 import GenericModal from "./GenericModal";
 // import LoadingPage from "../../../LoadingScreen/LoadingPage.jsx";
 import { axiosInstance as axios } from "../../../../apis/axios.js";
+import { toast } from "react-toastify";
 
 // Map for endpoint base path
 const endpointMap = {
@@ -27,14 +28,6 @@ function GenericPage({ title, type }) {
       setData(user[type]);
     }
   }, [user?.[type]]);
-  // if (isSaving) {
-  //   return (
-  //     <div className="flex justify-center items-center p-8">
-  //       <div className="w-6 h-6 border-4 border-gray-300 border-t-blue-500 rounded-full animate-spin"></div>
-  //       <span className="ml-3 text-sm text-text">Saving...</span>
-  //     </div>
-  //   );
-  // }
 
   const handleAdd = () => {
     setEditIndex(null);
@@ -68,19 +61,14 @@ function GenericPage({ title, type }) {
 
         response = await axios.patch(
           `/profile/${endpointMap[type]}/${originalKey}`,
-          updatedItem,
+          updatedItem
         );
-        //  faster
-        // const updated = [...data];
-        // updated[editIndex] = response.data;
-        // setData(updated);
 
-        // safer as replace only the updated item
         setData((prev) =>
           prev.map((item) => {
             const itemKey = type === "skills" ? item.skillName : item._id;
             return itemKey === originalKey ? response.data : item;
-          }),
+          })
         );
       }
 
@@ -88,7 +76,7 @@ function GenericPage({ title, type }) {
       else {
         response = await axios.post(
           `/profile/${endpointMap[type]}`,
-          updatedItem,
+          updatedItem
         );
         console.log("🧾 response.data after POST:", response.data);
 
@@ -97,7 +85,7 @@ function GenericPage({ title, type }) {
         const newKey =
           type === "skills" ? response.data.skillName : response.data._id;
         const exists = data.some((item) =>
-          type === "skills" ? item.skillName === newKey : item._id === newKey,
+          type === "skills" ? item.skillName === newKey : item._id === newKey
         );
 
         if (!exists) {
@@ -111,6 +99,20 @@ function GenericPage({ title, type }) {
       onUserUpdate?.(refreshed.data);
     } catch (err) {
       console.error("Failed to save item:", err);
+
+      const message = err.response?.data?.message;
+
+      if (type === "skills" && err.response?.status === 409) {
+        toast.error(
+          typeof message === "string"
+            ? message
+            : Array.isArray(message)
+              ? message.join(", ")
+              : "This skill already exists. Please try another."
+        );
+      } else {
+        toast.error("Failed to save item. Please try again.");
+      }
     } finally {
       //finally happen no matter what: even if: The API fails PATCH/POST throws an error or return early
       setIsSaving(false);
@@ -126,6 +128,7 @@ function GenericPage({ title, type }) {
     try {
       await axios.delete(`/profile/${endpointMap[type]}/${itemId}`);
       setData((prev) => prev.filter((_, i) => i !== editIndex));
+      toast.success("Deletion was successful.");
 
       closeModal();
 
@@ -188,6 +191,7 @@ function GenericPage({ title, type }) {
             <button
               className="w-8 h-8 flex items-center justify-center rounded-full hover:bg-transition text-text"
               onClick={handleAdd}
+              aria-label="Add new experience"
             >
               +
             </button>
@@ -218,6 +222,7 @@ function GenericPage({ title, type }) {
                 <button
                   onClick={() => handleEdit(item, index)}
                   className="absolute top-2 right-2 text-gray-500 hover:text-blue-700 p-1 group-hover:visible"
+                  aria-label="Edit experience"
                 >
                   ✎
                 </button>

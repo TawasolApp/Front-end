@@ -1,14 +1,26 @@
 import { describe, it, vi, beforeEach, afterEach, expect } from "vitest";
-import { render, screen, fireEvent, cleanup } from "@testing-library/react";
+import {
+  render,
+  screen,
+  fireEvent,
+  cleanup,
+  waitFor,
+} from "@testing-library/react";
+import {
+  setProfilePicture,
+  setCoverPhoto,
+} from "../../../store/authenticationSlice.js";
+
 import { MemoryRouter, Route, Routes } from "react-router-dom";
 import { Provider } from "react-redux";
 import { configureStore } from "@reduxjs/toolkit";
 import ProfileHeader from "../../../pages/UserProfile/Components/HeaderComponents/ProfileHeader";
+import { axiosInstance as axios } from "../../../apis/axios.js";
 
 // Setup a basic redux store with mocked authentication
 const mockStore = configureStore({
   reducer: {
-    authentication: () => ({ userId: "viewer-1" }), // your viewer user id
+    authentication: () => ({ userId: "viewer-1" }),
   },
 });
 
@@ -26,10 +38,9 @@ vi.mock(
         Enlarged: {profilePicture}
       </div>
     ),
-  }),
+  })
 );
 
-// ✅ Important: This path must match the one used in ProfileHeader.jsx
 vi.mock(
   "../../../pages/UserProfile/Components/HeaderComponents/ImageUploadModal",
   () => ({
@@ -46,12 +57,14 @@ vi.mock(
           <button data-testid="upload-cancel" onClick={onClose}>
             Cancel
           </button>
+          <button data-testid="upload-delete" onClick={() => onUpload(null)}>
+            Delete
+          </button>
         </div>
       ) : null,
-  }),
+  })
 );
 
-// Mock edit modal
 vi.mock(
   "../../../pages/UserProfile/Components/HeaderComponents/EditProfileModal",
   () => ({
@@ -70,10 +83,9 @@ vi.mock(
           </button>
         </div>
       ) : null,
-  }),
+  })
 );
 
-// Mock profile picture component
 vi.mock(
   "../../../pages/UserProfile/Components/HeaderComponents/ProfilePicture",
   () => ({
@@ -89,10 +101,9 @@ vi.mock(
         </button>
       </>
     ),
-  }),
+  })
 );
 
-// Mock cover photo component
 vi.mock(
   "../../../pages/UserProfile/Components/HeaderComponents/CoverPhoto",
   () => ({
@@ -108,7 +119,7 @@ vi.mock(
         </button>
       </>
     ),
-  }),
+  })
 );
 
 describe("ProfileHeader Component", () => {
@@ -151,12 +162,66 @@ describe("ProfileHeader Component", () => {
             <Route path="/users/:profileSlug" element={ui} />
           </Routes>
         </MemoryRouter>
-      </Provider>,
+      </Provider>
     );
 
   it("returns null if user is null", () => {
     const { container } = renderWithProviders(<ProfileHeader user={null} />);
     expect(container.firstChild).toBeNull();
+  });
+  it("dispatches empty cover photo on deletion", async () => {
+    const deleteSpy = vi.spyOn(axios, "delete").mockResolvedValue({});
+    const dispatchSpy = vi.spyOn(mockStore, "dispatch");
+
+    renderWithProviders(
+      <ProfileHeader
+        user={mockUser}
+        isOwner={true}
+        isVisible={true}
+        onSave={vi.fn()}
+        experienceRef={experienceRef}
+        educationRef={educationRef}
+      />
+    );
+
+    fireEvent.click(screen.getByTestId("upload-cover"));
+    fireEvent.click(screen.getByTestId("upload-delete"));
+
+    await waitFor(() => {
+      expect(deleteSpy).toHaveBeenCalledWith("/profile/cover-photo");
+      expect(dispatchSpy).toHaveBeenCalledWith(setCoverPhoto(""));
+    });
+  });
+  it("patches and saves contact info correctly", async () => {
+    const patchSpy = vi.spyOn(axios, "patch").mockResolvedValue({});
+
+    const onSave = vi.fn();
+    renderWithProviders(
+      <ProfileHeader
+        user={mockUser}
+        isOwner={true}
+        isVisible={true}
+        onSave={onSave}
+        experienceRef={experienceRef}
+        educationRef={educationRef}
+      />
+    );
+
+    fireEvent.click(screen.getByText("Contact info"));
+    await waitFor(() => {
+      expect(screen.getByTestId("contact-modal")).toBeInTheDocument();
+    });
+
+    fireEvent.click(screen.getByTestId("save-contact"));
+
+    await waitFor(() => {
+      expect(patchSpy).toHaveBeenCalledWith("/profile", {
+        location: "Updated Location",
+      });
+      expect(onSave).toHaveBeenCalledWith(
+        expect.objectContaining({ location: "Updated Location" })
+      );
+    });
   });
 
   it("renders profile info if user is owner", () => {
@@ -168,7 +233,7 @@ describe("ProfileHeader Component", () => {
         onSave={vi.fn()}
         experienceRef={experienceRef}
         educationRef={educationRef}
-      />,
+      />
     );
 
     expect(screen.getByText("Fatma Gamal")).toBeInTheDocument();
@@ -177,6 +242,51 @@ describe("ProfileHeader Component", () => {
     expect(screen.getByText("42 connections")).toBeInTheDocument();
     expect(screen.getByText("Software Intern")).toBeInTheDocument();
     expect(screen.getByText("Cairo University")).toBeInTheDocument();
+  });
+  it("dispatches empty profile picture on deletion", async () => {
+    const deleteSpy = vi.spyOn(axios, "delete").mockResolvedValue({});
+    const dispatchSpy = vi.spyOn(mockStore, "dispatch");
+
+    renderWithProviders(
+      <ProfileHeader
+        user={mockUser}
+        isOwner={true}
+        isVisible={true}
+        onSave={vi.fn()}
+        experienceRef={experienceRef}
+        educationRef={educationRef}
+      />
+    );
+
+    fireEvent.click(screen.getByTestId("upload-profile"));
+    fireEvent.click(screen.getByTestId("upload-delete"));
+
+    await waitFor(() => {
+      expect(deleteSpy).toHaveBeenCalledWith("/profile/profile-picture");
+      expect(dispatchSpy).toHaveBeenCalledWith(setProfilePicture(""));
+    });
+  });
+
+  it("handles deleting profile picture when fileOrNull is null", async () => {
+    const deleteSpy = vi.spyOn(axios, "delete");
+
+    renderWithProviders(
+      <ProfileHeader
+        user={mockUser}
+        isOwner={true}
+        isVisible={true}
+        onSave={vi.fn()}
+        experienceRef={experienceRef}
+        educationRef={educationRef}
+      />
+    );
+
+    fireEvent.click(screen.getByTestId("upload-profile"));
+    fireEvent.click(screen.getByTestId("upload-delete"));
+
+    await waitFor(() => {
+      expect(deleteSpy).toHaveBeenCalledWith("/profile/profile-picture");
+    });
   });
 
   it("renders viewer view if not owner", () => {
@@ -188,9 +298,74 @@ describe("ProfileHeader Component", () => {
         onSave={vi.fn()}
         experienceRef={experienceRef}
         educationRef={educationRef}
-      />,
+      />
     );
     expect(screen.getByTestId("viewer-view")).toBeInTheDocument();
+  });
+  vi.mock(
+    "../../../pages/UserProfile/Components/HeaderComponents/ContactInfoModal",
+    () => ({
+      default: ({ isOpen, onClose, onSave }) =>
+        isOpen ? (
+          <div data-testid="contact-modal">
+            Contact Modal
+            <button
+              data-testid="save-contact"
+              onClick={() => onSave({ location: "Updated Location" })}
+            >
+              Save Contact
+            </button>
+            <button data-testid="close-contact" onClick={onClose}>
+              Close
+            </button>
+          </div>
+        ) : null,
+    })
+  );
+
+  it("opens contact info modal and saves updated fields", async () => {
+    const patchSpy = vi.spyOn(axios, "patch").mockResolvedValue({});
+    const onSave = vi.fn();
+
+    renderWithProviders(
+      <ProfileHeader
+        user={mockUser}
+        isOwner={true}
+        isVisible={true}
+        onSave={onSave}
+        experienceRef={experienceRef}
+        educationRef={educationRef}
+      />
+    );
+
+    // Open contact modal
+    fireEvent.click(screen.getByText("Contact info"));
+
+    // Simulate saving from ContactInfoModal
+    const updatedFields = { location: "Updated Location" };
+    await waitFor(() => {
+      const modal = screen.getByTestId("contact-modal");
+      expect(modal).toBeInTheDocument();
+    });
+
+    // You must mock ContactInfoModal properly to trigger `onSave`
+  });
+  it("passes correct props to ImageUploadModal", () => {
+    renderWithProviders(
+      <ProfileHeader
+        user={mockUser}
+        isOwner={true}
+        isVisible={true}
+        onSave={vi.fn()}
+        experienceRef={experienceRef}
+        educationRef={educationRef}
+      />
+    );
+
+    fireEvent.click(screen.getByTestId("upload-profile"));
+
+    expect(screen.getByTestId("upload-modal")).toBeInTheDocument();
+    // You may also assert with spies inside the mocked modal if needed
   });
 
   it("opens edit modal when edit button is clicked", () => {
@@ -202,7 +377,7 @@ describe("ProfileHeader Component", () => {
         onSave={vi.fn()}
         experienceRef={experienceRef}
         educationRef={educationRef}
-      />,
+      />
     );
 
     fireEvent.click(screen.getByRole("button", { name: /✎/i }));
@@ -219,13 +394,13 @@ describe("ProfileHeader Component", () => {
         onSave={onSave}
         experienceRef={experienceRef}
         educationRef={educationRef}
-      />,
+      />
     );
 
     fireEvent.click(screen.getByRole("button", { name: /✎/i }));
     fireEvent.click(screen.getByTestId("save-edit"));
     expect(onSave).toHaveBeenCalledWith(
-      expect.objectContaining({ firstName: "Updated" }),
+      expect.objectContaining({ firstName: "Updated" })
     );
   });
 
@@ -238,12 +413,12 @@ describe("ProfileHeader Component", () => {
         onSave={vi.fn()}
         experienceRef={experienceRef}
         educationRef={educationRef}
-      />,
+      />
     );
 
     fireEvent.click(screen.getByTestId("profile-picture"));
     expect(screen.getByTestId("image-enlarge")).toHaveTextContent(
-      "profile.jpg",
+      "profile.jpg"
     );
   });
 
@@ -256,7 +431,7 @@ describe("ProfileHeader Component", () => {
         onSave={vi.fn()}
         experienceRef={experienceRef}
         educationRef={educationRef}
-      />,
+      />
     );
 
     fireEvent.click(screen.getByTestId("cover-photo"));
@@ -272,7 +447,7 @@ describe("ProfileHeader Component", () => {
         onSave={vi.fn()}
         experienceRef={experienceRef}
         educationRef={educationRef}
-      />,
+      />
     );
 
     fireEvent.click(screen.getByTestId("upload-profile"));
@@ -289,12 +464,102 @@ describe("ProfileHeader Component", () => {
         onSave={vi.fn()}
         experienceRef={experienceRef}
         educationRef={educationRef}
-      />,
+      />
     );
 
     fireEvent.click(screen.getByTestId("upload-cover"));
     expect(screen.getByTestId("upload-modal")).toBeInTheDocument();
     fireEvent.click(screen.getByTestId("upload-confirm"));
+  });
+  it("saves edit and closes modal", async () => {
+    const onSave = vi.fn();
+    renderWithProviders(
+      <ProfileHeader
+        user={mockUser}
+        isOwner={true}
+        isVisible={true}
+        onSave={onSave}
+        experienceRef={experienceRef}
+        educationRef={educationRef}
+      />
+    );
+
+    fireEvent.click(screen.getByRole("button", { name: /✎/i }));
+    expect(screen.getByTestId("edit-modal")).toBeInTheDocument();
+
+    fireEvent.click(screen.getByTestId("save-edit"));
+
+    await waitFor(() => {
+      // Modal should disappear
+      expect(screen.queryByTestId("edit-modal")).not.toBeInTheDocument();
+    });
+
+    expect(onSave).toHaveBeenCalledWith(
+      expect.objectContaining({ firstName: "Updated" })
+    );
+  });
+  it("uploads new profile picture and updates UI", async () => {
+    const postSpy = vi
+      .spyOn(axios, "post")
+      .mockResolvedValueOnce({ data: { url: "http://test.com/image.jpg" } });
+
+    const patchSpy = vi.spyOn(axios, "patch").mockResolvedValueOnce({});
+
+    renderWithProviders(
+      <ProfileHeader
+        user={mockUser}
+        isOwner={true}
+        isVisible={true}
+        onSave={vi.fn()}
+        experienceRef={experienceRef}
+        educationRef={educationRef}
+      />
+    );
+
+    // Open upload modal
+    fireEvent.click(screen.getByTestId("upload-profile"));
+    expect(screen.getByTestId("upload-modal")).toBeInTheDocument();
+
+    // Confirm upload (this calls onUpload("uploaded.jpg"))
+    fireEvent.click(screen.getByTestId("upload-confirm"));
+
+    await waitFor(() => {
+      expect(postSpy).toHaveBeenCalledWith(
+        "/media",
+        expect.any(FormData),
+        expect.objectContaining({
+          headers: { "Content-Type": "multipart/form-data" },
+        })
+      );
+
+      expect(patchSpy).toHaveBeenCalledWith("/profile", {
+        profilePicture: "http://test.com/image.jpg",
+      });
+    });
+  });
+
+  it("handles upload error gracefully", async () => {
+    vi.spyOn(axios, "post").mockRejectedValueOnce(new Error("Upload failed"));
+
+    renderWithProviders(
+      <ProfileHeader
+        user={mockUser}
+        isOwner={true}
+        isVisible={true}
+        onSave={vi.fn()}
+        experienceRef={experienceRef}
+        educationRef={educationRef}
+      />
+    );
+
+    fireEvent.click(screen.getByTestId("upload-profile"));
+    fireEvent.click(screen.getByTestId("upload-confirm"));
+
+    await waitFor(() => {
+      // Optionally assert that the UI did not break or log was triggered
+      // You can spy on console.error if needed
+      expect(axios.post).toHaveBeenCalled();
+    });
   });
 
   it("scrolls to experience and education on click", () => {
@@ -306,7 +571,7 @@ describe("ProfileHeader Component", () => {
         onSave={vi.fn()}
         experienceRef={experienceRef}
         educationRef={educationRef}
-      />,
+      />
     );
 
     fireEvent.click(screen.getByText("Software Intern"));

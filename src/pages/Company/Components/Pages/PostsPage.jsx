@@ -20,7 +20,7 @@ function PostsPage() {
     <div className="flex justify-center min-h-screen bg-mainBackground gap-0 p-4">
       <main className=" w-full max-w-3xl mx-auto space-y-4">
         <MainFeed
-          API_ROUTE={`/posts/user/${companyId}`}
+          API_ROUTE={`/posts/${companyId}/user/${companyId}`}
           showShare={isAdmin}
           currentAuthorId={companyId}
           currentAuthorName={company.name}

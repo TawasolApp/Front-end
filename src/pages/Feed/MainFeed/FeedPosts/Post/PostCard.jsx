@@ -1,31 +1,28 @@
 import { useState } from "react";
-import { usePost } from "../PostContext";
-
 import BookmarkBorderIcon from "@mui/icons-material/BookmarkBorder";
 import BookmarkIcon from "@mui/icons-material/Bookmark";
 import FlagIcon from "@mui/icons-material/Flag";
-import HighlightOffIcon from "@mui/icons-material/HighlightOff";
 import LinkIcon from "@mui/icons-material/Link";
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
-
+import { usePost } from "../PostContext";
 import PostCardHeader from "./Header/PostCardHeader";
 import PostContent from "./Content/PostContent";
 import EngagementMetrics from "./Metrics/EngagementMetrics";
 import ActivitiesHolder from "./Activities/ActivitiesHolder";
 import CommentsContainer from "./Comments/CommentsContainer";
 import ReactionsModal from "../ReactionModal/ReactionsModal";
-
 import TextModal from "../../SharePost/TextModal";
 import DeletePostModal from "../DeleteModal/DeletePostModal";
 import SilentRepostHeader from "./Header/SilentRepostHeader";
-
+import ReportPostModal from "../../../../../pages/Privacy/PostReportModal";
 const PostCard = ({ setShowPostModal, setMediaIndex }) => {
   // MODALS
   const [showLikes, setShowLikes] = useState(false);
   const [showComments, setShowComments] = useState(false);
   const [showEditModal, setShowEditModal] = useState(false);
   const [showDeleteModal, setShowDeleteModal] = useState(false);
+  const [showReportModal, setShowReportModal] = useState(false);
 
   const {
     currentAuthorId,
@@ -47,7 +44,7 @@ const PostCard = ({ setShowPostModal, setMediaIndex }) => {
     },
     {
       text: "Report post",
-      onClick: () => console.log("Reported post"), // TODO: when reporting is implemented
+      onClick: () => setShowReportModal(true), // TODO: when reporting is implemented
       icon: FlagIcon,
     },
     {
@@ -127,7 +124,7 @@ const PostCard = ({ setShowPostModal, setMediaIndex }) => {
 
       {showLikes && (
         <ReactionsModal
-          API_URL={`/posts/reactions/${post.id}`}
+          API_URL={`/posts/${currentAuthorId}/reactions/${post.id}`}
           setShowLikes={() => setShowLikes(false)}
           reactCounts={post.reactCounts}
         />
@@ -154,6 +151,14 @@ const PostCard = ({ setShowPostModal, setMediaIndex }) => {
             setShowDeleteModal(false);
           }}
           commentOrPost="Post"
+        />
+      )}
+      {showReportModal && (
+        <ReportPostModal
+          isOpen={showReportModal}
+          onClose={() => setShowReportModal(false)}
+          targetId={post.id}
+          // type="post"
         />
       )}
     </div>

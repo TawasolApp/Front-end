@@ -3,7 +3,6 @@ import { createSlice } from "@reduxjs/toolkit";
 const initialState = {
   userId: localStorage.getItem("userId") || "",
   email: localStorage.getItem("email") || "",
-  password: localStorage.getItem("password") || "",
   firstName: localStorage.getItem("firstName") || "",
   lastName: localStorage.getItem("lastName") || "",
   location: localStorage.getItem("location") || "",
@@ -14,6 +13,8 @@ const initialState = {
   profilePicture: localStorage.getItem("profilePicture") || null,
   coverPhoto: localStorage.getItem("cover") || null,
   isSocialLogin: localStorage.getItem("isSocialLogin") || false,
+  role: localStorage.getItem("role") || "",
+  isPremium: localStorage.getItem("isPremium") || false,
 };
 
 export const authenticationSlice = createSlice({
@@ -39,10 +40,6 @@ export const authenticationSlice = createSlice({
     setLocation: (state, action) => {
       state.location = action.payload;
       localStorage.setItem("location", action.payload);
-    },
-    setPassword: (state, action) => {
-      state.password = action.payload;
-      localStorage.setItem("password", action.payload);
     },
     setToken: (state, action) => {
       state.token = action.payload;
@@ -75,10 +72,17 @@ export const authenticationSlice = createSlice({
       state.isSocialLogin = action.payload;
       localStorage.setItem("isSocialLogin", action.payload);
     },
+    setRole: (state, action) => {
+      state.role = action.payload;
+      localStorage.setItem("role", action.payload);
+    },
+    setIsPremium: (state, action) => {
+      state.isPremium = action.payload;
+      localStorage.setItem("isPremium", action.payload);
+    },
     logout: (state) => {
       state.userId = "";
       state.email = "";
-      state.password = "";
       state.firstName = "";
       state.lastName = "";
       state.location = "";
@@ -90,6 +94,8 @@ export const authenticationSlice = createSlice({
       state.coverPhoto = "";
       state.isNewGoogleUser = false;
       state.isSocialLogin = false;
+      state.role = "";
+      state.isPremium = false;
       localStorage.removeItem("userId");
       localStorage.removeItem("email");
       localStorage.removeItem("firstName");
@@ -102,6 +108,8 @@ export const authenticationSlice = createSlice({
       localStorage.removeItem("profilePicture");
       localStorage.removeItem("coverPhoto");
       localStorage.removeItem("isSocialLogin");
+      localStorage.removeItem("role");
+      localStorage.removeItem("isPremium");
     },
   },
 });
@@ -111,7 +119,6 @@ export const {
   setEmail,
   setFirstName,
   setLastName,
-  setPassword,
   setLocation,
   setToken,
   setRefreshToken,
@@ -121,6 +128,8 @@ export const {
   setCoverPhoto,
   setIsNewGoogleUser,
   setIsSocialLogin,
+  setRole,
+  setIsPremium,
   logout,
 } = authenticationSlice.actions;
 

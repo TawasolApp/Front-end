@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
+import { useSelector } from "react-redux";
 import { axiosInstance } from "../../apis/axios";
 import PostContainer from "./MainFeed/FeedPosts/PostContainer";
 
@@ -8,10 +9,16 @@ const SinglePost = () => {
   const navigate = useNavigate();
   const [post, setPost] = useState(null);
 
+  const currentAuthorId = useSelector((state) => state.authentication.userId);
+  const currentAuthorName = `${useSelector((state) => state.authentication.firstName)} ${useSelector((state) => state.authentication.lastName)}`;
+  const currentAuthorPicture = useSelector(
+    (state) => state.authentication.profilePicture,
+  );
+
   useEffect(() => {
     const fetchPost = async () => {
       try {
-        const response = await axiosInstance.get(`posts/${id}`);
+        const response = await axiosInstance.get(`/posts/${currentAuthorId}/${id}`);
         setPost(response.data);
       } catch (e) {
         navigate("/error-404");
@@ -22,7 +29,7 @@ const SinglePost = () => {
 
   const handleDeletePost = async () => {
     try {
-      await axiosInstance.delete(`/delete/${id}`);
+      await axiosInstance.delete(`/posts/${currentAuthorId}/${id}`);
       navigate("/feed");
     } catch (e) {
       console.log(e.message);
@@ -38,7 +45,7 @@ const SinglePost = () => {
     silentRepost = false,
   ) => {
     try {
-      await axiosInstance.post("posts", {
+      await axiosInstance.post(`/posts/${currentAuthorId}`, {
         content: text,
         media: media,
         taggedUsers: taggedUsers,
@@ -62,6 +69,9 @@ const SinglePost = () => {
                 post={post}
                 handleSharePost={handleSharePost}
                 handleDeletePost={handleDeletePost}
+                currentAuthorId={currentAuthorId}
+                currentAuthorName={currentAuthorName}
+                currentAuthorPicture={currentAuthorPicture}
               />
             )}
           </main>

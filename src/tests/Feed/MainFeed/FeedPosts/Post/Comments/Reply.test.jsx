@@ -1,5 +1,5 @@
 import { describe, it, expect, vi, beforeEach } from "vitest";
-import { render, screen, fireEvent } from "@testing-library/react";
+import { render, screen, fireEvent, waitFor } from "@testing-library/react";
 import React from "react";
 
 // Mock the usePost hook directly without importing it
@@ -126,6 +126,22 @@ vi.mock(
   }),
 );
 
+vi.mock(
+  "../../../../../../pages/Feed/MainFeed/FeedPosts/DeleteModal/DeletePostModal",
+  () => ({
+    default: ({ closeModal, deleteFunc }) => (
+      <div data-testid="delete-modal">
+        <button onClick={deleteFunc} data-testid="confirm-delete">
+          Confirm Delete
+        </button>
+        <button onClick={closeModal} data-testid="cancel-delete">
+          Cancel
+        </button>
+      </div>
+    ),
+  })
+);
+
 describe("Reply Component", () => {
   const mockReply = {
     id: "reply123",
@@ -178,15 +194,28 @@ describe("Reply Component", () => {
     expect(screen.queryByTestId("menu-item-2")).not.toBeInTheDocument();
   });
 
-  it("handles delete action correctly", () => {
+  it("handles delete action correctly", async () => {
     render(<Reply commentId={mockCommentId} reply={mockReply} />);
-
-    fireEvent.click(screen.getByTestId("menu-item-2")); // Click delete option
-
+  
+    // Click delete option in menu to open the modal
+    fireEvent.click(screen.getByTestId("menu-item-2"));
+    
+    // The delete modal should now be visible
+    expect(screen.getByTestId("delete-modal")).toBeInTheDocument();
+    
+    // Click the confirm button in the modal
+    fireEvent.click(screen.getByTestId("confirm-delete"));
+  
+    // Now the delete function should have been called
     expect(mockHandleDeleteReplyToComment).toHaveBeenCalledWith(
       mockCommentId,
-      mockReply.id,
+      mockReply.id
     );
+    
+    // Wait for the modal to disappear
+    await waitFor(() => {
+      expect(screen.queryByTestId("delete-modal")).not.toBeInTheDocument();
+    });
   });
 
   it("shows edit form when edit action is clicked", () => {
