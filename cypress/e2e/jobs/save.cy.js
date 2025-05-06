@@ -16,7 +16,7 @@ describe("saves jobs", () => {
     });
   
     it("Saves job for later", () => {
-      cy.getSearchBar().type("Senior Applications Orchestrator");
+      cy.getSearchBar().type("Customer Optimization Planner");
       cy.getSearchBar().type("{enter}");
   
       cy.wait(5000);
@@ -46,7 +46,7 @@ describe("saves jobs", () => {
 
       cy.getFirstSavedJob().should(
         "contain",
-        "Senior Applications Orchestrator"
+        "Customer Optimization Planner"
       );
     });
   });

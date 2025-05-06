@@ -16,7 +16,7 @@ describe("applies for jobs", () => {
     });
   
     it("Applies for jobs", () => {
-      cy.getSearchBar().type("Senior Applications Orchestrator");
+      cy.getSearchBar().type("Customer Optimization Planner");
       cy.getSearchBar().type("{enter}");
   
       cy.wait(5000);
@@ -35,6 +35,10 @@ describe("applies for jobs", () => {
       cy.getPhoneNumberInput().type("1234567890");
 
       cy.getSubmitApplicationButton().click();
+
+      cy.wait(5000);
+
+      cy.contains("Under Review").should("be.visible");
 
     });
   });

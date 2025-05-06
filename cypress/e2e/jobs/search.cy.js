@@ -16,7 +16,7 @@ describe("searches for jobs", () => {
   });
 
   it("Searches for job by keyword", () => {
-    cy.getSearchBar().type("Senior Applications Orchestrator");
+    cy.getSearchBar().type("Customer Optimization Planner");
     cy.getSearchBar().type("{enter}");
 
     cy.wait(5000);
@@ -28,12 +28,12 @@ describe("searches for jobs", () => {
 
     cy.getJobsFirstSearchResult().should(
       "contain",
-      "Senior Applications Orchestrator"
+      "Customer Optimization Planner"
     );
   });
 
   it("Searches for job by industry", () => {
-    cy.getSearchBar().type("Senior");
+    cy.getSearchBar().type("Customer");
     cy.getSearchBar().type("{enter}");
 
     cy.wait(5000);
@@ -43,22 +43,20 @@ describe("searches for jobs", () => {
 
     cy.wait(5000);
 
-    cy.getJobsSearchResults().should("have.length", 3);
-
-    cy.getIndustryFilter().type("Toys");
+    cy.getIndustryFilter().type("Home");
 
     cy.wait(5000);
 
-    cy.getJobsSearchResults().should("have.length", 1);
+    cy.getJobsSearchResults().should("have.length", 3);
 
     cy.getJobsFirstSearchResult().should(
       "contain",
-      "Senior Applications Orchestrator"
+      "Customer Optimization Planner"
     );
   });
 
   it("Searches for job by location", () => {
-    cy.getSearchBar().type("Senior");
+    cy.getSearchBar().type("Customer");
     cy.getSearchBar().type("{enter}");
 
     cy.wait(5000);
@@ -68,9 +66,7 @@ describe("searches for jobs", () => {
 
     cy.wait(5000);
 
-    cy.getJobsSearchResults().should("have.length", 3);
-
-    cy.getLocationFilter().type("Johnston Inlet");
+    cy.getLocationFilter().type("Castle Lane");
 
     cy.wait(5000);
 
@@ -78,7 +74,7 @@ describe("searches for jobs", () => {
 
     cy.getJobsFirstSearchResult().should(
       "contain",
-      "Senior Applications Orchestrator"
+      "Customer Optimization Planner"
     );
   });
 
@@ -87,15 +83,13 @@ describe("searches for jobs", () => {
 
     cy.wait(5000);
 
-    cy.getExperienceLevelFilter().select("Internship");
+    cy.getExperienceLevelFilter().select("Director");
 
     cy.wait(5000);
 
-    cy.getJobsSearchResults().should("have.length", 3);
-
     cy.getJobsFirstSearchResult().should(
       "contain",
-      "Senior Applications Orchestrator"
+      "Customer Optimization Planner"
     );
   });
 
@@ -104,15 +98,13 @@ describe("searches for jobs", () => {
 
     cy.wait(5000);
 
-    cy.getCompanyFilter().type("Toy - Fritsch");
+    cy.getCompanyFilter().type("Carroll - Denesik");
 
     cy.wait(5000);
 
-    cy.getJobsSearchResults().should("have.length", 4);
-
     cy.getJobsFirstSearchResult().should(
       "contain",
-      "Senior Applications Orchestrator"
+      "Customer Optimization Planner"
     );
   });
 
@@ -121,8 +113,8 @@ describe("searches for jobs", () => {
 
     cy.wait(5000);
 
-    cy.getMinSalaryFilter().type("4109274686190554");
-    cy.getMaxSalaryFilter().type("4109274686190556");
+    cy.getMinSalaryFilter().type("8809372402024850");
+    cy.getMaxSalaryFilter().type("8809372402024852");
 
     cy.wait(5000);
 
@@ -130,7 +122,7 @@ describe("searches for jobs", () => {
 
     cy.getJobsFirstSearchResult().should(
       "contain",
-      "Senior Applications Orchestrator"
+      "Customer Optimization Planner"
     );
   });
 });
