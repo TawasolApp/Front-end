@@ -9,7 +9,7 @@ describe('open news feed', () => {
 
     describe('Post interactions', () => {
         it('Creates a Post', () => {
-            cy.getCreatePost().click();
+            cy.getSearchDropdown().click();
             cy.getCreatePostInput().click().type('This is a test post');
             cy.getCreatePostButton().click();
             cy.getPost().first().should('contain', 'This is a test post');
